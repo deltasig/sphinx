@@ -1,0 +1,1084 @@
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Mvc.FixedDisplayModes.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+E:\Documents\Projects\DeltaSigmaPhiWebsite\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Facebook.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Facebook.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Ty\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Facebook.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Facebook.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+E:\Users\Ben\Documents\Visual Studio 2013\Projects\CS397Project\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Facebook.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Facebook.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2012\Projects\Working-Ben\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Facebook.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Facebook.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Facebook.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Facebook.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+C:\Users\feign\Source\Workspaces\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csprojResolveAssemblyReference.cache
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Working-Emilio\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Moq.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebActivatorEx.dll
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.pdb
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Moq.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.xml
+C:\Users\Tyler\Documents\Visual Studio 2012\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Moq.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\WebActivatorEx.dll
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.pdb
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Moq.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.xml
+D:\My Documents\Visual Studio 2013\Projects\CS397Project\Development\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll.config
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DeltaSigmaPhiWebsite.pdb
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\EntityFramework.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Facebook.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\GenericRepository.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Helpers.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Web.Infrastructure.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Moq.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Spatial.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Razor.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebActivatorEx.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebGrease.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Mono.Math.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Antlr3.Runtime.pdb
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.AspNet.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.Core.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OAuth.Consumer.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\DotNetOpenAuth.OpenId.RelyingParty.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\EntityFramework.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\EntityFramework.SqlServer.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Facebook.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\GenericRepository.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\GenericRepository.EntityFramework.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.AspNet.Mvc.Facebook.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Data.Edm.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Data.OData.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.pdb
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.ServiceLocation.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Configuration.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.Mvc.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Practices.Unity.RegistrationByConvention.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Microsoft.Web.WebPages.OAuth.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Moq.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Newtonsoft.Json.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.Web.Common.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Ninject.Web.Mvc.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Extensions.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Formatting.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Net.Http.Primitives.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Spatial.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Helpers.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.OData.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Http.WebHost.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Mvc.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Optimization.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.Razor.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Deployment.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\System.Web.WebPages.Razor.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebMatrix.Data.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\WebMatrix.WebData.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Org.Mentalis.Security.Cryptography.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\Mono.Math.xml
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.Edm.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\de\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\es\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\fr\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\it\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ja\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ko\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ru\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hans\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hant\Microsoft.Data.OData.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\de\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\es\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\fr\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\it\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ja\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ko\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\ru\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hans\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\bin\zh-Hant\System.Spatial.resources.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.csproj.App.config
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.dll
+E:\Documents\Projects\GitHub\Sphinx\DeltaSigmaPhiWebsite\obj\Debug\DeltaSigmaPhiWebsite.pdb

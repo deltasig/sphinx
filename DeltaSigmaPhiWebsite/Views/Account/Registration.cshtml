@@ -1,0 +1,23 @@
+﻿@model DeltaSigmaPhiWebsite.Models.RegistrationModel
+@{
+    ViewBag.Title = "Registration";
+}
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <p class="text-success">@ViewBag.SuccessMessage</p>
+    <p class="text-warning">@ViewBag.FailMessage</p>
+    @{Html.RenderPartial("_RegisterPartial", Model.RegisterModel);}
+    <br />
+    @if(User.IsInRole("Administrator"))
+    {
+        Html.RenderPartial("_UnregisterPartial", Model.UnregisterModel);
+    }
+</div>

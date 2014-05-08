@@ -1,0 +1,33 @@
+﻿@model DeltaSigmaPhiWebsite.Models.ServiceHourSubmissionModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-10">
+                Service Hour Submission Form
+            </div>
+            <div class="col-md-2 text-right">
+                <button type="button" class="btn btn-default btn-xs text-right" id="service-close-button">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SubmitService", "Sphinx", FormMethod.Post, new { role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.SelectedEventId)
+                @Html.DropDownListFor(m => m.SelectedEventId, Model.Events, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.HoursServed)
+                @Html.TextBoxFor(m => m.HoursServed, new { @class = "form-control" })
+            </div>
+            <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
+        }
+    </div>
+</div>

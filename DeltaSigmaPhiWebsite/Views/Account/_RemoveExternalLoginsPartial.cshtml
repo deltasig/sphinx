@@ -1,0 +1,22 @@
+﻿@model ICollection<DeltaSigmaPhiWebsite.Models.ExternalLogin>
+
+@if (Model.Count > 0)
+{
+    <h5>Remove External Login(s):</h5>
+    <div class="form-group">
+        <ul class="list-inline">
+            @foreach (var externalLogin in Model.Where(externalLogin => ViewBag.ShowRemoveButton))
+            {
+            <li>
+                @using (Html.BeginForm("Disassociate", "Account"))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("provider", externalLogin.Provider)
+                    @Html.Hidden("providerUserId", externalLogin.ProviderUserId)
+                    <button type="submit" style="padding: 0" class="btn btn-link btn-sm" title="Remove @externalLogin.ProviderDisplayName authentication from your account">Remove @externalLogin.ProviderDisplayName</button>
+                }
+            </li>
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Delta Sigma Phi";
+}
+
+@if (DateTime.Now.Hour >= 19 || DateTime.Now.Hour <= 7)
+{
+    <img src="~/Images/HouseFrontNight70s.jpg" alt="Header" style="padding: 0" height="650" width="100%" />
+}
+else
+{
+    <img src="~/Images/HouseFrontDay70s.jpg" alt="Header" style="padding: 0" height="650" width="100%" />
+}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h2>Prospective Members</h2>
+                    <p>
+                        Our recruitment process is <strong>values-based</strong> and we are proud of it.  For those who are right for Delta Sig, you already believe what we believe.
+                        You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded individuals will accelerate the realization of that vision.
+                        If Delta Sig isn't the right place for you, we will help you find a fraternity that is.
+                    </p>
+                    <p><a class="btn btn-success" href="#" role="button">Learn More »</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h2>Alumni Involvement</h2>
+                    <p>
+                        After a decade-long absence, Delta Epsilon has returned to Missouri S&amp;T and we have quickly risen to be one of the most influental student organizations on campus.
+                        Our accomplishments are numerous, but none of it would be possible without generous support provided by our alumni.  That is why Delta Epsilon is committed to reconnecting with you.
+                    </p>
+                    <p><a class="btn btn-success" href="#" role="button">Learn More »</a></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="thumbnail">
+                <div class="caption">
+                    <h2>Community Outreach</h2>
+                    <p>
+                        Delta Sig wants to connect with you!  We are committed to building relationships on campus and throughout the community.
+                        If you have an opportunity to make Missouri S&amp;T and the communiy a better place, let us know and we will do our best to help you.
+                    </p>
+                    <p><a class="btn btn-success" href="#" role="button">Learn More »</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

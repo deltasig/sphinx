@@ -1,0 +1,30 @@
+﻿<ul class="nav navbar-nav navbar-right">
+    @if (Request.IsAuthenticated)
+    {
+        @*<li>
+            <p class="navbar-text">Signed in as:</p>
+        </li>*@
+        <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+            @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
+        </li>
+        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Account" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+            @Html.ActionLink("Account", "Index", "Account")
+        </li>
+        <li>
+            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", style = "margin: 0" }))
+            {
+                // Example of link-based form submission
+                @Html.AntiForgeryToken()
+                <p class="navbar-text">
+                    <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
+                </p>
+            }
+        </li>
+    }
+    else
+    {
+        <li class="@(ViewContext.RouteData.Values.ContainsValue("Login") ? "active" : "")">
+            @Html.ActionLink("Log In", "Login", "Account")
+        </li>
+    }
+</ul>

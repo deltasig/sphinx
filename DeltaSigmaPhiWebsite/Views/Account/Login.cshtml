@@ -1,0 +1,71 @@
+﻿@model DeltaSigmaPhiWebsite.Models.LoginModel
+
+@{
+    ViewBag.Title = "Log In";
+}
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="panel panel-default">
+        <!-- Default panel contents -->
+        <div class="panel-heading">Local Account</div>
+        <div class="panel-body">
+            @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form", id = "login-form" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UserName, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "User Name" })
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="text-warning">
+                            @Html.ValidationMessageFor(m => m.UserName)
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-sm-2 control-label" })
+                    <div class="col-sm-6">
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                    </div>
+                    <div class="col-sm-4">
+                        <p class="text-warning">
+                            @Html.ValidationMessageFor(m => m.Password)
+                        </p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBoxFor(m => m.RememberMe)
+                                @Html.LabelFor(m => m.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-success">Log In</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <p class="text-warning">
+                            @Html.ValidationSummary(true, "Authentication Failed", new { @class = "text-danger" })
+                        </p>
+                    </div>
+                </div>
+            }
+            @Html.Action("ExternalLoginsList")
+        </div>
+    </div>
+</div>
