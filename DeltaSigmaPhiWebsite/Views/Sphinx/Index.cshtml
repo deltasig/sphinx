@@ -1,0 +1,386 @@
+﻿@model DeltaSigmaPhiWebsite.Models.SphinxModel
+
+@{
+    ViewBag.Title = "Sphinx";
+}
+
+@{const int descriptionLength = 25;}
+
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-4">
+                @if (Model.ProfilePicUrl != String.Empty)
+                {
+                    <h1>
+                        <img src="@Model.ProfilePicUrl" alt="fb pic" class="img-thumbnail">
+                        @Model.MemberInfo.FirstName @Model.MemberInfo.LastName
+                    </h1>
+                }
+                else
+                {
+                    <h1>
+                        @Model.MemberInfo.FirstName @Model.MemberInfo.LastName
+                    </h1>
+                }
+            </div>
+            <div class="col-md-8 text-right">
+                <h1>@ViewBag.Title</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <a href="@Url.Action("SubmitStudy", "Sphinx")" id="study-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required study hours for this week.">
+                        <span class="badge">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                            @Model.RemainingStudyHours
+                        </span>
+                        <span>Study</span>
+                    </a>
+                    <a href="@Url.Action("SubmitService", "Sphinx")" id="service-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required service hours for this semester.">
+                        <span class="badge">
+                            <span class="glyphicon glyphicon-plus"></span>
+                            @Model.RemainingCommunityServiceHours
+                        </span>
+                        <span>Serve</span>
+                    </a>
+                    <p class="text-warning">@ViewBag.FailMessage</p>
+                </div>
+            </div>
+
+            <!-- Chores Section -->
+            <div class="row-fluid">
+                <h3>Yours Chores <small>this week</small></h3>
+                @if (Model.AllChores == null || Model.AllChores.AllUsersChores.FirstOrDefault() == null)
+                {
+                    <h6>All Chores have been completed!</h6>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Complete By</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @{var count = 0;}
+                        @foreach (var chore in Model.AllChores.AllUsersChores)
+                        {
+                            count++;
+                            var collapseName = "collape" + count.ToString();
+                            <tr>
+                                <td><div>@chore.Name</div></td>
+                                <td><div>@chore.Type</div></td>
+                                <td><div>@chore.CompletedBy.DayOfWeek</div></td>
+                                @if (chore.Description.Length > descriptionLength)
+                                {
+                                    <td><div>@(chore.Description.Substring(0, descriptionLength))... &nbsp; </div></td>
+                                }
+                                else
+                                {
+                                    <td><div>@(chore.Description) &nbsp;</div></td>
+                                }
+
+                                @if (chore.Status)
+                                {
+                                    <td class="text-success">Done</td>
+                                }
+                                else
+                                {
+                                    <td class="text-danger">Unsatisfactory</td>
+                                }
+                                @*uncollapse the directions row*@
+                                <td>
+                                    <button type="button" class="btn btn-xs btn-link" data-toggle="collapse" data-target=".@collapseName">Details</button>
+                                </td>
+
+                            </tr>
+                            if (chore.Description.Length > descriptionLength)
+                            {
+                                <tr class="@collapseName collapse out">
+                                    <td></td>
+                                    <td><div><strong>Description</strong></div></td>
+                                    <td colspan="4"><div>@chore.Description</div></td>
+                                </tr>
+                            }
+                            <tr class="@collapseName collapse out">
+                                <td></td>
+                                <td><div><strong>Directions</strong></div></td>
+                                <td colspan="4"><div>@chore.Directions</div></td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+            <!-- Study Hours Section -->
+            <!-- Service Hours Sections-->
+            <div class="row-fluid">
+                <h3>Your Service Hours <small>this semester</small></h3>
+                @if (Model.SoberSignedUp.Count == 0)
+                {
+                    <div class="alert alert-warning">
+                        You haven't signed up to sober drive!  <a href="@Url.Action("SoberSchedule", "Sphinx")">Sign up</a>
+                    </div>
+                }
+                @if (!Model.ServiceModel.CompletedEvents.Any() && !Model.SoberSignedUp.Any())
+                {
+                    <p>No service hours submitted</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Hours</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        @foreach (var submission in Model.ServiceModel.CompletedEvents)
+                        {
+                            <tr>
+                                <td>@submission.EventName</td>
+                                <td>@submission.HoursComplete Hours</td>
+                                @if (submission.Approval)
+                                {
+                                    <td class="text-success">Approved</td>
+                                }
+                                else
+                                {
+                                    <td class="text-warning">Disapproved</td>
+                                }
+                            </tr>
+                        }
+                        @foreach (var item in Model.SoberSignedUp)
+                        {
+                            <tr>
+                                <td>
+                                    Sober @item.SoberType on @item.Shift.ToShortDateString()
+                                </td>
+                                @if (@item.SoberType == "Driver")
+                                {
+                                    <td>5 Hours</td>
+                                }
+                                else
+                                {
+                                    <td>n/a</td>
+                                }
+                                @if (item.Shift < DateTime.Now)
+                                {
+                                    <td class="text-success">Completed</td>
+                                }
+                                else
+                                {
+                                    <td class="text-warning">Pending</td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+            <div class="row-fluid">
+                <h3>Your Study Hours <small>this week</small></h3>
+                @if (!Model.StudyHours.Any())
+                {
+                    <p>You haven't turned in any study hours yet for approval. >:O</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Date &amp; Time</th>
+                                <th>IsProctored</th>
+                                <th>IsApproved</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        @foreach (var studyHour in Model.StudyHours)
+                        {
+                            <tr>
+                                <td>@studyHour.DateTimeStudied</td>
+                                <td>@studyHour.IsProctored</td>
+                                <td>@studyHour.IsApproved</td>
+                                <td>@studyHour.DurationHours</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+            <div class="row-fluid">
+                <h3>Pending Study Hours <small>this week</small></h3>
+                @if (!Model.StudyApproval.Any())
+                {
+                    <p>No one has requested any approvals from you. :'(</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Submitted by</th>
+                                <th>Date &amp; time</th>
+                                <th>Hours</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        @foreach (var studyApproval in Model.StudyApproval)
+                        {
+                            <tr>
+                                <td>@studyApproval.Member.FirstName @studyApproval.Member.LastName</td>
+                                <td>@studyApproval.DateTimeStudied</td>
+                                <td>@studyApproval.DurationHours</td>
+                                <td>@studyApproval.IsApproved</td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="well">
+                <h3 style="margin-top: 0;">Sober Driver(s)</h3>
+                <table class="table table-condensed table-striped table-responsive">
+                    @foreach (var item in Model.FullSoberSchedule.Where(item => item.SoberType == "Driver"))
+                    {
+                        <tr>
+                            <td>
+                                @item.Shift.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.Shift.DayOfWeek
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <h3 style="margin-top: 0;">Sober Officers(s)</h3>
+                <table class="table table-condensed">
+                    @foreach (var item in Model.FullSoberSchedule.Where(item => item.SoberType == "Officer"))
+                    {
+                        <tr>
+                            <td>
+                                @item.Shift.ToShortDateString()
+                            </td>
+                            <td>
+                                @item.Shift.DayOfWeek
+                            </td>
+                            <td>
+                                @item.Name
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <h3 style="margin-top: 0;">Laundry</h3>
+                <p>
+                    @Model.LaundrySummary
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="service-dialog" style="display: none"></div>
+<div id="study-dialog" style="display: none"></div>
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery-2.1.0.min.js")
+    @Scripts.Render("~/Scripts/jquery-ui-1.10.4.min.js")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var url = "";
+
+            // Defines the service dialog and binds it to an element in the html with the corresponding "id"
+            $("#service-dialog").dialog({
+                autoOpen: false,
+                closeOnEscape: true,
+                resizable: false,
+                position: ["left", 50],
+                width: 350,
+                show: { effect: "slide", direction: "left" },
+                hide: { effect: "slide", direction: "left" },
+                modal: true,
+                draggable: false,
+                open: function () {
+                    $(".ui-dialog-titlebar").hide();
+                    $(this).load(url, function () {
+                        $("#service-close-button").on("click", function (e) {
+                            $("#service-dialog").dialog("close");
+                        });
+                    });
+                }
+            });
+
+            // Handles the click of the "Serve" link (appears as a button)
+            $("#service-dialog-link").on("click", function (e) {
+                // Required to bind button click to this action
+                e.preventDefault();
+                // Sets the url to the view we want to load into the dialog
+                url = $(this).attr("href");
+                // Determine current visibility of dialogs and handle it for proper display
+                if ($("#service-dialog").dialog("isOpen")) {
+                    $("#service-dialog").dialog("close");
+                } else if ($("#study-dialog").dialog("isOpen")) {
+                    $("#study-dialog").dialog("close");
+                    $("#service-dialog").dialog("open");
+                } else {
+                    $("#service-dialog").dialog("open");
+                }
+            });
+
+
+            // Defines the study dialog and binds it to an element in the html with the corresponding "id"
+            $("#study-dialog").dialog({
+                autoOpen: false,
+                closeOnEscape: true,
+                resizable: false,
+                position: ["left", 50],
+                width: 350,
+                show: { effect: "slide", direction: "left" },
+                hide: { effect: "slide", direction: "left" },
+                modal: true,
+                draggable: false,
+                open: function () {
+                    $(".ui-dialog-titlebar").hide();
+                    $(this).load(url, function () {
+                        $("#study-close-button").on("click", function (e) {
+                            $("#study-dialog").dialog("close");
+                        });
+                        $("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
+                    });
+                }
+            });
+
+            // Handles the click of the "Study" link (appears as a button)
+            $("#study-dialog-link").on("click", function (e) {
+                // Required to bind button click to this action
+                e.preventDefault();
+                // Sets the url to the view we want to load into the dialog
+                url = $(this).attr("href");
+                // Determine current visibility of dialogs and handle it for proper display
+                if ($("#study-dialog").dialog("isOpen")) {
+                    $("#study-dialog").dialog("close");
+                } else if ($("#service-dialog").dialog("isOpen")) {
+                    $("#service-dialog").dialog("close");
+                    $("#study-dialog").dialog("open");
+                } else {
+                    $("#study-dialog").dialog("open");
+                }
+            });
+        });
+
+    </script>
+}

@@ -1,0 +1,55 @@
+﻿<div class="navbar navbar-default" style="margin-bottom: 0">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="@Url.Action("Index", "Home")">
+                <img src="~/Images/MobileTouch-57x57.png" width="40" height="40" alt="Edit" style="margin-right: 15px" />
+            </a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav" id="menu">
+                <li class="@(ViewContext.RouteData.Values.ContainsValue("HowToJoin") ? "active" : "")">@Html.ActionLink("How To Join", "HowToJoin", "Home")</li>
+                <li><a href="http://www.deltasigrollaalumni.com/">Alumni</a></li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sponsored Programs <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Scholarships</li>
+                        <li>@Html.ActionLink("Building Better Men", "BuildingBetterMenScholarship", "Home")</li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Programs</li>
+                        <li><a href="#">Professional Development Program</a></li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="dropdown-header">Facts</li>
+                        <li>@Html.ActionLink("Academics", "Academics", "Home")</li>
+                        <li><a href="#">Accomplishments</a></li>
+                        <li><a href="#">Involvements</a></li>
+                        <li class="divider"></li>
+                        <li class="dropdown-header">Leadership</li>
+                        <li>@Html.ActionLink("Chairmen", "Chairmen", "Home")</li>
+                        <li>@Html.ActionLink("Officers", "Officers", "Home")</li>
+                    </ul>
+                </li>
+                <li class="@(ViewContext.RouteData.Values.ContainsValue("Contact") ? "active" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="http://www.mst.edu">Missouri S&amp;T</a></li>
+                        <li><a href="http://www.deltasig.org">Delta Sig Nationals</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <div id="login">
+                @Html.Partial("_LoginPartial")
+            </div>
+        </div>
+    </div>
+</div>

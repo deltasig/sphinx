@@ -1,0 +1,94 @@
+﻿@model DeltaSigmaPhiWebsite.Models.AccountInformationModel
+@{
+    ViewBag.Title = "Account";
+}
+
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title <small>@ViewBag.StatusMessage</small></h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Member Information</div>
+                <div class="panel-body">
+                    <div class="media">
+                        @if (Model.ProfilePicUrl != String.Empty)
+                        {
+                            <img src="@Model.ProfilePicUrl" alt="fb pic" class="img-thumbnail pull-left" />
+                        }
+                        <div class="media-body">
+                            <h4 class="media-heading">@Model.MemberInfo.FirstName @Model.MemberInfo.LastName</h4>
+                            <table class="table table-condensed table-hover">
+                                <tr>
+                                    <td>User Name</td>
+                                    <td>@Model.MemberInfo.UserName</td>
+                                </tr>
+                                <tr>
+                                    <td>Nickname</td>
+                                    <td>@Model.MemberInfo.Nickname</td>
+                                </tr>
+                                <tr>
+                                    <td>Email</td>
+                                    <td>@Model.MemberInfo.Email</td>
+                                </tr>
+                                <tr>
+                                    <td>Pin</td>
+                                    <td>@Model.MemberInfo.Pin</td>
+                                </tr>
+                                <tr>
+                                    <td>Room</td>
+                                    <td>@Model.MemberInfo.Room</td>
+                                </tr>
+                                <tr>
+                                    <td>Status</td>
+                                    <td>@Model.MemberInfo.MemberStatus.StatusName</td>
+                                </tr>
+                                <tr>
+                                    <td>Pledge Class</td>
+                                    <td>@Model.MemberInfo.PledgeClass</td>
+                                </tr>
+                                <tr>
+                                    <td>Graduating</td>
+                                    <td>@Model.MemberInfo.Semester</td>
+                                </tr>
+                                <tr>
+                                    <td>Big Bro</td>
+                                    <td>@Model.MemberInfo.BigBrother</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Stats</div>
+                <div class="panel-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
+    @{
+        Html.RenderPartial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel);
+    }
+    <div class="panel panel-default">
+        <div class="panel-heading">External Authentication</div>
+        <div class="panel-body">
+            @Html.Action("RemoveExternalLogins")
+            @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+        </div>
+    </div>
+
+</div>

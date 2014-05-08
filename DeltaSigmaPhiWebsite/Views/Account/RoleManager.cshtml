@@ -1,0 +1,26 @@
+﻿@model DeltaSigmaPhiWebsite.Models.RoleManagerModel
+@{
+    ViewBag.Title = "Role Manager";
+}
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-6">
+                <h1>@ViewBag.Title </h1>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <p class="text-success">@ViewBag.SuccessMessage</p>
+    <p class="text-warning">@ViewBag.FailMessage</p>
+</div>
+<div class="container">
+    @{ Html.RenderPartial("_RoleAssignmentPartial", Model.AssignModel); }
+    <br />
+    @{ Html.RenderPartial("_RoleUnassignmentPartial", Model.UnassignModel); }
+    <br />
+    @{ Html.RenderPartial("_CreateRolePartial", Model.CreateModel); }
+    <br />
+    @{ Html.RenderPartial("_DeleteRolePartial", Model.DeleteModel); }
+</div>

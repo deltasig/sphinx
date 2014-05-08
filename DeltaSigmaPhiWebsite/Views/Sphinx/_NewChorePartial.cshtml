@@ -1,0 +1,184 @@
+﻿@model DeltaSigmaPhiWebsite.Models.MyChoreModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <div class="col-md-10">
+                Create/Assign Chore
+            </div>
+        </div>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("addChore", "Sphinx", FormMethod.Post, new { role = "form" }))
+        {
+            //Required for everything
+            <div class="form-group">
+                @Html.LabelFor(model => model.ChoreName)
+                <div>@Html.ValidationMessageFor(model => model.ChoreName, "", new { @class = "text-danger" })</div>
+                @Html.EditorFor(model => model.ChoreName, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Description)
+                <div>@Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })</div>
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.Direction)
+                <div>@Html.ValidationMessageFor(model => model.Direction, "", new { @class = "text-danger" })</div>
+                @Html.EditorFor(model => model.Direction, new { htmlAttributes = new { @class = "form-control " } })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ChoreTypes)
+                <div>@Html.ValidationMessageFor(model => model.selectedChoreType, "", new { @class = "text-danger" })</div>
+                @Html.DropDownListFor(m => m.selectedChoreType, Model.ChoreTypes, "---Choose Chore Type---", new { onChange = "changeChoreType();", @class = "form-control" })
+            </div>
+            
+            <div class="kitchen punishment house hidden">
+                @Html.LabelFor(model => model.CompletedBy)
+                <div>@Html.ValidationMessageFor(model => model.CompletedBy, "", new { @class = "text-danger" })</div>
+                @Html.EditorFor(model => model.CompletedBy, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+            
+            <div class="punishment hidden">
+                @Html.LabelFor(model => model.ChoreClasses)
+                <div>@Html.ValidationMessageFor(model => model.selectedChoreClass, "", new { @class = "text-danger" })</div>
+                @Html.DropDownListFor(m => m.selectedChoreClass, Model.ChoreClasses, "---Choose Chore Class---", new { @class = "form-control" })
+            </div>
+            
+            <div class="kitchen punishment house hidden">
+                @Html.LabelFor(model => model.AssignedToChore)
+                <div>@Html.ValidationMessageFor(model => model.AssignedToChore, "", new { @class = "text-danger" })</div>
+                @Html.ListBoxFor(m => m.AssignedToChore, Model.AllMemebers, new { @class = "form-control", @multiple = "multiple" })
+            </div>
+
+            <div class="weekly hidden">
+                <div>
+                    Days due
+                </div>
+                <div>@Html.ValidationMessageFor(model => model.OnSunday, "", new { @class = "text-danger" })</div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnSunday)
+                    @Html.CheckBoxFor(model => model.OnSunday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnMonday)
+                    @Html.CheckBoxFor(model => model.OnMonday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnTuesday)
+                    @Html.CheckBoxFor(model => model.OnTuesday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnWednesday)
+                    @Html.CheckBoxFor(model => model.OnWednesday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnThursday)
+                    @Html.CheckBoxFor(model => model.OnThursday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnFriday)
+                    @Html.CheckBoxFor(model => model.OnFriday, new { @class = "text-danger" })
+                </div>
+                <div class="checkbox">
+                    @Html.LabelFor(model => model.OnSaturday)
+                    @Html.CheckBoxFor(model => model.OnSaturday, new { @class = "text-danger" })
+                </div>
+            </div>
+            
+            @Html.HiddenFor(model => model.selectedChoreClass, new { id = "choreClass"})
+
+            <button type="submit" class="btn btn-success btn-sm btn-block">Submit</button>
+        }
+        </div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+<script type="text/javascript">
+    function changeChoreType() {
+        if ($('#selectedChoreType').val() == 0) {
+            //hide everything
+            $('.weekly').removeClass('show');
+            $('.weekly').addClass('hidden');
+            $('.kitchen').removeClass('show');
+            $('.kitchen').addClass('hidden');
+            $('.punishment').removeClass('show');
+            $('.punishment').addClass('hidden');
+            $('.house').removeClass('show');
+            $('.house').addClass('hidden');
+
+            $('#selectedChoreClass').val(null);
+        }
+            //House Cleaning
+        else if ($('#selectedChoreType').val() == 1) {
+            //hide everything not needed by House Cleaning
+            $('.weekly').removeClass('show');
+            $('.weekly').addClass('hidden');
+            $('.punishment').removeClass('show');
+            $('.punishment').addClass('hidden');
+            $('.kitchen').removeClass('show');
+            $('.kitchen').addClass('hidden');
+            //unhide everything needed by House Cleaning
+            $('.house').removeClass('hidden');
+            $('.house').addClass('show');
+            
+            $('#selectedChoreClass').val(1);
+        }
+            //Punishment
+        else if ($('#selectedChoreType').val() == 2) {
+            //hide everything not needed by Punishment
+            $('.weekly').removeClass('show');
+            $('.weekly').addClass('hidden');
+            $('.house').removeClass('show');
+            $('.house').addClass('hidden');
+            $('.kitchen').removeClass('show');
+            $('.kitchen').addClass('hidden');
+            //unhide everything needed by Punishment
+            $('.punishment').removeClass('hidden');
+            $('.punishment').addClass('show');
+
+            //if we set to punishment, but the class is set to general
+            //then clear the class            
+            if ($('#selectedChoreClass').val() == 1 || $('#selectedChoreClass').val() == null)
+            {
+                $('#selectedChoreClass').val(2);
+            }
+        }
+            //Kitchen
+        else if ($('#selectedChoreType').val() == 3) {
+            //hide everything not needed by Kitchen
+            $('.weekly').removeClass('show');
+            $('.weekly').addClass('hidden');
+            $('.house').removeClass('show');
+            $('.house').addClass('hidden');
+            $('.punishment').removeClass('show');
+            $('.punishment').addClass('hidden');
+            //unhide everything needed by Kitchen
+            $('.kitchen').removeClass('hidden');
+            $('.kitchen').addClass('show');
+
+            $('#selectedChoreClass').val(1);
+        }
+            //Weekly
+        else if ($('#selectedChoreType').val() == 4) {
+            //hide everything not needed by Weekly
+            $('.punishment').removeClass('show');
+            $('.punishment').addClass('hidden');
+            $('.house').removeClass('show');
+            $('.house').addClass('hidden');
+            $('.kitchen').removeClass('show');
+            $('.kitchen').addClass('hidden');
+            //unhide everything needed by Weekly
+            $('.weekly').removeClass('hidden');
+            $('.weekly').addClass('show');
+
+            $('#selectedChoreClass').val(1);
+        }
+        return false;
+    }
+
+    $(document).ready(function()
+    {
+        changeChoreType();
+    })
+</script>

@@ -1,0 +1,1132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Addresses">
+    <Key>
+      <PropertyRef Name="AddressId" />
+    </Key>
+    <Property Name="AddressId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="Address1" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="Address2" Type="nvarchar" MaxLength="100" />
+    <Property Name="City" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="State" Type="nvarchar" MaxLength="2" Nullable="false" />
+    <Property Name="PostalCode" Type="int" Nullable="false" />
+    <Property Name="Country" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="ChoreAssignments">
+    <Key>
+      <PropertyRef Name="ChoreId" />
+      <PropertyRef Name="ChoreGroupId" />
+    </Key>
+    <Property Name="ChoreId" Type="int" Nullable="false" />
+    <Property Name="ChoreGroupId" Type="int" Nullable="false" />
+    <Property Name="DateTimeIssued" Type="datetime" Nullable="false" />
+    <Property Name="DateTimeCompleted" Type="datetime" />
+    <Property Name="IsSatisfactory" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChoreClasses">
+    <Key>
+      <PropertyRef Name="ChoreClassId" />
+    </Key>
+    <Property Name="ChoreClassId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChoreClassName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChoreGroupAssignments">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="ChoreGroupId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="ChoreGroupId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChoreGroups">
+    <Key>
+      <PropertyRef Name="ChoreGroupId" />
+    </Key>
+    <Property Name="ChoreGroupId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SemesterId" Type="int" Nullable="false" />
+    <Property Name="ChoreGroupTypeId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ChoreGroupTypes">
+    <Key>
+      <PropertyRef Name="ChoreGroupTypeId" />
+    </Key>
+    <Property Name="ChoreGroupTypeId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChoreType" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Chores">
+    <Key>
+      <PropertyRef Name="ChoreId" />
+    </Key>
+    <Property Name="ChoreId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ChoreClassId" Type="int" />
+    <Property Name="ChoreName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="100" />
+    <Property Name="Directions" Type="nvarchar(max)" />
+    <Property Name="OnSunday" Type="bit" />
+    <Property Name="OnMonday" Type="bit" />
+    <Property Name="OnTuesday" Type="bit" />
+    <Property Name="OnWednesday" Type="bit" />
+    <Property Name="OnThursday" Type="bit" />
+    <Property Name="OnFriday" Type="bit" />
+    <Property Name="OnSaturday" Type="bit" />
+  </EntityType>
+  <EntityType Name="Classes">
+    <Key>
+      <PropertyRef Name="ClassId" />
+    </Key>
+    <Property Name="ClassId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DepartmentId" Type="int" Nullable="false" />
+    <Property Name="CourseNumber" Type="int" Nullable="false" />
+    <Property Name="CourseName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ClassesTaken">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="ClassId" />
+      <PropertyRef Name="SemesterId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="ClassId" Type="int" Nullable="false" />
+    <Property Name="SemesterId" Type="int" Nullable="false" />
+    <Property Name="MidtermGrade" Type="char" MaxLength="1" />
+    <Property Name="FinalGrade" Type="char" MaxLength="1" />
+    <Property Name="Dropped" Type="bit" />
+  </EntityType>
+  <EntityType Name="ClassesTaught">
+    <Key>
+      <PropertyRef Name="ClassId" />
+      <PropertyRef Name="InstructorId" />
+    </Key>
+    <Property Name="ClassId" Type="int" Nullable="false" />
+    <Property Name="InstructorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CommitteeMembers">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="LeaderId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="LeaderId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Departments">
+    <Key>
+      <PropertyRef Name="DepartmentId" />
+    </Key>
+    <Property Name="DepartmentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DepartmentName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Events">
+    <Key>
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DateTimeOccurred" Type="datetime" Nullable="false" />
+    <Property Name="EventName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DurationHours" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IncidentInvolvement">
+    <Key>
+      <PropertyRef Name="IncidentId" />
+    </Key>
+    <Property Name="IncidentId" Type="int" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IncidentReports">
+    <Key>
+      <PropertyRef Name="IncidentId" />
+    </Key>
+    <Property Name="IncidentId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DateTimeSubmitted" Type="datetime" Nullable="false" />
+    <Property Name="ReportedBy" Type="int" Nullable="false" />
+    <Property Name="DateTimeOfIncident" Type="datetime" Nullable="false" />
+    <Property Name="BehaviorsWitnessed" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="PolicyBroken" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="DateOfHearing" Type="datetime" />
+    <Property Name="DecisionRendered" Type="nvarchar(max)" />
+  </EntityType>
+  <EntityType Name="Instructors">
+    <Key>
+      <PropertyRef Name="InstructorId" />
+    </Key>
+    <Property Name="InstructorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Prefix" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="LaundrySignup">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DateTimeShift" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DateTimeShift" Type="datetime" Nullable="false" />
+    <Property Name="DateTimeSignedUp" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Leaders">
+    <Key>
+      <PropertyRef Name="LeaderId" />
+    </Key>
+    <Property Name="LeaderId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="PositionId" Type="int" Nullable="false" />
+    <Property Name="SemesterId" Type="int" Nullable="false" />
+    <Property Name="RemainingBudgetBalance" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Majors">
+    <Key>
+      <PropertyRef Name="MajorId" />
+    </Key>
+    <Property Name="MajorId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DepartmentId" Type="int" Nullable="false" />
+    <Property Name="MajorName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="MemberMajors">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="MajorId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="MajorId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Members">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserName" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="FirstName" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Nickname" Type="nvarchar" MaxLength="50" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Pin" Type="int" />
+    <Property Name="Room" Type="int" />
+    <Property Name="PreviousSemesterGPA" Type="float" />
+    <Property Name="CumulativeGPA" Type="float" />
+    <Property Name="RemainingBalance" Type="float" />
+    <Property Name="StatusId" Type="int" />
+    <Property Name="PledgeClassId" Type="int" />
+    <Property Name="ExpectedGraduationId" Type="int" />
+    <Property Name="BigBroId" Type="int" />
+  </EntityType>
+  <EntityType Name="MemberStatus">
+    <Key>
+      <PropertyRef Name="StatusId" />
+    </Key>
+    <Property Name="StatusId" Type="int" Nullable="false" />
+    <Property Name="StatusName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrganizationPositions">
+    <Key>
+      <PropertyRef Name="OrganizationPositionId" />
+    </Key>
+    <Property Name="OrganizationPositionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrganizationId" Type="int" Nullable="false" />
+    <Property Name="PositionName" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Organizations">
+    <Key>
+      <PropertyRef Name="OrganizationId" />
+    </Key>
+    <Property Name="OrganizationId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OrganizationName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="OrganizationsJoined">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="OrganizationId" />
+      <PropertyRef Name="SemesterId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="OrganizationId" Type="int" Nullable="false" />
+    <Property Name="SemesterId" Type="int" Nullable="false" />
+    <Property Name="OrganizationPositionId" Type="int" />
+  </EntityType>
+  <EntityType Name="PhoneNumbers">
+    <Key>
+      <PropertyRef Name="PhoneNumberId" />
+    </Key>
+    <Property Name="PhoneNumberId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="PhoneNumber" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PledgeClasses">
+    <Key>
+      <PropertyRef Name="PledgeClassId" />
+    </Key>
+    <Property Name="PledgeClassId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SemesterId" Type="int" Nullable="false" />
+    <Property Name="PledgeClassName" Type="nvarchar" MaxLength="100" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Positions">
+    <Key>
+      <PropertyRef Name="PositionId" />
+    </Key>
+    <Property Name="PositionId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PositionName" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsExecutive" Type="bit" />
+    <Property Name="IsElected" Type="bit" />
+  </EntityType>
+  <EntityType Name="Semesters">
+    <Key>
+      <PropertyRef Name="SemesterId" />
+    </Key>
+    <Property Name="SemesterId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Year" Type="int" Nullable="false" />
+    <Property Name="Term" Type="nvarchar" MaxLength="10" Nullable="false" />
+    <Property Name="DateStart" Type="date" />
+    <Property Name="DateEnd" Type="date" />
+  </EntityType>
+  <EntityType Name="ServiceHours">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="EventId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="EventId" Type="int" Nullable="false" />
+    <Property Name="DurationHours" Type="float" Nullable="false" />
+    <Property Name="DateTimeSubmitted" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SoberDriverSignup">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DateTimeShift" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DateTimeShift" Type="datetime" Nullable="false" />
+    <Property Name="DateTimeSignedUp" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SoberOfficerSignup">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DateTimeShift" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DateTimeShift" Type="datetime" Nullable="false" />
+    <Property Name="DateTimeSignedUp" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StudyHours">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="DateTimeStudied" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="DateTimeStudied" Type="datetime" Nullable="false" />
+    <Property Name="DurationHours" Type="float" Nullable="false" />
+    <Property Name="DateTimeSubmitted" Type="datetime" Nullable="false" />
+    <Property Name="DesignatedApprover" Type="int" />
+    <Property Name="IsApproved" Type="bit" />
+    <Property Name="DateTimeApproved" Type="datetime" />
+    <Property Name="IsProctored" Type="bit" />
+  </EntityType>
+  <EntityType Name="sysdiagrams">
+    <Key>
+      <PropertyRef Name="diagram_id" />
+    </Key>
+    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="principal_id" Type="int" Nullable="false" />
+    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="version" Type="int" />
+    <Property Name="definition" Type="varbinary(max)" />
+  </EntityType>
+  <EntityType Name="webpages_Membership">
+    <Key>
+      <PropertyRef Name="UserId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="CreateDate" Type="datetime" />
+    <Property Name="ConfirmationToken" Type="nvarchar" MaxLength="128" />
+    <Property Name="IsConfirmed" Type="bit" />
+    <Property Name="LastPasswordFailureDate" Type="datetime" />
+    <Property Name="PasswordFailuresSinceLastSuccess" Type="int" Nullable="false" />
+    <Property Name="Password" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="PasswordChangedDate" Type="datetime" />
+    <Property Name="PasswordSalt" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="PasswordVerificationToken" Type="nvarchar" MaxLength="128" />
+    <Property Name="PasswordVerificationTokenExpirationDate" Type="datetime" />
+  </EntityType>
+  <EntityType Name="webpages_OAuthMembership">
+    <Key>
+      <PropertyRef Name="Provider" />
+      <PropertyRef Name="ProviderUserId" />
+    </Key>
+    <Property Name="Provider" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="ProviderUserId" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="UserId" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="webpages_Roles">
+    <Key>
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="RoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RoleName" Type="nvarchar" MaxLength="256" Nullable="false" />
+  </EntityType>
+  <EntityType Name="webpages_UsersInRoles">
+    <Key>
+      <PropertyRef Name="UserId" />
+      <PropertyRef Name="RoleId" />
+    </Key>
+    <Property Name="UserId" Type="int" Nullable="false" />
+    <Property Name="RoleId" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Addresses_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="Addresses" Type="Self.Addresses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Addresses">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BigBroId">
+    <End Role="Members" Type="Self.Members" Multiplicity="0..1" />
+    <End Role="Members1" Type="Self.Members" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Members1">
+        <PropertyRef Name="BigBroId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreAssignments_ChoreGroups">
+    <End Role="ChoreGroups" Type="Self.ChoreGroups" Multiplicity="1" />
+    <End Role="ChoreAssignments" Type="Self.ChoreAssignments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ChoreGroups">
+        <PropertyRef Name="ChoreGroupId" />
+      </Principal>
+      <Dependent Role="ChoreAssignments">
+        <PropertyRef Name="ChoreGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreAssignments_Chores">
+    <End Role="Chores" Type="Self.Chores" Multiplicity="1" />
+    <End Role="ChoreAssignments" Type="Self.ChoreAssignments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Chores">
+        <PropertyRef Name="ChoreId" />
+      </Principal>
+      <Dependent Role="ChoreAssignments">
+        <PropertyRef Name="ChoreId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreGroupAssignments_ChoreGroups">
+    <End Role="ChoreGroups" Type="Self.ChoreGroups" Multiplicity="1" />
+    <End Role="ChoreGroupAssignments" Type="Self.ChoreGroupAssignments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ChoreGroups">
+        <PropertyRef Name="ChoreGroupId" />
+      </Principal>
+      <Dependent Role="ChoreGroupAssignments">
+        <PropertyRef Name="ChoreGroupId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreGroupAssignments_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="ChoreGroupAssignments" Type="Self.ChoreGroupAssignments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="ChoreGroupAssignments">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreGroups_ChoreGroupTypes">
+    <End Role="ChoreGroupTypes" Type="Self.ChoreGroupTypes" Multiplicity="1" />
+    <End Role="ChoreGroups" Type="Self.ChoreGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ChoreGroupTypes">
+        <PropertyRef Name="ChoreGroupTypeId" />
+      </Principal>
+      <Dependent Role="ChoreGroups">
+        <PropertyRef Name="ChoreGroupTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ChoreGroups_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+    <End Role="ChoreGroups" Type="Self.ChoreGroups" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="ChoreGroups">
+        <PropertyRef Name="SemesterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Chores_ChoreClasses">
+    <End Role="ChoreClasses" Type="Self.ChoreClasses" Multiplicity="0..1" />
+    <End Role="Chores" Type="Self.Chores" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ChoreClasses">
+        <PropertyRef Name="ChoreClassId" />
+      </Principal>
+      <Dependent Role="Chores">
+        <PropertyRef Name="ChoreClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CommitteeMembers_Leaders">
+    <End Role="Leaders" Type="Self.Leaders" Multiplicity="1" />
+    <End Role="CommitteeMembers" Type="Self.CommitteeMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Leaders">
+        <PropertyRef Name="LeaderId" />
+      </Principal>
+      <Dependent Role="CommitteeMembers">
+        <PropertyRef Name="LeaderId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CommitteeMembers_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="CommitteeMembers" Type="Self.CommitteeMembers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="CommitteeMembers">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoursesTaken_Courses">
+    <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
+    <End Role="ClassesTaken" Type="Self.ClassesTaken" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Classes">
+        <PropertyRef Name="ClassId" />
+      </Principal>
+      <Dependent Role="ClassesTaken">
+        <PropertyRef Name="ClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoursesTaken_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+    <End Role="ClassesTaken" Type="Self.ClassesTaken" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="ClassesTaken">
+        <PropertyRef Name="SemesterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoursesTaken_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="ClassesTaken" Type="Self.ClassesTaken" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="ClassesTaken">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoursesTaught_Courses">
+    <End Role="Classes" Type="Self.Classes" Multiplicity="1" />
+    <End Role="ClassesTaught" Type="Self.ClassesTaught" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Classes">
+        <PropertyRef Name="ClassId" />
+      </Principal>
+      <Dependent Role="ClassesTaught">
+        <PropertyRef Name="ClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CoursesTaught_Instructors">
+    <End Role="Instructors" Type="Self.Instructors" Multiplicity="1" />
+    <End Role="ClassesTaught" Type="Self.ClassesTaught" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Instructors">
+        <PropertyRef Name="InstructorId" />
+      </Principal>
+      <Dependent Role="ClassesTaught">
+        <PropertyRef Name="InstructorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IncidentInvolvement_IncidentReports">
+    <End Role="IncidentReports" Type="Self.IncidentReports" Multiplicity="1" />
+    <End Role="IncidentInvolvement" Type="Self.IncidentInvolvement" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="IncidentReports">
+        <PropertyRef Name="IncidentId" />
+      </Principal>
+      <Dependent Role="IncidentInvolvement">
+        <PropertyRef Name="IncidentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IncidentInvolvement_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="IncidentInvolvement" Type="Self.IncidentInvolvement" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="IncidentInvolvement">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_IncidentReports_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="IncidentReports" Type="Self.IncidentReports" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="IncidentReports">
+        <PropertyRef Name="ReportedBy" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_LaundrySignup_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="LaundrySignup" Type="Self.LaundrySignup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="LaundrySignup">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Leaders_Positions">
+    <End Role="Positions" Type="Self.Positions" Multiplicity="1" />
+    <End Role="Leaders" Type="Self.Leaders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Positions">
+        <PropertyRef Name="PositionId" />
+      </Principal>
+      <Dependent Role="Leaders">
+        <PropertyRef Name="PositionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Leaders_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+    <End Role="Leaders" Type="Self.Leaders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="Leaders">
+        <PropertyRef Name="SemesterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Leaders_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="Leaders" Type="Self.Leaders" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="Leaders">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Majors_Departments">
+    <End Role="Departments" Type="Self.Departments" Multiplicity="1" />
+    <End Role="Majors" Type="Self.Majors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Departments">
+        <PropertyRef Name="DepartmentId" />
+      </Principal>
+      <Dependent Role="Majors">
+        <PropertyRef Name="DepartmentId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberMajors_MemberMajors">
+    <End Role="Majors" Type="Self.Majors" Multiplicity="1" />
+    <End Role="MemberMajors" Type="Self.MemberMajors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Majors">
+        <PropertyRef Name="MajorId" />
+      </Principal>
+      <Dependent Role="MemberMajors">
+        <PropertyRef Name="MajorId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberMajors_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="MemberMajors" Type="Self.MemberMajors" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="MemberMajors">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_MemberStatus">
+    <End Role="MemberStatus" Type="Self.MemberStatus" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="MemberStatus">
+        <PropertyRef Name="StatusId" />
+      </Principal>
+      <Dependent Role="Members">
+        <PropertyRef Name="StatusId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrganizationPositions_Organizations">
+    <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+    <End Role="OrganizationPositions" Type="Self.OrganizationPositions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Organizations">
+        <PropertyRef Name="OrganizationId" />
+      </Principal>
+      <Dependent Role="OrganizationPositions">
+        <PropertyRef Name="OrganizationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrganizationsJoined_OrganizationPositions">
+    <End Role="OrganizationPositions" Type="Self.OrganizationPositions" Multiplicity="0..1" />
+    <End Role="OrganizationsJoined" Type="Self.OrganizationsJoined" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="OrganizationPositions">
+        <PropertyRef Name="OrganizationPositionId" />
+      </Principal>
+      <Dependent Role="OrganizationsJoined">
+        <PropertyRef Name="OrganizationPositionId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrganizationsJoined_Organizations">
+    <End Role="Organizations" Type="Self.Organizations" Multiplicity="1" />
+    <End Role="OrganizationsJoined" Type="Self.OrganizationsJoined" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Organizations">
+        <PropertyRef Name="OrganizationId" />
+      </Principal>
+      <Dependent Role="OrganizationsJoined">
+        <PropertyRef Name="OrganizationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrganizationsJoined_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+    <End Role="OrganizationsJoined" Type="Self.OrganizationsJoined" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="OrganizationsJoined">
+        <PropertyRef Name="SemesterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_OrganizationsJoined_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="OrganizationsJoined" Type="Self.OrganizationsJoined" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="OrganizationsJoined">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PhoneNumbers_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="PhoneNumbers" Type="Self.PhoneNumbers" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="PhoneNumbers">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PledgeClass">
+    <End Role="PledgeClasses" Type="Self.PledgeClasses" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PledgeClasses">
+        <PropertyRef Name="PledgeClassId" />
+      </Principal>
+      <Dependent Role="Members">
+        <PropertyRef Name="PledgeClassId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PledgeClasses_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="1" />
+    <End Role="PledgeClasses" Type="Self.PledgeClasses" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="PledgeClasses">
+        <PropertyRef Name="SemesterId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ServiceHours_Events">
+    <End Role="Events" Type="Self.Events" Multiplicity="1" />
+    <End Role="ServiceHours" Type="Self.ServiceHours" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Events">
+        <PropertyRef Name="EventId" />
+      </Principal>
+      <Dependent Role="ServiceHours">
+        <PropertyRef Name="EventId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ServiceHours_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="ServiceHours" Type="Self.ServiceHours" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="ServiceHours">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SoberDriverSignup_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="SoberDriverSignup" Type="Self.SoberDriverSignup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="SoberDriverSignup">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SoberOfficerSignup_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="SoberOfficerSignup" Type="Self.SoberOfficerSignup" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="SoberOfficerSignup">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudyHours_UserProfiles">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="StudyHours" Type="Self.StudyHours" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="StudyHours">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserProfiles_Semesters">
+    <End Role="Semesters" Type="Self.Semesters" Multiplicity="0..1" />
+    <End Role="Members" Type="Self.Members" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Semesters">
+        <PropertyRef Name="SemesterId" />
+      </Principal>
+      <Dependent Role="Members">
+        <PropertyRef Name="ExpectedGraduationId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_webpages_Membership_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="webpages_Membership" Type="Self.webpages_Membership" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="webpages_Membership">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_webpages_OAuthMembership_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="webpages_OAuthMembership" Type="Self.webpages_OAuthMembership" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="webpages_OAuthMembership">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_webpages_UsersInRoles_Members">
+    <End Role="Members" Type="Self.Members" Multiplicity="1" />
+    <End Role="webpages_UsersInRoles" Type="Self.webpages_UsersInRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Members">
+        <PropertyRef Name="UserId" />
+      </Principal>
+      <Dependent Role="webpages_UsersInRoles">
+        <PropertyRef Name="UserId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_webpages_UsersInRoles_webpages_Roles">
+    <End Role="webpages_Roles" Type="Self.webpages_Roles" Multiplicity="1" />
+    <End Role="webpages_UsersInRoles" Type="Self.webpages_UsersInRoles" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="webpages_Roles">
+        <PropertyRef Name="RoleId" />
+      </Principal>
+      <Dependent Role="webpages_UsersInRoles">
+        <PropertyRef Name="RoleId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="ModelStoreContainer">
+    <EntitySet Name="Addresses" EntityType="Self.Addresses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChoreAssignments" EntityType="Self.ChoreAssignments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChoreClasses" EntityType="Self.ChoreClasses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChoreGroupAssignments" EntityType="Self.ChoreGroupAssignments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChoreGroups" EntityType="Self.ChoreGroups" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ChoreGroupTypes" EntityType="Self.ChoreGroupTypes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Chores" EntityType="Self.Chores" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Classes" EntityType="Self.Classes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ClassesTaken" EntityType="Self.ClassesTaken" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ClassesTaught" EntityType="Self.ClassesTaught" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CommitteeMembers" EntityType="Self.CommitteeMembers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Departments" EntityType="Self.Departments" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Events" EntityType="Self.Events" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IncidentInvolvement" EntityType="Self.IncidentInvolvement" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="IncidentReports" EntityType="Self.IncidentReports" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Instructors" EntityType="Self.Instructors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="LaundrySignup" EntityType="Self.LaundrySignup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Leaders" EntityType="Self.Leaders" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Majors" EntityType="Self.Majors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MemberMajors" EntityType="Self.MemberMajors" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Members" EntityType="Self.Members" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="MemberStatus" EntityType="Self.MemberStatus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrganizationPositions" EntityType="Self.OrganizationPositions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Organizations" EntityType="Self.Organizations" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="OrganizationsJoined" EntityType="Self.OrganizationsJoined" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PhoneNumbers" EntityType="Self.PhoneNumbers" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="PledgeClasses" EntityType="Self.PledgeClasses" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Positions" EntityType="Self.Positions" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Semesters" EntityType="Self.Semesters" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="ServiceHours" EntityType="Self.ServiceHours" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SoberDriverSignup" EntityType="Self.SoberDriverSignup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SoberOfficerSignup" EntityType="Self.SoberOfficerSignup" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="StudyHours" EntityType="Self.StudyHours" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="webpages_Membership" EntityType="Self.webpages_Membership" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="webpages_OAuthMembership" EntityType="Self.webpages_OAuthMembership" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="webpages_Roles" EntityType="Self.webpages_Roles" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="webpages_UsersInRoles" EntityType="Self.webpages_UsersInRoles" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_Addresses_UserProfiles" Association="Self.FK_Addresses_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Addresses" EntitySet="Addresses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BigBroId" Association="Self.FK_BigBroId">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Members1" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreAssignments_ChoreGroups" Association="Self.FK_ChoreAssignments_ChoreGroups">
+      <End Role="ChoreGroups" EntitySet="ChoreGroups" />
+      <End Role="ChoreAssignments" EntitySet="ChoreAssignments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreAssignments_Chores" Association="Self.FK_ChoreAssignments_Chores">
+      <End Role="Chores" EntitySet="Chores" />
+      <End Role="ChoreAssignments" EntitySet="ChoreAssignments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreGroupAssignments_ChoreGroups" Association="Self.FK_ChoreGroupAssignments_ChoreGroups">
+      <End Role="ChoreGroups" EntitySet="ChoreGroups" />
+      <End Role="ChoreGroupAssignments" EntitySet="ChoreGroupAssignments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreGroupAssignments_UserProfiles" Association="Self.FK_ChoreGroupAssignments_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="ChoreGroupAssignments" EntitySet="ChoreGroupAssignments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreGroups_ChoreGroupTypes" Association="Self.FK_ChoreGroups_ChoreGroupTypes">
+      <End Role="ChoreGroupTypes" EntitySet="ChoreGroupTypes" />
+      <End Role="ChoreGroups" EntitySet="ChoreGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ChoreGroups_Semesters" Association="Self.FK_ChoreGroups_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="ChoreGroups" EntitySet="ChoreGroups" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Chores_ChoreClasses" Association="Self.FK_Chores_ChoreClasses">
+      <End Role="ChoreClasses" EntitySet="ChoreClasses" />
+      <End Role="Chores" EntitySet="Chores" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CommitteeMembers_Leaders" Association="Self.FK_CommitteeMembers_Leaders">
+      <End Role="Leaders" EntitySet="Leaders" />
+      <End Role="CommitteeMembers" EntitySet="CommitteeMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CommitteeMembers_UserProfiles" Association="Self.FK_CommitteeMembers_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="CommitteeMembers" EntitySet="CommitteeMembers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoursesTaken_Courses" Association="Self.FK_CoursesTaken_Courses">
+      <End Role="Classes" EntitySet="Classes" />
+      <End Role="ClassesTaken" EntitySet="ClassesTaken" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoursesTaken_Semesters" Association="Self.FK_CoursesTaken_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="ClassesTaken" EntitySet="ClassesTaken" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoursesTaken_UserProfiles" Association="Self.FK_CoursesTaken_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="ClassesTaken" EntitySet="ClassesTaken" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoursesTaught_Courses" Association="Self.FK_CoursesTaught_Courses">
+      <End Role="Classes" EntitySet="Classes" />
+      <End Role="ClassesTaught" EntitySet="ClassesTaught" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CoursesTaught_Instructors" Association="Self.FK_CoursesTaught_Instructors">
+      <End Role="Instructors" EntitySet="Instructors" />
+      <End Role="ClassesTaught" EntitySet="ClassesTaught" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IncidentInvolvement_IncidentReports" Association="Self.FK_IncidentInvolvement_IncidentReports">
+      <End Role="IncidentReports" EntitySet="IncidentReports" />
+      <End Role="IncidentInvolvement" EntitySet="IncidentInvolvement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IncidentInvolvement_UserProfiles" Association="Self.FK_IncidentInvolvement_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="IncidentInvolvement" EntitySet="IncidentInvolvement" />
+    </AssociationSet>
+    <AssociationSet Name="FK_IncidentReports_UserProfiles" Association="Self.FK_IncidentReports_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="IncidentReports" EntitySet="IncidentReports" />
+    </AssociationSet>
+    <AssociationSet Name="FK_LaundrySignup_UserProfiles" Association="Self.FK_LaundrySignup_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="LaundrySignup" EntitySet="LaundrySignup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Leaders_Positions" Association="Self.FK_Leaders_Positions">
+      <End Role="Positions" EntitySet="Positions" />
+      <End Role="Leaders" EntitySet="Leaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Leaders_Semesters" Association="Self.FK_Leaders_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="Leaders" EntitySet="Leaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Leaders_UserProfiles" Association="Self.FK_Leaders_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="Leaders" EntitySet="Leaders" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Majors_Departments" Association="Self.FK_Majors_Departments">
+      <End Role="Departments" EntitySet="Departments" />
+      <End Role="Majors" EntitySet="Majors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberMajors_MemberMajors" Association="Self.FK_MemberMajors_MemberMajors">
+      <End Role="Majors" EntitySet="Majors" />
+      <End Role="MemberMajors" EntitySet="MemberMajors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberMajors_UserProfiles" Association="Self.FK_MemberMajors_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="MemberMajors" EntitySet="MemberMajors" />
+    </AssociationSet>
+    <AssociationSet Name="FK_MemberStatus" Association="Self.FK_MemberStatus">
+      <End Role="MemberStatus" EntitySet="MemberStatus" />
+      <End Role="Members" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrganizationPositions_Organizations" Association="Self.FK_OrganizationPositions_Organizations">
+      <End Role="Organizations" EntitySet="Organizations" />
+      <End Role="OrganizationPositions" EntitySet="OrganizationPositions" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrganizationsJoined_OrganizationPositions" Association="Self.FK_OrganizationsJoined_OrganizationPositions">
+      <End Role="OrganizationPositions" EntitySet="OrganizationPositions" />
+      <End Role="OrganizationsJoined" EntitySet="OrganizationsJoined" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrganizationsJoined_Organizations" Association="Self.FK_OrganizationsJoined_Organizations">
+      <End Role="Organizations" EntitySet="Organizations" />
+      <End Role="OrganizationsJoined" EntitySet="OrganizationsJoined" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrganizationsJoined_Semesters" Association="Self.FK_OrganizationsJoined_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="OrganizationsJoined" EntitySet="OrganizationsJoined" />
+    </AssociationSet>
+    <AssociationSet Name="FK_OrganizationsJoined_UserProfiles" Association="Self.FK_OrganizationsJoined_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="OrganizationsJoined" EntitySet="OrganizationsJoined" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PhoneNumbers_UserProfiles" Association="Self.FK_PhoneNumbers_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="PhoneNumbers" EntitySet="PhoneNumbers" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PledgeClass" Association="Self.FK_PledgeClass">
+      <End Role="PledgeClasses" EntitySet="PledgeClasses" />
+      <End Role="Members" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PledgeClasses_Semesters" Association="Self.FK_PledgeClasses_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="PledgeClasses" EntitySet="PledgeClasses" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ServiceHours_Events" Association="Self.FK_ServiceHours_Events">
+      <End Role="Events" EntitySet="Events" />
+      <End Role="ServiceHours" EntitySet="ServiceHours" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ServiceHours_UserProfiles" Association="Self.FK_ServiceHours_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="ServiceHours" EntitySet="ServiceHours" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SoberDriverSignup_UserProfiles" Association="Self.FK_SoberDriverSignup_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="SoberDriverSignup" EntitySet="SoberDriverSignup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SoberOfficerSignup_UserProfiles" Association="Self.FK_SoberOfficerSignup_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="SoberOfficerSignup" EntitySet="SoberOfficerSignup" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudyHours_UserProfiles" Association="Self.FK_StudyHours_UserProfiles">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="StudyHours" EntitySet="StudyHours" />
+    </AssociationSet>
+    <AssociationSet Name="FK_UserProfiles_Semesters" Association="Self.FK_UserProfiles_Semesters">
+      <End Role="Semesters" EntitySet="Semesters" />
+      <End Role="Members" EntitySet="Members" />
+    </AssociationSet>
+    <AssociationSet Name="FK_webpages_Membership_Members" Association="Self.FK_webpages_Membership_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="webpages_Membership" EntitySet="webpages_Membership" />
+    </AssociationSet>
+    <AssociationSet Name="FK_webpages_OAuthMembership_Members" Association="Self.FK_webpages_OAuthMembership_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="webpages_OAuthMembership" EntitySet="webpages_OAuthMembership" />
+    </AssociationSet>
+    <AssociationSet Name="FK_webpages_UsersInRoles_Members" Association="Self.FK_webpages_UsersInRoles_Members">
+      <End Role="Members" EntitySet="Members" />
+      <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_webpages_UsersInRoles_webpages_Roles" Association="Self.FK_webpages_UsersInRoles_webpages_Roles">
+      <End Role="webpages_Roles" EntitySet="webpages_Roles" />
+      <End Role="webpages_UsersInRoles" EntitySet="webpages_UsersInRoles" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
