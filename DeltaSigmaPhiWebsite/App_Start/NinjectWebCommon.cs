@@ -5,9 +5,10 @@ namespace DeltaSigmaPhiWebsite.App_Start
 {
     using System;
     using System.Web;
+    using Data.Interfaces;
     using Data.UnitOfWork;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
-
+    using Models;
     using Ninject;
     using Ninject.Web.Common;
 
@@ -62,6 +63,8 @@ namespace DeltaSigmaPhiWebsite.App_Start
         private static void RegisterServices(IKernel kernel)
         {
             kernel.Bind<IUnitOfWork>().To<UnitOfWork>();
+            kernel.Bind<IWebSecurity>().To<WebSecurityWrapper>();
+            kernel.Bind<IOAuthWebSecurity>().To<OAuthWebSecurityWrapper>();
         }        
     }
 }

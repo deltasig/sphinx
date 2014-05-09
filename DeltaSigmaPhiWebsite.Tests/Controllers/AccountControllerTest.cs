@@ -31,6 +31,8 @@
         {
             // Arrange
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             var repMock = new Mock<IMembersRepository>();
             repMock.Setup(m => m.GetAll()).Returns(new []
             {
@@ -39,7 +41,7 @@
                 new Member { UserId = 3, FirstName = "FN3", LastName = "LN3" },
             }.AsQueryable());
             uowMock.Setup(m => m.MemberRepository).Returns(repMock.Object);
-            var controller = new AccountController(uowMock.Object);
+            var controller = new AccountController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             //var actual = controller.GetUserIdListAsFullName();
             // Assert

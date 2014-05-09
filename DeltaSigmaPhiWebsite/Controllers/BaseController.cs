@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Data.Interfaces;
     using Data.UnitOfWork;
-    using Microsoft.Web.WebPages.OAuth;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -12,10 +12,15 @@
 
     public class BaseController : Controller
     {
+        internal IWebSecurity WebSecurity { get; set; }
+        internal IOAuthWebSecurity OAuthWebSecurity { get; set; }
+
         protected readonly IUnitOfWork uow = new UnitOfWork();
-        public BaseController(IUnitOfWork uow)
+        public BaseController(IUnitOfWork uow, IWebSecurity webSecurity, IOAuthWebSecurity oAuthWebSecurity)
         {
             this.uow = uow;
+            this.WebSecurity = webSecurity;
+            this.OAuthWebSecurity = oAuthWebSecurity;
         }
 
         protected int GetThisSemestersId()
@@ -71,7 +76,7 @@
             }
             return new SelectList(newList, "StatusId", "StatusName");
         }
-        protected static IEnumerable<SelectListItem> GetTerms()
+        protected IEnumerable<SelectListItem> GetTerms()
         {
             var terms = new List<string>
             {
@@ -79,12 +84,12 @@
             };
             return new SelectList(terms);
         }
-        protected static IEnumerable<SelectListItem> GetRoleList()
+        protected IEnumerable<SelectListItem> GetRoleList()
         {
             var roles = Roles.GetAllRoles();
             return new SelectList(roles);
         }
-        protected static IEnumerable<ExternalLogin> GetExternalLogins(string userName)
+        protected IEnumerable<ExternalLogin> GetExternalLogins(string userName)
         {
             var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);
             var externalLogins = (
@@ -99,7 +104,7 @@
             ).ToList();
             return externalLogins;
         }
-        protected static string GetPictureUrl(string userName)
+        protected string GetPictureUrl(string userName)
         {
             var logins = GetExternalLogins(userName).ToList();
             if (logins.Count <= 0) return "";
@@ -123,7 +128,7 @@
             }
             return pictureUrl;
         }
-        protected static string GetBigPictureUrl(string userName)
+        protected string GetBigPictureUrl(string userName)
         {
             var logins = GetExternalLogins(userName).ToList();
             if (logins.Count <= 0) return "";
