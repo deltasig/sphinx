@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Tests.Controllers
 {
+    using Data.Interfaces;
     using Data.UnitOfWork;
     using DeltaSigmaPhiWebsite.Controllers;
     using Moq;
@@ -28,8 +29,10 @@
         public void HomeIndexReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.Index() as ViewResult;
             // Assert
@@ -39,8 +42,10 @@
         public void HomeAboutReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.About() as ViewResult;
             // Assert
@@ -50,8 +55,10 @@
         public void HomeContactReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.Contact() as ViewResult;
             // Assert
@@ -61,8 +68,10 @@
         public void HomeHowToJoinReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.HowToJoin() as ViewResult;
             // Assert
@@ -72,8 +81,10 @@
         public void HomeScholarshipReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.BuildingBetterMenScholarship() as ViewResult;
             // Assert
@@ -83,8 +94,10 @@
         public void HomeAcademicsReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.Academics() as ViewResult;
             // Assert
@@ -94,8 +107,10 @@
         public void HomeOfficersReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.Officers() as ViewResult;
             // Assert
@@ -105,8 +120,10 @@
         public void HomeChairmenReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
+            var ws = new Mock<IWebSecurity>();
+            var oaws = new Mock<IOAuthWebSecurity>();
             // Arrange
-            var controller = new HomeController(uowMock.Object);
+            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
             var actual = controller.Chairmen() as ViewResult;
             // Assert

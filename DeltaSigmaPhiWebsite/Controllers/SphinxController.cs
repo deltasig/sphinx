@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Data.Interfaces;
     using Data.UnitOfWork;
     using Models;
     using System;
@@ -7,18 +8,17 @@
     using System.Linq;
     using System.Web.Mvc;
     using System.Web.Security;
-    using WebMatrix.WebData;
 
     [Authorize]
     public class SphinxController : BaseController
     {
-        public SphinxController(IUnitOfWork uow) : base(uow) { }
+        public SphinxController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
         public ActionResult Index()
         {
-            var member = uow.MemberRepository.GetById(WebSecurity.CurrentUserId);
             var userId = WebSecurity.GetUserId(User.Identity.Name);
+            var member = uow.MemberRepository.GetById(userId);
             var model = new SphinxModel
             {
                 MemberInfo = member,
@@ -29,7 +29,7 @@
                 StudyModel = new StudyHourSubmissionModel { Approvers = GetAllApproverIds(userId) },
                 StudyHours = GetStudyHoursForUser(userId),
                 StudyApproval = GetRequestedStudyHourApprovalsForUser(userId),
-                ProfilePicUrl = AccountController.GetPictureUrl(member.UserName),
+                ProfilePicUrl = GetPictureUrl(member.UserName),
                 SoberSignedUp = GetSoberSignedUp(userId),
                 FullSoberSchedule = CompleteSoberSchedule(),
                 LaundrySummary = LaundrySummary(),
@@ -314,7 +314,7 @@
             var record = new IncidentReport
                 {
                     DateTimeSubmitted = DateTime.Now,
-                    ReportedBy = WebSecurity.CurrentUserId,
+                    ReportedBy = WebSecurity.GetUserId(User.Identity.Name),
                     DateTimeOfIncident = model.IncidentDate,
                     BehaviorsWitnessed = model.BehaviorsWitnessed ?? "",
                     PolicyBroken = model.PolicyBroken ?? ""
@@ -593,7 +593,7 @@
             //Get the user id of the person viewing the page
             var allThisWeeksReservations = ThisWeeksLaundrySignup();
 
-            var usersReservationsThisWeek = allThisWeeksReservations.FindAll(reserved => reserved.UserId == WebSecurity.CurrentUserId);
+            var usersReservationsThisWeek = allThisWeeksReservations.FindAll(reserved => reserved.UserId == WebSecurity.GetUserId(User.Identity.Name));
             var amountSignedUp = usersReservationsThisWeek.Count();
 
             //Check how many other times the person has signed up. This amount will be limited to less than 2 (for now)
@@ -606,7 +606,8 @@
             }
 
             //Add reservation to the database
-            var reservation = new LaundrySignup { UserId = WebSecurity.CurrentUserId, DateTimeShift = signup.Shift, DateTimeSignedUp = DateTime.Now };
+            var reservation = new LaundrySignup { UserId = WebSecurity.GetUserId(User.Identity.Name), 
+                DateTimeShift = signup.Shift, DateTimeSignedUp = DateTime.Now };
             if (ModelState.IsValid)
             {
                 uow.LaundrySignupRepository.Insert(reservation);
