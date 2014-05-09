@@ -112,7 +112,7 @@
         [AssignedMembersList("selectedChoreType", ErrorMessage = "For your Chore Type, at least one person must be assigned to the chore")]
         [Display(Name = "Assigned To Chore")]
         public IEnumerable<int> AssignedToChore { get; set; }
-        public MultiSelectList AllMemebers { get; set; }
+        public IEnumerable<SelectListItem> AllMemebers { get; set; }
 
         [WeekDaysAttribute(new string[1] { "selectedChoreType" }, new string[6] { "OnMonday", "OnTuesday", "OnWednesday", "OnThursday", "OnFriday", "OnSaturday" }, ErrorMessage = "For your Chore Type, at least one day must be selected")]
         [Display(Name = "Sunday")]

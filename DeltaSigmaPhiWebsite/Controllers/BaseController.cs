@@ -1,9 +1,14 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Data.UnitOfWork;
+    using Microsoft.Web.WebPages.OAuth;
+    using Models;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Web.Mvc;
-    using Data.UnitOfWork;
+    using System.Web.Security;
 
     public class BaseController : Controller
     {
@@ -13,6 +18,17 @@
             this.uow = uow;
         }
 
+        protected int GetThisSemestersId()
+        {
+            var semesters = uow.SemesterRepository.GetAll().ToList();
+            if (semesters.Count <= 0) return -1;
+
+            var thisSemester = semesters.FirstOrDefault(entity => (DateTime.Now > entity.DateStart && DateTime.Now < entity.DateEnd));
+            if (thisSemester != null)
+                return thisSemester.SemesterId;
+
+            return -1;
+        }
         protected IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
             var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
@@ -40,6 +56,96 @@
                 });
             }
             return new SelectList(newList, "UserId", "Name");
+        }
+        protected IEnumerable<SelectListItem> GetStatusList()
+        {
+            var statusList = uow.MemberStatusRepository.GetAll();
+            var newList = new List<object>();
+            foreach (var status in statusList)
+            {
+                newList.Add(new
+                {
+                    status.StatusId,
+                    status.StatusName
+                });
+            }
+            return new SelectList(newList, "StatusId", "StatusName");
+        }
+        protected static IEnumerable<SelectListItem> GetTerms()
+        {
+            var terms = new List<string>
+            {
+                "Spring", "Fall"
+            };
+            return new SelectList(terms);
+        }
+        protected static IEnumerable<SelectListItem> GetRoleList()
+        {
+            var roles = Roles.GetAllRoles();
+            return new SelectList(roles);
+        }
+        protected static IEnumerable<ExternalLogin> GetExternalLogins(string userName)
+        {
+            var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);
+            var externalLogins = (
+                from account in accounts
+                let clientData = OAuthWebSecurity.GetOAuthClientData(account.Provider)
+                select new ExternalLogin
+                {
+                    Provider = account.Provider,
+                    ProviderDisplayName = clientData.DisplayName,
+                    ProviderUserId = account.ProviderUserId
+                }
+            ).ToList();
+            return externalLogins;
+        }
+        protected static string GetPictureUrl(string userName)
+        {
+            var logins = GetExternalLogins(userName).ToList();
+            if (logins.Count <= 0) return "";
+            var facebookId = (from login in logins where login.ProviderDisplayName == "Facebook" select login.ProviderUserId).First();
+
+            WebResponse response = null;
+            var pictureUrl = string.Empty;
+            try
+            {
+                var request = WebRequest.Create(string.Format("https://graph.facebook.com/{0}/picture", facebookId));
+                response = request.GetResponse();
+                pictureUrl = response.ResponseUri.ToString();
+            }
+            catch (Exception ex)
+            {
+                //? handle
+            }
+            finally
+            {
+                if (response != null) response.Close();
+            }
+            return pictureUrl;
+        }
+        protected static string GetBigPictureUrl(string userName)
+        {
+            var logins = GetExternalLogins(userName).ToList();
+            if (logins.Count <= 0) return "";
+            var facebookId = (from login in logins where login.ProviderDisplayName == "Facebook" select login.ProviderUserId).First();
+
+            WebResponse response = null;
+            var pictureUrl = string.Empty;
+            try
+            {
+                var request = WebRequest.Create(string.Format("https://graph.facebook.com/{0}/picture?type=large", facebookId));
+                response = request.GetResponse();
+                pictureUrl = response.ResponseUri.ToString();
+            }
+            catch (Exception ex)
+            {
+                //? handle
+            }
+            finally
+            {
+                if (response != null) response.Close();
+            }
+            return pictureUrl;
         }
 
         protected override void Dispose(bool disposing)
