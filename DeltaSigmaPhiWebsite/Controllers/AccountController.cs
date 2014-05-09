@@ -4,9 +4,7 @@
     using Microsoft.Web.WebPages.OAuth;
     using Models;
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Net;
     using System.Transactions;
     using System.Web.Mvc;
     using System.Web.Security;
@@ -441,27 +439,7 @@
 
         #endregion
 
-        #region Helpers
-
-        private IEnumerable<SelectListItem> GetStatusList()
-        {
-            var statusList = uow.MemberStatusRepository.GetAll();
-            var newList = new List<object>();
-            foreach (var status in statusList)
-            {
-                newList.Add(new
-                {
-                    status.StatusId,
-                    status.StatusName
-                });
-            }
-            return new SelectList(newList, "StatusId", "StatusName");
-        }
-        private static IEnumerable<SelectListItem> GetRoleList()
-        {
-            var roles = Roles.GetAllRoles();
-            return new SelectList(roles);
-        }
+        #region Error Messages
 
         private static dynamic GetRegistrationMessage(RegistrationMessageId? message)
         {
@@ -527,71 +505,6 @@
                     return "An unknown error occurred. Please verify your entry and try again. If the problem persists, please contact your system administrator.";
             }
         }
-
-        public static IEnumerable<ExternalLogin> GetExternalLogins(string userName)
-        {
-            var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);
-            var externalLogins = (
-                from account in accounts
-                let clientData = OAuthWebSecurity.GetOAuthClientData(account.Provider)
-                select new ExternalLogin
-                {
-                    Provider = account.Provider,
-                    ProviderDisplayName = clientData.DisplayName,
-                    ProviderUserId = account.ProviderUserId
-                }
-            ).ToList();
-            return externalLogins;
-        }
-        public static string GetPictureUrl(string userName)
-        {
-            var logins = GetExternalLogins(userName).ToList();
-            if (logins.Count <= 0) return "";
-            var facebookId = (from login in logins where login.ProviderDisplayName == "Facebook" select login.ProviderUserId).First();
-
-            WebResponse response = null;
-            var pictureUrl = string.Empty;
-            try
-            {
-                var request = WebRequest.Create(string.Format("https://graph.facebook.com/{0}/picture", facebookId));
-                response = request.GetResponse();
-                pictureUrl = response.ResponseUri.ToString();
-            }
-            catch (Exception ex)
-            {
-                //? handle
-            }
-            finally
-            {
-                if (response != null) response.Close();
-            }
-            return pictureUrl;
-        }
-        private static string GetBigPictureUrl(string userName)
-        {
-            var logins = GetExternalLogins(userName).ToList();
-            if (logins.Count <= 0) return "";
-            var facebookId = (from login in logins where login.ProviderDisplayName == "Facebook" select login.ProviderUserId).First();
-
-            WebResponse response = null;
-            var pictureUrl = string.Empty;
-            try
-            {
-                var request = WebRequest.Create(string.Format("https://graph.facebook.com/{0}/picture?type=large", facebookId));
-                response = request.GetResponse();
-                pictureUrl = response.ResponseUri.ToString();
-            }
-            catch (Exception ex)
-            {
-                //? handle
-            }
-            finally
-            {
-                if (response != null) response.Close();
-            }
-            return pictureUrl;
-        }
-
 
         public enum ManageMessageId
         {

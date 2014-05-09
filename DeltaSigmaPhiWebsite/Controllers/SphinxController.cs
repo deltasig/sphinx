@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Data.Entity.Core.Objects;
     using Data.UnitOfWork;
     using Models;
     using System;
@@ -705,24 +704,6 @@
             var ticks = (date.Ticks / span.Ticks);
             return new DateTime(ticks * span.Ticks);
         }
-        private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
-        {
-            return message == LaundrySignupMessage.ReserveSuccess ? "You have successfully reserved a time slot."
-                : message == LaundrySignupMessage.ReserveFailed ? "Laundry signup has failed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.CancelReservationSuccess ? "Your reservation has been successfully removed."
-                : message == LaundrySignupMessage.CancelReservationFailed ? "Your reservation was unable to be removed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.ReserveFailedTooMany ? "You have reserved to many slots within the coming week. Please cancel one or more before you attempt to reserve another."
-                : "";
-        }
-
-        public enum LaundrySignupMessage
-        {
-            ReserveSuccess,
-            CancelReservationSuccess,
-            ReserveFailed,
-            ReserveFailedTooMany,
-            CancelReservationFailed
-        }
 
         #endregion
 
@@ -936,40 +917,25 @@
 
         #endregion
 
-        #region Helpers
+        #region Error Messages
 
-        private static IEnumerable<SelectListItem> GetTerms()
+        private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
         {
-            var terms = new List<string>
-            {
-                "Spring", "Fall"
-            };
-            return new SelectList(terms);
+            return message == LaundrySignupMessage.ReserveSuccess ? "You have successfully reserved a time slot."
+                : message == LaundrySignupMessage.ReserveFailed ? "Laundry signup has failed.  Please try again or contact the system administrator."
+                : message == LaundrySignupMessage.CancelReservationSuccess ? "Your reservation has been successfully removed."
+                : message == LaundrySignupMessage.CancelReservationFailed ? "Your reservation was unable to be removed.  Please try again or contact the system administrator."
+                : message == LaundrySignupMessage.ReserveFailedTooMany ? "You have reserved to many slots within the coming week. Please cancel one or more before you attempt to reserve another."
+                : "";
         }
-        private MultiSelectList GetUserIdListAsFullName()
-        {
-            var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
-            var newList = new List<object>();
-            foreach (var member in members)
-            {
-                newList.Add(new
-                {
-                    member.UserId,
-                    Name = member.LastName + ", " + member.FirstName
-                });
-            }
-            return new SelectList(newList, "UserId", "Name");
-        }
-        private int GetThisSemestersId()
-        {
-            var semesters = uow.SemesterRepository.GetAll().ToList();
-            if (semesters.Count <= 0) return -1;
 
-            var thisSemester = semesters.FirstOrDefault(entity => (DateTime.Now > entity.DateStart && DateTime.Now < entity.DateEnd));
-            if (thisSemester != null)
-                return thisSemester.SemesterId;
-
-            return -1;
+        public enum LaundrySignupMessage
+        {
+            ReserveSuccess,
+            CancelReservationSuccess,
+            ReserveFailed,
+            ReserveFailedTooMany,
+            CancelReservationFailed
         }
 
         #endregion
