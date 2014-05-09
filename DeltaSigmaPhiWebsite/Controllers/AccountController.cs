@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Data.Interfaces;
     using Data.UnitOfWork;
     using Microsoft.Web.WebPages.OAuth;
     using Models;
@@ -13,7 +14,7 @@
     [Authorize]
     public class AccountController : BaseController
     {
-        public AccountController(IUnitOfWork uow) : base(uow) { }
+        public AccountController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
         public ActionResult Index(ManageMessageId? message)
@@ -358,7 +359,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider)
         {
-            return new ExternalLoginResult(provider, Url.Action("ExternalLoginCallback"));
+            return new ExternalLoginResult(this, provider, Url.Action("ExternalLoginCallback"));
         }
 
         [HttpGet]
@@ -422,18 +423,20 @@
 
         internal class ExternalLoginResult : ActionResult
         {
-            public ExternalLoginResult(string provider, string returnUrl)
+            public ExternalLoginResult(BaseController controller, string provider, string returnUrl)
             {
+                Controller = controller;
                 Provider = provider;
                 ReturnUrl = returnUrl;
             }
 
+            public BaseController Controller { get; set; }
             public string Provider { get; private set; }
             public string ReturnUrl { get; private set; }
 
             public override void ExecuteResult(ControllerContext context)
             {
-                OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
+                Controller.OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
             }
         }
 
