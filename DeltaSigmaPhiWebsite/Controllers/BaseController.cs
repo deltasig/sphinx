@@ -23,7 +23,7 @@
             this.OAuthWebSecurity = oAuthWebSecurity;
         }
 
-        protected int GetThisSemestersId()
+        protected virtual int GetThisSemestersId()
         {
             var semesters = uow.SemesterRepository.GetAll().ToList();
             if (semesters.Count <= 0) return -1;
@@ -34,7 +34,7 @@
 
             return -1;
         }
-        protected IEnumerable<SelectListItem> GetUserIdListAsFullName()
+        protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
             var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
             var newList = new List<object>();
@@ -48,7 +48,7 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected IEnumerable<SelectListItem> GetUserIdListAsFullNameWithNone()
+        protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullNameWithNone()
         {
             var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
             var newList = new List<object> { new { UserId = 0, Name = "None" } };
@@ -62,7 +62,7 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected IEnumerable<SelectListItem> GetStatusList()
+        protected virtual IEnumerable<SelectListItem> GetStatusList()
         {
             var statusList = uow.MemberStatusRepository.GetAll();
             var newList = new List<object>();
@@ -76,7 +76,7 @@
             }
             return new SelectList(newList, "StatusId", "StatusName");
         }
-        protected IEnumerable<SelectListItem> GetTerms()
+        protected virtual IEnumerable<SelectListItem> GetTerms()
         {
             var terms = new List<string>
             {
@@ -84,12 +84,12 @@
             };
             return new SelectList(terms);
         }
-        protected IEnumerable<SelectListItem> GetRoleList()
+        protected virtual IEnumerable<SelectListItem> GetRoleList()
         {
             var roles = Roles.GetAllRoles();
             return new SelectList(roles);
         }
-        protected IEnumerable<ExternalLogin> GetExternalLogins(string userName)
+        protected virtual IEnumerable<ExternalLogin> GetExternalLogins(string userName)
         {
             var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);
             var externalLogins = (
@@ -104,7 +104,7 @@
             ).ToList();
             return externalLogins;
         }
-        protected string GetPictureUrl(string userName)
+        public virtual string GetPictureUrl(string userName)
         {
             var logins = GetExternalLogins(userName).ToList();
             if (logins.Count <= 0) return "";
@@ -128,7 +128,7 @@
             }
             return pictureUrl;
         }
-        protected string GetBigPictureUrl(string userName)
+        public virtual string GetBigPictureUrl(string userName)
         {
             var logins = GetExternalLogins(userName).ToList();
             if (logins.Count <= 0) return "";

@@ -87,7 +87,7 @@
         <div class="panel-heading">External Authentication</div>
         <div class="panel-body">
             @Html.Action("RemoveExternalLogins")
-            @Html.Action("ExternalLoginsList", new { ReturnUrl = ViewBag.ReturnUrl })
+            @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
         </div>
     </div>
 

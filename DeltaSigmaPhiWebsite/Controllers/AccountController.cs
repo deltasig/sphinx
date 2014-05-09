@@ -19,7 +19,8 @@
         [HttpGet]
         public ActionResult Index(ManageMessageId? message)
         {
-            var member = uow.MemberRepository.Get(m => m.UserName == User.Identity.Name);
+            var userName = WebSecurity.CurrentUser.Identity.Name;
+            var member = uow.MemberRepository.Get(m => m.UserName == userName);
             var model = new AccountInformationModel
             {
                 MemberInfo = member,
@@ -28,8 +29,7 @@
             };
 
             ViewBag.StatusMessage = GetManageMessage(message);
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            ViewBag.ReturnUrl = Url.Action("Index");
+            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
             return View(model);
         }
 
