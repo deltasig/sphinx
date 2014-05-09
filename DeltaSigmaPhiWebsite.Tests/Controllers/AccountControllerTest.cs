@@ -1,5 +1,9 @@
 ﻿namespace DeltaSigmaPhiWebsite.Tests.Controllers
 {
+    using System;
+    using System.Linq.Expressions;
+    using System.Security.Policy;
+    using System.Web.Mvc;
     using Data.Interfaces;
     using Data.UnitOfWork;
     using DeltaSigmaPhiWebsite.Controllers;
@@ -27,26 +31,42 @@
         }
 
         [Test]
-        public void GetUserIdListAsFullName()
+        public void Index()
         {
+            var uowMock = new Mock<IUnitOfWork>();
+            var wsMock = new Mock<IWebSecurity>();
+            var oawsMock = new Mock<IOAuthWebSecurity>();
+            var repMock = new Mock<IMembersRepository>();
+            var conMock = new Mock<AccountController>(uowMock.Object, wsMock.Object, oawsMock.Object) { CallBase = true };
+
             // Arrange
+            repMock.Setup(m => m.Get(It.IsAny< Expression<Func<Member, bool>>>())).Returns(new Member
+            {
+                UserId = 1, FirstName = "John", LastName = "Doe", UserName = "johndoe"
+            });
+            uowMock.Setup(m => m.MemberRepository).Returns(repMock.Object);
+            wsMock.Setup(x => x.CurrentUser.Identity.Name).Returns("johndoe");
+            conMock.Setup(x => x.GetBigPictureUrl(It.IsAny<string>())).Returns("johndoe");
+
+            // Act
+            var actual = conMock.Object.Index(null);
+
+            // Assert
+            Assert.IsInstanceOf<ActionResult>(actual);
+        }
+
+        [Test]
+        public void Login()
+        {
             var uowMock = new Mock<IUnitOfWork>();
             var ws = new Mock<IWebSecurity>();
             var oaws = new Mock<IOAuthWebSecurity>();
-            var repMock = new Mock<IMembersRepository>();
-            repMock.Setup(m => m.GetAll()).Returns(new []
-            {
-                new Member { UserId = 1, FirstName = "FN1", LastName = "LN1" },
-                new Member { UserId = 2, FirstName = "FN2", LastName = "LN2" },
-                new Member { UserId = 3, FirstName = "FN3", LastName = "LN3" },
-            }.AsQueryable());
-            uowMock.Setup(m => m.MemberRepository).Returns(repMock.Object);
+            // Arrange
             var controller = new AccountController(uowMock.Object, ws.Object, oaws.Object);
             // Act
-            //var actual = controller.GetUserIdListAsFullName();
+            var actual = controller.Login() as ViewResult;
             // Assert
-            //Assert.IsInstanceOf<ActionResult>(actual);
+            Assert.IsInstanceOf<ActionResult>(actual);
         }
-
     }
 }
