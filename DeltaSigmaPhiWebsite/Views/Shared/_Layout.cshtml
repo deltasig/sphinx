@@ -5,18 +5,15 @@
     <title>@ViewBag.Title</title>
     <link href="~/Images/Favicon-16x16.png" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- If jQuery UI theme is needed, add it here as link (affects modal styling negatively) -->
-    @*<link rel="stylesheet" type="text/css" href="/Content/themes/base/jquery-ui.css" />*@
     @Styles.Render("~/Content/bootstrap")
-    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body style="padding: 0">
     @Html.Partial("Nav")
     @RenderBody()
     @Html.Partial("Footer")
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->    
+    @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
