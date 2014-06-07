@@ -2,7 +2,6 @@
 {
     using Data.Interfaces;
     using Data.UnitOfWork;
-    using Microsoft.Web.WebPages.OAuth;
     using Models;
     using System;
     using System.Linq;
@@ -63,7 +62,7 @@
         {
             WebSecurity.Logout();
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpGet]
