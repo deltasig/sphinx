@@ -264,6 +264,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
     <Compile Include="Data\Interfaces\IChoreGroupTypesRepository.cs" />
@@ -516,6 +517,10 @@
     <Content Include="Views\Sphinx\IncidentReporting.cshtml" />
     <Content Include="Views\Sphinx\SoberSchedule.cshtml" />
     <Content Include="Views\Sphinx\SubmitStudy.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Error\InternalServerError.cshtml" />
+    <Content Include="Views\Shared\Error\NotFoundInfo.cshtml" />
+    <Content Include="Views\Shared\Error\InternalServerErrorInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
