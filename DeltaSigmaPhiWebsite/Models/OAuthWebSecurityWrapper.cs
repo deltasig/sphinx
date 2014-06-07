@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models
 {
-    using Data.Interfaces;
     using DotNetOpenAuth.AspNet;
     using Microsoft.Web.WebPages.OAuth;
     using System.Collections.Generic;

@@ -1,8 +1,8 @@
-﻿namespace DeltaSigmaPhiWebsite.Data.Interfaces
+﻿namespace DeltaSigmaPhiWebsite.Models
 {
+    using System.Collections.Generic;
     using DotNetOpenAuth.AspNet;
     using Microsoft.Web.WebPages.OAuth;
-    using System.Collections.Generic;
 
     public interface IOAuthWebSecurity
     {

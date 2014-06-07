@@ -3,6 +3,7 @@
     using Data.Interfaces;
     using Data.UnitOfWork;
     using DeltaSigmaPhiWebsite.Controllers;
+    using Models;
     using Moq;
     using NUnit.Framework;
     using System.Transactions;
