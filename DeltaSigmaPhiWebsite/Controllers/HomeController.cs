@@ -1,13 +1,17 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Web.Mvc;
-    using Data.Interfaces;
+    using System;
     using Data.UnitOfWork;
     using Models;
+    using System.Web.Mvc;
 
     public class HomeController : BaseController
     {
-        public HomeController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+        public HomeController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws)
+            : base(uow, ws, oaws)
+        {
+            
+        }
 
         public ActionResult Index()
         {

@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.Interfaces;
     using Data.UnitOfWork;
     using Models;
     using System;
@@ -13,7 +12,7 @@
     public class SphinxController : BaseController
     {
         public SphinxController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
+        
         [HttpGet]
         public ActionResult Index()
         {
