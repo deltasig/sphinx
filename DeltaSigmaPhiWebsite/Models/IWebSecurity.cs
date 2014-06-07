@@ -1,4 +1,4 @@
-﻿namespace DeltaSigmaPhiWebsite.Data.Interfaces
+﻿namespace DeltaSigmaPhiWebsite.Models
 {
     using System.Security.Principal;
 

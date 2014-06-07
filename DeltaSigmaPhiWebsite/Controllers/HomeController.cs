@@ -3,6 +3,7 @@
     using System.Web.Mvc;
     using Data.Interfaces;
     using Data.UnitOfWork;
+    using Models;
 
     public class HomeController : BaseController
     {

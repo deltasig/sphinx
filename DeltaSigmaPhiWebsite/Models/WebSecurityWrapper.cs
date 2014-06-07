@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models
 {
-    using Data.Interfaces;
     using System.Security.Principal;
     using System.Web;
     using WebMatrix.WebData;
