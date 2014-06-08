@@ -9,11 +9,6 @@ namespace DeltaSigmaPhiWebsite.Models
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<ChoreAssignment> ChoreAssignments { get; set; }
-        public virtual DbSet<ChoreClass> ChoreClasses { get; set; }
-        public virtual DbSet<ChoreGroup> ChoreGroups { get; set; }
-        public virtual DbSet<ChoreGroupType> ChoreGroupTypes { get; set; }
-        public virtual DbSet<Chore> Chores { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<ClassTaken> ClassesTakens { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
@@ -45,26 +40,6 @@ namespace DeltaSigmaPhiWebsite.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ChoreGroup>()
-                .HasMany(e => e.ChoreAssignments)
-                .WithRequired(e => e.ChoreGroup)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<ChoreGroup>()
-                .HasMany(e => e.Members)
-                .WithMany(e => e.ChoreGroups)
-                .Map(m => m.ToTable("ChoreGroupAssignments").MapLeftKey("ChoreGroupId").MapRightKey("UserId"));
-
-            modelBuilder.Entity<ChoreGroupType>()
-                .HasMany(e => e.ChoreGroups)
-                .WithRequired(e => e.ChoreGroupType)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Chore>()
-                .HasMany(e => e.ChoreAssignments)
-                .WithRequired(e => e.Chore)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<Class>()
                 .HasMany(e => e.ClassesTakens)
                 .WithRequired(e => e.Class)
@@ -194,12 +169,7 @@ namespace DeltaSigmaPhiWebsite.Models
                 .HasMany(e => e.Leaders)
                 .WithRequired(e => e.Position)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Semester>()
-                .HasMany(e => e.ChoreGroups)
-                .WithRequired(e => e.Semester)
-                .WillCascadeOnDelete(false);
-
+            
             modelBuilder.Entity<Semester>()
                 .HasMany(e => e.ClassesTakens)
                 .WithRequired(e => e.Semester)

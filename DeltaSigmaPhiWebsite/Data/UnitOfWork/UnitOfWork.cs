@@ -49,31 +49,6 @@
         {
             get { return memberStatusRepository ?? (memberStatusRepository = new MemberStatusRepository(context)); }
         }
-        private IChoresRepository choreRepository;
-        public IChoresRepository ChoreRepository
-        {
-            get { return choreRepository ?? (choreRepository = new ChoresRepository(context)); }
-        }
-        private IChoreGroupsRepository choreGroupRepository;
-        public IChoreGroupsRepository ChoreGroupRepository
-        {
-            get { return choreGroupRepository ?? (choreGroupRepository = new ChoreGroupsRepository(context)); }
-        }
-        private IChoreAssignmentsRepository choreAssignmentRepository;
-        public IChoreAssignmentsRepository ChoreAssignmentRepository
-        {
-            get { return choreAssignmentRepository ?? (choreAssignmentRepository = new ChoreAssignmentsRepository(context)); }
-        }
-        private IChoreClassesRepository choreClassRepository;
-        public IChoreClassesRepository ChoreClassRepository
-        {
-            get { return choreClassRepository ?? (choreClassRepository = new ChoreClassesRepository(context)); }
-        }
-        private IChoreGroupTypesRepository choreGroupTypeRepository;
-        public IChoreGroupTypesRepository ChoreGroupTypeRepository
-        {
-            get { return choreGroupTypeRepository ?? (choreGroupTypeRepository = new ChoreGroupTypesRepository(context)); }
-        }
         private IStudyHoursRepository studyHourRepository;
         public IStudyHoursRepository StudyHourRepository
         {

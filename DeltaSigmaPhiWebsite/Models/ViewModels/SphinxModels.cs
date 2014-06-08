@@ -20,7 +20,6 @@
         public ServiceHourSubmissionModel ServiceModel { get; set; }
         public List<SoberReservationModel> SoberSignedUp { get; set; }
         public List<SoberReservationModel> FullSoberSchedule { get; set; }
-        public ChoresToDo AllChores { get; set; }
     }
 
     public class StudyHourSubmissionModel
@@ -70,71 +69,6 @@
     public class AdminPanelModel
     {
         public AddSemesterModel SemesterModel { get; set; }
-        public MyChoreModel NewChoreModel { get; set; }
-    }
-
-    public class MyChoreModel
-    {
-        [Required(ErrorMessage = "Chore Requires a Name")]
-        [DataType(DataType.Text)]
-        [StringLength(50,ErrorMessage="Description cannot be longer than 100 characters")]
-        [Display(Name = "Chore Name")]
-        public string ChoreName { get; set; }
-
-        [Required(ErrorMessage = "Please give a simple description of the chore")]
-        [DataType(DataType.Text)]
-        [StringLength(100, ErrorMessage="Description cannot be longer than 100 characters")]
-        [Display(Name = "Description")]
-        public string Description { get; set; }
-
-        [Required(ErrorMessage = "Please give all neccessary information for the chore")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Direction")]
-        public string Direction { get; set; }
-
-        [Required(ErrorMessage = "All Chores require a type")]
-        [DataType(DataType.Text)]
-        [Display(Name = "Chore Type")]
-        public int selectedChoreType { get; set; }
-        public IEnumerable<SelectListItem> ChoreTypes { get; set; }
-
-        [Required(ErrorMessage = "All Chores require a class")]
-        [Display(Name = "Chore Class")]
-        public int selectedChoreClass { get; set; }
-        public IEnumerable<SelectListItem> ChoreClasses { get; set; }
-
-        [ChoreDateDue("selectedChoreType", ErrorMessage = "For your Chore Type, a compltion date is required")]
-        [DataType(DataType.DateTime)]
-        [ValidChoreDate("selectedChoreType", ErrorMessage = "You must enter a date/time that is in the future")]
-        [Display(Name = "Due Date")]
-        public DateTime CompletedBy { get; set; }
-
-        [AssignedMembersList("selectedChoreType", ErrorMessage = "For your Chore Type, at least one person must be assigned to the chore")]
-        [Display(Name = "Assigned To Chore")]
-        public IEnumerable<int> AssignedToChore { get; set; }
-        public IEnumerable<SelectListItem> AllMemebers { get; set; }
-
-        [WeekDaysAttribute(new string[1] { "selectedChoreType" }, new string[6] { "OnMonday", "OnTuesday", "OnWednesday", "OnThursday", "OnFriday", "OnSaturday" }, ErrorMessage = "For your Chore Type, at least one day must be selected")]
-        [Display(Name = "Sunday")]
-        public bool OnSunday { get; set; }
-
-        [Display(Name = "Monday")]
-        public bool OnMonday { get; set; }
-
-        [Display(Name = "Tuesday")]
-        public bool OnTuesday { get; set; }
-
-        [Display(Name = "Wednesday")]
-        public bool OnWednesday { get; set; }
-
-        [Display(Name = "Thursday")]
-        public bool OnThursday { get; set; }
-
-        [Display(Name = "Friday")]
-        public bool OnFriday { get; set; }
-
-        [Display(Name = "Saturday")]
-        public bool OnSaturday { get; set; }
     }
 
     public class AddSemesterModel
@@ -224,130 +158,11 @@
         public DateTime Shift { get; set; }
     }
 
-    public class ChoresToDo
-    {
-        public List<SingleChore> AllUsersChores { get; set; }
-    }
-
-    public class SingleChore
-    {
-        public string Type { get; set; }
-        public string Name { get; set; }
-        public DateTime CompletedBy { get; set; }
-        public string Description { get; set; }
-        public string Directions { get; set; }
-        public bool Status {get; set;}
-}
-
     public class MyTestModel
     {
         public string Gender { get; set; }
         public string Title { get; set; }
         public string TmpTitle { get; set; }
-}
-
-    #region CustomValidation
-
-    public class ChoreDateDueAttribute : ValidationAttribute
-    {
-        public ChoreDateDueAttribute(params string[] ChoreType)
-        {
-            this.PropertyName = ChoreType;
-        }
-        public string[] PropertyName { get; private set; }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var properties = this.PropertyName.Select(validationContext.ObjectType.GetProperty);
-            var values = properties.Select(p => p.GetValue(validationContext.ObjectInstance, null)).OfType<int>();
-            if (values.FirstOrDefault() != 4 && value == null)
-            {
-                return new ValidationResult(this.FormatErrorMessage(validationContext.DisplayName));
-            }
-            return ValidationResult.Success;
-        }
     }
-
-    public class AssignedMembersListAttribute : ValidationAttribute
-    {
-        public AssignedMembersListAttribute(params string[] ChoreType)
-        {
-            this.PropertyName = ChoreType;
-        }
-        public string[] PropertyName { get; private set; }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var properties = this.PropertyName.Select(validationContext.ObjectType.GetProperty);
-            var values = properties.Select(p => p.GetValue(validationContext.ObjectInstance, null)).OfType<int>();
-            if (values.FirstOrDefault() != 4 && value == null)
-            {
-                return new ValidationResult(this.FormatErrorMessage(validationContext.DisplayName));
-            }
-            return ValidationResult.Success;
-        }
-    }
-
-    public class ValidChoreDate : ValidationAttribute
-    {
-        public ValidChoreDate(params string[] ChoreType)
-        {
-            this.PropertyName = ChoreType;
-        }
-        public string[] PropertyName { get; private set; }
-
-        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            var properties = this.PropertyName.Select(validationContext.ObjectType.GetProperty);
-            var values = properties.Select(p => p.GetValue(validationContext.ObjectInstance, null)).OfType<int>();
-
-            if (values.FirstOrDefault() != 4 && value != null)
-            {
-                if ((DateTime)value < DateTime.Now)
-                    return new ValidationResult(this.FormatErrorMessage(validationContext.DisplayName));
-                else
-                    return ValidationResult.Success;
-            }
-            return ValidationResult.Success;
-        }
-    }
-
-    public class WeekDaysAttribute : ValidationAttribute
-    {
-        public WeekDaysAttribute(string[] ChoreType, string[] BoolProperties)
-        {
-
-            this.BoolPropertyNames = BoolProperties;
-            this.PropertyName = ChoreType;
-        }
-
-        public string[] PropertyName { get; private set; }
-        public string[] BoolPropertyNames { get; private set; }
-
-        protected override ValidationResult IsValid(object inputValue, ValidationContext validationContext)
-        {
-            var properties = this.PropertyName.Select(validationContext.ObjectType.GetProperty);
-            var values = properties.Select(p => p.GetValue(validationContext.ObjectInstance, null)).OfType<int>();
-
-            var boolProperties = this.BoolPropertyNames.Select(validationContext.ObjectType.GetProperty);
-            var boolValues = boolProperties.Select(p => p.GetValue(validationContext.ObjectInstance, null)).ToList();
-
-            if(values.FirstOrDefault() == 4)
-            {
-                foreach (bool value in boolValues)
-                {
-                    if(value == true)
-                    {
-                        return ValidationResult.Success;
-                    }
-                }
-                return new ValidationResult(this.FormatErrorMessage(validationContext.DisplayName));
-            }
-            return ValidationResult.Success;
-        }
-    }
-
-    #endregion
-    
 }
 

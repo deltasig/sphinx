@@ -10,7 +10,6 @@ namespace DeltaSigmaPhiWebsite.Models
     {
         public Semester()
         {
-            ChoreGroups = new HashSet<ChoreGroup>();
             ClassesTakens = new HashSet<ClassTaken>();
             Leaders = new HashSet<Leader>();
             Members = new HashSet<Member>();
@@ -31,9 +30,7 @@ namespace DeltaSigmaPhiWebsite.Models
 
         [Column(TypeName = "date")]
         public DateTime? DateEnd { get; set; }
-
-        public virtual ICollection<ChoreGroup> ChoreGroups { get; set; }
-
+        
         public virtual ICollection<ClassTaken> ClassesTakens { get; set; }
 
         public virtual ICollection<Leader> Leaders { get; set; }
