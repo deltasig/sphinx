@@ -55,7 +55,7 @@
             </div>
 
             <!-- Chores Section -->
-            <div class="row-fluid">
+            @*<div class="row-fluid">
                 <h3>Yours Chores <small>this week</small></h3>
                 @if (Model.AllChores == null || Model.AllChores.AllUsersChores.FirstOrDefault() == null)
                 {
@@ -100,7 +100,6 @@
                                 {
                                     <td class="text-danger">Unsatisfactory</td>
                                 }
-                                @*uncollapse the directions row*@
                                 <td>
                                     <button type="button" class="btn btn-xs btn-link" data-toggle="collapse" data-target=".@collapseName">Details</button>
                                 </td>
@@ -122,8 +121,7 @@
                         }
                     </table>
                 }
-            </div>
-            <!-- Study Hours Section -->
+            </div>*@
             <!-- Service Hours Sections-->
             <div class="row-fluid">
                 <h3>Your Service Hours <small>this semester</small></h3>
@@ -189,6 +187,7 @@
                     </table>
                 }
             </div>
+            <!-- Study Hours Section -->
             <div class="row-fluid">
                 <h3>Your Study Hours <small>this week</small></h3>
                 @if (!Model.StudyHours.Any())
@@ -248,6 +247,7 @@
                 }
             </div>
         </div>
+        <!-- Sober Section -->
         <div class="col-md-4">
             <div class="well">
                 <h3 style="margin-top: 0;">Sober Driver(s)</h3>

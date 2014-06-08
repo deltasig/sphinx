@@ -6,14 +6,14 @@
     <link href="~/Images/Favicon-16x16.png" rel="shortcut icon" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @Styles.Render("~/Content/bootstrap")
+    @Scripts.Render("~/bundles/modernizr")
 </head>
 <body style="padding: 0">
     @Html.Partial("Nav")
     @RenderBody()
     @Html.Partial("Footer")
-    <!-- Include all compiled plugins (below), or include individual files as needed -->    
-    @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    @Scripts.Render("~/bundles/otf")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
