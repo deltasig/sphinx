@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using Data.Interfaces;
+    using Data.Repositories;
     using Data.UnitOfWork;
     using Models;
     using System;
@@ -16,9 +17,14 @@
         public AccountController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        public ActionResult Index(ManageMessageId? message)
+        public ActionResult Index(ManageMessageId? message, string userName = null)
         {
-            var userName = WebSecurity.CurrentUser.Identity.Name;
+            if (userName == null)
+            {
+                userName = WebSecurity.CurrentUser.Identity.Name;
+                ViewBag.StatusMessage = GetManageMessage(message);
+                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
+            }
             var member = uow.MemberRepository.Get(m => m.UserName == userName);
             var model = new AccountInformationModel
             {
@@ -27,8 +33,6 @@
                 ChangePasswordModel = new LocalPasswordModel()
             };
 
-            ViewBag.StatusMessage = GetManageMessage(message);
-            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
             return View(model);
         }
 
@@ -382,7 +386,7 @@
             }
             // If the current user is logged in, add the new account
             OAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
-            return RedirectToAction("Index", "Sphinx");
+            return RedirectToAction("Index", new { Message = ManageMessageId.AddLoginSuccess });
         }
 
         [HttpGet]
@@ -468,6 +472,7 @@
             return message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
             : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
             : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
+            : message == ManageMessageId.AddLoginSuccess ? "External login was added."
             : "";
         }
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
@@ -513,6 +518,7 @@
             ChangePasswordSuccess,
             SetPasswordSuccess,
             RemoveLoginSuccess,
+            AddLoginSuccess,
         }
         public enum RoleMessageId
         {
