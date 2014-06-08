@@ -95,7 +95,10 @@
         [HttpGet]
         public ActionResult SubmitStudy()
         {
-            var model = new StudyHourSubmissionModel { Approvers = GetAllApproverIds(WebSecurity.GetUserId(User.Identity.Name)) };
+            var model = new StudyHourSubmissionModel
+            {
+                Approvers = GetAllApproverIds(WebSecurity.GetUserId(User.Identity.Name))
+            };
             return PartialView(model);
         }
 
