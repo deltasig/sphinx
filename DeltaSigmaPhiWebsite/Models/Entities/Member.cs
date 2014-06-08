@@ -23,7 +23,6 @@ namespace DeltaSigmaPhiWebsite.Models
             SoberOfficers = new HashSet<SoberOfficer>();
             StudyHours = new HashSet<StudyHour>();
             webpages_OAuthMembership = new HashSet<webpages_OAuthMembership>();
-            ChoreGroups = new HashSet<ChoreGroup>();
             Leaders1 = new HashSet<Leader>();
             IncidentReports1 = new HashSet<IncidentReport>();
             Majors = new HashSet<Major>();
@@ -104,9 +103,7 @@ namespace DeltaSigmaPhiWebsite.Models
         public virtual webpages_Membership webpages_Membership { get; set; }
 
         public virtual ICollection<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
-
-        public virtual ICollection<ChoreGroup> ChoreGroups { get; set; }
-
+        
         public virtual ICollection<Leader> Leaders1 { get; set; }
 
         public virtual ICollection<IncidentReport> IncidentReports1 { get; set; }
