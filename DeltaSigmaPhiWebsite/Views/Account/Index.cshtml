@@ -78,17 +78,17 @@
         </div>
     </div>
 
-
-    @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
-    @{
-        Html.RenderPartial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel);
-    }
-    <div class="panel panel-default">
-        <div class="panel-heading">External Authentication</div>
-        <div class="panel-body">
-            @Html.Action("RemoveExternalLogins")
-            @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
+    @if (User.Identity.Name == Model.MemberInfo.UserName)
+    {
+        @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
+        @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
+        
+        <div class="panel panel-default">
+            <div class="panel-heading">External Authentication</div>
+            <div class="panel-body">
+                @Html.Action("RemoveExternalLogins")
+                @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
+            </div>
         </div>
-    </div>
-
+    }
 </div>
