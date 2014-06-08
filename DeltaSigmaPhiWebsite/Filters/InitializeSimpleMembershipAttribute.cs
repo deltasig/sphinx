@@ -37,7 +37,7 @@
                             ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
                         }
                     }
-
+                    
                     WebSecurity.InitializeDatabaseConnection("DspContext", "Members", "UserId", "UserName", true);
                 }
                 catch (Exception ex)

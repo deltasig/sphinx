@@ -267,15 +267,15 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
-    <Compile Include="Data\Interfaces\IChoreGroupTypesRepository.cs" />
-    <Compile Include="Data\Interfaces\IChoreAssignmentsRepository.cs" />
-    <Compile Include="Data\Interfaces\IChoreClassesRepository.cs" />
-    <Compile Include="Data\Interfaces\IChoreGroupsRepository.cs" />
-    <Compile Include="Data\Interfaces\IChoresRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Migrations\201406082321247_InitialMigrations.cs" />
+    <Compile Include="Migrations\201406082321247_InitialMigrations.Designer.cs">
+      <DependentUpon>201406082321247_InitialMigrations.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IOAuthWebSecurity.cs" />
     <Compile Include="Data\Interfaces\ISemestersRepository.cs" />
     <Compile Include="Data\Interfaces\IServiceHoursRepository.cs" />
@@ -283,11 +283,6 @@
     <Compile Include="Data\Interfaces\ISoberDriversRepository.cs" />
     <Compile Include="Data\Interfaces\IStudyHoursRepository.cs" />
     <Compile Include="Models\IWebSecurity.cs" />
-    <Compile Include="Data\Repositories\ChoreAssignmentsRepository.cs" />
-    <Compile Include="Data\Repositories\ChoreClassesRepository.cs" />
-    <Compile Include="Data\Repositories\ChoreGroupsRepository.cs" />
-    <Compile Include="Data\Repositories\ChoreGroupTypesRepository.cs" />
-    <Compile Include="Data\Repositories\ChoresRepository.cs" />
     <Compile Include="Data\Repositories\EventsRepository.cs" />
     <Compile Include="Data\Repositories\LaundrySignupRepository.cs" />
     <Compile Include="Data\Repositories\MemberStatusRepository.cs" />
@@ -306,11 +301,6 @@
     <Compile Include="Models\OAuthWebSecurityWrapper.cs" />
     <Compile Include="Models\ViewModels\AccountModels.cs" />
     <Compile Include="Models\Entities\Address.cs" />
-    <Compile Include="Models\Entities\Chore.cs" />
-    <Compile Include="Models\Entities\ChoreAssignment.cs" />
-    <Compile Include="Models\Entities\ChoreClass.cs" />
-    <Compile Include="Models\Entities\ChoreGroup.cs" />
-    <Compile Include="Models\Entities\ChoreGroupType.cs" />
     <Compile Include="Models\Entities\Class.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Models\Entities\Department.cs" />
@@ -512,7 +502,6 @@
     <Content Include="Views\Sphinx\SubmitService.cshtml" />
     <Content Include="Views\Sphinx\_AddSemesterPartial.cshtml" />
     <Content Include="Views\Sphinx\LaundrySchedule.cshtml" />
-    <Content Include="Views\Sphinx\_NewChorePartial.cshtml" />
     <Content Include="Views\Sphinx\SoberScheduleManager.cshtml" />
     <Content Include="Views\Sphinx\IncidentReporting.cshtml" />
     <Content Include="Views\Sphinx\SoberSchedule.cshtml" />
@@ -528,7 +517,11 @@
   <ItemGroup>
     <Content Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201406082321247_InitialMigrations.resx">
+      <DependentUpon>201406082321247_InitialMigrations.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
