@@ -1,7 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.Interfaces;
-    using Data.Repositories;
     using Data.UnitOfWork;
     using Models;
     using System;
