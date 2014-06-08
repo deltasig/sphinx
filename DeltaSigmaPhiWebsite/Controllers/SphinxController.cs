@@ -34,7 +34,6 @@
                 LaundrySummary = LaundrySummary(),
                 AllChores = new ChoresToDo { AllUsersChores = GetUserChores(userId) }
             };
-            ViewBag.FailMessage = TempData["ServiceSubmissionError"];
 
             return View(model);
         }
