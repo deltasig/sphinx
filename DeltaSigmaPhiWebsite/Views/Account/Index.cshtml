@@ -81,13 +81,38 @@
     @if (User.Identity.Name == Model.MemberInfo.UserName)
     {
         @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
-        @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
-        
-        <div class="panel panel-default">
-            <div class="panel-heading">External Authentication</div>
-            <div class="panel-body">
-                @Html.Action("RemoveExternalLogins")
-                @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
+        <div class="row">
+            <div class="col-sm-6">
+                @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
+                <div class="panel panel-default">
+                    <div class="panel-heading">External Authentication</div>
+                    <div class="panel-body">
+                        @Html.Action("RemoveExternalLogins")
+                        @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                @Html.Partial("_UpdateAddress", Model.PrimaryAddress)
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-sm-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Address</div>
+                    <div class="panel-body">
+                        @Model.PrimaryAddress.Address1<br>
+                        @Model.PrimaryAddress.Address2<br>
+                        @Model.PrimaryAddress.City, @Model.PrimaryAddress.State @Model.PrimaryAddress.PostalCode<br>
+                        @Model.PrimaryAddress.Country
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                
             </div>
         </div>
     }

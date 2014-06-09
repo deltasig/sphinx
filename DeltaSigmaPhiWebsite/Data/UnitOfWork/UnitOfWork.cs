@@ -1,82 +1,87 @@
 ﻿namespace DeltaSigmaPhiWebsite.Data.UnitOfWork
 {
-    using System;
     using Interfaces;
     using Models;
     using Repositories;
+    using System;
 
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly DspContext context = new DspContext();
+        private readonly DspContext _context = new DspContext();
         
-        private IMembersRepository memberRepository;
+        private IMembersRepository _memberRepository;
         public IMembersRepository MemberRepository
         {
-            get { return memberRepository ?? (memberRepository = new MembersRepository(context)); }
+            get { return _memberRepository ?? (_memberRepository = new MembersRepository(_context)); }
         }
-        private IServiceHoursRepository serviceHourRepository;
+        private IServiceHoursRepository _serviceHourRepository;
         public IServiceHoursRepository ServiceHourRepository
         {
-            get { return serviceHourRepository ?? (serviceHourRepository = new ServiceHoursRepository(context)); }
+            get { return _serviceHourRepository ?? (_serviceHourRepository = new ServiceHoursRepository(_context)); }
         }
-        private ISemestersRepository semesterRepository;
+        private ISemestersRepository _semesterRepository;
         public ISemestersRepository SemesterRepository
         {
-            get { return semesterRepository ?? (semesterRepository = new SemestersRepository(context)); }
+            get { return _semesterRepository ?? (_semesterRepository = new SemestersRepository(_context)); }
         }
-        private IEventsRepository eventRepository;
+        private IEventsRepository _eventRepository;
         public IEventsRepository EventRepository
         {
-            get { return eventRepository ?? (eventRepository = new EventsRepository(context)); }
+            get { return _eventRepository ?? (_eventRepository = new EventsRepository(_context)); }
         }
-        private ILaundrySignupRepository laundrySignupRepository;
+        private ILaundrySignupRepository _laundrySignupRepository;
         public ILaundrySignupRepository LaundrySignupRepository
         {
-            get { return laundrySignupRepository ?? (laundrySignupRepository = new LaundrySignupRepository(context)); }
+            get { return _laundrySignupRepository ?? (_laundrySignupRepository = new LaundrySignupRepository(_context)); }
         }
-        private ISoberDriversRepository soberDriverRepository;
+        private ISoberDriversRepository _soberDriverRepository;
         public ISoberDriversRepository SoberDriverRepository
         {
-            get { return soberDriverRepository ?? (soberDriverRepository = new SoberDriversRepository(context)); }
+            get { return _soberDriverRepository ?? (_soberDriverRepository = new SoberDriversRepository(_context)); }
         }
-        private ISoberOfficersRepository soberOfficerRepository;
+        private ISoberOfficersRepository _soberOfficerRepository;
         public ISoberOfficersRepository SoberOfficerRepository
         {
-            get { return soberOfficerRepository ?? (soberOfficerRepository = new SoberOfficersRepository(context)); }
+            get { return _soberOfficerRepository ?? (_soberOfficerRepository = new SoberOfficersRepository(_context)); }
         }
-        private IMemberStatusRepository memberStatusRepository;
+        private IMemberStatusRepository _memberStatusRepository;
         public IMemberStatusRepository MemberStatusRepository
         {
-            get { return memberStatusRepository ?? (memberStatusRepository = new MemberStatusRepository(context)); }
+            get { return _memberStatusRepository ?? (_memberStatusRepository = new MemberStatusRepository(_context)); }
         }
-        private IStudyHoursRepository studyHourRepository;
+        private IStudyHoursRepository _studyHourRepository;
         public IStudyHoursRepository StudyHourRepository
         {
-            get { return studyHourRepository ?? (studyHourRepository = new StudyHoursRepository(context)); }
+            get { return _studyHourRepository ?? (_studyHourRepository = new StudyHoursRepository(_context)); }
         }
-        private IIncidentReportsRepository incidentReportRepository;
+        private IIncidentReportsRepository _incidentReportRepository;
         public IIncidentReportsRepository IncidentReportRepository
         {
-            get { return incidentReportRepository ?? (incidentReportRepository = new IncidentReportsRepository(context)); }
+            get { return _incidentReportRepository ?? (_incidentReportRepository = new IncidentReportsRepository(_context)); }
+        }
+        private IAddressesRepository _addressesRepository;
+        public IAddressesRepository AddressesRepository
+        {
+            get { return _addressesRepository ?? (_addressesRepository = new AddressesRepository(_context)); }
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
-        private bool disposed;
+        private bool _disposed;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposed)
+            if (!_disposed)
             {
                 if (disposing)
                 {
-                    context.Dispose();
+                    _context.Dispose();
                 }
             }
-            disposed = true;
+            _disposed = true;
         }
 
         public void Dispose()
