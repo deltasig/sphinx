@@ -156,5 +156,6 @@
         public Member MemberInfo { get; set; }
         public LocalPasswordModel ChangePasswordModel { get; set; }
         public string ProfilePicUrl { get; set; }
+        public Address PrimaryAddress { get; set; }
     }
 }

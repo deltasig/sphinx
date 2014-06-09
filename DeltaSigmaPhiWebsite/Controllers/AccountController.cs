@@ -28,11 +28,33 @@
             {
                 MemberInfo = member,
                 ProfilePicUrl = GetBigPictureUrl(member.UserName),
-                ChangePasswordModel = new LocalPasswordModel()
+                ChangePasswordModel = new LocalPasswordModel(),
+                PrimaryAddress = member.Addresses.Count == 0 ? new Address() : member.Addresses.First()
             };
 
             return View(model);
         }
+
+        #region Profile
+        
+        [HttpPost]
+        public ActionResult UpdateAddress(Address address)
+        {
+            if (uow.AddressesRepository.GetAll().Any(a => a.AddressId == address.AddressId))
+            {
+                uow.AddressesRepository.DeleteById(address.AddressId);
+            }
+
+            address.UserId = WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name);
+            uow.AddressesRepository.Insert(address);
+
+            uow.Save();
+
+            return RedirectToAction("Index", "Account");
+        }
+
+
+        #endregion
 
         #region Local Authentication
 

@@ -268,10 +268,12 @@
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
+    <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Data\Repositories\AddressesRepository.cs" />
     <Compile Include="Migrations\201406082321247_InitialMigrations.cs" />
     <Compile Include="Migrations\201406082321247_InitialMigrations.Designer.cs">
       <DependentUpon>201406082321247_InitialMigrations.cs</DependentUpon>
@@ -511,6 +513,7 @@
     <Content Include="Views\Error\InternalServerError.cshtml" />
     <Content Include="Views\Shared\Error\NotFoundInfo.cshtml" />
     <Content Include="Views\Shared\Error\InternalServerErrorInfo.cshtml" />
+    <Content Include="Views\Account\_UpdateAddress.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
