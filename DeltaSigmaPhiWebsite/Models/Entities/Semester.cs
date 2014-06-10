@@ -19,10 +19,18 @@ namespace DeltaSigmaPhiWebsite.Models
 
         public int SemesterId { get; set; }
 
+        [Required]
+        [Display(Name = "Start Date")]
+        [DataType(DataType.Date)]
         [Column(TypeName = "date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateStart { get; set; }
 
+        [Required]
+        [Display(Name = "End Date")]
+        [DataType(DataType.Date)]
         [Column(TypeName = "date")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateEnd { get; set; }
         
         public virtual ICollection<ClassTaken> ClassesTakens { get; set; }

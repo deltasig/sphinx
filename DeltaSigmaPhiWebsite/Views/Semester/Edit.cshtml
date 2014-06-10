@@ -1,0 +1,50 @@
+﻿@model DeltaSigmaPhiWebsite.Models.Semester
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Edit</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-3">
+            <h3>@(Model.DateStart.Month < 6 ? "Spring" : "Fall") @Model.DateStart.Year <small>Semester</small></h3>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.SemesterId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DateStart, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateStart, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DateEnd, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.DateEnd, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateEnd, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+            <div>
+                @Html.ActionLink("Back to List", "Index")
+            </div>
+        </div>
+    </div>
+</div>
+

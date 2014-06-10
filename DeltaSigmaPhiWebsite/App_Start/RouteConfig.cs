@@ -8,6 +8,12 @@
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            
+            routes.MapRoute(
+                name: "Semester",
+                url: "Semester/{action}/{id}",
+                defaults: new { controller = "Semester", id = UrlParameter.Optional }
+            );
 
             routes.MapRoute(
                 name: "AccountIndex",
