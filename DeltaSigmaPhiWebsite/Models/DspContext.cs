@@ -4,7 +4,8 @@ namespace DeltaSigmaPhiWebsite.Models
 
     public partial class DspContext : DbContext
     {
-        public DspContext() : base("name=DspContext")
+        public DspContext()
+            : base("name=DefaultConnection")
         {
         }
 
