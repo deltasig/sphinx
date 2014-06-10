@@ -1,0 +1,58 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Models.Semester>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Semesters</h1>
+                <p>
+                    At the end of each semester, define the next semester by creating a new one here.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <p>
+                @Html.ActionLink("Create New", "Create")
+            </p>
+            <table class="table">
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateStart)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateEnd)
+                    </th>
+                    <th></th>
+                </tr>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateStart)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateEnd)
+                        </td>
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId }) |
+                            @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

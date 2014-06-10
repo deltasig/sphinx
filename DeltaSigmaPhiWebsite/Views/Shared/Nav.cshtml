@@ -4,7 +4,9 @@
         <img src="~/Images/DeltaSig-Header-Small.png" alt="Header" style="padding: 20px 0" id="header-img" />
     </div>
 }
-@if (ViewContext.RouteData.Values.ContainsValue("Sphinx") || ViewContext.RouteData.Values.ContainsValue("Account"))
+@if (ViewContext.RouteData.Values.ContainsValue("Sphinx") || 
+    ViewContext.RouteData.Values.ContainsValue("Account") ||
+    ViewContext.RouteData.Values.ContainsValue("Semester"))
 {
     @Html.Partial("_InternalNav")
 }
