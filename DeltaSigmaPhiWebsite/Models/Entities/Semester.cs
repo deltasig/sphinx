@@ -20,10 +20,10 @@ namespace DeltaSigmaPhiWebsite.Models
         public int SemesterId { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime? DateStart { get; set; }
+        public DateTime DateStart { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime? DateEnd { get; set; }
+        public DateTime DateEnd { get; set; }
         
         public virtual ICollection<ClassTaken> ClassesTakens { get; set; }
 

@@ -343,10 +343,6 @@
     <Compile Include="Data\Repositories\MembersRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\aspnet-DeltaSigmaPhiWebsite-20131123054730.mdf" />
-    <Content Include="App_Data\aspnet-DeltaSigmaPhiWebsite-20131123054730_log.ldf">
-      <DependentUpon>aspnet-DeltaSigmaPhiWebsite-20131123054730.mdf</DependentUpon>
-    </Content>
     <Content Include="Content\bootstrap\css\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap\css\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-theme.css" />
@@ -525,6 +521,9 @@
     <EmbeddedResource Include="Migrations\201406101402228_Initial.resx">
       <DependentUpon>201406101402228_Initial.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
