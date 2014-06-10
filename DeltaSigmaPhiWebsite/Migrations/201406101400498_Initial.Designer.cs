@@ -7,13 +7,13 @@ namespace DeltaSigmaPhiWebsite.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.0-30225")]
-    public sealed partial class InitialMigrations : IMigrationMetadata
+    public sealed partial class Initial : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(InitialMigrations));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Initial));
         
         string IMigrationMetadata.Id
         {
-            get { return "201406082321247_InitialMigrations"; }
+            get { return "201406101400498_Initial"; }
         }
         
         string IMigrationMetadata.Source

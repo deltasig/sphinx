@@ -19,12 +19,6 @@ namespace DeltaSigmaPhiWebsite.Models
 
         public int SemesterId { get; set; }
 
-        public int Year { get; set; }
-
-        [Required]
-        [StringLength(10)]
-        public string Term { get; set; }
-
         [Column(TypeName = "date")]
         public DateTime? DateStart { get; set; }
 
