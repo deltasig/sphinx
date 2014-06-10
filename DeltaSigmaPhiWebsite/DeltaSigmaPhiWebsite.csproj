@@ -274,9 +274,9 @@
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
     <Compile Include="Data\Repositories\AddressesRepository.cs" />
-    <Compile Include="Migrations\201406082321247_InitialMigrations.cs" />
-    <Compile Include="Migrations\201406082321247_InitialMigrations.Designer.cs">
-      <DependentUpon>201406082321247_InitialMigrations.cs</DependentUpon>
+    <Compile Include="Migrations\201406101402228_Initial.cs" />
+    <Compile Include="Migrations\201406101402228_Initial.Designer.cs">
+      <DependentUpon>201406101402228_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\IOAuthWebSecurity.cs" />
@@ -522,8 +522,8 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201406082321247_InitialMigrations.resx">
-      <DependentUpon>201406082321247_InitialMigrations.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201406101402228_Initial.resx">
+      <DependentUpon>201406101402228_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

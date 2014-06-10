@@ -65,8 +65,6 @@
             {
                 uow.SemesterRepository.Insert(new Semester
                 {
-                    Year = model.Year,
-                    Term = model.SelectedTerm,
                     DateStart = model.StartDate,
                     DateEnd = model.EndDate
                 });

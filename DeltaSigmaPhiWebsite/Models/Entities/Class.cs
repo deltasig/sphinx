@@ -10,7 +10,7 @@ namespace DeltaSigmaPhiWebsite.Models
     {
         public Class()
         {
-            ClassesTakens = new HashSet<ClassTaken>();
+            ClassesTaken = new HashSet<ClassTaken>();
             Instructors = new HashSet<Instructor>();
         }
 
@@ -18,13 +18,17 @@ namespace DeltaSigmaPhiWebsite.Models
 
         public int DepartmentId { get; set; }
 
+        public string CourseNumberDepartmentPrefix { get; set; }
+
         public int CourseNumber { get; set; }
 
         [Required]
         [StringLength(100)]
         public string CourseName { get; set; }
 
-        public virtual ICollection<ClassTaken> ClassesTakens { get; set; }
+        public virtual Department Department { get; set; }
+
+        public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
 
         public virtual ICollection<Instructor> Instructors { get; set; }
     }
