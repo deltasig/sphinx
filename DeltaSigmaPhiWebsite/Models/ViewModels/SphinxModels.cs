@@ -66,34 +66,6 @@
         public bool Approval { get; set; }
     }
 
-    public class AdminPanelModel
-    {
-        public AddSemesterModel SemesterModel { get; set; }
-    }
-
-    public class AddSemesterModel
-    {
-        [Required]
-        [Display(Name = "Year")]
-        public int Year { get; set; }
-
-        [Required]
-        [Display(Name = "Term")]
-        [DataType(DataType.Text)]
-        public string SelectedTerm { get; set; }
-        public IEnumerable<SelectListItem> Terms { get; set; }
-
-        [Required]
-        [Display(Name = "Start Date")]
-        [DataType(DataType.Date)]
-        public DateTime StartDate { get; set; }
-
-        [Required]
-        [Display(Name = "End Date")]
-        [DataType(DataType.Date)]
-        public DateTime EndDate { get; set; }
-    }
-
     public class SoberSignupModel
     {
         public List<SoberReservationModel> SoberSignUpsNeededList { get; set; }
@@ -156,13 +128,6 @@
         public string Name { get; set; }
         public string UserName { get; set; }
         public DateTime Shift { get; set; }
-    }
-
-    public class MyTestModel
-    {
-        public string Gender { get; set; }
-        public string Title { get; set; }
-        public string TmpTitle { get; set; }
     }
 }
 

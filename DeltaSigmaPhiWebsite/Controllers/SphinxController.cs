@@ -37,49 +37,6 @@
             return View(model);
         }
 
-        #region System Administration
-
-        [HttpGet]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult AdminPanel()
-        {
-            var model = new AdminPanelModel
-            {
-                SemesterModel = new AddSemesterModel
-                {
-                    Terms = GetTerms(),
-                    StartDate = DateTime.Today.Date,
-                    EndDate = DateTime.Today.Date,
-                    Year = DateTime.Today.Year
-                }
-            };
-
-            return View(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult AddSemester(AddSemesterModel model)
-        {
-            try
-            {
-                uow.SemesterRepository.Insert(new Semester
-                {
-                    DateStart = model.StartDate,
-                    DateEnd = model.EndDate
-                });
-                uow.Save();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return RedirectToAction("AdminPanel");
-        }
-
-        #endregion
-
         #region Academics
 
         [HttpGet]

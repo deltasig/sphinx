@@ -267,6 +267,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\SemesterController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
     <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
@@ -497,9 +498,7 @@
     <Content Include="Views\Shared\_ExternalNav.cshtml" />
     <Content Include="Views\Shared\_InternalNav.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
-    <Content Include="Views\Sphinx\AdminPanel.cshtml" />
     <Content Include="Views\Sphinx\SubmitService.cshtml" />
-    <Content Include="Views\Sphinx\_AddSemesterPartial.cshtml" />
     <Content Include="Views\Sphinx\LaundrySchedule.cshtml" />
     <Content Include="Views\Sphinx\SoberScheduleManager.cshtml" />
     <Content Include="Views\Sphinx\IncidentReporting.cshtml" />
@@ -510,6 +509,10 @@
     <Content Include="Views\Shared\Error\NotFoundInfo.cshtml" />
     <Content Include="Views\Shared\Error\InternalServerErrorInfo.cshtml" />
     <Content Include="Views\Account\_UpdateAddress.cshtml" />
+    <Content Include="Views\Semester\Create.cshtml" />
+    <Content Include="Views\Semester\Delete.cshtml" />
+    <Content Include="Views\Semester\Edit.cshtml" />
+    <Content Include="Views\Semester\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
