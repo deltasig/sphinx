@@ -17,21 +17,17 @@ namespace DeltaSigmaPhiWebsite.Migrations
 
         protected override void Seed(DspContext context)
         {
-            //  This method will be called after migrating to the latest version.
+            WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Members", "UserId", "UserName", true);
 
-            WebSecurity.InitializeDatabaseConnection("DspContext", "Members", "UserId", "UserName", true);
-            
-            context.MemberStatus.AddRange(new List<MemberStatus>
-            {
+            context.MemberStatus.AddOrUpdate(m => m.StatusName,
                 new MemberStatus { StatusName = "Pledge"},
                 new MemberStatus { StatusName = "Neophyte"},
                 new MemberStatus { StatusName = "Active"},
                 new MemberStatus { StatusName = "Alumnus"},
-                new MemberStatus { StatusName = "Affiliate"},
-            });
+                new MemberStatus { StatusName = "Affiliate"}
+            );
 
-            context.Semesters.AddRange(new List<Semester>
-            {
+            context.Semesters.AddOrUpdate(s => s.DateStart,
                 new Semester { DateStart = new DateTime(2010, 1, 1), DateEnd = new DateTime(2010, 5, 31) },
                 new Semester { DateStart = new DateTime(2010, 8, 1), DateEnd = new DateTime(2010, 12, 31) },
                 new Semester { DateStart = new DateTime(2011, 1, 1), DateEnd = new DateTime(2011, 5, 31) },
@@ -42,10 +38,9 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Semester { DateStart = new DateTime(2013, 8, 1), DateEnd = new DateTime(2013, 12, 31) },
                 new Semester { DateStart = new DateTime(2014, 1, 1), DateEnd = new DateTime(2014, 5, 31) },
                 new Semester { DateStart = new DateTime(2014, 8, 1), DateEnd = new DateTime(2014, 12, 31) }
-            });
+            );
 
-            context.Departments.AddRange(new List<Department>
-            {
+            context.Departments.AddOrUpdate(d => d.DepartmentName,
                 new Department { DepartmentName = "Aerospace & Mechanical Engineering" },
                 new Department { DepartmentName = "Arts, Languages, and Philosophy" },
                 new Department { DepartmentName = "Biological Sciences" },
@@ -66,13 +61,12 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Department { DepartmentName = "Mining Engineering" },
                 new Department { DepartmentName = "Nuclear Engineering" },
                 new Department { DepartmentName = "Physics" }, //20
-                new Department { DepartmentName = "Psychology" },
-            });
+                new Department { DepartmentName = "Psychology" }
+            );
 
             context.SaveChanges();
 
-            context.Majors.AddRange(new List<Major>
-            {
+            context.Majors.AddOrUpdate(m => m.MajorName,
                 new Major { DepartmentId = 1, MajorName = "Aerospace Engineering" },
                 new Major { DepartmentId = 1, MajorName = "Mechanical Engineering" },
                 new Major { DepartmentId = 2, MajorName = "Art" },
@@ -102,8 +96,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Major { DepartmentId = 18, MajorName = "Mining Engineering" },
                 new Major { DepartmentId = 19, MajorName = "Nuclear Engineering" },
                 new Major { DepartmentId = 20, MajorName = "Physics" },
-                new Major { DepartmentId = 21, MajorName = "Psychology" },
-            });
+                new Major { DepartmentId = 21, MajorName = "Psychology" }
+            );
 
             context.SaveChanges();
 

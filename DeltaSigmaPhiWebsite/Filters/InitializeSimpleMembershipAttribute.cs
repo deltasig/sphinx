@@ -37,8 +37,8 @@
                             ((IObjectContextAdapter)context).ObjectContext.CreateDatabase();
                         }
                     }
-                    
-                    WebSecurity.InitializeDatabaseConnection("DspContext", "Members", "UserId", "UserName", true);
+
+                    WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Members", "UserId", "UserName", true);
                 }
                 catch (Exception ex)
                 {
