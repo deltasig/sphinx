@@ -21,6 +21,7 @@ namespace DeltaSigmaPhiWebsite.Models
         [StringLength(100)]
         public string MajorName { get; set; }
 
+        [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; }
 
         public virtual ICollection<Member> Members { get; set; }

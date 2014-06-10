@@ -40,8 +40,34 @@ namespace DeltaSigmaPhiWebsite.Models
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Event>()
+                .HasMany(e => e.ServiceHours)
+                .WithRequired(e => e.Event)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<IncidentReport>()
+                .Property(u => u.ReportedBy)
+                .HasColumnName("ReportedBy");
+
+            modelBuilder.Entity<Leader>()
+                .HasMany(e => e.Members)
+                .WithMany(e => e.Leaders1)
+                .Map(m => m.ToTable("CommitteeMembers").MapLeftKey("LeaderId").MapRightKey("UserId"));
+
+            modelBuilder.Entity<Meal>()
+                .HasMany(e => e.MealsCooked)
+                .WithRequired(e => e.Meal)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Position>()
+                .HasMany(e => e.Leaders)
+                .WithRequired(e => e.Position)
+                .WillCascadeOnDelete(false);
+            
+            #region Class, Department, ClassTaken
+
             modelBuilder.Entity<Class>()
-                .HasMany(e => e.ClassesTakens)
+                .HasMany(e => e.ClassesTaken)
                 .WithRequired(e => e.Class)
                 .WillCascadeOnDelete(false);
 
@@ -65,30 +91,33 @@ namespace DeltaSigmaPhiWebsite.Models
                 .WithRequired(e => e.Department)
                 .WillCascadeOnDelete(false);
 
-            modelBuilder.Entity<Event>()
-                .HasMany(e => e.ServiceHours)
-                .WithRequired(e => e.Event)
+            modelBuilder.Entity<Department>()
+                .HasMany(e => e.Classes)
+                .WithRequired(e => e.Department)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<IncidentReport>()
-                .Property(u => u.ReportedBy)
-                .HasColumnName("ReportedBy");
-
-            modelBuilder.Entity<Leader>()
-                .HasMany(e => e.Members)
-                .WithMany(e => e.Leaders1)
-                .Map(m => m.ToTable("CommitteeMembers").MapLeftKey("LeaderId").MapRightKey("UserId"));
 
             modelBuilder.Entity<Major>()
                 .HasMany(e => e.Members)
                 .WithMany(e => e.Majors)
                 .Map(m => m.ToTable("MemberMajors").MapLeftKey("MajorId").MapRightKey("UserId"));
 
-            modelBuilder.Entity<Meal>()
-                .HasMany(e => e.MealsCooked)
-                .WithRequired(e => e.Meal)
+            #endregion
+
+            #region Organization
+
+            modelBuilder.Entity<Organization>()
+                .HasMany(e => e.OrganizationPositions)
+                .WithRequired(e => e.Organization)
                 .WillCascadeOnDelete(false);
 
+            modelBuilder.Entity<Organization>()
+                .HasMany(e => e.OrganizationsJoineds)
+                .WithRequired(e => e.Organization)
+                .WillCascadeOnDelete(false);
+
+            #endregion
+
+            #region Member
             modelBuilder.Entity<Member>()
                 .HasMany(e => e.Addresses)
                 .WithRequired(e => e.Member)
@@ -155,21 +184,9 @@ namespace DeltaSigmaPhiWebsite.Models
                 .WithMany(e => e.Members)
                 .Map(m => m.ToTable("webpages_UsersInRoles").MapLeftKey("UserId").MapRightKey("RoleId"));
 
-            modelBuilder.Entity<Organization>()
-                .HasMany(e => e.OrganizationPositions)
-                .WithRequired(e => e.Organization)
-                .WillCascadeOnDelete(false);
+            #endregion
 
-            modelBuilder.Entity<Organization>()
-                .HasMany(e => e.OrganizationsJoineds)
-                .WithRequired(e => e.Organization)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Position>()
-                .HasMany(e => e.Leaders)
-                .WithRequired(e => e.Position)
-                .WillCascadeOnDelete(false);
-            
+            #region Semester
             modelBuilder.Entity<Semester>()
                 .HasMany(e => e.ClassesTakens)
                 .WithRequired(e => e.Semester)
@@ -194,6 +211,7 @@ namespace DeltaSigmaPhiWebsite.Models
                 .HasMany(e => e.PledgeClasses)
                 .WithRequired(e => e.Semester)
                 .WillCascadeOnDelete(false);
+            #endregion
         }
     }
 }
