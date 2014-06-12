@@ -1,4 +1,4 @@
-﻿@model DeltaSigmaPhiWebsite.Models.SphinxModel
+﻿@model SphinxModel
 
 @{
     ViewBag.Title = "Sphinx";
@@ -226,89 +226,92 @@
 
 <div id="service-dialog" style="display: none"></div>
 <div id="study-dialog" style="display: none"></div>
-@Scripts.Render("~/Scripts/jquery-2.1.0.min.js")
-<script type="text/javascript">
+@section scripts
+{
+    <script type="text/javascript">
 
-    $(function () {
-        var url = "";
+        $(function() {
+            var url = "";
 
-        // Defines the service dialog and binds it to an element in the html with the corresponding "id"
-        $("#service-dialog").dialog({
-            autoOpen: false,
-            closeOnEscape: true,
-            resizable: false,
-            position: ["left", 50],
-            width: 350,
-            show: { effect: "slide", direction: "left" },
-            hide: { effect: "slide", direction: "left" },
-            modal: true,
-            draggable: false,
-            open: function () {
-                $(".ui-dialog-titlebar").hide();
-                $(this).load(url, function () {
-                    $("#service-close-button").on("click", function (e) {
-                        $("#service-dialog").dialog("close");
+            // Defines the service dialog and binds it to an element in the html with the corresponding "id"
+            $("#service-dialog").dialog({
+                autoOpen: false,
+                closeOnEscape: true,
+                resizable: false,
+                position: ["left", 50],
+                width: 350,
+                show: { effect: "slide", direction: "left" },
+                hide: { effect: "slide", direction: "left" },
+                modal: true,
+                draggable: false,
+                open: function() {
+                    $(".ui-dialog-titlebar").hide();
+                    $(this).load(url, function() {
+                        $("#service-close-button").on("click", function(e) {
+                            $("#service-dialog").dialog("close");
+                        });
                     });
-                });
-            }
-        });
+                }
+            });
 
-        // Handles the click of the "Serve" link (appears as a button)
-        $("#service-dialog-link").on("click", function (e) {
-            // Required to bind button click to this action
-            e.preventDefault();
-            // Sets the url to the view we want to load into the dialog
-            url = $(this).attr("href");
-            // Determine current visibility of dialogs and handle it for proper display
-            if ($("#service-dialog").dialog("isOpen")) {
-                $("#service-dialog").dialog("close");
-            } else if ($("#study-dialog").dialog("isOpen")) {
-                $("#study-dialog").dialog("close");
-                $("#service-dialog").dialog("open");
-            } else {
-                $("#service-dialog").dialog("open");
-            }
-        });
+            // Handles the click of the "Serve" link (appears as a button)
+            $("#service-dialog-link").on("click", function(e) {
+                // Required to bind button click to this action
+                e.preventDefault();
+                // Sets the url to the view we want to load into the dialog
+                url = $(this).attr("href");
+                // Determine current visibility of dialogs and handle it for proper display
+                if ($("#service-dialog").dialog("isOpen")) {
+                    $("#service-dialog").dialog("close");
+                } else if ($("#study-dialog").dialog("isOpen")) {
+                    $("#study-dialog").dialog("close");
+                    $("#service-dialog").dialog("open");
+                } else {
+                    $("#service-dialog").dialog("open");
+                }
+            });
 
 
-        // Defines the study dialog and binds it to an element in the html with the corresponding "id"
-        $("#study-dialog").dialog({
-            autoOpen: false,
-            closeOnEscape: true,
-            resizable: false,
-            position: ["left", 50],
-            width: 350,
-            show: { effect: "slide", direction: "left" },
-            hide: { effect: "slide", direction: "left" },
-            modal: true,
-            draggable: false,
-            open: function () {
-                $(".ui-dialog-titlebar").hide();
-                $(this).load(url, function () {
-                    $("#study-close-button").on("click", function (e) {
-                        $("#study-dialog").dialog("close");
+            // Defines the study dialog and binds it to an element in the html with the corresponding "id"
+            $("#study-dialog").dialog({
+                autoOpen: false,
+                closeOnEscape: true,
+                resizable: false,
+                position: ["left", 50],
+                width: 350,
+                show: { effect: "slide", direction: "left" },
+                hide: { effect: "slide", direction: "left" },
+                modal: true,
+                draggable: false,
+                open: function() {
+                    $(".ui-dialog-titlebar").hide();
+                    $(this).load(url, function() {
+                        $("#study-close-button").on("click", function(e) {
+                            $("#study-dialog").dialog("close");
+                        });
+                        // This allows the datepicker in the modal to display properly.
+                        $("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
                     });
-                    $("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
-                });
-            }
+                }
+            });
+
+            // Handles the click of the "Study" link (appears as a button)
+            $("#study-dialog-link").on("click", function(e) {
+                // Required to bind button click to this action
+                e.preventDefault();
+                // Sets the url to the view we want to load into the dialog
+                url = $(this).attr("href");
+                // Determine current visibility of dialogs and handle it for proper display
+                if ($("#study-dialog").dialog("isOpen")) {
+                    $("#study-dialog").dialog("close");
+                } else if ($("#service-dialog").dialog("isOpen")) {
+                    $("#service-dialog").dialog("close");
+                    $("#study-dialog").dialog("open");
+                } else {
+                    $("#study-dialog").dialog("open");
+                }
+            });
         });
 
-        // Handles the click of the "Study" link (appears as a button)
-        $("#study-dialog-link").on("click", function (e) {
-            // Required to bind button click to this action
-            e.preventDefault();
-            // Sets the url to the view we want to load into the dialog
-            url = $(this).attr("href");
-            // Determine current visibility of dialogs and handle it for proper display
-            if ($("#study-dialog").dialog("isOpen")) {
-                $("#study-dialog").dialog("close");
-            } else if ($("#service-dialog").dialog("isOpen")) {
-                $("#service-dialog").dialog("close");
-                $("#study-dialog").dialog("open");
-            } else {
-                $("#study-dialog").dialog("open");
-            }
-        });
-    });
-
-</script>
+    </script>
+}

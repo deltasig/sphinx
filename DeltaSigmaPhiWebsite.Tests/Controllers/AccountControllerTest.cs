@@ -1,17 +1,16 @@
 ﻿namespace DeltaSigmaPhiWebsite.Tests.Controllers
 {
-    using System;
-    using System.Linq.Expressions;
-    using System.Security.Policy;
-    using System.Web.Mvc;
     using Data.Interfaces;
     using Data.UnitOfWork;
     using DeltaSigmaPhiWebsite.Controllers;
     using Models;
+    using Models.Entities;
     using Moq;
     using NUnit.Framework;
-    using System.Linq;
+    using System;
+    using System.Linq.Expressions;
     using System.Transactions;
+    using System.Web.Mvc;
 
     [TestFixture]
     public class AccountControllerTest
