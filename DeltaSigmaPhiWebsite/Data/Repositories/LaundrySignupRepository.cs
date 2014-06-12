@@ -1,9 +1,10 @@
 ﻿namespace DeltaSigmaPhiWebsite.Data.Repositories
 {
-    using System;
-    using System.Linq;
     using Interfaces;
     using Models;
+    using Models.Entities;
+    using System;
+    using System.Linq;
 
     public class LaundrySignupRepository : GenericRepository<LaundrySignup>, ILaundrySignupRepository
     {

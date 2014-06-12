@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Tests.Controllers
 {
-    using Data.Interfaces;
     using Data.UnitOfWork;
     using DeltaSigmaPhiWebsite.Controllers;
     using Models;

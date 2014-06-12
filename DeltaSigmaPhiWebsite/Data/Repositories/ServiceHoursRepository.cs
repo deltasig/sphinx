@@ -2,6 +2,7 @@
 {
     using Interfaces;
     using Models;
+    using Models.Entities;
 
     public class ServiceHoursRepository : GenericRepository<ServiceHour>, IServiceHoursRepository
     {

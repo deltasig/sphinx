@@ -1,8 +1,9 @@
 ﻿namespace DeltaSigmaPhiWebsite.Data.Interfaces
 {
-    using Models;
+    using Models.Entities;
 
     public interface IIncidentReportsRepository : IGenericRepository<IncidentReport>
     {
+
     }
 }

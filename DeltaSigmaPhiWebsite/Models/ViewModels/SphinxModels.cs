@@ -1,10 +1,10 @@
-﻿namespace DeltaSigmaPhiWebsite.Models
+﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
+    using Entities;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-    using System.Linq;       //IF YOU REMOVE "CustomValidation" region THEN REMOVE THIS
 
     public class SphinxModel
     {

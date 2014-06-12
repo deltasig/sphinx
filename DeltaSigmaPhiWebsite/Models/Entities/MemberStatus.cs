@@ -1,4 +1,4 @@
-namespace DeltaSigmaPhiWebsite.Models
+namespace DeltaSigmaPhiWebsite.Models.Entities
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
