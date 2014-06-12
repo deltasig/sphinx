@@ -298,7 +298,6 @@
     <Compile Include="Data\Repositories\StudyHoursRepository.cs" />
     <Compile Include="Data\UnitOfWork\IUnitOfWork.cs" />
     <Compile Include="Data\UnitOfWork\UnitOfWork.cs" />
-    <Compile Include="Filters\InitializeSimpleMembershipAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -527,6 +526,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Filters\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
