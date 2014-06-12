@@ -1,5 +1,6 @@
 namespace DeltaSigmaPhiWebsite.Models
 {
+    using Entities;
     using System.Data.Entity;
 
     public partial class DspContext : DbContext

@@ -2,6 +2,7 @@
 {
     using Interfaces;
     using Models;
+    using Models.Entities;
 
     public class MembersRepository : GenericRepository<Member>, IMembersRepository
     {

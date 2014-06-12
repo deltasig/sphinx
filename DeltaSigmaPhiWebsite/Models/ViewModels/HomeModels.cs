@@ -1,4 +1,4 @@
-﻿namespace DeltaSigmaPhiWebsite.Models
+﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
     public class HomeModels
     {

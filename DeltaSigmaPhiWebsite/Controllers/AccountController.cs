@@ -2,6 +2,8 @@
 {
     using Data.UnitOfWork;
     using Models;
+    using Models.Entities;
+    using Models.ViewModels;
     using System;
     using System.Linq;
     using System.Transactions;

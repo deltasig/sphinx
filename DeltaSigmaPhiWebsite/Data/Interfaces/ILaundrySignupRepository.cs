@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Data.Interfaces
 {
+    using Models.Entities;
     using System;
-    using Models;
 
     public interface ILaundrySignupRepository : IGenericRepository<LaundrySignup>
     {
