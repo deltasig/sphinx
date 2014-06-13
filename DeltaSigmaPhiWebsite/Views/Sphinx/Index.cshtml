@@ -14,18 +14,16 @@
                 {
                     <h1>
                         <img src="@Model.ProfilePicUrl" alt="fb pic" class="img-thumbnail">
-                        @Model.MemberInfo.FirstName @Model.MemberInfo.LastName
+                        @ViewBag.Title
                     </h1>
                 }
                 else
                 {
-                    <h1>
-                        @Model.MemberInfo.FirstName @Model.MemberInfo.LastName
-                    </h1>
+                    <h1>@ViewBag.Title</h1>
                 }
             </div>
             <div class="col-md-8 text-right">
-                <h1>@ViewBag.Title</h1>
+                <p class="text-warning">@ViewBag.FailMessage</p>
             </div>
         </div>
     </div>
@@ -34,25 +32,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-8">
-            <div class="row">
-                <div class="col-md-12">
-                    <a href="@Url.Action("SubmitStudy", "Sphinx")" id="study-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required study hours for this week.">
-                        <span class="badge">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            @Model.RemainingStudyHours
-                        </span>
-                        <span>Study</span>
-                    </a>
-                    <a href="@Url.Action("SubmitService", "Sphinx")" id="service-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required service hours for this semester.">
-                        <span class="badge">
-                            <span class="glyphicon glyphicon-plus"></span>
-                            @Model.RemainingCommunityServiceHours
-                        </span>
-                        <span>Serve</span>
-                    </a>
-                    <p class="text-warning">@ViewBag.FailMessage</p>
-                </div>
-            </div>
             <!-- Service Hours Sections-->
             <div class="row-fluid">
                 <h3>Your Service Hours <small>this semester</small></h3>
@@ -180,6 +159,24 @@
         </div>
         <!-- Sober Section -->
         <div class="col-md-4">
+            <a href="@Url.Action("SubmitStudy", "Sphinx")" id="study-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required study hours for this week.">
+                <span class="badge">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                    @Model.RemainingStudyHours
+                </span>
+                <span>Study</span>
+            </a>
+            <a href="@Url.Action("SubmitService", "Sphinx")" id="service-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required service hours for this semester.">
+                <span class="badge">
+                    <span class="glyphicon glyphicon-plus"></span>
+                    @Model.RemainingCommunityServiceHours
+                </span>
+                <span>Serve</span>
+            </a>
+            <br />
+            <br />
+            <div id="service-form" style="display: none">@{Html.RenderAction("SubmitService");}</div>
+            <div id="study-form" style="display: none">@{Html.RenderAction("SubmitStudy");}</div>
             <div class="well">
                 <h3 style="margin-top: 0;">Sober Driver(s)</h3>
                 <table class="table table-condensed table-striped table-responsive">
@@ -224,92 +221,28 @@
     </div>
 </div>
 
-<div id="service-dialog" style="display: none"></div>
-<div id="study-dialog" style="display: none"></div>
 @section scripts
 {
     <script type="text/javascript">
 
-        $(function() {
-            var url = "";
-
-            // Defines the service dialog and binds it to an element in the html with the corresponding "id"
-            $("#service-dialog").dialog({
-                autoOpen: false,
-                closeOnEscape: true,
-                resizable: false,
-                position: ["left", 50],
-                width: 350,
-                show: { effect: "slide", direction: "left" },
-                hide: { effect: "slide", direction: "left" },
-                modal: true,
-                draggable: false,
-                open: function() {
-                    $(".ui-dialog-titlebar").hide();
-                    $(this).load(url, function() {
-                        $("#service-close-button").on("click", function(e) {
-                            $("#service-dialog").dialog("close");
-                        });
-                    });
-                }
-            });
+        $(function () {
+            //$("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
 
             // Handles the click of the "Serve" link (appears as a button)
-            $("#service-dialog-link").on("click", function(e) {
+            $("#service-dialog-link").on("click", function (e) {
                 // Required to bind button click to this action
                 e.preventDefault();
-                // Sets the url to the view we want to load into the dialog
-                url = $(this).attr("href");
                 // Determine current visibility of dialogs and handle it for proper display
-                if ($("#service-dialog").dialog("isOpen")) {
-                    $("#service-dialog").dialog("close");
-                } else if ($("#study-dialog").dialog("isOpen")) {
-                    $("#study-dialog").dialog("close");
-                    $("#service-dialog").dialog("open");
-                } else {
-                    $("#service-dialog").dialog("open");
-                }
-            });
-
-
-            // Defines the study dialog and binds it to an element in the html with the corresponding "id"
-            $("#study-dialog").dialog({
-                autoOpen: false,
-                closeOnEscape: true,
-                resizable: false,
-                position: ["left", 50],
-                width: 350,
-                show: { effect: "slide", direction: "left" },
-                hide: { effect: "slide", direction: "left" },
-                modal: true,
-                draggable: false,
-                open: function() {
-                    $(".ui-dialog-titlebar").hide();
-                    $(this).load(url, function() {
-                        $("#study-close-button").on("click", function(e) {
-                            $("#study-dialog").dialog("close");
-                        });
-                        // This allows the datepicker in the modal to display properly.
-                        $("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
-                    });
-                }
+                $("#study-form").hide();
+                $("#service-form").toggle("slide", { direction: 'up' }, 600);
             });
 
             // Handles the click of the "Study" link (appears as a button)
-            $("#study-dialog-link").on("click", function(e) {
+            $("#study-dialog-link").on("click", function (e) {
                 // Required to bind button click to this action
                 e.preventDefault();
-                // Sets the url to the view we want to load into the dialog
-                url = $(this).attr("href");
-                // Determine current visibility of dialogs and handle it for proper display
-                if ($("#study-dialog").dialog("isOpen")) {
-                    $("#study-dialog").dialog("close");
-                } else if ($("#service-dialog").dialog("isOpen")) {
-                    $("#service-dialog").dialog("close");
-                    $("#study-dialog").dialog("open");
-                } else {
-                    $("#study-dialog").dialog("open");
-                }
+                $("#service-form").hide();
+                $("#study-form").toggle("slide", { direction: 'up' }, 600);
             });
         });
 
