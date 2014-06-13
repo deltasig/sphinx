@@ -159,24 +159,29 @@
         </div>
         <!-- Sober Section -->
         <div class="col-md-4">
-            <a href="@Url.Action("SubmitStudy", "Sphinx")" id="study-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required study hours for this week.">
-                <span class="badge">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                    @Model.RemainingStudyHours
-                </span>
-                <span>Study</span>
-            </a>
-            <a href="@Url.Action("SubmitService", "Sphinx")" id="service-dialog-link" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="These are the remaining required service hours for this semester.">
-                <span class="badge">
-                    <span class="glyphicon glyphicon-plus"></span>
-                    @Model.RemainingCommunityServiceHours
-                </span>
-                <span>Serve</span>
-            </a>
+            <div class="btn-group">
+                <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
+                        title="These are the remaining required service hours for this semester." id="serviceHourModalToggle">
+                    <span class="badge">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        @Model.RemainingCommunityServiceHours
+                    </span>
+                    <span>Serve</span>
+                </button>
+                <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
+                        title="These are the remaining required study hours for this week." id="studyHourModalToggle">
+                    <span class="badge">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                        @Model.RemainingStudyHours
+                    </span>
+                    <span>Study</span>
+                </button>
+            </div>
+
             <br />
             <br />
-            <div id="service-form" style="display: none">@{Html.RenderAction("SubmitService");}</div>
-            <div id="study-form" style="display: none">@{Html.RenderAction("SubmitStudy");}</div>
+            @{Html.RenderAction("SubmitService");}
+            @{Html.RenderAction("SubmitStudy");}
             <div class="well">
                 <h3 style="margin-top: 0;">Sober Driver(s)</h3>
                 <table class="table table-condensed table-striped table-responsive">
@@ -226,24 +231,8 @@
     <script type="text/javascript">
 
         $(function () {
-            //$("#DateTimeStudied").removeClass("text-box single-line").addClass("form-control");
-
-            // Handles the click of the "Serve" link (appears as a button)
-            $("#service-dialog-link").on("click", function (e) {
-                // Required to bind button click to this action
-                e.preventDefault();
-                // Determine current visibility of dialogs and handle it for proper display
-                $("#study-form").hide();
-                $("#service-form").toggle("slide", { direction: 'up' }, 600);
-            });
-
-            // Handles the click of the "Study" link (appears as a button)
-            $("#study-dialog-link").on("click", function (e) {
-                // Required to bind button click to this action
-                e.preventDefault();
-                $("#service-form").hide();
-                $("#study-form").toggle("slide", { direction: 'up' }, 600);
-            });
+            $('#serviceHourModalToggle').tooltip();
+            $("#studyHourModalToggle").tooltip();
         });
 
     </script>
