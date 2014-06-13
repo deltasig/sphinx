@@ -1,34 +1,38 @@
 ﻿@model StudyHourSubmissionModel
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="row">
-            <div class="col-md-12">
-                Study Hour Submission Form
+<div class="modal fade" id="studyHourModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Study Hour Submission Form</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SubmitStudy", "Sphinx", FormMethod.Post, new { role = "form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true)
+
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.HoursStudied)
+                        @Html.TextBoxFor(m => m.HoursStudied, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.HoursStudied, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.DateTimeStudied)
+                        @Html.EditorFor(m => m.DateTimeStudied, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.DateTimeStudied, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.SelectedApproverId)
+                        @Html.DropDownListFor(m => m.SelectedApproverId, Model.Approvers, new { @class = "form-control" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                }
             </div>
         </div>
-    </div>
-    <div class="panel-body">
-        @using (Html.BeginForm("SubmitStudy", "Sphinx", FormMethod.Post, new { role = "form" }))
-        {
-            @Html.AntiForgeryToken()
-            @Html.ValidationSummary(true)
-
-            <div class="form-group">
-                @Html.LabelFor(m => m.HoursStudied)
-                @Html.TextBoxFor(m => m.HoursStudied, new { @class = "form-control" })
-                @Html.ValidationMessageFor(m => m.HoursStudied, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.DateTimeStudied)
-                @Html.EditorFor(m => m.DateTimeStudied, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(m => m.DateTimeStudied, "", new { @class = "text-danger" })
-            </div>
-            <div class="form-group">
-                @Html.LabelFor(m => m.SelectedApproverId)
-                @Html.DropDownListFor(m => m.SelectedApproverId, Model.Approvers, new { @class = "form-control" })
-            </div>
-            <button type="submit" class="btn btn-success btn-lg btn-block">Submit</button>
-        }
     </div>
 </div>
