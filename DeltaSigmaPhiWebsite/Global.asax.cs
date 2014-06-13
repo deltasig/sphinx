@@ -1,13 +1,13 @@
 ﻿namespace DeltaSigmaPhiWebsite
 {
-    using System.Data.Entity.Migrations;
     using App_Start;
+    using Migrations;
+    using System.Data.Entity.Migrations;
     using System.Web;
     using System.Web.Http;
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
-    using Migrations;
     using WebMatrix.WebData;
 
     public class MvcApplication : HttpApplication
