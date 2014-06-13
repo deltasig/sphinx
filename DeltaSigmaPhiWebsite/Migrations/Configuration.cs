@@ -17,7 +17,10 @@ namespace DeltaSigmaPhiWebsite.Migrations
 
         protected override void Seed(DspContext context)
         {
-            WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Members", "UserId", "UserName", true);
+            if (!WebSecurity.Initialized)
+            {
+                WebSecurity.InitializeDatabaseConnection("DefaultConnection", "Members", "UserId", "UserName", true);
+            }
 
             context.MemberStatus.AddOrUpdate(m => m.StatusName,
                 new MemberStatus { StatusName = "Pledge"},
