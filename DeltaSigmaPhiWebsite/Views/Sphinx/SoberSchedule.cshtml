@@ -43,7 +43,7 @@
                             @if (item.UID == null)
                             {
                                 using (Html.BeginForm("CreateSoberReservation", "Sphinx",
-                                    new DeltaSigmaPhiWebsite.Models.SoberReservationModel {UID = null, Shift = item.Shift, Name = User.Identity.Name, SoberType = item.SoberType},
+                                    new SoberReservationModel {UID = null, Shift = item.Shift, Name = User.Identity.Name, SoberType = item.SoberType},
                                     FormMethod.Post, new { id="reserveForm" }))
                                 {
                                         <a href="javascript:document.getElementById('reserveForm').submit()">Volunteer</a>
@@ -52,7 +52,7 @@
                             @if (User.Identity.Name == @item.UserName)
                             {
                                 using (Html.BeginForm("CancelSoberReservation", "Sphinx", 
-                                    new DeltaSigmaPhiWebsite.Models.SoberReservationModel { UID = item.UID, Shift = item.Shift, SoberType = item.SoberType, UserName = @item.UserName },
+                                    new SoberReservationModel { UID = item.UID, Shift = item.Shift, SoberType = item.SoberType, UserName = @item.UserName },
                                     FormMethod.Post, new { id = "cancelForm" }))
                                 {
                                         <a href="javascript:document.getElementById('reserveForm').submit()">Cancel</a>

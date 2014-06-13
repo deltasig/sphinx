@@ -63,7 +63,7 @@
                             //<!-- allow user to cancel -->
                             if (User.Identity.Name == timeSlot.UserName)
                             {
-                                using (Html.BeginForm("CancelReserveLaundry", "Sphinx", new DeltaSigmaPhiWebsite.Models.LaundryReservationModel { Shift = timeSlot.Shift, UserId = 0, UserName = User.Identity.Name }))
+                                using (Html.BeginForm("CancelReserveLaundry", "Sphinx", new LaundryReservationModel { Shift = timeSlot.Shift, UserId = 0, UserName = User.Identity.Name }))
                                 {
                                     <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
                                 }
@@ -82,7 +82,7 @@
                         else
                         {
                             @:<!-- Enable the user to reserve the time slot -->
-                                using (Html.BeginForm("ReserveLaundry", "Sphinx", new DeltaSigmaPhiWebsite.Models.LaundryReservationModel { Shift = timeSlot.Shift, UserName = User.Identity.Name }))
+                                using (Html.BeginForm("ReserveLaundry", "Sphinx", new LaundryReservationModel { Shift = timeSlot.Shift, UserName = User.Identity.Name }))
                                 {
                                     <button type="submit" class="btn btn-sm btn-success">Open</button>
                                 }
