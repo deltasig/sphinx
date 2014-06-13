@@ -13,6 +13,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(DspContext context)
