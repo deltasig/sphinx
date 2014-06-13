@@ -5,7 +5,6 @@ namespace DeltaSigmaPhiWebsite.App_Start
 {
     using System;
     using System.Web;
-    using Data.Interfaces;
     using Data.UnitOfWork;
     using Microsoft.Web.Infrastructure.DynamicModuleHelper;
     using Models;
