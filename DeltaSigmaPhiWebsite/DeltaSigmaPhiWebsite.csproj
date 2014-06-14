@@ -415,8 +415,6 @@
     <Content Include="Views\Home\HowToJoin.cshtml" />
     <Content Include="Views\Home\Academics.cshtml" />
     <Content Include="Views\Home\BuildingBetterMenScholarship.cshtml" />
-    <Content Include="Views\Home\Officers.cshtml" />
-    <Content Include="Views\Home\Chairmen.cshtml" />
     <Content Include="Views\Shared\Nav.cshtml" />
     <Content Include="Views\Account\_CreateRolePartial.cshtml" />
     <Content Include="Views\Account\_DeleteRolePartial.cshtml" />
@@ -445,6 +443,7 @@
     <Content Include="Views\Semester\Delete.cshtml" />
     <Content Include="Views\Semester\Edit.cshtml" />
     <Content Include="Views\Semester\Index.cshtml" />
+    <Content Include="Views\Shared\_Title.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

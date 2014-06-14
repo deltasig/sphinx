@@ -6,28 +6,10 @@
 
 @{const int descriptionLength = 25;}
 
-<div class="container">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-md-4">
-                @if (Model.ProfilePicUrl != String.Empty)
-                {
-                    <h1>
-                        <img src="@Model.ProfilePicUrl" alt="fb pic" class="img-thumbnail">
-                        @ViewBag.Title
-                    </h1>
-                }
-                else
-                {
-                    <h1>@ViewBag.Title</h1>
-                }
-            </div>
-            <div class="col-md-8 text-right">
-                <p class="text-warning">@ViewBag.FailMessage</p>
-            </div>
-        </div>
-    </div>
-</div>
+@section Title
+{
+    @Html.Partial("_Title")
+}
 
 <div class="container">
     <div class="row">

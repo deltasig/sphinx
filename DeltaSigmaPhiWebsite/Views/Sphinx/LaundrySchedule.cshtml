@@ -3,17 +3,10 @@
     ViewBag.Title = "Laundry Signup";
 }
 
-<div class="container">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-lg-12">
-                <h1>@ViewBag.Title</h1>
-                <p class="text-success">@ViewBag.SuccessMessage</p>
-                <p class="text-warning">@ViewBag.FailMessage</p>
-            </div>
-        </div>
-    </div>
-</div>
+@section Title
+{
+    @Html.Partial("_Title")
+}
 
 <div class="container">
     <!-- Table Begins Here -->

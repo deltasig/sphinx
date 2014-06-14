@@ -1,10 +1,10 @@
 ﻿@{
     ViewBag.Title = "About";
 }
-
-<div class="container">
-    <h1>@ViewBag.Title</h1>
-</div>
+@section Title
+{
+    @Html.Partial("_Title")
+}
 <div class="container">
     <article>
         <p>

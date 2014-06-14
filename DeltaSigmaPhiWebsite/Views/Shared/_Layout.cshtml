@@ -10,6 +10,7 @@
 </head>
 <body style="padding: 0">
     @Html.Partial("Nav")
+    @RenderSection("Title", required: false)
     @RenderBody()
     @Html.Partial("Footer")
     <!-- Include all compiled plugins (below), or include individual files as needed -->
