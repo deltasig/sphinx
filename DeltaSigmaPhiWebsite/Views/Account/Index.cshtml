@@ -71,7 +71,6 @@
             </div>
         </div>
     </div>
-
     @if (User.Identity.Name == Model.MemberInfo.UserName)
     {
         @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
@@ -87,27 +86,15 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                @Html.Partial("_UpdateAddress", Model.PrimaryAddress)
-            </div>
-        </div>
-    }
-    else
-    {
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">Address</div>
-                    <div class="panel-body">
-                        @Model.PrimaryAddress.Address1<br>
-                        @Model.PrimaryAddress.Address2<br>
-                        @Model.PrimaryAddress.City, @Model.PrimaryAddress.State @Model.PrimaryAddress.PostalCode<br>
-                        @Model.PrimaryAddress.Country
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                
+                @{ Html.RenderAction("MyAddresses", "Address"); }
             </div>
         </div>
     }
 </div>
+<script type="text/javascript">
+
+    $(function () {
+        //$('#serviceHourModalToggle').tooltip();
+    });
+
+</script>
