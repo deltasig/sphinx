@@ -103,31 +103,5 @@
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);
         }
-        [Test]
-        public void HomeOfficersReturnsActionResult()
-        {
-            var uowMock = new Mock<IUnitOfWork>();
-            var ws = new Mock<IWebSecurity>();
-            var oaws = new Mock<IOAuthWebSecurity>();
-            // Arrange
-            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
-            // Act
-            var actual = controller.Officers() as ViewResult;
-            // Assert
-            Assert.IsInstanceOf<ActionResult>(actual);
-        }
-        [Test]
-        public void HomeChairmenReturnsActionResult()
-        {
-            var uowMock = new Mock<IUnitOfWork>();
-            var ws = new Mock<IWebSecurity>();
-            var oaws = new Mock<IOAuthWebSecurity>();
-            // Arrange
-            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
-            // Act
-            var actual = controller.Chairmen() as ViewResult;
-            // Assert
-            Assert.IsInstanceOf<ActionResult>(actual);
-        }
     }
 }

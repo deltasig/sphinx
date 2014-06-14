@@ -1,16 +1,8 @@
 ﻿@if (ViewContext.RouteData.Values.ContainsValue("Home"))
 {
-    <div class="container">
-        <img src="~/Images/DeltaSig-Header-Small.png" alt="Header" style="padding: 20px 0" id="header-img" />
-    </div>
-}
-@if (ViewContext.RouteData.Values.ContainsValue("Sphinx") || 
-    ViewContext.RouteData.Values.ContainsValue("Account") ||
-    ViewContext.RouteData.Values.ContainsValue("Semester"))
-{
-    @Html.Partial("_InternalNav")
+    @Html.Partial("_ExternalNav")
 }
 else
 {
-    @Html.Partial("_ExternalNav")
+    @Html.Partial("_InternalNav")
 }

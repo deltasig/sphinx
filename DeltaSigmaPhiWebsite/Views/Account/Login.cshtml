@@ -3,15 +3,10 @@
 @{
     ViewBag.Title = "Log In";
 }
-<div class="container">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-sm-6">
-                <h1>@ViewBag.Title</h1>
-            </div>
-        </div>
-    </div>
-</div>
+@section Title
+{
+    @Html.Partial("_Title")
+}
 <div class="container">
     <div class="panel panel-default">
         <!-- Default panel contents -->
