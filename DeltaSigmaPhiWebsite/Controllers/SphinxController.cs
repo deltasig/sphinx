@@ -626,8 +626,8 @@
             // All reservations within specified time frame.
             var signups = uow.LaundrySignupRepository
                 .GetAll()
-                .Where(l => l.DateTimeShift >= today && l.DateTimeShift < endOfWeek);
-            var members = uow.MemberRepository.GetAll(); //all users
+                .Where(l => l.DateTimeShift >= today && l.DateTimeShift < endOfWeek).ToList();
+            var members = uow.MemberRepository.GetAll().ToList(); //all users
 
             var presentWeekSignup = new List<LaundryReservationModel>();
             foreach (var reservedTime in signups)
