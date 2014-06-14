@@ -1,21 +1,12 @@
 ﻿@model Semester
 
 @{
-    ViewBag.Title = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Create New Semester";
 }
-
-<div class="container">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>Create</h1>
-            </div>
-        </div>
-    </div>
-</div>
-
-
+@section Title
+{
+    @Html.Partial("_Title")
+}
 <div class="container">
     <div class="row">
         <div class="col-lg-3">

@@ -1,25 +1,12 @@
 ﻿@model SoberSignupModel
 @{
     ViewBag.Title = "Sober Schedule";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-    <div class="page-header">
-        <div class="row">
-            <div class="col-md-6">
-                <h1>
-                    @ViewBag.Title
-                </h1>
-            </div>
-            <div class="col-md-6 text-right" style="margin-top: 30px">
-                @if (User.IsInRole("Administrator"))
-                {
-                    @Html.ActionLink("Manage", "SoberScheduleManager", "Sphinx")
-                }
-            </div>
-        </div>
-    </div>
-</div>
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
 
 <div class="container">
     <div class="row">

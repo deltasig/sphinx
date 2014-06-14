@@ -24,7 +24,8 @@
 
         public ActionResult Contact()
         {
-            return View();
+            var model = uow.MemberRepository.GetAll();
+            return View(model);
         }
 
         public ActionResult HowToJoin()
@@ -41,13 +42,5 @@
             return View();
         }
 
-        public ActionResult Officers()
-        {
-            return View();
-        }
-        public ActionResult Chairmen()
-        {
-            return View();
-        }
     }
 }

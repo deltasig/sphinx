@@ -1,4 +1,4 @@
-﻿<div class="navbar navbar-default" style="margin-bottom: 0">
+﻿<div class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -15,27 +15,14 @@
             <ul class="nav navbar-nav" id="menu">
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("HowToJoin") ? "active" : "")">@Html.ActionLink("How To Join", "HowToJoin", "Home")</li>
                 <li><a href="http://www.deltasigrollaalumni.com/">Alumni</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Sponsored Programs <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Scholarships</li>
-                        <li>@Html.ActionLink("Building Better Men", "BuildingBetterMenScholarship", "Home")</li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Programs</li>
-                        <li><a href="#">Professional Development Program</a></li>
-                    </ul>
+                <li class="@(ViewContext.RouteData.Values.ContainsValue("BuildingBetterMenScholarship") ? "active" : "")">
+                    @Html.ActionLink("Scholarship", "BuildingBetterMenScholarship", "Home")
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                        <li class="dropdown-header">Facts</li>
-                        <li>@Html.ActionLink("Academics", "Academics", "Home")</li>
-                        <li><a href="#">Accomplishments</a></li>
-                        <li><a href="#">Involvements</a></li>
-                        <li class="divider"></li>
-                        <li class="dropdown-header">Leadership</li>
-                        <li>@Html.ActionLink("Chairmen", "Chairmen", "Home")</li>
-                        <li>@Html.ActionLink("Officers", "Officers", "Home")</li>
+                        <li class="dropdown-header">Stats</li>
+                        <li><a href="#">Coming soon</a></li>
                     </ul>
                 </li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Contact") ? "active" : "")">@Html.ActionLink("Contact", "Contact", "Home")</li>
