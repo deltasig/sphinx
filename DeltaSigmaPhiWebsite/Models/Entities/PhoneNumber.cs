@@ -1,5 +1,6 @@
 namespace DeltaSigmaPhiWebsite.Models.Entities
 {
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class PhoneNumber
@@ -10,6 +11,9 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         [Column("PhoneNumber")]
         public int PhoneNumber1 { get; set; }
+
+        [StringLength(100)]
+        public string Type { get; set; }
 
         public virtual Member Member { get; set; }
     }

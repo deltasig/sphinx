@@ -30,34 +30,12 @@
             {
                 MemberInfo = member,
                 ProfilePicUrl = GetBigPictureUrl(member.UserName),
-                ChangePasswordModel = new LocalPasswordModel(),
-                PrimaryAddress = member.Addresses.Count == 0 ? new Address() : member.Addresses.First()
+                ChangePasswordModel = new LocalPasswordModel()
             };
 
             return View(model);
         }
-
-        #region Profile
         
-        [HttpPost]
-        public ActionResult UpdateAddress(Address address)
-        {
-            if (uow.AddressesRepository.GetAll().Any(a => a.AddressId == address.AddressId))
-            {
-                uow.AddressesRepository.DeleteById(address.AddressId);
-            }
-
-            address.UserId = WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name);
-            uow.AddressesRepository.Insert(address);
-
-            uow.Save();
-
-            return RedirectToAction("Index", "Account");
-        }
-
-
-        #endregion
-
         #region Local Authentication
 
         [HttpGet]
@@ -74,7 +52,7 @@
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
             {
-                return RedirectToAction("Index", "Sphinx");
+                return RedirectToAction(returnUrl);
             }
 
             // If we got this far, something failed, redisplay form
@@ -122,28 +100,30 @@
         {
             RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return RedirectToAction("Registration", new {Message = message});
+            // Attempt to register the user
+            try
             {
-                // Attempt to register the user
-                try
-                {
-                    model.Email = model.Email.ToLower();
-                    var signIndex = model.Email.IndexOf('@');
-                    var userName = model.Email.Substring(0, signIndex);
+                model.Email = model.Email.ToLower();
+                var signIndex = model.Email.IndexOf('@');
+                var userName = model.Email.Substring(0, signIndex);
 
-                    WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
-                        new { model.FirstName, model.LastName, NickName = model.Nickname, model.Email, model.StatusId });
+                WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
+                    new { model.FirstName, model.LastName, NickName = model.Nickname, model.Email, model.StatusId });
 
-                    message = RegistrationMessageId.RegistrationSuccess;
-                }
-                catch (MembershipCreateUserException e)
-                {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
-                }
-                catch (Exception)
-                {
-                    ModelState.AddModelError("", "Something went wrong.  Sorry for the inconvenience.");
-                }
+                uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
+                uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
+                uow.Save();
+
+                message = RegistrationMessageId.RegistrationSuccess;
+            }
+            catch (MembershipCreateUserException e)
+            {
+                ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "Something went wrong.  Sorry for the inconvenience.");
             }
             return RedirectToAction("Registration", new { Message = message });
         }

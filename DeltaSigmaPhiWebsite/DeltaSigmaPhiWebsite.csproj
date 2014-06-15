@@ -320,6 +320,7 @@
     <Compile Include="Models\Entities\Department.cs" />
     <Compile Include="Models\DspContext.cs" />
     <Compile Include="Models\Entities\Event.cs" />
+    <Compile Include="Models\ViewModels\AddressModels.cs" />
     <Compile Include="Models\ViewModels\HomeModels.cs" />
     <Compile Include="Models\Entities\IncidentReport.cs" />
     <Compile Include="Models\Entities\Instructor.cs" />
@@ -447,9 +448,10 @@
     <Content Include="Views\Shared\_Title.cshtml" />
     <Content Include="Views\Address\Create.cshtml" />
     <Content Include="Views\Address\Delete.cshtml" />
-    <Content Include="Views\Address\Details.cshtml" />
     <Content Include="Views\Address\Edit.cshtml" />
-    <Content Include="Views\Address\MyAddresses.cshtml" />
+    <Content Include="Views\Address\Index.cshtml" />
+    <Content Include="Views\Address\_MyAddressesPartial.cshtml" />
+    <Content Include="Views\Address\_MyAddressesCreatePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

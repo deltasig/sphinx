@@ -22,20 +22,7 @@
                 {
                     @Html.AntiForgeryToken()
 
-                    <h4>Address</h4>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
-                    {
-                        @Html.LabelFor(model => model.Address.UserId, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => model.Address.UserId, Model.Users, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.Address.UserId, "", new { @class = "text-danger" })
-                    }
-                    else
-                    {
-
-                        @Html.HiddenFor(model => model.Address.Member.UserId)
-                    }
+                    @Html.HiddenFor(model => model.Address.UserId)
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.Address.Type, htmlAttributes: new { @class = "control-label" })
