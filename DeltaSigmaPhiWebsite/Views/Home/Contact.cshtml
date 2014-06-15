@@ -19,7 +19,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var member in Model)
+                    @foreach (var member in Model.Where(m => m.webpages_Roles.Count() > 0))
                     {
                         <tr>
                             <td>@member.webpages_Roles.First().RoleName</td>
