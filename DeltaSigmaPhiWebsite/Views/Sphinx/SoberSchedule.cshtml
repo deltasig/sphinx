@@ -11,6 +11,10 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
+            @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+            {
+                @Html.ActionLink("Manager", "SoberScheduleManager", "Sphinx")
+            }
             <table class="table table-responsive table-striped table-condensed" style="text-align:left;">
                 <thead>
                     <tr>
@@ -33,7 +37,7 @@
                                     new SoberReservationModel {UID = null, Shift = item.Shift, Name = User.Identity.Name, SoberType = item.SoberType},
                                     FormMethod.Post, new { id="reserveForm" }))
                                 {
-                                        <a href="javascript:document.getElementById('reserveForm').submit()">Volunteer</a>
+                                    <a href="javascript:document.getElementById('reserveForm').submit()">Volunteer</a>
                                 }
                             }
                             @if (User.Identity.Name == @item.UserName)
@@ -42,7 +46,7 @@
                                     new SoberReservationModel { UID = item.UID, Shift = item.Shift, SoberType = item.SoberType, UserName = @item.UserName },
                                     FormMethod.Post, new { id = "cancelForm" }))
                                 {
-                                        <a href="javascript:document.getElementById('reserveForm').submit()">Cancel</a>
+                                    <a href="javascript:document.getElementById('reserveForm').submit()">Cancel</a>
                                 }
                             }
 
@@ -55,5 +59,5 @@
 </div>
 
 @section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
+
 }
