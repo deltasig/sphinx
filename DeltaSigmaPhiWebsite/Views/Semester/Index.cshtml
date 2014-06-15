@@ -7,42 +7,51 @@
 {
     @Html.Partial("_Title")
 }
+
+@{ Html.RenderPartial("~/Views/Semester/Create.cshtml", new Semester()); }
+
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <p>
-                @Html.ActionLink("Create New", "Create")
-            </p>
-            <table class="table">
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateStart)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateEnd)
-                    </th>
-                    <th></th>
-                </tr>
-
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateStart)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateEnd)
-                        </td>
-                        <td>
-                            @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId }) |
-                            @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
-                        </td>
-                    </tr>
-                }
-            </table>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <button class="btn-link" data-toggle="modal" data-target="#semesterCreateModal">Create New</button>
+                </div>
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Semester</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DateStart)
+                                </th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.DateEnd)
+                                </th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @(item.DateStart.Month < 6 ? "Spring" : "Fall") @item.DateStart.Year
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateStart)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.DateEnd)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId }) |
+                                    @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
-

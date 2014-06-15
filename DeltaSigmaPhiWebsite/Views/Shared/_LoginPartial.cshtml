@@ -1,13 +1,10 @@
 ﻿<ul class="nav navbar-nav navbar-right">
     @if (Request.IsAuthenticated)
     {
-        @*<li>
-            <p class="navbar-text">Signed in as:</p>
-        </li>*@
         <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
             @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
         </li>
-        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Account" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+        <li class="@(ViewBag.Title == "Account" ? "active" : "")">
             @Html.ActionLink("Account", "Index", "Account")
         </li>
         <li>

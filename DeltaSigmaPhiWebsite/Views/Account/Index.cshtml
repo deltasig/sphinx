@@ -71,11 +71,11 @@
             </div>
         </div>
     </div>
-    @if (User.Identity.Name == Model.MemberInfo.UserName)
-    {
-        @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
-        <div class="row">
-            <div class="col-sm-6">
+    @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
+    <div class="row">
+        <div class="col-sm-6">
+            @if (User.Identity.Name == Model.MemberInfo.UserName)
+            {
                 @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
                 <div class="panel panel-default">
                     <div class="panel-heading">External Authentication</div>
@@ -84,17 +84,10 @@
                         @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
                     </div>
                 </div>
-            </div>
-            <div class="col-sm-6">
-                @{ Html.RenderAction("MyAddresses", "Address"); }
-            </div>
+            }
         </div>
-    }
+        <div class="col-sm-6">
+            @{ Html.RenderPartial("~/Views/Address/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
+        </div>
+    </div>
 </div>
-<script type="text/javascript">
-
-    $(function () {
-        //$('#serviceHourModalToggle').tooltip();
-    });
-
-</script>
