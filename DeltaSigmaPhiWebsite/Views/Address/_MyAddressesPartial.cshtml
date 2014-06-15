@@ -1,0 +1,58 @@
+﻿@model IEnumerable<Address>
+
+@{ Html.RenderPartial("~/Views/Address/_MyAddressesCreatePartial.cshtml", 
+       new CreateAddressModel { Address = new Address { UserId = WebSecurity.CurrentUserId }, Users = new List<SelectListItem>() } ); }
+
+<div class="panel panel-default">
+    <div class="panel-heading">My Addresses</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Address
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Type)
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.Address1 == null)
+                        {
+                            @:Please enter an address
+                        }
+                        else
+                        {
+                            @item.Address1@:,
+                            if (@item.Address2 != null)
+                            {
+                                @item.Address2@:,
+                            }
+                            @item.City@:, @item.State @item.PostalCode,
+                            @item.Country
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Type)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null) |
+                        @Html.ActionLink("Delete", "Delete", "Address", new { id = item.AddressId }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+        @if (Model.Count() < 2)
+        {
+            <button class="btn-link" data-toggle="modal" data-target="#addressCreateModal">Create New</button>
+        }
+    </div>
+</div>

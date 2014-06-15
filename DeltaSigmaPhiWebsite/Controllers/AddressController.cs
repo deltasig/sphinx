@@ -6,67 +6,47 @@
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using Models.ViewModels;
 
     [Authorize]
     public class AddressController : BaseController
     {
         public AddressController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
-        // GET: Address
-        public ActionResult MyAddresses()
+        public ActionResult Index(int? userId)
         {
-            var addresses = uow.AddressesRepository.GetAll().Where(a => a.Member.UserName == User.Identity.Name).ToList();
-            return View(addresses);
-        }
-
-        // GET: Address/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            if (userId == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var addresses = uow.AddressesRepository.GetAll().ToList().OrderBy(a => a.Member.LastName);
+                ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
+                return View(addresses);
             }
-            Address address = uow.AddressesRepository.GetById(id);
-            if (address == null)
+            else
             {
-                return HttpNotFound();
+                var addresses = uow.AddressesRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
+                ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
+                return View(addresses);
             }
-            return View(address);
         }
-
-        // GET: Address/Create
-        public ActionResult Create()
-        {
-            ViewBag.UserId = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
-            return View();
-        }
-
-        // POST: Address/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "AddressId,UserId,Address1,Address2,City,State,PostalCode,Country")] Address address)
+        public ActionResult Create(CreateAddressModel model)
         {
-            if (ModelState.IsValid)
-            {
-                uow.AddressesRepository.Insert(address);
-                uow.Save();
-                return RedirectToAction("Index", "Account");
-            }
-
-            ViewBag.UserId = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName", address.UserId);
-            return View(address);
+            if (!ModelState.IsValid) return View(model);
+            uow.AddressesRepository.Insert(model.Address);
+            uow.Save();
+            return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == model.Address.UserId
+                ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
         }
 
-        // GET: Address/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Address address = uow.AddressesRepository.GetById(id);
+            var address = uow.AddressesRepository.GetById(id);
             if (address == null)
             {
                 return HttpNotFound();
@@ -75,24 +55,21 @@
             return View(address);
         }
 
-        // POST: Address/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AddressId,UserId,Address1,Address2,City,State,PostalCode,Country")] Address address)
+        public ActionResult Edit([Bind(Include = "AddressId,UserId,Type,Address1,Address2,City,State,PostalCode,Country")] Address address)
         {
             if (ModelState.IsValid)
             {
                 uow.AddressesRepository.Update(address);
                 uow.Save();
-                return RedirectToAction("Index", "Account");
+                return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId 
+                    ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
             ViewBag.UserId = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName", address.UserId);
             return View(address);
         }
 
-        // GET: Address/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -107,16 +84,15 @@
             return View(address);
         }
 
-        // POST: Address/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Address address = uow.AddressesRepository.GetById(id);
+            var address = uow.AddressesRepository.GetById(id);
             uow.AddressesRepository.Delete(address);
             uow.Save();
-            return RedirectToAction("Index", "Account");
+            return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId
+                ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
         }
-
     }
 }

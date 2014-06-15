@@ -1,0 +1,66 @@
+﻿@model IEnumerable<Address>
+
+@{
+    ViewBag.Title = "Address Index";
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+@{ Html.RenderPartial("~/Views/Address/Create.cshtml", new CreateAddressModel() { Address = new Address(), Users = ViewBag.Members }); }
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Member</th>
+                                <th>Address</th>
+                                <th>@Html.DisplayNameFor(model => model.Type)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Member.LastName, @item.Member.FirstName
+                                </td>
+                                <td>
+                                    @if (item.Address1 == null)
+                                    {
+                                        @:None entered.
+                                                                              }
+                                    else
+                                    {
+                                        @item.Address1@:,
+                                        if (@item.Address2 != null)
+                                        {
+                                        @item.Address2@:,
+                                        }
+                                        @item.City@:, @item.State @item.PostalCode,
+                                        @item.Country
+                                    }
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Type)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null) |
+                                    @Html.ActionLink("Delete", "Delete", "Address", new { id = item.AddressId }, null)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <button class="btn-link" data-toggle="modal" data-target="#addressCreateModal">Create New</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,16 +9,27 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <h3>Are you sure you want to delete the "@Model.AddressName" address?</h3>
-
+            <p>
+                @Html.ActionLink("Address Index", "Index", "Address") |
+                @Html.ActionLink("My Account", "Index", "Account")
+            </p>
+            <h3>Are you sure you want to delete this address?</h3>
+            <p>
+                @Model.Member.FirstName @Model.Member.LastName
+            </p>
+            <p>
+                @Model.Address1,
+                @if (@Model.Address2 != null)
+                {
+                    @Model.Address2@:,
+                                    }
+                @Model.City, @Model.State @Model.PostalCode,
+                @Model.Country
+            </p>
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <input type="submit" value="Delete" class="btn btn-default" />
-                </div>
+                <input type="submit" value="Delete" class="btn btn-default" />
             }
         </div>
     </div>
