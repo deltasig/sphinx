@@ -39,9 +39,9 @@
                             </li>
                         }
                     }
-                    <li>@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
-                    <li>@Html.ActionLink("Laundry Schedule", "LaundrySchedule", "Sphinx")</li>
-                    <li>@Html.ActionLink("Incident Reporting", "IncidentReporting", "Sphinx")</li>
+                    <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
+                    <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">@Html.ActionLink("Laundry Signup", "LaundrySchedule", "Sphinx")</li>
+                    <li class="@(ViewBag.Title == "Incident Reporting" ? "active" : "")">@Html.ActionLink("Incident Reporting", "IncidentReporting", "Sphinx")</li>
                 }
                 else
                 {
