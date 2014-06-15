@@ -286,7 +286,9 @@
             {
                 SoberSignUpsNeededList = CompleteSoberSchedule()
             });
+        
         }
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public ActionResult SoberScheduleManager()
         {
             return View(new SoberSignupModel

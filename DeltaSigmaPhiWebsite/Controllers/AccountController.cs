@@ -52,6 +52,8 @@
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
             {
+                if (string.IsNullOrEmpty(returnUrl))
+                    return RedirectToAction("Index", "Sphinx");
                 return RedirectToAction(returnUrl);
             }
 
