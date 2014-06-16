@@ -10,7 +10,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public int UserId { get; set; }
 
         [Column("PhoneNumber")]
-        public int PhoneNumber1 { get; set; }
+        [DataType(DataType.PhoneNumber)]
+        [RegularExpression(@"^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$", 
+            ErrorMessage = "Phone numbers must entered in the following format: ###-###-####")]
+        public string PhoneNumber1 { get; set; }
 
         [StringLength(100)]
         public string Type { get; set; }
