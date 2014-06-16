@@ -442,7 +442,6 @@
     <Content Include="Views\Error\InternalServerError.cshtml" />
     <Content Include="Views\Shared\Error\NotFoundInfo.cshtml" />
     <Content Include="Views\Shared\Error\InternalServerErrorInfo.cshtml" />
-    <Content Include="Views\Account\_UpdateAddress.cshtml" />
     <Content Include="Views\Semester\Create.cshtml" />
     <Content Include="Views\Semester\Delete.cshtml" />
     <Content Include="Views\Semester\Edit.cshtml" />
