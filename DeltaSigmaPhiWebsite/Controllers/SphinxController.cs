@@ -409,7 +409,7 @@
                 Shift = slot.DateOfShift,
                 SoberType = "Driver"
             }).ToList();
-            var signedUpForOfficer = uow.SoberOfficerRepository.FindBy(entity => entity.UserId == userId && entity.DateOfShift >= DateTime.Today);
+            var signedUpForOfficer = uow.SoberOfficerRepository.FindBy(entity => entity.UserId == userId && entity.DateOfShift >= DateTime.Today).ToList();
             allRemaining.AddRange(signedUpForOfficer.Select(slot => new SoberReservationModel()
             {
                 UID = slot.UserId,
@@ -442,7 +442,7 @@
         {
             //Get list of all sober driver slots 
             var thisWeekSchedule = new List<SoberReservationModel>();
-            var allDriverSlots = uow.SoberDriverRepository.FindBy(entity => entity.DateOfShift >= DateTime.Today);
+            var allDriverSlots = uow.SoberDriverRepository.FindBy(entity => entity.DateOfShift >= DateTime.Today).ToList();
             foreach (var slot in allDriverSlots)
             {
                 thisWeekSchedule.Add(new SoberReservationModel()
@@ -455,7 +455,7 @@
                 });
             }
             //Get list of all sober officer slots
-            var allOfficerSlots = uow.SoberOfficerRepository.FindBy(entity => entity.DateOfShift >= DateTime.Today);
+            var allOfficerSlots = uow.SoberOfficerRepository.FindBy(entity => entity.DateOfShift >= DateTime.Today).ToList();
             foreach (var slot in allOfficerSlots)
             {
                 thisWeekSchedule.Add(new SoberReservationModel()

@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Linq;
     using Data.UnitOfWork;
     using Models;
     using System.Web.Mvc;
@@ -24,7 +25,7 @@
 
         public ActionResult Contact()
         {
-            var model = uow.MemberRepository.GetAll();
+            var model = uow.MemberRepository.GetAll().Where(m => m.webpages_Roles.Any()).ToList();
             return View(model);
         }
 
