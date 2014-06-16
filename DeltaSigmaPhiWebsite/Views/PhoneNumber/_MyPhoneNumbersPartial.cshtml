@@ -1,0 +1,36 @@
+﻿@model IEnumerable<PhoneNumber>
+
+<div class="panel panel-default">
+    <div class="panel-heading">My Phone Numbers</div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Phone Number</th>
+                    <th>@Html.DisplayNameFor(model => model.Type)</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="@(string.IsNullOrEmpty(item.PhoneNumber1) ? "danger" : "")">
+                        @if (string.IsNullOrEmpty(item.PhoneNumber1))
+                        {
+                            @:Please enter a phone number
+                        }
+                        else
+                        {
+                            @item.PhoneNumber1
+                        }
+                    </td>
+                    <td>@item.Type</td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", "PhoneNumber", new { id = item.PhoneNumberId }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

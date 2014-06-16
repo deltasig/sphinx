@@ -1,7 +1,7 @@
-﻿@model IEnumerable<Address>
+﻿@model IEnumerable<PhoneNumber>
 
 @{
-    ViewBag.Title = "Address Index";
+    ViewBag.Title = "Phone Number Index";
 }
 
 @section Title
@@ -19,7 +19,7 @@
                             <tr>
                                 <th>Member</th>
                                 <th>Status</th>
-                                <th>Address</th>
+                                <th>Phone Number</th>
                                 <th>@Html.DisplayNameFor(model => model.Type)</th>
                                 <th></th>
                             </tr>
@@ -30,27 +30,21 @@
                             <tr>
                                 <td>@item.Member.LastName, @item.Member.FirstName</td>
                                 <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "success")">
-                                    @if (string.IsNullOrEmpty(item.Address1))
+                                <td class="@(string.IsNullOrEmpty(item.PhoneNumber1) ? "warning" : "success")">
+                                    @if (string.IsNullOrEmpty(item.PhoneNumber1))
                                     {
                                         @:None entered.
-                                                                              }
+                                    }
                                     else
                                     {
-                                        @item.Address1@:,
-                                        if (@item.Address2 != null)
-                                        {
-                                            @item.Address2@:,
-                                        }
-                                        @item.City@:, @item.State @item.PostalCode,
-                                        @item.Country
+                                        @item.PhoneNumber1
                                     }
                                 </td>
                                 <td>@item.Type</td>
                                 <td>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                     {
-                                        @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null)
+                                        @Html.ActionLink("Edit", "Edit", "PhoneNumber", new { id = item.PhoneNumberId }, null)
                                     }
                                 </td>
                             </tr>

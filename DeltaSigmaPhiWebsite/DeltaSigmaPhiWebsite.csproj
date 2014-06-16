@@ -274,17 +274,20 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\PhoneNumberController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SemesterController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
+    <Compile Include="Data\Interfaces\IPhoneNumbersRepository.cs" />
     <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Data\Repositories\PhoneNumbersRepository.cs" />
     <Compile Include="Data\Repositories\AddressesRepository.cs" />
     <Compile Include="Migrations\201406101402228_Initial.cs" />
     <Compile Include="Migrations\201406101402228_Initial.Designer.cs">
@@ -320,7 +323,6 @@
     <Compile Include="Models\Entities\Department.cs" />
     <Compile Include="Models\DspContext.cs" />
     <Compile Include="Models\Entities\Event.cs" />
-    <Compile Include="Models\ViewModels\AddressModels.cs" />
     <Compile Include="Models\ViewModels\HomeModels.cs" />
     <Compile Include="Models\Entities\IncidentReport.cs" />
     <Compile Include="Models\Entities\Instructor.cs" />
@@ -446,12 +448,12 @@
     <Content Include="Views\Semester\Edit.cshtml" />
     <Content Include="Views\Semester\Index.cshtml" />
     <Content Include="Views\Shared\_Title.cshtml" />
-    <Content Include="Views\Address\Create.cshtml" />
-    <Content Include="Views\Address\Delete.cshtml" />
     <Content Include="Views\Address\Edit.cshtml" />
     <Content Include="Views\Address\Index.cshtml" />
     <Content Include="Views\Address\_MyAddressesPartial.cshtml" />
-    <Content Include="Views\Address\_MyAddressesCreatePartial.cshtml" />
+    <Content Include="Views\PhoneNumber\Edit.cshtml" />
+    <Content Include="Views\PhoneNumber\_MyPhoneNumbersPartial.cshtml" />
+    <Content Include="Views\PhoneNumber\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
