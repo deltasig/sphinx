@@ -16,6 +16,7 @@
         IStudyHoursRepository StudyHourRepository { get; }
         IIncidentReportsRepository IncidentReportRepository { get; }
         IAddressesRepository AddressesRepository { get; }
+        IPhoneNumbersRepository PhoneNumbersRepository { get; }
         void Save();
     }
 }

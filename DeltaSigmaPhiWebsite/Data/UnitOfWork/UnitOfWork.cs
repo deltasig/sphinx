@@ -64,6 +64,11 @@
         {
             get { return _addressesRepository ?? (_addressesRepository = new AddressesRepository(_context)); }
         }
+        private IPhoneNumbersRepository _phoneNumbersRepository;
+        public IPhoneNumbersRepository PhoneNumbersRepository
+        {
+            get { return _phoneNumbersRepository ?? (_phoneNumbersRepository = new PhoneNumbersRepository(_context)); }
+        }
 
         public void Save()
         {

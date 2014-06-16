@@ -10,6 +10,12 @@
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "PhoneNumber",
+                url: "PhoneNumber/{action}/{id}",
+                defaults: new { controller = "PhoneNumber", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Address",
                 url: "Address/{action}/{id}",
                 defaults: new { controller = "Address", id = UrlParameter.Optional }

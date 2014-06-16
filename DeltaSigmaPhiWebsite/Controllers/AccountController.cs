@@ -17,15 +17,20 @@
         public AccountController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        public ActionResult Index(ManageMessageId? message, string userName = null)
+        public ActionResult Index(string userName, ManageMessageId? message, int? userId)
         {
-            if (userName == null)
+            if (userId != null)
+            {
+                if(OAuthWebSecurity.HasLocalAccount((int)userId))
+                    userName = uow.MemberRepository.GetById(userId).UserName;
+            }
+            else if(string.IsNullOrEmpty(userName))
             {
                 userName = WebSecurity.CurrentUser.Identity.Name;
-                ViewBag.StatusMessage = GetManageMessage(message);
-                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
             }
             var member = uow.MemberRepository.Get(m => m.UserName == userName);
+                ViewBag.StatusMessage = GetManageMessage(message);
+                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
             var model = new AccountInformationModel
             {
                 MemberInfo = member,
@@ -115,6 +120,8 @@
 
                 uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
                 uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
+                uow.PhoneNumbersRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
+                uow.PhoneNumbersRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency Contact" });
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
