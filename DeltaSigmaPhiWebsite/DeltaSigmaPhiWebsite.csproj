@@ -281,6 +281,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SemesterController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
+    <Compile Include="Data\DspRoleProvider.cs" />
     <Compile Include="Data\Interfaces\IPhoneNumbersRepository.cs" />
     <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
