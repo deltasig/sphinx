@@ -1,19 +1,17 @@
 ﻿@if (ViewContext.RouteData.Values.ContainsValue("Home"))
 {
-    
-    <div class="container">
-        <div class="page-header">
-            <div class="row">
-                <div class="col-lg-12">
-                    <img src="~/Images/DeltaSig-Header-Small.png" alt="Header" style="margin-top: 35px" class="img-responsive center-block" />
-                    @if (ViewBag.Title != "Delta Sigma Phi")
-                    {
-                        <h1 class="text-center">@ViewBag.Title</h1>
-                    }
+    if (ViewBag.Title != "Delta Sigma Phi")
+    {
+        <div class="container">
+            <div class="page-header" style="margin-top: 65px">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <h1><strong>@ViewBag.Title.ToUpper()</strong></h1>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 }
 else
 {
@@ -21,7 +19,7 @@ else
         <div class="page-header" style="margin-top: 50px">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1>@ViewBag.Title</h1>
+                    <h1><strong>@ViewBag.Title.ToUpper()</strong></h1>
                     <p class="text-success">@ViewBag.SuccessMessage</p>
                     <p class="text-warning">@ViewBag.FailMessage</p>
                 </div>
