@@ -17,6 +17,7 @@
         IIncidentReportsRepository IncidentReportRepository { get; }
         IAddressesRepository AddressesRepository { get; }
         IPhoneNumbersRepository PhoneNumbersRepository { get; }
+        ILeadersRepository LeadersRepository { get; }
         void Save();
     }
 }

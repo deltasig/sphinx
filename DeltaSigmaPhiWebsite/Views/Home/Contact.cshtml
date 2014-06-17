@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Member>
+﻿@model IEnumerable<Leader>
 @{
     ViewBag.Title = "Contact";
 }
@@ -11,26 +11,39 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
-            <table class="table table-bordered table-responsive">
-                <thead>
-                    <tr>
-                        <th>Position</th>
-                        <th>Contact Name</th>
-                        <th>Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    
-                    @foreach (var member in Model)
-                    {
+            @if (Model.Any())
+            {
+                <h3>
+                    @(Model.First().Semester.DateStart.Month < 6 ? "Spring" : "Fall")
+                    @Model.First().Semester.DateStart.Year
+                    <small>Semester</small>
+
+                </h3>
+
+                <table class="table table-bordered table-responsive">
+                    <thead>
                         <tr>
-                            <td>@member.webpages_Roles.First().RoleName</td>
-                            <td>@member.FirstName @member.LastName</td>
-                            <td><a href="mailto:@member.Email">@member.Email</a></td>
+                            <th>Position</th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var leader in Model)
+                        {
+                            <tr>
+                                <td>@leader.Position.PositionName</td>
+                                <td>@leader.Member.FirstName @leader.Member.LastName</td>
+                                <td><a href="mailto:@leader.Member.Email">@leader.Member.Email</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>Contact information will be updated as soon as appointments are made.</p>
+            }
         </div>
     </div>
 </div>

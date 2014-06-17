@@ -40,7 +40,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Semester { DateStart = new DateTime(2012, 8, 1), DateEnd = new DateTime(2012, 12, 31) },
                 new Semester { DateStart = new DateTime(2013, 1, 1), DateEnd = new DateTime(2013, 5, 31) },
                 new Semester { DateStart = new DateTime(2013, 8, 1), DateEnd = new DateTime(2013, 12, 31) },
-                new Semester { DateStart = new DateTime(2014, 1, 1), DateEnd = new DateTime(2014, 5, 31) },
+                new Semester { DateStart = new DateTime(2014, 1, 1), DateEnd = new DateTime(2014, 6, 30) },
                 new Semester { DateStart = new DateTime(2014, 8, 1), DateEnd = new DateTime(2014, 12, 31) }
             );
 
