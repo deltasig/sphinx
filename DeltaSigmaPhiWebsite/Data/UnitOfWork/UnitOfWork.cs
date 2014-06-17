@@ -59,20 +59,25 @@
         {
             get { return _incidentReportRepository ?? (_incidentReportRepository = new IncidentReportsRepository(_context)); }
         }
-        private IAddressesRepository _addressesRepository;
-        public IAddressesRepository AddressesRepository
+        private IAddressesRepository _addressRepository;
+        public IAddressesRepository AddressRepository
         {
-            get { return _addressesRepository ?? (_addressesRepository = new AddressesRepository(_context)); }
+            get { return _addressRepository ?? (_addressRepository = new AddressesRepository(_context)); }
         }
-        private IPhoneNumbersRepository _phoneNumbersRepository;
-        public IPhoneNumbersRepository PhoneNumbersRepository
+        private IPhoneNumbersRepository _phoneNumberRepository;
+        public IPhoneNumbersRepository PhoneNumberRepository
         {
-            get { return _phoneNumbersRepository ?? (_phoneNumbersRepository = new PhoneNumbersRepository(_context)); }
+            get { return _phoneNumberRepository ?? (_phoneNumberRepository = new PhoneNumbersRepository(_context)); }
         }
-        private ILeadersRepository _leadersRepository;
-        public ILeadersRepository LeadersRepository
+        private ILeadersRepository _leaderRepository;
+        public ILeadersRepository LeaderRepository
         {
-            get { return _leadersRepository ?? (_leadersRepository = new LeadersRepository(_context)); }
+            get { return _leaderRepository ?? (_leaderRepository = new LeadersRepository(_context)); }
+        }
+        private IPositionsRepository _positionRepository;
+        public IPositionsRepository PositionRepository
+        {
+            get { return _positionRepository ?? (_positionRepository = new PositionsRepository(_context)); }
         }
 
         public void Save()

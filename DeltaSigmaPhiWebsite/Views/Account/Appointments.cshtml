@@ -1,0 +1,27 @@
+﻿@model AppointmentsModel
+@{
+    ViewBag.Title = "Appointments";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @{ Html.RenderPartial("_PositionAppointmentPartial", Model.AppointModel); }
+            @if (User.IsInRole("Administrator"))
+            {
+                Html.RenderPartial("_PositionUnappointmentPartial", Model.UnappointModel);
+            }
+            @{ Html.RenderPartial("_PositionCreationPartial", Model.CreateModel); }
+            @if (User.IsInRole("Administrator"))
+            {
+                Html.RenderPartial("_PositionDeletionPartial", Model.DeleteModel);
+            }
+        </div>
+        <div class="col-xs-6">
+            @{ Html.RenderPartial("_PositionRecentAppointmentsPartial", Model.RecentAppointments); }
+        </div>
+    </div>
+</div>
