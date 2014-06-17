@@ -16,9 +16,9 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public int PositionId { get; set; }
 
-        public int SemesterId { get; set; }
+        public int? SemesterId { get; set; }
 
-        public double RemainingBudgetBalance { get; set; }
+        public double? RemainingBudgetBalance { get; set; }
 
         public virtual Position Position { get; set; }
 

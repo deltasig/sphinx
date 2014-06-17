@@ -105,8 +105,35 @@ namespace DeltaSigmaPhiWebsite.Migrations
 
             context.SaveChanges();
 
-            if (!Roles.RoleExists("Administrator"))
-                Roles.CreateRole("Administrator");
+            context.Positions.AddOrUpdate(m => m.PositionName,
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Administrator" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "President" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Vice President External" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Vice President Internal" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Treasurer", },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Secretary" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Sergeant-at-Arms" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Executive Board Representative" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "Academics" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "Brotherhood" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "Director of Recruitment" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "House Manager" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "New Member Education" },
+                new Position { IsElected = false, IsExecutive = true, PositionName = "Social" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Alumni Relations" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Community Service" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Greek Week" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "House Steward" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Philanthropy" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Public Relations" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "St. Pat's" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "IFC" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "StuCo" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Chapter Advisor" }
+            );
+
+            context.SaveChanges();
 
             if (!WebSecurity.UserExists("tjm6f4"))
                 WebSecurity.CreateUserAndAccount("tjm6f4", "***REMOVED***", new
