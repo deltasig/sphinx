@@ -28,13 +28,22 @@
             var semesters = uow.SemesterRepository.GetAll().ToList();
             if (semesters.Count <= 0) return null;
 
-            var thisSemester = uow.SemesterRepository.GetAll().First(s => 
-                s.DateStart <= DateTime.Now &&
-                s.DateEnd >= DateTime.Now);
-            if (thisSemester != null)
-                return thisSemester.SemesterId;
+            try
+            {
+                var thisSemester = uow.SemesterRepository.GetAll().FirstOrDefault(s =>
+                    s.DateStart <= DateTime.Now &&
+                    s.DateEnd >= DateTime.Now);
 
-            return null;
+                if (thisSemester != null) return thisSemester.SemesterId;
+
+                var latestStartDate = uow.SemesterRepository.GetAll().Max(s => s.DateStart);
+                var latestSemester = uow.SemesterRepository.Get(s => s.DateStart == latestStartDate);
+                return latestSemester.SemesterId;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
