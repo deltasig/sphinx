@@ -35,7 +35,7 @@
                         {
                             <tr>
                                 <td>
-                                    @(item.DateStart.Month < 6 ? "Spring" : "Fall") @item.DateStart.Year
+                                    @item.ToString()
                                 </td>
                                 <td>
                                     @Html.DisplayFor(modelItem => item.DateStart)
@@ -44,8 +44,12 @@
                                     @Html.DisplayFor(modelItem => item.DateEnd)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId }) |
-                                    @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        @:|
+                                        @Html.ActionLink("Delete", "Delete", new {id = item.SemesterId})
+                                    }
                                 </td>
                             </tr>
                         }

@@ -1,5 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Collections.Generic;
+    using Data;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
@@ -118,10 +120,10 @@
                 WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
                     new { model.FirstName, model.LastName, NickName = model.Nickname, model.Email, model.StatusId });
 
-                uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
-                uow.AddressesRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
-                uow.PhoneNumbersRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
-                uow.PhoneNumbersRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency Contact" });
+                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
+                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
+                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
+                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency Contact" });
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
@@ -229,31 +231,45 @@
         #region Roles
 
         [HttpGet]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult RoleManager(RoleMessageId? message)
+        [Authorize(Roles = "Administrator, President")]
+        public ActionResult Appointments(AppointmentMessageId? message)
         {
             switch (message)
             {
-                case RoleMessageId.CreateSuccess:
-                case RoleMessageId.DeleteSuccess:
-                case RoleMessageId.RoleAssignSuccess:
-                case RoleMessageId.RoleUnassignSuccess:
-                    ViewBag.SuccessMessage = GetRoleMessage(message);
+                case AppointmentMessageId.CreatePositionSuccess:
+                case AppointmentMessageId.DeletePositionSuccess:
+                case AppointmentMessageId.AppointmentSuccess:
+                case AppointmentMessageId.UnappointmentSuccess:
+                    ViewBag.SuccessMessage = GetAppointmentMessage(message);
                     break;
-                case RoleMessageId.CreateDuplicate:
-                case RoleMessageId.DeleteNonExistent:
-                case RoleMessageId.RoleAssignDuplicate:
-                case RoleMessageId.RoleUnassignFailed:
-                    ViewBag.FailMessage = GetRoleMessage(message);
+                case AppointmentMessageId.CreateDuplicate:
+                case AppointmentMessageId.DeleteNonExistent:
+                case AppointmentMessageId.AppointmentDuplicate:
+                case AppointmentMessageId.UnappointmentFailed:
+                    ViewBag.FailMessage = GetAppointmentMessage(message);
                     break;
             }
 
-            var model = new RoleManagerModel
+            var model = new AppointmentsModel
             {
-                AssignModel = new AssignUserToRoleModel { Users = GetUserIdListAsFullName(), Roles = GetRoleList() },
-                UnassignModel = new UnassignUserFromRoleModel { Users = GetUserIdListAsFullName(), Roles = GetRoleList() },
-                CreateModel = new CreateRoleModel(),
-                DeleteModel = new DeleteRoleModel { Roles = GetRoleList() }
+                AppointModel = new AppointModel
+                {
+                    Users = GetUserIdListAsFullName(), 
+                    Positions = GetPositionsList(), 
+                    AvailableSemesters = GetThisAndNextSemesterList()
+                },
+                UnappointModel = new AppointModel
+                {
+                    Users = GetUserIdListAsFullName(), 
+                    Positions = GetPositionsList(),
+                    AvailableSemesters = GetThisAndNextSemesterList()
+                },
+                CreateModel = new CreatePositionModel(),
+                DeleteModel = new DeletePositionModel
+                {
+                    Positions = GetPositionsList()
+                },
+                RecentAppointments = GetRecentAppointments()
             };
 
             return View(model);
@@ -261,82 +277,83 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult AssignUserToRole(AssignUserToRoleModel model)
+        [Authorize(Roles = "Administrator, President")]
+        public ActionResult Appoint(AppointModel model)
         {
-            RoleMessageId? message = null;
+            AppointmentMessageId? message = null;
             var member = uow.MemberRepository.Get(m => m.UserId == model.SelectedUserId);
-            if (Roles.IsUserInRole(member.UserName, model.SelectedRoleName))
+            var positionId = uow.PositionRepository.Get(p => p.PositionName == model.SelectedPositionName).PositionId;
+            if (Roles.IsUserInRole(member.UserName, model.SelectedPositionName))
             {
-                message = RoleMessageId.RoleAssignDuplicate;
+                message = AppointmentMessageId.AppointmentDuplicate;
             }
             else
             {
-                Roles.AddUserToRole(member.UserName, model.SelectedRoleName);
-                message = RoleMessageId.RoleAssignSuccess;
+                ((DspRoleProvider)Roles.Provider).AddUserToRole(model.SelectedUserId, positionId, model.SelectedSemesterId);
+                message = AppointmentMessageId.AppointmentSuccess;
             }
 
-            return RedirectToAction("RoleManager", new { Message = message });
+            return RedirectToAction("Appointments", new { Message = message });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public ActionResult UnassignUserFromRole(UnassignUserFromRoleModel model)
+        public ActionResult Unappoint(AppointModel model)
         {
-            RoleMessageId? message = null;
+            AppointmentMessageId? message = null;
             var member = uow.MemberRepository.Get(m => m.UserId == model.SelectedUserId);
-            if (Roles.IsUserInRole(member.UserName, model.SelectedRoleName))
+            if (Roles.IsUserInRole(member.UserName, model.SelectedPositionName))
             {
-                Roles.RemoveUserFromRole(member.UserName, model.SelectedRoleName);
-                message = RoleMessageId.RoleUnassignSuccess;
+                Roles.RemoveUserFromRole(member.UserName, model.SelectedPositionName);
+                message = AppointmentMessageId.UnappointmentSuccess;
             }
             else
             {
-                message = RoleMessageId.RoleUnassignFailed;
+                message = AppointmentMessageId.UnappointmentFailed;
             }
 
-            return RedirectToAction("RoleManager", new { Message = message });
+            return RedirectToAction("Appointments", new { Message = message });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, President")]
+        public ActionResult CreatePosition(CreatePositionModel model)
+        {
+            AppointmentMessageId? message;
+
+            if (!Roles.RoleExists(model.PositionName))
+            {
+                Roles.CreateRole(model.PositionName);
+                message = AppointmentMessageId.CreatePositionSuccess;
+            }
+            else
+            {
+                message = AppointmentMessageId.CreateDuplicate;
+            }
+
+            return RedirectToAction("Appointments", new { Message = message });
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public ActionResult CreateRole(CreateRoleModel model)
+        public ActionResult DeletePosition(DeletePositionModel model)
         {
-            RoleMessageId? message;
+            AppointmentMessageId? message;
 
-            if (!Roles.RoleExists(model.RoleName))
+            if (Roles.RoleExists(model.SelectedPositionName))
             {
-                Roles.CreateRole(model.RoleName);
-                message = RoleMessageId.CreateSuccess;
+                Roles.DeleteRole(model.SelectedPositionName);
+                message = AppointmentMessageId.DeletePositionSuccess;
             }
             else
             {
-                message = RoleMessageId.CreateDuplicate;
+                message = AppointmentMessageId.DeleteNonExistent;
             }
 
-            return RedirectToAction("RoleManager", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult DeleteRole(DeleteRoleModel model)
-        {
-            RoleMessageId? message;
-
-            if (Roles.RoleExists(model.SelectedRoleName))
-            {
-                Roles.DeleteRole(model.SelectedRoleName);
-                message = RoleMessageId.DeleteSuccess;
-            }
-            else
-            {
-                message = RoleMessageId.DeleteNonExistent;
-            }
-
-            return RedirectToAction("RoleManager", new { Message = message });
+            return RedirectToAction("Appointments", new { Message = message });
         }
 
         #endregion
@@ -466,16 +483,16 @@
                 : message == RegistrationMessageId.UnregisterFailed ? "Account removal failed.  Please contact the system administrator."
                 : "";
         }
-        private static dynamic GetRoleMessage(RoleMessageId? message)
+        private static dynamic GetAppointmentMessage(AppointmentMessageId? message)
         {
-            return message == RoleMessageId.CreateSuccess ? "Role created."
-                : message == RoleMessageId.DeleteSuccess ? "Role deleted."
-                : message == RoleMessageId.CreateDuplicate ? "Creation failed because the role already exists."
-                : message == RoleMessageId.DeleteNonExistent ? "Delete failed because no role with that name exists."
-                : message == RoleMessageId.RoleAssignSuccess ? "User successfully assigned to role."
-                : message == RoleMessageId.RoleAssignDuplicate ? "User is already in that role."
-                : message == RoleMessageId.RoleUnassignSuccess ? "User removed from role."
-                : message == RoleMessageId.RoleUnassignFailed ? "User is not in role and cannot be removed from it."
+            return message == AppointmentMessageId.CreatePositionSuccess ? "Position created."
+                : message == AppointmentMessageId.DeletePositionSuccess ? "Position deleted."
+                : message == AppointmentMessageId.CreateDuplicate ? "Creation failed because a Position with that name already exists."
+                : message == AppointmentMessageId.DeleteNonExistent ? "Deletion failed because no Position with that name exists."
+                : message == AppointmentMessageId.AppointmentSuccess ? "Member has been successfully appointed."
+                : message == AppointmentMessageId.AppointmentDuplicate ? "Member has already been appointed to that Position for the selected Semester."
+                : message == AppointmentMessageId.UnappointmentSuccess ? "Member has been unappointed from Position."
+                : message == AppointmentMessageId.UnappointmentFailed ? "Member cannot be unappointed from a Position to which he has not been appointed."
                 : "";
         }
         private static dynamic GetManageMessage(ManageMessageId? message)
@@ -531,16 +548,16 @@
             RemoveLoginSuccess,
             AddLoginSuccess,
         }
-        public enum RoleMessageId
+        public enum AppointmentMessageId
         {
-            RoleAssignSuccess,
-            RoleUnassignSuccess,
-            CreateSuccess,
-            DeleteSuccess,
+            AppointmentSuccess,
+            UnappointmentSuccess,
+            CreatePositionSuccess,
+            DeletePositionSuccess,
             CreateDuplicate,
             DeleteNonExistent,
-            RoleAssignDuplicate,
-            RoleUnassignFailed,
+            AppointmentDuplicate,
+            UnappointmentFailed,
         }
         public enum RegistrationMessageId
         {

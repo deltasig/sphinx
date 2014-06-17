@@ -17,7 +17,7 @@
         {
             if (userId == null)
             {
-                var addresses = uow.PhoneNumbersRepository.GetAll().ToList()
+                var addresses = uow.PhoneNumberRepository.GetAll().ToList()
                     .OrderBy(s => s.Member.StatusId)
                     .ThenBy(m => m.Member.LastName)
                     .ThenBy(a => a.Type);
@@ -26,7 +26,7 @@
             }
             else
             {
-                var addresses = uow.PhoneNumbersRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
+                var addresses = uow.PhoneNumberRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
                 ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
                 return View(addresses);
             }
@@ -38,7 +38,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var phoneNumber = uow.PhoneNumbersRepository.GetById(id);
+            var phoneNumber = uow.PhoneNumberRepository.GetById(id);
             if (phoneNumber == null)
             {
                 return HttpNotFound();
@@ -53,7 +53,7 @@
         {
             if (ModelState.IsValid)
             {
-                uow.PhoneNumbersRepository.Update(phoneNumber);
+                uow.PhoneNumberRepository.Update(phoneNumber);
                 uow.Save();
                 return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == phoneNumber.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
