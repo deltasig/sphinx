@@ -5,20 +5,49 @@
 {
     @Html.Partial("_Title")
 }
-<div class="container-fluid">
-    <div class="row">
-        @if (DateTime.Now.Hour >= 19 || DateTime.Now.Hour <= 7)
-        {
-            <img src="~/Images/HouseFrontNight70s.jpg" class="hidden-xs hidden-sm"
-                 alt="Header" style="padding: 0" height="650" width="100%" />
-        }
-        else
-        {
-            <img src="~/Images/HouseFrontDay70s.jpg" class="hidden-xs hidden-sm"
-                 alt="Header" style="padding: 0" height="650" width="100%" />
-        }
+@if (DateTime.Now.Hour >= 19 || DateTime.Now.Hour <= 7)
+{
+    <div class="jumbotron" style="background-image:url('/Images/HouseFrontNight70s.jpg');
+                                      background-repeat:no-repeat; background-size: 100% 650px; height: 650px; margin-top: 50px">
+        <div class="container" style="margin-top: 50px">
+            <div class="row">
+                <div class="col-xs-12" style="color:whitesmoke">
+                    <h1 style="margin: 0">
+                        <strong>DELTA SIGMA PHI</strong>
+                    </h1>
+                    <h2 style="margin: 0">
+                        DELTA EPSILON CHAPTER
+                    </h2>
+                    <h3 style="margin: 0">
+                        MISSOURI S&amp;T
+                    </h3>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+}
+else
+{
+    <div class="jumbotron" style="background-image:url('/Images/HouseFrontDay70s.jpg');
+                                      background-repeat:no-repeat; background-size: 100% 650px; height: 650px; margin-top: 50px">
+        <div class="container" style="margin-top: 50px">
+            <div class="row">
+                <div class="col-xs-12">
+                    <h1 style="margin: 0">
+                        <strong>DELTA SIGMA PHI</strong>
+                    </h1>
+                    <h2 style="margin: 0">
+                        DELTA EPSILON CHAPTER
+                    </h2>
+                    <h3 style="margin: 0">
+                        MISSOURI S&amp;T
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 <div class="container" style="margin-top: 25px">
     <div class="row">
         <div class="col-lg-4">
