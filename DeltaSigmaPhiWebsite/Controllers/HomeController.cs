@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System;
     using System.Linq;
     using Data.UnitOfWork;
     using Models;
@@ -7,8 +8,7 @@
 
     public class HomeController : BaseController
     {
-        public HomeController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws)
-            : base(uow, ws, oaws)
+        public HomeController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws)
         {
             
         }
@@ -25,7 +25,11 @@
 
         public ActionResult Contact()
         {
-            var model = uow.MemberRepository.GetAll().Where(m => m.webpages_Roles.Any()).ToList();
+            var currentSemester = GetThisSemestersId();
+
+            if (currentSemester == null) return View();
+
+            var model = uow.LeadersRepository.GetAll().Where(l => l.SemesterId == (int)currentSemester).ToList();
             return View(model);
         }
 

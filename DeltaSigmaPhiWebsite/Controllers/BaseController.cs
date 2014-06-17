@@ -23,16 +23,18 @@
             this.OAuthWebSecurity = oAuthWebSecurity;
         }
 
-        protected virtual int GetThisSemestersId()
+        protected virtual int? GetThisSemestersId()
         {
             var semesters = uow.SemesterRepository.GetAll().ToList();
-            if (semesters.Count <= 0) return -1;
+            if (semesters.Count <= 0) return null;
 
-            var thisSemester = semesters.FirstOrDefault(entity => (DateTime.Now > entity.DateStart && DateTime.Now < entity.DateEnd));
+            var thisSemester = uow.SemesterRepository.GetAll().First(s => 
+                s.DateStart <= DateTime.Now &&
+                s.DateEnd >= DateTime.Now);
             if (thisSemester != null)
                 return thisSemester.SemesterId;
 
-            return -1;
+            return null;
         }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {

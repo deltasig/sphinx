@@ -69,6 +69,11 @@
         {
             get { return _phoneNumbersRepository ?? (_phoneNumbersRepository = new PhoneNumbersRepository(_context)); }
         }
+        private ILeadersRepository _leadersRepository;
+        public ILeadersRepository LeadersRepository
+        {
+            get { return _leadersRepository ?? (_leadersRepository = new LeadersRepository(_context)); }
+        }
 
         public void Save()
         {

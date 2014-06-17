@@ -282,12 +282,14 @@
     <Compile Include="Controllers\SemesterController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
     <Compile Include="Data\DspRoleProvider.cs" />
+    <Compile Include="Data\Interfaces\ILeadersRepository.cs" />
     <Compile Include="Data\Interfaces\IPhoneNumbersRepository.cs" />
     <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
     <Compile Include="Data\Interfaces\IEventsRepository.cs" />
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Data\Repositories\LeadersRepository.cs" />
     <Compile Include="Data\Repositories\PhoneNumbersRepository.cs" />
     <Compile Include="Data\Repositories\AddressesRepository.cs" />
     <Compile Include="Migrations\201406101402228_Initial.cs" />
