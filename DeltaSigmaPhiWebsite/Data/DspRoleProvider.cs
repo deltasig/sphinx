@@ -96,8 +96,9 @@
                                 {
                                     UserId = user.UserId,
                                     PositionId = positionId,
-                                    SemesterId = db.Semesters.First(s =>
-                                        s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now).SemesterId
+                                    SemesterId = (from s in db.Semesters
+                                                  orderby s.DateEnd descending
+                                                  select s.SemesterId).First()
                                 };
                                 db.Leaders.Add(memberInRole);
                             }
@@ -121,21 +122,6 @@
                     {
                         PositionName = roleName
                     });
-                    db.SaveChanges();
-                }
-            }
-            catch
-            {
-            }
-        }
-
-        public void CreateRole(Position position)
-        {
-            try
-            {
-                using (var db = new DspContext())
-                {
-                    db.Positions.Add(position);
                     db.SaveChanges();
                 }
             }
