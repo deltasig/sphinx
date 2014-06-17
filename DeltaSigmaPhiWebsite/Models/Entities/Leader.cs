@@ -1,5 +1,6 @@
 namespace DeltaSigmaPhiWebsite.Models.Entities
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -15,6 +16,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public int UserId { get; set; }
 
         public int PositionId { get; set; }
+
+        public DateTime AppointedOn { get; set; }
 
         public int? SemesterId { get; set; }
 

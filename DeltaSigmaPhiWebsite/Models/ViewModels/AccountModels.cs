@@ -99,49 +99,42 @@
         public IEnumerable<SelectListItem> Users { get; set; }
     }
 
-    public class RoleManagerModel
+    public class AppointmentsModel
     {
-        public AssignUserToRoleModel AssignModel { get; set; }
-        public UnassignUserFromRoleModel UnassignModel { get; set; }
-        public CreateRoleModel CreateModel { get; set; }
-        public DeleteRoleModel DeleteModel { get; set; }
+        public AppointModel AppointModel { get; set; }
+        public AppointModel UnappointModel { get; set; }
+        public CreatePositionModel CreateModel { get; set; }
+        public DeletePositionModel DeleteModel { get; set; }
+        public IEnumerable<Leader> RecentAppointments { get; set; }
     }
 
-    public class AssignUserToRoleModel
+    public class AppointModel
     {
-        [Display(Name = "Assign")]
+        [Display(Name = "Member")]
         public int SelectedUserId { get; set; }
         public IEnumerable<SelectListItem> Users { get; set; }
-
-        [Display(Name = "As")]
-        public string SelectedRoleName { get; set; }
-        public IEnumerable<SelectListItem> Roles { get; set; }
+        [Display(Name = "Position")]
+        public string SelectedPositionName { get; set; }
+        public IEnumerable<SelectListItem> Positions { get; set; }
+        [Display(Name = "Semester")]
+        public int SelectedSemesterId { get; set; }
+        public IEnumerable<SelectListItem> AvailableSemesters { get; set; } 
     }
 
-    public class UnassignUserFromRoleModel
-    {
-        [Display(Name = "Unassign")]
-        public int SelectedUserId { get; set; }
-        public IEnumerable<SelectListItem> Users { get; set; }
-
-        [Display(Name = "From")]
-        public string SelectedRoleName { get; set; }
-        public IEnumerable<SelectListItem> Roles { get; set; }
-    }
-
-    public class CreateRoleModel
+    public class CreatePositionModel
     {
         [Required]
-        [Display(Name = "Role Name")]
-        public string RoleName { get; set; }
+        [Display(Name = "Position")]
+        [DataType(DataType.Text)]
+        public string PositionName { get; set; }
     }
 
-    public class DeleteRoleModel
+    public class DeletePositionModel
     {
-        [Display(Name = "Roles")]
-        public string SelectedRoleName { get; set; }
-
-        public IEnumerable<SelectListItem> Roles { get; set; }
+        [Required]
+        [Display(Name = "Position")]
+        public string SelectedPositionName { get; set; }
+        public IEnumerable<SelectListItem> Positions { get; set; }
     }
     
     public class ExternalLogin

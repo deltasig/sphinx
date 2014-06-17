@@ -7,27 +7,26 @@
     using System.Net;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, Secretary")]
     public class SemesterController : BaseController
     {
         public SemesterController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
-        // GET: Semesters
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Secretary")]
         public ActionResult Index()
         {
             return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart));
         }
-        
-        // GET: Semesters/Create
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Secretary")]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Semesters/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Administrator, Secretary")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SemesterId,DateStart,DateEnd")] Semester semester)
         {
@@ -38,7 +37,8 @@
             return RedirectToAction("Index");
         }
 
-        // GET: Semesters/Edit/5
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Secretary")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -53,10 +53,8 @@
             return View(semester);
         }
 
-        // POST: Semesters/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize(Roles = "Administrator, Secretary")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SemesterId,DateStart,DateEnd")] Semester semester)
         {
@@ -67,7 +65,8 @@
             return RedirectToAction("Index");
         }
 
-        // GET: Semesters/Delete/5
+        [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -82,8 +81,8 @@
             return View(semester);
         }
 
-        // POST: Semesters/Delete/5
         [HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {

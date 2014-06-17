@@ -15,9 +15,10 @@
         IMemberStatusRepository MemberStatusRepository { get; }
         IStudyHoursRepository StudyHourRepository { get; }
         IIncidentReportsRepository IncidentReportRepository { get; }
-        IAddressesRepository AddressesRepository { get; }
-        IPhoneNumbersRepository PhoneNumbersRepository { get; }
-        ILeadersRepository LeadersRepository { get; }
+        IAddressesRepository AddressRepository { get; }
+        IPhoneNumbersRepository PhoneNumberRepository { get; }
+        ILeadersRepository LeaderRepository { get; }
+        IPositionsRepository PositionRepository { get; }
         void Save();
     }
 }

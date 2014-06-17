@@ -17,7 +17,7 @@
         {
             if (userId == null)
             {
-                var addresses = uow.AddressesRepository.GetAll().ToList()
+                var addresses = uow.AddressRepository.GetAll().ToList()
                     .OrderBy(s => s.Member.StatusId)
                     .ThenBy(m => m.Member.LastName)
                     .ThenBy(a => a.Type);
@@ -26,7 +26,7 @@
             }
             else
             {
-                var addresses = uow.AddressesRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
+                var addresses = uow.AddressRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
                 ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
                 return View(addresses);
             }
@@ -38,7 +38,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var address = uow.AddressesRepository.GetById(id);
+            var address = uow.AddressRepository.GetById(id);
             if (address == null)
             {
                 return HttpNotFound();
@@ -53,7 +53,7 @@
         {
             if (ModelState.IsValid)
             {
-                uow.AddressesRepository.Update(address);
+                uow.AddressRepository.Update(address);
                 uow.Save();
                 return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");

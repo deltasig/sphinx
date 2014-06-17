@@ -41,5 +41,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public virtual ICollection<OrganizationsJoined> OrganizationsJoineds { get; set; }
 
         public virtual ICollection<PledgeClass> PledgeClasses { get; set; }
+
+        public override string ToString()
+        {
+            return (DateStart.Month < 6 ? "Spring " : "Fall ") + DateStart.Year;
+        }
     }
 }

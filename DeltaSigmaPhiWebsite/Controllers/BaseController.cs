@@ -2,6 +2,7 @@
 {
     using Data.UnitOfWork;
     using Models;
+    using Models.Entities;
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
@@ -44,6 +45,30 @@
             {
                 return null;
             }
+        }
+        protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterList()
+        {
+            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
+            var currentSemesterId = GetThisSemestersId();
+            var newList = new List<object>();
+
+            // Check if the second semester from the top is the current semester (next semester has been added)
+            if (semesters[1].SemesterId == currentSemesterId)
+            {
+                newList.Add(new
+                {
+                    semesters[1].SemesterId,
+                    Name = semesters[1].ToString()
+                });
+            }
+            // Add the semester at the top of the list no matter what.
+            newList.Add(new
+            {
+                semesters[0].SemesterId,
+                Name = semesters[0].ToString()
+            });
+
+            return new SelectList(newList, "SemesterId", "Name");
         }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
@@ -95,11 +120,28 @@
             };
             return new SelectList(terms);
         }
-        protected virtual IEnumerable<SelectListItem> GetRoleList()
+        protected virtual IEnumerable<SelectListItem> GetPositionsList()
         {
-            var roles = Roles.GetAllRoles();
-            return new SelectList(roles);
+            var positions = Roles.GetAllRoles();
+            return new SelectList(positions);
         }
+        protected virtual IEnumerable<Leader> GetRecentAppointments()
+        {
+            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
+            var index = 1;
+            switch (semesters.Count())
+            {
+                case 1:
+                    index = 0;
+                    break;
+                case 0:
+                    return new List<Leader>();
+            }
+            var workingSemester = semesters[index];
+            return uow.LeaderRepository.GetAll().Where(l => l.Semester.DateStart >= workingSemester.DateStart)
+                .OrderByDescending(o => o.AppointedOn).ToList();
+        }
+
         protected virtual IEnumerable<ExternalLogin> GetExternalLogins(string userName)
         {
             var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);

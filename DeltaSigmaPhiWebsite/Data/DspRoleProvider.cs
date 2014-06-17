@@ -77,8 +77,8 @@
 
                         foreach (var position in allPositions)
                         {
-                            positionIds.AddRange(from positionName in positionNames 
-                                                 where position.PositionName == positionName 
+                            positionIds.AddRange(from positionName in positionNames
+                                                 where position.PositionName == positionName
                                                  select position.PositionId);
                         }
 
@@ -87,7 +87,7 @@
                         foreach (var positionId in positionIds)
                         {
                             var memberInRole = (from mip in db.Leaders
-                                                where mip.Member.UserId == user.UserId && 
+                                                where mip.Member.UserId == user.UserId &&
                                                       mip.PositionId == positionId
                                                 select mip).FirstOrDefault();
                             if (memberInRole == null)
@@ -98,13 +98,35 @@
                                     PositionId = positionId,
                                     SemesterId = (from s in db.Semesters
                                                   orderby s.DateEnd descending
-                                                  select s.SemesterId).First()
+                                                  select s.SemesterId).First(),
+                                    AppointedOn = DateTime.Now
                                 };
                                 db.Leaders.Add(memberInRole);
                             }
                             db.SaveChanges();
                         }
                     }
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public void AddUserToRole(int userId, int positionId, int semesterId)
+        {
+            try
+            {
+                using (var db = new DspContext())
+                {
+                    db.Leaders.Add(new Leader
+                    {
+                        UserId = userId,
+                        PositionId = positionId,
+                        SemesterId = semesterId,
+                        AppointedOn = DateTime.Now
+                    });
+                    db.SaveChanges();
                 }
             }
             catch
@@ -168,7 +190,7 @@
                 try
                 {
                     var usersInRole = from mip in db.Leaders
-                                      where mip.Position.PositionName == positionName && 
+                                      where mip.Position.PositionName == positionName &&
                                             mip.Member.UserName == usernameToMatch
                                       select mip;
 
@@ -194,7 +216,7 @@
                 try
                 {
                     var positions = from r in db.Positions
-                                  select r;
+                                    select r;
 
                     roles.AddRange(positions.Select(p => p.PositionName));
                 }
@@ -215,8 +237,8 @@
                 try
                 {
                     var positionsHeld = from r in db.Leaders
-                                  where r.Member.UserName == username
-                                  select r;
+                                        where r.Member.UserName == username
+                                        select r;
 
                     roles.AddRange(positionsHeld.Select(p => p.Position.PositionName));
                 }
@@ -261,11 +283,26 @@
             {
                 try
                 {
-                    var membersInRole = from mip in db.Leaders
-                                        where mip.Position.PositionName == positionName &&
-                                              mip.Member.UserName == userName
-                                        select mip;
-                    if (membersInRole.Any())
+                    IEnumerable<Leader> positionsHeld;
+                    if (positionName == "Administrator")
+                    {
+                        positionsHeld = from l in db.Leaders
+                                        where l.Position.PositionName == positionName &&
+                                              l.Member.UserName == userName
+                                        select l;
+                    }
+                    else
+                    {
+                        var semesters = db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
+                        var mostRecentSemester = semesters[0];
+                        positionsHeld = from l in db.Leaders
+                                        where l.Position.PositionName == positionName &&
+                                              l.Member.UserName == userName &&
+                                              l.SemesterId == mostRecentSemester.SemesterId
+                                        select l;
+                    }
+
+                    if (positionsHeld.Any())
                     {
                         isValid = true;
                     }
@@ -289,8 +326,8 @@
                     {
                         // find each member in users table
                         var member = (from u in db.Members
-                                     where u.UserName == userName
-                                     select u)
+                                      where u.UserName == userName
+                                      select u)
                                     .FirstOrDefault();
 
                         if (member == null) continue;
@@ -302,8 +339,8 @@
 
                         foreach (var position in allPositions)
                         {
-                            removePositionIds.AddRange(from positionName in positionNames 
-                                                       where position.PositionName == positionName 
+                            removePositionIds.AddRange(from positionName in positionNames
+                                                       where position.PositionName == positionName
                                                        select position.PositionId);
                         }
 

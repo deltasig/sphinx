@@ -10,7 +10,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-3">
-            <h3>@(Model.DateStart.Month < 6 ? "Spring" : "Fall") @Model.DateStart.Year <small>Semester</small></h3>
+            <h3>@Model.ToString() <small>Semester</small></h3>
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()

@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Leader>
+
+
+<div class="panel panel-default">
+    <div class="panel-heading">Recent Appointments</div>
+    <div class="panel-body">
+        <table class="table table-responsive">
+            <thead>
+                <tr>
+                    <th>Member</th>
+                    <th>Position</th>
+                    <th>Semester</th>
+                    <th>Appointed On</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Member.LastName, @item.Member.FirstName</td>
+                    <td>@item.Position.PositionName</td>
+                    <td>@item.Semester.ToString()</td>
+                    <td>@item.AppointedOn.ToShortDateString()</td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
