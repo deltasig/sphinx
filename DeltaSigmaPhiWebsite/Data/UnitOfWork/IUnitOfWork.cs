@@ -19,6 +19,7 @@
         IPhoneNumbersRepository PhoneNumberRepository { get; }
         ILeadersRepository LeaderRepository { get; }
         IPositionsRepository PositionRepository { get; }
+        IPledgeClassesRepository PledgeClassRepository { get; }
         void Save();
     }
 }

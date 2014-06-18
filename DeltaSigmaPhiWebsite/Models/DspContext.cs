@@ -201,7 +201,7 @@ namespace DeltaSigmaPhiWebsite.Models
 
             modelBuilder.Entity<Semester>()
                 .HasMany(e => e.Members)
-                .WithOptional(e => e.Semester)
+                .WithRequired(e => e.Semester)
                 .HasForeignKey(e => e.ExpectedGraduationId);
 
             modelBuilder.Entity<Semester>()

@@ -39,16 +39,18 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [Required]
         [StringLength(50)]
         public string LastName { get; set; }
-
-        [StringLength(50)]
-        public string Nickname { get; set; }
-
+        
         [Required]
         [StringLength(50)]
         public string Email { get; set; }
 
+        [Range(0, 9999999999, ErrorMessage = "Pin number is too long.")]
+        [DataType(DataType.Text)]
         public int? Pin { get; set; }
 
+        [Range(0, 999, ErrorMessage = "Room number is too long.")]
+        [DataType(DataType.Text)]
+        [Display(Name = "Room (Enter 0 for Out-of-House")]
         public int? Room { get; set; }
 
         public double? PreviousSemesterGPA { get; set; }
@@ -57,11 +59,11 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public double? RemainingBalance { get; set; }
 
-        public int? StatusId { get; set; }
+        public int StatusId { get; set; }
 
-        public int? PledgeClassId { get; set; }
+        public int PledgeClassId { get; set; }
 
-        public int? ExpectedGraduationId { get; set; }
+        public int ExpectedGraduationId { get; set; }
 
         public int? BigBroId { get; set; }
 
@@ -108,5 +110,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public virtual ICollection<Major> Majors { get; set; }
 
         public virtual ICollection<webpages_Roles> webpages_Roles { get; set; }
+
+        public override string ToString()
+        {
+            return FirstName + " " + LastName;
+        }
     }
 }

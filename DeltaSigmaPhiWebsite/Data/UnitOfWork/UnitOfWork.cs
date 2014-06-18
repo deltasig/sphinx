@@ -79,6 +79,11 @@
         {
             get { return _positionRepository ?? (_positionRepository = new PositionsRepository(_context)); }
         }
+        private IPledgeClassesRepository _pledgeClassRepository;
+        public IPledgeClassesRepository PledgeClassRepository
+        {
+            get { return _pledgeClassRepository ?? (_pledgeClassRepository = new PledgeClassesRepository(_context)); }
+        }
 
         public void Save()
         {
