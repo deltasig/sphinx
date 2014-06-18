@@ -34,15 +34,7 @@
                         </tr>
                         <tr>
                             <th>Room</th>
-                            <td>@if (Model.Room == null || Model.Room == 0)
-                                {
-                                    @:Out-of-House
-                                }
-                                else
-                                {
-                                    @Model.Room
-                                }
-                            </td>
+                            <td>@Model.RoomString()</td>
                         </tr>
                         <tr>
                             <th>Status</th>
