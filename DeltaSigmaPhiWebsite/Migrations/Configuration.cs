@@ -365,12 +365,26 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 {
                     FirstName = "Tyler", 
                     LastName = "Morrow", 
-                    NickName = "Ty", 
                     Email = "tjm6f4@mst.edu", 
-                    StatusId = context.MemberStatus.Single(s => s.StatusName == "Alumnus").StatusId,
+                    StatusId = context.MemberStatus.Single(s => s.StatusName == "Active").StatusId,
                     ExpectedGraduationId = 9,
                     PledgeClassId = 12
                 });
+            var userId = WebSecurity.GetUserId("tjm6f4");
+            if (!context.Addresses.Select(a => a.UserId == userId).Any())
+            {
+                context.Addresses.AddOrUpdate(
+                    new Address { UserId = userId, Type = "Mailing" },
+                    new Address { UserId = userId, Type = "Permanent" });
+                context.SaveChanges();
+            }
+            if (!context.PhoneNumbers.Select(a => a.UserId == userId).Any())
+            {
+                context.PhoneNumbers.AddOrUpdate(m => m.Type,
+                    new PhoneNumber { UserId = userId, Type = "Mobile" },
+                    new PhoneNumber { UserId = userId, Type = "Emergency Contact" });
+                context.SaveChanges();
+            }
 
             if (!Roles.GetRolesForUser("tjm6f4").Contains("Administrator"))
                 Roles.AddUsersToRoles(new[] { "tjm6f4" }, new[] { "Administrator" });

@@ -17,7 +17,7 @@
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Index()
         {
-            return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart));
+            return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart).ToList());
         }
 
         [HttpGet]
