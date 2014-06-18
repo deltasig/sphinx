@@ -8,7 +8,7 @@
     @Html.Partial("_Title")
 }
 
-@{ Html.RenderPartial("~/Views/Semester/Create.cshtml", new Semester()); }
+@{ Html.RenderPartial("~/Views/Semester/Create.cshtml", new CreateSemesterModel()); }
 
 <div class="container">
     <div class="row">
@@ -18,31 +18,31 @@
                     <button class="btn-link" data-toggle="modal" data-target="#semesterCreateModal">Create New</button>
                 </div>
                 <div class="panel-body">
-                    <table class="table">
+                    <table class="table table-responsive table-condensed">
                         <thead>
                             <tr>
                                 <th>Semester</th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DateStart)
-                                </th>
-                                <th>
-                                    @Html.DisplayNameFor(model => model.DateEnd)
-                                </th>
+                                <th>Pledge Class(es)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateStart)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>
-                                    @item.ToString()
+                                <td>@item.ToString()</td>
+                                <td>@foreach (var pledgeClass in item.PledgeClasses)
+                                    {
+                                        if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
+                                        {
+                                            @:|
+                                        }
+                                        @pledgeClass.PledgeClassName
+                                    }
                                 </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DateStart)
-                                </td>
-                                <td>
-                                    @Html.DisplayFor(modelItem => item.DateEnd)
-                                </td>
+                                <td>@item.DateStart</td>
+                                <td>@item.DateStart</td>
                                 <td>
                                     @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
                                     @if (User.IsInRole("Administrator"))
