@@ -228,7 +228,7 @@
             return roles.ToArray();
         }
 
-        public override string[] GetRolesForUser(string username)
+        public override string[] GetRolesForUser(string userName)
         {
             var roles = new List<string>();
 
@@ -236,11 +236,22 @@
             {
                 try
                 {
-                    var positionsHeld = from r in db.Leaders
-                                        where r.Member.UserName == username
-                                        select r;
+                    var semesters = db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
+                    var mostRecentSemester = semesters[0];
+                    var positionsHeld = (from l in db.Leaders
+                                         where l.Member.UserName == userName &&
+                                               l.SemesterId == mostRecentSemester.SemesterId
+                                         select l.Position.PositionName).ToList();
+                    var member = (from m in db.Members
+                                    where m.UserName == userName
+                                    select m).Single();
 
-                    roles.AddRange(positionsHeld.Select(p => p.Position.PositionName));
+                    roles.AddRange(positionsHeld);
+                    roles.Add(member.MemberStatus.StatusName);
+                    if (IsUserInRole(member.UserName, "Administrator"))
+                    {
+                        roles.Add("Administrator");
+                    }
                 }
                 catch
                 {
@@ -275,7 +286,7 @@
             return users.ToArray();
         }
 
-        public override bool IsUserInRole(string userName, string positionName)
+        public override bool IsUserInRole(string userName, string roleName)
         {
             var isValid = false;
 
@@ -283,11 +294,16 @@
             {
                 try
                 {
+                    if (db.MemberStatus.Select(s => s.StatusName).Contains(roleName))
+                    {
+                        return db.Members.Single(m => m.UserName == userName).MemberStatus.StatusName == roleName;
+                    }
+
                     IEnumerable<Leader> positionsHeld;
-                    if (positionName == "Administrator")
+                    if (roleName == "Administrator")
                     {
                         positionsHeld = from l in db.Leaders
-                                        where l.Position.PositionName == positionName &&
+                                        where l.Position.PositionName == roleName &&
                                               l.Member.UserName == userName
                                         select l;
                     }
@@ -296,7 +312,7 @@
                         var semesters = db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
                         var mostRecentSemester = semesters[0];
                         positionsHeld = from l in db.Leaders
-                                        where l.Position.PositionName == positionName &&
+                                        where l.Position.PositionName == roleName &&
                                               l.Member.UserName == userName &&
                                               l.SemesterId == mostRecentSemester.SemesterId
                                         select l;

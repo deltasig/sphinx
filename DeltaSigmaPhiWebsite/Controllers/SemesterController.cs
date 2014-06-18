@@ -3,42 +3,45 @@
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
+    using Models.ViewModels;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
 
+    [Authorize(Roles = "Active")]
     public class SemesterController : BaseController
     {
         public SemesterController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary")]
         public ActionResult Index()
         {
             return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart));
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SemesterId,DateStart,DateEnd")] Semester semester)
+        public ActionResult Create([Bind(Include = "SemesterId,DateStart,DateEnd")] CreateSemesterModel model)
         {
-            if (!ModelState.IsValid) return View(semester);
+            if (!ModelState.IsValid) return View(model);
 
-            uow.SemesterRepository.Insert(semester);
+            uow.SemesterRepository.Insert(model.Semester);
             uow.Save();
+            
             return RedirectToAction("Index");
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -54,7 +57,7 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SemesterId,DateStart,DateEnd")] Semester semester)
         {

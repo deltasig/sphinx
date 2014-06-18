@@ -10,7 +10,7 @@
     using System.Web.Mvc;
     using System.Web.Security;
 
-    [Authorize]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class SphinxController : BaseController
     {
         public SphinxController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
