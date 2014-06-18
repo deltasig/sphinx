@@ -1,6 +1,10 @@
 ﻿@{
     ViewBag.Title = "Internal server error";
 }
+@section Title
+{
+    @Html.Partial("_Title")
+}
 @{
     Html.RenderPartial("Error/InternalServerErrorInfo");
 }
