@@ -71,14 +71,29 @@
         [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [DataType(DataType.Text)]
-        [Display(Name = "Nickname")]
-        public string Nickname { get; set; }
-
+        [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Status")]
         public string StatusId { get; set; }
         public IEnumerable<SelectListItem> StatusList { get; set; }
+        
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Expected Graduation")]
+        public string ExpectedGraduationId { get; set; }
+        public IEnumerable<SelectListItem> SemesterList { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Pledge Class")]
+        public string PledgeClassId { get; set; }
+        public IEnumerable<SelectListItem> PledgeClassList { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [StringLength(3, ErrorMessage = "Room number is too long.")]
+        [Display(Name = "Room (Enter 0 for Out-of-House)")]
+        public string Room { get; set; }
         
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
