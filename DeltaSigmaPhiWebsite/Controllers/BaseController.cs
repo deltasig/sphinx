@@ -86,6 +86,22 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
+        protected virtual IEnumerable<SelectListItem> GetSemesterListWithNone()
+        {
+            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
+            var newList = new List<object> { new { SemesterId = -1, Name = "--Graduating Semester (optional)--" } };
+
+            foreach (var s in semesters)
+            {
+                newList.Add(new
+                {
+                    s.SemesterId,
+                    Name = s.ToString()
+                });
+            }
+
+            return new SelectList(newList, "SemesterId", "Name");
+        }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
             var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
@@ -128,6 +144,20 @@
             }
             return new SelectList(newList, "StatusId", "StatusName");
         }
+        protected virtual IEnumerable<SelectListItem> GetStatusListWithNone()
+        {
+            var statusList = uow.MemberStatusRepository.GetAll();
+            var newList = new List<object> { new { StatusId = -1, StatusName = "--Status (optional)--" } };
+            foreach (var status in statusList)
+            {
+                newList.Add(new
+                {
+                    status.StatusId,
+                    status.StatusName
+                });
+            }
+            return new SelectList(newList, "StatusId", "StatusName");
+        }
         protected virtual IEnumerable<SelectListItem> GetTerms()
         {
             var terms = new List<string>
@@ -157,21 +187,21 @@
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
-        protected virtual IEnumerable<SelectListItem> GetMemberStatusList()
+        protected virtual IEnumerable<SelectListItem> GetPledgeClassListWithNone()
         {
-            var statuses = uow.MemberStatusRepository.GetAll().OrderBy(s => s.StatusId).ToList();
-            var newList = new List<object>();
+            var pledgeClasses = uow.PledgeClassRepository.GetAll().OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var newList = new List<object> { new { PledgeClassId = -1, PledgeClassName = "--Pledge Class (optional)--" } };
 
-            foreach (var s in statuses)
+            foreach (var p in pledgeClasses)
             {
                 newList.Add(new
                 {
-                    s.StatusId,
-                    s.StatusName
+                    p.PledgeClassId,
+                    p.PledgeClassName
                 });
             }
 
-            return new SelectList(newList, "StatusId", "StatusName");
+            return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
 
         protected virtual IEnumerable<Leader> GetRecentAppointments()

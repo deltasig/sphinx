@@ -28,6 +28,12 @@
             );
 
             routes.MapRoute(
+                name: "AccountActions",
+                url: "Account/{action}/{model}",
+                defaults: new { controller = "Account", model = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "AccountIndex",
                 url: "Account/{userName}",
                 defaults: new { controller = "Account", action = "Index", userName = UrlParameter.Optional }

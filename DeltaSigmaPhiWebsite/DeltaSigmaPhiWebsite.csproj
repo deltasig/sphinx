@@ -465,6 +465,7 @@
     <Content Include="Views\Account\_PositionRecentAppointmentsPartial.cshtml" />
     <Content Include="Views\Account\_MemberInformationPartial.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
+    <Content Include="Views\Account\Roster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

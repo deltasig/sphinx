@@ -50,7 +50,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         [Range(0, 999, ErrorMessage = "Room number is too long.")]
         [DataType(DataType.Text)]
-        [Display(Name = "Room (Enter 0 for Out-of-House")]
+        [Display(Name = "Room (Enter 0 for Out-of-House)")]
         public int? Room { get; set; }
 
         public double? PreviousSemesterGPA { get; set; }
@@ -114,6 +114,13 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public override string ToString()
         {
             return FirstName + " " + LastName;
+        }
+
+        public string RoomString()
+        {
+            if (Room == null)
+                return "Unassigned";
+            return Room == 0 ? "Out-of-House" : "In-House";
         }
     }
 }
