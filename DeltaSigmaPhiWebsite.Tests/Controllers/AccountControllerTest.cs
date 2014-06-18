@@ -48,7 +48,7 @@
             conMock.Setup(x => x.GetBigPictureUrl(It.IsAny<string>())).Returns("johndoe");
 
             // Act
-            var actual = conMock.Object.Index(string.Empty, null, null);
+            var actual = conMock.Object.Index(string.Empty, null);
 
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);

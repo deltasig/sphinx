@@ -1,0 +1,61 @@
+﻿@model EditMemberInfoModel
+@{
+    ViewBag.Title = "Edit Member Information";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.Member.UserId)
+                @Html.HiddenFor(m => m.Member.UserName)
+                @Html.HiddenFor(m => m.Member.Email)
+                @Html.HiddenFor(m => m.Member.FirstName)
+                @Html.HiddenFor(m => m.Member.LastName)
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
+                    @Html.EditorFor(m => m.Member.Pin, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.Member.Pin, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.Room, new { @class = "control-label" })
+                    @Html.EditorFor(m => m.Member.Room, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(m => m.Member.Room, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
+                    @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

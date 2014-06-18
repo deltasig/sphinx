@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Collections.Generic;
     using Data;
     using Data.UnitOfWork;
     using Models;
@@ -13,26 +12,29 @@
     using System.Web.Security;
     using WebMatrix.WebData;
 
-    [Authorize]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AccountController : BaseController
     {
         public AccountController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        public ActionResult Index(string userName, ManageMessageId? message, int? userId)
+        public ActionResult Index(string userName, ManageMessageId? message)
         {
-            if (userId != null)
+            if (!string.IsNullOrEmpty(userName))
             {
-                if(OAuthWebSecurity.HasLocalAccount((int)userId))
-                    userName = uow.MemberRepository.GetById(userId).UserName;
+                if (!OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName)))
+                    userName = WebSecurity.CurrentUser.Identity.Name;
             }
             else if(string.IsNullOrEmpty(userName))
             {
                 userName = WebSecurity.CurrentUser.Identity.Name;
             }
+
             var member = uow.MemberRepository.Get(m => m.UserName == userName);
-                ViewBag.StatusMessage = GetManageMessage(message);
-                ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
+
+            ViewBag.StatusMessage = GetManageMessage(message);
+            ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
+
             var model = new AccountInformationModel
             {
                 MemberInfo = member,
@@ -42,7 +44,55 @@
 
             return View(model);
         }
-        
+
+        [HttpGet]
+        [Authorize(Roles = "Administrator, Secretary")]
+        public ActionResult Edit(string userName)
+        {
+            var member = string.IsNullOrEmpty(userName)
+                ? uow.MemberRepository.Get(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
+                : uow.MemberRepository.Get(m => m.UserName == userName);
+            var model = new EditMemberInfoModel
+            {
+                Member = member,
+                Semesters = GetSemesterList(),
+                PledgeClasses = GetPledgeClassList(),
+                Statuses = GetMemberStatusList(),
+                Members = GetUserIdListAsFullNameWithNone()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Secretary")]
+        public ActionResult Edit(EditMemberInfoModel model)
+        {
+            model.Semesters = GetSemesterList();
+            model.PledgeClasses = GetPledgeClassList();
+            model.Statuses = GetMemberStatusList();
+            model.Members = GetUserIdListAsFullNameWithNone();
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var member = uow.MemberRepository.Get(m => m.UserId == model.Member.UserId);
+            member.Pin = model.Member.Pin;
+            member.Room = model.Member.Room;
+            member.StatusId = model.Member.StatusId;
+            member.PledgeClassId = model.Member.PledgeClassId;
+            member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
+            member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
+
+            uow.MemberRepository.Update(member);
+            uow.Save();
+
+            return View(model);
+        }
+
         #region Local Authentication
 
         [HttpGet]

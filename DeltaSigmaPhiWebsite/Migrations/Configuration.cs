@@ -28,20 +28,161 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new MemberStatus { StatusName = "Neophyte"},
                 new MemberStatus { StatusName = "Active"},
                 new MemberStatus { StatusName = "Alumnus"},
-                new MemberStatus { StatusName = "Affiliate"}
+                new MemberStatus { StatusName = "Affiliate" },
+                new MemberStatus { StatusName = "Released" }
             );
 
+            const int startDay = 1;
+            const int endDay = 31;
+            const int springStartMonth = 1;
+            const int springEndMonth = 5;
+            const int fallStartMonth = 8;
+            const int fallEndMonth = 12;
+
             context.Semesters.AddOrUpdate(s => s.DateStart,
-                new Semester { DateStart = new DateTime(2010, 1, 1), DateEnd = new DateTime(2010, 5, 31) },
-                new Semester { DateStart = new DateTime(2010, 8, 1), DateEnd = new DateTime(2010, 12, 31) },
-                new Semester { DateStart = new DateTime(2011, 1, 1), DateEnd = new DateTime(2011, 5, 31) },
-                new Semester { DateStart = new DateTime(2011, 8, 1), DateEnd = new DateTime(2011, 12, 31) },
-                new Semester { DateStart = new DateTime(2012, 1, 1), DateEnd = new DateTime(2012, 5, 31) },
-                new Semester { DateStart = new DateTime(2012, 8, 1), DateEnd = new DateTime(2012, 12, 31) },
-                new Semester { DateStart = new DateTime(2013, 1, 1), DateEnd = new DateTime(2013, 5, 31) },
-                new Semester { DateStart = new DateTime(2013, 8, 1), DateEnd = new DateTime(2013, 12, 31) },
-                new Semester { DateStart = new DateTime(2014, 1, 1), DateEnd = new DateTime(2014, 5, 31) },
-                new Semester { DateStart = new DateTime(2014, 8, 1), DateEnd = new DateTime(2014, 12, 31) }
+                new Semester { DateStart = new DateTime(2006, springStartMonth, startDay), DateEnd = new DateTime(2006, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2006, fallStartMonth, startDay), DateEnd = new DateTime(2006,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2007, springStartMonth, startDay), DateEnd = new DateTime(2007, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2007, fallStartMonth, startDay), DateEnd = new DateTime(2007,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2008, springStartMonth, startDay), DateEnd = new DateTime(2008, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2008, fallStartMonth, startDay), DateEnd = new DateTime(2008,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2009, springStartMonth, startDay), DateEnd = new DateTime(2009, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2009, fallStartMonth, startDay), DateEnd = new DateTime(2009,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2010, springStartMonth, startDay), DateEnd = new DateTime(2010, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2010, fallStartMonth, startDay), DateEnd = new DateTime(2010,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2011, springStartMonth, startDay), DateEnd = new DateTime(2011, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2011, fallStartMonth, startDay), DateEnd = new DateTime(2011,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2012, springStartMonth, startDay), DateEnd = new DateTime(2012, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2012, fallStartMonth, startDay), DateEnd = new DateTime(2012,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2013, springStartMonth, startDay), DateEnd = new DateTime(2013, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2013, fallStartMonth, startDay), DateEnd = new DateTime(2013,fallEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2014, springStartMonth, startDay), DateEnd = new DateTime(2014, springEndMonth, endDay) },
+                new Semester { DateStart = new DateTime(2014, fallStartMonth, startDay), DateEnd = new DateTime(2014,fallEndMonth, endDay) }
+            );
+
+            context.SaveChanges();
+            
+            context.PledgeClasses.AddOrUpdate(m => m.PledgeClassName,
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2006, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Alpha 1",
+                    PinningDate = new DateTime(2006, 2, 19)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2006, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Alpha 2",
+                    PinningDate = new DateTime(2006, 2, 22)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2006, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Alpha 3",
+                    PinningDate = new DateTime(2006, 3, 6)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2006, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Beta",
+                    PinningDate = new DateTime(2006, 9, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2007, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Gamma",
+                    PinningDate = new DateTime(2007, 2, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2007, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Delta",
+                    PinningDate = new DateTime(2007, 9, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2008, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Epsilon",
+                    PinningDate = new DateTime(2008, 2, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2008, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Zeta",
+                    PinningDate = new DateTime(2008, 9, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2009, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Eta",
+                    PinningDate = new DateTime(2009, 2, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2009, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Theta",
+                    PinningDate = new DateTime(2009, 9, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2010, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Iota",
+                    PinningDate = new DateTime(2010, 2, 1)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2010, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Kappa",
+                    PinningDate = new DateTime(2010, 9, 19)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2011, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Lambda",
+                    PinningDate = new DateTime(2011, 2, 20)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2011, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Mu",
+                    PinningDate = new DateTime(2011, 9, 18)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2012, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Nu",
+                    PinningDate = new DateTime(2012, 2, 17)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2012, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Xi",
+                    PinningDate = new DateTime(2012, 9, 16)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2013, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Omicron",
+                    PinningDate = new DateTime(2013, 2, 24)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2013, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Pi",
+                    PinningDate = new DateTime(2013, 9, 15)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2014, springStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Rho",
+                    PinningDate = new DateTime(2014, 2, 16)
+                },
+                new PledgeClass
+                {
+                    SemesterId = context.Semesters.Single(s => s.DateStart == new DateTime(2014, fallStartMonth, startDay)).SemesterId,
+                    PledgeClassName = "Sigma",
+                    PinningDate = new DateTime(2014, 9, 1)
+                }
             );
 
             context.Departments.AddOrUpdate(d => d.DepartmentName,
@@ -142,7 +283,9 @@ namespace DeltaSigmaPhiWebsite.Migrations
                     LastName = "Morrow", 
                     NickName = "Ty", 
                     Email = "tjm6f4@mst.edu", 
-                    StatusId = context.MemberStatus.Single(s => s.StatusName == "Alumnus").StatusId
+                    StatusId = context.MemberStatus.Single(s => s.StatusName == "Alumnus").StatusId,
+                    ExpectedGraduationId = 9,
+                    PledgeClassId = 12
                 });
 
             if (!Roles.GetRolesForUser("tjm6f4").Contains("Administrator"))

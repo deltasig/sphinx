@@ -1,0 +1,68 @@
+﻿@model Member
+
+<div class="panel panel-default">
+    <div class="panel-heading">Profile</div>
+    <div class="panel-body">
+        <div class="media">
+            @*@if (Model.ProfilePicUrl != String.Empty)
+            {
+                <img src="@Model.ProfilePicUrl" alt="fb pic" class="img-thumbnail pull-left" />
+            }*@
+            <div class="media-body">
+                <table class="table table-responsive table-condensed">
+                    <thead>
+                        <tr>
+                            <td><h2 class="media-heading">@Model.ToString()</h2></td>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
+                            {
+                                <td class="text-right">@Html.ActionLink("Edit", "Edit", "Account", new { userName = Model.UserName }, null)</td>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>User Name</th>
+                            <td>@Model.UserName</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>@Model.Email</td>
+                        </tr>
+                        <tr>
+                            <th>Pin</th>
+                            <td>@Model.Pin</td>
+                        </tr>
+                        <tr>
+                            <th>Room</th>
+                            <td>@if (Model.Room == null || Model.Room == 0)
+                                {
+                                    @:Out-of-House
+                                }
+                                else
+                                {
+                                    @Model.Room
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Status</th>
+                            <td>@Model.MemberStatus.StatusName</td>
+                        </tr>
+                        <tr>
+                            <th>Pledge Class</th>
+                            <td>@Model.PledgeClass.PledgeClassName</td>
+                        </tr>
+                        <tr>
+                            <th>Graduating</th>
+                            <td>@Model.Semester.ToString()</td>
+                        </tr>
+                        <tr>
+                            <th>Big Bro</th>
+                            <td>@(Model.BigBrother == null ? "None" : Model.BigBrother.ToString())</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
