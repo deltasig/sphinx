@@ -34,7 +34,10 @@
                                 {
                                     <li>@Html.ActionLink("Registration", "Registration", "Account")</li>
                                 }
-                                @if (User.IsInRole("Administrator") || User.IsInRole("President"))
+                                @if (User.IsInRole("Administrator") || 
+                                    User.IsInRole("President") || 
+                                    User.IsInRole("Secretary") || 
+                                    User.IsInRole("Academics"))
                                 {
                                     <li>@Html.ActionLink("Semesters", "Index", "Semester")</li>
                                 }

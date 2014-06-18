@@ -8,27 +8,27 @@
     using System.Net;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Active")]
+    [Authorize(Roles = "Active, Administrator")]
     public class SemesterController : BaseController
     {
         public SemesterController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Index()
         {
             return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart));
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, President, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "SemesterId,DateStart,DateEnd")] CreateSemesterModel model)
         {
@@ -41,7 +41,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -57,7 +57,7 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, President, Secretary")]
+        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "SemesterId,DateStart,DateEnd")] Semester semester)
         {

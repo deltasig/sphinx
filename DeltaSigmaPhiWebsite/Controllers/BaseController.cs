@@ -31,15 +31,13 @@
 
             try
             {
-                var thisSemester = uow.SemesterRepository.GetAll().FirstOrDefault(s =>
-                    s.DateStart <= DateTime.Now &&
-                    s.DateEnd >= DateTime.Now);
+                var thisSemester = uow.SemesterRepository.GetAll()
+                    .Where(s => s.DateEnd >= DateTime.Now)
+                    .OrderBy(s => s.DateStart)
+                    .ToList()
+                    .First();
 
-                if (thisSemester != null) return thisSemester.SemesterId;
-
-                var latestStartDate = uow.SemesterRepository.GetAll().Max(s => s.DateStart);
-                var latestSemester = uow.SemesterRepository.Get(s => s.DateStart == latestStartDate);
-                return latestSemester.SemesterId;
+                return thisSemester.SemesterId;
             }
             catch (Exception)
             {
@@ -48,28 +46,28 @@
         }
         protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterList()
         {
-            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
-            var currentSemesterId = GetThisSemestersId();
-            var newList = new List<object>();
+            var thisAndComingSemesters = uow.SemesterRepository.GetAll()
+                .Where(s => s.DateEnd >= DateTime.Now)
+                .OrderBy(s => s.DateStart)
+                .ToList();
 
-            // Check if the second semester from the top is the current semester (next semester has been added)
-            if (semesters[1].SemesterId == currentSemesterId)
+            var newList = new List<object>
             {
-                newList.Add(new
+                new
                 {
-                    semesters[1].SemesterId,
-                    Name = semesters[1].ToString()
-                });
-            }
-            // Add the semester at the top of the list no matter what.
-            newList.Add(new
-            {
-                semesters[0].SemesterId,
-                Name = semesters[0].ToString()
-            });
+                    thisAndComingSemesters[0].SemesterId,
+                    Name = thisAndComingSemesters[0].ToString()
+                },
+                new
+                {
+                    thisAndComingSemesters[1].SemesterId,
+                    Name = thisAndComingSemesters[1].ToString()
+                }
+            };
 
             return new SelectList(newList, "SemesterId", "Name");
         }
+
         protected virtual IEnumerable<SelectListItem> GetSemesterList()
         {
             var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
@@ -206,19 +204,20 @@
 
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
-            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
-            var index = 1;
-            switch (semesters.Count())
-            {
-                case 1:
-                    index = 0;
-                    break;
-                case 0:
-                    return new List<Leader>();
-            }
-            var workingSemester = semesters[index];
-            return uow.LeaderRepository.GetAll().Where(l => l.Semester.DateStart >= workingSemester.DateStart)
-                .OrderByDescending(o => o.AppointedOn).ToList();
+            var thisAndComingSemesters = uow.SemesterRepository.GetAll()
+                .Where(s => s.DateEnd >= DateTime.Now)
+                .OrderBy(s => s.DateStart)
+                .ToList();
+
+            var leaders = uow.LeaderRepository.GetAll().ToList();
+
+            var recentAppointsments = leaders
+                .Where(l =>
+                    l.SemesterId == thisAndComingSemesters[0].SemesterId ||
+                    l.SemesterId == thisAndComingSemesters[1].SemesterId)
+                .ToList();
+
+            return recentAppointsments;
         }
 
         protected virtual IEnumerable<ExternalLogin> GetExternalLogins(string userName)
