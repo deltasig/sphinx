@@ -1,6 +1,10 @@
 ﻿@{
     ViewBag.Title = "Not found";
 }
+@section Title
+{
+    @Html.Partial("_Title")
+}
 @{
     Html.RenderPartial("Error/NotFoundInfo");
 }
