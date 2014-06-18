@@ -1,13 +1,12 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Collections;
-    using System.Collections.Generic;
     using Data;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Transactions;
     using System.Web.Mvc;
@@ -229,7 +228,12 @@
             }
             var model = new RegistrationModel
             {
-                RegisterModel = new RegisterModel { StatusList = GetStatusList() },
+                RegisterModel = new RegisterModel
+                {
+                    StatusList = GetStatusList(), 
+                    PledgeClassList = GetPledgeClassList(),
+                    SemesterList = GetSemesterList()
+                },
                 UnregisterModel = new UnregisterModel { Users = GetUserIdListAsFullName() }
             };
 
@@ -252,7 +256,7 @@
                 var userName = model.Email.Substring(0, signIndex);
 
                 WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
-                    new { model.FirstName, model.LastName, NickName = model.Nickname, model.Email, model.StatusId });
+                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId });
 
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
