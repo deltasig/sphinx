@@ -1,5 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Collections;
+    using System.Collections.Generic;
     using Data;
     using Data.UnitOfWork;
     using Models;
@@ -25,7 +27,7 @@
                 if (!OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName)))
                     userName = WebSecurity.CurrentUser.Identity.Name;
             }
-            else if(string.IsNullOrEmpty(userName))
+            else if (string.IsNullOrEmpty(userName))
             {
                 userName = WebSecurity.CurrentUser.Identity.Name;
             }
@@ -46,6 +48,88 @@
         }
 
         [HttpGet]
+        public ActionResult Roster(RosterModel model)
+        {
+            if (model.SearchModel != null)
+            {
+                if (!string.IsNullOrEmpty(model.SearchModel.SearchTerm))
+                {
+                    model.Members = uow.MemberRepository
+                        .GetAll()
+                        .Where(m => m.FirstName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()) ||
+                            m.LastName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()))
+                        .ToList();
+                }
+                else if (model.SearchModel.CustomSearchRequested())
+                {
+                    IEnumerable<Member> guidedSearchResults = uow.MemberRepository
+                        .GetAll()
+                        .OrderBy(o => o.LastName)
+                        .ToList();
+                    if (model.SearchModel.SelectedStatusId != -1)
+                    {
+                        guidedSearchResults =
+                            guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
+                    }
+                    if (model.SearchModel.SelectedPledgeClassId != -1)
+                    {
+                        guidedSearchResults =
+                            guidedSearchResults.Where(m => m.PledgeClassId == model.SearchModel.SelectedPledgeClassId);
+                    }
+                    if (model.SearchModel.SelectedGraduationSemesterId != -1)
+                    {
+                        guidedSearchResults =
+                            guidedSearchResults.Where(m => m.ExpectedGraduationId == model.SearchModel.SelectedGraduationSemesterId);
+                    }
+                    switch (model.SearchModel.LivingType)
+                    {
+                        case "InHouse":
+                            guidedSearchResults =
+                                guidedSearchResults.Where(m => m.Room != 0);
+                            break;
+                        case "OutOfHouse":
+                            guidedSearchResults =
+                                guidedSearchResults.Where(m => m.Room == 0);
+                            break;
+                    }
+
+                    model.Members = guidedSearchResults.ToList();
+                }
+                else
+                {
+                    model.Members = uow.MemberRepository
+                        .GetAll()
+                        .Where(m => m.MemberStatus.StatusName == "Active")
+                        .OrderBy(o => o.PledgeClassId)
+                        .ThenBy(o => o.LastName)
+                        .ToList();
+                }
+            }
+            else
+            {
+                model = new RosterModel
+                {
+                    Members = uow.MemberRepository
+                        .GetAll()
+                        .Where(m => m.MemberStatus.StatusName == "Active")
+                        .OrderBy(o => o.PledgeClassId)
+                        .ThenBy(o => o.LastName)
+                        .ToList()
+                };
+            }
+
+            model.SearchModel = new RosterSearchModel
+            {
+                Statuses = GetStatusListWithNone(),
+                PledgeClasses = GetPledgeClassListWithNone(),
+                Semesters = GetSemesterListWithNone(),
+                LivingType = "Both"
+            };
+
+            return View(model);
+        }
+
+        [HttpGet]
         [Authorize(Roles = "Administrator, Secretary")]
         public ActionResult Edit(string userName)
         {
@@ -57,7 +141,7 @@
                 Member = member,
                 Semesters = GetSemesterList(),
                 PledgeClasses = GetPledgeClassList(),
-                Statuses = GetMemberStatusList(),
+                Statuses = GetStatusList(),
                 Members = GetUserIdListAsFullNameWithNone()
             };
 
@@ -71,7 +155,7 @@
         {
             model.Semesters = GetSemesterList();
             model.PledgeClasses = GetPledgeClassList();
-            model.Statuses = GetMemberStatusList();
+            model.Statuses = GetStatusList();
             model.Members = GetUserIdListAsFullNameWithNone();
 
             if (!ModelState.IsValid)
@@ -159,7 +243,7 @@
         {
             RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
 
-            if (!ModelState.IsValid) return RedirectToAction("Registration", new {Message = message});
+            if (!ModelState.IsValid) return RedirectToAction("Registration", new { Message = message });
             // Attempt to register the user
             try
             {
@@ -221,7 +305,7 @@
             message = RegistrationMessageId.UnregisterFailed;
             return RedirectToAction("Registration", new { Message = message });
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult ChangePassword(LocalPasswordModel model)
@@ -304,13 +388,13 @@
             {
                 AppointModel = new AppointModel
                 {
-                    Users = GetUserIdListAsFullName(), 
-                    Positions = GetPositionsList(), 
+                    Users = GetUserIdListAsFullName(),
+                    Positions = GetPositionsList(),
                     AvailableSemesters = GetThisAndNextSemesterList()
                 },
                 UnappointModel = new AppointModel
                 {
-                    Users = GetUserIdListAsFullName(), 
+                    Users = GetUserIdListAsFullName(),
                     Positions = GetPositionsList(),
                     AvailableSemesters = GetThisAndNextSemesterList()
                 },
