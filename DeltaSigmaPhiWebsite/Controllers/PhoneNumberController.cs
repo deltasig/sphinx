@@ -6,9 +6,8 @@
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
-    using Models.ViewModels;
 
-    [Authorize]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class PhoneNumberController : BaseController
     {
         public PhoneNumberController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }

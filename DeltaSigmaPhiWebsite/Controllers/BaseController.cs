@@ -70,6 +70,22 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
+        protected virtual IEnumerable<SelectListItem> GetSemesterList()
+        {
+            var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
+            var newList = new List<object>();
+
+            foreach (var s in semesters)
+            {
+                newList.Add(new
+                {
+                    s.SemesterId,
+                    Name = s.ToString()
+                });
+            }
+
+            return new SelectList(newList, "SemesterId", "Name");
+        }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
             var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
@@ -125,6 +141,39 @@
             var positions = Roles.GetAllRoles();
             return new SelectList(positions);
         }
+        protected virtual IEnumerable<SelectListItem> GetPledgeClassList()
+        {
+            var pledgeClasses = uow.PledgeClassRepository.GetAll().OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var newList = new List<object>();
+
+            foreach (var p in pledgeClasses)
+            {
+                newList.Add(new
+                {
+                    p.PledgeClassId,
+                    p.PledgeClassName
+                });
+            }
+
+            return new SelectList(newList, "PledgeClassId", "PledgeClassName");
+        }
+        protected virtual IEnumerable<SelectListItem> GetMemberStatusList()
+        {
+            var statuses = uow.MemberStatusRepository.GetAll().OrderBy(s => s.StatusId).ToList();
+            var newList = new List<object>();
+
+            foreach (var s in statuses)
+            {
+                newList.Add(new
+                {
+                    s.StatusId,
+                    s.StatusName
+                });
+            }
+
+            return new SelectList(newList, "StatusId", "StatusName");
+        }
+
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
             var semesters = uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateEnd).ToList();
