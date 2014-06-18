@@ -29,14 +29,14 @@
 
             routes.MapRoute(
                 name: "AccountIndex",
-                url: "Account/",
-                defaults: new { controller = "Account", action = "Index", id = UrlParameter.Optional }
+                url: "Account/{userName}",
+                defaults: new { controller = "Account", action = "Index", userName = UrlParameter.Optional }
             );
 
             routes.MapRoute(
                 name: "Account",
-                url: "Account/{action}/{id}",
-                defaults: new { controller = "Account", id = UrlParameter.Optional }
+                url: "Account/{action}/{userName}",
+                defaults: new { controller = "Account", userName = UrlParameter.Optional }
             );
 
             routes.MapRoute(
@@ -55,6 +55,12 @@
                 name: "Home",
                 url: "",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "Errors",
+                url: "Error/{action}",
+                defaults: new { controller = "Error" }
             );
 
             routes.MapRoute(
