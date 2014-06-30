@@ -220,6 +220,91 @@
             return recentAppointsments;
         }
 
+        protected int GetRemainingServiceHoursForUser(int userId)
+        {
+            const int requiredHours = 15;
+            // Beginning of today (12:00am of today)
+            var today = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0));
+            // Find current semester
+            var currentSemester = uow.SemesterRepository.Get(s => s.DateStart <= today && s.DateEnd >= today);
+            if (currentSemester == null)
+                return 15;
+
+            var startOfSemester = currentSemester.DateStart;
+            var endOfSemester = currentSemester.DateEnd;
+
+            var totalHours = 0.0;
+            try
+            {
+                var serviceHours = uow.ServiceHourRepository.GetAll()
+                    .Where(h => h.Member.UserId == userId && h.Event.DateTimeOccurred >= startOfSemester &&
+                            h.Event.DateTimeOccurred <= endOfSemester);
+                if (serviceHours.Any())
+                    totalHours = serviceHours.Select(h => h.DurationHours).Sum();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            var soberDriverCheck = uow.SoberDriverRepository.Get(s => s.UserId == userId);
+            if (soberDriverCheck != null)
+            {
+                if (soberDriverCheck.DateOfShift >= startOfSemester && soberDriverCheck.DateOfShift <= endOfSemester)
+                {
+                    totalHours += 5;
+                }
+            }
+
+            var remainingHours = requiredHours - (int)totalHours;
+            return remainingHours < 0 ? 0 : remainingHours;
+        }
+        protected IEnumerable<SelectListItem> GetAllEventIdsAsEventName()
+        {
+            var today = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0)); //beginning of today (12:00am of today)
+            var yearAgoToday = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0)); //beginning of today, one year ago (12:00am of today)
+            yearAgoToday -= new TimeSpan(365, 0, 0, 0);
+            var events = uow.EventRepository.FindBy(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday)); //only retrieves events ranging one year back
+            return new SelectList(events, "EventId", "EventName");
+        }
+        protected IEnumerable<ServiceHourCompletedModel> GetAllCompletedEvents(int userId)
+        {
+            var submissions = new List<ServiceHourCompletedModel>();
+            var currentSemester = uow.SemesterRepository.Get(s => s.DateStart <= DateTime.Now && s.DateEnd >= DateTime.Now);
+            IEnumerable<ServiceHour> serviceHourSubmissions;
+            if (currentSemester == null)
+            {
+                serviceHourSubmissions = uow.ServiceHourRepository.FindBy(e => e.UserId == userId);
+            }
+            else
+            {
+                serviceHourSubmissions =
+                    uow.ServiceHourRepository.FindBy(e => e.UserId == userId &&
+                        e.Event.DateTimeOccurred >= currentSemester.DateStart &&
+                            e.Event.DateTimeOccurred <= currentSemester.DateEnd);
+            }
+
+            foreach (var submission in serviceHourSubmissions)
+            {
+                submissions.Add(new ServiceHourCompletedModel()
+                {
+                    EventName = uow.EventRepository.GetById(submission.EventId).EventName,
+                    HoursComplete = (int)submission.DurationHours,
+                    Approval = true
+                });
+            }
+            return submissions;
+        }
+
+        protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
+        {
+            //Rounds down based on the TimeSpan
+            //Ex. date = DateTime.Now, span = TimeSpan of one day
+            //Results in 12:00am of today
+            var ticks = (date.Ticks / span.Ticks);
+            return new DateTime(ticks * span.Ticks);
+        }
+
         protected virtual IEnumerable<ExternalLogin> GetExternalLogins(string userName)
         {
             var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);
