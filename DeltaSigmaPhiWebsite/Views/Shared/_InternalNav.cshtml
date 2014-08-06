@@ -24,6 +24,10 @@
                                 {
                                     <li>@Html.ActionLink("Appointments", "Appointments", "Account")</li>
                                 }
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                                {
+                                    <li>@Html.ActionLink("Events", "Index", "Event")</li>
+                                }
                                 @if (User.IsInRole("Administrator") ||
                                      User.IsInRole("President") ||
                                      User.IsInRole("Vice President External") ||
