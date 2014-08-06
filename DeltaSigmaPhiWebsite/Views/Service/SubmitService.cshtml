@@ -8,7 +8,7 @@
                 <h4 class="modal-title" id="myModalLabel">Service Hour Submission Form</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("SubmitService", "Sphinx", FormMethod.Post, new { role = "form" }))
+                @using (Html.BeginForm("SubmitService", "Service", FormMethod.Post, new { role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
