@@ -167,38 +167,38 @@
                 @{ Html.RenderAction("SubmitStudy"); }
                 <div class="well">
                     <h3 style="margin-top: 0;">Sober Driver(s)</h3>
-                    <table class="table table-condensed table-striped table-responsive">
+                    <table class="table table-condensed table-responsive">
                         @foreach (var item in Model.FullSoberSchedule.Where(item => item.SoberType == "Driver"))
-                    {
-                        <tr>
-                            <td>
-                                @item.Shift.ToShortDateString()
-                            </td>
-                            <td>
-                                @item.Shift.DayOfWeek
-                            </td>
-                            <td>
-                                @item.Name
-                            </td>
-                        </tr>
-                    }
+                        {
+                            <tr class="@(item.Name == "None" ? "warning" : "")">
+                                <td>
+                                    @item.Shift.ToShortDateString()
+                                </td>
+                                <td>
+                                    @item.Shift.DayOfWeek
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                            </tr>
+                        }
                     </table>
                     <h3 style="margin-top: 0;">Sober Officers(s)</h3>
-                    <table class="table table-condensed">
+                    <table class="table table-condensed table-responsive">
                         @foreach (var item in Model.FullSoberSchedule.Where(item => item.SoberType == "Officer"))
-                    {
-                        <tr>
-                            <td>
-                                @item.Shift.ToShortDateString()
-                            </td>
-                            <td>
-                                @item.Shift.DayOfWeek
-                            </td>
-                            <td>
-                                @item.Name
-                            </td>
-                        </tr>
-                    }
+                        {
+                            <tr class="@(item.Name == "None" ? "warning" : "")">
+                                <td>
+                                    @item.Shift.ToShortDateString()
+                                </td>
+                                <td>
+                                    @item.Shift.DayOfWeek
+                                </td>
+                                <td>
+                                    @item.Name
+                                </td>
+                            </tr>
+                        }
                     </table>
                     <h3 style="margin-top: 0;">Laundry</h3>
                     <p>
