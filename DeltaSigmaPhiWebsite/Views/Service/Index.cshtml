@@ -1,0 +1,40 @@
+﻿@model IEnumerable<ServiceIndexModel>
+
+@{
+    ViewBag.Title = "Service Index";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Showing Service Hours for @Model.First().Semester
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
+                                    <td>@item.Hours</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

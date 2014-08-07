@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
 	using System;
+	using System.Collections.Generic;
 	using System.Linq;
 	using System.Web.Mvc;
 	using Data.UnitOfWork;
@@ -16,7 +17,26 @@
 		[HttpGet]
 		public ActionResult Index()
 		{
-			return RedirectToAction("Index", "Sphinx");
+			var activeMembers = uow.MemberRepository.GetAll()
+				.Where(m => m.MemberStatus.StatusName == "Active").ToList();
+			
+			var model = new List<ServiceIndexModel>();
+			var thisOrLastSemester = GetThisOrLastSemester();
+
+			foreach (var member in activeMembers)
+			{
+				model.Add(new ServiceIndexModel
+				{
+					Member = member,
+					Hours = member.ServiceHours
+						.Where(e => e.DateTimeSubmitted >= thisOrLastSemester.DateStart && 
+							e.DateTimeSubmitted <= thisOrLastSemester.DateEnd)
+						.Sum(h => h.DurationHours),
+					Semester = thisOrLastSemester
+				});
+			}
+
+			return View(model);
 		}
 
 		[HttpGet]
