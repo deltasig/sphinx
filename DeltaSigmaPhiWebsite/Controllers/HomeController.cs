@@ -23,7 +23,7 @@
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Contacts()
         {
             var currentSemester = GetThisSemestersId();
 
@@ -33,12 +33,12 @@
             return View(model);
         }
 
-        public ActionResult HowToJoin()
+        public ActionResult Recruitment()
         {
             return View();
         }
 
-        public ActionResult BuildingBetterMenScholarship()
+        public ActionResult Scholarships()
         {
             return View();
         }
