@@ -8,18 +8,35 @@
 }
 else
 {
-    <h5>
-        Log in using:
-    </h5>
+    
     using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = ViewBag.ReturnUrl }))
     {
         @Html.AntiForgeryToken()
         <div class="form-group">
             <ul class="list-inline">
+                <li>
+                    Log in using:
+                </li>
                 @foreach (var p in Model)
                 {
                     <li>
-                        <button type="submit" name="provider" class="btn btn-link btn-sm" style="padding: 0" value="@p.AuthenticationClient.ProviderName" title="Log in using your @p.DisplayName account">@p.DisplayName</button>
+                        <button type="submit" name="provider" 
+                                class="btn btn-link btn-sm" 
+                                style="padding: 0" 
+                                value="@p.AuthenticationClient.ProviderName" title="Log in using your @p.DisplayName account">
+                            @if (p.DisplayName == "Facebook")
+                            {
+                                <i class="fa fa-facebook-square fa-3x"></i>
+                            }
+                            else if (p.DisplayName == "Google")
+                            {
+                                <i class="fa fa-google-plus-square fa-3x"></i>
+                            }
+                            else
+                            {
+                                @p.DisplayName
+                            }
+                        </button>
                     </li>
                 }
             </ul>
