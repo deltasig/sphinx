@@ -396,6 +396,8 @@
     <Content Include="fonts\FontAwesome.otf" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

@@ -1,126 +1,89 @@
 ﻿@{
     ViewBag.Title = "Delta Sigma Phi";
+    TimeZoneInfo cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
 }
 @section Title
 {
     @Html.Partial("_Title")
 }
-@if (DateTime.Now.Hour >= 19 || DateTime.Now.Hour <= 7)
-{
-    <div class="jumbotron hidden-xs home-bg"
-         style="background-image:url('/Images/HouseFrontNight70s.jpg');">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12" style="color:whitesmoke">
-                    <h1 style="margin-top: 50px; margin-bottom: 0px">
-                        DELTA SIGMA PHI
-                    </h1>
-                    <h2 style="margin: 0">
-                        DELTA EPSILON CHAPTER
-                    </h2>
-                    <h3 style="margin: 0">
-                        MISSOURI S&amp;T
-                    </h3>
-                </div>
+
+<div class="top-section @(currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "night-img" : "day-img")">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 jumbotron" style="background: none; padding: 0; @(currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "color:whitesmoke" : "")">
+                <h1 style="margin: 100px 0 0 0">
+                    <strong>DELTA SIGMA PHI</strong>
+                </h1>
+                <h2 style="margin: 0">
+                    DELTA EPSILON CHAPTER
+                </h2>
+                <h3 style="margin: 0">
+                    MISSOURI S&amp;T
+                </h3>
             </div>
         </div>
     </div>
-    <div class="container visible-xs" style="margin-top: 75px">
+</div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 style="margin: 75px 0;">
+                <strong><em>Delta Sig</em></strong> is a about redefining the fraternity experience.  We are on a mission to show
+                that a quality fraternity can enhance the college experience beyond that of any other organization.
+            </h1>
+        </div>
+    </div>
+</div>
+
+<div class="content-section" style="background-color: lightgray;">
+    <div class="container">
         <div class="row">
             <div class="col-xs-12">
-                <h1 style="margin: 0">
-                    <strong>DELTA SIGMA PHI</strong>
+                <h1 class="text-center" style="margin-bottom:30px;">
+                    Get In Touch
                 </h1>
-                <h2 style="margin: 0">
-                    DELTA EPSILON CHAPTER
-                </h2>
-                <h3 style="margin: 0">
-                    MISSOURI S&amp;T
-                </h3>
             </div>
         </div>
-    </div>
-}
-else
-{
-    <div class="jumbotron hidden-xs home-bg" 
-         style="background-image:url('/Images/HouseFrontDay70s.jpg');">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h1 style="margin-top: 50px; margin-bottom: 0px">
-                        <strong>DELTA SIGMA PHI</strong>
-                    </h1>
-                    <h2 style="margin: 0">
-                        DELTA EPSILON CHAPTER
-                    </h2>
-                    <h3 style="margin: 0">
-                        MISSOURI S&amp;T
-                    </h3>
-                </div>
+        <div class="row">
+            <div class="col-sm-4 text-center">
+                <span class="fa-stack" style="font-size:5em">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-lightbulb-o fa-stack-1x fa-inverse"></i>
+                </span>
+                <h2>Prospective Members</h2>
+                <p>
+                    Our recruitment process is <strong>values-based</strong> and we are proud of it.  For those who are right for Delta Sig, you already believe what we believe.
+                    You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded individuals will accelerate the realization of that vision.
+                    If Delta Sig isn't the right place for you, we will help you find a fraternity that is. <br />
+                    @Html.ActionLink("Learn More »", "HowToJoin", "Home")
+                </p>
             </div>
-        </div>
-    </div>
-    <div class="container visible-xs" style="margin-top: 75px">
-        <div class=" row">
-            <div class="col-xs-12">
-                <h1 style="margin: 0">
-                    <strong>DELTA SIGMA PHI</strong>
-                </h1>
-                <h2 style="margin: 0">
-                    DELTA EPSILON CHAPTER
-                </h2>
-                <h3 style="margin: 0">
-                    MISSOURI S&amp;T
-                </h3>
+            <div class="col-sm-4 text-center">
+                <span class="fa-stack" style="font-size:5em">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-graduation-cap fa-stack-1x fa-inverse"></i>
+                </span>
+                <h2>Alumni Involvement</h2>
+                <p>
+                    After a decade-long absence, Delta Epsilon has returned to Missouri S&amp;T and we have quickly risen to be one of the most influental student organizations 
+                    on campus. Accomplishments are great, but none of it would be possible without support from our alumni.  
+                    That is why Delta Epsilon is committed to reconnecting with you. <br/>
+                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni Website »</a>
+                </p>
             </div>
-        </div>
-    </div>
-}
-<div class="home-content hidden-xs">
-    <div class="container-fluid">
-        <div class="row home-row">
-            <div class="col-lg-4">
-                <div class="thumbnail" style="height:375px">
-                    <div class="caption text-center">
-                        <i class="fa fa-lightbulb-o" style="font-size:6em; color:rgba(51, 51, 51, 0.37)"></i>
-                        <h2>Prospective Members</h2>
-                        <p class="text-justify">
-                            Our recruitment process is <strong>values-based</strong> and we are proud of it.  For those who are right for Delta Sig, you already believe what we believe.
-                            You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded individuals will accelerate the realization of that vision.
-                            If Delta Sig isn't the right place for you, we will help you find a fraternity that is.
-                        </p>
-                        <p><a class="btn btn-default" href="@Url.Action("HowToJoin")" role="button">Learn More »</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="thumbnail" style="height:375px">
-                    <div class="caption text-center">
-                        <i class="fa fa-graduation-cap" style="font-size:6em; color:rgba(51, 51, 51, 0.37)"></i>
-                        <h2>Alumni Involvement</h2>
-                        <p class="text-justify">
-                            After a decade-long absence, Delta Epsilon has returned to Missouri S&amp;T and we have quickly risen to be one of the most influental student organizations on campus.
-                            Our accomplishments are numerous, but none of it would be possible without generous support provided by our alumni.  That is why Delta Epsilon is committed to reconnecting with you.
-                        </p>
-                        <p><a class="btn btn-default" href="http://www.deltasigrollaalumni.com/" role="button">Learn More »</a></p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="thumbnail" style="height:375px">
-                    <div class="caption text-center">
-                        <i class="fa fa-group" style="font-size:6em; color:rgba(51, 51, 51, 0.37)"></i>
-                        <h2>Community Outreach</h2>
-                        <p class="text-justify">
-                            Delta Sig wants to connect with you!  We are committed to building relationships on campus and throughout the community.
-                            If you have an opportunity to make Missouri S&amp;T and the communiy a better place, let us know and we will do our best to help you.
-                        </p>
-                        <br />
-                        <br />
-                        <p><a class="btn btn-default" href="@Url.Action("Contact")" role="button">Learn More »</a></p>
-                    </div>
-                </div>
+            <div class="col-sm-4 text-center">
+                <span class="fa-stack" style="font-size:5em">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-group fa-stack-1x fa-inverse"></i>
+                </span>
+                <h2>Community Outreach</h2>
+                <p>
+                    Delta Sig wants to connect with you!  We are committed to building relationships on campus and throughout the community.
+                    If you have an opportunity to make Missouri S&amp;T and the communiy a better place, let us know and we will do our best to help you. <br />
+                    @Html.ActionLink("Contact Us »", "Contact", "Home")
+                </p>
             </div>
         </div>
     </div>
