@@ -11,6 +11,13 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-12">
+            <div class="alert alert-warning">
+                <p>
+                    A comprehensive list of contact information is forthcoming.  We apologize for the inconvenience. <br/>
+                    If you have questions, please direct them to Chapter President <strong>Mac Prather</strong> via email:
+                    <a href="mailto:mmpxw3@mst.edu" target="_blank">mmpxw3@mst.edu</a>
+                </p>
+            </div>
             @if (Model.Any())
             {
                 <h3>
@@ -42,7 +49,10 @@
             }
             else
             {
-                <p>Contact information will be updated as soon as appointments are made.</p>
+                <p>
+                    
+                    @*Contact information will be updated soon.  We apologize for the inconvenience.*@
+                </p>
             }
         </div>
     </div>
