@@ -1,4 +1,4 @@
-﻿@if (ViewContext.RouteData.Values.ContainsValue("Home"))
+﻿@if (ViewContext.RouteData.Values.ContainsValue("Home") || ViewContext.RouteData.Values.ContainsValue("Error"))
 {
     @Html.Partial("_ExternalNav")
 }
