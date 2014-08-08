@@ -3,6 +3,7 @@
     using System.Net;
     using System.Web.Mvc;
 
+    [AllowAnonymous]
     public class ErrorController : Controller
     {
         public ActionResult Index()

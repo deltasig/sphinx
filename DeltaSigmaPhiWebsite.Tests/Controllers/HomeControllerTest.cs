@@ -60,12 +60,12 @@
             // Arrange
             var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
-            var actual = controller.Contact() as ViewResult;
+            var actual = controller.Contacts() as ViewResult;
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);
         }
         [Test]
-        public void HomeHowToJoinReturnsActionResult()
+        public void HomeRecruitmentReturnsActionResult()
         {
             var uowMock = new Mock<IUnitOfWork>();
             var ws = new Mock<IWebSecurity>();
@@ -73,7 +73,7 @@
             // Arrange
             var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
-            var actual = controller.HowToJoin() as ViewResult;
+            var actual = controller.Recruitment() as ViewResult;
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);
         }
@@ -86,7 +86,7 @@
             // Arrange
             var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
             // Act
-            var actual = controller.BuildingBetterMenScholarship() as ViewResult;
+            var actual = controller.Scholarships() as ViewResult;
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);
         }

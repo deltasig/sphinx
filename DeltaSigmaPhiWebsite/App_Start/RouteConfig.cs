@@ -75,6 +75,12 @@
 				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
 			);
 
+            routes.MapRoute(
+                name: "ErrorIndex",
+                url: "Error/",
+                defaults: new { controller = "Error", action = "NotFound"}
+            );
+
 			routes.MapRoute(
 				name: "Errors",
 				url: "Error/{action}",
