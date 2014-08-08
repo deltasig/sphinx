@@ -8,7 +8,7 @@
         {
             //OAuthWebSecurity.RegisterMicrosoftClient("", "");
             //OAuthWebSecurity.RegisterTwitterClient("", "");
-            OAuthWebSecurity.RegisterFacebookClient("648128831898394", "301287924d5874aa9f52d65c268311fb");
+            OAuthWebSecurity.RegisterFacebookClient("312694035579415", "6b647683da7c13f846b5f38042f83b1f");
             OAuthWebSecurity.RegisterGoogleClient();
         }
     }
