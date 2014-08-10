@@ -13,17 +13,15 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav" id="menu">
-                <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">@Html.ActionLink("Recruitment", "Recruitment", "Home")</li>
+                <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">
+                    @Html.ActionLink("Recruitment", "Recruitment", "Home")
+                </li>
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Scholarships") ? "active" : "")">
                     @Html.ActionLink("Scholarships", "Scholarships", "Home")
                 </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">About <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-header">Stats</li>
-                        <li><a href="#">Coming soon</a></li>
-                    </ul>
+                <li class="@(ViewContext.RouteData.Values.ContainsValue("About") ? "active" : "")">
+                    @Html.ActionLink("About", "About", "Home")
                 </li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Contacts") ? "active" : "")">@Html.ActionLink("Contacts", "Contacts", "Home")</li>
                 <li class="dropdown">
@@ -33,10 +31,23 @@
                         <li><a href="http://www.deltasig.org">Delta Sig Nationals</a></li>
                     </ul>
                 </li>
+                <li class="hidden-xs hidden-sm">
+                    <a href="https://www.facebook.com/deltasig.de" target="_blank">
+                        <i class="fa fa-facebook-square fa-lg"></i>
+                    </a>
+                </li>
+                <li class="hidden-xs hidden-sm">
+                    <a href="https://twitter.com/DSPDeltaEpsilon" target="_blank">
+                        <i class="fa fa-twitter fa-lg"></i>
+                    </a>
+                </li>
+                @*<li class="hidden-xs hidden-sm">
+                    <a href="https://www.youtube.com/user/mstdeltasig" target="_blank">
+                        <i class="fa fa-youtube fa-lg"></i>
+                    </a>
+                </li>*@
             </ul>
-            <div id="login">
-                @Html.Partial("_LoginPartial")
-            </div>
+            @Html.Partial("_LoginPartial")
         </div>
     </div>
 </div>
