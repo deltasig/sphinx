@@ -13,22 +13,15 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav" id="menu">
+                <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">
                     @Html.ActionLink("Recruitment", "Recruitment", "Home")
                 </li>
-                <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Scholarships") ? "active" : "")">
                     @Html.ActionLink("Scholarships", "Scholarships", "Home")
                 </li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Contacts") ? "active" : "")">
                     @Html.ActionLink("Contacts", "Contacts", "Home")
-                </li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Links <b class="caret"></b></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="http://www.mst.edu">Missouri S&amp;T</a></li>
-                        <li><a href="http://www.deltasig.org">Delta Sig Nationals</a></li>
-                    </ul>
                 </li>
                 <li class="hidden-xs hidden-sm">
                     <a href="https://www.facebook.com/deltasig.de" target="_blank">
