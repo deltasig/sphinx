@@ -1,5 +1,6 @@
 namespace DeltaSigmaPhiWebsite.Models
 {
+    using System.Diagnostics;
     using Entities;
     using System.Data.Entity;
 
@@ -8,6 +9,7 @@ namespace DeltaSigmaPhiWebsite.Models
         public DspContext()
             : base("name=DefaultConnection")
         {
+            //Database.Log = sql => Debug.Write(sql);
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
