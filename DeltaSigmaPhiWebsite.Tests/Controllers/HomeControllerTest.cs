@@ -38,19 +38,7 @@
             // Assert
             Assert.IsInstanceOf<ActionResult>(actual);
         }
-        [Test]
-        public void HomeAboutReturnsActionResult()
-        {
-            var uowMock = new Mock<IUnitOfWork>();
-            var ws = new Mock<IWebSecurity>();
-            var oaws = new Mock<IOAuthWebSecurity>();
-            // Arrange
-            var controller = new HomeController(uowMock.Object, ws.Object, oaws.Object);
-            // Act
-            var actual = controller.About() as ViewResult;
-            // Assert
-            Assert.IsInstanceOf<ActionResult>(actual);
-        }
+
         [Test]
         public void HomeContactReturnsActionResult()
         {
