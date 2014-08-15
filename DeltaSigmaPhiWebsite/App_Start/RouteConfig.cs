@@ -8,6 +8,7 @@
 		public static void RegisterRoutes(RouteCollection routes)
 		{
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+			routes.IgnoreRoute("elmah.axd");
 
 			routes.MapRoute(
 				name: "Service",
@@ -75,11 +76,11 @@
 				defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
 			);
 
-            routes.MapRoute(
-                name: "ErrorIndex",
-                url: "Error/",
-                defaults: new { controller = "Error", action = "NotFound"}
-            );
+			routes.MapRoute(
+				name: "ErrorIndex",
+				url: "Error/",
+				defaults: new { controller = "Error", action = "NotFound"}
+			);
 
 			routes.MapRoute(
 				name: "Errors",
