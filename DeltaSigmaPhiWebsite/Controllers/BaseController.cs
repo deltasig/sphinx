@@ -44,7 +44,17 @@
 				return null;
 			}
 		}
-		protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterList()
+		protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
+		{
+			var thisAndComingSemesters = uow.SemesterRepository.GetAll()
+				.Where(s => s.DateEnd >= DateTime.Now)
+				.OrderBy(s => s.DateStart)
+				.Take(2)
+				.ToList();
+
+			return thisAndComingSemesters;
+		}
+		protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterSelectList()
 		{
 			var thisAndComingSemesters = uow.SemesterRepository.GetAll()
 				.Where(s => s.DateEnd >= DateTime.Now)

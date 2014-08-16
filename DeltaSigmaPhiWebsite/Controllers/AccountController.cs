@@ -388,26 +388,32 @@
                     break;
             }
 
-            var model = new AppointmentsModel
+
+            var positions = uow.PositionRepository.GetAll();
+            var semesters = GetThisAndNextSemesterList().ToList();
+            var leaders = new List<Leader>();
+
+            foreach(var position in positions)
             {
-                AppointModel = new AppointModel
+                if (position.PositionName == "Administrator") continue;
+                foreach(var semester in semesters)
                 {
-                    Users = GetUserIdListAsFullName(),
-                    Positions = GetPositionsList(),
-                    AvailableSemesters = GetThisAndNextSemesterList()
-                },
-                UnappointModel = new AppointModel
-                {
-                    Users = GetUserIdListAsFullName(),
-                    Positions = GetPositionsList(),
-                    AvailableSemesters = GetThisAndNextSemesterList()
-                },
-                CreateModel = new CreatePositionModel(),
-                DeleteModel = new DeletePositionModel
-                {
-                    Positions = GetPositionsList()
-                },
-                RecentAppointments = GetRecentAppointments()
+                    var leader = uow.LeaderRepository.GetAll().SingleOrDefault(l => l.SemesterId == semester.SemesterId && l.PositionId == position.PositionId) ??
+                                 new Leader();
+                    leaders.Add(new Leader
+                    {
+                        Position = position,
+                        Semester = semester,
+                        Member = leader.Member
+                    });
+                }
+            }
+
+            // Build model.
+            var model = new AppointmentModel
+            {
+                Appointments = leaders.OrderBy(l => l.Semester.SemesterId),
+                Users = GetUserIdListAsFullNameWithNone()
             };
 
             return View(model);
@@ -416,18 +422,16 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, President")]
-        public ActionResult Appoint(AppointModel model)
+        public ActionResult Appoint(IEnumerable<Leader> model)
         {
             AppointmentMessageId? message = null;
-            var member = uow.MemberRepository.Get(m => m.UserId == model.SelectedUserId);
-            var positionId = uow.PositionRepository.Get(p => p.PositionName == model.SelectedPositionName).PositionId;
-            if (Roles.IsUserInRole(member.UserName, model.SelectedPositionName))
+
+            foreach(var ap in model)
             {
-                message = AppointmentMessageId.AppointmentDuplicate;
-            }
-            else
-            {
-                ((DspRoleProvider)Roles.Provider).AddUserToRole(model.SelectedUserId, positionId, model.SelectedSemesterId);
+                var member = uow.MemberRepository.Get(m => m.UserId == ap.UserId);
+                if (Roles.IsUserInRole(member.UserName, ap.Position.PositionName)) continue;
+
+                ((DspRoleProvider)Roles.Provider).AddUserToRole(ap.UserId, ap.Position.PositionId, ap.Semester.SemesterId);
                 message = AppointmentMessageId.AppointmentSuccess;
             }
 
