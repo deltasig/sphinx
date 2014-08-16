@@ -1,4 +1,4 @@
-﻿@model AppointmentsModel
+﻿@model AppointmentModel
 @{
     ViewBag.Title = "Appointments";
 }
@@ -8,20 +8,63 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-xs-6">
-            @{ Html.RenderPartial("_PositionAppointmentPartial", Model.AppointModel); }
-            @if (User.IsInRole("Administrator"))
+        <div class="col-xs-12">
+
+            @using (Html.BeginForm("Appoint", "Account", FormMethod.Post, new { @class = "", role = "form" }))
             {
-                Html.RenderPartial("_PositionUnappointmentPartial", Model.UnappointModel);
-            }
-            @{ Html.RenderPartial("_PositionCreationPartial", Model.CreateModel); }
-            @if (User.IsInRole("Administrator"))
-            {
-                Html.RenderPartial("_PositionDeletionPartial", Model.DeleteModel);
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(m => m.Appointments)
+
+                foreach (var semester in Model.Appointments.Select(s => s.Semester).Distinct().ToList())
+                {
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            @semester
+                        </div>
+
+                        <div class="panel-body">
+                            <table class="table table-responsive table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>Appointed Member</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var ap in Model.Appointments.Where(a => a.Semester == semester))
+                                    {
+                                        <tr>
+                                            <td>@ap.Position.PositionName</td>
+                                            <td>@Html.DropDownListFor(m => ap.UserId, Model.Users, new { @class = "form-control" })</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </div>
+                    </div>
+                }
             }
         </div>
-        <div class="col-xs-6">
-            @{ Html.RenderPartial("_PositionRecentAppointmentsPartial", Model.RecentAppointments); }
-        </div>
+        @*<div class="col-xs-6">
+                @{ Html.RenderPartial("_PositionAppointmentPartial", Model.AppointModel); }
+                @if (User.IsInRole("Administrator"))
+                {
+                    Html.RenderPartial("_PositionUnappointmentPartial", Model.UnappointModel);
+                }
+                @{ Html.RenderPartial("_PositionCreationPartial", Model.CreateModel); }
+                @if (User.IsInRole("Administrator"))
+                {
+                    Html.RenderPartial("_PositionDeletionPartial", Model.DeleteModel);
+                }
+            </div>
+            <div class="col-xs-6">
+                @{ Html.RenderPartial("_PositionRecentAppointmentsPartial", Model.RecentAppointments); }
+            </div>*@
     </div>
 </div>
