@@ -84,6 +84,16 @@
         {
             get { return _pledgeClassRepository ?? (_pledgeClassRepository = new PledgeClassesRepository(_context)); }
         }
+        private IClassesRepository _classesRepository;
+        public IClassesRepository ClassesRepository
+        {
+            get { return _classesRepository ?? (_classesRepository = new ClassesRepository(_context)); }
+        }
+        private IDepartmentsRepository _departmentsRepository;
+        public IDepartmentsRepository DepartmentsRepository
+        {
+            get { return _departmentsRepository ?? (_departmentsRepository = new DepartmentsRepository(_context)); }
+        }
 
         public void Save()
         {
