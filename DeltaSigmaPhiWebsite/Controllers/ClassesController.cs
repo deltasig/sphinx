@@ -18,22 +18,7 @@
             var classes = uow.ClassesRepository.GetAll();
             return View(classes.ToList());
         }
-
-        // GET: Classes/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Class @class = uow.ClassesRepository.GetById(id);
-            if (@class == null)
-            {
-                return HttpNotFound();
-            }
-            return View(@class);
-        }
-
+        
         // GET: Classes/Create
         public ActionResult Create()
         {
@@ -44,7 +29,7 @@
         // POST: Classes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ClassId,DepartmentId,CourseNumberDepartmentPrefix,CourseNumber,CourseName")] Class @class)
+        public ActionResult Create([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName")] Class @class)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +61,7 @@
         // POST: Classes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseNumberDepartmentPrefix,CourseNumber,CourseName")] Class @class)
+        public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName")] Class @class)
         {
             if (ModelState.IsValid)
             {

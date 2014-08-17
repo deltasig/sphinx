@@ -13,13 +13,18 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public int ClassId { get; set; }
 
+        [Required]
+        [Display(Name = "Department")]
         public int DepartmentId { get; set; }
 
-        public string CourseNumberDepartmentPrefix { get; set; }
-
-        public int CourseNumber { get; set; }
+        [Required]
+        [Display(Name = "Number")]
+        [DataType(DataType.Text)]
+        [StringLength(7)]
+        public string CourseShorthand { get; set; }
 
         [Required]
+        [Display(Name = "Name")]
         [StringLength(100)]
         public string CourseName { get; set; }
 

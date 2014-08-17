@@ -14,6 +14,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public int DepartmentId { get; set; }
 
         [Required]
+        [Display(Name = "Department")]
         [StringLength(100)]
         public string DepartmentName { get; set; }
 
