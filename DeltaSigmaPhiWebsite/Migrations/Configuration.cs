@@ -338,7 +338,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Position { IsElected = true, IsExecutive = true, PositionName = "Treasurer", },
                 new Position { IsElected = true, IsExecutive = true, PositionName = "Secretary" },
                 new Position { IsElected = true, IsExecutive = true, PositionName = "Sergeant-at-Arms" },
-                new Position { IsElected = true, IsExecutive = true, PositionName = "Executive Board Representative" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Executive Board Representative 1" },
+                new Position { IsElected = true, IsExecutive = true, PositionName = "Executive Board Representative 2" },
                 new Position { IsElected = false, IsExecutive = true, PositionName = "Academics" },
                 new Position { IsElected = false, IsExecutive = true, PositionName = "Brotherhood" },
                 new Position { IsElected = false, IsExecutive = true, PositionName = "Director of Recruitment" },
@@ -354,7 +355,11 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Position { IsElected = false, IsExecutive = false, PositionName = "St. Pat's" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "IFC" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "StuCo" },
-                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 1" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 2" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 3" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 4" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 5" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Chapter Advisor" }
             );
 

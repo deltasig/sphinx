@@ -19,7 +19,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public DateTime AppointedOn { get; set; }
 
-        public int? SemesterId { get; set; }
+        public int SemesterId { get; set; }
 
         public double? RemainingBudgetBalance { get; set; }
 

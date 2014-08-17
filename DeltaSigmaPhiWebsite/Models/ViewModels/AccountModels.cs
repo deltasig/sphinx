@@ -116,53 +116,8 @@
 
     public class AppointmentModel
     {
-        public IEnumerable<Leader> Appointments { get; set; } 
-        public IEnumerable<SelectListItem> Users { get; set; }
-    }
-
-    public class Appointment
-    {
-        public Semester Semester { get; set; }
-        public string PositionName { get; set; }
-        public int SelectUserId { get; set; }
-    }
-
-    //public class AppointmentsModel
-    //{
-    //    public AppointModel AppointModel { get; set; }
-    //    public AppointModel UnappointModel { get; set; }
-    //    public CreatePositionModel CreateModel { get; set; }
-    //    public DeletePositionModel DeleteModel { get; set; }
-    //    public IEnumerable<Leader> RecentAppointments { get; set; }
-    //}
-
-    public class AppointModel
-    {
-        [Display(Name = "Member")]
-        public int SelectedUserId { get; set; }
-        public IEnumerable<SelectListItem> Users { get; set; }
-        [Display(Name = "Position")]
-        public string SelectedPositionName { get; set; }
-        public IEnumerable<SelectListItem> Positions { get; set; }
-        [Display(Name = "Semester")]
-        public int SelectedSemesterId { get; set; }
-        public IEnumerable<SelectListItem> AvailableSemesters { get; set; }
-    }
-
-    public class CreatePositionModel
-    {
-        [Required]
-        [Display(Name = "Position")]
-        [DataType(DataType.Text)]
-        public string PositionName { get; set; }
-    }
-
-    public class DeletePositionModel
-    {
-        [Required]
-        [Display(Name = "Position")]
-        public string SelectedPositionName { get; set; }
-        public IEnumerable<SelectListItem> Positions { get; set; }
+        public Leader Leader { get; set; } 
+        public IEnumerable<object> Users { get; set; }
     }
     
     public class ExternalLogin

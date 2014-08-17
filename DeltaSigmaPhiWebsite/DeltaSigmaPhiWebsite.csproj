@@ -447,14 +447,10 @@
     <Content Include="Views\Home\Academics.cshtml" />
     <Content Include="Views\Home\Scholarships.cshtml" />
     <Content Include="Views\Shared\Nav.cshtml" />
-    <Content Include="Views\Account\_PositionCreationPartial.cshtml" />
-    <Content Include="Views\Account\_PositionDeletionPartial.cshtml" />
     <Content Include="Views\Account\Appointments.cshtml" />
     <Content Include="Views\Account\Registration.cshtml" />
     <Content Include="Views\Account\_RegisterPartial.cshtml" />
     <Content Include="Views\Account\_UnregisterPartial.cshtml" />
-    <Content Include="Views\Account\_PositionAppointmentPartial.cshtml" />
-    <Content Include="Views\Account\_PositionUnappointmentPartial.cshtml" />
     <Content Include="Views\Sphinx\Index.cshtml" />
     <Content Include="Views\Shared\_ExternalNav.cshtml" />
     <Content Include="Views\Shared\_InternalNav.cshtml" />
@@ -480,7 +476,6 @@
     <Content Include="Views\PhoneNumber\Edit.cshtml" />
     <Content Include="Views\PhoneNumber\_MyPhoneNumbersPartial.cshtml" />
     <Content Include="Views\PhoneNumber\Index.cshtml" />
-    <Content Include="Views\Account\_PositionRecentAppointmentsPartial.cshtml" />
     <Content Include="Views\Account\_MemberInformationPartial.cshtml" />
     <Content Include="Views\Account\Edit.cshtml" />
     <Content Include="Views\Account\Roster.cshtml" />

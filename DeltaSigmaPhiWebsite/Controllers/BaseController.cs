@@ -135,7 +135,11 @@
 		}
 		protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullNameWithNone()
 		{
-			var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
+            return new SelectList(GetUserIdListAsFullNameWithNoneNonSelectList(), "UserId", "Name");
+		}
+	    protected virtual IEnumerable<object> GetUserIdListAsFullNameWithNoneNonSelectList()
+	    {
+	        var members = uow.MemberRepository.GetAll().OrderBy(o => o.LastName);
 			var newList = new List<object> { new { UserId = 0, Name = "None" } };
 			foreach (var member in members)
 			{
@@ -145,8 +149,8 @@
 					Name = member.LastName + ", " + member.FirstName
 				});
 			}
-			return new SelectList(newList, "UserId", "Name");
-		}
+			return newList;
+	    }
 		protected virtual IEnumerable<SelectListItem> GetStatusList()
 		{
 			var statusList = uow.MemberStatusRepository.GetAll();

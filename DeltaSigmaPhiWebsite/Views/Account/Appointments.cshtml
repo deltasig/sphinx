@@ -1,6 +1,7 @@
-﻿@model AppointmentModel
+﻿@model IList<AppointmentModel>
 @{
     ViewBag.Title = "Appointments";
+    var semesters = Model.Select(m => m.Leader.Semester).Distinct();
 }
 @section Title
 {
@@ -10,13 +11,12 @@
     <div class="row">
         <div class="col-xs-12">
 
-            @using (Html.BeginForm("Appoint", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+            @using (Html.BeginForm("Appointments", "Account", FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
-                @Html.HiddenFor(m => m.Appointments)
 
-                foreach (var semester in Model.Appointments.Select(s => s.Semester).Distinct().ToList())
+                foreach (var semester in semesters)
                 {
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
@@ -33,12 +33,23 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var ap in Model.Appointments.Where(a => a.Semester == semester))
+                                    @for(int i = 0; i < Model.Count(); i++)
                                     {
-                                        <tr>
-                                            <td>@ap.Position.PositionName</td>
-                                            <td>@Html.DropDownListFor(m => ap.UserId, Model.Users, new { @class = "form-control" })</td>
-                                        </tr>
+                                        if (Model[i].Leader.SemesterId == semester.SemesterId)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.HiddenFor(m => Model[i].Leader.SemesterId)
+                                                    @Html.HiddenFor(m => Model[i].Leader.PositionId)
+                                                    @Html.DisplayFor(m => Model[i].Leader.Position.PositionName)
+                                                </td>
+                                                <td>
+                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                        new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId), 
+                                                        new { @class = "form-control"})
+                                                </td>
+                                            </tr>
+                                        }
                                     }
                                 </tbody>
                             </table>
