@@ -57,6 +57,15 @@
                             <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumber")</li>
                         </ul>
                     </li>
+                    if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics <b class="caret"></b></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Classes", "Index", "Classes")</li>
+                            </ul>
+                        </li>
+                    }
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
                     if (User.IsInRole("Active"))
                     { 

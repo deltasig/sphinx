@@ -20,6 +20,8 @@
         ILeadersRepository LeaderRepository { get; }
         IPositionsRepository PositionRepository { get; }
         IPledgeClassesRepository PledgeClassRepository { get; }
+        IClassesRepository ClassesRepository { get; }
+        IDepartmentsRepository DepartmentsRepository { get; }
         void Save();
     }
 }

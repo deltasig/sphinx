@@ -281,6 +281,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ClassesController.cs" />
     <Compile Include="Controllers\PhoneNumberController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -290,6 +291,8 @@
     <Compile Include="Controllers\ServiceController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
     <Compile Include="Data\DspRoleProvider.cs" />
+    <Compile Include="Data\Interfaces\IDepartmentsRepository.cs" />
+    <Compile Include="Data\Interfaces\IClassesRepository.cs" />
     <Compile Include="Data\Interfaces\IPledgeClassesRepository.cs" />
     <Compile Include="Data\Interfaces\IPositionsRepository.cs" />
     <Compile Include="Data\Interfaces\ILeadersRepository.cs" />
@@ -299,6 +302,8 @@
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Data\Repositories\DepartmentsRepository.cs" />
+    <Compile Include="Data\Repositories\ClassesRepository.cs" />
     <Compile Include="Data\Repositories\PledgeClassesRepository.cs" />
     <Compile Include="Data\Repositories\PositionsRepository.cs" />
     <Compile Include="Data\Repositories\LeadersRepository.cs" />
@@ -484,6 +489,11 @@
     <Content Include="Views\Event\Edit.cshtml" />
     <Content Include="Views\Event\Index.cshtml" />
     <Content Include="Views\Service\Index.cshtml" />
+    <Content Include="Views\Classes\Create.cshtml" />
+    <Content Include="Views\Classes\Delete.cshtml" />
+    <Content Include="Views\Classes\Details.cshtml" />
+    <Content Include="Views\Classes\Edit.cshtml" />
+    <Content Include="Views\Classes\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

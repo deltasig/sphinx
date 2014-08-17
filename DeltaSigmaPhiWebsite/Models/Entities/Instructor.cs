@@ -13,10 +13,6 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public int InstructorId { get; set; }
 
         [Required]
-        [StringLength(10)]
-        public string Prefix { get; set; }
-
-        [Required]
         [StringLength(50)]
         public string FirstName { get; set; }
 
