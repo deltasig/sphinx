@@ -309,12 +309,14 @@
                     }
                     else
                     {
-                        var semesters = db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
-                        var mostRecentSemester = semesters[0];
+                        var thisSemester = db.Semesters
+                            .Where(s => s.DateEnd >= DateTime.Now)
+                            .OrderBy(s => s.DateStart)
+                            .First();
                         positionsHeld = from l in db.Leaders
                                         where l.Position.PositionName == roleName &&
                                               l.Member.UserName == userName &&
-                                              l.SemesterId == mostRecentSemester.SemesterId
+                                              l.SemesterId == thisSemester.SemesterId
                                         select l;
                     }
 
