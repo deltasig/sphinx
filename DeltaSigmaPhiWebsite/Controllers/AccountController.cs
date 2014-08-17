@@ -319,7 +319,7 @@
             ViewBag.ReturnUrl = Url.Action("Index");
             if (hasLocalAccount)
             {
-                if (!ModelState.IsValid) return View(model);
+                if (!ModelState.IsValid) return RedirectToAction("Index");
                 // ChangePassword will throw an exception rather than return false in certain failure scenarios.
                 bool changePasswordSucceeded;
                 try
@@ -348,7 +348,7 @@
                     state.Errors.Clear();
                 }
 
-                if (!ModelState.IsValid) return View(model);
+                if (!ModelState.IsValid) return RedirectToAction("Index");
                 try
                 {
                     WebSecurity.CreateAccount(User.Identity.Name, model.NewPassword);
@@ -374,47 +374,40 @@
         {
             switch (message)
             {
-                case AppointmentMessageId.CreatePositionSuccess:
-                case AppointmentMessageId.DeletePositionSuccess:
                 case AppointmentMessageId.AppointmentSuccess:
-                case AppointmentMessageId.UnappointmentSuccess:
                     ViewBag.SuccessMessage = GetAppointmentMessage(message);
                     break;
-                case AppointmentMessageId.CreateDuplicate:
-                case AppointmentMessageId.DeleteNonExistent:
-                case AppointmentMessageId.AppointmentDuplicate:
-                case AppointmentMessageId.UnappointmentFailed:
+                case AppointmentMessageId.AppointmentFailure:
                     ViewBag.FailMessage = GetAppointmentMessage(message);
                     break;
             }
 
-
             var positions = uow.PositionRepository.GetAll();
             var semesters = GetThisAndNextSemesterList().ToList();
-            var leaders = new List<Leader>();
+            var model = new List<AppointmentModel>();
 
             foreach(var position in positions)
             {
                 if (position.PositionName == "Administrator") continue;
                 foreach(var semester in semesters)
                 {
-                    var leader = uow.LeaderRepository.GetAll().SingleOrDefault(l => l.SemesterId == semester.SemesterId && l.PositionId == position.PositionId) ??
-                                 new Leader();
-                    leaders.Add(new Leader
+                    var leader = uow.LeaderRepository.GetAll().SingleOrDefault(l =>
+                        l.SemesterId == semester.SemesterId &&
+                        l.PositionId == position.PositionId) ?? new Leader();
+                    model.Add(new AppointmentModel
                     {
-                        Position = position,
-                        Semester = semester,
-                        Member = leader.Member
+                        Leader = new Leader
+                        {
+                            Position = position,
+                            PositionId = position.PositionId,
+                            Semester = semester,
+                            SemesterId = semester.SemesterId,
+                            UserId = leader.UserId 
+                        },
+                        Users = GetUserIdListAsFullNameWithNoneNonSelectList()
                     });
                 }
             }
-
-            // Build model.
-            var model = new AppointmentModel
-            {
-                Appointments = leaders.OrderBy(l => l.Semester.SemesterId),
-                Users = GetUserIdListAsFullNameWithNone()
-            };
 
             return View(model);
         }
@@ -422,77 +415,42 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, President")]
-        public ActionResult Appoint(IEnumerable<Leader> model)
+        public ActionResult Appointments(IList<AppointmentModel> model)
         {
             AppointmentMessageId? message = null;
 
-            foreach(var ap in model)
+            try
             {
-                var member = uow.MemberRepository.Get(m => m.UserId == ap.UserId);
-                if (Roles.IsUserInRole(member.UserName, ap.Position.PositionName)) continue;
+                foreach (var ap in model)
+                {
+                    // Check if a Leader entry already exists.
+                    var leader = uow.LeaderRepository.Get(m =>
+                        m.SemesterId == ap.Leader.SemesterId &&
+                        m.PositionId == ap.Leader.PositionId);
 
-                ((DspRoleProvider)Roles.Provider).AddUserToRole(ap.UserId, ap.Position.PositionId, ap.Semester.SemesterId);
+                    if (leader == null)
+                    {
+                        if (ap.Leader.UserId == 0) continue;
+                        ((DspRoleProvider)Roles.Provider)
+                            .AddUserToRole(ap.Leader.UserId, ap.Leader.PositionId, ap.Leader.SemesterId);
+                    }
+                    else if (ap.Leader.UserId == 0)
+                    {
+                        uow.LeaderRepository.DeleteById(leader.LeaderId);
+                        uow.Save();
+                    }
+                    else if (ap.Leader.UserId != 0)
+                    {
+                        leader.UserId = ap.Leader.UserId;
+                        uow.LeaderRepository.Update(leader);
+                        uow.Save();
+                    }
+                }
                 message = AppointmentMessageId.AppointmentSuccess;
             }
-
-            return RedirectToAction("Appointments", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult Unappoint(AppointModel model)
-        {
-            AppointmentMessageId? message = null;
-            var member = uow.MemberRepository.Get(m => m.UserId == model.SelectedUserId);
-            if (Roles.IsUserInRole(member.UserName, model.SelectedPositionName))
+            catch (Exception)
             {
-                Roles.RemoveUserFromRole(member.UserName, model.SelectedPositionName);
-                message = AppointmentMessageId.UnappointmentSuccess;
-            }
-            else
-            {
-                message = AppointmentMessageId.UnappointmentFailed;
-            }
-
-            return RedirectToAction("Appointments", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, President")]
-        public ActionResult CreatePosition(CreatePositionModel model)
-        {
-            AppointmentMessageId? message;
-
-            if (!Roles.RoleExists(model.PositionName))
-            {
-                Roles.CreateRole(model.PositionName);
-                message = AppointmentMessageId.CreatePositionSuccess;
-            }
-            else
-            {
-                message = AppointmentMessageId.CreateDuplicate;
-            }
-
-            return RedirectToAction("Appointments", new { Message = message });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
-        public ActionResult DeletePosition(DeletePositionModel model)
-        {
-            AppointmentMessageId? message;
-
-            if (Roles.RoleExists(model.SelectedPositionName))
-            {
-                Roles.DeleteRole(model.SelectedPositionName);
-                message = AppointmentMessageId.DeletePositionSuccess;
-            }
-            else
-            {
-                message = AppointmentMessageId.DeleteNonExistent;
+                message = AppointmentMessageId.AppointmentFailure;
             }
 
             return RedirectToAction("Appointments", new { Message = message });
@@ -627,14 +585,9 @@
         }
         private static dynamic GetAppointmentMessage(AppointmentMessageId? message)
         {
-            return message == AppointmentMessageId.CreatePositionSuccess ? "Position created."
-                : message == AppointmentMessageId.DeletePositionSuccess ? "Position deleted."
-                : message == AppointmentMessageId.CreateDuplicate ? "Creation failed because a Position with that name already exists."
-                : message == AppointmentMessageId.DeleteNonExistent ? "Deletion failed because no Position with that name exists."
-                : message == AppointmentMessageId.AppointmentSuccess ? "Member has been successfully appointed."
-                : message == AppointmentMessageId.AppointmentDuplicate ? "Member has already been appointed to that Position for the selected Semester."
-                : message == AppointmentMessageId.UnappointmentSuccess ? "Member has been unappointed from Position."
-                : message == AppointmentMessageId.UnappointmentFailed ? "Member cannot be unappointed from a Position to which he has not been appointed."
+            return 
+                message == AppointmentMessageId.AppointmentSuccess ? "Appointments completed."
+                : message == AppointmentMessageId.AppointmentFailure ? "Appointments failed. Please check your appointments and try again."
                 : "";
         }
         private static dynamic GetManageMessage(ManageMessageId? message)
@@ -693,13 +646,7 @@
         public enum AppointmentMessageId
         {
             AppointmentSuccess,
-            UnappointmentSuccess,
-            CreatePositionSuccess,
-            DeletePositionSuccess,
-            CreateDuplicate,
-            DeleteNonExistent,
-            AppointmentDuplicate,
-            UnappointmentFailed,
+            AppointmentFailure
         }
         public enum RegistrationMessageId
         {
