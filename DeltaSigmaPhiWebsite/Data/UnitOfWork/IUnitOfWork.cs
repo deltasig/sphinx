@@ -10,8 +10,7 @@
         ISemestersRepository SemesterRepository { get; }
         IEventsRepository EventRepository { get; }
         ILaundrySignupRepository LaundrySignupRepository { get; }
-        ISoberDriversRepository SoberDriverRepository { get; }
-        ISoberOfficersRepository SoberOfficerRepository { get; }
+        ISoberSignupsRepository SoberSignupsRepository { get; }
         IMemberStatusRepository MemberStatusRepository { get; }
         IStudyHoursRepository StudyHourRepository { get; }
         IIncidentReportsRepository IncidentReportRepository { get; }

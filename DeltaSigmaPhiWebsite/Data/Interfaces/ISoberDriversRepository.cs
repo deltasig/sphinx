@@ -2,7 +2,7 @@
 {
     using Models.Entities;
 
-    public interface ISoberDriversRepository : IGenericRepository<SoberDriver>
+    public interface ISoberSignupsRepository : IGenericRepository<SoberSignup>
     {
 
     }

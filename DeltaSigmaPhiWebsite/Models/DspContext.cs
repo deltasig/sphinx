@@ -34,8 +34,7 @@ namespace DeltaSigmaPhiWebsite.Models
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
-        public virtual DbSet<SoberDriver> SoberDrivers { get; set; }
-        public virtual DbSet<SoberOfficer> SoberOfficers { get; set; }
+        public virtual DbSet<SoberSignup> SoberSchedule { get; set; }
         public virtual DbSet<StudyHour> StudyHours { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<webpages_Membership> webpages_Membership { get; set; }
