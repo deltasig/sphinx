@@ -35,7 +35,7 @@
             var ws = new Mock<IWebSecurity>();
             var oaws = new Mock<IOAuthWebSecurity>();
             var repMock = new Mock<IMembersRepository>();
-            repMock.Setup(m => m.GetAll()).Returns(new[]
+            repMock.Setup(m => m.SelectAll()).Returns(new[]
             {
                 new Member { UserId = 1, FirstName = "FN1", LastName = "LN1" },
                 new Member { UserId = 2, FirstName = "FN2", LastName = "LN2" },

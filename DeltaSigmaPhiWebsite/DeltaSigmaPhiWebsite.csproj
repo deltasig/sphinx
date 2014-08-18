@@ -280,6 +280,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ClassesController.cs" />
+    <Compile Include="Controllers\IncidentsController.cs" />
     <Compile Include="Controllers\PhoneNumberController.cs" />
     <Compile Include="Controllers\AddressController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -492,6 +493,10 @@
     <Content Include="Views\Classes\Index.cshtml" />
     <Content Include="Views\Sphinx\_RequestSoberSignup.cshtml" />
     <Content Include="Views\Sphinx\_SoberSchedulePartial.cshtml" />
+    <Content Include="Views\Incidents\Create.cshtml" />
+    <Content Include="Views\Incidents\Details.cshtml" />
+    <Content Include="Views\Incidents\Edit.cshtml" />
+    <Content Include="Views\Incidents\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

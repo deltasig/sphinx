@@ -16,17 +16,17 @@
         {
             if (userId == null)
             {
-                var addresses = uow.AddressRepository.GetAll().ToList()
+                var addresses = uow.AddressRepository.SelectAll().ToList()
                     .OrderBy(s => s.Member.StatusId)
                     .ThenBy(m => m.Member.LastName)
                     .ThenBy(a => a.Type);
-                ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
+                ViewBag.Members = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName");
                 return View(addresses);
             }
             else
             {
-                var addresses = uow.AddressRepository.GetAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
-                ViewBag.Members = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName");
+                var addresses = uow.AddressRepository.SelectAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
+                ViewBag.Members = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName");
                 return View(addresses);
             }
         }
@@ -37,12 +37,12 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var address = uow.AddressRepository.GetById(id);
+            var address = uow.AddressRepository.SingleById(id);
             if (address == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
             return View(address);
         }
 
@@ -57,7 +57,7 @@
                 return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.GetAll(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
             return View(address);
         }
     }

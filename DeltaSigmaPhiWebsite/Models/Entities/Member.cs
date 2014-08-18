@@ -19,10 +19,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
             SoberSignups = new HashSet<SoberSignup>();
             StudyHours = new HashSet<StudyHour>();
             webpages_OAuthMembership = new HashSet<webpages_OAuthMembership>();
-            Leaders1 = new HashSet<Leader>();
-            IncidentReports1 = new HashSet<IncidentReport>();
+            Committees = new HashSet<Leader>();
             Majors = new HashSet<Major>();
-            webpages_Roles = new HashSet<webpages_Roles>();
         }
 
         [Key]
@@ -58,6 +56,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public double? RemainingBalance { get; set; }
 
+        public int RequiredStudyHours { get; set; }
+
         public int StatusId { get; set; }
 
         public int PledgeClassId { get; set; }
@@ -65,6 +65,16 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public int ExpectedGraduationId { get; set; }
 
         public int? BigBroId { get; set; }
+        
+        public virtual Member BigBrother { get; set; }
+
+        public virtual MemberStatus MemberStatus { get; set; }
+
+        public virtual PledgeClass PledgeClass { get; set; }
+
+        public virtual Semester Semester { get; set; }
+
+        public virtual webpages_Membership webpages_Membership { get; set; }
 
         public virtual ICollection<Address> Addresses { get; set; }
 
@@ -78,15 +88,9 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public virtual ICollection<Member> LittleBrothers { get; set; }
 
-        public virtual Member BigBrother { get; set; }
-
-        public virtual MemberStatus MemberStatus { get; set; }
-
         public virtual ICollection<OrganizationsJoined> OrganizationsJoined { get; set; }
 
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
-
-        public virtual PledgeClass PledgeClass { get; set; }
 
         public virtual ICollection<ServiceHour> ServiceHours { get; set; }
 
@@ -94,19 +98,11 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public virtual ICollection<StudyHour> StudyHours { get; set; }
 
-        public virtual Semester Semester { get; set; }
-
-        public virtual webpages_Membership webpages_Membership { get; set; }
-
         public virtual ICollection<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         
-        public virtual ICollection<Leader> Leaders1 { get; set; }
-
-        public virtual ICollection<IncidentReport> IncidentReports1 { get; set; }
+        public virtual ICollection<Leader> Committees { get; set; }
 
         public virtual ICollection<Major> Majors { get; set; }
-
-        public virtual ICollection<webpages_Roles> webpages_Roles { get; set; }
 
         public override string ToString()
         {

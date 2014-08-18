@@ -21,10 +21,10 @@
         public ActionResult Index()
         {
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            var member = uow.MemberRepository.GetById(userId);
+            var member = uow.MemberRepository.SingleById(userId);
             var events = GetAllCompletedEventsForUser(userId).ToList();
 
-            var soberSignups = uow.SoberSignupsRepository.GetAll()
+            var soberSignups = uow.SoberSignupsRepository.SelectAll()
                 .Where(s => DbFunctions.DiffDays(s.DateOfShift, DateTime.Now) <= 7).ToList();
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
@@ -99,7 +99,7 @@
             var lastWeek = DateTime.Today.AddDays(-7); //This MUST be done outside the query, cannot run the AddDays function inside the query call
             try
             {
-                totalHours = (from hours in uow.StudyHourRepository.GetAll()
+                totalHours = (from hours in uow.StudyHourRepository.SelectAll()
                               where hours.UserId == userId &&
                               hours.DateTimeStudied >= lastWeek
                               select hours.DurationHours).ToList().Sum();
@@ -113,18 +113,18 @@
         }
         private IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
         {
-            var member = uow.MemberRepository.GetById(userId);
+            var member = uow.MemberRepository.SingleById(userId);
 
             return member.StudyHours.Where(s => s.DateTimeStudied >= DateTime.Today.AddDays(-7));
         }
         private IEnumerable<StudyHour> GetRequestedStudyHourApprovalsForUser(int userId)
         {
             var lastWeek = DateTime.Now.AddDays(-7);
-            return uow.StudyHourRepository.FindBy(s => s.DesignatedApprover == userId && s.DateTimeStudied >= lastWeek);
+            return uow.StudyHourRepository.SelectBy(s => s.DesignatedApprover == userId && s.DateTimeStudied >= lastWeek);
         }
         private IEnumerable<SelectListItem> GetAllApproverIds(int userId)
         {
-            var members = uow.MemberRepository.FindBy(a => a.UserId != userId).OrderBy(o => o.LastName);
+            var members = uow.MemberRepository.SelectBy(a => a.UserId != userId).OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -138,46 +138,13 @@
         }
 
         #endregion
-
-        #region Incident Reporting
-
-        [HttpGet]
-        public ActionResult IncidentReporting()
-        {
-            return View(new IncidentReportModel
-            {
-                RecentIncidentReports = uow.IncidentReportRepository.GetAll(),
-                Members = GetUserIdListAsFullName()
-            });
-        }
-        [HttpPost]
-        public ActionResult FileIncidentReport(IncidentReportModel model)
-        {
-            if (!ModelState.IsValid) return RedirectToAction("IncidentReporting", "Sphinx");
-
-            var record = new IncidentReport
-                {
-                    DateTimeSubmitted = DateTime.Now,
-                    ReportedBy = WebSecurity.GetUserId(User.Identity.Name),
-                    DateTimeOfIncident = model.IncidentDate,
-                    BehaviorsWitnessed = model.BehaviorsWitnessed ?? "",
-                    PolicyBroken = model.PolicyBroken ?? ""
-                };
-
-            uow.IncidentReportRepository.Insert(record);
-            uow.Save();
-
-            return RedirectToAction("IncidentReporting", "Sphinx");
-        }
-
-        #endregion
-
+        
         #region Sober Scheduling
 
         public ActionResult SoberSchedule()
         {
             var signups =
-                uow.SoberSignupsRepository.GetAll()
+                uow.SoberSignupsRepository.SelectAll()
                     .Where(s => s.DateOfShift >= DateTime.Now)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
@@ -188,7 +155,7 @@
         public ActionResult SoberScheduleManager()
         {
             var vacantSignups =
-                uow.SoberSignupsRepository.GetAll()
+                uow.SoberSignupsRepository.SelectAll()
                     .Where(s => s.DateOfShift >= DateTime.Now && s.UserId == null)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
@@ -228,12 +195,12 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = uow.SoberSignupsRepository.GetById(id);
+            var signup = uow.SoberSignupsRepository.SingleById(id);
 
             if (signup.UserId != null)
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
-            signup.UserId = uow.MemberRepository.Get(m => m.UserName == User.Identity.Name).UserId;
+            signup.UserId = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
             uow.SoberSignupsRepository.Update(signup);
             uow.Save();
 
@@ -247,7 +214,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = uow.SoberSignupsRepository.GetById(id);
+            var signup = uow.SoberSignupsRepository.SingleById(id);
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             if (signup.UserId == null || signup.UserId != userId)
                 return RedirectToAction("SoberSchedule", "Sphinx");
@@ -346,7 +313,7 @@
         [HttpPost]
         public ActionResult CancelReserveLaundry(LaundryReservationModel cancel)
         {
-            if (uow.LaundrySignupRepository.Get(s => s.DateTimeShift == cancel.Shift) == null)
+            if (uow.LaundrySignupRepository.Single(s => s.DateTimeShift == cancel.Shift) == null)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
 
             uow.LaundrySignupRepository.DeleteByShift(cancel.Shift);
@@ -402,9 +369,9 @@
 
             // All reservations within specified time frame.
             var signups = uow.LaundrySignupRepository
-                .GetAll()
+                .SelectAll()
                 .Where(l => l.DateTimeShift >= today && l.DateTimeShift < endOfWeek).ToList();
-            var members = uow.MemberRepository.GetAll().ToList(); //all users
+            var members = uow.MemberRepository.SelectAll().ToList(); //all users
 
             var presentWeekSignup = new List<LaundryReservationModel>();
             foreach (var reservedTime in signups)

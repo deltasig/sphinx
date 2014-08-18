@@ -17,24 +17,24 @@
             _context = context;
         }
 
-        public virtual TEntity Get(Expression<Func<TEntity, bool>> predicate)
+        public virtual TEntity Single(Expression<Func<TEntity, bool>> predicate)
         {
             var query = _context.Set<TEntity>().SingleOrDefault(predicate);
             return query;
         }
 
-        public virtual TEntity GetById(object id)
+        public virtual TEntity SingleById(object id)
         {
             return _context.Set<TEntity>().Find(id);
         }
 
-        public virtual IQueryable<TEntity> GetAll()
+        public virtual IQueryable<TEntity> SelectAll()
         {
             var query = _context.Set<TEntity>();
             return query;
         }
 
-        public virtual IQueryable<TEntity> FindBy(Expression<Func<TEntity, bool>> predicate)
+        public virtual IQueryable<TEntity> SelectBy(Expression<Func<TEntity, bool>> predicate)
         {
             var query = _context.Set<TEntity>().Where(predicate);
             return query;
@@ -66,7 +66,7 @@
             _context.Set<TEntity>().Remove(entity);
         }
         
-        public virtual void Save()
+        public virtual void SaveChanges()
         {
             _context.SaveChanges();
         }

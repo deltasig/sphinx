@@ -17,7 +17,7 @@
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Index()
         {
-            return View(uow.SemesterRepository.GetAll().OrderByDescending(s => s.DateStart).ToList());
+            return View(uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateStart).ToList());
         }
 
         [HttpGet]
@@ -48,7 +48,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = uow.SemesterRepository.GetById(id);
+            var semester = uow.SemesterRepository.SingleById(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -76,7 +76,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = uow.SemesterRepository.GetById(id);
+            var semester = uow.SemesterRepository.SingleById(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -89,19 +89,10 @@
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var semester = uow.SemesterRepository.GetById(id);
+            var semester = uow.SemesterRepository.SingleById(id);
             uow.SemesterRepository.Delete(semester);
             uow.Save();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                uow.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
