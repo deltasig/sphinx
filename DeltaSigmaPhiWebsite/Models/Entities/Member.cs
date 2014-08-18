@@ -17,7 +17,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
             PhoneNumbers = new HashSet<PhoneNumber>();
             ServiceHours = new HashSet<ServiceHour>();
             SoberSignups = new HashSet<SoberSignup>();
-            StudyHours = new HashSet<StudyHour>();
+            SubmittedStudyHours = new HashSet<StudyHour>();
+            ApprovedStudyHours = new HashSet<StudyHour>();
             webpages_OAuthMembership = new HashSet<webpages_OAuthMembership>();
             Committees = new HashSet<Leader>();
             Majors = new HashSet<Major>();
@@ -96,7 +97,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public virtual ICollection<SoberSignup> SoberSignups { get; set; }
 
-        public virtual ICollection<StudyHour> StudyHours { get; set; }
+        public virtual ICollection<StudyHour> SubmittedStudyHours { get; set; }
+        public virtual ICollection<StudyHour> ApprovedStudyHours { get; set; }
 
         public virtual ICollection<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         

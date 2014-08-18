@@ -15,6 +15,13 @@
     @if (User.IsInRole("Active") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
     {
         <div class="row">
+            <div class="col-xs-12">
+                <p class="text-warning">
+                    @ViewBag.Message
+                </p>
+            </div>
+        </div>
+        <div class="row">
             <div class="col-md-7">
                 <!-- Service Hours Sections-->
                 <div class="row-fluid">
@@ -48,61 +55,65 @@
                         </table>
                     }
                 </div>
-                <!-- Study Hours Section -->
-                <div class="row-fluid">
-                    <h3>Your Study Hours <small>this week</small></h3>
-                    @if (!Model.StudyHours.Any())
-                    {
-                        <p>You haven't turned in any study hours yet for approval. >:O</p>
-                    }
-                    else
-                    {
-                        <table class="table table-condensed table-striped table-responsive">
-                            <thead>
-                                <tr>
-                                    <th>Date &amp; Time</th>
-                                    <th>IsProctored</th>
-                                    <th>IsApproved</th>
-                                    <th>Hours</th>
-                                </tr>
-                            </thead>
-                            @foreach (var studyHour in Model.StudyHours)
-                            {
-                                <tr>
-                                    <td>@studyHour.DateTimeStudied</td>
-                                    <td>@studyHour.IsProctored</td>
-                                    <td>@studyHour.IsApproved</td>
-                                    <td>@studyHour.DurationHours</td>
-                                </tr>
-                            }
-                        </table>
-                    }
-                </div>
+                @if (Model.MemberInfo.RequiredStudyHours > 0)
+                {
+                    <!-- Study Hours Section -->
+                    <div class="row-fluid">
+                        <h3>Your Study Hours <small>this week</small></h3>
+                        @if (!Model.StudyHours.Any())
+                        {
+                            <p>You haven't turned in any study hours yet for approval. >:O</p>
+                        }
+                        else
+                        {
+                            <table class="table table-condensed table-striped table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Is Proctored</th>
+                                        <th>Approver</th>
+                                        <th>Hours</th>
+                                    </tr>
+                                </thead>
+                                @foreach (var studyHour in Model.StudyHours)
+                                {
+                                    <tr>
+                                        <td>@studyHour.DateTimeStudied.ToShortDateString()</td>
+                                        <td>@studyHour.IsProctored</td>
+                                        <td>@studyHour.Approver.ToString()</td>
+                                        <td>@studyHour.DurationHours</td>
+                                    </tr>
+                                }
+                            </table>
+                        }
+                    </div>
+                }
             </div>
             <div class="col-md-5">
                 <div class="btn-group">
                     <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
                             title="These are the remaining required service hours for this semester." id="serviceHourModalToggle">
                         <span class="badge">
-                            <span class="glyphicon glyphicon-plus"></span>
                             @Model.RemainingCommunityServiceHours
                         </span>
                         <span>Serve</span>
                     </button>
-                    <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
-                            title="These are the remaining required study hours for this week." id="studyHourModalToggle">
-                        <span class="badge">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                            @Model.RemainingStudyHours
-                        </span>
-                        <span>Study</span>
-                    </button>
+                    @if (Model.MemberInfo.RequiredStudyHours > 0)
+                    {
+                        <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
+                                title="These are the remaining required study hours for this week." id="studyHourModalToggle">
+                            <span class="badge">
+                                @Model.RemainingStudyHours
+                            </span>
+                            <span>Study</span>
+                        </button>
+                    }
                 </div>
 
                 <br />
                 <br />
                 @{ Html.RenderAction("SubmitService", "Service"); }
-                @{ Html.RenderAction("SubmitStudy"); }
+                @{ Html.RenderAction("Submit", "StudyHours"); }
 
                 @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
                 
