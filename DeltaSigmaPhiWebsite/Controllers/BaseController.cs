@@ -42,7 +42,6 @@
         {
             return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Alumnus");
         }
-
         protected virtual int? GetThisSemestersId()
         {
             var semesters = uow.SemesterRepository.SelectAll().ToList();
@@ -58,7 +57,6 @@
                 return null;
             }
         }
-
         protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
@@ -108,7 +106,6 @@
                     .ToList()
                     .First();
         }
-
         protected virtual IEnumerable<SelectListItem> GetSemesterList()
         {
             var semesters = uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateEnd).ToList();
@@ -246,7 +243,6 @@
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
-
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
@@ -264,7 +260,6 @@
 
             return recentAppointsments;
         }
-
         protected int GetRemainingServiceHoursForUser(int userId)
         {
             const int requiredHours = 15;
@@ -327,13 +322,68 @@
                 e.Event.DateTimeOccurred >= thisSemester.DateStart &&
                 e.Event.DateTimeOccurred <= thisSemester.DateEnd);
         }
-
         protected IEnumerable<SoberSignup> GetSoberSignupsForUser(int userId, Semester semester)
         {
             return uow.SoberSignupsRepository.SelectAll().Where(s =>
                     s.UserId == userId &&
                     s.DateOfShift <= semester.DateEnd &&
                     s.DateOfShift >= semester.DateStart);
+        }
+
+        protected IEnumerable<SelectListItem> GetAllApproverIds(int userId)
+        {
+            var members = uow.MemberRepository.SelectBy(a => a.UserId != userId).OrderBy(o => o.LastName);
+            var newList = new List<object>();
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.LastName + ", " + member.FirstName
+                });
+            }
+            return new SelectList(newList, "UserId", "Name");
+        }
+        protected int GetRemainingStudyHoursForUser(int userId)
+        {
+            var startOfThisWeek = GetStartOfCurrentWeek();
+            var member = uow.MemberRepository.SingleById(userId);
+            var totalHours = 0.0;
+
+            try
+            {
+                totalHours = (from hour in uow.StudyHourRepository.SelectAll()
+                              where hour.SubmittedBy == userId &&
+                                    hour.ApproverId != null &&
+                                    hour.DateTimeStudied >= startOfThisWeek
+                              select hour.DurationHours).ToList().Sum();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return (member.RequiredStudyHours - (int)totalHours);
+        }
+        protected IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
+        {
+            var member = uow.MemberRepository.SingleById(userId);
+
+            return member.SubmittedStudyHours.Where(s => s.DateTimeStudied >= GetStartOfCurrentWeek());
+        }
+        protected DateTime GetStartOfCurrentWeek()
+        {
+            // Monday @ 6:00pm
+            if((int)DateTime.Today.DayOfWeek == 1)
+            {
+                return DateTime.Today.AddDays(-7).AddHours(18);
+            }
+            if((int)DateTime.Today.DayOfWeek == 0)
+            {
+                return DateTime.Today.AddDays(-6).AddHours(18);
+            }
+
+            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek - 1)).AddHours(18);
         }
 
         protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
@@ -344,7 +394,6 @@
             var ticks = (date.Ticks / span.Ticks);
             return new DateTime(ticks * span.Ticks);
         }
-
         protected virtual IEnumerable<ExternalLogin> GetExternalLogins(string userName)
         {
             var accounts = OAuthWebSecurity.GetAccountsFromUserName(userName);

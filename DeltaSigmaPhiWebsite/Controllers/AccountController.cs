@@ -129,7 +129,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, Secretary, Academics")]
         public ActionResult Edit(string userName)
         {
             var member = string.IsNullOrEmpty(userName)
@@ -149,7 +149,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, Secretary, Academics")]
         public ActionResult Edit(EditMemberInfoModel model)
         {
             model.Semesters = GetSemesterList();
@@ -169,6 +169,7 @@
             member.PledgeClassId = model.Member.PledgeClassId;
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
+            member.RequiredStudyHours = model.Member.RequiredStudyHours;
 
             uow.MemberRepository.Update(member);
             uow.Save();

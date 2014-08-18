@@ -1,4 +1,4 @@
-﻿@model StudyHourSubmissionModel
+﻿@model StudyHour
 
 <div class="modal fade" id="studyHourModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -8,25 +8,26 @@
                 <h4 class="modal-title" id="myModalLabel">Study Hour Submission Form</h4>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("SubmitStudy", "Sphinx", FormMethod.Post, new { role = "form" }))
+                @using (Html.BeginForm("Submit", "StudyHours", FormMethod.Post, new { role = "form" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
-
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.HoursStudied)
-                        @Html.TextBoxFor(m => m.HoursStudied, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.HoursStudied, "", new { @class = "text-danger" })
-                    </div>
+                    
                     <div class="form-group">
                         @Html.LabelFor(m => m.DateTimeStudied)
                         @Html.EditorFor(m => m.DateTimeStudied, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.DateTimeStudied, "", new { @class = "text-danger" })
                     </div>
                     <div class="form-group">
-                        @Html.LabelFor(m => m.SelectedApproverId)
-                        @Html.DropDownListFor(m => m.SelectedApproverId, Model.Approvers, new { @class = "form-control" })
+                        @Html.LabelFor(m => m.DurationHours)
+                        @Html.TextBoxFor(m => m.DurationHours, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.DurationHours, "", new { @class = "text-danger" })
                     </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.IsProctored)
+                        @Html.EditorFor(m => m.IsProctored)
+                    </div>
+    
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         <button type="submit" class="btn btn-success">Submit</button>

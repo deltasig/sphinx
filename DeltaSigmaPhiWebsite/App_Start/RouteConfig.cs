@@ -11,6 +11,12 @@
             routes.IgnoreRoute("elmah.axd");
 
             routes.MapRoute(
+                name: "StudyHours",
+                url: "StudyHours/{action}/{id}",
+                defaults: new { controller = "StudyHours", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
                 name: "Incidents",
                 url: "Incidents/{action}/{id}",
                 defaults: new { controller = "Incidents", id = UrlParameter.Optional }
