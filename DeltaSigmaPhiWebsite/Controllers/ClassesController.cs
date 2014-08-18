@@ -12,21 +12,18 @@
     {
         public ClassesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
-        // GET: Classes
         public ActionResult Index()
         {
-            var classes = uow.ClassesRepository.GetAll();
+            var classes = uow.ClassesRepository.SelectAll();
             return View(classes.ToList());
         }
         
-        // GET: Classes/Create
         public ActionResult Create()
         {
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.GetAll(), "DepartmentId", "DepartmentName");
+            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName");
             return View();
         }
 
-        // POST: Classes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName")] Class @class)
@@ -38,23 +35,22 @@
                 return RedirectToAction("Index");
             }
 
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.GetAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
             return View(@class);
         }
 
-        // GET: Classes/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Class @class = uow.ClassesRepository.GetById(id);
+            Class @class = uow.ClassesRepository.SingleById(id);
             if (@class == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.GetAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
             return View(@class);
         }
 
@@ -69,7 +65,7 @@
                 uow.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.GetAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
             return View(@class);
         }
 
@@ -80,7 +76,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Class @class = uow.ClassesRepository.GetById(id);
+            Class @class = uow.ClassesRepository.SingleById(id);
             if (@class == null)
             {
                 return HttpNotFound();
@@ -96,15 +92,6 @@
             uow.ClassesRepository.DeleteById(id);
             uow.Save();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                uow.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

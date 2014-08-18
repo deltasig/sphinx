@@ -1,0 +1,47 @@
+﻿@model IEnumerable<IncidentReport>
+
+@{
+    ViewBag.Title = "Incident Reports";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Create New", "Create")
+                </div>
+                <div class="panel-body">
+                    <table class="table table-responsive table-condensed">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.DateTimeSubmitted)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateTimeOfIncident)</th>
+                                <th>@Html.DisplayNameFor(model => model.PolicyBroken)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.DisplayFor(modelItem => item.DateTimeSubmitted)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.DateTimeOfIncident)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PolicyBroken)</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.IncidentId }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.IncidentId }) 
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

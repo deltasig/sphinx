@@ -79,34 +79,7 @@
         [DataType(DataType.Date)]
         public DateTime SoberOfficerReservationRequest { get; set; }
     }
-
-    public class IncidentReportModel
-    {
-        public int? RepBy { get; set; }
-        public IEnumerable<IncidentReport> RecentIncidentReports { get; set; }
-            
-        [Required]
-        [Display(Name = "Date of Incident")]
-        [DataType(DataType.Date)]
-        public DateTime IncidentDate { get; set; }
-
-        [Required]
-        [Display(Name = "Member Responsible")]
-        [DataType(DataType.Text)]
-        public string MemberBeingReported { get; set; }
-        public IEnumerable<SelectListItem> Members { get; set; }
-
-        [Required]
-        [Display(Name = "Behavior Witnessed")]
-        [DataType(DataType.MultilineText)]
-        public string BehaviorsWitnessed { get; set; }
-
-        [Required]
-        [Display(Name = "Policy Broken")]
-        [DataType(DataType.Text)]
-        public string PolicyBroken { get; set; }
-    }
-
+    
     public class LaundrySignupModel
     {
         public List< List <LaundryReservationModel> > ThisWeeksSignups { get; set; }

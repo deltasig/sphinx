@@ -39,7 +39,7 @@
             var conMock = new Mock<AccountController>(uowMock.Object, wsMock.Object, oawsMock.Object) { CallBase = true };
 
             // Arrange
-            repMock.Setup(m => m.Get(It.IsAny< Expression<Func<Member, bool>>>())).Returns(new Member
+            repMock.Setup(m => m.Single(It.IsAny< Expression<Func<Member, bool>>>())).Returns(new Member
             {
                 UserId = 1, FirstName = "John", LastName = "Doe", UserName = "johndoe"
             });
