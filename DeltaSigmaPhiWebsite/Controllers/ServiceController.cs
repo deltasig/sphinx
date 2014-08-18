@@ -17,7 +17,7 @@
 		[HttpGet]
 		public ActionResult Index()
 		{
-			var activeMembers = uow.MemberRepository.GetAll()
+			var activeMembers = uow.MemberRepository.SelectAll()
 				.Where(m => m.MemberStatus.StatusName == "Active").ToList();
 			
 			var model = new List<ServiceIndexModel>();
@@ -53,7 +53,7 @@
 			var userId = WebSecurity.GetUserId(User.Identity.Name);
 
 			// Check if hours submitted is more than held for event
-			var selectedEvent = uow.EventRepository.Get(e => e.EventId == model.SelectedEventId);
+			var selectedEvent = uow.EventRepository.Single(e => e.EventId == model.SelectedEventId);
 			if (model.HoursServed > selectedEvent.DurationHours)
 			{
 				TempData["ServiceSubmissionError"] = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
@@ -67,7 +67,7 @@
 			}
 
 			// Check if submission has already been created under same eventId for userId
-			var duplicateSubmission = uow.ServiceHourRepository.FindBy(e => (e.EventId == model.SelectedEventId && e.UserId == userId));
+			var duplicateSubmission = uow.ServiceHourRepository.SelectBy(e => (e.EventId == model.SelectedEventId && e.UserId == userId));
 			if (duplicateSubmission.Any())
 			{
 				// Previous submission found
@@ -88,6 +88,5 @@
 			uow.Save();
 			return RedirectToAction("Index");
 		}
-
 	}
 }

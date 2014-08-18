@@ -31,7 +31,7 @@
                 userName = WebSecurity.CurrentUser.Identity.Name;
             }
 
-            var member = uow.MemberRepository.Get(m => m.UserName == userName);
+            var member = uow.MemberRepository.Single(m => m.UserName == userName);
 
             ViewBag.StatusMessage = GetManageMessage(message);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
@@ -54,7 +54,7 @@
                 if (!string.IsNullOrEmpty(model.SearchModel.SearchTerm))
                 {
                     model.Members = uow.MemberRepository
-                        .GetAll()
+                        .SelectAll()
                         .Where(m => m.FirstName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()) ||
                             m.LastName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()))
                         .ToList();
@@ -62,7 +62,7 @@
                 else if (model.SearchModel.CustomSearchRequested())
                 {
                     IEnumerable<Member> guidedSearchResults = uow.MemberRepository
-                        .GetAll()
+                        .SelectAll()
                         .OrderBy(o => o.LastName)
                         .ToList();
                     if (model.SearchModel.SelectedStatusId != -1)
@@ -97,7 +97,7 @@
                 else
                 {
                     model.Members = uow.MemberRepository
-                        .GetAll()
+                        .SelectAll()
                         .Where(m => m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
@@ -109,7 +109,7 @@
                 model = new RosterModel
                 {
                     Members = uow.MemberRepository
-                        .GetAll()
+                        .SelectAll()
                         .Where(m => m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
@@ -133,8 +133,8 @@
         public ActionResult Edit(string userName)
         {
             var member = string.IsNullOrEmpty(userName)
-                ? uow.MemberRepository.Get(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
-                : uow.MemberRepository.Get(m => m.UserName == userName);
+                ? uow.MemberRepository.Single(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
+                : uow.MemberRepository.Single(m => m.UserName == userName);
             var model = new EditMemberInfoModel
             {
                 Member = member,
@@ -162,7 +162,7 @@
                 return View(model);
             }
 
-            var member = uow.MemberRepository.Get(m => m.UserId == model.Member.UserId);
+            var member = uow.MemberRepository.Single(m => m.UserId == model.Member.UserId);
             member.Pin = model.Member.Pin;
             member.Room = model.Member.Room;
             member.StatusId = model.Member.StatusId;
@@ -289,7 +289,7 @@
                 // Attempt to remove the user from the system
                 try
                 {
-                    var member = uow.MemberRepository.Get(m => m.UserId == model.SelectedUserId);
+                    var member = uow.MemberRepository.Single(m => m.UserId == model.SelectedUserId);
                     ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(member.UserName);
                     // deletes record from webpages_Membership table
                     (Membership.Provider).DeleteUser(member.UserName, true);
@@ -382,7 +382,7 @@
                     break;
             }
 
-            var positions = uow.PositionRepository.GetAll();
+            var positions = uow.PositionRepository.SelectAll();
             var semesters = GetThisAndNextSemesterList().ToList();
             var model = new List<AppointmentModel>();
 
@@ -391,7 +391,7 @@
                 if (position.PositionName == "Administrator") continue;
                 foreach(var semester in semesters)
                 {
-                    var leader = uow.LeaderRepository.GetAll().SingleOrDefault(l =>
+                    var leader = uow.LeaderRepository.SelectAll().SingleOrDefault(l =>
                         l.SemesterId == semester.SemesterId &&
                         l.PositionId == position.PositionId) ?? new Leader();
                     model.Add(new AppointmentModel
@@ -424,7 +424,7 @@
                 foreach (var ap in model)
                 {
                     // Check if a Leader entry already exists.
-                    var leader = uow.LeaderRepository.Get(m =>
+                    var leader = uow.LeaderRepository.Single(m =>
                         m.SemesterId == ap.Leader.SemesterId &&
                         m.PositionId == ap.Leader.PositionId);
 
@@ -657,6 +657,5 @@
         }
 
         #endregion
-
     }
 }

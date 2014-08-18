@@ -54,7 +54,7 @@ namespace DeltaSigmaPhiWebsite.Models
 
             modelBuilder.Entity<Leader>()
                 .HasMany(e => e.Members)
-                .WithMany(e => e.Leaders1)
+                .WithMany(e => e.Committees)
                 .Map(m => m.ToTable("CommitteeMembers").MapLeftKey("LeaderId").MapRightKey("UserId"));
 
             modelBuilder.Entity<Meal>()
@@ -181,11 +181,6 @@ namespace DeltaSigmaPhiWebsite.Models
                 .HasMany(e => e.webpages_OAuthMembership)
                 .WithRequired(e => e.Member)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.webpages_Roles)
-                .WithMany(e => e.Members)
-                .Map(m => m.ToTable("webpages_UsersInRoles").MapLeftKey("UserId").MapRightKey("RoleId"));
 
             #endregion
 

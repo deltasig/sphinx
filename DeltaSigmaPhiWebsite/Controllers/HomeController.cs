@@ -24,7 +24,7 @@
 
             if (currentSemester == null) return View();
 
-            var model = uow.LeaderRepository.GetAll().Where(l => l.SemesterId == (int)currentSemester).ToList();
+            var model = uow.LeaderRepository.SelectAll().Where(l => l.SemesterId == (int)currentSemester).ToList();
             return View(model);
         }
 
