@@ -315,7 +315,6 @@
     <Compile Include="Models\IOAuthWebSecurity.cs" />
     <Compile Include="Data\Interfaces\ISemestersRepository.cs" />
     <Compile Include="Data\Interfaces\IServiceHoursRepository.cs" />
-    <Compile Include="Data\Interfaces\ISoberOfficersRepository.cs" />
     <Compile Include="Data\Interfaces\ISoberDriversRepository.cs" />
     <Compile Include="Data\Interfaces\IStudyHoursRepository.cs" />
     <Compile Include="Models\IWebSecurity.cs" />
@@ -324,7 +323,6 @@
     <Compile Include="Data\Repositories\MemberStatusRepository.cs" />
     <Compile Include="Data\Repositories\SemestersRepository.cs" />
     <Compile Include="Data\Repositories\ServiceHoursRepository.cs" />
-    <Compile Include="Data\Repositories\SoberOfficersRepository.cs" />
     <Compile Include="Data\Repositories\SoberDriversRepository.cs" />
     <Compile Include="Data\Repositories\IncidentReportsRepository.cs" />
     <Compile Include="Data\Repositories\StudyHoursRepository.cs" />
@@ -359,8 +357,7 @@
     <Compile Include="Models\Entities\Position.cs" />
     <Compile Include="Models\Entities\Semester.cs" />
     <Compile Include="Models\Entities\ServiceHour.cs" />
-    <Compile Include="Models\Entities\SoberDriver.cs" />
-    <Compile Include="Models\Entities\SoberOfficer.cs" />
+    <Compile Include="Models\Entities\SoberSignup.cs" />
     <Compile Include="Models\ViewModels\SemesterViewModels.cs" />
     <Compile Include="Models\ViewModels\SphinxModels.cs" />
     <Compile Include="Models\Entities\StudyHour.cs" />
@@ -493,6 +490,8 @@
     <Content Include="Views\Classes\Delete.cshtml" />
     <Content Include="Views\Classes\Edit.cshtml" />
     <Content Include="Views\Classes\Index.cshtml" />
+    <Content Include="Views\Sphinx\_RequestSoberSignup.cshtml" />
+    <Content Include="Views\Sphinx\_SoberSchedulePartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

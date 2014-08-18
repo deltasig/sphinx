@@ -4,9 +4,9 @@
     using Models;
     using Models.Entities;
 
-    public class SoberDriversRepository : GenericRepository<SoberDriver>, ISoberDriversRepository
+    public class SoberSignupsRepository : GenericRepository<SoberSignup>, ISoberSignupsRepository
     {
-        public SoberDriversRepository(DspContext context) : base(context)
+        public SoberSignupsRepository(DspContext context) : base(context)
         {
         }
     }

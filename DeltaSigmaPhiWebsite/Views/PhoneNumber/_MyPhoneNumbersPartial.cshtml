@@ -15,14 +15,14 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td class="@(string.IsNullOrEmpty(item.PhoneNumber1) ? "danger" : "")">
-                        @if (string.IsNullOrEmpty(item.PhoneNumber1))
+                    <td class="@(string.IsNullOrEmpty(item.Number) ? "danger" : "")">
+                        @if (string.IsNullOrEmpty(item.Number))
                         {
                             @:Please enter a phone number
                         }
                         else
                         {
-                            @item.PhoneNumber1
+                            @item.Number
                         }
                     </td>
                     <td>@item.Type</td>

@@ -48,7 +48,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PhoneNumberId,UserId,PhoneNumber1,Type")] PhoneNumber phoneNumber)
+        public ActionResult Edit([Bind(Include = "PhoneNumberId,UserId,Number,Type")] PhoneNumber phoneNumber)
         {
             if (ModelState.IsValid)
             {

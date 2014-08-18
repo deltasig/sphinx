@@ -13,7 +13,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$", 
             ErrorMessage = "Phone numbers must entered in the following format: ###-###-####")]
-        public string PhoneNumber1 { get; set; }
+        public string Number { get; set; }
 
         [StringLength(100)]
         public string Type { get; set; }
