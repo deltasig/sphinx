@@ -30,14 +30,14 @@
                             <tr>
                                 <td>@item.Member.LastName, @item.Member.FirstName</td>
                                 <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.PhoneNumber1) ? "warning" : "success")">
-                                    @if (string.IsNullOrEmpty(item.PhoneNumber1))
+                                <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "success")">
+                                    @if (string.IsNullOrEmpty(item.Number))
                                     {
                                         @:None entered.
                                     }
                                     else
                                     {
-                                        @item.PhoneNumber1
+                                        @item.Number
                                     }
                                 </td>
                                 <td>@item.Type</td>

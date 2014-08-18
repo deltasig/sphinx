@@ -1,4 +1,4 @@
-﻿@model SoberSignupModel
+﻿@model IEnumerable<SoberSignup>
 
 @{
     ViewBag.Title = "Sober Schedule Manager";
@@ -10,51 +10,38 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-6">
-            <h4>Volunteers are still needed on the following dates:</h4>
-            <table class="table table-striped" style="text-align:left">
-                <thead>
-                    <tr>
-                        <th>
-                            Role
-                        </th>
-                        <th>
-                            Date
-                        </th>
-                    </tr>
-                </thead>
-                @foreach (var item in Model.SoberSignUpsNeededList)
-                {
-                    <tr>
-                        <td>
-                            @item.SoberType
-                        </td>
-                        <td>
-                            @item.Shift.ToShortDateString()
-                        </td>
-                    </tr>
-                }
-            </table>
+        <div class="col-xs-12">
+            @Html.ActionLink("Back to Schedule", "SoberSchedule")
+            <br/><br/>
         </div>
-        <div class="col-lg-6">
-            @using (Html.BeginForm("RequestSoberDriver", "Sphinx", FormMethod.Post, new { @class = "form-inline", role = "form" }))
-            {
-                <h3>Request a Sober Driver</h3>
-                <div class="form-group">
-                    @Html.EditorFor(model => model.SoberDriverReservationRequest, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SoberDriverReservationRequest, "", new { @class = "text-danger" })
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            @Html.Partial("_RequestSoberSignup", new SoberSignup())
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Volunteers are still needed on the following dates:
                 </div>
-                <button type="submit" class="btn btn-success btn-sm">Submit</button>
-            }
-            @using (Html.BeginForm("RequestSoberOfficer", "Sphinx", FormMethod.Post, new { @class = "form-inline", role = "form" }))
-            {
-                <h3>Request a Sober Officer</h3>
-                <div class="form-group">
-                    @Html.EditorFor(model => model.SoberOfficerReservationRequest, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.SoberOfficerReservationRequest, "", new { @class = "text-danger" })
+                <div class="panel-body">
+                    <table class="table table-responsive" style="text-align:left">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Type</td>
+                                <td>@item.DateOfShift.ToShortDateString()</td>
+                            </tr>
+                        }
+                    </table>
                 </div>
-                <button type="submit" class="btn btn-success btn-sm">Submit</button>
-            }
+            </div>
         </div>
     </div>
 

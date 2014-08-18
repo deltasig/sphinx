@@ -34,15 +34,10 @@
         {
             get { return _laundrySignupRepository ?? (_laundrySignupRepository = new LaundrySignupRepository(_context)); }
         }
-        private ISoberDriversRepository _soberDriverRepository;
-        public ISoberDriversRepository SoberDriverRepository
+        private ISoberSignupsRepository _soberSignupsRepository;
+        public ISoberSignupsRepository SoberSignupsRepository
         {
-            get { return _soberDriverRepository ?? (_soberDriverRepository = new SoberDriversRepository(_context)); }
-        }
-        private ISoberOfficersRepository _soberOfficerRepository;
-        public ISoberOfficersRepository SoberOfficerRepository
-        {
-            get { return _soberOfficerRepository ?? (_soberOfficerRepository = new SoberOfficersRepository(_context)); }
+            get { return _soberSignupsRepository ?? (_soberSignupsRepository = new SoberSignupsRepository(_context)); }
         }
         private IMemberStatusRepository _memberStatusRepository;
         public IMemberStatusRepository MemberStatusRepository
