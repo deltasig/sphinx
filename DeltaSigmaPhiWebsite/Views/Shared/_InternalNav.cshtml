@@ -55,6 +55,10 @@
                             <li class="dropdown-header">Performance</li>
                             <li>@Html.ActionLink("Service", "Index", "Service")</li>
                             <li>@Html.ActionLink("Incidents", "Index", "Incidents")</li>
+                            <li class="dropdown-header">Study Hours</li>
+                            <li>@Html.ActionLink("Index", "Index", "StudyHours")</li>
+                            <li>@Html.ActionLink("Tracker", "Tracker", "StudyHours")</li>
+                            <li>@Html.ActionLink("Unapproved", "Unapproved", "StudyHours")</li>
                         </ul>
                     </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("Academics"))

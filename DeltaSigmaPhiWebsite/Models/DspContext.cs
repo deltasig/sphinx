@@ -169,8 +169,15 @@ namespace DeltaSigmaPhiWebsite.Models
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Member>()
-                .HasMany(e => e.StudyHours)
-                .WithRequired(e => e.Member)
+                .HasMany(e => e.SubmittedStudyHours)
+                .WithRequired(e => e.Submitter)
+                .HasForeignKey(e => e.SubmittedBy)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.ApprovedStudyHours)
+                .WithOptional(e => e.Approver)
+                .HasForeignKey(e => e.ApproverId)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Member>()

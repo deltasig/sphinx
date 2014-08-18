@@ -8,25 +8,35 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
     {
         [Key]
         [Column(Order = 0)]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int UserId { get; set; }
+        public int StudyHourId { get; set; }
 
         [Key]
         [Column(Order = 1)]
+        public int SubmittedBy { get; set; }
+
+        [Key]
+        [Column(Order = 2)]
+        [DataType(DataType.Date)]
+        [Display(Name = "Studied On")]
         public DateTime DateTimeStudied { get; set; }
 
+        public int? ApproverId { get; set; }
+        
+        [Required]
+        [Display(Name = "Durations (Hours)")]
         public double DurationHours { get; set; }
 
+        [Required]
+        [Display(Name = "Proctored?")]
+        public bool IsProctored { get; set; }
+
+        [Display(Name = "Submitted On")]
         public DateTime DateTimeSubmitted { get; set; }
 
-        public int? DesignatedApprover { get; set; }
-
-        public bool? IsApproved { get; set; }
-
+        [Display(Name = "Approved On")]
         public DateTime? DateTimeApproved { get; set; }
 
-        public bool? IsProctored { get; set; }
-
-        public virtual Member Member { get; set; }
+        public virtual Member Submitter { get; set; }
+        public virtual Member Approver { get; set; }
     }
 }

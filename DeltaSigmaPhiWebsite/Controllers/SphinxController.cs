@@ -1,14 +1,14 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Data.Entity;
-    using System.Net;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
+    using System.Net;
     using System.Web.Mvc;
     using System.Web.Security;
 
@@ -18,7 +18,7 @@
         public SphinxController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
-        public ActionResult Index()
+        public ActionResult Index(string message = "")
         {
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             var member = uow.MemberRepository.SingleById(userId);
@@ -47,97 +47,17 @@
                 RemainingCommunityServiceHours = GetRemainingServiceHoursForUser(userId),
                 RemainingStudyHours = GetRemainingStudyHoursForUser(userId),
                 CompletedEvents = events,
-                StudyModel = new StudyHourSubmissionModel
-                {
-                    Approvers = GetAllApproverIds(userId)
-                },
                 StudyHours = GetStudyHoursForUser(userId),
-                StudyApproval = GetRequestedStudyHourApprovalsForUser(userId),
                 ProfilePicUrl = GetPictureUrl(member.UserName),
                 SoberSignups = soberSignups,
                 LaundrySummary = LaundrySummary(),
                 NeedsToSoberDrive = !memberSoberSignups.Any()
             };
 
+            ViewBag.Message = message;
+
             return View(model);
         }
-
-        #region Academics
-
-        [HttpGet]
-        public ActionResult SubmitStudy()
-        {
-            var model = new StudyHourSubmissionModel
-            {
-                Approvers = GetAllApproverIds(WebSecurity.GetUserId(User.Identity.Name))
-            };
-            return PartialView(model);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SubmitStudy(StudyHourSubmissionModel model)
-        {
-            var submission = new StudyHour
-            {
-                UserId = WebSecurity.GetUserId(User.Identity.Name),
-                DateTimeStudied = model.DateTimeStudied,
-                DateTimeSubmitted = DateTime.Now,
-                DesignatedApprover = model.SelectedApproverId,
-                DurationHours = model.HoursStudied
-            };
-
-            uow.StudyHourRepository.Insert(submission);
-            uow.Save();
-            return RedirectToAction("Index");
-        }
-
-        private int GetRemainingStudyHoursForUser(int userId)
-        {
-            var totalHours = 0.0;
-            const double requiredHours = 20.0; //Temporary constant, eventually will be a call to db like totalHours
-            var lastWeek = DateTime.Today.AddDays(-7); //This MUST be done outside the query, cannot run the AddDays function inside the query call
-            try
-            {
-                totalHours = (from hours in uow.StudyHourRepository.SelectAll()
-                              where hours.UserId == userId &&
-                              hours.DateTimeStudied >= lastWeek
-                              select hours.DurationHours).ToList().Sum();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return ((int)requiredHours - (int)totalHours);
-        }
-        private IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
-        {
-            var member = uow.MemberRepository.SingleById(userId);
-
-            return member.StudyHours.Where(s => s.DateTimeStudied >= DateTime.Today.AddDays(-7));
-        }
-        private IEnumerable<StudyHour> GetRequestedStudyHourApprovalsForUser(int userId)
-        {
-            var lastWeek = DateTime.Now.AddDays(-7);
-            return uow.StudyHourRepository.SelectBy(s => s.DesignatedApprover == userId && s.DateTimeStudied >= lastWeek);
-        }
-        private IEnumerable<SelectListItem> GetAllApproverIds(int userId)
-        {
-            var members = uow.MemberRepository.SelectBy(a => a.UserId != userId).OrderBy(o => o.LastName);
-            var newList = new List<object>();
-            foreach (var member in members)
-            {
-                newList.Add(new
-                {
-                    member.UserId,
-                    Name = member.LastName + ", " + member.FirstName
-                });
-            }
-            return new SelectList(newList, "UserId", "Name");
-        }
-
-        #endregion
         
         #region Sober Scheduling
 
