@@ -1,4 +1,0 @@
-﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
-{
-
-}

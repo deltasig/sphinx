@@ -48,7 +48,6 @@
                 RemainingStudyHours = GetRemainingStudyHoursForUser(userId),
                 CompletedEvents = events,
                 StudyHours = GetStudyHoursForUser(userId),
-                ProfilePicUrl = GetPictureUrl(member.UserName),
                 SoberSignups = soberSignups,
                 LaundrySummary = LaundrySummary(),
                 NeedsToSoberDrive = !memberSoberSignups.Any()
