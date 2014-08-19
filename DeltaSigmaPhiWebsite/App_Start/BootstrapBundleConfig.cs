@@ -16,7 +16,10 @@ namespace DeltaSigmaPhiWebsite.App_Start
             BundleTable.Bundles.Add(new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.css"));
             BundleTable.Bundles.Add(new StyleBundle("~/Content/bootstrap-theme").Include("~/Content/bootstrap-theme.css"));
             BundleTable.Bundles.Add(new StyleBundle("~/Content/site").Include("~/Content/Site.css"));
-            BundleTable.Bundles.Add(new StyleBundle("~/Content/font-awesome").Include("~/Content/font-awesome.css"));
+            BundleTable.Bundles.Add(new StyleBundle("~/Content/font-awesome")
+                .Include("~/Content/font-awesome.css"));
+            BundleTable.Bundles.Add(new StyleBundle("~/Content/data-tables")
+                .Include("~/Content/DataTables-1.10.2/media/css/jquery.dataTables.css"));
 		}
 	}
 }
