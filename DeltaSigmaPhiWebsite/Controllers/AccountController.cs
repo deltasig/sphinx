@@ -39,7 +39,6 @@
             var model = new AccountInformationModel
             {
                 MemberInfo = member,
-                ProfilePicUrl = GetBigPictureUrl(member.UserName),
                 ChangePasswordModel = new LocalPasswordModel()
             };
 
@@ -455,121 +454,6 @@
             }
 
             return RedirectToAction("Appointments", new { Message = message });
-        }
-
-        #endregion
-
-        #region External Authentication
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Disassociate(string provider, string providerUserId)
-        {
-            var ownerAccount = OAuthWebSecurity.GetUserName(provider, providerUserId);
-            ManageMessageId? message = null;
-
-            // Only disassociate the account if the currently logged in user is the owner
-            if (ownerAccount != User.Identity.Name)
-                return RedirectToAction("Index", new { Message = message });
-
-            // Use a transaction to prevent the user from deleting their last login credential
-            using (var scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = IsolationLevel.Serializable }))
-            {
-                var hasLocalAccount = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-                if (!hasLocalAccount && OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name).Count <= 1)
-                    return RedirectToAction("Index", new { Message = message });
-                OAuthWebSecurity.DeleteAccount(provider, providerUserId);
-                scope.Complete();
-                message = ManageMessageId.RemoveLoginSuccess;
-            }
-
-            return RedirectToAction("Index", new { Message = message });
-        }
-
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public ActionResult ExternalLogin(string provider)
-        {
-            return new ExternalLoginResult(this, provider, Url.Action("ExternalLoginCallback"));
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult ExternalLoginCallback()
-        {
-            var result = OAuthWebSecurity.VerifyAuthentication(Url.Action("ExternalLoginCallback"));
-            if (!result.IsSuccessful)
-            {
-                return RedirectToAction("ExternalLoginFailure");
-            }
-
-            if (OAuthWebSecurity.Login(result.Provider, result.ProviderUserId, false))
-            {
-                return RedirectToAction("Index", "Sphinx");
-            }
-
-            if (!User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Login", "Account");
-            }
-            // If the current user is logged in, add the new account
-            OAuthWebSecurity.CreateOrUpdateAccount(result.Provider, result.ProviderUserId, User.Identity.Name);
-            return RedirectToAction("Index", new { Message = ManageMessageId.AddLoginSuccess });
-        }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult ExternalLoginFailure()
-        {
-            return View();
-        }
-
-        [AllowAnonymous]
-        [ChildActionOnly]
-        public ActionResult ExternalLoginsList(string returnUrl)
-        {
-            ViewBag.ReturnUrl = returnUrl;
-            return PartialView("_ExternalLoginsListPartial", OAuthWebSecurity.RegisteredClientData);
-        }
-
-        [ChildActionOnly]
-        public ActionResult RemoveExternalLogins()
-        {
-            var accounts = OAuthWebSecurity.GetAccountsFromUserName(User.Identity.Name);
-
-            var externalLogins = (
-                from account in accounts
-                let clientData = OAuthWebSecurity.GetOAuthClientData(account.Provider)
-                select new ExternalLogin
-                {
-                    Provider = account.Provider,
-                    ProviderDisplayName = clientData.DisplayName,
-                    ProviderUserId = account.ProviderUserId
-                }
-            ).ToList();
-
-            ViewBag.ShowRemoveButton = externalLogins.Count > 1 || OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(User.Identity.Name));
-            return PartialView("_RemoveExternalLoginsPartial", externalLogins);
-        }
-
-        internal class ExternalLoginResult : ActionResult
-        {
-            public ExternalLoginResult(BaseController controller, string provider, string returnUrl)
-            {
-                Controller = controller;
-                Provider = provider;
-                ReturnUrl = returnUrl;
-            }
-
-            public BaseController Controller { get; set; }
-            public string Provider { get; private set; }
-            public string ReturnUrl { get; private set; }
-
-            public override void ExecuteResult(ControllerContext context)
-            {
-                Controller.OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
-            }
         }
 
         #endregion

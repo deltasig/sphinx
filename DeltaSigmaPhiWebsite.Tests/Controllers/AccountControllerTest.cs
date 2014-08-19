@@ -45,7 +45,6 @@
             });
             uowMock.Setup(m => m.MemberRepository).Returns(repMock.Object);
             wsMock.Setup(x => x.CurrentUser.Identity.Name).Returns("johndoe");
-            conMock.Setup(x => x.GetBigPictureUrl(It.IsAny<string>())).Returns("johndoe");
 
             // Act
             var actual = conMock.Object.Index(string.Empty, null);

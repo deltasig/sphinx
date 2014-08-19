@@ -23,22 +23,7 @@
             @if (User.Identity.Name == Model.MemberInfo.UserName)
             {
                 @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
-                <div class="panel panel-default">
-                    <div class="panel-heading">External Authentication</div>
-                    <div class="panel-body">
-                        @Html.Action("RemoveExternalLogins")
-                        @Html.Action("ExternalLoginsList", new { ReturnUrl = Url.Action("Index") })
-                    </div>
-                </div>
             }
-        </div>
-    </div>
-    @*<p>You're logged in as <strong>@User.Identity.Name</strong>.</p>*@
-    <div class="row">
-        <div class="col-sm-6">
-            
-        </div>
-        <div class="col-sm-6">
         </div>
     </div>
 </div>

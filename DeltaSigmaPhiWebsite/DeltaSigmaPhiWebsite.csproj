@@ -344,7 +344,6 @@
     <Compile Include="Models\DspContext.cs" />
     <Compile Include="Models\Entities\Event.cs" />
     <Compile Include="Models\ViewModels\ClassModels.cs" />
-    <Compile Include="Models\ViewModels\HomeModels.cs" />
     <Compile Include="Models\Entities\IncidentReport.cs" />
     <Compile Include="Models\Entities\LaundrySignup.cs" />
     <Compile Include="Models\Entities\Leader.cs" />
@@ -437,13 +436,9 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_RemoveExternalLoginsPartial.cshtml" />
     <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Index.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Home\Contacts.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />

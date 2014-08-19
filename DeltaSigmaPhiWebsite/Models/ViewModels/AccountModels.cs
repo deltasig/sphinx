@@ -4,16 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
-
-    public class RegisterExternalLoginModel
-    {
-        [Required]
-        [Display(Name = "User Name")]
-        public string UserName { get; set; }
-
-        public string ExternalLoginData { get; set; }
-    }
-
+    
     public class LocalPasswordModel
     {
         [Required]
@@ -120,19 +111,10 @@
         public IEnumerable<object> Users { get; set; }
     }
     
-    public class ExternalLogin
-    {
-        public string Provider { get; set; }
-        public string ProviderDisplayName { get; set; }
-        public string ProviderUserId { get; set; }
-        public string ProviderUserName { get; set; }
-    }
-
     public class AccountInformationModel
     {
         public Member MemberInfo { get; set; }
         public LocalPasswordModel ChangePasswordModel { get; set; }
-        public string ProfilePicUrl { get; set; }
     }
 
     public class EditMemberInfoModel
