@@ -21,6 +21,11 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int SemesterId { get; set; }
 
+        [Display(Name = "Instructor")]
+        [DataType(DataType.Text)]
+        [StringLength(40)]
+        public string Instructor { get; set; }
+
         [StringLength(1)]
         public string MidtermGrade { get; set; }
 

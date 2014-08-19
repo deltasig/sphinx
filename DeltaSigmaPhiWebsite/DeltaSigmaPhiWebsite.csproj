@@ -291,8 +291,9 @@
     <Compile Include="Controllers\StudyHoursController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
     <Compile Include="Data\DspRoleProvider.cs" />
-    <Compile Include="Data\Interfaces\IDepartmentsRepository.cs" />
     <Compile Include="Data\Interfaces\IClassesRepository.cs" />
+    <Compile Include="Data\Interfaces\IDepartmentsRepository.cs" />
+    <Compile Include="Data\Interfaces\IClassesTakenRepository.cs" />
     <Compile Include="Data\Interfaces\IPledgeClassesRepository.cs" />
     <Compile Include="Data\Interfaces\IPositionsRepository.cs" />
     <Compile Include="Data\Interfaces\ILeadersRepository.cs" />
@@ -302,6 +303,7 @@
     <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
     <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
     <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
+    <Compile Include="Data\Repositories\ClassesTakenRepository.cs" />
     <Compile Include="Data\Repositories\DepartmentsRepository.cs" />
     <Compile Include="Data\Repositories\ClassesRepository.cs" />
     <Compile Include="Data\Repositories\PledgeClassesRepository.cs" />
@@ -314,6 +316,7 @@
       <DependentUpon>201406101402228_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Models\IOAuthWebSecurity.cs" />
     <Compile Include="Data\Interfaces\ISemestersRepository.cs" />
     <Compile Include="Data\Interfaces\IServiceHoursRepository.cs" />
@@ -337,13 +340,12 @@
     <Compile Include="Models\ViewModels\AccountModels.cs" />
     <Compile Include="Models\Entities\Address.cs" />
     <Compile Include="Models\Entities\Class.cs" />
-    <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Models\Entities\Department.cs" />
     <Compile Include="Models\DspContext.cs" />
     <Compile Include="Models\Entities\Event.cs" />
+    <Compile Include="Models\ViewModels\ClassModels.cs" />
     <Compile Include="Models\ViewModels\HomeModels.cs" />
     <Compile Include="Models\Entities\IncidentReport.cs" />
-    <Compile Include="Models\Entities\Instructor.cs" />
     <Compile Include="Models\Entities\LaundrySignup.cs" />
     <Compile Include="Models\Entities\Leader.cs" />
     <Compile Include="Models\Entities\Major.cs" />
@@ -503,6 +505,7 @@
     <Content Include="Views\StudyHours\Index.cshtml" />
     <Content Include="Views\StudyHours\Tracker.cshtml" />
     <Content Include="Views\StudyHours\_StudyHourProgressPartial.cshtml" />
+    <Content Include="Views\Classes\CreateSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

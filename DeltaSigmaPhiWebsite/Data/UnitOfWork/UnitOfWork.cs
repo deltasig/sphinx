@@ -84,6 +84,11 @@
         {
             get { return _classesRepository ?? (_classesRepository = new ClassesRepository(_context)); }
         }
+        private IClassesTakenRepository _classesTakenRepository;
+        public IClassesTakenRepository ClassesTakenRepository
+        {
+            get { return _classesTakenRepository ?? (_classesTakenRepository = new ClassesTakenRepository(_context)); }
+        }
         private IDepartmentsRepository _departmentsRepository;
         public IDepartmentsRepository DepartmentsRepository
         {
