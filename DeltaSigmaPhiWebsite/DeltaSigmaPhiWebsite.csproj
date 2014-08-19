@@ -311,9 +311,9 @@
     <Compile Include="Data\Repositories\LeadersRepository.cs" />
     <Compile Include="Data\Repositories\PhoneNumbersRepository.cs" />
     <Compile Include="Data\Repositories\AddressesRepository.cs" />
-    <Compile Include="Migrations\201406101402228_Initial.cs" />
-    <Compile Include="Migrations\201406101402228_Initial.Designer.cs">
-      <DependentUpon>201406101402228_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201408190209458_Initial.cs" />
+    <Compile Include="Migrations\201408190209458_Initial.Designer.cs">
+      <DependentUpon>201408190209458_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
@@ -514,14 +514,14 @@
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201406101402228_Initial.resx">
-      <DependentUpon>201406101402228_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Filters\" />
     <Folder Include="Views\Shared\EditorTemplate\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201408190209458_Initial.resx">
+      <DependentUpon>201408190209458_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

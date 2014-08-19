@@ -1,11 +1,11 @@
 namespace DeltaSigmaPhiWebsite.Migrations
 {
-    using Models;
-    using Models.Entities;
     using System;
     using System.Data.Entity.Migrations;
     using System.Linq;
     using System.Web.Security;
+    using Models;
+    using Models.Entities;
     using WebMatrix.WebData;
 
     internal sealed class Configuration : DbMigrationsConfiguration<DspContext>
@@ -373,7 +373,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                     Email = "tjm6f4@mst.edu", 
                     StatusId = context.MemberStatus.Single(s => s.StatusName == "Active").StatusId,
                     ExpectedGraduationId = 9,
-                    PledgeClassId = 12
+                    PledgeClassId = 12,
+                    RequiredStudyHours = 0
                 });
             var userId = WebSecurity.GetUserId("tjm6f4");
             if (!context.Addresses.Select(a => a.UserId == userId).Any())
