@@ -8,7 +8,7 @@
     using System.Net;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumni")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
         public IncidentsController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }

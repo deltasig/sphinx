@@ -76,7 +76,7 @@
                         </li>
                     }
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
-                    if (User.IsInRole("Active"))
+                    if (User.IsInRole("Active") || User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte"))
                     { 
                         <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">@Html.ActionLink("Laundry Signup", "LaundrySchedule", "Sphinx")</li>
                     }
