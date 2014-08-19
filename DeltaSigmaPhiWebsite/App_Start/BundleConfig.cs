@@ -8,6 +8,7 @@
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/otf").Include(
+                "~/Scripts/DataTables-1.10.2/media/js/jquery.dataTables.js",
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery-ui-{version}.js",
                 "~/Scripts/jquery.unobtrusive*",
