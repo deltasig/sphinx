@@ -262,6 +262,7 @@
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
                 uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
+                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency" });
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
