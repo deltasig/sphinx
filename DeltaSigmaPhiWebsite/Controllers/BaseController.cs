@@ -34,8 +34,8 @@
         }
         protected virtual IEnumerable<Member> GetAllActivePledgeNeophyteMembers()
         {
-            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active" &&
-                m.MemberStatus.StatusName == "Pledge" &&
+            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active" ||
+                m.MemberStatus.StatusName == "Pledge" ||
                 m.MemberStatus.StatusName == "Neophyte");
         }
         protected virtual IEnumerable<Member> GetAllAlumniMembers()
@@ -120,7 +120,7 @@
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name");
+            return new SelectList(newList, "SemesterId", "Name", GetThisSemester().SemesterId);
         }
         protected virtual IEnumerable<SelectListItem> GetSemesterListWithNone()
         {
@@ -140,14 +140,14 @@
         }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
-            var members = uow.MemberRepository.SelectAll().OrderBy(o => o.LastName);
+            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
                 newList.Add(new
                 {
                     member.UserId,
-                    Name = member.LastName + ", " + member.FirstName
+                    Name = member.FirstName + " " + member.LastName 
                 });
             }
             return new SelectList(newList, "UserId", "Name");
@@ -158,14 +158,14 @@
         }
         protected virtual IEnumerable<object> GetUserIdListAsFullNameWithNoneNonSelectList()
         {
-            var members = uow.MemberRepository.SelectAll().OrderBy(o => o.LastName);
+            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.LastName);
             var newList = new List<object> { new { UserId = 0, Name = "None" } };
             foreach (var member in members)
             {
                 newList.Add(new
                 {
                     member.UserId,
-                    Name = member.LastName + ", " + member.FirstName
+                    Name = member.FirstName + " " + member.LastName
                 });
             }
             return newList;

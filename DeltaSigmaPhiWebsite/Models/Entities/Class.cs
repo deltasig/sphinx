@@ -8,7 +8,6 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public Class()
         {
             ClassesTaken = new HashSet<ClassTaken>();
-            Instructors = new HashSet<Instructor>();
         }
 
         public int ClassId { get; set; }
@@ -28,10 +27,12 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [StringLength(100)]
         public string CourseName { get; set; }
 
+        [Required]
+        [Display(Name = "Credit Hours")]
+        public int CreditHours { get; set; }
+
         public virtual Department Department { get; set; }
 
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
-
-        public virtual ICollection<Instructor> Instructors { get; set; }
     }
 }

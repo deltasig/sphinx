@@ -18,7 +18,6 @@ namespace DeltaSigmaPhiWebsite.Models
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }
-        public virtual DbSet<Instructor> Instructors { get; set; }
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
         public virtual DbSet<Leader> Leaders { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
@@ -73,12 +72,7 @@ namespace DeltaSigmaPhiWebsite.Models
                 .HasMany(e => e.ClassesTaken)
                 .WithRequired(e => e.Class)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Class>()
-                .HasMany(e => e.Instructors)
-                .WithMany(e => e.Classes)
-                .Map(m => m.ToTable("ClassesTaught").MapLeftKey("ClassId").MapRightKey("InstructorId"));
-
+            
             modelBuilder.Entity<ClassTaken>()
                 .Property(e => e.MidtermGrade)
                 .IsFixedLength()
