@@ -329,7 +329,6 @@
                     s.DateOfShift <= semester.DateEnd &&
                     s.DateOfShift >= semester.DateStart);
         }
-
         protected IEnumerable<SelectListItem> GetAllApproverIds(int userId)
         {
             var members = uow.MemberRepository.SelectBy(a => a.UserId != userId).OrderBy(o => o.LastName);
@@ -373,17 +372,17 @@
         }
         protected DateTime GetStartOfCurrentWeek()
         {
-            // Monday @ 6:00pm
+            // Monday @ 11:59:59pm
             if((int)DateTime.Today.DayOfWeek == 1)
             {
-                return DateTime.Today.AddDays(-7).AddHours(18);
+                return DateTime.Today.AddDays(-7).AddHours(23).AddMinutes(59).AddSeconds(59);
             }
             if((int)DateTime.Today.DayOfWeek == 0)
             {
-                return DateTime.Today.AddDays(-6).AddHours(18);
+                return DateTime.Today.AddDays(-6).AddHours(23).AddMinutes(59).AddSeconds(59);
             }
 
-            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek - 1)).AddHours(18);
+            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek - 1)).AddHours(23).AddMinutes(59).AddSeconds(59);
         }
 
         protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
