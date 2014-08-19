@@ -81,6 +81,7 @@
             model.SubmittedBy = WebSecurity.GetUserId(User.Identity.Name);
             model.DateTimeStudied = model.DateTimeStudied;
             model.DateTimeSubmitted = DateTime.Now;
+            model.RequiredStudyHours = uow.MemberRepository.SingleById(model.SubmittedBy).RequiredStudyHours;
 
             uow.StudyHourRepository.Insert(model);
             uow.Save();
