@@ -9,7 +9,7 @@
     using System;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class StudyHoursController : BaseController
     {
         public StudyHoursController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
@@ -17,7 +17,7 @@
         public ActionResult Index()
         {
             var thisSemester = GetThisSemester();
-            var model = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart);
+            var model = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart).ToList();
             return View(model);
         }
 
@@ -28,8 +28,8 @@
 
             var model = new TrackerModel
             {
-                ThisWeek = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= startOfThisWeek),
-                ThisSemester = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart)
+                ThisWeek = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= startOfThisWeek).ToList(),
+                ThisSemester = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart).ToList()
             };
             return View(model);
         }
@@ -39,8 +39,28 @@
             var startOfThisWeek = GetStartOfCurrentWeek();
             var model = uow.StudyHourRepository.SelectBy(s =>
                 s.DateTimeStudied >= startOfThisWeek && 
-                s.ApproverId == null);
+                s.ApproverId == null).ToList();
             return View(model);
+        }
+
+        public ActionResult Approve(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+            var studyHour = uow.StudyHourRepository.Single(s => s.StudyHourId == id);
+            if (studyHour == null)
+            {
+                return HttpNotFound();
+            }
+            studyHour.DateTimeApproved = DateTime.Now;
+            studyHour.ApproverId = WebSecurity.GetUserId(User.Identity.Name);
+
+            uow.StudyHourRepository.Update(studyHour);
+            uow.Save();
+
+            return RedirectToAction("Unapproved");
         }
         
         [HttpGet]
@@ -68,26 +88,6 @@
             return RedirectToAction("Index", "Sphinx");
         }
         
-        public ActionResult Approve(int? id)
-        {
-            if (id == null)
-            {
-                return HttpNotFound();
-            }
-            var studyHour = uow.StudyHourRepository.Single(s => s.StudyHourId == id);
-            if (studyHour == null)
-            {
-                return HttpNotFound();
-            }
-            studyHour.DateTimeApproved = DateTime.Now;
-            studyHour.ApproverId = WebSecurity.GetUserId(User.Identity.Name);
-
-            uow.StudyHourRepository.Update(studyHour);
-            uow.Save();
-
-            return RedirectToAction("Unapproved");
-        }
-        
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Delete(int? id)
         {
@@ -106,6 +106,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -123,6 +124,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit([Bind(Include = "UserId,RequiredStudyHours")] Member model)
         {
             var member = uow.MemberRepository.SingleById(model.UserId);

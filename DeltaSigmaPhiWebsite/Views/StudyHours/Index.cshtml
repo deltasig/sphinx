@@ -37,7 +37,16 @@
                                     <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
                                     <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
                                     <td>@Html.DisplayFor(modelItem => item.DateTimeSubmitted)</td>
-                                    <td>@item.Approver.ToString()</td>
+                                    <td>
+                                        @if (item.Approver == null)
+                                        {
+                                            @: None
+                                            }
+                                        else
+                                        {
+                                            @item.Approver.ToString()
+                                        }
+                                    </td>
                                     <td>@Html.DisplayFor(modelItem => item.DateTimeApproved)</td>
                                     <td>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))

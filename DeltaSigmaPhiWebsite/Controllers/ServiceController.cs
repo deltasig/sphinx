@@ -9,7 +9,7 @@
 	using Models.Entities;
 	using Models.ViewModels;
 
-	[Authorize(Roles = "Pledge, Neophyte, Active")]
+	[Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
 	public class ServiceController : BaseController
 	{
 		public ServiceController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }

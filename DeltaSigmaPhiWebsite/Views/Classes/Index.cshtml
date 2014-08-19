@@ -19,9 +19,9 @@
                     <table class="table table-responsive table-condensed">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.Department.DepartmentName)</th>
                                 <th>@Html.DisplayNameFor(model => model.CourseShorthand)</th>
                                 <th>@Html.DisplayNameFor(model => model.CourseName)</th>
+                                <th>@Html.DisplayNameFor(model => model.Department.DepartmentName)</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -29,9 +29,9 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
                                     <td>@Html.DisplayFor(modelItem => item.CourseShorthand)</td>
                                     <td>@Html.DisplayFor(modelItem => item.CourseName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id=item.ClassId }) |
                                         @Html.ActionLink("Delete", "Delete", new { id=item.ClassId })

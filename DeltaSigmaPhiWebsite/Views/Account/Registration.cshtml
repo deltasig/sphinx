@@ -8,13 +8,8 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-sm-12 col-sm-6">
             @{Html.RenderPartial("_RegisterPartial", Model.RegisterModel);}
-            <br />
-            @if (User.IsInRole("Administrator"))
-            {
-                Html.RenderPartial("_UnregisterPartial", Model.UnregisterModel);
-            }
         </div>
     </div>
 </div>
