@@ -12,11 +12,9 @@
         public bool NeedsToSoberDrive { get; set; }
         public int RemainingStudyHours { get; set; }
         public int RemainingCommunityServiceHours { get; set; }
-        public IEnumerable<string> Roles { get; set; }
-        public string ProfilePicUrl { get; set; }
         public string LaundrySummary { get; set; }
+        public IEnumerable<string> Roles { get; set; }
         public IEnumerable<StudyHour> StudyHours { get; set; }
-        public IEnumerable<StudyHour> StudyApproval { get; set; }
         public IEnumerable<ServiceHour> CompletedEvents { get; set; }
         public IEnumerable<SoberSignup> SoberSignups { get; set; }
     }
@@ -33,14 +31,12 @@
         [Display(Name = "Hours")]
         [DataType(DataType.Duration)]
         public int HoursServed { get; set; }
-
-
         public DateTime SoberDriveTime { get; set; }
     }
 
     public class LaundrySignupModel
     {
-        public List< List <LaundryReservationModel> > ThisWeeksSignups { get; set; }
+        public List<List<LaundryReservationModel>> ThisWeeksSignups { get; set; }
     }
 
     public class LaundryReservationModel
