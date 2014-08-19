@@ -36,6 +36,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [Display(Name = "Approved On")]
         public DateTime? DateTimeApproved { get; set; }
 
+        public int RequiredStudyHours { get; set; }
+
         public virtual Member Submitter { get; set; }
         public virtual Member Approver { get; set; }
     }
