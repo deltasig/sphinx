@@ -19,7 +19,7 @@
                     </div>
                 }
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed">
+                    <table class="table table-responsive table-condensed" id="schedule-table">
                         <thead>
                             <tr>
                                 <th>Requested</th>
@@ -64,3 +64,17 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $('#schedule-table').DataTable({
+            pageLength: 25,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
