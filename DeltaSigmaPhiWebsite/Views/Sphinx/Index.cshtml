@@ -80,7 +80,16 @@
                                     <tr>
                                         <td>@studyHour.DateTimeStudied.ToShortDateString()</td>
                                         <td>@studyHour.IsProctored</td>
-                                        <td>@studyHour.Approver.ToString()</td>
+                                        <td>
+                                            @if (studyHour.Approver == null)
+                                            {
+                                                @: None
+                                            }
+                                            else
+                                            {
+                                                @studyHour.Approver.ToString()
+                                            }
+                                        </td>
                                         <td>@studyHour.DurationHours</td>
                                     </tr>
                                 }

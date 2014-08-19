@@ -236,11 +236,14 @@
             {
                 try
                 {
-                    var semesters = db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
-                    var mostRecentSemester = semesters[0];
+                    var thisSemester = db.Semesters
+                                .Where(s => s.DateEnd >= DateTime.Now)
+                                .OrderBy(s => s.DateStart)
+                                .ToList()
+                                .First();
                     var positionsHeld = (from l in db.Leaders
                                          where l.Member.UserName == userName &&
-                                               l.SemesterId == mostRecentSemester.SemesterId
+                                               l.SemesterId == thisSemester.SemesterId
                                          select l.Position.PositionName).ToList();
                     var member = (from m in db.Members
                                     where m.UserName == userName
@@ -309,15 +312,16 @@
                     }
                     else
                     {
-                        var thisSemester = db.Semesters
-                            .Where(s => s.DateEnd >= DateTime.Now)
-                            .OrderBy(s => s.DateStart)
-                            .First();
-                        positionsHeld = from l in db.Leaders
-                                        where l.Position.PositionName == roleName &&
-                                              l.Member.UserName == userName &&
-                                              l.SemesterId == thisSemester.SemesterId
-                                        select l;
+                        var thisSemester =  db.Semesters
+                                .Where(s => s.DateEnd >= DateTime.Now)
+                                .OrderBy(s => s.DateStart)
+                                .ToList()
+                                .First();
+                        positionsHeld = db.Leaders.Where(l => 
+                                            l.SemesterId == thisSemester.SemesterId &&
+                                            l.Member.UserName == userName &&
+                                            l.Position.PositionName == roleName)
+                                            .ToList();
                     }
 
                     if (positionsHeld.Any())

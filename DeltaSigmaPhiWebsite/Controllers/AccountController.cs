@@ -257,12 +257,11 @@
                 var userName = model.Email.Substring(0, signIndex);
 
                 WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
-                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId });
+                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0 });
 
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
                 uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
-                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency Contact" });
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
@@ -383,7 +382,7 @@
                     break;
             }
 
-            var positions = uow.PositionRepository.SelectAll();
+            var positions = uow.PositionRepository.SelectAll().ToList();
             var semesters = GetThisAndNextSemesterList().ToList();
             var model = new List<AppointmentModel>();
 
@@ -392,7 +391,7 @@
                 if (position.PositionName == "Administrator") continue;
                 foreach(var semester in semesters)
                 {
-                    var leader = uow.LeaderRepository.SelectAll().SingleOrDefault(l =>
+                    var leader = uow.LeaderRepository.SelectAll().ToList().SingleOrDefault(l =>
                         l.SemesterId == semester.SemesterId &&
                         l.PositionId == position.PositionId) ?? new Leader();
                     model.Add(new AppointmentModel

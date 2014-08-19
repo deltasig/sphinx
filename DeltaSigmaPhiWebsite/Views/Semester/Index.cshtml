@@ -41,8 +41,8 @@
                                         @pledgeClass.PledgeClassName
                                     }
                                 </td>
-                                <td>@item.DateStart</td>
-                                <td>@item.DateStart</td>
+                                <td>@item.DateStart.ToShortDateString()</td>
+                                <td>@item.DateEnd.ToShortDateString()</td>
                                 <td>
                                     @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
                                     @if (User.IsInRole("Administrator"))

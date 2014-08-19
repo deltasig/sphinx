@@ -36,7 +36,7 @@
         {
             return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active" ||
                 m.MemberStatus.StatusName == "Pledge" ||
-                m.MemberStatus.StatusName == "Neophyte");
+                m.MemberStatus.StatusName == "Neophyte").ToList();
         }
         protected virtual IEnumerable<Member> GetAllAlumniMembers()
         {
