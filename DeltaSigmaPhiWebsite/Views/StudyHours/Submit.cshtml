@@ -14,6 +14,7 @@
                     @Html.ValidationSummary(true)
                     
                     @Html.HiddenFor(model => model.RequiredStudyHours)
+                    @Html.HiddenFor(model => model.ProctoredStudyHours)
                     
                     <div class="form-group">
                         @Html.LabelFor(m => m.DateTimeStudied)
@@ -28,6 +29,11 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.IsProctored)
                         @Html.EditorFor(m => m.IsProctored)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Location)
+                        @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Location, "", new { @class = "text-danger" })
                     </div>
     
                     <div class="modal-footer">

@@ -59,6 +59,8 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public int RequiredStudyHours { get; set; }
 
+        public int? ProctoredStudyHours { get; set; }
+
         public int StatusId { get; set; }
 
         public int PledgeClassId { get; set; }

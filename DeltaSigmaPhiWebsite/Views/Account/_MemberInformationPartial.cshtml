@@ -49,8 +49,12 @@
                             <td>@(Model.BigBrother == null ? "None" : Model.BigBrother.ToString())</td>
                         </tr>
                         <tr>
-                            <th>Study Hours (weekly)</th>
+                            <th>Unproctored Study Hours (weekly)</th>
                             <td>@Model.RequiredStudyHours</td>
+                        </tr>
+                        <tr>
+                            <th>Proctored Study Hours (weekly)</th>
+                            <td>@Model.ProctoredStudyHours</td>
                         </tr>
                     </tbody>
                 </table>

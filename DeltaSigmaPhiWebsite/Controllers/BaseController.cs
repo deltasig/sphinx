@@ -372,17 +372,23 @@
         }
         protected DateTime GetStartOfCurrentWeek()
         {
-            // Monday @ 11:59:59pm
-            if((int)DateTime.Today.DayOfWeek == 1)
+            switch (DateTime.Today.DayOfWeek)
             {
-                return DateTime.Today.AddDays(-7).AddHours(23).AddMinutes(59).AddSeconds(59);
+                case DayOfWeek.Sunday:
+                    return DateTime.Today.AddDays(-5);
+                case DayOfWeek.Monday:
+                    return DateTime.Today.AddDays(-6);
+                case DayOfWeek.Tuesday:
+                    return DateTime.Today;
+                case DayOfWeek.Wednesday:
+                    return DateTime.Today.AddDays(-1);
+                case DayOfWeek.Thursday:
+                    return DateTime.Today.AddDays(-2);
+                case DayOfWeek.Friday:
+                    return DateTime.Today.AddDays(-3);
+                default: // Saturday
+                    return DateTime.Today.AddDays(-4);
             }
-            if((int)DateTime.Today.DayOfWeek == 0)
-            {
-                return DateTime.Today.AddDays(-6).AddHours(23).AddMinutes(59).AddSeconds(59);
-            }
-
-            return DateTime.Today.AddDays(-1 * (int)(DateTime.Today.DayOfWeek - 1)).AddHours(23).AddMinutes(59).AddSeconds(59);
         }
 
         protected DateTime DateTimeFloor(DateTime date, TimeSpan span)

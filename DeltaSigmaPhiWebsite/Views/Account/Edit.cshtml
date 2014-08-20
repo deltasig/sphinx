@@ -62,6 +62,11 @@
                         @Html.EditorFor(m => m.Member.RequiredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.Member.RequiredStudyHours, "", new { @class = "text-danger" })
                     </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ProctoredStudyHours, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.ProctoredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.ProctoredStudyHours, "", new { @class = "text-danger" })
+                    </div>
                 }
 
                 <div class="form-group">
