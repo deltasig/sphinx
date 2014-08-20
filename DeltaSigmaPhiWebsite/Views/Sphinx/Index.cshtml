@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Sphinx";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 
 @{const int descriptionLength = 25;}
@@ -125,17 +126,35 @@
                 @{ Html.RenderAction("Submit", "StudyHours"); }
 
                 @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
-                
+
                 <table class="table table-condensed table-responsive">
                     <thead>
                         <tr>
-                            <th colspan="5">Laundry Availability</th>
+                            <th colspan="2">Upcoming Laundry Reservations</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><p>@Model.LaundrySummary</p></td>
-                        </tr>
+                        @if (Model.LaundrySummary.Any())
+                        {
+
+                            foreach (var signup in Model.LaundrySummary)
+                            {
+                                <tr>
+                                    <td>
+                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortDateString():
+                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortTimeString() -
+                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).AddHours(2).ToShortTimeString()
+                                    </td>
+                                    <td>@signup.Member.ToString()</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="2">No reservations this week.</td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

@@ -12,7 +12,7 @@
         public bool NeedsToSoberDrive { get; set; }
         public int RemainingStudyHours { get; set; }
         public int RemainingCommunityServiceHours { get; set; }
-        public string LaundrySummary { get; set; }
+        public IEnumerable<LaundrySignup> LaundrySummary { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public IEnumerable<StudyHour> StudyHours { get; set; }
         public IEnumerable<ServiceHour> CompletedEvents { get; set; }
@@ -33,20 +33,7 @@
         public int HoursServed { get; set; }
         public DateTime SoberDriveTime { get; set; }
     }
-
-    public class LaundrySignupModel
-    {
-        public List<List<LaundryReservationModel>> ThisWeeksSignups { get; set; }
-    }
-
-    public class LaundryReservationModel
-    {
-        public int UserId {get; set;}
-        public string Name { get; set; }
-        public string UserName { get; set; }
-        public DateTime Shift { get; set; }
-    }
-
+  
     public class ServiceIndexModel
     {
         public Member Member { get; set; }

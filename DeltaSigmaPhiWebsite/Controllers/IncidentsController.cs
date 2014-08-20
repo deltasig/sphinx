@@ -43,7 +43,7 @@
         public ActionResult Create([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
         {
             if (!ModelState.IsValid) return View(incidentReport);
-            incidentReport.DateTimeSubmitted = DateTime.Now;
+            incidentReport.DateTimeSubmitted = DateTime.UtcNow;
             incidentReport.ReportedBy = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
             
             uow.IncidentReportRepository.Insert(incidentReport);

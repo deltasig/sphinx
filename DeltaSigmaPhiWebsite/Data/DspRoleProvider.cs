@@ -99,7 +99,7 @@
                                     SemesterId = (from s in db.Semesters
                                                   orderby s.DateEnd descending
                                                   select s.SemesterId).First(),
-                                    AppointedOn = DateTime.Now
+                                    AppointedOn = DateTime.UtcNow
                                 };
                                 db.Leaders.Add(memberInRole);
                             }
@@ -124,7 +124,7 @@
                         UserId = userId,
                         PositionId = positionId,
                         SemesterId = semesterId,
-                        AppointedOn = DateTime.Now
+                        AppointedOn = DateTime.UtcNow
                     });
                     db.SaveChanges();
                 }
@@ -237,7 +237,7 @@
                 try
                 {
                     var thisSemester = db.Semesters
-                                .Where(s => s.DateEnd >= DateTime.Now)
+                                .Where(s => s.DateEnd >= DateTime.UtcNow)
                                 .OrderBy(s => s.DateStart)
                                 .ToList()
                                 .First();
@@ -313,7 +313,7 @@
                     else
                     {
                         var thisSemester =  db.Semesters
-                                .Where(s => s.DateEnd >= DateTime.Now)
+                                .Where(s => s.DateEnd >= DateTime.UtcNow)
                                 .OrderBy(s => s.DateStart)
                                 .ToList()
                                 .First();
