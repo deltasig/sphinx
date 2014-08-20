@@ -30,7 +30,7 @@
                                 }
                                 @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
                                 {
-                                    <li>@Html.ActionLink("Events", "Index", "Event")</li>
+                                    <li>@Html.ActionLink("Service Events", "Index", "Event")</li>
                                 }
                                 @if (User.IsInRole("Administrator") ||
                                      User.IsInRole("President") ||

@@ -169,6 +169,7 @@
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.RequiredStudyHours = model.Member.RequiredStudyHours;
+            member.ProctoredStudyHours = model.Member.ProctoredStudyHours;
 
             uow.MemberRepository.Update(member);
             uow.Save();
@@ -256,7 +257,7 @@
                 var userName = model.Email.Substring(0, signIndex);
 
                 WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
-                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0 });
+                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0, ProctoredStudyHours = 0 });
 
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
