@@ -4,9 +4,9 @@
     <thead>
         <tr>
             <th>Name</th>
-            <th>Required Hours (Proctored|Unproctored)</th>
-            <th>Submitted (Proctored|Unproctored)</th>
-            <th>Approved (Proctored|Unproctored)</th>
+            <th>Required Hours</th>
+            <th>Total Submitted Hours</th>
+            <th>Approved Hours</th>
             <th></th>
         </tr>
     </thead>
@@ -18,16 +18,16 @@
                     @item.ToString()
                 </td>
                 <td>
-                    @item.RequiredStudyHours |
-                    @item.ProctoredStudyHours
+                    @item.ProctoredStudyHours |
+                    @item.RequiredStudyHours
                 </td>
                 <td>
                     @item.SubmittedStudyHours.Where(m => !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
                     @item.SubmittedStudyHours.Where(m => m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
                 </td>
                 <td>
-                    @item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
-                    @item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
+                @item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
+                @item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
                 <td>
                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                     {
