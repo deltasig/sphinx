@@ -37,9 +37,9 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public DateTime? DateTimeApproved { get; set; }
 
         [Required]
-        [StringLength(50, MinimumLength = 1)]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "Length of Event name must be 1-50 characters.")]
         [Display(Name = "Location")]
-        public string Location { get; set; }
+        public string StudyLocation { get; set; }
 
         public int RequiredStudyHours { get; set; }
         public int? ProctoredStudyHours { get; set; }

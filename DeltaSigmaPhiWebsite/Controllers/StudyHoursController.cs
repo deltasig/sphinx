@@ -31,7 +31,7 @@
             {
                 ThisWeek = new ProgressModel
                 {
-                    Members = uow.MemberRepository.SelectBy(s => s.RequiredStudyHours >= 0).ToList(),
+                    Members = uow.MemberRepository.SelectBy(s => s.RequiredStudyHours > 0).ToList(),
                     StartDate = startOfThisWeek.AddDays(-7)
                 },
                 ThisSemester = new ProgressModel
@@ -45,9 +45,9 @@
 
         public ActionResult Unapproved()
         {
-            var startOfThisWeek = GetStartOfCurrentWeek();
-            var model = uow.StudyHourRepository.SelectBy(s =>
-                s.DateTimeStudied >= startOfThisWeek && 
+            var thisSemester = GetThisSemester();
+            var model = uow.StudyHourRepository.SelectBy(s => 
+                s.DateTimeStudied >= thisSemester.DateStart &&
                 s.ApproverId == null).ToList();
             return View(model);
         }

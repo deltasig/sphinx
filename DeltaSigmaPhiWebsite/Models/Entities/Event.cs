@@ -16,19 +16,19 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
 		[Required]
 		[Display(Name = "Date/Time of Event")]
-		[DataType(DataType.DateTime)]
-		[DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm tt}", ApplyFormatInEditMode = true)]
+		[DisplayFormat(DataFormatString = "{0:MM-dd-yyyy hh:mm tt}", ApplyFormatInEditMode = true)]
 		public DateTime DateTimeOccurred { get; set; }
 
 		[Required]
 		[Display(Name = "Event Name")]
-		[DataType(DataType.Text)]
-		[StringLength(50)]
+        [DataType(DataType.Text)]
+        [StringLength(50, MinimumLength = 1, ErrorMessage = "Length of Event name must be 1-50 characters.")]
 		public string EventName { get; set; }
 
 		[Required]
 		[Display(Name = "Event Duration (Hrs)")]
-		[DataType(DataType.Duration)]
+        [DataType(DataType.Duration)]
+        [Range(0.5, 12, ErrorMessage = "Please enter a number from 0-12")]
 		public double DurationHours { get; set; }
 
 		public virtual ICollection<ServiceHour> ServiceHours { get; set; }
