@@ -69,8 +69,9 @@
         }
         protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
         {
+            var now = ConvertUtcToCst(DateTime.UtcNow);
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd >= DateTime.UtcNow)
+                .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
                 .Take(2)
                 .ToList();
@@ -79,8 +80,9 @@
         }
         protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterSelectList()
         {
+            var now = ConvertUtcToCst(DateTime.UtcNow);
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd >= DateTime.UtcNow)
+                .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
                 .ToList();
 
@@ -102,16 +104,18 @@
         }
         protected virtual Semester GetThisOrLastSemester()
         {
+            var now = ConvertUtcToCst(DateTime.UtcNow);
             return uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd <= DateTime.UtcNow)
+                .Where(s => s.DateEnd <= now)
                 .OrderBy(s => s.DateStart)
                 .ToList()
                 .Last();
         }
         protected virtual Semester GetThisSemester()
         {
+            var now = ConvertUtcToCst(DateTime.UtcNow);
             return uow.SemesterRepository.SelectAll()
-                    .Where(s => s.DateEnd >= DateTime.UtcNow)
+                    .Where(s => s.DateEnd >= now)
                     .OrderBy(s => s.DateStart)
                     .ToList()
                     .First();
