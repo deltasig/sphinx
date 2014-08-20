@@ -57,8 +57,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public double? RemainingBalance { get; set; }
 
+        [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
         public int RequiredStudyHours { get; set; }
 
+        [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
         public int? ProctoredStudyHours { get; set; }
 
         public int StatusId { get; set; }
