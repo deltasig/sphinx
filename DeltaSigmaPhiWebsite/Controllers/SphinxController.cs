@@ -25,19 +25,28 @@
             var events = GetAllCompletedEventsForUser(userId).ToList();
 
             var soberSignups = uow.SoberSignupsRepository.SelectAll()
-                .Where(s => DbFunctions.DiffDays(s.DateOfShift, DateTime.Now) <= 7).ToList();
+                .Where(s => DbFunctions.DiffDays(s.DateOfShift, DateTime.UtcNow) <= 7).ToList();
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
 
             var enumerable = memberSoberSignups as IList<SoberSignup> ?? memberSoberSignups.ToList();
             if (enumerable.Any())
             {
-                var signup = enumerable.First(s => s.Type == SoberSignupType.Driver);
                 events.Add(new ServiceHour
                 {
                     DurationHours = 5,
                     Event = new Event { EventName = "Sober Driving" }
                 });
+            }
+
+            var laundrySignups = uow.LaundrySignupRepository
+                    .SelectBy(l => l.DateTimeShift >= DateTime.UtcNow)
+                    .OrderBy(l => l.DateTimeShift)
+                    .ToList();
+            var laundryTake = laundrySignups.Count;
+            if(laundrySignups.Count > 5)
+            {
+                laundryTake  = 5;
             }
 
             var model = new SphinxModel
@@ -49,7 +58,7 @@
                 CompletedEvents = events,
                 StudyHours = GetStudyHoursForUser(userId),
                 SoberSignups = soberSignups,
-                LaundrySummary = LaundrySummary(),
+                LaundrySummary = laundrySignups.Take(laundryTake),
                 NeedsToSoberDrive = !memberSoberSignups.Any()
             };
 
@@ -64,7 +73,7 @@
         {
             var signups =
                 uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= DateTime.Now)
+                    .Where(s => s.DateOfShift >= DateTime.UtcNow)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
             return View(signups);
@@ -75,7 +84,7 @@
         {
             var vacantSignups =
                 uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= DateTime.Now && s.UserId == null)
+                    .Where(s => s.DateOfShift >= DateTime.UtcNow && s.UserId == null)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
 
@@ -152,10 +161,6 @@
         [HttpGet]
         public ActionResult LaundrySchedule(LaundrySignupMessage? message)
         {
-            var twoHours = new TimeSpan(2, 0, 0);
-            var oneDay = new TimeSpan(1, 0, 0, 0);
-            var thisMorning = new DateTime((DateTime.Now.Ticks / oneDay.Ticks) * oneDay.Ticks);
-
             switch (message)
             {
                 case LaundrySignupMessage.ReserveSuccess:
@@ -168,147 +173,75 @@
                     ViewBag.FailMessage = GetLaundrySignupMessage(message);
                     break;
             }
-            var signups = ThisWeeksLaundrySignup();
-            var fullSchedule = new List<List<LaundryReservationModel>>();
-            for (var i = 0; i < 12; i++)
+
+            var startOfTodayUtc = DateTime.UtcNow.Date.AddHours(5);
+            const int hoursInDay = 24;
+            const int slotSize = 2;
+
+            var existingSignups = uow.LaundrySignupRepository.SelectBy(l => l.DateTimeShift > startOfTodayUtc).ToList();
+            var model = new List<List<LaundrySignup>>();
+
+            for (var y = 0; y < 12; y++) // Hours in day
             {
-                var timeSlotSchedule = new List<LaundryReservationModel>();
-                for (var j = 0; j < 7; j++)
+                var timeSlotSchedule = new List<LaundrySignup>();
+                for (var x = 0; x < 7; x++) // Days of week
                 {
-                    var thisTimeSlot = thisMorning + TimeSpan.FromTicks(oneDay.Ticks * j) + TimeSpan.FromTicks(twoHours.Ticks * i);
-                    var reservation = signups.Find(x => x.Shift == thisTimeSlot);
+                    var timeSlot = startOfTodayUtc.AddHours(y * slotSize + x * hoursInDay);
+                    var reservation = existingSignups.SingleOrDefault(s => s.DateTimeShift == timeSlot);
                     if (reservation != null)
                     {
+                        reservation.DateTimeShift = ConvertUtcToCst(reservation.DateTimeShift);
                         timeSlotSchedule.Add(reservation);
                     }
                     else
                     {
-                        var nullReservation = new LaundryReservationModel { Name = null, Shift = thisTimeSlot };
-                        timeSlotSchedule.Add(nullReservation);
+                        timeSlotSchedule.Add(new LaundrySignup { DateTimeShift = ConvertUtcToCst(timeSlot) });
                     }
                 }
-                fullSchedule.Add(timeSlotSchedule);
+                model.Add(timeSlotSchedule);
             }
-            var model = new LaundrySignupModel { ThisWeeksSignups = fullSchedule };
+
             return View(model);
         }
         [HttpPost]
-        public ActionResult ReserveLaundry(LaundryReservationModel signup)
+        public ActionResult ReserveLaundry(LaundrySignup signup)
         {
-            // This verifies the validity of the Model being passed to this method by way of any annotations specified on the model class.
             if (!ModelState.IsValid)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveFailed });
 
-            //Get the user id of the person viewing the page
-            var allThisWeeksReservations = ThisWeeksLaundrySignup();
+            var startOfToday = DateTime.UtcNow.Date;
+            var currentUserId = WebSecurity.GetUserId(User.Identity.Name);
+            var existingSignups = uow.LaundrySignupRepository.SelectBy(l => 
+                l.DateTimeShift >= startOfToday &&
+                l.UserId == currentUserId)
+                .ToList();
 
-            var usersReservationsThisWeek = allThisWeeksReservations.FindAll(reserved => reserved.UserId == WebSecurity.GetUserId(User.Identity.Name));
-            var amountSignedUp = usersReservationsThisWeek.Count();
-
-            //Check how many other times the person has signed up. This amount will be limited to less than 2 (for now)
-            //IEnumerable<LaundrySignup> MySignups = db.LaundrySignups.Where(x => x.UserId == ThisUserId);
-            //int AmountSignedUp = MySignups.Count();
-
-            if (amountSignedUp >= 2) //MAKE CONST SOMEWHERE
+            if (existingSignups.Count() >= 2) 
             {
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveFailedTooMany });
             }
 
-            //Add reservation to the database
-            var reservation = new LaundrySignup
-            {
-                UserId = WebSecurity.GetUserId(User.Identity.Name),
-                DateTimeShift = signup.Shift,
-                DateTimeSignedUp = DateTime.Now
-            };
-            if (ModelState.IsValid)
-            {
-                uow.LaundrySignupRepository.Insert(reservation);
-                uow.Save();
-                return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveSuccess });
-            }
-            return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveFailed });
+            signup.UserId = currentUserId;
+            signup.DateTimeSignedUp = DateTime.UtcNow;
+            signup.DateTimeShift = ConvertCstToUtc(signup.DateTimeShift);
+
+            uow.LaundrySignupRepository.Insert(signup);
+            uow.Save();
+
+            return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveSuccess });
         }
         [HttpPost]
-        public ActionResult CancelReserveLaundry(LaundryReservationModel cancel)
+        public ActionResult CancelReserveLaundry(LaundrySignup cancel)
         {
-            if (uow.LaundrySignupRepository.Single(s => s.DateTimeShift == cancel.Shift) == null)
+            cancel.DateTimeShift = ConvertCstToUtc(cancel.DateTimeShift);
+            var shift = uow.LaundrySignupRepository.Single(s => s.DateTimeShift == cancel.DateTimeShift);
+            if (shift == null)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
-
-            uow.LaundrySignupRepository.DeleteByShift(cancel.Shift);
+            
+            uow.LaundrySignupRepository.Delete(shift);
             uow.Save();
 
             return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
-        }
-
-        private String LaundrySummary()
-        {
-            var presentSignupSlot = DateTimeFloor(DateTime.Now, new TimeSpan(2, 0, 0));
-            var nextSignupSlot = presentSignupSlot + new TimeSpan(2, 0, 0);
-            var allThisWeeksReservations = ThisWeeksLaundrySignup().FindAll(reserved => reserved.Shift >= presentSignupSlot).OrderBy(x => x.Shift).ToList();
-
-            if (allThisWeeksReservations.Count == 0)   // Scenario 3: No reservations this week -> special message
-            {
-                return "Laundry Room has not been reserved this week!";
-            }
-            //Scenario 1: Room is reserved now -> find next available time open
-            //Scenario 2: Room not reserved now AND Room reserved next hour AND we are more than half way through the present shift -> pretent present shift is reserved and find next availabe time open
-            //I HAVE NO IDEA IF SCENARIO 2 IS CORRECT!!!
-            double hours;
-            string hoursString;
-            if (allThisWeeksReservations[0].Shift == presentSignupSlot || ((allThisWeeksReservations[0].Shift == nextSignupSlot) && (nextSignupSlot - DateTime.Now).TotalHours < 1))
-            {
-                var firstFreeTime = allThisWeeksReservations[0].Shift;
-                for (var i = 0; i <= allThisWeeksReservations.Count; i++)
-                {
-                    if (i == allThisWeeksReservations.Count || allThisWeeksReservations[i].Shift != firstFreeTime)
-                    {
-                        //double hours = (allThisWeeksReservations[i - 1].Shift - DateTime.Now + new TimeSpan(2, 0, 0)).TotalHours;
-                        hours = (firstFreeTime - DateTime.Now).TotalHours;
-                        hoursString = hours.ToString("0.0");
-                        return "Laundry Room is next available in " + hoursString + "hours.";
-                    }
-                    firstFreeTime += new TimeSpan(2, 0, 0);
-                }
-                //This line will never be called. The if statement above handles all possible inputs. This is just to eliminate an error.
-                return "Laundry Room Information is not availale right now.";
-            }
-
-            hours = (allThisWeeksReservations[0].Shift - DateTime.Now).TotalHours;
-            hoursString = hours.ToString("0.0");
-            return "Laundry Room is available for the next " + hoursString + " hours.";
-        }
-        private List<LaundryReservationModel> ThisWeeksLaundrySignup()
-        {
-            // Beginning of today (12:00am of today).
-            var today = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0));
-            var sevenDays = new TimeSpan(7, 0, 0, 0);
-            // Add seven days to beginning of today (12:00am of a week from today).
-            var endOfWeek = today + sevenDays;
-
-            // All reservations within specified time frame.
-            var signups = uow.LaundrySignupRepository
-                .SelectAll()
-                .Where(l => l.DateTimeShift >= today && l.DateTimeShift < endOfWeek).ToList();
-            var members = uow.MemberRepository.SelectAll().ToList(); //all users
-
-            var presentWeekSignup = new List<LaundryReservationModel>();
-            foreach (var reservedTime in signups)
-            {
-                //Get user information for each of the reservations that take place this week
-                var isReserved = members.Any(user => user.UserId == reservedTime.UserId);
-                if (!isReserved) continue;
-
-                var reservingMember = members.First(user => user.UserId == reservedTime.UserId);
-                presentWeekSignup.Add(new LaundryReservationModel()
-                {
-                    UserId = reservedTime.UserId,
-                    UserName = reservingMember.UserName,
-                    Name = reservingMember.FirstName + " " + reservingMember.LastName[0] + ".",
-                    Shift = reservedTime.DateTimeShift
-                });
-            }
-            return presentWeekSignup;
         }
 
         #endregion

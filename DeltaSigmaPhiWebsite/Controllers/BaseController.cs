@@ -24,6 +24,16 @@
             this.OAuthWebSecurity = oAuthWebSecurity;
         }
 
+        protected virtual DateTime ConvertUtcToCst(DateTime utc)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+        }
+        protected virtual DateTime ConvertCstToUtc(DateTime cst)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+        }
         protected virtual IEnumerable<Member> GetAllActiveMembers()
         {
             return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active");
@@ -60,7 +70,7 @@
         protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd >= DateTime.Now)
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .Take(2)
                 .ToList();
@@ -70,7 +80,7 @@
         protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterSelectList()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd >= DateTime.Now)
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToList();
 
@@ -93,7 +103,7 @@
         protected virtual Semester GetThisOrLastSemester()
         {
             return uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd <= DateTime.Now)
+                .Where(s => s.DateEnd <= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToList()
                 .Last();
@@ -101,7 +111,7 @@
         protected virtual Semester GetThisSemester()
         {
             return uow.SemesterRepository.SelectAll()
-                    .Where(s => s.DateEnd >= DateTime.Now)
+                    .Where(s => s.DateEnd >= DateTime.UtcNow)
                     .OrderBy(s => s.DateStart)
                     .ToList()
                     .First();
@@ -246,7 +256,7 @@
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
-                .Where(s => s.DateEnd >= DateTime.Now)
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToList();
 
@@ -264,7 +274,7 @@
         {
             const int requiredHours = 15;
             // Beginning of today (12:00am of today)
-            var today = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0));
+            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
             // Find current semester
             var currentSemester = uow.SemesterRepository.Single(s => s.DateStart <= today && s.DateEnd >= today);
             if (currentSemester == null)
@@ -303,8 +313,8 @@
         }
         protected IEnumerable<SelectListItem> GetAllEventIdsAsEventName()
         {
-            var today = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0)); //beginning of today (12:00am of today)
-            var yearAgoToday = DateTimeFloor(DateTime.Now, new TimeSpan(1, 0, 0, 0)); //beginning of today, one year ago (12:00am of today)
+            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today (12:00am of today)
+            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today, one year ago (12:00am of today)
             yearAgoToday -= new TimeSpan(365, 0, 0, 0);
             var events = uow.EventRepository.SelectBy(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday)); //only retrieves events ranging one year back
             return new SelectList(events, "EventId", "EventName");
@@ -394,7 +404,7 @@
         protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
         {
             //Rounds down based on the TimeSpan
-            //Ex. date = DateTime.Now, span = TimeSpan of one day
+            //Ex. date = DateTime.UtcNow, span = TimeSpan of one day
             //Results in 12:00am of today
             var ticks = (date.Ticks / span.Ticks);
             return new DateTime(ticks * span.Ticks);

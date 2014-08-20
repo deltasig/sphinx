@@ -80,7 +80,7 @@
 			var submission = new ServiceHour
 			{
 				UserId = userId,
-				DateTimeSubmitted = DateTime.Now,
+				DateTimeSubmitted = DateTime.UtcNow,
 				EventId = model.SelectedEventId,
 				DurationHours = model.HoursServed
 			};
