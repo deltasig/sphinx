@@ -589,6 +589,7 @@
     <Content Include="Views\StudyHours\Tracker.cshtml" />
     <Content Include="Views\StudyHours\_StudyHourProgressPartial.cshtml" />
     <Content Include="Views\Classes\CreateSchedule.cshtml" />
+    <Content Include="Views\Classes\Schedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -105,6 +105,7 @@
                                     <td>@item.Pin</td>
                                     <td>@item.RoomString()</td>
                                     <td>
+                                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
                                         {
                                             @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, null) @:|
