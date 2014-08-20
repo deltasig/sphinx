@@ -236,8 +236,9 @@
             {
                 try
                 {
+                    var now = ConvertUtcToCst(DateTime.UtcNow);
                     var thisSemester = db.Semesters
-                                .Where(s => s.DateEnd >= DateTime.UtcNow)
+                                .Where(s => s.DateEnd >= now)
                                 .OrderBy(s => s.DateStart)
                                 .ToList()
                                 .First();
@@ -312,8 +313,9 @@
                     }
                     else
                     {
+                        var now = ConvertUtcToCst(DateTime.UtcNow);
                         var thisSemester =  db.Semesters
-                                .Where(s => s.DateEnd >= DateTime.UtcNow)
+                                .Where(s => s.DateEnd >= now)
                                 .OrderBy(s => s.DateStart)
                                 .ToList()
                                 .First();
@@ -395,6 +397,11 @@
         private string GetConfigValue(string configValue, string defaultValue)
         {
             return String.IsNullOrEmpty(configValue) ? defaultValue : configValue;
+        }
+        private DateTime ConvertUtcToCst(DateTime utc)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
         }
     }
 }
