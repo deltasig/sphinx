@@ -20,11 +20,12 @@
 
         public ActionResult Contacts()
         {
-            var currentSemester = GetThisSemestersId();
+            var currentSemester = GetThisSemester();
 
             if (currentSemester == null) return View();
 
-            var model = uow.LeaderRepository.SelectAll().Where(l => l.SemesterId == (int)currentSemester).ToList();
+            var model = uow.LeaderRepository.SelectAll().Where(l => l.SemesterId == currentSemester.SemesterId).ToList();
+
             return View(model);
         }
 
