@@ -14,14 +14,21 @@
     {
         public ClassesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
-        public ActionResult Index()
+        public ActionResult Index(string message)
         {
+            ViewBag.Message = string.Empty;
+
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
             var classes = uow.ClassesRepository.SelectAll();
             return View(classes.ToList());
         }
         
         public ActionResult Create()
         {
+            ViewBag.Message = string.Empty;
             ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName");
             return View();
         }
@@ -30,11 +37,12 @@
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
         {
+            ViewBag.Message = string.Empty;
             if (ModelState.IsValid)
             {
                 uow.ClassesRepository.Insert(@class);
                 uow.Save();
-                return RedirectToAction("Index");
+                ViewBag.Message = "Class created successfully. ";
             }
 
             ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
@@ -45,7 +53,7 @@
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             Class @class = uow.ClassesRepository.SingleById(id);
             if (@class == null)
@@ -56,7 +64,6 @@
             return View(@class);
         }
 
-        // POST: Classes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
@@ -71,12 +78,11 @@
             return View(@class);
         }
 
-        // GET: Classes/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             Class @class = uow.ClassesRepository.SingleById(id);
             if (@class == null)
@@ -86,14 +92,13 @@
             return View(@class);
         }
 
-        // POST: Classes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
             uow.ClassesRepository.DeleteById(id);
             uow.Save();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = "Course deleted." });
         }
 
         public ActionResult CreateSchedule()
@@ -124,8 +129,71 @@
                 }
                 uow.Save();
             }
+            var member = uow.MemberRepository.SingleById(model.SelectedMember);
+            return RedirectToAction("Schedule", new { userName = member.UserName, message = "Class(es) added successfully. " });
+        }
 
-            return CreateSchedule();
+        public ActionResult Schedule(string userName, string message)
+        {
+            ViewBag.Message = string.Empty;
+
+            if (string.IsNullOrEmpty(userName))
+            {
+                ViewBag.Message = "Couldn't find anyone by that user name. ";
+                return View(new List<ClassTaken>());
+            }
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+            var model = uow.ClassesTakenRepository
+                .SelectBy(c => c.Member.UserName == userName)
+                .OrderByDescending(c => c.SemesterId)
+                .ToList();
+            if(model.Count <= 0)
+            {
+                ViewBag.Message += "No classes found for " + userName + ". ";
+            }
+
+            return View(model);
+        }
+
+        public ActionResult DeleteFromSchedule(int id, int sid, int cid, string username)
+        {
+            var entry = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
+            if (entry == null)
+            {
+                return RedirectToAction("Schedule", new { userName = username, message = "Course not found. " });
+            }
+
+            uow.ClassesTakenRepository.Delete(entry);
+            uow.Save();
+
+            return RedirectToAction("Schedule", new { userName = username, message = "Course deleted from schedule. " });
+        }
+
+        public ActionResult Edit(int id, int sid, int cid)
+        {
+            var model = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] ClassTaken classTaken)
+        {
+            if (!ModelState.IsValid) 
+                return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
+
+            uow.ClassesTakenRepository.Update(classTaken);
+            uow.Save();
+
+            return RedirectToAction("Schedule", new { userName = "", message = "Record updated." });
         }
     }
 }

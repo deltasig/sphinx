@@ -11,6 +11,12 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-xs-12">
+            @if(ViewBag.Message.Length > 0)
+            {
+                <div class="alert alert-warning">
+                    @ViewBag.Message
+                </div>
+            }
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
