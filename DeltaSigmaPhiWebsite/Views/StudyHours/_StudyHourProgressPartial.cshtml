@@ -1,27 +1,37 @@
-﻿@model IEnumerable<StudyHour>
+﻿@model ProgressModel
            
 <table class="table table-responsive table-condensed">
     <thead>
         <tr>
             <th>Name</th>
-            <th>Required Hours</th>
-            <th>Turned In</th>
-            <th>Approved</th>
+            <th>Required Hours (Proctored|Unproctored)</th>
+            <th>Submitted (Proctored|Unproctored)</th>
+            <th>Approved (Proctored|Unproctored)</th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Select(m => m.SubmittedBy).Distinct())
+        @foreach (var item in Model.Members)
         {
             <tr>
-                <td>@Model.Select(m => m.Submitter).First(m => m.UserId == item).ToString()</td>
-                <td>@Model.Select(m => m.Submitter).First(m => m.UserId == item).RequiredStudyHours</td>
-                <td>@Model.Where(m => m.SubmittedBy == item).Sum(s => s.DurationHours)</td>
-                <td>@Model.Where(m => m.SubmittedBy == item && m.ApproverId != null).Sum(s => s.DurationHours)</td>
+                <td>
+                    @item.ToString()
+                </td>
+                <td>
+                    @item.RequiredStudyHours |
+                    @item.ProctoredStudyHours
+                </td>
+                <td>
+                    @item.SubmittedStudyHours.Where(m => !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
+                    @item.SubmittedStudyHours.Where(m => m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
+                </td>
+                <td>
+                    @item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
+                    @item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
                 <td>
                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                     {
-                        @Html.ActionLink("Edit", "Edit", "Account", new { id = Model.Select(m => m.Submitter).First(m => m.UserId == item).UserName }, new { })
+                        @Html.ActionLink("Edit", "Edit", "Account", new { id = item.UserName }, new { })
                     }
                 </td>
             </tr>
