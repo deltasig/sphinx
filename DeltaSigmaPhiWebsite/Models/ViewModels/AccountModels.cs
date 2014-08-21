@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
+    using System.EnterpriseServices.Internal;
     using Entities;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -36,6 +37,7 @@
 
         [Display(Name = "Remember me")]
         public bool RememberMe { get; set; }
+        public string ReturnUrl {get;set;}
     }
 
     public class RegistrationModel
@@ -75,7 +77,7 @@
         
         [Required]
         [DataType(DataType.Text)]
-        [Display(Name = "Expected Graduation")]
+        [Display(Name = "Graduation")]
         public string ExpectedGraduationId { get; set; }
         public IEnumerable<SelectListItem> SemesterList { get; set; }
 
