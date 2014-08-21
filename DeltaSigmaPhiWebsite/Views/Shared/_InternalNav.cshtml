@@ -15,10 +15,13 @@
             <ul class="nav navbar-nav" id="menu">
                 @if (Request.IsAuthenticated && !User.IsInRole("Released"))
                 {
-                    if (User.IsInRole("Administrator") || 
-                        User.IsInRole("President") || 
+                    <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                        @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
+                    </li>
+                    if (User.IsInRole("Administrator") ||
+                        User.IsInRole("President") ||
                         User.IsInRole("Secretary") ||
-                        User.IsInRole("Director of Recruitment") || 
+                        User.IsInRole("Director of Recruitment") ||
                         User.IsInRole("Academics"))
                     {
                         <li class="dropdown">
@@ -49,32 +52,35 @@
                             </ul>
                         </li>
                     }
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Members <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Roster", "Roster", "Account")</li>
-                            <li class="dropdown-header">Contact Info</li>
-                            <li>@Html.ActionLink("Addresses", "Index", "Address")</li>
-                            <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumber")</li>
-                            <li class="dropdown-header">Performance</li>
-                            <li>@Html.ActionLink("Service", "Index", "Service")</li>
-                            <li>@Html.ActionLink("Incidents", "Index", "Incidents")</li>
-                            <li class="dropdown-header">Study Hours</li>
-                            <li>@Html.ActionLink("Index", "Index", "StudyHours")</li>
-                            <li>@Html.ActionLink("Tracker", "Tracker", "StudyHours")</li>
-                            <li>@Html.ActionLink("Unapproved", "Unapproved", "StudyHours")</li>
-                        </ul>
-                    </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Classes", "Index", "Classes")</li>
-                                <li>@Html.ActionLink("Create Schedule", "CreateSchedule", "Classes")</li>
+                                <li>@Html.ActionLink("Study Hour Index", "Index", "StudyHours")</li>
+                                <li>@Html.ActionLink("Classes Index", "Index", "Classes")</li>
+                                <li>@Html.ActionLink("Class Scheduler", "CreateSchedule", "Classes")</li>
                             </ul>
                         </li>
                     }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Members <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Roster", "Roster", "Account")</li>
+                            <li>@Html.ActionLink("Addresses", "Index", "Address")</li>
+                            <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumber")</li>
+                            <li class="divider" />
+                            <li>@Html.ActionLink("Service Hour Summary", "Index", "Service")</li>
+                            @if (User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+                            {
+                                <li class="divider" />
+                                <li>@Html.ActionLink("Study Hour Tracker", "Tracker", "StudyHours")</li>
+                                <li>@Html.ActionLink("Unapproved Study Hours", "Unapproved", "StudyHours")</li>
+                            }
+                            <li class="divider" />
+                            <li>@Html.ActionLink("Incident Reports", "Index", "Incidents")</li>
+                        </ul>
+                    </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
                     if (User.IsInRole("Active") || User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte"))
                     { 

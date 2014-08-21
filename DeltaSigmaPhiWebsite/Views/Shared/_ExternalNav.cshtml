@@ -13,6 +13,12 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav" id="menu">
+                @if (Request.IsAuthenticated && !User.IsInRole("Released"))
+                {
+                    <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                        @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
+                    </li>
+                }
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">
                     @Html.ActionLink("Recruitment", "Recruitment", "Home")
@@ -34,10 +40,10 @@
                     </a>
                 </li>
                 @*<li class="hidden-xs hidden-sm">
-                    <a href="https://www.youtube.com/user/mstdeltasig" target="_blank">
-                        <i class="fa fa-youtube fa-lg"></i>
-                    </a>
-                </li>*@
+                        <a href="https://www.youtube.com/user/mstdeltasig" target="_blank">
+                            <i class="fa fa-youtube fa-lg"></i>
+                        </a>
+                    </li>*@
             </ul>
             @Html.Partial("_LoginPartial")
         </div>
