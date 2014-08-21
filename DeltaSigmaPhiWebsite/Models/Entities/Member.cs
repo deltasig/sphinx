@@ -40,6 +40,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         
         [Required]
         [StringLength(50)]
+        [Display(Name = "Email")]
         public string Email { get; set; }
 
         [Range(0, 9999999999, ErrorMessage = "Pin number is too long.")]
@@ -57,18 +58,24 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         public double? RemainingBalance { get; set; }
 
+        [Display(Name = "Required Unproctored Study Hours")]
         [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
         public int RequiredStudyHours { get; set; }
 
+        [Display(Name = "Required Proctored Study Hours")]
         [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
         public int? ProctoredStudyHours { get; set; }
 
+        [Display(Name = "Member Status")]
         public int StatusId { get; set; }
 
+        [Display(Name = "Pledge Class")]
         public int PledgeClassId { get; set; }
 
+        [Display(Name = "Expected Graduation")]
         public int ExpectedGraduationId { get; set; }
 
+        [Display(Name = "Big Brother")]
         public int? BigBroId { get; set; }
         
         public virtual Member BigBrother { get; set; }

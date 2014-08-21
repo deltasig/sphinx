@@ -18,8 +18,8 @@
                     @item.ToString()
                 </td>
                 <td>
-                    @item.ProctoredStudyHours |
-                    @item.RequiredStudyHours
+                    @item.RequiredStudyHours |
+                    @item.ProctoredStudyHours 
                 </td>
                 <td>
                     @item.SubmittedStudyHours.Where(m => !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
@@ -31,7 +31,7 @@
                 <td>
                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                     {
-                        @Html.ActionLink("Edit", "Edit", "Account", new { id = item.UserName }, new { })
+                        @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, new { })
                     }
                 </td>
             </tr>

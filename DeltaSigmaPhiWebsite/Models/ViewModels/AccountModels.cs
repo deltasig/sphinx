@@ -46,10 +46,15 @@
 
     public class RegisterModel
     {
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "User Name")]
+        public string UserName { get; set; }
+
         [Required]
         [DataType(DataType.EmailAddress)]
-        [Display(Name = "S&T Email Address")]
-        [RegularExpression(@"^[a-zA-Z0-9]([a-zA-Z0-9-_.])*@((m|M)(a|A)(i|I)(l|L).)?(m|M)(s|S)(t|T).(e|E)(d|D)(u|U)", ErrorMessage = "You must have an @mail.mst.edu or @mst.edu Email to register.")]
+        [Display(Name = "Email Address")]
         public string Email { get; set; }
         
         [Required]
