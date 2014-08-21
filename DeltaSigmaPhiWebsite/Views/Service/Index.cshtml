@@ -16,7 +16,7 @@
                     Showing Service Hours for @Model.First().Semester
                 </div>
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed">
+                    <table class="table table-responsive table-condensed table-hover" id="service-table">
                         <thead>
                             <tr>
                                 <th>Name</th>
@@ -34,7 +34,25 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="panel-footer">
+                    <strong>Note: </strong> The hours being reported here consist of hours served at events that occured after the end of the previous semester
+                    and before the end of the current semester.
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+        $('#service-table').DataTable({
+            pageLength: 100,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
