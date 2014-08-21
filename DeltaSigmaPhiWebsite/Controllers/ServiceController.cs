@@ -18,10 +18,15 @@
 		public ActionResult Index()
 		{
 			var activeMembers = uow.MemberRepository.SelectAll()
-				.Where(m => m.MemberStatus.StatusName == "Active").ToList();
+				.Where(m => 
+                    m.MemberStatus.StatusName == "Active" || 
+                    m.MemberStatus.StatusName == "Pledge" ||
+                    m.MemberStatus.StatusName == "Neophyte")
+                .ToList();
 			
 			var model = new List<ServiceIndexModel>();
-			var thisOrLastSemester = GetThisOrLastSemester();
+            var lastSemester = GetLastSemester();
+			var thisSemester = GetThisSemester();
 
 			foreach (var member in activeMembers)
 			{
@@ -29,10 +34,11 @@
 				{
 					Member = member,
 					Hours = member.ServiceHours
-						.Where(e => e.DateTimeSubmitted >= thisOrLastSemester.DateStart && 
-							e.DateTimeSubmitted <= thisOrLastSemester.DateEnd)
+						.Where(e => 
+                            e.Event.DateTimeOccurred > lastSemester.DateEnd && 
+							e.DateTimeSubmitted <= thisSemester.DateEnd)
 						.Sum(h => h.DurationHours),
-					Semester = thisOrLastSemester
+					Semester = thisSemester
 				});
 			}
 

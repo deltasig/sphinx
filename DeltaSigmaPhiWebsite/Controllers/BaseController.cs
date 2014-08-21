@@ -120,6 +120,15 @@
                     .ToList()
                     .First();
         }
+        protected virtual Semester GetLastSemester()
+        {
+            var now = ConvertUtcToCst(DateTime.UtcNow);
+            return uow.SemesterRepository.SelectAll()
+                    .Where(s => s.DateEnd < now)
+                    .OrderBy(s => s.DateStart)
+                    .ToList()
+                    .Last();
+        }
         protected virtual IEnumerable<SelectListItem> GetSemesterList()
         {
             var semesters = uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateEnd).ToList();
