@@ -21,6 +21,19 @@
         [HttpGet]
         public ActionResult Index(string userName, ManageMessageId? message)
         {
+            switch (message)
+            {
+                case ManageMessageId.AddLoginSuccess:
+                case ManageMessageId.ChangePasswordSuccess:
+                case ManageMessageId.RemoveLoginSuccess:
+                case ManageMessageId.SetPasswordSuccess:
+                    ViewBag.SuccessMessage = GetManageMessage(message);
+                    break;
+                case ManageMessageId.ChangePasswordFailure:
+                case ManageMessageId.SetPasswordFailure:
+                    ViewBag.FailMessage = GetManageMessage(message);
+                    break;
+            }
             if (!string.IsNullOrEmpty(userName))
             {
                 if (!OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName)))
@@ -130,8 +143,18 @@
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Secretary, Academics")]
-        public ActionResult Edit(string userName)
+        public ActionResult Edit(string userName, AccountChangeMessageId? message)
         {
+            switch (message)
+            {
+                case AccountChangeMessageId.UpdateSuccess:
+                    ViewBag.SuccessMessage = GetAccountChangeMessage(message);
+                    break;
+                case AccountChangeMessageId.UpdateFailed:
+                    ViewBag.FailMessage = GetAccountChangeMessage(message);
+                    break;
+            }
+
             var member = string.IsNullOrEmpty(userName)
                 ? uow.MemberRepository.Single(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
                 : uow.MemberRepository.Single(m => m.UserName == userName);
@@ -185,19 +208,19 @@
         [AllowAnonymous]
         public ActionResult Login()
         {
-            return View();
+            return View(new LoginModel());
         }
 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginModel model, string returnUrl)
+        public ActionResult Login(LoginModel model)
         {
             if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
             {
-                if (string.IsNullOrEmpty(returnUrl))
+                if (string.IsNullOrEmpty(model.ReturnUrl))
                     return RedirectToAction("Index", "Sphinx");
-                return RedirectToAction(returnUrl);
+                return Redirect(model.ReturnUrl);
             }
 
             // If we got this far, something failed, redisplay form
@@ -362,12 +385,11 @@
                     return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
                 }
 
-                ModelState.AddModelError("", "The current password is incorrect or the new password is invalid.");
+                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
             }
             else
             {
-                // User does not have a local password so remove any validation errors caused by a missing
-                // OldPassword field
+                // User does not have a local password so remove any validation errors caused by a missing OldPassword field
                 var state = ModelState["OldPassword"];
                 if (state != null)
                 {
@@ -382,12 +404,9 @@
                 }
                 catch (Exception)
                 {
-                    ModelState.AddModelError("", String.Format("Unable to create local account. An account with the name \"{0}\" may already exist.", User.Identity.Name));
+                    return RedirectToAction("Index", new { Message = ManageMessageId.SetPasswordFailure });
                 }
             }
-
-            // If we got this far, something failed, redisplay form
-            return RedirectToAction("Index");
         }
 
         #endregion
@@ -507,8 +526,17 @@
             : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
             : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
             : message == ManageMessageId.AddLoginSuccess ? "External login was added."
+            : message == ManageMessageId.SetPasswordFailure ? "The current password is incorrect or the new password is invalid."
+            : message == ManageMessageId.ChangePasswordFailure ? "Unable to create local account. An account with that name may already exist."
             : "";
         }
+        private static dynamic GetAccountChangeMessage(AccountChangeMessageId? message)
+        {
+            return message == AccountChangeMessageId.UpdateSuccess ? "This account has been updated."
+            : message == AccountChangeMessageId.UpdateFailed ? "Update failed, please verify that the data you entered is valid."
+            : "";
+        }
+
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for
@@ -550,7 +578,9 @@
         public enum ManageMessageId
         {
             ChangePasswordSuccess,
+            ChangePasswordFailure,
             SetPasswordSuccess,
+            SetPasswordFailure,
             RemoveLoginSuccess,
             AddLoginSuccess,
         }
@@ -565,6 +595,12 @@
             UnregisterSuccess,
             RegistrationFailed,
             UnregisterFailed
+        }
+
+        public enum AccountChangeMessageId
+        {
+            UpdateSuccess,
+            UpdateFailed
         }
 
         #endregion

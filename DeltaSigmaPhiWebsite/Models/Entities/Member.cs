@@ -72,7 +72,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [Display(Name = "Pledge Class")]
         public int PledgeClassId { get; set; }
 
-        [Display(Name = "Expected Graduation")]
+        [Display(Name = "Graduation")]
         public int ExpectedGraduationId { get; set; }
 
         [Display(Name = "Big Brother")]
