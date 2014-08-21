@@ -9,11 +9,14 @@
     using System.Web.Mvc;
     using Models.ViewModels;
 
-    [Authorize(Roles = "Administrator, Academics")]
+    
+    [Authorize]
     public class ClassesController : BaseController
     {
         public ClassesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
+
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Index(string message)
         {
             ViewBag.Message = string.Empty;
@@ -25,7 +28,8 @@
             var classes = uow.ClassesRepository.SelectAll();
             return View(classes.ToList());
         }
-        
+
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Create()
         {
             ViewBag.Message = string.Empty;
@@ -35,6 +39,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Create([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
         {
             ViewBag.Message = string.Empty;
@@ -49,6 +54,7 @@
             return View(@class);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -66,6 +72,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
         {
             if (ModelState.IsValid)
@@ -78,6 +85,7 @@
             return View(@class);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -94,6 +102,7 @@
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult DeleteConfirmed(int id)
         {
             uow.ClassesRepository.DeleteById(id);
@@ -116,6 +125,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult CreateSchedule(ClassScheduleModel model)
         {
             if(ModelState.IsValid)
@@ -158,6 +168,7 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult DeleteFromSchedule(int id, int sid, int cid, string username)
         {
             var entry = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
@@ -172,6 +183,7 @@
             return RedirectToAction("Schedule", new { userName = username, message = "Course deleted from schedule. " });
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit(int id, int sid, int cid)
         {
             var model = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
@@ -185,6 +197,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 

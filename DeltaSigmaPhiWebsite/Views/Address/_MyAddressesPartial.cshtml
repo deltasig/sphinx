@@ -8,7 +8,10 @@
                 <tr>
                     <th>Address</th>
                     <th>@Html.DisplayNameFor(model => model.Type)</th>
-                    <th></th>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.First().Member.UserName)
+                    {
+                        <th></th>
+                    }
                 </tr>
             </thead>
 
@@ -32,9 +35,12 @@
                         }
                     </td>
                     <td>@item.Type</td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null)
-                    </td>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.First().Member.UserName)
+                    {
+                        <td>
+                            @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null)
+                        </td>
+                    }
                 </tr>
             }
         </table>

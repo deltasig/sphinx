@@ -31,7 +31,11 @@
                     <tr>
                         <th>Semester</th>
                         <th>Course</th>
-                        <th></th>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                        {
+
+                            <th></th>
+                        }
                     </tr>
                 </thead>
                 <tbody>
@@ -40,10 +44,13 @@
                         <tr>
                             <td>@item.Semester.ToString()</td>
                             <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
-                            <td>
-                                @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
-                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName}, null)
-                            </td>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                            {
+                                <td>
+                                    @Html.ActionLink("Delete from Schedule", "DeleteFromSchedule", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                </td>
+                            }
                         </tr>
                     }
                 </tbody>

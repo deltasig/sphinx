@@ -8,10 +8,14 @@
                 <table class="table table-responsive table-condensed">
                     <thead>
                         <tr>
-                            <td><h2 class="media-heading">@Model.ToString()</h2></td>
                             @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.UserName)
                             {
+                                <td><h2 class="media-heading">@Model.ToString()</h2></td>
                                 <td class="text-right">@Html.ActionLink("Edit", "Edit", "Account", new { userName = Model.UserName }, null)</td>
+                            }
+                            else
+                            {
+                                <td colspan="2"><h2 class="media-heading">@Model.ToString()</h2></td>
                             }
                         </tr>
                     </thead>
