@@ -144,6 +144,7 @@
         }
 
         [HttpGet]
+        [Authorize(Roles = "Administrator, Secretary, Academics, House Manager")]
         public ActionResult Edit(string userName, AccountChangeMessageId? message)
         {
             var member = string.IsNullOrEmpty(userName)
@@ -163,6 +164,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Secretary, Academics, House Manager")]
         public ActionResult Edit(EditMemberInfoModel model)
         {
             model.Semesters = GetSemesterList();
