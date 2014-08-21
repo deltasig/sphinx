@@ -237,7 +237,10 @@
                     PledgeClassList = GetPledgeClassList(),
                     SemesterList = GetSemesterList()
                 },
-                UnregisterModel = new UnregisterModel { Users = GetUserIdListAsFullName() }
+                UnregisterModel = new UnregisterModel
+                {
+                    Users = GetUserIdListAsFullName()
+                }
             };
 
             return View(model);
@@ -292,6 +295,27 @@
                 try
                 {
                     var member = uow.MemberRepository.Single(m => m.UserId == model.SelectedUserId);
+
+                    if(member.ClassesTaken.Count > 0 || member.SubmittedStudyHours.Count > 0 ||
+                       member.Committees.Count > 0 || member.IncidentReports.Count > 0 ||
+                       member.OrganizationsJoined.Count > 0 || member.LaundrySignups.Count > 0 ||
+                       member.LittleBrothers.Count > 0 || member.Majors.Count > 0 ||
+                       member.Leaders.Count > 0)
+                    {
+                        message = RegistrationMessageId.UnregisterFailed;
+                        return RedirectToAction("Registration", new { Message = message });
+                    }
+
+                    foreach (var address in member.Addresses.ToList())
+                    {
+                        uow.AddressRepository.Delete(address);
+                    }
+                    foreach (var number in member.PhoneNumbers.ToList())
+                    {
+                        uow.PhoneNumberRepository.Delete(number);
+                    }
+                    uow.Save();
+
                     ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(member.UserName);
                     // deletes record from webpages_Membership table
                     (Membership.Provider).DeleteUser(member.UserName, true);
@@ -467,7 +491,7 @@
             return message == RegistrationMessageId.RegistrationSuccess ? "The new account has been successfully registered."
                 : message == RegistrationMessageId.RegistrationFailed ? "Account registration failed.  Please contact the system administrator."
                 : message == RegistrationMessageId.UnregisterSuccess ? "The account has been successfully removed."
-                : message == RegistrationMessageId.UnregisterFailed ? "Account removal failed.  Please contact the system administrator."
+                : message == RegistrationMessageId.UnregisterFailed ? "Account removal failed.  This could be because the user has records in the system tied to them and can't be deleted."
                 : "";
         }
         private static dynamic GetAppointmentMessage(AppointmentMessageId? message)

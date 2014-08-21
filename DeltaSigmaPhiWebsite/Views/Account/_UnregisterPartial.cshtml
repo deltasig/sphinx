@@ -4,7 +4,7 @@
     <div class="panel-heading">Unregister</div>
     <div class="panel-body">
         <div class="alert alert-warning">
-            <strong>Warning!</strong>  This will remove all records of a member's existence in this system.
+            <strong>Warning!</strong>  This will only remove user accounts that have not interacted with the system.
         </div>
         @using (Html.BeginForm("Unregister", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
         {
