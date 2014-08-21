@@ -46,13 +46,20 @@
                                     {
                                         @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
                                     }
-                                    else if(item.Member.UserName == User.Identity.Name)
+                                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                     {
-                                        @Html.ActionLink("Cancel", "SoberSignupCancel", new { id = item.SignupId })
+                                        using (Html.BeginForm("SoberSignupCancel", "Sphinx", new { id = item.SignupId }, 
+                                            FormMethod.Get, new { style = "display: inline" }))
+                                        {
+                                            @item.Member.ToString()
+                                            <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
+                                                <i class="fa fa-minus-square"></i>
+                                            </button>
+                                        }
                                     }
                                     else
                                     {
-                                        @item.Member.UserName
+                                        @item.Member.ToString()
                                     }
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                     {
