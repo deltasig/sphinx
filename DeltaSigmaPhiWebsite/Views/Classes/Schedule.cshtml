@@ -10,49 +10,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            @if(ViewBag.Message.Length > 0)
+            @if (ViewBag != null && ViewBag.Message.Length > 0)
             {
                 <div class="alert alert-warning">
                     @ViewBag.Message
                 </div>
             }
-            @if (Model.Any())
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Showing Classes for @Model.First().Member.ToString()
-                    </div>
-                    <div class="panel-body">
-                        <table class="table table-responsive table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Semester</th>
-                                    <th>Course</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>@item.Semester.ToString()</td>
-                                        <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
-                                        <td>
-                                            @Html.ActionLink("Delete", "DeleteFromSchedule", new
-                                            {
-                                                id = item.UserId, 
-                                                sid = item.SemesterId,
-                                                cid = item.ClassId,
-                                                username = item.Member.UserName
-                                            })
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            }
+            @{ Html.RenderPartial("~/Views/Classes/_ClassSchedulePartial.cshtml", Model); }
         </div>
     </div>
 </div>
