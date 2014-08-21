@@ -1,4 +1,4 @@
-﻿@if (ViewContext.RouteData.Values.ContainsValue("Home"))
+﻿@if (ViewContext.RouteData.Values.ContainsValue("Home") || !Request.IsAuthenticated)
 {
     @Html.Partial("_ExternalNav")
 }
