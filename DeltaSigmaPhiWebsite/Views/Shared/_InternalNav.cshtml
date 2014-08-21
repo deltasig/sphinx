@@ -18,11 +18,8 @@
                     <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
                     </li>
-                    if (User.IsInRole("Administrator") ||
-                        User.IsInRole("President") ||
-                        User.IsInRole("Secretary") ||
-                        User.IsInRole("Director of Recruitment") ||
-                        User.IsInRole("Academics"))
+                    if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") ||
+                        User.IsInRole("Director of Recruitment") || User.IsInRole("Academics"))
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
@@ -35,17 +32,11 @@
                                 {
                                     <li>@Html.ActionLink("Service Events", "Index", "Event")</li>
                                 }
-                                @if (User.IsInRole("Administrator") ||
-                                     User.IsInRole("President") ||
-                                     User.IsInRole("Secretary") ||
-                                     User.IsInRole("Director of Recruitment"))
+                                @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
                                 {
                                     <li>@Html.ActionLink("Registration", "Registration", "Account")</li>
                                 }
-                                @if (User.IsInRole("Administrator") || 
-                                    User.IsInRole("President") || 
-                                    User.IsInRole("Secretary") || 
-                                    User.IsInRole("Academics"))
+                                @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") || User.IsInRole("Academics"))
                                 {
                                     <li>@Html.ActionLink("Semesters", "Index", "Semester")</li>
                                 }
@@ -71,7 +62,7 @@
                             <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumber")</li>
                             <li class="divider" />
                             <li>@Html.ActionLink("Service Hour Summary", "Index", "Service")</li>
-                            @if (User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                             {
                                 <li class="divider" />
                                 <li>@Html.ActionLink("Study Hour Tracker", "Tracker", "StudyHours")</li>
@@ -82,16 +73,14 @@
                         </ul>
                     </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
-                    if (User.IsInRole("Active") || User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte"))
+                    if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                     { 
                         <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">@Html.ActionLink("Laundry Signup", "LaundrySchedule", "Sphinx")</li>
                     }
                 }
                 else
                 {
-                    <li>
-                        <p class="navbar-text"></p>
-                    </li>
+                    <li><p class="navbar-text"></p></li>
                 }
             </ul>
             <div id="login">
