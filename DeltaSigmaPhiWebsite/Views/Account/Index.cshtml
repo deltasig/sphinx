@@ -14,12 +14,8 @@
             @{ Html.RenderPartial("~/Views/PhoneNumber/_MyPhoneNumbersPartial.cshtml", Model.MemberInfo.PhoneNumbers); }
         </div>
         <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Stats</div>
-                <div class="panel-body">
-                    Coming soon.
-                </div>
-            </div>
+            @{ Html.RenderPartial("~/Views/Classes/_ClassSchedulePartial.cshtml", Model.ThisSemesterCourses); }
+
             @if (User.Identity.Name == Model.MemberInfo.UserName)
             {
                 @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
