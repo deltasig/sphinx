@@ -16,12 +16,16 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(m => m.Member.UserId)
                 @Html.HiddenFor(m => m.Member.UserName)
-                @Html.HiddenFor(m => m.Member.Email)
                 @Html.HiddenFor(m => m.Member.FirstName)
                 @Html.HiddenFor(m => m.Member.LastName)
 
                 if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
                 {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
+                    </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
                         @Html.EditorFor(m => m.Member.Pin, new { htmlAttributes = new { @class = "form-control" } })
@@ -70,10 +74,10 @@
                 }
 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-default" /> |
+                    @Html.ActionLink("Back to Roster", "Roster", "Account")
                 </div>
             }
-            @Html.ActionLink("To Roster", "Roster", "Account")
         </div>
     </div>
 </div>

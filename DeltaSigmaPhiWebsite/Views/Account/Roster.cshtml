@@ -13,14 +13,11 @@
     @using (Html.BeginForm("Roster", "Account", FormMethod.Get, new { @class = "", role = "form" }))
     {
         <div class="panel panel-default">
+            <div class="panel-heading">
+                Filter Options
+            </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-sm-12">
-                        @Html.EditorFor(m => m.SearchModel.SearchTerm, new { htmlAttributes = new { @class = "form-control", placeholder = "Name Search" } })
-                        <a data-toggle="collapse" data-parent="#accordian" href="#advanced-search">Advanced Options</a>
-                    </div>
-                </div>
-                <div class="row collapse" id="advanced-search">
                     <br />
                     <div class="col-sm-3">
                         @Html.DropDownListFor(m => m.SearchModel.SelectedStatusId, Model.SearchModel.Statuses, new { @class = "form-control" })
@@ -51,82 +48,81 @@
                             </label>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="panel-footer">
-                <div class="row">
-                    <div class="col-sm-2">
-                        <input type="submit" value="Search" class="btn btn-default btn-block text-center" />
+                    <div class="col-sm-3">
+                        <input type="submit" value="Filter" class="btn btn-default text-center" />
                     </div>
                 </div>
             </div>
         </div>
     }
-    <hr />
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed">
+                    <table class="table table-responsive table-condensed" id="roster-table">
                         <thead>
                             <tr>
                                 <th>Member</th>
-                                <th>User Name</th>
                                 <th>Email</th>
                                 <th>Status</th>
                                 <th>Pledge Class</th>
                                 <th>Graduating</th>
                                 <th>Big Bro</th>
-                                <th>Pin</th>
                                 <th>Room</th>
+                                <th></th>
                             </tr>
                         </thead>
-                        @if (Model.Members.Any())
-                        {
-                            foreach (var item in Model.Members)
+                        <tbody>
+                            @if (Model.Members.Any())
                             {
-                                <tr>
-                                    <td>@item.ToString()</td>
-                                    <td>@item.UserName</td>
-                                    <td><a href="mailto:@item.Email">@item.Email</a></td>
-                                    <td>@item.MemberStatus.StatusName</td>
-                                    <td>@item.PledgeClass.PledgeClassName</td>
-                                    <td>@item.Semester.ToString()</td>
-                                    <td>
-                                        @if (item.BigBroId != null)
-                                        {
-                                            @item.BigBrother.ToString()
+                                foreach (var item in Model.Members)
+                                {
+                                    <tr>
+                                        <td>@item.ToString()</td>
+                                        <td><a href="mailto:@item.Email">@item.Email</a></td>
+                                        <td>@item.MemberStatus.StatusName</td>
+                                        <td>@item.PledgeClass.PledgeClassName</td>
+                                        <td>@item.Semester.ToString()</td>
+                                        <td>
+                                            @if (item.BigBroId != null)
+                                            {
+                                                @item.BigBrother.ToString()
+                                            }
+                                            else
+                                            {
+                                                @:None
                                         }
-                                        else
-                                        {
-                                            @:None
+                                        </td>
+                                        <td>@item.RoomString()</td>
+                                        <td>
+                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
+                                            {
+                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, null) @:|
                                         }
-                                    </td>
-                                    <td>@item.Pin</td>
-                                    <td>@item.RoomString()</td>
-                                    <td>
-                                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
-                                        {
-                                            @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, null) @:|
-                                        }
-                                        @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName }, null)
-                                    </td>
-                                </tr>
+                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName }, null)
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        }
-                        else
-                        {
-                            <tr><td>No members were found.</td></tr>
-                        }
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 @section scripts
 {
-    
+    <script type="text/javascript">
+
+        $('#roster-table').DataTable({
+            pageLength: 100,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
 }
