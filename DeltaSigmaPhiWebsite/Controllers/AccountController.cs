@@ -50,15 +50,16 @@
         {
             if (model.SearchModel != null)
             {
-                if (!string.IsNullOrEmpty(model.SearchModel.SearchTerm))
-                {
-                    model.Members = uow.MemberRepository
-                        .SelectAll()
-                        .Where(m => m.FirstName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()) ||
-                            m.LastName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()))
-                        .ToList();
-                }
-                else if (model.SearchModel.CustomSearchRequested())
+                //if (!string.IsNullOrEmpty(model.SearchModel.SearchTerm))
+                //{
+                //    model.Members = uow.MemberRepository
+                //        .SelectAll()
+                //        .Where(m => m.FirstName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()) ||
+                //            m.LastName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()))
+                //        .ToList();
+                //}
+                //else 
+                if (model.SearchModel.CustomSearchRequested())
                 {
                     IEnumerable<Member> guidedSearchResults = uow.MemberRepository
                         .SelectAll()
@@ -162,6 +163,7 @@
             }
 
             var member = uow.MemberRepository.Single(m => m.UserId == model.Member.UserId);
+            member.Email = model.Member.Email;
             member.Pin = model.Member.Pin;
             member.Room = model.Member.Room;
             member.StatusId = model.Member.StatusId;
@@ -253,16 +255,15 @@
             try
             {
                 model.Email = model.Email.ToLower();
-                var signIndex = model.Email.IndexOf('@');
-                var userName = model.Email.Substring(0, signIndex);
+                model.UserName = model.UserName.ToLower();
 
-                WebSecurity.CreateUserAndAccount(userName.ToLower(), model.Password,
+                WebSecurity.CreateUserAndAccount(model.UserName, model.Password,
                     new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0, ProctoredStudyHours = 0 });
 
-                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Mailing" });
-                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(userName), Type = "Permanent" });
-                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Mobile" });
-                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(userName), Type = "Emergency" });
+                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });
+                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Permanent" });
+                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mobile" });
+                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Emergency" });
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
