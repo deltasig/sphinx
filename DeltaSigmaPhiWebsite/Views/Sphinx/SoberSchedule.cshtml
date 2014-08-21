@@ -46,9 +46,13 @@
                                     {
                                         @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
                                     }
-                                    else
+                                    else if(item.Member.UserName == User.Identity.Name)
                                     {
                                         @Html.ActionLink("Cancel", "SoberSignupCancel", new { id = item.SignupId })
+                                    }
+                                    else
+                                    {
+                                        @item.Member.UserName
                                     }
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                     {
