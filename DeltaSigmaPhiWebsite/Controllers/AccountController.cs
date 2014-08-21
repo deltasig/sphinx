@@ -48,11 +48,13 @@
 
             ViewBag.StatusMessage = GetManageMessage(message);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
+            var thisSemester = GetThisSemester();
 
             var model = new AccountInformationModel
             {
                 MemberInfo = member,
-                ChangePasswordModel = new LocalPasswordModel()
+                ChangePasswordModel = new LocalPasswordModel(),
+                ThisSemesterCourses = member.ClassesTaken.Where(c => c.SemesterId == thisSemester.SemesterId).ToList()
             };
 
             return View(model);
@@ -145,16 +147,6 @@
         [Authorize(Roles = "Administrator, Secretary, Academics")]
         public ActionResult Edit(string userName, AccountChangeMessageId? message)
         {
-            switch (message)
-            {
-                case AccountChangeMessageId.UpdateSuccess:
-                    ViewBag.SuccessMessage = GetAccountChangeMessage(message);
-                    break;
-                case AccountChangeMessageId.UpdateFailed:
-                    ViewBag.FailMessage = GetAccountChangeMessage(message);
-                    break;
-            }
-
             var member = string.IsNullOrEmpty(userName)
                 ? uow.MemberRepository.Single(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
                 : uow.MemberRepository.Single(m => m.UserName == userName);
@@ -182,6 +174,7 @@
 
             if (!ModelState.IsValid)
             {
+                ViewBag.FailMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateFailed);
                 return View(model);
             }
 
@@ -198,6 +191,8 @@
 
             uow.MemberRepository.Update(member);
             uow.Save();
+
+            ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
 
             return View(model);
         }

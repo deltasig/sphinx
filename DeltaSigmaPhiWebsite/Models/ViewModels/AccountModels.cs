@@ -122,6 +122,7 @@
     {
         public Member MemberInfo { get; set; }
         public LocalPasswordModel ChangePasswordModel { get; set; }
+        public IEnumerable<ClassTaken> ThisSemesterCourses { get; set; } 
     }
 
     public class EditMemberInfoModel
