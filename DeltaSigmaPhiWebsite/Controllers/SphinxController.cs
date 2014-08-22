@@ -71,9 +71,12 @@
 
         public ActionResult SoberSchedule()
         {
+
+            var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
+
             var signups =
                 uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= DateTime.UtcNow)
+                    .Where(s => s.DateOfShift >= threeAmYesterday)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
             return View(signups);
@@ -95,6 +98,8 @@
         public ActionResult RequestSoberMember(SoberSignup signup)
         {
             if (!ModelState.IsValid) return RedirectToAction("SoberScheduleManager", "Sphinx");
+
+            signup.DateOfShift = ConvertCstToUtc(signup.DateOfShift);
 
             uow.SoberSignupsRepository.Insert(signup);
             uow.Save();
@@ -129,6 +134,8 @@
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
             signup.UserId = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
+            signup.DateTimeSignedUp = DateTime.UtcNow;
+
             uow.SoberSignupsRepository.Update(signup);
             uow.Save();
 
@@ -148,6 +155,8 @@
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
             signup.UserId = null;
+            signup.DateTimeSignedUp = null;
+
             uow.SoberSignupsRepository.Update(signup);
             uow.Save();
 
