@@ -173,8 +173,7 @@
                     ViewBag.FailMessage = GetLaundrySignupMessage(message);
                     break;
             }
-
-            var startOfTodayUtc = DateTime.UtcNow.Date.AddHours(5);
+            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
             const int hoursInDay = 24;
             const int slotSize = 2;
 
