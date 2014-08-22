@@ -38,7 +38,7 @@
                     @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.First().Member.UserName)
                     {
                         <td>
-                            @Html.ActionLink("Edit", "Edit", "Address", new { id = item.AddressId }, null)
+                            @Html.ActionLink("Edit", "Edit", "Addresses", new { id = item.AddressId }, null)
                         </td>
                     }
                 </tr>
