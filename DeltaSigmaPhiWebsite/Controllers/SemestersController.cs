@@ -9,9 +9,9 @@
     using System.Web.Mvc;
 
     [Authorize(Roles = "Active, Administrator")]
-    public class SemesterController : BaseController
+    public class SemestersController : BaseController
     {
-        public SemesterController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+        public SemestersController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         [HttpGet]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]

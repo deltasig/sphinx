@@ -29,33 +29,33 @@
             );
 
             routes.MapRoute(
-                name: "Service",
-                url: "Service/{action}/{id}",
-                defaults: new { controller = "Service", id = UrlParameter.Optional }
+                name: "ServiceHours",
+                url: "ServiceHours/{action}/{id}",
+                defaults: new { controller = "ServiceHours", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "Event",
-                url: "Event/{action}/{id}",
-                defaults: new { controller = "Event", id = UrlParameter.Optional }
+                name: "Events",
+                url: "Events/{action}/{id}",
+                defaults: new { controller = "Events", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "PhoneNumber",
-                url: "PhoneNumber/{action}/{id}",
-                defaults: new { controller = "PhoneNumber", id = UrlParameter.Optional }
+                name: "PhoneNumbers",
+                url: "PhoneNumbers/{action}/{id}",
+                defaults: new { controller = "PhoneNumbers", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "Address",
-                url: "Address/{action}/{id}",
-                defaults: new { controller = "Address", id = UrlParameter.Optional }
+                name: "Addresses",
+                url: "Addresses/{action}/{id}",
+                defaults: new { controller = "Addresses", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(
-                name: "Semester",
-                url: "Semester/{action}/{id}",
-                defaults: new { controller = "Semester", id = UrlParameter.Optional }
+                name: "Semesters",
+                url: "Semesters/{action}/{id}",
+                defaults: new { controller = "Semesters", id = UrlParameter.Optional }
             );
 
             routes.MapRoute(

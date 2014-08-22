@@ -10,8 +10,8 @@
     <div class="row">
         <div class="col-sm-6">
             @{ Html.RenderPartial("~/Views/Account/_MemberInformationPartial.cshtml", Model.MemberInfo); }
-            @{ Html.RenderPartial("~/Views/Address/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
-            @{ Html.RenderPartial("~/Views/PhoneNumber/_MyPhoneNumbersPartial.cshtml", Model.MemberInfo.PhoneNumbers); }
+            @{ Html.RenderPartial("~/Views/Addresses/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
+            @{ Html.RenderPartial("~/Views/PhoneNumbers/_MyPhoneNumbersPartial.cshtml", Model.MemberInfo.PhoneNumbers); }
         </div>
         <div class="col-sm-6">
             @{ Html.RenderPartial("~/Views/Classes/_ClassSchedulePartial.cshtml", Model.ThisSemesterCourses); }

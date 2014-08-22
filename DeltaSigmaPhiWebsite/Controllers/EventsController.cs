@@ -9,27 +9,22 @@
 	using System.Web.Mvc;
 
 	[Authorize(Roles = "Administrator, Service")]
-	public class EventController : BaseController
+	public class EventsController : BaseController
 	{
 		private DspContext db = new DspContext();
 
-		public EventController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+		public EventsController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
-		// GET: Event
 		public ActionResult Index()
 		{
 			return View(db.Events.ToList());
 		}
 
-		// GET: Event/Create
 		public ActionResult Create()
 		{
 			return View();
 		}
 
-		// POST: Event/Create
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Create([Bind(Include = "EventId,DateTimeOccurred,EventName,DurationHours")] Event @event)
@@ -44,7 +39,6 @@
 			return View(@event);
 		}
 
-		// GET: Event/Edit/5
 		public ActionResult Edit(int? id)
 		{
 			if (id == null)
@@ -59,9 +53,6 @@
 			return View(@event);
 		}
 
-		// POST: Event/Edit/5
-		// To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-		// more details see http://go.microsoft.com/fwlink/?LinkId=317598.
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Edit([Bind(Include = "EventId,DateTimeOccurred,EventName,DurationHours")] Event @event)
@@ -75,7 +66,6 @@
 			return View(@event);
 		}
 
-		// GET: Event/Delete/5
 		public ActionResult Delete(int? id)
 		{
 			if (id == null)
@@ -90,7 +80,6 @@
 			return View(@event);
 		}
 
-		// POST: Event/Delete/5
 		[HttpPost, ActionName("Delete")]
 		[ValidateAntiForgeryToken]
 		public ActionResult DeleteConfirmed(int id)

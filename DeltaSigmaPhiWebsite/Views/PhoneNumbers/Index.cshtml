@@ -44,7 +44,7 @@
                                 <td>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                     {
-                                        @Html.ActionLink("Edit", "Edit", "PhoneNumber", new { id = item.PhoneNumberId }, null)
+                                        @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
                                     }
                                 </td>
                             </tr>

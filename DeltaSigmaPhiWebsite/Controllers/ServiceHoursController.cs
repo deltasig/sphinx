@@ -10,9 +10,9 @@
 	using Models.ViewModels;
 
 	[Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
-	public class ServiceController : BaseController
+	public class ServiceHoursController : BaseController
 	{
-		public ServiceController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+		public ServiceHoursController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
 		[HttpGet]
 		public ActionResult Index()
@@ -46,7 +46,7 @@
 		}
 
 		[HttpGet]
-		public ActionResult SubmitService()
+		public ActionResult Submit()
 		{
 			var model = new ServiceHourSubmissionModel { Events = GetAllEventIdsAsEventName() };
 			return PartialView(model);
@@ -54,7 +54,7 @@
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public ActionResult SubmitService(ServiceHourSubmissionModel model)
+		public ActionResult Submit(ServiceHourSubmissionModel model)
 		{
 			var userId = WebSecurity.GetUserId(User.Identity.Name);
 

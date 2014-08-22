@@ -8,15 +8,15 @@
     using System.Web.Mvc;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
-    public class PhoneNumberController : BaseController
+    public class AddressesController : BaseController
     {
-        public PhoneNumberController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+        public AddressesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
 
         public ActionResult Index(int? userId)
         {
             if (userId == null)
             {
-                var addresses = uow.PhoneNumberRepository.SelectAll().ToList()
+                var addresses = uow.AddressRepository.SelectAll().ToList()
                     .OrderBy(s => s.Member.StatusId)
                     .ThenBy(m => m.Member.LastName)
                     .ThenBy(a => a.Type);
@@ -25,7 +25,7 @@
             }
             else
             {
-                var addresses = uow.PhoneNumberRepository.SelectAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
+                var addresses = uow.AddressRepository.SelectAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
                 ViewBag.Members = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName");
                 return View(addresses);
             }
@@ -37,28 +37,28 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var phoneNumber = uow.PhoneNumberRepository.SingleById(id);
-            if (phoneNumber == null)
+            var address = uow.AddressRepository.SingleById(id);
+            if (address == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", phoneNumber.UserId);
-            return View(phoneNumber);
+            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
+            return View(address);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PhoneNumberId,UserId,Number,Type")] PhoneNumber phoneNumber)
+        public ActionResult Edit([Bind(Include = "AddressId,UserId,Type,Address1,Address2,City,State,PostalCode,Country")] Address address)
         {
             if (ModelState.IsValid)
             {
-                uow.PhoneNumberRepository.Update(phoneNumber);
+                uow.AddressRepository.Update(address);
                 uow.Save();
-                return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == phoneNumber.UserId
+                return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", phoneNumber.UserId);
-            return View(phoneNumber);
+            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
+            return View(address);
         }
     }
 }
