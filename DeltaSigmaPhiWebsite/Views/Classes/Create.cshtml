@@ -30,7 +30,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.CourseShorthand, htmlAttributes: new { @class = "control-label" })
-                    <p class="text-success"><strong>Examples: CS 1570, ME 1010, CE 3300</strong></p>
+                    <p class="text-success"><strong>Examples: CS 1570, Chem 1010, ME 3300</strong></p>
                     @Html.EditorFor(model => model.CourseShorthand, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.CourseShorthand, "", new { @class = "text-danger" })
                 </div>
