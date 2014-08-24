@@ -65,11 +65,6 @@
                         @Html.EditorFor(m => m.Member.ProctoredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.Member.ProctoredStudyHours, "", new { @class = "text-danger" })
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Member.Room, new { @class = "control-label" })
-                        @Html.EditorFor(m => m.Member.Room, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(m => m.Member.Room, "", new { @class = "text-danger" })
-                    </div>
                 }
                 else if (User.IsInRole("Secretary"))
                 {
@@ -119,7 +114,7 @@
                     @Html.HiddenFor(m => m.Member.RequiredStudyHours)
                     @Html.HiddenFor(m => m.Member.ProctoredStudyHours)
                 }
-                else if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                else if (User.IsInRole("Academics"))
                 {
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.RequiredStudyHours, new { @class = "control-label" })

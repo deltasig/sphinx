@@ -13,7 +13,7 @@
                 <td>No lifeguards on duty</td>
             </tr>
         }
-        @foreach (var item in Model.OrderBy(t => t.Type))
+        @foreach (var item in Model)
         {
             <tr>
                 <td>@item.Type</td>
