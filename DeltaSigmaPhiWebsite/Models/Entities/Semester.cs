@@ -2,6 +2,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -21,16 +22,26 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [Required]
         [Display(Name = "Start Date")]
         [DataType(DataType.Date)]
-        [Column(TypeName = "date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateStart { get; set; }
 
         [Required]
         [Display(Name = "End Date")]
         [DataType(DataType.Date)]
-        [Column(TypeName = "date")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateEnd { get; set; }
+
+        [Required]
+        [Display(Name = "Study Hour Start")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime StudyHourStart { get; set; }
+
+        [Required]
+        [Display(Name = "Study Hour End")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime StudyHourEnd { get; set; }
         
         public virtual ICollection<ClassTaken> ClassesTakens { get; set; }
 

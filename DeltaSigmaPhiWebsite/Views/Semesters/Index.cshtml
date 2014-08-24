@@ -26,6 +26,8 @@
                                     <th>Pledge Class(es)</th>
                                     <th>@Html.DisplayNameFor(model => model.DateStart)</th>
                                     <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
+                                    <th>@Html.DisplayNameFor(model => model.StudyHourStart)</th>
+                                    <th>@Html.DisplayNameFor(model => model.StudyHourEnd)</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -39,21 +41,24 @@
                                             if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
                                             {
                                                 @:|
+                                            }
+
+                                            @pledgeClass.PledgeClassName
                                         }
-                                        @pledgeClass.PledgeClassName
+                                    </td>
+                                    <td>@item.DateStart.ToShortDateString()</td>
+                                    <td>@item.DateEnd.ToShortDateString()</td>
+                                    <td>@item.StudyHourStart.ToShortDateString()</td>
+                                    <td>@item.StudyHourEnd.ToShortDateString()</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
+                                        @if (User.IsInRole("Administrator"))
+                                        {
+                                            @:|
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
                                         }
-                                </td>
-                                <td>@item.DateStart.ToShortDateString()</td>
-                                <td>@item.DateEnd.ToShortDateString()</td>
-                                <td>
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
-                                    @if (User.IsInRole("Administrator"))
-                                    {
-                                        @:|
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
-                                    }
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             }
                         </table>
                     </div>
