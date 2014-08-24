@@ -28,6 +28,18 @@
                     @Html.EditorFor(model => model.DateEnd, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.DateEnd, "", new { @class = "text-danger" })
                 </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudyHourStart, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.StudyHourStart, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.StudyHourStart, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StudyHourEnd, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.StudyHourEnd, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.StudyHourEnd, "", new { @class = "text-danger" })
+                </div>
 
                 <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-default" />
