@@ -144,9 +144,9 @@
             var model = new ClassScheduleModel
             {
                 Members = GetUserIdListAsFullName(),
-                AllClasses = uow.ClassesRepository.SelectAll(),
+                AllClasses = uow.ClassesRepository.SelectAll().OrderBy(c => c.CourseShorthand).ToList(),
                 Semesters = GetSemesterList(),
-                SelectedSemester = GetThisOrLastSemester().SemesterId,
+                SelectedSemester = GetThisSemester().SemesterId,
                 ClassesTaken = new List<ClassTaken> { new ClassTaken() }
             };
             return View(model);

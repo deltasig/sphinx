@@ -163,7 +163,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
         {
-            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.FirstName);
+            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
