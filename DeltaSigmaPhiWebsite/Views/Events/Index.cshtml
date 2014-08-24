@@ -16,30 +16,32 @@
                     @Html.ActionLink("Create New", "Create")
                 </div>
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed">
-                        <thead>
-                            <tr>
-                                <th>@Html.DisplayNameFor(model => model.DateTimeOccurred)</th>
-                                <th>@Html.DisplayNameFor(model => model.EventName)</th>
-                                <th>@Html.DisplayNameFor(model => model.DurationHours)</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.DateTimeOccurred)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.EventName)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
-                                    </td>
+                                    <th>@Html.DisplayNameFor(model => model.DateTimeOccurred)</th>
+                                    <th>@Html.DisplayNameFor(model => model.EventName)</th>
+                                    <th>@Html.DisplayNameFor(model => model.DurationHours)</th>
+                                    <th></th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.DateTimeOccurred)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.EventName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

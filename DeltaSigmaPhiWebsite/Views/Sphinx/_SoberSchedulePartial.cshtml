@@ -1,35 +1,37 @@
 ﻿@model IEnumerable<SoberSignup>
 
-<table class="table table-condensed table-responsive">
-    <thead>
-        <tr>
-            <th colspan="5">Sober Schedule <small>(Next 7 Days)</small></th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (!Model.Any())
-        {
+<div class="table-responsive">
+    <table class="table table-condensed">
+        <thead>
             <tr>
-                <td>No lifeguards on duty</td>
+                <th colspan="5">Sober Schedule <small>(Next 7 Days)</small></th>
             </tr>
-        }
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Type</td>
-                <td>@item.DateOfShift.DayOfWeek</td>
-                <td>@item.DateOfShift.ToShortDateString()</td>
-                @if (item.UserId == null)
-                {
-                    <td>None</td>
-                    <td></td>
-                }
-                else
-                {
-                    <td>@item.Member.ToString()</td>
-                    <td>@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number</td>
-                }
-            </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td>No lifeguards on duty</td>
+                </tr>
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Type</td>
+                    <td>@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3)</td>
+                    <td>@item.DateOfShift.ToShortDateString()</td>
+                    @if (item.UserId == null)
+                    {
+                        <td>None</td>
+                        <td></td>
+                    }
+                    else
+                    {
+                        <td>@item.Member.ToString()</td>
+                        <td>@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

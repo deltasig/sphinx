@@ -8,7 +8,7 @@
     @Html.Partial("_Title")
 }
 
-@{ Html.RenderPartial("~/Views/Semester/Create.cshtml", new CreateSemesterModel()); }
+@{ Html.RenderPartial("~/Views/Semesters/Create.cshtml", new CreateSemesterModel()); }
 
 <div class="container">
     <div class="row">
@@ -18,28 +18,30 @@
                     <button class="btn-link" data-toggle="modal" data-target="#semesterCreateModal">Create New</button>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Semester</th>
-                                <th>Pledge Class(es)</th>
-                                <th>@Html.DisplayNameFor(model => model.DateStart)</th>
-                                <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.ToString()</td>
-                                <td>@foreach (var pledgeClass in item.PledgeClasses)
-                                    {
-                                        if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Semester</th>
+                                    <th>Pledge Class(es)</th>
+                                    <th>@Html.DisplayNameFor(model => model.DateStart)</th>
+                                    <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.ToString()</td>
+                                    <td>
+                                        @foreach (var pledgeClass in item.PledgeClasses)
                                         {
-                                            @:|
+                                            if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
+                                            {
+                                                @:|
                                         }
                                         @pledgeClass.PledgeClassName
-                                    }
+                                        }
                                 </td>
                                 <td>@item.DateStart.ToShortDateString()</td>
                                 <td>@item.DateEnd.ToShortDateString()</td>
@@ -48,12 +50,13 @@
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         @:|
-                                        @Html.ActionLink("Delete", "Delete", new {id = item.SemesterId})
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
                                     }
                                 </td>
                             </tr>
-                        }
-                    </table>
+                            }
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

@@ -14,42 +14,44 @@
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Member</th>
-                                <th>Status</th>
-                                <th>Phone Number</th>
-                                <th>@Html.DisplayNameFor(model => model.Type)</th>
-                                <th></th>
-                            </tr>
-                        </thead>
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Status</th>
+                                    <th>Phone Number</th>
+                                    <th>@Html.DisplayNameFor(model => model.Type)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
 
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "success")">
-                                    @if (string.IsNullOrEmpty(item.Number))
-                                    {
-                                        @:None entered.
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
+                                    <td>@item.Member.MemberStatus.StatusName</td>
+                                    <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "success")">
+                                        @if (string.IsNullOrEmpty(item.Number))
+                                        {
+                                            @:None entered.
                                     }
-                                    else
-                                    {
-                                        @item.Number
-                                    }
-                                </td>
-                                <td>@item.Type</td>
-                                <td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
-                                    {
-                                        @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </table>
+                                        else
+                                        {
+                                            @item.Number
+                                        }
+                                    </td>
+                                    <td>@item.Type</td>
+                                    <td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
