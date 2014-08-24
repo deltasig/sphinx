@@ -54,9 +54,10 @@
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 
-        [Required]
-        [DataType(DataType.EmailAddress)]
-        [Display(Name = "Email Address")]
+        [Required(ErrorMessage = "The email address is required")]
+        [StringLength(50)]
+        [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
         
         [Required]

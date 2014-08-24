@@ -37,13 +37,14 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [Required]
         [StringLength(50)]
         public string LastName { get; set; }
-        
-        [Required]
+
+        [Required(ErrorMessage = "The email address is required")]
         [StringLength(50)]
         [Display(Name = "Email")]
+        [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
-        [Range(0, 9999999999, ErrorMessage = "Pin number is too long.")]
+        [Range(0, 999999999, ErrorMessage = "Pin number is too long.")]
         [DataType(DataType.Text)]
         public int? Pin { get; set; }
 

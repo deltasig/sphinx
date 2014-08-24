@@ -92,11 +92,22 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            Class @class = uow.ClassesRepository.SingleById(id);
+
+            var @class = uow.ClassesRepository.SingleById(id);
             if (@class == null)
             {
                 return HttpNotFound();
             }
+
+            if (@class.ClassesTaken.Any())
+            {
+                return RedirectToAction("Index", new
+                {
+                    message = "This class is currently being taken, or has been taken, " +
+                              "by one or more people, therefore it can't be deleted."
+                });
+            }
+
             return View(@class);
         }
 
@@ -105,6 +116,15 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult DeleteConfirmed(int id)
         {
+            var @class = uow.ClassesRepository.SingleById(id);
+            if (@class.ClassesTaken.Any())
+            {
+                return RedirectToAction("Index", new
+                {
+                    message = "This class is currently being taken, or has been taken, " +
+                              "by one or more people, therefore it can't be deleted."
+                });
+            }
             uow.ClassesRepository.DeleteById(id);
             uow.Save();
             return RedirectToAction("Index", new { message = "Course deleted." });
@@ -184,7 +204,7 @@
         }
 
         [Authorize(Roles = "Administrator, Academics")]
-        public ActionResult Edit(int id, int sid, int cid)
+        public ActionResult EditClassTaken(int id, int sid, int cid)
         {
             var model = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
             if (model == null)
@@ -198,7 +218,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
-        public ActionResult Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] ClassTaken classTaken)
+        public ActionResult EditClassTaken([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 
                 return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
