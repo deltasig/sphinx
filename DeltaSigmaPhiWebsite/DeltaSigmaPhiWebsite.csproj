@@ -545,7 +545,6 @@
     <Content Include="Views\Shared\_ExternalNav.cshtml" />
     <Content Include="Views\Shared\_InternalNav.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
-    <Content Include="Views\Service\SubmitService.cshtml" />
     <Content Include="Views\Sphinx\LaundrySchedule.cshtml" />
     <Content Include="Views\Sphinx\SoberScheduleManager.cshtml" />
     <Content Include="Views\Sphinx\IncidentReporting.cshtml" />
@@ -573,7 +572,6 @@
     <Content Include="Views\Events\Delete.cshtml" />
     <Content Include="Views\Events\Edit.cshtml" />
     <Content Include="Views\Events\Index.cshtml" />
-    <Content Include="Views\Service\Index.cshtml" />
     <Content Include="Views\Classes\Create.cshtml" />
     <Content Include="Views\Classes\Delete.cshtml" />
     <Content Include="Views\Classes\Edit.cshtml" />
@@ -592,6 +590,8 @@
     <Content Include="Views\Classes\Schedule.cshtml" />
     <Content Include="Views\Classes\_ClassSchedulePartial.cshtml" />
     <Content Include="Views\Classes\EditClassTaken.cshtml" />
+    <Content Include="Views\ServiceHours\Index.cshtml" />
+    <Content Include="Views\ServiceHours\Submit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
