@@ -16,7 +16,6 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         [Required]
         [Display(Name = "Date of Shift")]
-        [Column(TypeName = "date")]
         [DataType(DataType.Date)]
         public DateTime DateOfShift { get; set; }
 
