@@ -25,21 +25,23 @@
                     Volunteers are still needed on the following dates:
                 </div>
                 <div class="panel-body">
-                    <table class="table table-responsive" style="text-align:left">
-                        <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Type</td>
-                                <td>@item.DateOfShift.ToShortDateString()</td>
-                            </tr>
-                        }
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table" style="text-align:left">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Type</td>
+                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
