@@ -59,54 +59,56 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed" id="roster-table">
-                        <thead>
-                            <tr>
-                                <th>Member</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>Pledge Class</th>
-                                <th>Graduating</th>
-                                <th>Big Bro</th>
-                                <th>Room</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.Members.Any())
-                            {
-                                foreach (var item in Model.Members)
+                    <div class="table-responsive">
+                        <table class="table table-condensed" id="roster-table">
+                            <thead>
+                                <tr>
+                                    <th>Member</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Pledge Class</th>
+                                    <th>Graduating</th>
+                                    <th>Big Bro</th>
+                                    <th>Room</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.Members.Any())
                                 {
-                                    <tr>
-                                        <td>@item.ToString()</td>
-                                        <td><a href="mailto:@item.Email">@item.Email</a></td>
-                                        <td>@item.MemberStatus.StatusName</td>
-                                        <td>@item.PledgeClass.PledgeClassName</td>
-                                        <td>@item.Semester.ToString()</td>
-                                        <td>
-                                            @if (item.BigBroId != null)
-                                            {
-                                                @item.BigBrother.ToString()
-                                            }
-                                            else
-                                            {
-                                                @:None
+                                    foreach (var item in Model.Members)
+                                    {
+                                        <tr>
+                                            <td>@item.ToString()</td>
+                                            <td><a href="mailto:@item.Email">@item.Email</a></td>
+                                            <td>@item.MemberStatus.StatusName</td>
+                                            <td>@item.PledgeClass.PledgeClassName</td>
+                                            <td>@item.Semester.ToString()</td>
+                                            <td>
+                                                @if (item.BigBroId != null)
+                                                {
+                                                    @item.BigBrother.ToString()
+                                                }
+                                                else
+                                                {
+                                                    @:None
                                         }
-                                        </td>
-                                        <td>@item.RoomString()</td>
-                                        <td>
-                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
-                                            @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
-                                            {
-                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, null) @:|
+                                            </td>
+                                            <td>@item.RoomString()</td>
+                                            <td>
+                                                @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
+                                                @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
+                                                {
+                                                    @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName }, null) @:|
                                         }
-                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName }, null)
-                                        </td>
-                                    </tr>
+                                                @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName }, null)
+                                            </td>
+                                        </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

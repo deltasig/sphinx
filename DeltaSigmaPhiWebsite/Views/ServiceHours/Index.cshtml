@@ -16,23 +16,25 @@
                     Showing Service Hours for @Model.First().Semester
                 </div>
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed table-hover" id="service-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Hours</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
+                    <div class="table-responsive">
+                        <table class="table table-condensed" id="service-table">
+                            <thead>
                                 <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Hours</td>
+                                    <th>Name</th>
+                                    <th>Hours</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>@item.Member.LastName, @item.Member.FirstName</td>
+                                        <td>@item.Hours</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="panel-footer">
                     <strong>Note: </strong> The hours being reported here consist of hours served at events that occured after the end of the previous semester

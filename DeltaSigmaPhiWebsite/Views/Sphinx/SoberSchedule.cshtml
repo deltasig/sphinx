@@ -19,57 +19,59 @@
                     </div>
                 }
                 <div class="panel-body">
-                    <table class="table table-responsive table-condensed" id="schedule-table">
-                        <thead>
-                            <tr>
-                                <th>Requested</th>
-                                <th>Volunteer</th>
-                                <th>Date</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        @foreach (var item in Model.OrderBy(s => s.DateOfShift))
-                        {
-                            <tr>
-                                <td>@item.Type</td>
-                                @if (item.UserId == null)
-                                {
-                                    <td>None</td>
-                                }
-                                else
-                                {
-                                    <td>@item.Member.ToString()</td>
-                                }
-                                <td>@item.DateOfShift.ToShortDateString()</td>
-                                <td>
+                    <div class="table-responsive">
+                        <table class="table table-condensed" id="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Requested</th>
+                                    <th>Volunteer</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model.OrderBy(s => s.DateOfShift))
+                            {
+                                <tr>
+                                    <td>@item.Type</td>
                                     @if (item.UserId == null)
                                     {
-                                        @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
-                                    }
-                                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                    {
-                                        using (Html.BeginForm("SoberSignupCancel", "Sphinx", new { id = item.SignupId }, 
-                                            FormMethod.Get, new { style = "display: inline" }))
-                                        {
-                                            @item.Member.ToString()
-                                            <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
-                                                <i class="fa fa-minus-square"></i>
-                                            </button>
-                                        }
+                                        <td>None</td>
                                     }
                                     else
                                     {
-                                        @item.Member.ToString()
+                                        <td>@item.Member.ToString()</td>
                                     }
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                    {
-                                        @:|
-                                        @Html.ActionLink("Delete", "SoberSignupDelete", new { id = item.SignupId })
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </table>
+                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                    <td>
+                                        @if (item.UserId == null)
+                                        {
+                                            @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
+                                        }
+                                        else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                        {
+                                            using (Html.BeginForm("SoberSignupCancel", "Sphinx", new { id = item.SignupId },
+                                                FormMethod.Get, new { style = "display: inline" }))
+                                            {
+                                                @item.Member.ToString()
+                                                <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
+                                                    <i class="fa fa-minus-square"></i>
+                                                </button>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @item.Member.ToString()
+                                        }
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                        {
+                                            @:|
+                                            @Html.ActionLink("Delete", "SoberSignupDelete", new { id = item.SignupId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

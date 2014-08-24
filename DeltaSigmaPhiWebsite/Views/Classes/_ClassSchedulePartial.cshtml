@@ -26,37 +26,39 @@
     <div class="panel-body">
         @if (Model.Any())
         {
-            <table class="table table-responsive table-condensed">
-                <thead>
-                    <tr>
-                        <th>Semester</th>
-                        <th>Course</th>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                        {
-
-                            <th></th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
                         <tr>
-                            <td>@item.Semester.ToString()</td>
-                            <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
+                            <th>Semester</th>
+                            <th>Course</th>
                             @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                             {
-                                <td>
-                                    @Html.ActionLink("Edit", "EditClassTaken", "Classes",
-                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
-                                    | @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
-                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
-                                </td>
+
+                                <th></th>
                             }
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Semester.ToString()</td>
+                                <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                {
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditClassTaken", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                        | @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
         else
         {
