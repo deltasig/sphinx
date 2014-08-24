@@ -547,13 +547,10 @@
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Views\Sphinx\LaundrySchedule.cshtml" />
     <Content Include="Views\Sphinx\SoberScheduleManager.cshtml" />
-    <Content Include="Views\Sphinx\IncidentReporting.cshtml" />
     <Content Include="Views\Sphinx\SoberSchedule.cshtml" />
     <Content Include="Views\StudyHours\Submit.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Error\InternalServerError.cshtml" />
-    <Content Include="Views\Shared\Error\NotFoundInfo.cshtml" />
-    <Content Include="Views\Shared\Error\InternalServerErrorInfo.cshtml" />
     <Content Include="Views\Semesters\Create.cshtml" />
     <Content Include="Views\Semesters\Delete.cshtml" />
     <Content Include="Views\Semesters\Edit.cshtml" />
@@ -602,7 +599,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Filters\" />
-    <Folder Include="Views\Shared\EditorTemplate\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201408190209458_Initial.resx">

@@ -25,7 +25,7 @@
         {
             var thisSemester = GetThisSemester();
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var semeserStudyHours = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart).ToList();
+            var semeserStudyHours = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.StudyHourStart).ToList();
 
             var model = new TrackerModel
             {
@@ -37,7 +37,7 @@
                 ThisSemester = new ProgressModel
                 {
                     Members = uow.MemberRepository.SelectBy(s => semeserStudyHours.Any(h => h.Submitter.UserId == s.UserId)).ToList(),
-                    StartDate = thisSemester.DateStart
+                    StartDate = thisSemester.StudyHourStart
                 }
             };
             return View(model);
@@ -46,8 +46,8 @@
         public ActionResult Unapproved()
         {
             var thisSemester = GetThisSemester();
-            var model = uow.StudyHourRepository.SelectBy(s => 
-                s.DateTimeStudied >= thisSemester.DateStart &&
+            var model = uow.StudyHourRepository.SelectBy(s =>
+                s.DateTimeStudied >= thisSemester.StudyHourStart &&
                 s.ApproverId == null).ToList();
             return View(model);
         }
