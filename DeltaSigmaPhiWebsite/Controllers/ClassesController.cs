@@ -33,7 +33,9 @@
         public ActionResult Create()
         {
             ViewBag.Message = string.Empty;
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName");
+            ViewBag.DepartmentId = new SelectList(
+                uow.DepartmentsRepository.SelectAll().ToList().OrderBy(c => c.DepartmentName), 
+                "DepartmentId", "DepartmentName");
             return View();
         }
 
@@ -157,23 +159,39 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult CreateSchedule(ClassScheduleModel model)
         {
+            var message = "";
+            var duplicateCount = 0;
             if(ModelState.IsValid)
             {
                 foreach(var course in model.ClassesTaken)
                 {
-                    if (uow.ClassesTakenRepository.SelectAll().ToList()
-                        .Select(c => c.ClassId == course.ClassId && 
-                            c.SemesterId == course.SemesterId &&
-                            c.UserId == course.UserId).Any()) continue;
+                    var classesTaken = uow.ClassesTakenRepository.SelectBy(c => 
+                            c.ClassId == course.ClassId && 
+                            c.SemesterId == model.SelectedSemester && 
+                            c.UserId == model.SelectedMember)
+                        .ToList();
+                    if (classesTaken.Any())
+                    {
+                        duplicateCount++;
+                        continue;
+                    }
 
                     course.SemesterId = model.SelectedSemester;
                     course.UserId = model.SelectedMember;
                     uow.ClassesTakenRepository.Insert(course);
                 }
                 uow.Save();
+                if(duplicateCount < model.ClassesTaken.Count)
+                {
+                    message = "Class(es) added successfully. ";
+                }
+                if (duplicateCount > 0)
+                {
+                    message += duplicateCount + " class(es) were not added since the member was already enrolled.";
+                }
             }
             var member = uow.MemberRepository.SingleById(model.SelectedMember);
-            return RedirectToAction("Schedule", new { userName = member.UserName, message = "Class(es) added successfully. " });
+            return RedirectToAction("Schedule", new { userName = member.UserName, message});
         }
 
         public ActionResult Schedule(string userName, string message)

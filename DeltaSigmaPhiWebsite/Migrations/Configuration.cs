@@ -294,7 +294,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Department { DepartmentName = "Mining Engineering" },
                 new Department { DepartmentName = "Nuclear Engineering" },
                 new Department { DepartmentName = "Physics" }, //20
-                new Department { DepartmentName = "Psychology" }
+                new Department { DepartmentName = "Psychology" },
+                new Department { DepartmentName = "Military Science" }
             );
 
             context.SaveChanges();
@@ -351,7 +352,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Position { IsElected = false, IsExecutive = true, PositionName = "New Member Education" },
                 new Position { IsElected = false, IsExecutive = true, PositionName = "Social" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Alumni Relations" },
-                new Position { IsElected = false, IsExecutive = false, PositionName = "Community Service" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Service" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Greek Week" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "House Steward" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Philanthropy" },
