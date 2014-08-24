@@ -25,8 +25,8 @@
             {
                 ViewBag.Message = message;
             }
-            var classes = uow.ClassesRepository.SelectAll();
-            return View(classes.ToList());
+            var classes = uow.ClassesRepository.SelectAll().OrderBy(c => c.CourseShorthand).ToList();
+            return View(classes);
         }
 
         [Authorize(Roles = "Administrator, Academics")]
