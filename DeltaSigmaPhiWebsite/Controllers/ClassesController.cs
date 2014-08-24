@@ -45,9 +45,18 @@
             ViewBag.Message = string.Empty;
             if (ModelState.IsValid)
             {
-                uow.ClassesRepository.Insert(@class);
-                uow.Save();
-                ViewBag.Message = "Class created successfully. ";
+                if (uow.ClassesRepository.SelectAll().ToList()
+                    .Any(c => c.CourseShorthand == @class.CourseShorthand && 
+                        c.DepartmentId == @class.DepartmentId))
+                {
+                    ViewBag.Message = "A Class in that department with that number already exists.";
+                }
+                else
+                {
+                    uow.ClassesRepository.Insert(@class);
+                    uow.Save();
+                    ViewBag.Message = "Class created successfully. ";
+                }
             }
 
             ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
@@ -152,9 +161,13 @@
             {
                 foreach(var course in model.ClassesTaken)
                 {
+                    if (uow.ClassesTakenRepository.SelectAll().ToList()
+                        .Select(c => c.ClassId == course.ClassId && 
+                            c.SemesterId == course.SemesterId &&
+                            c.UserId == course.UserId).Any()) continue;
+
                     course.SemesterId = model.SelectedSemester;
                     course.UserId = model.SelectedMember;
-                    
                     uow.ClassesTakenRepository.Insert(course);
                 }
                 uow.Save();
@@ -218,7 +231,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
-        public ActionResult EditClassTaken([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] ClassTaken classTaken)
+        public ActionResult EditClassTaken([Bind(Include = "UserId,ClassId,SemesterId,Instructor,MidtermGrade,FinalGrade,Dropped")] ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 
                 return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
@@ -226,7 +239,9 @@
             uow.ClassesTakenRepository.Update(classTaken);
             uow.Save();
 
-            return RedirectToAction("Schedule", new { userName = "", message = "Record updated." });
+            var member = uow.MemberRepository.SingleById(classTaken.UserId);
+
+            return RedirectToAction("Schedule", new { userName = member.UserName, message = "Record updated." });
         }
     }
 }

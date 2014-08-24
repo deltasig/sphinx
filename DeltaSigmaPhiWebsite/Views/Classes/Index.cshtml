@@ -28,6 +28,7 @@
                                 <th>@Html.DisplayNameFor(model => model.CourseShorthand)</th>
                                 <th>@Html.DisplayNameFor(model => model.CourseName)</th>
                                 <th>@Html.DisplayNameFor(model => model.Department.DepartmentName)</th>
+                                <th>Total Times Taken</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -38,6 +39,7 @@
                                     <td>@Html.DisplayFor(modelItem => item.CourseShorthand)</td>
                                     <td>@Html.DisplayFor(modelItem => item.CourseName)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Department.DepartmentName)</td>
+                                    <td>@item.ClassesTaken.Count</td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ClassId }) |
                                         @Html.ActionLink("Delete", "Delete", new { id = item.ClassId })

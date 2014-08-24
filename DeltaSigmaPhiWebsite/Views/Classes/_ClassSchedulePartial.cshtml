@@ -47,7 +47,9 @@
                             @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                             {
                                 <td>
-                                    @Html.ActionLink("Delete from Schedule", "DeleteFromSchedule", "Classes",
+                                    @Html.ActionLink("Edit", "EditClassTaken", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                    | @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
                                     new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
                                 </td>
                             }

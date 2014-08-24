@@ -591,6 +591,7 @@
     <Content Include="Views\Classes\CreateSchedule.cshtml" />
     <Content Include="Views\Classes\Schedule.cshtml" />
     <Content Include="Views\Classes\_ClassSchedulePartial.cshtml" />
+    <Content Include="Views\Classes\EditClassTaken.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
