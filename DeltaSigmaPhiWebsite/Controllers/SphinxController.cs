@@ -23,9 +23,14 @@
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             var member = uow.MemberRepository.SingleById(userId);
             var events = GetAllCompletedEventsForUser(userId).ToList();
+            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
 
             var soberSignups = uow.SoberSignupsRepository.SelectAll()
-                .Where(s => DbFunctions.DiffDays(s.DateOfShift, DateTime.UtcNow) <= 7).ToList();
+                .Where(s =>
+                    s.DateOfShift >= startOfTodayUtc && 
+                    DbFunctions.DiffDays(s.DateOfShift, DateTime.UtcNow) <= 7)
+                .OrderBy(s => s.DateOfShift)
+                .ToList();
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
 
@@ -71,7 +76,6 @@
 
         public ActionResult SoberSchedule()
         {
-
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
 
             var signups =
@@ -85,9 +89,10 @@
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public ActionResult SoberScheduleManager()
         {
+            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
             var vacantSignups =
                 uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= DateTime.UtcNow && s.UserId == null)
+                    .Where(s => s.DateOfShift >= startOfTodayUtc && s.UserId == null)
                     .OrderBy(s => s.DateOfShift)
                     .ToList();
 
@@ -151,7 +156,11 @@
 
             var signup = uow.SoberSignupsRepository.SingleById(id);
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            if (signup.UserId == null || signup.UserId != userId)
+
+            if (signup.UserId == null ||
+                (signup.UserId != userId && 
+                !User.IsInRole("Administrator") && 
+                !User.IsInRole("Sergeant-at-Arms")))
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
             signup.UserId = null;

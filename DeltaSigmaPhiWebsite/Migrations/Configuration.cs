@@ -378,7 +378,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                     StatusId = context.MemberStatus.Single(s => s.StatusName == "Active").StatusId,
                     ExpectedGraduationId = 9,
                     PledgeClassId = 12,
-                    RequiredStudyHours = 0
+                    RequiredStudyHours = 0,
+                    ProctoredStudyHours = 0
                 });
             var userId = WebSecurity.GetUserId("tjm6f4");
             if (!context.Addresses.Select(a => a.UserId == userId).Any())
