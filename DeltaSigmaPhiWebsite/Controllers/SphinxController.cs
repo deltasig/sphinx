@@ -24,11 +24,12 @@
             var member = uow.MemberRepository.SingleById(userId);
             var events = GetAllCompletedEventsForUser(userId).ToList();
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
+            var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
 
             var soberSignups = uow.SoberSignupsRepository.SelectAll()
                 .Where(s =>
                     s.DateOfShift >= startOfTodayUtc && 
-                    DbFunctions.DiffDays(s.DateOfShift, DateTime.UtcNow) <= 7)
+                    s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
                 .ToList();
             var thisSemester = GetThisSemester();
