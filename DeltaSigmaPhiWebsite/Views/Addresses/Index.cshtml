@@ -15,7 +15,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed">
+                        <table class="table table-condensed" id="address-table">
                             <thead>
                                 <tr>
                                     <th>Member</th>
@@ -35,15 +35,15 @@
                                         @if (string.IsNullOrEmpty(item.Address1))
                                         {
                                             @:None entered.
-                                                                              }
+                                        }
                                         else
                                         {
                                             @item.Address1@:,
-                                        if (@item.Address2 != null)
-                                        {
-                                            @item.Address2@:,
-                                        }
-                                        @item.City@:, @item.State @item.PostalCode,
+                                            if (@item.Address2 != null)
+                                            {
+                                                @item.Address2@:,
+                                            }
+                                            @item.City@:, @item.State @item.PostalCode,
                                             @item.Country
                                         }
                                     </td>
@@ -63,3 +63,17 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $('#address-table').DataTable({
+            pageLength: 100,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
