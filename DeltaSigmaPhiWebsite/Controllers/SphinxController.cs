@@ -31,6 +31,7 @@
                     s.DateOfShift >= startOfTodayUtc && 
                     s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.Type)
                 .ToList();
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
