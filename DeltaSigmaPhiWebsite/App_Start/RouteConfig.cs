@@ -10,6 +10,8 @@
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("elmah.axd");
 
+            routes.LowercaseUrls = true;
+
             routes.MapRoute(
                 name: "StudyHours",
                 url: "StudyHours/{action}/{id}",
