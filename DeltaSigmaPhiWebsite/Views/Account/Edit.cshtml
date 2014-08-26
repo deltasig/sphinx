@@ -18,14 +18,10 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(m => m.Member.UserId)
+                @Html.HiddenFor(m => m.Member.UserName)
 
                 if (User.IsInRole("Administrator"))
                 {
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Member.UserName, new { @class = "control-label" })
-                        @Html.EditorFor(m => m.Member.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(m => m.Member.UserName, "", new { @class = "text-danger" })
-                    </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
                         @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
@@ -116,7 +112,6 @@
                         @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members, new { @class = "form-control" })
                     </div>
-                    @Html.HiddenFor(m => m.Member.UserName)
                     @Html.HiddenFor(m => m.Member.Room)
                     @Html.HiddenFor(m => m.Member.RequiredStudyHours)
                     @Html.HiddenFor(m => m.Member.ProctoredStudyHours)
@@ -128,7 +123,6 @@
                         @Html.EditorFor(m => m.Member.Room, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.Member.Room, "", new { @class = "text-danger" })
                     </div>
-                    @Html.HiddenFor(m => m.Member.UserName)
                     @Html.HiddenFor(m => m.Member.FirstName)
                     @Html.HiddenFor(m => m.Member.LastName)
                     @Html.HiddenFor(m => m.Member.Email)
@@ -152,7 +146,6 @@
                         @Html.EditorFor(m => m.Member.ProctoredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(m => m.Member.ProctoredStudyHours, "", new { @class = "text-danger" })
                     </div>
-                    @Html.HiddenFor(m => m.Member.UserName)
                     @Html.HiddenFor(m => m.Member.FirstName)
                     @Html.HiddenFor(m => m.Member.LastName)
                     @Html.HiddenFor(m => m.Member.Room)
@@ -165,11 +158,6 @@
                 }
                 else if (User.Identity.Name == Model.Member.UserName)
                 {
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Member.UserName, new { @class = "control-label" })
-                        @Html.EditorFor(m => m.Member.UserName, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(m => m.Member.UserName, "", new { @class = "text-danger" })
-                    </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
                         @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })

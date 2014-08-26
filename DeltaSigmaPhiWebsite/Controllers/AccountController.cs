@@ -183,7 +183,6 @@
             }
 
             var member = uow.MemberRepository.Single(m => m.UserId == model.Member.UserId);
-            member.UserName = model.Member.UserName;
             member.FirstName = model.Member.FirstName;
             member.LastName = model.Member.LastName;
             member.Email = model.Member.Email;
