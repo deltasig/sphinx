@@ -111,11 +111,20 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Facebook.6.8.0\lib\net45\Facebook.dll</HintPath>
     </Reference>
+    <Reference Include="FluentScheduler">
+      <HintPath>..\packages\FluentScheduler.3.1.44\lib\net40\FluentScheduler.dll</HintPath>
+    </Reference>
     <Reference Include="GenericRepository">
       <HintPath>..\packages\GenericRepository.0.3.1-pre01\lib\net40\GenericRepository.dll</HintPath>
     </Reference>
     <Reference Include="GenericRepository.EntityFramework">
       <HintPath>..\packages\GenericRepository.EntityFramework.0.3.1-pre01\lib\net40\GenericRepository.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -274,6 +283,7 @@
     <Compile Include="App_Start\AuthConfig.cs" />
     <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\DspTaskRegistry.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
