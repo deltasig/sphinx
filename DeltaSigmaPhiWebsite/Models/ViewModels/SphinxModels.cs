@@ -11,6 +11,7 @@
         public Member MemberInfo { get; set; }
         public bool NeedsToSoberDrive { get; set; }
         public int RemainingStudyHours { get; set; }
+        public int RemainingProctoredStudyHours { get; set; }
         public int RemainingCommunityServiceHours { get; set; }
         public IEnumerable<LaundrySignup> LaundrySummary { get; set; }
         public IEnumerable<string> Roles { get; set; }
