@@ -84,7 +84,8 @@
         $('#schedule-table').DataTable({
             pageLength: 25,
             lengthChange: false,
-            "oLanguage": { "sSearch": "" }
+            "oLanguage": { "sSearch": "" },
+            "order": [[2, "asc"], [0, "asc"]]
         });
 
         $('div.dataTables_filter input').addClass('form-control');
