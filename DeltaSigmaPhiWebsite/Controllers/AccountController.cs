@@ -144,7 +144,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary, Academics, House Manager")]
         public ActionResult Edit(string userName, AccountChangeMessageId? message)
         {
             var member = string.IsNullOrEmpty(userName)
@@ -164,9 +163,14 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Secretary, Academics, House Manager")]
         public ActionResult Edit(EditMemberInfoModel model)
         {
+            if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && !User.IsInRole("Academics") && 
+               !User.IsInRole("House Manager") && User.Identity.Name != model.Member.UserName)
+            {
+                RedirectToAction("Index");
+            }
+
             model.Semesters = GetSemesterList();
             model.PledgeClasses = GetPledgeClassList();
             model.Statuses = GetStatusList();
@@ -179,6 +183,9 @@
             }
 
             var member = uow.MemberRepository.Single(m => m.UserId == model.Member.UserId);
+            member.UserName = model.Member.UserName;
+            member.FirstName = model.Member.FirstName;
+            member.LastName = model.Member.LastName;
             member.Email = model.Member.Email;
             member.Pin = model.Member.Pin;
             member.Room = model.Member.Room;
