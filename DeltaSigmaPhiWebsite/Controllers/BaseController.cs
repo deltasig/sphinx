@@ -377,7 +377,8 @@
                 totalHours = (from hour in uow.StudyHourRepository.SelectAll()
                               where hour.SubmittedBy == userId &&
                                     hour.ApproverId != null &&
-                                    hour.DateTimeStudied >= startOfThisWeek
+                                    hour.DateTimeStudied >= startOfThisWeek &&
+                                    !hour.IsProctored
                               select hour.DurationHours).ToList().Sum();
             }
             catch (Exception)
@@ -386,6 +387,31 @@
             }
 
             return (member.RequiredStudyHours - (int)totalHours);
+        }
+        protected int GetRemainingProctoredStudyHoursForUser(int userId)
+        {
+            var startOfThisWeek = GetStartOfCurrentWeek();
+            var member = uow.MemberRepository.SingleById(userId);
+            var required = 0;
+            if (member.ProctoredStudyHours != null) 
+                required = (int)member.ProctoredStudyHours;
+            var totalHours = 0.0;
+
+            try
+            {
+                totalHours = (from hour in uow.StudyHourRepository.SelectAll()
+                              where hour.SubmittedBy == userId &&
+                                    hour.ApproverId != null &&
+                                    hour.DateTimeStudied >= startOfThisWeek &&
+                                    hour.IsProctored
+                              select hour.DurationHours).ToList().Sum();
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return (required - (int)totalHours);
         }
         protected IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
         {
