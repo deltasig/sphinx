@@ -62,6 +62,7 @@
                 Roles = Roles.GetRolesForUser(member.UserName),
                 RemainingCommunityServiceHours = GetRemainingServiceHoursForUser(userId),
                 RemainingStudyHours = GetRemainingStudyHoursForUser(userId),
+                RemainingProctoredStudyHours = GetRemainingProctoredStudyHoursForUser(userId),
                 CompletedEvents = events,
                 StudyHours = GetStudyHoursForUser(userId),
                 SoberSignups = soberSignups,
