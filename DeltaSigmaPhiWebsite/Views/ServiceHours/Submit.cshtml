@@ -12,7 +12,14 @@
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true)
-
+                       
+                    <div class="form-group">
+                        <div class="alert alert-warning">
+                            <strong>Tip: </strong>Submitting hours for an event you already turn in hours for will update the hours for that event. <br/>
+                            If you enter a value of zero for an event you already submitted hours for, you will delete that submission.
+                        </div>
+                    </div>
+                    
                     <div class="form-group">
                         @Html.LabelFor(m => m.SelectedEventId)
                         @Html.DropDownListFor(m => m.SelectedEventId, Model.Events, new { @class = "form-control" })

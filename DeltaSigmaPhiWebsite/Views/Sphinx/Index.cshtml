@@ -17,9 +17,12 @@
     {
         <div class="row">
             <div class="col-xs-12">
-                <p class="text-warning">
-                    @ViewBag.Message
-                </p>
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <div class="alert alert-warning">
+                        @ViewBag.Message
+                    </div>
+                }
             </div>
         </div>
         <div class="row">
@@ -43,14 +46,16 @@
                             <thead>
                                 <tr>
                                     <th>Event</th>
+                                    <th>Date</th>
                                     <th>Hours</th>
                                 </tr>
                             </thead>
-                            @foreach (var item in Model.CompletedEvents)
+                            @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
                             {
                                 <tr>
                                     <td>@item.Event.EventName</td>
-                                    <td>@item.DurationHours Hours</td>
+                                    <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
+                                    <td>@item.DurationHours</td>
                                 </tr>
                             }
                         </table>

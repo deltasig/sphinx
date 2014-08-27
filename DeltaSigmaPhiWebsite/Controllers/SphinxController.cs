@@ -35,14 +35,13 @@
                 .ToList();
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
-
             var enumerable = memberSoberSignups as IList<SoberSignup> ?? memberSoberSignups.ToList();
             if (enumerable.Any())
             {
                 events.Add(new ServiceHour
                 {
                     DurationHours = 5,
-                    Event = new Event { EventName = "Sober Driving" }
+                    Event = new Event { EventName = "Sober Driving", DateTimeOccurred = enumerable.First().DateOfShift },
                 });
             }
 
