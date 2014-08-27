@@ -55,9 +55,7 @@
                                                 {
                                                     using (Html.BeginForm("CancelReserveLaundry", "Sphinx", timeSlot))
                                                     {
-                                                        @timeSlot.Member.FirstName@:
-                                                        @timeSlot.Member.LastName.Substring(0, 1)@:.
-                                                            
+                                                        @timeSlot.Member.ToString()
                                                         <button type="submit" class="btn btn-sm btn-link" style="padding:0; margin:0; color:red">
                                                             <i class="fa fa-minus-square"></i>
                                                         </button>
@@ -67,7 +65,13 @@
                                                 else
                                                 {
                                                     <div class="text-center">
-                                                        <p>@timeSlot.Member.ToString()</p>
+                                                        <p>
+                                                            @timeSlot.Member.ToString()
+                                                            @if(timeSlot.Member.Room == 0)
+                                                            {
+                                                                @:*
+                                                            }
+                                                        </p>
                                                     </div>
                                                 }
                                             }
@@ -92,7 +96,8 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    Current Time: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToShortTimeString() CST
+                    Current Time: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToShortTimeString() CST <br/>
+                    * Member lives Out-of-House
                 </div>
             </div>
         </div>
