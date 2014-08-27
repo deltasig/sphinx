@@ -11,11 +11,22 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <div class="alert alert-warning">
+                <strong>Notice!</strong> Make sure you @Html.ActionLink("set your mobile phone number", "Index", "Account")!
+            </div>
             <div class="panel panel-default">
                 @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                 {
                     <div class="panel-heading">
-                        @Html.ActionLink("Manage", "SoberScheduleManager", "Sphinx")
+                        @if(Model.Any())
+                        {
+                            @: Sign up for sober duty below.
+                        }
+                        else
+                        {
+                            @: No shifts have been added yet.
+                        }
+                        @Html.ActionLink("Manage", "SoberScheduleManager", "Sphinx", new { @class = "pull-right" })
                     </div>
                 }
                 <div class="panel-body">
