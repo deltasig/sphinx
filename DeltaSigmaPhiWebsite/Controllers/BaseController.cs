@@ -286,22 +286,18 @@
         protected int GetRemainingServiceHoursForUser(int userId)
         {
             const int requiredHours = 15;
-            // Beginning of today (12:00am of today)
-            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
-            // Find current semester
-            var currentSemester = uow.SemesterRepository.Single(s => s.DateStart <= today && s.DateEnd >= today);
-            if (currentSemester == null)
-                return 15;
 
-            var startOfSemester = currentSemester.DateStart;
-            var endOfSemester = currentSemester.DateEnd;
+            var lastSemester = GetLastSemester();
+            var currentSemester = GetThisSemester();
 
             var totalHours = 0.0;
             try
             {
                 var serviceHours = uow.ServiceHourRepository.SelectAll()
-                    .Where(h => h.Member.UserId == userId && h.Event.DateTimeOccurred >= startOfSemester &&
-                            h.Event.DateTimeOccurred <= endOfSemester);
+                    .Where(h => 
+                        h.Member.UserId == userId && 
+                        h.Event.DateTimeOccurred > lastSemester.DateEnd &&
+                        h.Event.DateTimeOccurred <= currentSemester.DateEnd);
                 if (serviceHours.Any())
                     totalHours = serviceHours.Select(h => h.DurationHours).Sum();
             }
@@ -314,8 +310,8 @@
                 .Any(s =>
                     s.UserId == userId &&
                     s.Type == SoberSignupType.Driver &&
-                    s.DateOfShift >= startOfSemester &&
-                    s.DateOfShift <= endOfSemester);
+                    s.DateOfShift > lastSemester.DateEnd &&
+                    s.DateOfShift <= currentSemester.DateEnd);
             if (soberDriverCheck)
             {
                 totalHours += 5;
@@ -335,22 +331,24 @@
         protected IEnumerable<ServiceHour> GetAllCompletedEventsForUser(int userId)
         {
             var thisSemester = GetThisSemester();
-            if (thisSemester == null)
-            {
-                return uow.ServiceHourRepository.SelectBy(e => e.UserId == userId);
-            }
+            var lastSemester = GetLastSemester();
 
             return uow.ServiceHourRepository.SelectBy(e => 
                 e.UserId == userId &&
-                e.Event.DateTimeOccurred >= thisSemester.DateStart &&
+                e.Event.DateTimeOccurred > lastSemester.DateEnd &&
                 e.Event.DateTimeOccurred <= thisSemester.DateEnd);
         }
         protected IEnumerable<SoberSignup> GetSoberSignupsForUser(int userId, Semester semester)
         {
+            var previousSemester = uow.SemesterRepository.SelectAll()
+                .Where(s => s.DateEnd < semester.DateStart).ToList()
+                .OrderBy(s => s.DateStart)
+                .Last();
+
             return uow.SoberSignupsRepository.SelectAll().Where(s =>
                     s.UserId == userId &&
-                    s.DateOfShift <= semester.DateEnd &&
-                    s.DateOfShift >= semester.DateStart);
+                    s.DateOfShift > previousSemester.DateEnd &&
+                    s.DateOfShift <= semester.DateEnd);
         }
         protected IEnumerable<SelectListItem> GetAllApproverIds(int userId)
         {
