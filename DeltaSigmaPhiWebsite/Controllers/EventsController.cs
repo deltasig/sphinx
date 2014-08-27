@@ -31,6 +31,7 @@
 		{
 			if (ModelState.IsValid)
 			{
+                @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
 				db.Events.Add(@event);
 				db.SaveChanges();
 				return RedirectToAction("Index");
@@ -58,7 +59,8 @@
 		public ActionResult Edit([Bind(Include = "EventId,DateTimeOccurred,EventName,DurationHours")] Event @event)
 		{
 			if (ModelState.IsValid)
-			{
+            {
+                @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
 				db.Entry(@event).State = EntityState.Modified;
 				db.SaveChanges();
 				return RedirectToAction("Index");
