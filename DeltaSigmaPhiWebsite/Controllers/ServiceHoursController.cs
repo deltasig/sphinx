@@ -55,32 +55,51 @@
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		public ActionResult Submit(ServiceHourSubmissionModel model)
-		{
-			var userId = WebSecurity.GetUserId(User.Identity.Name);
+        {
+            var message = "";
+            // Invalid value
+            if (model.HoursServed < 0)
+            {
+                message = "Please enter a number of hours to submit greater than 0.";
+                return RedirectToAction("Index", "Sphinx", new { message });
+            }
 
+			var userId = WebSecurity.GetUserId(User.Identity.Name);
+            
 			// Check if hours submitted is more than held for event
 			var selectedEvent = uow.EventRepository.Single(e => e.EventId == model.SelectedEventId);
 			if (model.HoursServed > selectedEvent.DurationHours)
 			{
-				TempData["ServiceSubmissionError"] = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
-				return RedirectToAction("Index");
+                message = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
+                return RedirectToAction("Index", "Sphinx", new { message });
 			}
-
-			if (model.HoursServed <= 0)
-			{
-				TempData["ServiceSubmissionError"] = "Please enter a number of hours to submit greater than 0.";
-				return RedirectToAction("Index");
-			}
-
-			// Check if submission has already been created under same eventId for userId
+            
+			// Check if submission has already been created
 			var duplicateSubmission = uow.ServiceHourRepository.SelectBy(e => (e.EventId == model.SelectedEventId && e.UserId == userId));
 			if (duplicateSubmission.Any())
 			{
-				// Previous submission found
+                // Delete existing record
+                if (model.HoursServed == 0)
+                {
+                    uow.ServiceHourRepository.Delete(duplicateSubmission.Single());
+                    uow.Save();
+                    message = "Your submission was deleted.";
+                    return RedirectToAction("Index", "Sphinx", new { message });
+                }
+
+				// Update submission
 				duplicateSubmission.First().DurationHours = model.HoursServed;
 				uow.Save();
-				return RedirectToAction("Index");
+                message = "Your hours for" + selectedEvent.EventName + " event have been updated.";
+                return RedirectToAction("Index", "Sphinx", new { message });
 			}
+
+            // No existing, invalid value
+            if (model.HoursServed == 0)
+            {
+                message = "Please enter a number of hours to submit greater than 0.";
+                return RedirectToAction("Index", "Sphinx", new { message });
+            }
 
 			// If no previous submission, create new entry and add it to database
 			var submission = new ServiceHour
@@ -92,7 +111,8 @@
 			};
 			uow.ServiceHourRepository.Insert(submission);
 			uow.Save();
-			return RedirectToAction("Index");
+            message = "Service hours submitted successfully.";
+            return RedirectToAction("Index", "Sphinx", new { message });
 		}
 	}
 }
