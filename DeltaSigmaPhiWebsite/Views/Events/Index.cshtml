@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Service Event Index";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 @section Title
 {
@@ -30,9 +31,9 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.DateTimeOccurred)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.EventName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
+                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToShortTimeString()</td>
+                                        <td>@item.EventName</td>
+                                        <td>@item.DurationHours</td>
                                         <td>
                                             @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
