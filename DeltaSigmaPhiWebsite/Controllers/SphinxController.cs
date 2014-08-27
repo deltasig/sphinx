@@ -235,7 +235,10 @@
                 l.UserId == currentUserId)
                 .ToList();
 
-            if (existingSignups.Count() >= 2) 
+            var maxSignups = 2;
+            if (User.IsInRole("House Steward")) maxSignups = 4;
+
+            if (existingSignups.Count() >= maxSignups) 
             {
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveFailedTooMany });
             }
