@@ -448,10 +448,6 @@
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\DSP-Logo.png" />
-    <Content Include="Images\DSPWallpaper.png" />
-    <Content Include="Images\HomepageHeader.png" />
-    <Content Include="Images\DeltaSig-Header-Small.png" />
     <Content Include="Images\Favicon-16x16.png" />
     <Content Include="Images\HouseFrontDay70s.jpg" />
     <Content Include="Images\HouseFrontNight70s.jpg" />
