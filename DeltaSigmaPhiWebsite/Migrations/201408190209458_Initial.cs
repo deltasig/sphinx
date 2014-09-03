@@ -62,7 +62,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 "dbo.StudyHours",
                 c => new
                     {
-                        StudyHourId = c.Int(nullable: false),
+                        StudyHourId = c.Int(nullable: false, identity: true),
                         SubmittedBy = c.Int(nullable: false),
                         DateTimeStudied = c.DateTime(nullable: false),
                         ApproverId = c.Int(),

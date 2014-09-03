@@ -30,9 +30,9 @@
                                 {
                                     <tr>
                                         <td>@item.Submitter.ToString()</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DateTimeSubmitted)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
+                                        <td>@item.DurationHours</td>
+                                        <td>@item.DateTimeSubmitted</td>
+                                        <td>@item.IsProctored</td>
                                         <td>
                                             @Html.ActionLink("Approve", "Approve", new { id = item.StudyHourId })
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
