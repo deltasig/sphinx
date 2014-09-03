@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Unapproved Study Hours";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 
 @section Title
@@ -26,12 +27,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @foreach (var item in Model.OrderByDescending(d => d.DateTimeSubmitted).ThenBy(s => s.Submitter.ToString()))
                                 {
                                     <tr>
                                         <td>@item.Submitter.ToString()</td>
                                         <td>@item.DurationHours</td>
-                                        <td>@item.DateTimeSubmitted</td>
+                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeSubmitted, cstZone)</td>
                                         <td>@item.IsProctored</td>
                                         <td>
                                             @Html.ActionLink("Approve", "Approve", new { id = item.StudyHourId })
