@@ -25,7 +25,8 @@
         {
             var thisSemester = GetThisSemester();
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var semeserStudyHours = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.StudyHourStart).ToList();
+            var semesterStudyHours = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.StudyHourStart).ToList();
+            var members = semesterStudyHours.Select(s => s.Submitter).Distinct();
 
             var model = new TrackerModel
             {
@@ -36,7 +37,7 @@
                 },
                 ThisSemester = new ProgressModel
                 {
-                    Members = uow.MemberRepository.SelectBy(s => semeserStudyHours.Any(h => h.Submitter.UserId == s.UserId)).ToList(),
+                    Members = members,
                     StartDate = thisSemester.StudyHourStart
                 }
             };
@@ -46,6 +47,7 @@
         public ActionResult Unapproved()
         {
             var thisSemester = GetThisSemester();
+
             var model = uow.StudyHourRepository.SelectBy(s =>
                 s.DateTimeStudied >= thisSemester.StudyHourStart &&
                 s.ApproverId == null).ToList();
@@ -85,19 +87,23 @@
         {
             if (!ModelState.IsValid) return RedirectToAction("Index");
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            if (uow.StudyHourRepository
-                .SelectBy(s => s.DateTimeStudied == model.DateTimeStudied && s.SubmittedBy == userId).Any())
-                return RedirectToAction("Index", "Sphinx", new { message = "You can only submit one study hour entry for a given day." });
-            if (model.DurationHours > 6 || model.DurationHours < 0.5 || Math.Abs(model.DurationHours % 0.5) > 0)
+            //if (uow.StudyHourRepository
+            //    .SelectBy(s => s.DateTimeStudied == model.DateTimeStudied && s.SubmittedBy == userId).Any())
+            //    return RedirectToAction("Index", "Sphinx", new { message = "You can only submit one study hour entry for a given day." });
+
+            var member = uow.MemberRepository.SingleById(userId);
+            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
+            var totalHours = member.SubmittedStudyHours.Where(h => h.DateTimeStudied == startOfTodayUtc).Sum(h => h.DurationHours);
+            if (model.DurationHours > 6 || model.DurationHours < 0.5 || Math.Abs(model.DurationHours % 0.5) > 0 || totalHours + model.DurationHours > 6)
                 return RedirectToAction("Index", "Sphinx", new { message = "You can only submit from 0.5 to 6 hours per day in incremements of 0.5." });
-            if (model.DateTimeStudied.AddHours(model.DurationHours) > DateTime.UtcNow)
+            if (model.DateTimeStudied > ConvertUtcToCst(DateTime.UtcNow))
                 return RedirectToAction("Index", "Sphinx", new { message = "You can't submit hours that go into the future." });
             var startOfLastWeek = GetStartOfCurrentWeek().AddDays(-7);
             if (model.DateTimeStudied < startOfLastWeek || model.DateTimeSubmitted > DateTime.UtcNow)
                 return RedirectToAction("Index", "Sphinx", new { message = "You can only submit hours since the start of last Tuesday." });
 
             model.SubmittedBy = userId;
-            model.DateTimeStudied = model.DateTimeStudied;
+            model.DateTimeStudied = ConvertCstToUtc(model.DateTimeStudied);
             model.DateTimeSubmitted = DateTime.UtcNow;
             var submitter = uow.MemberRepository.SingleById(model.SubmittedBy);
             model.RequiredStudyHours = submitter.RequiredStudyHours;
