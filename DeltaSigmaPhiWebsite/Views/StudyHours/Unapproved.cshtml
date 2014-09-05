@@ -1,4 +1,5 @@
-﻿@model IEnumerable<StudyHour>
+﻿@using System.Activities.Statements
+@model IEnumerable<StudyHour>
 
 @{
     ViewBag.Title = "Unapproved Study Hours";
@@ -20,6 +21,7 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
+                                    <th>@Html.DisplayNameFor(model => model.DateTimeStudied)</th>
                                     <th>@Html.DisplayNameFor(model => model.DurationHours)</th>
                                     <th>@Html.DisplayNameFor(model => model.DateTimeSubmitted)</th>
                                     <th>@Html.DisplayNameFor(model => model.IsProctored)</th>
@@ -31,11 +33,15 @@
                                 {
                                     <tr>
                                         <td>@item.Submitter.ToString()</td>
+                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone).ToShortDateString()</td>
                                         <td>@item.DurationHours</td>
                                         <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeSubmitted, cstZone)</td>
-                                        <td>@item.IsProctored</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
                                         <td>
-                                            @Html.ActionLink("Approve", "Approve", new { id = item.StudyHourId })
+                                            @if(User.Identity.Name != item.Submitter.UserName)
+                                            {
+                                                @Html.ActionLink("Approve", "Approve", new { id = item.StudyHourId })
+                                            }
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                             {
                                                 @:|
