@@ -46,12 +46,26 @@
 
         public ActionResult Unapproved()
         {
-            var thisSemester = GetThisSemester();
-
-            var model = uow.StudyHourRepository.SelectBy(s =>
-                s.DateTimeStudied >= thisSemester.StudyHourStart &&
-                s.ApproverId == null).ToList();
-            return View(model);
+            var currentUser = uow.MemberRepository.SelectBy(m => m.UserName == User.Identity.Name).Single();
+            if((currentUser.RequiredStudyHours > 0 || currentUser.ProctoredStudyHours > 0) && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            {
+                var thisSemester = GetThisSemester();
+                var startOfStudyHours = thisSemester.StudyHourStart.AddDays(-1);
+                var model = uow.StudyHourRepository.SelectBy(s =>
+                    s.DateTimeStudied >= startOfStudyHours &&
+                    s.ApproverId == null &&
+                    s.Submitter.UserName == User.Identity.Name).ToList();
+                return View(model);
+            }
+            else
+            {
+                var thisSemester = GetThisSemester();
+                var startOfStudyHours = thisSemester.StudyHourStart.AddDays(-1);
+                var model = uow.StudyHourRepository.SelectBy(s =>
+                    s.DateTimeStudied >= startOfStudyHours &&
+                    s.ApproverId == null).ToList();
+                return View(model);
+            }
         }
 
         public ActionResult Approve(int? id)
@@ -98,9 +112,9 @@
                 return RedirectToAction("Index", "Sphinx", new { message = "You can only submit from 0.5 to 6 hours per day in incremements of 0.5." });
             if (model.DateTimeStudied > ConvertUtcToCst(DateTime.UtcNow))
                 return RedirectToAction("Index", "Sphinx", new { message = "You can't submit hours that go into the future." });
-            var startOfLastWeek = GetStartOfCurrentWeek().AddDays(-7);
-            if (model.DateTimeStudied < startOfLastWeek || model.DateTimeSubmitted > DateTime.UtcNow)
-                return RedirectToAction("Index", "Sphinx", new { message = "You can only submit hours since the start of last Tuesday." });
+            var startOfWeek = GetStartOfCurrentWeek();
+            if (model.DateTimeStudied < startOfWeek || model.DateTimeSubmitted > DateTime.UtcNow)
+                return RedirectToAction("Index", "Sphinx", new { message = "You can only submit hours for dates occurring after " + startOfWeek.AddDays(-1).ToShortDateString() });
 
             model.SubmittedBy = userId;
             model.DateTimeStudied = ConvertCstToUtc(model.DateTimeStudied);
