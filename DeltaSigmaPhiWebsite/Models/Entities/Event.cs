@@ -28,7 +28,7 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 		[Required]
 		[Display(Name = "Event Duration (Hrs)")]
         [DataType(DataType.Duration)]
-        [Range(0.5, 12, ErrorMessage = "Please enter a number from 0-12")]
+        [Range(0.5, 1000, ErrorMessage = "Please enter a number from 0-1000")]
 		public double DurationHours { get; set; }
 
 		public virtual ICollection<ServiceHour> ServiceHours { get; set; }
