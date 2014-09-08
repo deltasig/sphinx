@@ -10,27 +10,26 @@
     {
         public DspTaskRegistry()
         {
-            //Schedule(async () =>
-            //{
-            //    var message = new IdentityMessage
-            //    {
-            //        Subject = "Check check",
-            //        Body = "I'm rick james.",
-            //        Destination = "tjm6f4@mst.edu"
-            //    };
+            Schedule(async () =>
+            {
+                var message = new IdentityMessage
+                {
+                    Subject = "Check check",
+                    Body = "I'm rick james.",
+                    Destination = "tjm6f4@mst.edu"
+                };
 
-            //    try
-            //    {
-            //        var emailService = new EmailService();
-            //        await emailService.SendAsync(message);
-            //    }
-            //    catch (SmtpException e)
-            //    {
+                try
+                {
+                    var emailService = new EmailService();
+                    await emailService.SendAsync(message);
+                }
+                catch (SmtpException e)
+                {
 
-            //    }
-            //}).ToRunEvery(20).Seconds();
+                }
+            }).ToRunNow().AndEvery(3).Days().At(19, 0);
         }
-
     }
     public class EmailService : IIdentityMessageService
     {
