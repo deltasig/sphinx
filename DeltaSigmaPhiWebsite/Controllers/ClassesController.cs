@@ -77,7 +77,10 @@
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(
+                uow.DepartmentsRepository.SelectAll().ToList().OrderBy(c => c.DepartmentName), 
+                "DepartmentId", "DepartmentName", 
+                @class.DepartmentId);
             return View(@class);
         }
 
