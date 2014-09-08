@@ -5,15 +5,13 @@
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 
-@{const int descriptionLength = 25;}
-
 @section Title
 {
     @Html.Partial("_Title")
 }
 
 <div class="container">
-    @if (User.IsInRole("Active") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+    @if (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Administrator"))
     {
         <div class="row">
             <div class="col-xs-12">
@@ -28,80 +26,75 @@
         <div class="row">
             <div class="col-md-7">
                 <!-- Service Hours Sections-->
-                <div class="row-fluid">
-                    <h3>Your Service Hours <small>this semester</small></h3>
-                    @if (Model.NeedsToSoberDrive)
+                <h3>Your Service Hours <small>this semester</small></h3>
+                @if (Model.NeedsToSoberDrive)
+                {
+                    <div class="alert alert-warning">
+                        You haven't signed up to sober drive!  <a href="@Url.Action("SoberSchedule", "Sphinx")">Sign up</a>
+                    </div>
+                }
+                @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
+                {
+                    <p>No service hours submitted</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
+                        {
+                            <tr>
+                                <td>@item.Event.EventName</td>
+                                <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
+                                <td>@item.DurationHours</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                @if (Model.MemberInfo.RequiredStudyHours > 0)
+                {
+                    <h3>Your Study Hours <small>this week</small></h3>
+                    if (!Model.StudyHours.Any())
                     {
-                        <div class="alert alert-warning">
-                            You haven't signed up to sober drive!  <a href="@Url.Action("SoberSchedule", "Sphinx")">Sign up</a>
-                        </div>
-                    }
-                    @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
-                    {
-                        <p>No service hours submitted</p>
+                        <p>You haven't turned in any study hours yet for approval. >:O</p>
                     }
                     else
                     {
                         <table class="table table-condensed table-striped table-responsive">
                             <thead>
                                 <tr>
-                                    <th>Event</th>
                                     <th>Date</th>
+                                    <th>Proctored</th>
+                                    <th>Approver</th>
                                     <th>Hours</th>
                                 </tr>
                             </thead>
-                            @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
+                            @foreach (var studyHour in Model.StudyHours)
                             {
                                 <tr>
-                                    <td>@item.Event.EventName</td>
-                                    <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
-                                    <td>@item.DurationHours</td>
+                                    <td>@studyHour.DateTimeStudied.ToShortDateString()</td>
+                                    <td>@Html.DisplayFor(modelItem => studyHour.IsProctored)</td>
+                                    <td>
+                                        @if (studyHour.Approver == null)
+                                        {
+                                            @: None
+                                        }
+                                        else
+                                        {
+                                            @studyHour.Approver.ToString()
+                                        }
+                                    </td>
+                                    <td>@studyHour.DurationHours</td>
                                 </tr>
                             }
                         </table>
                     }
-                </div>
-                @if (Model.MemberInfo.RequiredStudyHours > 0)
-                {
-                    <!-- Study Hours Section -->
-                    <div class="row-fluid">
-                        <h3>Your Study Hours <small>this week</small></h3>
-                        @if (!Model.StudyHours.Any())
-                        {
-                            <p>You haven't turned in any study hours yet for approval. >:O</p>
-                        }
-                        else
-                        {
-                            <table class="table table-condensed table-striped table-responsive">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Proctored</th>
-                                        <th>Approver</th>
-                                        <th>Hours</th>
-                                    </tr>
-                                </thead>
-                                @foreach (var studyHour in Model.StudyHours)
-                                {
-                                    <tr>
-                                        <td>@studyHour.DateTimeStudied.ToShortDateString()</td>
-                                        <td>@Html.DisplayFor(modelItem => studyHour.IsProctored)</td>
-                                        <td>
-                                            @if (studyHour.Approver == null)
-                                            {
-                                                @: None
-                                            }
-                                            else
-                                            {
-                                                @studyHour.Approver.ToString()
-                                            }
-                                        </td>
-                                        <td>@studyHour.DurationHours</td>
-                                    </tr>
-                                }
-                            </table>
-                        }
-                    </div>
                 }
             </div>
             <div class="col-md-5">
