@@ -64,6 +64,12 @@
                 return RedirectToAction("Index", "Sphinx", new { message });
             }
 
+            var fraction = (model.HoursServed % 1) * 10;
+            if(fraction != 5)
+            {
+                model.HoursServed = Math.Floor(model.HoursServed);
+            }
+
 			var userId = WebSecurity.GetUserId(User.Identity.Name);
             
 			// Check if hours submitted is more than held for event
