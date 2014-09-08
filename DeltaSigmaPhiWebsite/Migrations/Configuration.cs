@@ -295,7 +295,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Department { DepartmentName = "Nuclear Engineering" },
                 new Department { DepartmentName = "Physics" }, //20
                 new Department { DepartmentName = "Psychology" },
-                new Department { DepartmentName = "Military Science" }
+                new Department { DepartmentName = "Military Science" },
+                new Department { DepartmentName = "History & Political Science" }
             );
 
             context.SaveChanges();
