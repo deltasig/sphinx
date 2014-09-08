@@ -283,9 +283,9 @@
 
             return recentAppointsments;
         }
-        protected int GetRemainingServiceHoursForUser(int userId)
+        protected double GetRemainingServiceHoursForUser(int userId)
         {
-            const int requiredHours = 15;
+            const double requiredHours = 15;
 
             var lastSemester = GetLastSemester();
             var currentSemester = GetThisSemester();
@@ -317,7 +317,7 @@
                 totalHours += 5;
             }
 
-            var remainingHours = requiredHours - (int)totalHours;
+            var remainingHours = requiredHours - totalHours;
             return remainingHours < 0 ? 0 : remainingHours;
         }
         protected IEnumerable<SelectListItem> GetAllEventIdsAsEventName()

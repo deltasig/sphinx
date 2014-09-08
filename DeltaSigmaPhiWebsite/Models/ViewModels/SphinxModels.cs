@@ -12,7 +12,7 @@
         public bool NeedsToSoberDrive { get; set; }
         public int RemainingStudyHours { get; set; }
         public int RemainingProctoredStudyHours { get; set; }
-        public int RemainingCommunityServiceHours { get; set; }
+        public double RemainingCommunityServiceHours { get; set; }
         public IEnumerable<LaundrySignup> LaundrySummary { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public IEnumerable<StudyHour> StudyHours { get; set; }
@@ -31,7 +31,7 @@
         [Required]
         [Display(Name = "Hours")]
         [DataType(DataType.Duration)]
-        public int HoursServed { get; set; }
+        public double HoursServed { get; set; }
         public DateTime SoberDriveTime { get; set; }
     }
   

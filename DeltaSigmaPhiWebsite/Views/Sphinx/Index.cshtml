@@ -105,10 +105,10 @@
                 }
             </div>
             <div class="col-md-5">
-                <div class="btn-group">
+                <div class="">
                     <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
                             title="These are your remaining required service hours for this semester." id="serviceHourModalToggle">
-                        <span class="badge">
+                        <span class="badge" style="font-weight: normal !important">
                             @Model.RemainingCommunityServiceHours
                         </span>
                         <span>Serve</span>
@@ -116,8 +116,8 @@
                     @if (Model.MemberInfo.RequiredStudyHours > 0 || Model.MemberInfo.ProctoredStudyHours > 0)
                     {
                         <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
-                                title="These are your required study hours per week (Unproctored | Proctored)." id="studyHourModalToggle">
-                            <span class="badge">
+                                title="These are your remaining study hours this week (Unproctored | Proctored)." id="studyHourModalToggle">
+                            <span class="badge" style="font-weight: normal !important">
                                 @Model.RemainingStudyHours | @Model.RemainingProctoredStudyHours
                             </span>
                             <span>Study</span>
