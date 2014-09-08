@@ -8,12 +8,18 @@
                 <th>Required Hours</th>
                 <th>Total Submitted Hours</th>
                 <th>Approved Hours</th>
+                @if(User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                {
+                    <th>Potential Fine</th>
+                }
                 <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Members.OrderBy(m => m.RequiredStudyHours).ThenBy(m => m.FirstName))
             {
+                var totalUnproctored = item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours);
+                var totalProctored = item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours);
                 <tr>
                     <td>
                         @item.ToString()
@@ -29,6 +35,20 @@
                     <td>
                         @item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
                         @item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
+                    </td>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                    {
+                        <td>
+                            $@if(item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored <= 0)
+                             {
+                                 @:0
+                             }
+                             else
+                             {
+                                 @((item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored)*5)
+                             }
+                        </td>
+                    }
                     <td>
                         @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                         {
