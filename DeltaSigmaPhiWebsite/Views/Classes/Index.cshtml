@@ -23,7 +23,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed">
+                        <table class="table table-condensed" id="class-table">
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.CourseShorthand)</th>
@@ -55,3 +55,17 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $('#class-table').DataTable({
+            pageLength: 25,
+            lengthChange: true,
+            "oLanguage": { "sSearch": "" }
+        });
+        
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
