@@ -12,13 +12,27 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-12">
-            @if(Model.ThisSemester.StartDate >= DateTime.UtcNow)
+        <div class="col-xs-6">
+            @if(Math.Abs((Model.ThisWeek.StartDate.AddDays(-7) - Model.ThisSemester.StartDate).Days) < 6)
+            {
+                @Html.ActionLink("Previous week", "Tracker", new { offset = Model.Offset - 1 })
+            }
+        </div>
+        <div class="col-xs-6">
+            @if(Model.Offset < 0)
+            {
+                @Html.ActionLink("Next week", "Tracker", new { offset = Model.Offset + 1 }, new { @class = "pull-right" })
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            @if (Model.ThisSemester.StartDate >= DateTime.UtcNow)
             {
                 <div class="alert alert-warning">
                     <strong>Study Hours have not started yet.</strong>
-                    The weekly list is showing a list of members who are assigned study hours, but they do not have to be turned in yet. <br/>
-                    Study Hours will be starting on 
+                    The weekly list is showing a list of members who are assigned study hours, but they do not have to be turned in yet. <br />
+                    Study Hours will be starting on
                     <strong>
                         @Model.ThisSemester.StartDate.DayOfWeek,
                         @Model.ThisSemester.StartDate.ToShortDateString()
@@ -26,7 +40,22 @@
                 </div>
             }
             <div class="panel panel-default">
-                <div class="panel-heading">This Week</div>
+                <div class="panel-heading">
+                    <div class="clearfix">
+                        This Week
+                        <div class="pull-right">
+                            @Model.ThisWeek.StartDate.ToShortDateString() to
+                            @if (Model.ThisWeek.StartDate.AddDays(7) > DateTime.UtcNow)
+                            {
+                                @: Present
+                            }
+                            else
+                            {
+                                @Model.ThisWeek.StartDate.AddDays(6).ToShortDateString()
+                            }
+                        </div>
+                    </div>
+                </div>
                 <div class="panel-body">
                     @Html.Partial("_StudyHourProgressPartial", Model.ThisWeek)
                 </div>
@@ -37,7 +66,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-heading">This Semester</div>
                 <div class="panel-body">

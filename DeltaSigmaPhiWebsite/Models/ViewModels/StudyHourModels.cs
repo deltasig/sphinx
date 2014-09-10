@@ -6,6 +6,7 @@
 
     public class TrackerModel
     {
+        public int Offset { get; set; }
         public ProgressModel ThisWeek { get; set; }
         public ProgressModel ThisSemester { get; set; } 
     }
