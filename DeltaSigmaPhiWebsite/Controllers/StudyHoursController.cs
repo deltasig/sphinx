@@ -21,19 +21,26 @@
             return View(model);
         }
 
-        public ActionResult Tracker()
+        public ActionResult Tracker(int? offset)
         {
             var thisSemester = GetThisSemester();
             var startOfThisWeek = GetStartOfCurrentWeek();
+            var modelOffset = 0;
+            if(offset != null && offset < 0)
+            {
+                startOfThisWeek = startOfThisWeek.AddDays(7 * (int)offset);
+                modelOffset = (int)offset;
+            }
             var semesterStudyHours = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.StudyHourStart).ToList();
             var members = semesterStudyHours.Select(s => s.Submitter).Distinct();
 
             var model = new TrackerModel
             {
+                Offset = modelOffset,
                 ThisWeek = new ProgressModel
                 {
                     Members = uow.MemberRepository.SelectBy(s => s.RequiredStudyHours > 0).ToList(),
-                    StartDate = startOfThisWeek.AddDays(-7)
+                    StartDate = startOfThisWeek
                 },
                 ThisSemester = new ProgressModel
                 {
