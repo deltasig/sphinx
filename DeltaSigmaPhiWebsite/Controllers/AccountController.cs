@@ -1,7 +1,10 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Net.Mail;
+    using App_Start;
     using Data;
     using Data.UnitOfWork;
+    using Microsoft.AspNet.Identity;
     using Models;
     using Models.Entities;
     using Models.ViewModels;
@@ -283,8 +286,8 @@
             {
                 model.Email = model.Email.ToLower();
                 model.UserName = model.UserName.ToLower();
-
-                WebSecurity.CreateUserAndAccount(model.UserName, model.Password,
+                var tempPassword = Membership.GeneratePassword(10, 5);
+                WebSecurity.CreateUserAndAccount(model.UserName, tempPassword,
                     new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0, ProctoredStudyHours = 0 });
 
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });
@@ -294,6 +297,24 @@
                 uow.Save();
 
                 message = RegistrationMessageId.RegistrationSuccess;
+
+                var emailMessage = new IdentityMessage
+                {
+                    Subject = "Registration Successful at deltasig-de.org",
+                    Body = "You have been successfully registered on deltasig-de.org. Your username is " + model.UserName +
+                        " and your temporary password (change it when you log in) is: " + tempPassword,
+                    Destination = model.Email
+                };
+                
+                try
+                {
+                    var emailService = new EmailService();
+                    emailService.SendAsync(emailMessage);
+                }
+                catch (SmtpException e)
+                {
+
+                }
             }
             catch (MembershipCreateUserException e)
             {
@@ -324,7 +345,7 @@
                        member.Committees.Count > 0 || member.IncidentReports.Count > 0 ||
                        member.OrganizationsJoined.Count > 0 || member.LaundrySignups.Count > 0 ||
                        member.LittleBrothers.Count > 0 || member.Majors.Count > 0 ||
-                       member.Leaders.Count > 0)
+                       member.Leaders.Count > 0 || member.ApprovedStudyHours.Count > 0)
                     {
                         message = RegistrationMessageId.UnregisterFailed;
                         return RedirectToAction("Registration", new { Message = message });
