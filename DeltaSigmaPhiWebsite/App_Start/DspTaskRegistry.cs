@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.App_Start
 {
+    using System;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
@@ -12,6 +13,9 @@
         {
             Schedule(async () =>
             {
+                var currentTime = DateTime.UtcNow;
+                if (currentTime.Hour != 2 || (currentTime.Minute < 0 && currentTime.Minute > 5)) return;
+
                 var message = new IdentityMessage
                 {
                     Subject = "Check check",
@@ -28,7 +32,7 @@
                 {
 
                 }
-            }).ToRunNow().AndEvery(3).Days().At(19, 0);
+            }).ToRunEvery(5).Minutes();
         }
     }
     public class EmailService : IIdentityMessageService
