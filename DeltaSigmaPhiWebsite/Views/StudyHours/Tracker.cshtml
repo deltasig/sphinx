@@ -42,7 +42,10 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="clearfix">
-                        This Week
+                        @if(Model.Offset == 0)
+                        {
+                            @: This Week
+                        }
                         <div class="pull-right">
                             @if ((Model.ThisWeek.StartDate - Model.ThisSemester.StartDate).Days < 4)
                             {
