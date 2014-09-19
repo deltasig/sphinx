@@ -2,6 +2,17 @@
 
 @{
     ViewBag.Title = "Service Index";
+
+    var totalMembers = Model.Count();
+    var pledges = Model.Where(m => m.Member.MemberStatus.StatusName == "Pledge").ToList();
+    var neophytes = Model.Where(m => m.Member.MemberStatus.StatusName == "Neophyte").ToList();
+    var actives = Model.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
+    var membersServed = Model.Count(m => m.Hours > 0);
+    var servedPercentage = (int)(100 * (membersServed / (double)totalMembers));
+    var membersServedEnough = Model.Count(m => m.Hours >= 15);
+    var servedEnoughPercentage = (int)(100 * (membersServedEnough / (double)totalMembers));
+    var totalHours = Model.Sum(m => m.Hours);
+    var averageHours = (totalHours / totalMembers).ToString("F1");
 }
 @section Title
 {
@@ -11,6 +22,37 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Quick Stats
+                </div>
+                <div class="panel-body">
+                    <p>
+                        <strong>Number of members:</strong>
+                        @totalMembers (@actives.Count() active(s), @pledges.Count() pledge(s), @neophytes.Count() neophyte(s))
+                    </p>
+                    <p>
+                        <strong>Total hours:</strong>
+                        @totalHours (@actives.Sum(a => a.Hours) from active(s), @pledges.Sum(p => p.Hours) from pledge(s), @neophytes.Sum(n => n.Hours) from neophyte(s))
+                    </p>
+                    <p>
+                        <strong>Members served &gt; 0 hours:</strong>
+                        @membersServed (@servedPercentage %)
+                    </p>
+                    <p>
+                        <strong>Members served &ge; 15 hours:</strong>
+                        @membersServedEnough (@servedEnoughPercentage %)
+                    </p>
+                    <p>
+                        <strong>Service Hours Per Member: </strong>
+                        @averageHours
+                    </p>
+                </div>
+                <div class="panel-footer">
+                    <strong>Note: </strong> These numbers are pulled from all current pledges, neophytes, and actives. 
+                    Those who have signed up to sober drive but have not yet driven do not get 5 hours added until after the date for which they signed up has passed.
+                </div>
+            </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Showing Service Hours for @Model.First().Semester
