@@ -11,6 +11,8 @@
         int GetUserId(string userName);
         bool ChangePassword(string userName, string currentPassword, string newPassword);
         string CreateAccount(string userName, string password, bool requireConfirmationToken = false);
+        bool ResetPassword(string passwordResetToken, string newPassword);
+        string GeneratePasswordResetToken(string userName, int tokenExpirationInMinutesFromNow);
 
         IPrincipal CurrentUser { get; }
     }

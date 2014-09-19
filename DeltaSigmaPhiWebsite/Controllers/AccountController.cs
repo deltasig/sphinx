@@ -431,6 +431,48 @@
             }
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public ActionResult ResetPassword(string userName)
+        {
+            bool changePasswordSucceeded;
+            var tempPassword = Membership.GeneratePassword(10, 5);;
+            try
+            {
+                var token = WebSecurity.GeneratePasswordResetToken(userName, 5);
+                changePasswordSucceeded = WebSecurity.ResetPassword(token, tempPassword);
+            }
+            catch (Exception)
+            {
+                changePasswordSucceeded = false;
+            }
+
+            if (changePasswordSucceeded)
+            {
+                var user = uow.MemberRepository.Single(m => m.UserName == userName);
+                var emailMessage = new IdentityMessage
+                {
+                    Subject = "Account Password has been reset at deltasig-de.org",
+                    Body = "Your account password has been reset on deltasig-de.org. Your username is " + userName +
+                        " and your new temporary password (change it when you log in) is: " + tempPassword,
+                    Destination = user.Email
+                };
+
+                try
+                {
+                    var emailService = new EmailService();
+                    emailService.SendAsync(emailMessage);
+                }
+                catch (SmtpException e)
+                {
+
+                }
+                return RedirectToAction("Index", new { userName, Message = ManageMessageId.ChangePasswordSuccess });
+            }
+
+            return RedirectToAction("Index", new { userName, Message = ManageMessageId.ChangePasswordFailure });
+        }
+
         #endregion
 
         #region Roles
