@@ -56,7 +56,10 @@
                                     <td>
                                         @if (item.UserId == null)
                                         {
-                                            @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
+                                            if (!User.IsInRole("Pledge") || item.Type != SoberSignupType.Officer)
+                                            {
+                                                @Html.ActionLink("Sign up", "SoberSignup", new {id = item.SignupId})
+                                            }
                                         }
                                         else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                         {
