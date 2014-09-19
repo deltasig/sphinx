@@ -18,7 +18,7 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed">
+                        <table class="table table-condensed" id="events-table">
                             <thead>
                                 <tr>
                                     <th>@Html.DisplayNameFor(model => model.DateTimeOccurred)</th>
@@ -48,3 +48,16 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#events-table').DataTable({
+            pageLength: 100,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}

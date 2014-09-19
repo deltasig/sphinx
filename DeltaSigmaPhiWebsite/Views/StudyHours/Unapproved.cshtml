@@ -17,7 +17,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed">
+                        <table class="table table-condensed" id="hours-table">
                             <thead>
                                 <tr>
                                     <th>Name</th>
@@ -58,3 +58,16 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#hours-table').DataTable({
+            pageLength: 50,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" }
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
