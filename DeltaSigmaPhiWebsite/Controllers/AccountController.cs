@@ -591,7 +591,7 @@
             : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
             : message == ManageMessageId.AddLoginSuccess ? "External login was added."
             : message == ManageMessageId.SetPasswordFailure ? "The current password is incorrect or the new password is invalid."
-            : message == ManageMessageId.ChangePasswordFailure ? "Unable to create local account. An account with that name may already exist."
+            : message == ManageMessageId.ChangePasswordFailure ? "Failed to change password. Your old password was probably incorrect."
             : "";
         }
         private static dynamic GetAccountChangeMessage(AccountChangeMessageId? message)
