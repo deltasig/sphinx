@@ -139,6 +139,8 @@
 
             if (signup.UserId != null)
                 return RedirectToAction("SoberSchedule", "Sphinx");
+            if(User.IsInRole("Pledge") && signup.Type == SoberSignupType.Officer)
+                return RedirectToAction("SoberSchedule", "Sphinx");
 
             signup.UserId = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
             signup.DateTimeSignedUp = DateTime.UtcNow;
