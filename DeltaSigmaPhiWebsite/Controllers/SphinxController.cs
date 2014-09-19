@@ -28,6 +28,7 @@
 
             var soberSignups = uow.SoberSignupsRepository.SelectAll()
                 .Where(s =>
+                    s.Type == SoberSignupType.Driver &&
                     s.DateOfShift >= startOfTodayUtc && 
                     s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
