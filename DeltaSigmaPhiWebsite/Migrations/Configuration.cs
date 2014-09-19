@@ -366,6 +366,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 3" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 4" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 5" },
+                new Position { IsElected = false, IsExecutive = false, PositionName = "Recruitment Coordinator 6" },
                 new Position { IsElected = false, IsExecutive = false, PositionName = "Chapter Advisor" }
             );
 
