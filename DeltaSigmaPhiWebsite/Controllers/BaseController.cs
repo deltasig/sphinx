@@ -419,22 +419,23 @@
         }
         protected DateTime GetStartOfCurrentWeek()
         {
-            switch (DateTime.UtcNow.Date.DayOfWeek)
+            var now = ConvertUtcToCst(DateTime.UtcNow).Date;
+            switch (now.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
-                    return DateTime.UtcNow.Date.AddDays(-5);
+                    return now.AddDays(-5);
                 case DayOfWeek.Monday:
-                    return DateTime.UtcNow.Date.AddDays(-6);
+                    return now.AddDays(-6);
                 case DayOfWeek.Tuesday:
-                    return DateTime.UtcNow.Date;
+                    return now;
                 case DayOfWeek.Wednesday:
-                    return DateTime.UtcNow.Date.AddDays(-1);
+                    return now.AddDays(-1);
                 case DayOfWeek.Thursday:
-                    return DateTime.UtcNow.Date.AddDays(-2);
+                    return now.AddDays(-2);
                 case DayOfWeek.Friday:
-                    return DateTime.UtcNow.Date.AddDays(-3);
+                    return now.AddDays(-3);
                 default: // Saturday
-                    return DateTime.UtcNow.Date.AddDays(-4);
+                    return now.AddDays(-4);
             }
         }
 
