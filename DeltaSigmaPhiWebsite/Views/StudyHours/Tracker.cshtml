@@ -27,7 +27,7 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            @if (Model.ThisSemester.StartDate >= DateTime.UtcNow)
+            @if (Model.ThisSemester.StartDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.Date, cstZone))
             {
                 <div class="alert alert-warning">
                     <strong>Study Hours have not started yet.</strong>
@@ -56,7 +56,7 @@
                                 @Model.ThisWeek.StartDate.ToShortDateString()
                             }
                             to
-                            @if (Model.ThisWeek.StartDate.AddDays(7) > DateTime.UtcNow)
+                            @if (Model.ThisWeek.StartDate.AddDays(7) > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.Date, cstZone))
                             {
                                 @: Present
                             }
