@@ -23,17 +23,23 @@
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             var member = uow.MemberRepository.SingleById(userId);
             var events = GetAllCompletedEventsForUser(userId).ToList();
-            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
+            var startOfTodayCst = ConvertUtcToCst(DateTime.UtcNow).Date;
+            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
             var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
+
+            if (startOfTodayCst.Hour < 6)
+            {
+                startOfTodayUtc = startOfTodayUtc.AddDays(-1);
+            }
 
             var soberSignups = uow.SoberSignupsRepository.SelectAll()
                 .Where(s =>
-                    s.Type == SoberSignupType.Driver &&
-                    s.DateOfShift >= startOfTodayUtc && 
+                    s.DateOfShift >= startOfTodayUtc &&
                     s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
                 .ThenBy(s => s.Type)
                 .ToList();
+
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
             var enumerable = memberSoberSignups as IList<SoberSignup> ?? memberSoberSignups.ToList();
