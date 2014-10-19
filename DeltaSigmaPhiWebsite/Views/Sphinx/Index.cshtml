@@ -215,7 +215,19 @@
             @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
         </div>
         <div class="col-sm-7">
-            <p>Alumni content is forthcoming.</p>
+            @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
+            {
+                <div class="alert alert-warning">
+                    Please enter your mailing address on your <a href="@Url.Action("Index", "Account")">Account page</a>!
+                </div>
+            }
+            @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
+            {
+                <div class="alert alert-warning">
+                    Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account")">Account page</a>!
+                </div>
+            }
+            <p>More Alumni content is forthcoming.</p>
         </div>
     }
     else if (User.IsInRole("Affiliate"))
