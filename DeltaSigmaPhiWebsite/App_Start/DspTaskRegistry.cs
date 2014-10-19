@@ -11,29 +11,29 @@
     {
         public DspTaskRegistry()
         {
-            Schedule(async () =>
-            {
-                var currentTime = DateTime.UtcNow;
-                if (currentTime.Hour == 2 && currentTime.Minute <= 5)
-                {
-                    var message = new IdentityMessage
-                    {
-                        Subject = "Check check",
-                        Body = "I'm rick james.",
-                        Destination = "tjm6f4@mst.edu"
-                    };
+            //Schedule(async () =>
+            //{
+            //    var currentTime = DateTime.UtcNow;
+            //    if (currentTime.Hour == 2 && currentTime.Minute <= 5)
+            //    {
+            //        var message = new IdentityMessage
+            //        {
+            //            Subject = "Check check",
+            //            Body = "I'm rick james.",
+            //            Destination = "tjm6f4@mst.edu"
+            //        };
 
-                    try
-                    {
-                        var emailService = new EmailService();
-                        await emailService.SendAsync(message);
-                    }
-                    catch (SmtpException e)
-                    {
+            //        try
+            //        {
+            //            var emailService = new EmailService();
+            //            await emailService.SendAsync(message);
+            //        }
+            //        catch (SmtpException e)
+            //        {
 
-                    }
-                }
-            }).ToRunEvery(5).Minutes();
+            //        }
+            //    }
+            //}).ToRunEvery(5).Minutes();
         }
     }
     public class EmailService : IIdentityMessageService
