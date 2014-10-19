@@ -28,10 +28,7 @@
                     else
                     {
                         <td>@item.Member.ToString()</td>
-                        <td class="hidden-xs">
-                            @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                        </td>
-                        <td class="visible-xs">
+                        <td>
                             <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
                                 @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
                             </a>
