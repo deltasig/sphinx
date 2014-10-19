@@ -42,15 +42,6 @@
 
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
-            var enumerable = memberSoberSignups as IList<SoberSignup> ?? memberSoberSignups.ToList();
-            if (enumerable.Any())
-            {
-                events.Add(new ServiceHour
-                {
-                    DurationHours = 5,
-                    Event = new Event { EventName = "Sober Driving", DateTimeOccurred = enumerable.First().DateOfShift },
-                });
-            }
 
             var laundrySignups = uow.LaundrySignupRepository
                     .SelectBy(l => l.DateTimeShift >= DateTime.UtcNow)
@@ -73,7 +64,9 @@
                 StudyHours = GetStudyHoursForUser(userId),
                 SoberSignups = soberSignups,
                 LaundrySummary = laundrySignups.Take(laundryTake),
-                NeedsToSoberDrive = !memberSoberSignups.Any()
+                NeedsToSoberDrive = !memberSoberSignups.Any(),
+                CurrentSemester = thisSemester,
+                PreviousSemester = GetLastSemester()
             };
 
             ViewBag.Message = message;

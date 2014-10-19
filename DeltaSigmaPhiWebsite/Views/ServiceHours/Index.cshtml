@@ -7,10 +7,14 @@
     var pledges = Model.Where(m => m.Member.MemberStatus.StatusName == "Pledge").ToList();
     var neophytes = Model.Where(m => m.Member.MemberStatus.StatusName == "Neophyte").ToList();
     var actives = Model.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
+    
     var membersServed = Model.Count(m => m.Hours > 0);
     var servedPercentage = (int)(100 * (membersServed / (double)totalMembers));
-    var membersServedEnough = Model.Count(m => m.Hours >= 15);
-    var servedEnoughPercentage = (int)(100 * (membersServedEnough / (double)totalMembers));
+    var membersServedTen = Model.Count(m => m.Hours >= 10);
+    var servedTenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
+    var membersServedFifteen = Model.Count(m => m.Hours >= 15);
+    var servedFifteenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
+    
     var totalHours = Model.Sum(m => m.Hours);
     var averageHours = (totalHours / totalMembers).ToString("F1");
 }
@@ -40,8 +44,12 @@
                         @membersServed (@servedPercentage %)
                     </p>
                     <p>
+                        <strong>Members served &ge; 10 hours:</strong>
+                        @membersServedTen (@servedTenPercentage %)
+                    </p>
+                    <p>
                         <strong>Members served &ge; 15 hours:</strong>
-                        @membersServedEnough (@servedEnoughPercentage %)
+                        @membersServedFifteen (@servedFifteenPercentage %)
                     </p>
                     <p>
                         <strong>Service Hours Per Member: </strong>
@@ -50,7 +58,7 @@
                 </div>
                 <div class="panel-footer">
                     <strong>Note: </strong> These numbers are pulled from all current pledges, neophytes, and actives. 
-                    Those who have signed up to sober drive but have not yet driven do not get 5 hours added until after the date for which they signed up has passed.
+                    Sober driving is not counted towards community service hours.
                 </div>
             </div>
             <div class="panel panel-default">
