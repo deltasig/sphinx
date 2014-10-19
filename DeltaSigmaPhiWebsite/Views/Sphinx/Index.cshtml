@@ -25,14 +25,14 @@
         </div>
         <div class="row">
             <div class="col-md-7">
-                <!-- Service Hours Sections-->
-                <h3>Your Service Hours <small>this semester</small></h3>
                 @if (Model.NeedsToSoberDrive)
                 {
                     <div class="alert alert-warning">
                         You haven't signed up to sober drive!  <a href="@Url.Action("SoberSchedule", "Sphinx")">Sign up</a>
                     </div>
                 }
+                <!-- Service Hours Sections-->
+                <h3>Your Service Hours <small>this semester</small></h3>
                 @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
                 {
                     <p>No service hours submitted</p>
@@ -123,6 +123,27 @@
                 @{ Html.RenderAction("Submit", "ServiceHours"); }
                 @{ Html.RenderAction("Submit", "StudyHours"); }
 
+                @if (!Model.NeedsToSoberDrive)
+                {
+                    <table class="table table-condensed table-responsive">
+                        <thead>
+                            <tr>
+                                <th colspan="2">My Sober Signups <small>(This Semester)</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.MemberInfo.SoberSignups
+                                .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
+                            {
+                                <tr>
+                                    <td>@item.Type</td>
+                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
                 @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
 
                 <table class="table table-condensed table-responsive">
@@ -160,11 +181,11 @@
     }
     else if (User.IsInRole("Alumnus"))
     {
-        <div class="col-sm-7">
-            <p>Alumni content is forthcoming.</p>
-        </div>
         <div class="col-sm-5">
             @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
+        </div>
+        <div class="col-sm-7">
+            <p>Alumni content is forthcoming.</p>
         </div>
     }
     else if (User.IsInRole("Affiliate"))

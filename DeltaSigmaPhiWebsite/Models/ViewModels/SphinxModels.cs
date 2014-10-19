@@ -13,6 +13,8 @@
         public int RemainingStudyHours { get; set; }
         public int RemainingProctoredStudyHours { get; set; }
         public double RemainingCommunityServiceHours { get; set; }
+        public Semester CurrentSemester { get; set; }
+        public Semester PreviousSemester { get; set; }
         public IEnumerable<LaundrySignup> LaundrySummary { get; set; }
         public IEnumerable<string> Roles { get; set; }
         public IEnumerable<StudyHour> StudyHours { get; set; }
