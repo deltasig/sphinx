@@ -285,7 +285,7 @@
         }
         protected double GetRemainingServiceHoursForUser(int userId)
         {
-            const double requiredHours = 15;
+            const double requiredHours = 10;
 
             var lastSemester = GetLastSemester();
             var currentSemester = GetThisSemester();
@@ -304,17 +304,6 @@
             catch (Exception)
             {
 
-            }
-
-            var soberDriverCheck = uow.SoberSignupsRepository.SelectAll()
-                .Any(s =>
-                    s.UserId == userId &&
-                    s.Type == SoberSignupType.Driver &&
-                    s.DateOfShift > lastSemester.DateEnd &&
-                    s.DateOfShift <= currentSemester.DateEnd);
-            if (soberDriverCheck)
-            {
-                totalHours += 5;
             }
 
             var remainingHours = requiredHours - totalHours;

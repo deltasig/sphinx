@@ -28,12 +28,6 @@
 			var lastSemester = GetLastSemester();
 			var thisSemester = GetThisSemester();
 
-            var soberSignups = uow.SoberSignupsRepository.SelectAll()
-                .Where(s =>
-                    s.Type == SoberSignupType.Driver &&
-                    s.DateOfShift >= thisSemester.DateStart &&
-                    s.DateOfShift <= DateTime.UtcNow).Select(c => c.Member.UserName).ToList();
-
 			foreach (var m in activeMembers)
 			{
 				var member = new ServiceIndexModel
@@ -47,12 +41,7 @@
 					Semester = thisSemester
 				};
 
-                if(soberSignups.Contains(m.UserName))
-                {
-                    member.Hours += 5;
-                }
-
-                model.Add(member);
+				model.Add(member);
 			}
 
 			return View(model);
