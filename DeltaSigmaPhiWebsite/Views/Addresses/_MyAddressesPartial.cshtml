@@ -19,20 +19,19 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="@(string.IsNullOrEmpty(item.Address1) ? "danger" : "")">
-                            @if (item.Address1 == null)
+                        <td class="@(!item.IsFilledOut() ? "danger" : "")">
+                            @if (!item.IsFilledOut())
                             {
                                 @:Please enter an address
-                        }
+                            }
                             else
                             {
                                 @item.Address1@:,
-                            if (@item.Address2 != null)
-                            {
-                                @item.Address2@:,
-                            }
-                            @item.City@:, @item.State @item.PostalCode,
-                                @item.Country
+                                if (@item.Address2 != null)
+                                {
+                                    @item.Address2@:,
+                                }
+                                @item.City@:, @item.State @item.PostalCode, @item.Country
                             }
                         </td>
                         <td>@item.Type</td>

@@ -34,5 +34,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         public string Country { get; set; }
 
         public virtual Member Member { get; set; }
+
+        public bool IsFilledOut()
+        {
+            return !string.IsNullOrEmpty(Address1) && !string.IsNullOrEmpty(City) && !string.IsNullOrEmpty(State);
+        }
     }
 }
