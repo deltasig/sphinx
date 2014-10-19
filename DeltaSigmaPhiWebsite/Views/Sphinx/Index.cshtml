@@ -24,6 +24,104 @@
             </div>
         </div>
         <div class="row">
+            <div class="col-md-5">
+                <div class="">
+                    <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
+                            title="These are your remaining required service hours for this semester." id="serviceHourModalToggle">
+                        <span class="badge" style="font-weight: normal !important">
+                            @Model.RemainingCommunityServiceHours
+                        </span>
+                        <span>Serve</span>
+                    </button>
+                    @if (Model.MemberInfo.RequiredStudyHours > 0 || Model.MemberInfo.ProctoredStudyHours > 0)
+                    {
+                        <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
+                                title="These are your remaining study hours this week (Unproctored | Proctored)." id="studyHourModalToggle">
+                            <span class="badge" style="font-weight: normal !important">
+                                @Model.RemainingStudyHours | @Model.RemainingProctoredStudyHours
+                            </span>
+                            <span>Study</span>
+                        </button>
+                    }
+                </div>
+                
+                <hr/>
+
+                @{ Html.RenderAction("Submit", "ServiceHours"); }
+                @{ Html.RenderAction("Submit", "StudyHours"); }
+                
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="active"><a href="#soberschedule" data-toggle="pill">Sober Schedule</a></li>
+                    <li><a href="#mysignups" data-toggle="pill">My Sober Schedule</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="soberschedule">
+                        @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
+                    </div>
+                    <div class="tab-pane" id="mysignups">
+                        @if (!Model.NeedsToSoberDrive)
+                        {
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3"><small>This Semester</small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MemberInfo.SoberSignups
+                                            .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
+                                        {
+                                            <tr>
+                                                <td>@item.Type</td>
+                                                <td>@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3)</td>
+                                                <td>@item.DateOfShift.ToShortDateString()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                You haven't signed up to sober drive!  <a href="@Url.Action("SoberSchedule", "Sphinx")">Sign up</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Upcoming Laundry Reservations</div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @if (Model.LaundrySummary.Any())
+                                {
+
+                                    foreach (var signup in Model.LaundrySummary)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortDateString():
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortTimeString() -
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).AddHours(2).ToShortTimeString()
+                                            </td>
+                                            <td>@signup.Member.ToString()</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">No reservations this week.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
             <div class="col-md-7">
                 @if (Model.NeedsToSoberDrive)
                 {
@@ -62,7 +160,7 @@
                     <h3>Your Study Hours <small>this week</small></h3>
                     if (!Model.StudyHours.Any())
                     {
-                        <p>You haven't turned in any study hours yet for approval. >:O</p>
+                        <p>You haven't turned in any study hours yet for approval.</p>
                     }
                     else
                     {
@@ -96,86 +194,6 @@
                         </table>
                     }
                 }
-            </div>
-            <div class="col-md-5">
-                <div class="">
-                    <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
-                            title="These are your remaining required service hours for this semester." id="serviceHourModalToggle">
-                        <span class="badge" style="font-weight: normal !important">
-                            @Model.RemainingCommunityServiceHours
-                        </span>
-                        <span>Serve</span>
-                    </button>
-                    @if (Model.MemberInfo.RequiredStudyHours > 0 || Model.MemberInfo.ProctoredStudyHours > 0)
-                    {
-                        <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#studyHourModal" data-placement="top"
-                                title="These are your remaining study hours this week (Unproctored | Proctored)." id="studyHourModalToggle">
-                            <span class="badge" style="font-weight: normal !important">
-                                @Model.RemainingStudyHours | @Model.RemainingProctoredStudyHours
-                            </span>
-                            <span>Study</span>
-                        </button>
-                    }
-                </div>
-
-                <br />
-                <br />
-                @{ Html.RenderAction("Submit", "ServiceHours"); }
-                @{ Html.RenderAction("Submit", "StudyHours"); }
-
-                @if (!Model.NeedsToSoberDrive)
-                {
-                    <table class="table table-condensed table-responsive">
-                        <thead>
-                            <tr>
-                                <th colspan="2">My Sober Signups <small>(This Semester)</small></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.MemberInfo.SoberSignups
-                                .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
-                            {
-                                <tr>
-                                    <td>@item.Type</td>
-                                    <td>@item.DateOfShift.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-
-                @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
-
-                <table class="table table-condensed table-responsive">
-                    <thead>
-                        <tr>
-                            <th colspan="2">Upcoming Laundry Reservations</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (Model.LaundrySummary.Any())
-                        {
-
-                            foreach (var signup in Model.LaundrySummary)
-                            {
-                                <tr>
-                                    <td>
-                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortDateString():
-                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortTimeString() -
-                                        @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).AddHours(2).ToShortTimeString()
-                                    </td>
-                                    <td>@signup.Member.ToString()</td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr>
-                                <td colspan="2">No reservations this week.</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
             </div>
         </div>
     }
