@@ -4,19 +4,46 @@
     ViewBag.Title = "Service Index";
 
     var totalMembers = Model.Count();
+    var actives = Model.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
     var pledges = Model.Where(m => m.Member.MemberStatus.StatusName == "Pledge").ToList();
     var neophytes = Model.Where(m => m.Member.MemberStatus.StatusName == "Neophyte").ToList();
-    var actives = Model.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
-    
+
     var membersServed = Model.Count(m => m.Hours > 0);
-    var servedPercentage = (int)(100 * (membersServed / (double)totalMembers));
+    var membersServedPercentage = (int)(100 * (membersServed / (double)totalMembers));
     var membersServedTen = Model.Count(m => m.Hours >= 10);
     var servedTenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
     var membersServedFifteen = Model.Count(m => m.Hours >= 15);
     var servedFifteenPercentage = (int)(100 * (membersServedFifteen / (double)totalMembers));
+    var totalMemberHours = Model.Sum(m => m.Hours);
+    var averageMemberHours = (totalMemberHours / totalMembers).ToString("F1");
+
+    var activesServed = actives.Count(m => m.Hours > 0);
+    var activesServedPercentage = (int)(100 * (activesServed / (double)(actives.Count == 0 ? 1 : actives.Count)));
+    var activesServedTen = actives.Count(m => m.Hours >= 10);
+    var activesTenPercentage = (int)(100 * (activesServedTen / (double)(actives.Count == 0 ? 1 : actives.Count)));
+    var activesServedFifteen = actives.Count(m => m.Hours >= 15);
+    var activesFifteenPercentage = (int)(100 * (activesServedFifteen / (double)(actives.Count == 0 ? 1 : actives.Count)));
+    var totalActiveHours = actives.Sum(m => m.Hours);
+    var averageActiveHours = (totalActiveHours / (actives.Count == 0 ? 1 : actives.Count)).ToString("F1");
     
-    var totalHours = Model.Sum(m => m.Hours);
-    var averageHours = (totalHours / totalMembers).ToString("F1");
+    var pledgesServed = pledges.Count(m => m.Hours > 0);
+    var pledgesServedPercentage = (int)(100 * (pledgesServed / (double)(pledges.Count == 0 ? 1 : pledges.Count)));
+    var pledgesServedTen = pledges.Count(m => m.Hours >= 10);
+    var pledgesTenPercentage = (int)(100 * (pledgesServedTen / (double)(pledges.Count == 0 ? 1 : pledges.Count)));
+    var pledgesServedFifteen = pledges.Count(m => m.Hours >= 15);
+    var pledgesFifteenPercentage = (int)(100 * (pledgesServedFifteen / (double)(pledges.Count == 0 ? 1 : pledges.Count)));
+    var totalPledgeHours = pledges.Sum(m => m.Hours);
+    var averagePledgeHours = (totalPledgeHours / (pledges.Count == 0 ? 1 : pledges.Count)).ToString("F1");
+    
+    var neophytesServed = neophytes.Count(m => m.Hours > 0);
+    var neophytesServedPercentage = (int)(100 * (neophytesServed / (double)(neophytes.Count == 0 ? 1 : neophytes.Count)));
+    var neophytesServedTen = neophytes.Count(m => m.Hours >= 10);
+    var neophytesTenPercentage = (int)(100 * (neophytesServedTen / (double)(neophytes.Count == 0 ? 1 : neophytes.Count)));
+    var neophytesServedFifteen = neophytes.Count(m => m.Hours >= 15);
+    var neophytesFifteenPercentage = (int)(100 * (neophytesServedFifteen / (double)(neophytes.Count == 0 ? 1 : neophytes.Count)));
+    var totalNeophyteHours = neophytes.Sum(m => m.Hours);
+    var averageNeophyteHours = (totalNeophyteHours / (neophytes.Count == 0 ? 1 : neophytes.Count)).ToString("F1");
+    
 }
 @section Title
 {
@@ -30,34 +57,74 @@
                 <div class="panel-heading">
                     Quick Stats
                 </div>
-                <div class="panel-body">
-                    <p>
-                        <strong>Number of members:</strong>
-                        @totalMembers (@actives.Count() active(s), @pledges.Count() pledge(s), @neophytes.Count() neophyte(s))
-                    </p>
-                    <p>
-                        <strong>Total hours:</strong>
-                        @totalHours (@actives.Sum(a => a.Hours) from active(s), @pledges.Sum(p => p.Hours) from pledge(s), @neophytes.Sum(n => n.Hours) from neophyte(s))
-                    </p>
-                    <p>
-                        <strong>Members served &gt; 0 hours:</strong>
-                        @membersServed (@servedPercentage %)
-                    </p>
-                    <p>
-                        <strong>Members served &ge; 10 hours:</strong>
-                        @membersServedTen (@servedTenPercentage %)
-                    </p>
-                    <p>
-                        <strong>Members served &ge; 15 hours:</strong>
-                        @membersServedFifteen (@servedFifteenPercentage %)
-                    </p>
-                    <p>
-                        <strong>Service Hours Per Member: </strong>
-                        @averageHours
-                    </p>
-                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>All Members (@totalMembers)</th>
+                            <th>Actives (@actives.Count())</th>
+                            <th>Pledges (@pledges.Count())</th>
+                            @if (neophytes.Any())
+                            {
+                                <th>Neophytes (@neophytes.Count())</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total hours:</td>
+                            <td>@totalMemberHours</td>
+                            <td>@actives.Sum(a => a.Hours)</td>
+                            <td>@pledges.Sum(p => p.Hours)</td>
+                            @if (neophytes.Any())
+                            {
+                                <td>@neophytes.Sum(n => n.Hours)</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Members served &gt; 0 hours:</td>
+                            <td>@membersServed (@membersServedPercentage %)</td>
+                            <td>@activesServed (@activesServedPercentage %)</td>
+                            <td>@pledgesServed (@pledgesServedPercentage %)</td>
+                            @if (neophytes.Any())
+                            {
+                                <td>@pledgesServed (@neophytesServedPercentage %)</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Members served &ge; 10 hours:</td>
+                            <td>@membersServedTen (@servedTenPercentage %)</td>
+                            <td>@activesServedTen (@activesTenPercentage %)</td>
+                            <td>@pledgesServedTen (@pledgesTenPercentage %)</td>
+                            @if (neophytes.Any())
+                            {
+                                <td>@neophytesServedTen (@neophytesTenPercentage %)</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Members served &ge; 15 hours:</td>
+                            <td>@membersServedFifteen (@servedFifteenPercentage %)</td>
+                            <td>@activesServedFifteen (@activesFifteenPercentage %)</td>
+                            <td>@pledgesServedFifteen (@pledgesFifteenPercentage %)</td>
+                            @if (neophytes.Any())
+                            {
+                                <td>@neophytesServedFifteen (@neophytesFifteenPercentage %)</td>
+                            }
+                        </tr>
+                        <tr>
+                            <td>Service Hours Per Member:</td>
+                            <td>@averageMemberHours</td>
+                            <td>@averageActiveHours</td>
+                            <td>@averagePledgeHours</td>
+                            @if (neophytes.Any())
+                            {
+                                <td>@averageNeophyteHours</td>
+                            }
+                        </tr>
+                    </tbody>
+                </table>
                 <div class="panel-footer">
-                    <strong>Note: </strong> These numbers are pulled from all current pledges, neophytes, and actives. 
+                    <strong>Note: </strong> These numbers are pulled from all current actives, pledges, and neophytes. 
                     Sober driving is not counted towards community service hours.
                 </div>
             </div>
