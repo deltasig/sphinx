@@ -13,7 +13,7 @@
     var membersServedTen = Model.Count(m => m.Hours >= 10);
     var servedTenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
     var membersServedFifteen = Model.Count(m => m.Hours >= 15);
-    var servedFifteenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
+    var servedFifteenPercentage = (int)(100 * (membersServedFifteen / (double)totalMembers));
     
     var totalHours = Model.Sum(m => m.Hours);
     var averageHours = (totalHours / totalMembers).ToString("F1");
