@@ -8,7 +8,7 @@
                 <th>Required Hours</th>
                 <th>Total Submitted Hours</th>
                 <th>Approved Hours</th>
-                @if(User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                 {
                     <th>Potential Fine</th>
                 }
@@ -18,8 +18,40 @@
         <tbody>
             @foreach (var item in Model.Members.OrderBy(m => m.RequiredStudyHours).ThenBy(m => m.FirstName))
             {
-                var totalUnproctored = item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours);
-                var totalProctored = item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours);
+                var submittedUnproctored = item.SubmittedStudyHours.Where(m =>
+                    !m.IsProctored &&
+                    m.DateTimeStudied >= Model.StartDate &&
+                    m.DateTimeStudied < Model.EndDate);
+                var submittedUnproctoredText = "<b>Unproctored</b><br>";
+                foreach (var sub in submittedUnproctored)
+                {
+                    submittedUnproctoredText += sub.DateTimeStudied.ToShortDateString() + " (" + sub.DurationHours + ")<br>";
+                }
+
+                var submittedProctored = item.SubmittedStudyHours.Where(m =>
+                    m.IsProctored &&
+                    m.DateTimeStudied >= Model.StartDate &&
+                    m.DateTimeStudied < Model.EndDate);
+                var submittedProctoredText = string.Empty;
+                if (submittedProctored.Any())
+                {
+                    submittedProctoredText = "<br><b>Proctored</b><br>";
+                }
+                foreach (var sub in submittedProctored)
+                {
+                    submittedProctoredText += sub.DateTimeStudied.ToShortDateString() + " (" + sub.DurationHours + ")<br>";
+                }
+
+                var totalUnproctored = item.SubmittedStudyHours.Where(m =>
+                    m.ApproverId != null &&
+                    !m.IsProctored &&
+                    m.DateTimeStudied >= Model.StartDate &&
+                    m.DateTimeStudied < Model.EndDate).Sum(s => s.DurationHours);
+                var totalProctored = item.SubmittedStudyHours.Where(m =>
+                    m.ApproverId != null &&
+                    m.IsProctored &&
+                    m.DateTimeStudied >= Model.StartDate &&
+                    m.DateTimeStudied < Model.EndDate).Sum(s => s.DurationHours);
                 <tr>
                     <td>
                         @item.ToString()
@@ -29,23 +61,36 @@
                         @item.ProctoredStudyHours
                     </td>
                     <td>
-                        @item.SubmittedStudyHours.Where(m => !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
-                        @item.SubmittedStudyHours.Where(m => m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
+                        <a class="display-hours" tabindex="0" href="#"
+                           data-toggle="popover" data-placement="left" data-trigger="focus"
+                           title="@item.FirstName @item.LastName Submissions"
+                           data-content="@submittedUnproctoredText @submittedProctoredText">
+                            <i class="fa fa-info-circle"></i>
+                        </a>
+                        @submittedUnproctored.Sum(s => s.DurationHours) |
+                        @submittedProctored.Sum(s => s.DurationHours)
                     </td>
                     <td>
-                        @item.SubmittedStudyHours.Where(m => m.ApproverId != null && !m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours) |
-                        @item.SubmittedStudyHours.Where(m => m.ApproverId != null && m.IsProctored && m.DateTimeStudied >= Model.StartDate).Sum(s => s.DurationHours)
+                        @item.SubmittedStudyHours.Where(m =>
+                            m.ApproverId != null && !m.IsProctored &&
+                            m.DateTimeStudied >= Model.StartDate &&
+                            m.DateTimeStudied < Model.EndDate).Sum(s => s.DurationHours) |
+                        @item.SubmittedStudyHours.Where(m =>
+                            m.ApproverId != null &&
+                            m.IsProctored &&
+                            m.DateTimeStudied >= Model.StartDate &&
+                            m.DateTimeStudied < Model.EndDate).Sum(s => s.DurationHours)
                     </td>
                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                     {
                         <td>
-                            $@if(item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored <= 0)
+                            $@if (item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored <= 0)
                              {
                                  @:0
                              }
                              else
                              {
-                                 @((item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored)*5)
+                                 @((item.RequiredStudyHours - totalUnproctored + item.ProctoredStudyHours - totalProctored) * 5)
                              }
                         </td>
                     }

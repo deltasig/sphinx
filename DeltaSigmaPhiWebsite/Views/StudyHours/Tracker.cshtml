@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            @if((Model.ThisWeek.StartDate - Model.ThisSemester.StartDate).Days >= 4)
+            @if((Model.ThisWeek.StartDate - Model.ThisSemester.DateStart).Days >= 4)
             {
                 @Html.ActionLink("Previous week", "Tracker", new { offset = Model.Offset - 1 })
             }
@@ -27,15 +27,15 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            @if (Model.ThisSemester.StartDate >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.Date, cstZone))
+            @if (Model.ThisSemester.StudyHourStart >= TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow.Date, cstZone))
             {
                 <div class="alert alert-warning">
                     <strong>Study Hours have not started yet.</strong>
                     The weekly list is showing a list of members who are assigned study hours, but they do not have to be turned in yet. <br />
                     Study Hours will be starting on
                     <strong>
-                        @Model.ThisSemester.StartDate.DayOfWeek,
-                        @Model.ThisSemester.StartDate.ToShortDateString()
+                        @Model.ThisSemester.DateStart.DayOfWeek,
+                        @Model.ThisSemester.DateStart.ToShortDateString()
                     </strong>
                 </div>
             }
@@ -47,9 +47,9 @@
                             @: This Week
                         }
                         <div class="pull-right">
-                            @if ((Model.ThisWeek.StartDate - Model.ThisSemester.StartDate).Days < 4)
+                            @if ((Model.ThisWeek.StartDate - Model.ThisSemester.DateStart).Days < 4)
                             {
-                                @Model.ThisSemester.StartDate.ToShortDateString()
+                                @Model.ThisSemester.DateStart.ToShortDateString()
                             }
                             else
                             {
@@ -76,18 +76,17 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">This Semester</div>
-                <div class="panel-body">
-                    @Html.Partial("_StudyHourProgressPartial", Model.ThisSemester)
-                </div>
-                <div class="panel-footer">
-                    <small>Unproctored | Proctored</small>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('.display-hours').popover({
+                html:true,
+            });
+        });
+
+    </script>
+}
