@@ -8,11 +8,12 @@
     {
         public int Offset { get; set; }
         public ProgressModel ThisWeek { get; set; }
-        public ProgressModel ThisSemester { get; set; } 
+        public Semester ThisSemester { get; set; }
     }
     public class ProgressModel
     {
         public IEnumerable<Member> Members { get; set; }
         public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }
