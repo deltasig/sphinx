@@ -208,10 +208,16 @@
                 for (var x = 0; x < 7; x++) // Days of week
                 {
                     var timeSlot = startOfTodayUtc.AddHours(y * slotSize + x * hoursInDay);
-                    var reservation = existingSignups.SingleOrDefault(s => s.DateTimeShift == timeSlot);
-                    if (reservation != null)
+                    if (existingSignups.Any(s => s.DateTimeShift == timeSlot))
                     {
-                        reservation.DateTimeShift = ConvertUtcToCst(reservation.DateTimeShift);
+                        var existing = existingSignups.Single(s => s.DateTimeShift == timeSlot);
+                        var reservation = new LaundrySignup
+                        {
+                            DateTimeSignedUp = existing.DateTimeSignedUp,
+                            DateTimeShift = ConvertUtcToCst(timeSlot),
+                            Member = existing.Member,
+                            UserId = existing.UserId
+                        };
                         timeSlotSchedule.Add(reservation);
                     }
                     else
