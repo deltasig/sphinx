@@ -10,15 +10,23 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-12">
-            <div class="alert alert-warning">
-                <strong>Notice!</strong> Make sure you @Html.ActionLink("set your mobile phone number", "Index", "Account")!
-            </div>
+        <div class="col-xs-12">
+            @if (!string.IsNullOrEmpty(ViewBag.Message))
+            {
+                <div class="alert alert-warning">
+                    @ViewBag.Message
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-12">
             <div class="panel panel-default">
                 @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                 {
                     <div class="panel-heading">
-                        @if(Model.Any())
+                        @if (Model.Any())
                         {
                             @: Sign up for sober duty below.
                         }
@@ -35,55 +43,58 @@
                             <thead>
                                 <tr>
                                     <th>Requested</th>
-                                    <th>Volunteer</th>
                                     <th>Date</th>
-                                    <th>Action</th>
+                                    <th>Volunteer</th>
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                    {
+                                        <th></th>
+                                    }
                                 </tr>
                             </thead>
-                            @foreach (var item in Model.OrderBy(s => s.DateOfShift))
-                            {
-                                <tr>
-                                    <td>@item.Type</td>
-                                    @if (item.UserId == null)
-                                    {
-                                        <td>None</td>
-                                    }
-                                    else
-                                    {
-                                        <td>@item.Member.ToString()</td>
-                                    }
-                                    <td>@item.DateOfShift.ToShortDateString()</td>
-                                    <td>
-                                        @if (item.UserId == null)
-                                        {
-                                            if (!User.IsInRole("Pledge") || item.Type != SoberSignupType.Officer)
+                            <tbody>
+                                @foreach (var item in Model.OrderBy(s => s.DateOfShift))
+                                {
+                                    <tr>
+                                        <td>@item.Type</td>
+                                        <td>@item.DateOfShift.ToShortDateString()</td>
+                                        <td>
+                                            @if (item.UserId == null)
                                             {
-                                                @Html.ActionLink("Sign up", "SoberSignup", new {id = item.SignupId})
+                                                if (!User.IsInRole("Pledge") || item.Type != SoberSignupType.Officer)
+                                                {
+                                                    @Html.ActionLink("Sign up", "SoberSignup", new { id = item.SignupId })
+                                                }
                                             }
-                                        }
-                                        else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                        {
-                                            using (Html.BeginForm("SoberSignupCancel", "Sphinx", new { id = item.SignupId },
-                                                FormMethod.Get, new { style = "display: inline" }))
+                                            else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                            {
+                                                using (Html.BeginForm("SoberSignupCancel", "Sphinx", new { id = item.SignupId },
+                                                    FormMethod.Get, new { style = "display: inline" }))
+                                                {
+                                                    @item.Member.ToString()
+                                                    <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
+                                                        <i class="fa fa-minus-square"></i>
+                                                    </button>
+                                                }
+                                            }
+                                            else
                                             {
                                                 @item.Member.ToString()
-                                                <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
-                                                    <i class="fa fa-minus-square"></i>
-                                                </button>
                                             }
-                                        }
-                                        else
-                                        {
-                                            @item.Member.ToString()
-                                        }
+                                        </td>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                         {
-                                            @:|
-                                            @Html.ActionLink("Delete", "SoberSignupDelete", new { id = item.SignupId })
+                                            <td>
+                                                <a class="" href="@Url.Action("EditSoberSignup", "Sphinx", new { id = item.SignupId })">
+                                                    <i class="fa fa-pencil fa-lg"></i>
+                                                </a> 
+                                                <a class="" href="@Url.Action("SoberSignupDelete", "Sphinx", new { id = item.SignupId })">
+                                                    <i class="fa fa-times fa-lg"></i>
+                                                </a>
+                                            </td>
                                         }
-                                    </td>
-                                </tr>
-                            }
+                                    </tr>
+                                }
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -99,7 +110,7 @@
             pageLength: 25,
             lengthChange: false,
             "oLanguage": { "sSearch": "" },
-            "order": [[2, "asc"], [0, "asc"]]
+            "order": [[1, "asc"], [0, "asc"]]
         });
 
         $('div.dataTables_filter input').addClass('form-control');
