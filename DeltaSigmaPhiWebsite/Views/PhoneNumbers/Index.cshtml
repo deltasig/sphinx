@@ -29,7 +29,6 @@
                                     <th>Member</th>
                                     <th>Status</th>
                                     <th>Phone Number</th>
-                                    <th>@Html.DisplayNameFor(model => model.Type)</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -51,11 +50,12 @@
                                             </a>
                                         }
                                     </td>
-                                    <td>@item.Type</td>
                                     <td>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                         {
-                                            @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
+                                            <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
+                                                <i class="fa fa-pencil fa-lg"></i>
+                                            </a>
                                         }
                                     </td>
                                 </tr>
@@ -72,7 +72,6 @@
                                     <th>Member</th>
                                     <th>Status</th>
                                     <th>Phone Number</th>
-                                    <th>@Html.DisplayNameFor(model => model.Type)</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -94,11 +93,12 @@
                                             </a>
                                         }
                                     </td>
-                                    <td>@item.Type</td>
                                     <td>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                         {
-                                            @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
+                                            <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
+                                                <i class="fa fa-pencil fa-lg"></i>
+                                            </a>
                                         }
                                     </td>
                                 </tr>
