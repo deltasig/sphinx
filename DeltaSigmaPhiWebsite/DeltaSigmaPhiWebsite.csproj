@@ -595,6 +595,7 @@
     <Content Include="Views\Classes\EditClassTaken.cshtml" />
     <Content Include="Views\ServiceHours\Index.cshtml" />
     <Content Include="Views\ServiceHours\Submit.cshtml" />
+    <Content Include="Views\Sphinx\EditSoberSignup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
