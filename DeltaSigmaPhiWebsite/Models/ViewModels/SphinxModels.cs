@@ -43,5 +43,16 @@
         public double Hours { get; set; }
         public Semester Semester { get; set; }
     }
+
+    public class EditSoberSignupModel
+    {
+        public SoberSignup SoberSignup { get; set; }
+
+        [Required]
+        [DataType(DataType.Text)]
+        [Display(Name = "Member")]
+        public int SelectedMember { get; set; }
+        public IEnumerable<SelectListItem> Members { get; set; }
+    }
 }
 
