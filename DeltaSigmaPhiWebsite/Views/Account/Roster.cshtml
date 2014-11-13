@@ -70,6 +70,7 @@
                                     <th>Graduating</th>
                                     <th>Big Bro</th>
                                     <th>Room</th>
+                                    <th>Shirt Size</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -95,6 +96,7 @@
                                         }
                                             </td>
                                             <td>@item.RoomString()</td>
+                                            <td>@item.ShirtSize</td>
                                             <td>
                                                 @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
                                                 @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))

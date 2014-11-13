@@ -158,7 +158,8 @@
                 Semesters = GetSemesterList(),
                 PledgeClasses = GetPledgeClassList(),
                 Statuses = GetStatusList(),
-                Members = GetUserIdListAsFullNameWithNone()
+                Members = GetUserIdListAsFullNameWithNone(),
+                ShirtSizes = GetShirtSizesSelectList()
             };
 
             return View(model);
@@ -178,6 +179,7 @@
             model.PledgeClasses = GetPledgeClassList();
             model.Statuses = GetStatusList();
             model.Members = GetUserIdListAsFullNameWithNone();
+            model.ShirtSizes = GetShirtSizesSelectList();
 
             if (!ModelState.IsValid)
             {
@@ -197,6 +199,7 @@
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.RequiredStudyHours = model.Member.RequiredStudyHours;
             member.ProctoredStudyHours = model.Member.ProctoredStudyHours;
+            member.ShirtSize = model.Member.ShirtSize;
 
             uow.MemberRepository.Update(member);
             uow.Save();
@@ -262,7 +265,8 @@
                 {
                     StatusList = GetStatusList(), 
                     PledgeClassList = GetPledgeClassList(),
-                    SemesterList = GetSemesterList()
+                    SemesterList = GetSemesterList(),
+                    ShirtSizes = GetShirtSizesSelectList()
                 },
                 UnregisterModel = new UnregisterModel
                 {
@@ -287,8 +291,12 @@
                 model.Email = model.Email.ToLower();
                 model.UserName = model.UserName.ToLower();
                 var tempPassword = Membership.GeneratePassword(10, 5);
-                WebSecurity.CreateUserAndAccount(model.UserName, tempPassword,
-                    new { model.FirstName, model.LastName, model.Email, model.Room, model.StatusId, model.PledgeClassId, model.ExpectedGraduationId, RequiredStudyHours = 0, ProctoredStudyHours = 0 });
+                WebSecurity.CreateUserAndAccount(model.UserName, tempPassword, new { 
+                        model.FirstName, model.LastName, model.Email, 
+                        model.Room, model.StatusId, model.PledgeClassId, 
+                        model.ExpectedGraduationId, RequiredStudyHours = 0, 
+                        ProctoredStudyHours = 0, model.ShirtSize
+                });
 
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });
                 uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Permanent" });
