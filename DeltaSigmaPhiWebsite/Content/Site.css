@@ -82,3 +82,11 @@ iframe, object, embed {
 .nav-tabs {
     margin-bottom: 0;
 }
+
+
+.table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+}
