@@ -7,10 +7,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
     [Table("LaundrySignup")]
     public partial class LaundrySignup
     {
-        public int UserId { get; set; }
-
         [Key]
         public DateTime DateTimeShift { get; set; }
+
+        public int UserId { get; set; }
 
         public DateTime DateTimeSignedUp { get; set; }
 
