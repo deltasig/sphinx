@@ -80,7 +80,10 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
 
         [Display(Name = "Big Brother")]
         public int? BigBroId { get; set; }
-        
+
+        [Display(Name = "Shirt Size")]
+        public string ShirtSize { get; set; }
+
         public virtual Member BigBrother { get; set; }
 
         public virtual MemberStatus MemberStatus { get; set; }

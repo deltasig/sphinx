@@ -325,6 +325,14 @@
     <Compile Include="Migrations\201408190209458_Initial.Designer.cs">
       <DependentUpon>201408190209458_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201411130333159_laundry primary key.cs" />
+    <Compile Include="Migrations\201411130333159_laundry primary key.Designer.cs">
+      <DependentUpon>201411130333159_laundry primary key.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201411130334547_ShirtSize.cs" />
+    <Compile Include="Migrations\201411130334547_ShirtSize.Designer.cs">
+      <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Models\IOAuthWebSecurity.cs" />
@@ -610,6 +618,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201408190209458_Initial.resx">
       <DependentUpon>201408190209458_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411130333159_laundry primary key.resx">
+      <DependentUpon>201411130333159_laundry primary key.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201411130334547_ShirtSize.resx">
+      <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

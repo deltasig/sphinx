@@ -266,6 +266,12 @@
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
+        protected virtual IEnumerable<SelectListItem> GetShirtSizesSelectList()
+        {
+            var newList = new List<string> { "S", "M", "L", "XL", "2XL" };
+            var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
+            return list;
+        }
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
             var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
