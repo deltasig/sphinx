@@ -360,11 +360,11 @@
 
         private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
         {
-            return message == LaundrySignupMessage.ReserveSuccess ? "You have successfully reserved a time slot."
-                : message == LaundrySignupMessage.ReserveFailed ? "Laundry signup has failed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.CancelReservationSuccess ? "Your reservation has been successfully removed."
-                : message == LaundrySignupMessage.CancelReservationFailed ? "Your reservation was unable to be removed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.ReserveFailedTooMany ? "You have reserved to many slots within the coming week. Please cancel one or more before you attempt to reserve another."
+            return message == LaundrySignupMessage.ReserveSuccess ? "Reservation succeeded."
+                : message == LaundrySignupMessage.ReserveFailed ? "Reservation failed.  Please try again or contact the system administrator."
+                : message == LaundrySignupMessage.CancelReservationSuccess ? "Reservation cancellation succeeded."
+                : message == LaundrySignupMessage.CancelReservationFailed ? "Reservation cancellation failed.  Please try again or contact the system administrator."
+                : message == LaundrySignupMessage.ReserveFailedTooMany ? "Reservation failed. You have reached the maximum number of allowable reservations for this time period."
                 : "";
         }
 
