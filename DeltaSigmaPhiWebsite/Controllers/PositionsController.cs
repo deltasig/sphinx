@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [Authorize(Roles = "Administrator, President")]
     public class PositionsController : Controller
     {
         private readonly DspContext _db = new DspContext();

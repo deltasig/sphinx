@@ -8,7 +8,7 @@
     using System.Net;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Active, Administrator")]
+    [Authorize(Roles = "Administrator, President, Secretary, Academics")]
     public class SemestersController : BaseController
     {
         public SemestersController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
