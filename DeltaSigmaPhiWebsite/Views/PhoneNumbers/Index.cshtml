@@ -27,31 +27,31 @@
             </div>
             <div class="checkbox-inline">
                 <label>
-                    @Html.CheckBoxFor(model => model.Neophytes)
+                    @Html.EditorFor(model => model.Neophytes)
                     <small>Neophytes</small>
                 </label>
             </div>
             <div class="checkbox-inline">
                 <label>
-                    @Html.CheckBoxFor(model => model.Actives)
+                    @Html.EditorFor(model => model.Actives)
                     <small>Actives</small>
                 </label>
             </div>
             <div class="checkbox-inline">
                 <label>
-                    @Html.CheckBoxFor(model => model.Alumni)
+                    @Html.EditorFor(model => model.Alumni)
                     <small>Alumni</small>
                 </label>
             </div>
             <div class="checkbox-inline">
                 <label>
-                    @Html.CheckBoxFor(model => model.Affiliates)
+                    @Html.EditorFor(model => model.Affiliates)
                     <small>Affiliates</small>
                 </label>
             </div>
             <div class="checkbox-inline">
                 <label>
-                    @Html.CheckBoxFor(model => model.Released)
+                    @Html.EditorFor(model => model.Released)
                     <small>Released</small>
                 </label>
             </div>
@@ -174,5 +174,6 @@
 
         $('div.dataTables_filter input').addClass('form-control');
         $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }

@@ -24,6 +24,7 @@
                     Neophytes = true,
                     Actives = true
                 };
+                return RedirectToAction("Index", model);
             }
 
             model.PhoneNumbers = FilterPhoneNumbers(model);
