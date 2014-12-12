@@ -1,34 +1,70 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Collections.Generic;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using Models.ViewModels;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
     {
         public AddressesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
-        public ActionResult Index(int? userId)
+        
+        public ActionResult Index(AddressIndexFilterModel model)
         {
-            if (userId == null)
+            if (model.IsBlank())
             {
-                var addresses = uow.AddressRepository.SelectAll().ToList()
-                    .OrderBy(s => s.Member.StatusId)
-                    .ThenBy(m => m.Member.LastName)
-                    .ThenBy(a => a.Type);
-                ViewBag.Members = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName");
-                return View(addresses);
+                model = new AddressIndexFilterModel
+                {
+                    Pledges = true,
+                    Neophytes = true,
+                    Actives = true
+                };
             }
-            else
+
+            model.Addresses = FilterAddresses(model);
+            return View(model);
+        }
+
+        public List<Address> FilterAddresses(AddressIndexFilterModel model)
+        {
+            var addresses = uow.AddressRepository.SelectAll()
+                .OrderBy(s => s.Member.StatusId)
+                .ThenBy(m => m.Member.LastName)
+                .ThenBy(a => a.Type).ToList();
+
+            if (!model.Pledges)
             {
-                var addresses = uow.AddressRepository.SelectAll().Where(m => m.UserId == userId).ToList().OrderBy(a => a.Member.LastName);
-                ViewBag.Members = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName");
-                return View(addresses);
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Pledge").ToList();
             }
+            if (!model.Neophytes)
+            {
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Neophyte").ToList();
+            }
+            if (!model.Actives)
+            {
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Active").ToList();
+            }
+            if (!model.Alumni)
+            {
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Alumnus").ToList();
+                
+            }
+            if (!model.Affiliates)
+            {
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Affiliate").ToList();
+                
+            }
+            if (!model.Released)
+            {
+                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Released").ToList();
+            }
+
+            return addresses;
         }
 
         public ActionResult Edit(int? id)

@@ -68,15 +68,6 @@
         {
             if (model.SearchModel != null)
             {
-                //if (!string.IsNullOrEmpty(model.SearchModel.SearchTerm))
-                //{
-                //    model.Members = uow.MemberRepository
-                //        .SelectAll()
-                //        .Where(m => m.FirstName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()) ||
-                //            m.LastName.ToLower().Contains(model.SearchModel.SearchTerm.ToLower()))
-                //        .ToList();
-                //}
-                //else 
                 if (model.SearchModel.CustomSearchRequested())
                 {
                     IEnumerable<Member> guidedSearchResults = uow.MemberRepository
@@ -87,6 +78,14 @@
                     {
                         guidedSearchResults =
                             guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
+                    }
+                    else
+                    {
+                        guidedSearchResults =
+                            guidedSearchResults.Where(m => 
+                                m.MemberStatus.StatusName == "Pledge" || 
+                                m.MemberStatus.StatusName == "Neophyte" ||
+                                m.MemberStatus.StatusName == "Active");
                     }
                     if (model.SearchModel.SelectedPledgeClassId != -1)
                     {

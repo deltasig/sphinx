@@ -1,10 +1,10 @@
-﻿@model IEnumerable<PhoneNumber>
+﻿@model PhoneIndexFilterModel
 
 @{
     ViewBag.Title = "Phone Number Index";
 
-    var mobile = Model.Where(m => m.Type == "Mobile");
-    var emergency = Model.Where(m => m.Type == "Emergency");
+    var mobile = Model.PhoneNumbers.Where(m => m.Type == "Mobile");
+    var emergency = Model.PhoneNumbers.Where(m => m.Type == "Emergency");
 }
 
 @section Title
@@ -13,6 +13,52 @@
 }
 
 <div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            @using (Html.BeginForm("Index", "PhoneNumbers", FormMethod.Get, new { @class = "", role = "form" }))
+            {
+            <input type="submit" value="Filter" class="btn btn-default" />
+
+            <div class="checkbox-inline" style="margin-left:10px">
+                <label>
+                    @Html.CheckBoxFor(model => model.Pledges)
+                    <small>Pledges</small>
+                </label>
+            </div>
+            <div class="checkbox-inline">
+                <label>
+                    @Html.CheckBoxFor(model => model.Neophytes)
+                    <small>Neophytes</small>
+                </label>
+            </div>
+            <div class="checkbox-inline">
+                <label>
+                    @Html.CheckBoxFor(model => model.Actives)
+                    <small>Actives</small>
+                </label>
+            </div>
+            <div class="checkbox-inline">
+                <label>
+                    @Html.CheckBoxFor(model => model.Alumni)
+                    <small>Alumni</small>
+                </label>
+            </div>
+            <div class="checkbox-inline">
+                <label>
+                    @Html.CheckBoxFor(model => model.Affiliates)
+                    <small>Affiliates</small>
+                </label>
+            </div>
+            <div class="checkbox-inline">
+                <label>
+                    @Html.CheckBoxFor(model => model.Released)
+                    <small>Released</small>
+                </label>
+            </div>
+            <br /><br />
+            }
+        </div>
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <ul class="nav nav-tabs nav-justified" role="tablist">
