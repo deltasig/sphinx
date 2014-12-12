@@ -296,6 +296,7 @@
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\PositionsController.cs" />
     <Compile Include="Controllers\SemestersController.cs" />
     <Compile Include="Controllers\ServiceHoursController.cs" />
     <Compile Include="Controllers\StudyHoursController.cs" />
@@ -332,6 +333,10 @@
     <Compile Include="Migrations\201411130334547_ShirtSize.cs" />
     <Compile Include="Migrations\201411130334547_ShirtSize.Designer.cs">
       <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201412120410549_PositionUpdate.cs" />
+    <Compile Include="Migrations\201412120410549_PositionUpdate.Designer.cs">
+      <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
@@ -604,6 +609,11 @@
     <Content Include="Views\ServiceHours\Index.cshtml" />
     <Content Include="Views\ServiceHours\Submit.cshtml" />
     <Content Include="Views\Sphinx\EditSoberSignup.cshtml" />
+    <Content Include="Views\Positions\Create.cshtml" />
+    <Content Include="Views\Positions\Delete.cshtml" />
+    <Content Include="Views\Positions\Details.cshtml" />
+    <Content Include="Views\Positions\Edit.cshtml" />
+    <Content Include="Views\Positions\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -624,6 +634,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201411130334547_ShirtSize.resx">
       <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412120410549_PositionUpdate.resx">
+      <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

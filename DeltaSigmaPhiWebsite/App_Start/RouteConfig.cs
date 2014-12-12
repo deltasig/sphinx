@@ -12,6 +12,13 @@
 
             routes.LowercaseUrls = true;
 
+
+            routes.MapRoute(
+                name: "Positions",
+                url: "Positions/{action}/{id}",
+                defaults: new { controller = "Positions", id = UrlParameter.Optional }
+            );
+
             routes.MapRoute(
                 name: "StudyHours",
                 url: "StudyHours/{action}/{id}",
