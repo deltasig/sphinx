@@ -94,6 +94,8 @@
                             <li>@Html.ActionLink("Addresses", "Index", "Addresses")</li>
                             <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumbers")</li>
                             <li>@Html.ActionLink("Incident Reports", "Index", "Incidents")</li>
+                            <li class="dropdown-header">Alumni-Related</li>
+                            <li>@Html.ActionLink("Alumni Leaders", "AlumniLeaders", "Sphinx")</li>
                         </ul>
                     </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>

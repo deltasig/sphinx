@@ -193,6 +193,20 @@
             }
             return newList;
         }
+        protected virtual IEnumerable<object> GetAlumniIdListAsFullNameWithNoneNonSelectList()
+        {
+            var members = GetAllAlumniMembers().OrderBy(o => o.LastName);
+            var newList = new List<object> { new { UserId = 0, Name = "None" } };
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return newList;
+        }
         protected virtual IEnumerable<SelectListItem> GetStatusList()
         {
             var statusList = uow.MemberStatusRepository.SelectAll();

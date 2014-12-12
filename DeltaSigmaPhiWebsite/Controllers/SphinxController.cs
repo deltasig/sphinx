@@ -79,6 +79,20 @@
             return View(model);
         }
 
+        [HttpGet]
+        public ActionResult AlumniLeaders()
+        {
+            var currentSemester = GetThisSemester();
+
+            if (currentSemester == null) return View();
+
+            var model = uow.LeaderRepository.SelectAll().Where(l => 
+                l.SemesterId == currentSemester.SemesterId && 
+                l.Position.Type == Position.PositionType.Alumni).ToList();
+
+            return View(model);
+        }
+
         #region Sober Scheduling
 
         public ActionResult SoberSchedule(string message)

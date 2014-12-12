@@ -110,8 +110,9 @@
 
     public class AppointmentModel
     {
-        public Leader Leader { get; set; } 
+        public Leader Leader { get; set; }
         public IEnumerable<object> Users { get; set; }
+        public IEnumerable<object> Alumni { get; set; }
     }
     
     public class AccountInformationModel

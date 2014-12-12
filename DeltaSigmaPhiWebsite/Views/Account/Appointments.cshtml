@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Appointments";
     var semesters = Model.Select(m => m.Leader.Semester).Distinct();
+    var positionTypes = Enum.GetValues(typeof(Position.PositionType)).Cast<Position.PositionType>().ToList();
 }
 @section Title
 {
@@ -28,28 +29,42 @@
                             <table class="table table-responsive table-condensed">
                                 <thead>
                                     <tr>
+                                        <th>Type</th>
                                         <th>Position</th>
                                         <th>Appointed Member</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @for(int i = 0; i < Model.Count(); i++)
+                                    @for(var i = 0; i < Model.Count(); i++)
                                     {
-                                        if (Model[i].Leader.SemesterId == semester.SemesterId)
+                                        if (Model[i].Leader.SemesterId != semester.SemesterId)
                                         {
-                                            <tr>
-                                                <td>
-                                                    @Html.HiddenFor(m => Model[i].Leader.SemesterId)
-                                                    @Html.HiddenFor(m => Model[i].Leader.PositionId)
-                                                    @Html.DisplayFor(m => Model[i].Leader.Position.PositionName)
-                                                </td>
-                                                <td>
-                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
-                                                        new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId), 
-                                                        new { @class = "form-control"})
-                                                </td>
-                                            </tr>
+                                            continue;
                                         }
+                                        <tr class="@(Model[i].Leader.Position.Type == Position.PositionType.Alumni ? "warning" : "success")">
+                                            <td>
+                                                @Html.DisplayFor(m => Model[i].Leader.Position.Type)
+                                            </td>
+                                            <td>
+                                                @Html.HiddenFor(m => Model[i].Leader.SemesterId)
+                                                @Html.HiddenFor(m => Model[i].Leader.PositionId)
+                                                @Html.DisplayFor(m => Model[i].Leader.Position.PositionName)
+                                            </td>
+                                            <td>
+                                                @if(Model[i].Leader.Position.Type == Position.PositionType.Alumni)
+                                                {
+                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Alumni, "UserId", "Name", Model[i].Leader.UserId), 
+                                                    new { @class = "form-control"})
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId), 
+                                                    new { @class = "form-control"})
+                                                }
+                                            </td>
+                                        </tr>
                                     }
                                 </tbody>
                             </table>
