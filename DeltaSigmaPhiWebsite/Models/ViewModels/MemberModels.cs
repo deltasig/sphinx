@@ -14,7 +14,7 @@
 
         internal bool IsBlank()
         {
-            return !(Pledges && Neophytes && Actives && Alumni && Affiliates && Released);
+            return !Pledges && !Neophytes && !Actives && !Alumni && !Affiliates && !Released;
         }
     }
 
