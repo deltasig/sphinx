@@ -499,7 +499,10 @@
                     break;
             }
 
-            var positions = uow.PositionRepository.SelectAll().Where(p => !p.IsDisabled).ToList();
+            var positions = uow.PositionRepository.SelectAll()
+                .Where(p => !p.IsDisabled)
+                .OrderBy(p => p.Type)
+                .ThenBy(p => p.DisplayOrder).ToList();
             var semesters = GetThisAndNextSemesterList().ToList();
             var model = new List<AppointmentModel>();
 
