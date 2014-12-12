@@ -7,12 +7,9 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     @RenderSection("AdditionalMeta", false)
-    @Styles.Render("~/Content/bootstrap")
-    @Styles.Render("~/Content/bootstrap-theme")
-    @Styles.Render("~/Content/font-awesome")
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
+    @Styles.Render("~/Content/bootstrap")
     @Scripts.Render("~/bundles/modernizr")
-    @Styles.Render("~/Content/site")
 </head>
 <body style="padding: 0">
     @{ Html.RenderPartial("Nav"); }
@@ -21,8 +18,8 @@
     @{ Html.RenderPartial("Footer"); }
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     @Scripts.Render("~/bundles/otf")
-        @Scripts.Render("~/bundles/bootstrap")
-        <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    @Scripts.Render("~/bundles/bootstrap")
+    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>
