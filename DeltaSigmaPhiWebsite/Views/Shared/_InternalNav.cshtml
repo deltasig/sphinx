@@ -24,57 +24,81 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
+                                @if (User.IsInRole("Administrator"))
                                 {
-                                    <li>@Html.ActionLink("Registration", "Registration", "Account")</li>
-                                }
-                                @if (User.IsInRole("Administrator") || User.IsInRole("President"))
-                                {
+                                    <li class="dropdown-header">Leadership</li>
                                     <li>@Html.ActionLink("Appointments", "Appointments", "Account")</li>
-                                }
-                                @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") || User.IsInRole("Academics"))
-                                {
+                                    <li>@Html.ActionLink("Positions", "Index", "Positions")</li>
+                                    <li class="dropdown-header">Members</li>
+                                    <li>@Html.ActionLink("Registration", "Registration", "Account")</li>
+                                    <li class="dropdown-header">System</li>
                                     <li>@Html.ActionLink("Semesters", "Index", "Semesters")</li>
+
                                 }
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                                else
                                 {
-                                    <li>@Html.ActionLink("Service Events", "Index", "Events")</li>
+                                    if (User.IsInRole("President"))
+                                    {
+                                        <li class="dropdown-header">Leadership</li>
+                                        <li>@Html.ActionLink("Appointments", "Appointments", "Account")</li>
+                                        <li>@Html.ActionLink("Positions", "Index", "Positions")</li>
+                                        <li class="dropdown-header">System</li>
+                                        <li>@Html.ActionLink("Semesters", "Index", "Semesters")</li>
+                                    }
+                                    if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
+                                    {
+                                        <li class="dropdown-header">Members</li>
+                                        <li>@Html.ActionLink("Registration", "Registration", "Account")</li>
+                                    }
+                                    if (User.IsInRole("Secretary") || User.IsInRole("Academics"))
+                                    {
+                                        <li class="dropdown-header">System</li>
+                                        <li>@Html.ActionLink("Semesters", "Index", "Semesters")</li>
+                                    }
                                 }
                             </ul>
                         </li>
                     }
-                    if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                    if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics <b class="caret"></b></a>
                             <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Study Hour Index", "Index", "StudyHours")</li>
-                                <li>@Html.ActionLink("Classes Index", "Index", "Classes")</li>
-                                <li>@Html.ActionLink("Class Scheduler", "CreateSchedule", "Classes")</li>
+                                <li>@Html.ActionLink("Study Hour Tracker", "Tracker", "StudyHours")</li>
+                                <li>@Html.ActionLink("Unapproved Study Hours", "Unapproved", "StudyHours")</li>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                {
+                                    <li class="dropdown-header">Chairman Only</li>
+                                    <li>@Html.ActionLink("Study Hour Index", "Index", "StudyHours")</li>
+                                    <li>@Html.ActionLink("Classes Index", "Index", "Classes")</li>
+                                    <li>@Html.ActionLink("Class Scheduler", "CreateSchedule", "Classes")</li>
+                                }
                             </ul>
                         </li>
                     }
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Service Hours", "Index", "ServiceHours")</li>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                            {
+                                <li class="dropdown-header">Chairman Only</li>
+                                <li>@Html.ActionLink("Service Events", "Index", "Events")</li>
+                            }
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Members <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Roster", "Roster", "Account")</li>
                             <li>@Html.ActionLink("Addresses", "Index", "Addresses")</li>
                             <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumbers")</li>
-                            <li class="divider" />
-                            <li>@Html.ActionLink("Service Hour Summary", "Index", "ServiceHours")</li>
-                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
-                            {
-                                <li class="divider" />
-                                <li>@Html.ActionLink("Study Hour Tracker", "Tracker", "StudyHours")</li>
-                                <li>@Html.ActionLink("Unapproved Study Hours", "Unapproved", "StudyHours")</li>
-                            }
-                            <li class="divider" />
                             <li>@Html.ActionLink("Incident Reports", "Index", "Incidents")</li>
                         </ul>
                     </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">@Html.ActionLink("Sober Schedule", "SoberSchedule", "Sphinx")</li>
                     if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
-                    { 
+                    {
                         <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">@Html.ActionLink("Laundry Signup", "LaundrySchedule", "Sphinx")</li>
                     }
                 }
