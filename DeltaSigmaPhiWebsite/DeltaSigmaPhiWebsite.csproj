@@ -484,6 +484,7 @@
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <Content Include="Scripts\DataTables-1.10.2\extensions\AutoFill\js\dataTables.autoFill.js" />
     <Content Include="Scripts\DataTables-1.10.2\extensions\AutoFill\js\dataTables.autoFill.min.js" />
