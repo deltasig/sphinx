@@ -524,7 +524,8 @@
                             SemesterId = semester.SemesterId,
                             UserId = leader.UserId 
                         },
-                        Users = GetUserIdListAsFullNameWithNoneNonSelectList()
+                        Users = GetUserIdListAsFullNameWithNoneNonSelectList(),
+                        Alumni = GetAlumniIdListAsFullNameWithNoneNonSelectList()
                     });
                 }
             }
