@@ -36,13 +36,6 @@
         public double HoursServed { get; set; }
         public DateTime SoberDriveTime { get; set; }
     }
-  
-    public class ServiceIndexModel
-    {
-        public Member Member { get; set; }
-        public double Hours { get; set; }
-        public Semester Semester { get; set; }
-    }
 
     public class EditSoberSignupModel
     {

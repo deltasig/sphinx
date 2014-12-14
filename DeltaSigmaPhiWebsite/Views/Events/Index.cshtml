@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Event>
+﻿@model EventIndexFilterModel
 
 @{
     ViewBag.Title = "Service Event Index";
@@ -11,6 +11,19 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-3">
+            @using (Html.BeginForm("Index", "Events", FormMethod.Get, new { @class = "form-inline", role = "form" }))
+            {
+                <div class="form-group">
+                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
+
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                    <br /><br />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-12 col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -21,17 +34,19 @@
                         <table class="table table-condensed" id="events-table">
                             <thead>
                                 <tr>
-                                    <th>@Html.DisplayNameFor(model => model.DateTimeOccurred)</th>
-                                    <th>@Html.DisplayNameFor(model => model.EventName)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DurationHours)</th>
+                                    <th>Day</th>
+                                    <th>Date/Time</th>
+                                    <th>Event Name</th>
+                                    <th>Duration (Hrs)</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @foreach (var item in Model.Events)
                                 {
                                     <tr>
-                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToShortTimeString()</td>
+                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).DayOfWeek.ToString().Substring(0, 3)</td>
+                                        <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("yyyy-MM-dd hh:mm tt")</td>
                                         <td>@item.EventName</td>
                                         <td>@item.DurationHours</td>
                                         <td>
@@ -54,7 +69,8 @@
         $('#events-table').DataTable({
             pageLength: 100,
             lengthChange: false,
-            "oLanguage": { "sSearch": "" }
+            "oLanguage": { "sSearch": "" },
+            "order": [[1, "asc"]]
         });
 
         $('div.dataTables_filter input').addClass('form-control');

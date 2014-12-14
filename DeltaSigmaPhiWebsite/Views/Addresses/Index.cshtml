@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-xs-12">
             @using (Html.BeginForm("Index", "Addresses", FormMethod.Get, new { @class = "", role = "form" }))
-                {
+            {
                 <input type="submit" value="Filter" class="btn btn-default" />
 
                 <div class="checkbox-inline" style="margin-left:10px">
@@ -56,7 +56,7 @@
                     </label>
                 </div>
                 <br /><br />
-                }
+            }
         </div>
     </div>
     <div class="row">
@@ -81,34 +81,34 @@
 
                             @foreach (var item in mailing)
                             {
-                            <tr>
-                                <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
-                                    @if (string.IsNullOrEmpty(item.Address1))
+                                <tr>
+                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
+                                    <td>@item.Member.MemberStatus.StatusName</td>
+                                    <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
+                                        @if (string.IsNullOrEmpty(item.Address1))
                                         {
-                                        @:None entered.
+                                            @:None entered.
                                         }
                                         else
                                         {
-                                        @item.Address1@:,
+                                            @item.Address1@:,
                                             if (@item.Address2 != null)
                                             {
-                                        @item.Address2@:,
+                                                @item.Address2@:,
                                             }
-                                        @item.City@:, @item.State @item.PostalCode,
-                                        @item.Country
+                                            @item.City@:, @item.State @item.PostalCode,
+                                            @item.Country
                                         }
-                                </td>
-                                <td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    </td>
+                                    <td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                         {
-                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
-                                            <i class="fa fa-pencil fa-lg"></i>
-                                        </a>
+                                            <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                                <i class="fa fa-pencil fa-lg"></i>
+                                            </a>
                                         }
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             }
                         </table>
                     </div>
@@ -128,34 +128,34 @@
 
                             @foreach (var item in permanent)
                             {
-                            <tr>
-                                <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
-                                    @if (string.IsNullOrEmpty(item.Address1))
+                                <tr>
+                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
+                                    <td>@item.Member.MemberStatus.StatusName</td>
+                                    <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
+                                        @if (string.IsNullOrEmpty(item.Address1))
                                         {
-                                        @:None entered.
+                                            @:None entered.
                                         }
                                         else
                                         {
-                                        @item.Address1@:,
+                                            @item.Address1@:,
                                             if (@item.Address2 != null)
                                             {
-                                        @item.Address2@:,
+                                                @item.Address2@:,
                                             }
-                                        @item.City@:, @item.State @item.PostalCode,
-                                        @item.Country
+                                            @item.City@:, @item.State @item.PostalCode,
+                                            @item.Country
                                         }
-                                </td>
-                                <td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    </td>
+                                    <td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
                                         {
-                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
-                                            <i class="fa fa-pencil fa-lg"></i>
-                                        </a>
+                                            <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                                <i class="fa fa-pencil fa-lg"></i>
+                                            </a>
                                         }
-                                </td>
-                            </tr>
+                                    </td>
+                                </tr>
                             }
                         </table>
                     </div>

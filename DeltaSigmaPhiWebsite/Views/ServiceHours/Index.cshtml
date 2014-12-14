@@ -1,20 +1,20 @@
-﻿@model IEnumerable<ServiceIndexModel>
+﻿@model ServiceHourIndexFilterModel
 
 @{
     ViewBag.Title = "Service Index";
 
-    var totalMembers = Model.Count();
-    var actives = Model.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
-    var pledges = Model.Where(m => m.Member.MemberStatus.StatusName == "Pledge").ToList();
-    var neophytes = Model.Where(m => m.Member.MemberStatus.StatusName == "Neophyte").ToList();
+    var totalMembers = Model.ServiceHours.Count();
+    var actives = Model.ServiceHours.Where(m => m.Member.MemberStatus.StatusName == "Active").ToList();
+    var pledges = Model.ServiceHours.Where(m => m.Member.MemberStatus.StatusName == "Pledge").ToList();
+    var neophytes = Model.ServiceHours.Where(m => m.Member.MemberStatus.StatusName == "Neophyte").ToList();
 
-    var membersServed = Model.Count(m => m.Hours > 0);
+    var membersServed = Model.ServiceHours.Count(m => m.Hours > 0);
     var membersServedPercentage = (int)(100 * (membersServed / (double)totalMembers));
-    var membersServedTen = Model.Count(m => m.Hours >= 10);
+    var membersServedTen = Model.ServiceHours.Count(m => m.Hours >= 10);
     var servedTenPercentage = (int)(100 * (membersServedTen / (double)totalMembers));
-    var membersServedFifteen = Model.Count(m => m.Hours >= 15);
+    var membersServedFifteen = Model.ServiceHours.Count(m => m.Hours >= 15);
     var servedFifteenPercentage = (int)(100 * (membersServedFifteen / (double)totalMembers));
-    var totalMemberHours = Model.Sum(m => m.Hours);
+    var totalMemberHours = Model.ServiceHours.Sum(m => m.Hours);
     var averageMemberHours = (totalMemberHours / totalMembers).ToString("F1");
 
     var activesServed = actives.Count(m => m.Hours > 0);
@@ -43,7 +43,7 @@
     var neophytesFifteenPercentage = (int)(100 * (neophytesServedFifteen / (double)(neophytes.Count == 0 ? 1 : neophytes.Count)));
     var totalNeophyteHours = neophytes.Sum(m => m.Hours);
     var averageNeophyteHours = (totalNeophyteHours / (neophytes.Count == 0 ? 1 : neophytes.Count)).ToString("F1");
-    
+
 }
 @section Title
 {
@@ -51,6 +51,19 @@
 }
 
 <div class="container">
+    <div class="row">
+        <div class="col-xs-3">
+            @using (Html.BeginForm("Index", "ServiceHours", FormMethod.Get, new { @class = "form-inline", role = "form" }))
+            {
+                <div class="form-group">
+                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
+
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                    <br/><br />
+                </div>
+            }
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
@@ -130,7 +143,7 @@
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Showing Service Hours for @Model.First().Semester
+                    Showing Service Hours for @Model.ServiceHours.First().Semester
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
@@ -142,7 +155,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach (var item in Model)
+                                @foreach (var item in Model.ServiceHours)
                                 {
                                     <tr>
                                         <td>@item.Member.LastName, @item.Member.FirstName</td>
