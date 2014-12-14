@@ -79,14 +79,6 @@
                         guidedSearchResults =
                             guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
                     }
-                    else
-                    {
-                        guidedSearchResults =
-                            guidedSearchResults.Where(m => 
-                                m.MemberStatus.StatusName == "Pledge" || 
-                                m.MemberStatus.StatusName == "Neophyte" ||
-                                m.MemberStatus.StatusName == "Active");
-                    }
                     if (model.SearchModel.SelectedPledgeClassId != -1)
                     {
                         guidedSearchResults =
@@ -115,7 +107,10 @@
                 {
                     model.Members = uow.MemberRepository
                         .SelectAll()
-                        .Where(m => m.MemberStatus.StatusName == "Active")
+                        .Where(m => 
+                            m.MemberStatus.StatusName == "Pledge" ||
+                            m.MemberStatus.StatusName == "Neophyte" ||
+                            m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
                         .ToList();
@@ -127,7 +122,10 @@
                 {
                     Members = uow.MemberRepository
                         .SelectAll()
-                        .Where(m => m.MemberStatus.StatusName == "Active")
+                        .Where(m =>
+                            m.MemberStatus.StatusName == "Pledge" ||
+                            m.MemberStatus.StatusName == "Neophyte" ||
+                            m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
                         .ToList()
