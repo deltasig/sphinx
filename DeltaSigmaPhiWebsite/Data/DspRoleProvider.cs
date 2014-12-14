@@ -237,15 +237,31 @@
                 try
                 {
                     var now = ConvertUtcToCst(DateTime.UtcNow);
-                    var thisSemester = db.Semesters
-                                .Where(s => s.DateEnd >= now)
-                                .OrderBy(s => s.DateStart)
-                                .ToList()
-                                .First();
+                    var thisAndFutureSemesters = db.Semesters
+                            .Where(s => s.DateEnd >= now)
+                            .OrderBy(s => s.DateStart)
+                            .ToList();
+                    var thisSemester = thisAndFutureSemesters[0];
+
+                    if (thisSemester.DateEnd.Month > 10)
+                    {
+                        var nextSemester = thisAndFutureSemesters[1];
+
+                        if (now >= thisSemester.FallTransitionDate)
+                        {
+                            roles.AddRange(
+                                (from l in db.Leaders
+                                 where l.Member.UserName == userName &&
+                                       l.SemesterId == nextSemester.SemesterId
+                                 select l.Position.PositionName).ToList());
+                        }
+                    }
+
                     var positionsHeld = (from l in db.Leaders
                                          where l.Member.UserName == userName &&
                                                l.SemesterId == thisSemester.SemesterId
                                          select l.Position.PositionName).ToList();
+
                     var member = (from m in db.Members
                                     where m.UserName == userName
                                     select m).Single();
@@ -303,27 +319,46 @@
                         return db.Members.Single(m => m.UserName == userName).MemberStatus.StatusName == roleName;
                     }
 
-                    IEnumerable<Leader> positionsHeld;
+                    var positionsHeld = new List<Leader>();
                     if (roleName == "Administrator")
                     {
-                        positionsHeld = from l in db.Leaders
-                                        where l.Position.PositionName == roleName &&
-                                              l.Member.UserName == userName
-                                        select l;
+                        var adminAppointments = from l in db.Leaders
+                                                where l.Position.PositionName == roleName &&
+                                                      l.Member.UserName == userName
+                                                select l;
+                        if (adminAppointments.Any())
+                        {
+                            isValid = true;
+                        }
                     }
                     else
                     {
                         var now = ConvertUtcToCst(DateTime.UtcNow);
-                        var thisSemester =  db.Semesters
+                        var thisAndFutureSemesters = db.Semesters
                                 .Where(s => s.DateEnd >= now)
                                 .OrderBy(s => s.DateStart)
-                                .ToList()
-                                .First();
-                        positionsHeld = db.Leaders.Where(l => 
+                                .ToList();
+                        var thisSemester = thisAndFutureSemesters[0];
+                        
+                        if(thisSemester.DateEnd.Month > 10)
+                        {
+                            var nextSemester = thisAndFutureSemesters[1];
+
+                            if (now >= thisSemester.FallTransitionDate)
+                            {
+                                positionsHeld.AddRange(db.Leaders.Where(l =>
+                                                l.SemesterId == nextSemester.SemesterId &&
+                                                l.Member.UserName == userName &&
+                                                l.Position.PositionName == roleName)
+                                                .ToList());
+                            }
+                        }
+
+                        positionsHeld.AddRange(db.Leaders.Where(l =>
                                             l.SemesterId == thisSemester.SemesterId &&
                                             l.Member.UserName == userName &&
                                             l.Position.PositionName == roleName)
-                                            .ToList();
+                                            .ToList());
                     }
 
                     if (positionsHeld.Any())

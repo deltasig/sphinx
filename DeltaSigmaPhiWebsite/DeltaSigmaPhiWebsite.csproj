@@ -338,6 +338,10 @@
     <Compile Include="Migrations\201412120410549_PositionUpdate.Designer.cs">
       <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201412140013530_FallTransitionDate.cs" />
+    <Compile Include="Migrations\201412140013530_FallTransitionDate.Designer.cs">
+      <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Models\IOAuthWebSecurity.cs" />
@@ -642,6 +646,9 @@
     <EmbeddedResource Include="Migrations\201412120410549_PositionUpdate.resx">
       <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201412140013530_FallTransitionDate.resx">
+      <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -665,6 +672,8 @@
           <DevelopmentServerPort>12025</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost:44300</IISUrl>
+          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
+          <IISAppRootUrl>https://localhost:44300/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
