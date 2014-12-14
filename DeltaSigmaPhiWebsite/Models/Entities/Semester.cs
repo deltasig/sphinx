@@ -30,6 +30,12 @@ namespace DeltaSigmaPhiWebsite.Models.Entities
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateEnd { get; set; }
+        
+        [Required]
+        [Display(Name = "Transition Date")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        public DateTime FallTransitionDate { get; set; }
 
         [Required]
         [Display(Name = "Study Hour Start")]

@@ -28,6 +28,13 @@
                                     <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
                                     <th>@Html.DisplayNameFor(model => model.StudyHourStart)</th>
                                     <th>@Html.DisplayNameFor(model => model.StudyHourEnd)</th>
+                                    <th>
+                                        @Html.DisplayNameFor(model => model.FallTransitionDate)
+                                        <a data-toggle="tooltip" data-placement="top"
+                                           title="Controls the date on which new chairmen are granted their powers; only works for Fall semesters.">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -50,6 +57,7 @@
                                     <td>@item.DateEnd.ToShortDateString()</td>
                                     <td>@item.StudyHourStart.ToShortDateString()</td>
                                     <td>@item.StudyHourEnd.ToShortDateString()</td>
+                                    <td>@item.FallTransitionDate.ToShortDateString()</td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
                                         @if (User.IsInRole("Administrator"))
@@ -67,3 +75,13 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}
