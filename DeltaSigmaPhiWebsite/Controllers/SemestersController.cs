@@ -30,7 +30,7 @@
         [HttpPost]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "SemesterId,DateStart,DateEnd,StudyHourStart,StudyHourEnd")] CreateSemesterModel model)
+        public ActionResult Create(CreateSemesterModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -59,7 +59,7 @@
         [HttpPost]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SemesterId,DateStart,DateEnd,StudyHourStart,StudyHourEnd")] Semester semester)
+        public ActionResult Edit(Semester semester)
         {
             if (!ModelState.IsValid) return View(semester);
 
