@@ -270,7 +270,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\AuthConfig.cs" />
-    <Compile Include="App_Start\BootstrapBundleConfig.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\DspTaskRegistry.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
