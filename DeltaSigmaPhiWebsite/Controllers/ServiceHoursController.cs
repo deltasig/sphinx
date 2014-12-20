@@ -1,14 +1,13 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web.Mvc;
-    using System.Web.Services.Description;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using Models.ViewModels;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Web.Mvc;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ServiceHoursController : BaseController

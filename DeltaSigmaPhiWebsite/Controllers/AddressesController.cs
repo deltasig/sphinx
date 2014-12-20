@@ -1,13 +1,13 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Collections.Generic;
     using Data.UnitOfWork;
     using Models;
     using Models.Entities;
+    using Models.ViewModels;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
-    using Models.ViewModels;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
