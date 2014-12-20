@@ -292,6 +292,19 @@
             var remainingHours = requiredHours - totalHours;
             return remainingHours < 0 ? 0 : remainingHours;
         }
+        protected virtual SelectList GetAllEventIdsAsEventName()
+        {
+            // Beginning of today (12:00am of today).
+            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
+            // Beginning of today, one year ago (12:00am of today).
+            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
+            yearAgoToday -= new TimeSpan(365, 0, 0, 0);
+            // Only retrieve events occuring within the last year.
+            var events = _db.Events
+                .Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday))
+                .ToList();
+            return new SelectList(events, "EventId", "EventName");
+        }
         protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync()
         {
             // Beginning of today (12:00am of today).
