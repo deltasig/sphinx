@@ -19,7 +19,7 @@
             bundles.Add(new ScriptBundle("~/bundles/bootstrap")
                 .Include("~/Scripts/bootstrap.js"));
             bundles.Add(new ScriptBundle("~/bundles/jquery")
-                .Include("~/Scripts/DataTables-1.10.2/media/js/jquery.dataTables.js")
+                .Include("~/Scripts/DataTables-1.10.4/media/js/jquery.dataTables.js")
                 .Include("~/Scripts/jquery-{version}.js")
                 .Include("~/Scripts/jquery-ui-{version}.js")
                 .Include("~/Scripts/jquery.unobtrusive*")
