@@ -1,22 +1,20 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class StudyHoursController : BaseController
     {
-        public StudyHoursController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-        
         public ActionResult Index()
         {
             var thisSemester = GetThisSemester();
-            var model = uow.StudyHourRepository.SelectBy(s => s.DateTimeStudied >= thisSemester.DateStart).ToList();
+            var model = _db.StudyHours.Where(s => s.DateTimeStudied >= thisSemester.DateStart).ToList();
             return View(model);
         }
 
@@ -37,7 +35,7 @@
                 Offset = modelOffset,
                 ThisWeek = new ProgressModel
                 {
-                    Members = uow.MemberRepository.SelectBy(s => s.RequiredStudyHours > 0).ToList(),
+                    Members = _db.Members.Where(s => s.RequiredStudyHours > 0).ToList(),
                     StartDate = startOfThisWeek,
                     EndDate = endOfWeek
                 },
@@ -48,12 +46,12 @@
 
         public ActionResult Unapproved()
         {
-            var currentUser = uow.MemberRepository.SelectBy(m => m.UserName == User.Identity.Name).Single();
+            var currentUser = _db.Members.Single(m => m.UserName == User.Identity.Name);
             if((currentUser.RequiredStudyHours > 0 || currentUser.ProctoredStudyHours > 0) && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
             {
                 var thisSemester = GetThisSemester();
                 var startOfStudyHours = thisSemester.StudyHourStart.AddDays(-1);
-                var model = uow.StudyHourRepository.SelectBy(s =>
+                var model = _db.StudyHours.Where(s =>
                     s.DateTimeStudied >= startOfStudyHours &&
                     s.ApproverId == null &&
                     s.Submitter.UserName == User.Identity.Name).ToList();
@@ -63,7 +61,7 @@
             {
                 var thisSemester = GetThisSemester();
                 var startOfStudyHours = thisSemester.StudyHourStart.AddDays(-1);
-                var model = uow.StudyHourRepository.SelectBy(s =>
+                var model = _db.StudyHours.Where(s =>
                     s.DateTimeStudied >= startOfStudyHours &&
                     s.ApproverId == null).ToList();
                 return View(model);
@@ -76,7 +74,7 @@
             {
                 return HttpNotFound();
             }
-            var studyHour = uow.StudyHourRepository.Single(s => s.StudyHourId == id);
+            var studyHour = _db.StudyHours.Single(s => s.StudyHourId == id);
             if (studyHour == null)
             {
                 return HttpNotFound();
@@ -84,8 +82,8 @@
             studyHour.DateTimeApproved = DateTime.UtcNow;
             studyHour.ApproverId = WebSecurity.GetUserId(User.Identity.Name);
 
-            uow.StudyHourRepository.Update(studyHour);
-            uow.Save();
+            _db.Entry(studyHour).State = EntityState.Modified;
+            _db.SaveChanges();
 
             return RedirectToAction("Unapproved");
         }
@@ -103,11 +101,11 @@
         {
             if (!ModelState.IsValid) return RedirectToAction("Index");
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            //if (uow.StudyHourRepository
+            //if (_db.StudyHours
             //    .SelectBy(s => s.DateTimeStudied == model.DateTimeStudied && s.SubmittedBy == userId).Any())
             //    return RedirectToAction("Index", "Sphinx", new { message = "You can only submit one study hour entry for a given day." });
 
-            var member = uow.MemberRepository.SingleById(userId);
+            var member = _db.Members.Find(userId);
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
             var totalHours = member.SubmittedStudyHours.Where(h => h.DateTimeStudied == startOfTodayUtc).Sum(h => h.DurationHours);
             if (model.DurationHours > 6 || model.DurationHours < 0.5 || Math.Abs(model.DurationHours % 0.5) > 0 || totalHours + model.DurationHours > 6)
@@ -121,12 +119,12 @@
             model.SubmittedBy = userId;
             model.DateTimeStudied = ConvertCstToUtc(model.DateTimeStudied);
             model.DateTimeSubmitted = DateTime.UtcNow;
-            var submitter = uow.MemberRepository.SingleById(model.SubmittedBy);
+            var submitter = _db.Members.Find(model.SubmittedBy);
             model.RequiredStudyHours = submitter.RequiredStudyHours;
             model.ProctoredStudyHours = submitter.ProctoredStudyHours;
 
-            uow.StudyHourRepository.Insert(model);
-            uow.Save();
+            _db.StudyHours.Add(model);
+            _db.SaveChanges();
 
             return RedirectToAction("Index", "Sphinx");
         }
@@ -138,13 +136,13 @@
             {
                 return HttpNotFound();
             }
-            var studyHour = uow.StudyHourRepository.Single(s => s.StudyHourId == id);
+            var studyHour = _db.StudyHours.Single(s => s.StudyHourId == id);
             if (studyHour == null)
             {
                 return HttpNotFound();
             }
-            uow.StudyHourRepository.Delete(studyHour);
-            uow.Save();
+            _db.StudyHours.Remove(studyHour);
+            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -156,7 +154,7 @@
             {
                 return HttpNotFound();
             }
-            var member = uow.MemberRepository.SingleById(id);
+            var member = _db.Members.Find(id);
             if (member == null)
             {
                 return HttpNotFound();
@@ -170,15 +168,15 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Edit([Bind(Include = "UserId,RequiredStudyHours")] Member model)
         {
-            var member = uow.MemberRepository.SingleById(model.UserId);
+            var member = _db.Members.Find(model.UserId);
             if (member == null)
             {
                 return HttpNotFound();
             }
 
             member.RequiredStudyHours = model.RequiredStudyHours;
-            uow.MemberRepository.Update(member);
-            uow.Save();
+            _db.Entry(member).State = EntityState.Modified;
+            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }

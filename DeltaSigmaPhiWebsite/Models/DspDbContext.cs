@@ -4,9 +4,9 @@ namespace DeltaSigmaPhiWebsite.Models
     using Entities;
     using System.Data.Entity;
 
-    public partial class DspContext : DbContext
+    public partial class DspDbContext : DbContext
     {
-        public DspContext()
+        public DspDbContext()
             : base("name=DefaultConnection")
         {
             //Database.Log = sql => Debug.Write(sql);
@@ -14,7 +14,7 @@ namespace DeltaSigmaPhiWebsite.Models
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<ClassTaken> ClassesTakens { get; set; }
+        public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }

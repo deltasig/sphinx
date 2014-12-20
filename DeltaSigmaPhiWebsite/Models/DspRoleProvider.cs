@@ -1,19 +1,12 @@
 ﻿namespace DeltaSigmaPhiWebsite.Data
 {
-    using System;
-    using System.Linq;
-    using System.Configuration;
-    using System.Collections.Specialized;
-    using System.Configuration.Provider;
-    using System.Data;
-    using System.Data.SqlClient;
-    using System.Security.Cryptography;
-    using System.Text;
-    using System.Web.Configuration;
-    using System.Web.Security;
-    using System.Collections.Generic;
     using Models;
-    using DeltaSigmaPhiWebsite.Models.Entities;
+    using Models.Entities;
+    using System;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Linq;
+    using System.Web.Security;
 
     public sealed class DspRoleProvider : RoleProvider
     {
@@ -59,7 +52,7 @@
         {
             try
             {
-                using (var db = new DspContext())
+                using (var db = new DspDbContext())
                 {
                     foreach (var userName in userNames)
                     {
@@ -117,7 +110,7 @@
         {
             try
             {
-                using (var db = new DspContext())
+                using (var db = new DspDbContext())
                 {
                     db.Leaders.Add(new Leader
                     {
@@ -138,7 +131,7 @@
         {
             try
             {
-                using (var db = new DspContext())
+                using (var db = new DspDbContext())
                 {
                     db.Positions.Add(new Position
                     {
@@ -156,7 +149,7 @@
         {
             var ret = false;
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -185,7 +178,7 @@
         {
             var users = new List<string>();
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -211,7 +204,7 @@
         {
             var roles = new List<string>();
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -232,7 +225,7 @@
         {
             var roles = new List<string>();
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -285,7 +278,7 @@
         {
             var users = new List<string>();
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -310,7 +303,7 @@
         {
             var isValid = false;
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 try
                 {
@@ -379,7 +372,7 @@
         {
             try
             {
-                using (var db = new DspContext())
+                using (var db = new DspDbContext())
                 {
                     foreach (var userName in userNames)
                     {
@@ -417,7 +410,7 @@
         {
             var isValid = false;
 
-            using (var db = new DspContext())
+            using (var db = new DspDbContext())
             {
                 // check if role exits
                 if (db.Positions.Any(r => r.PositionName == positionName))

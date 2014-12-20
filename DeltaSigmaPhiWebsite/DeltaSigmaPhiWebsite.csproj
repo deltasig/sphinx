@@ -167,17 +167,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Ninject.Web.Common.3.2.2.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="Ninject.Web.Mvc">
-      <HintPath>..\packages\Ninject.MVC3.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -285,7 +274,6 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\DspTaskRegistry.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
-    <Compile Include="App_Start\NinjectWebCommon.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -301,27 +289,7 @@
     <Compile Include="Controllers\ServiceHoursController.cs" />
     <Compile Include="Controllers\StudyHoursController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
-    <Compile Include="Data\DspRoleProvider.cs" />
-    <Compile Include="Data\Interfaces\IClassesRepository.cs" />
-    <Compile Include="Data\Interfaces\IDepartmentsRepository.cs" />
-    <Compile Include="Data\Interfaces\IClassesTakenRepository.cs" />
-    <Compile Include="Data\Interfaces\IPledgeClassesRepository.cs" />
-    <Compile Include="Data\Interfaces\IPositionsRepository.cs" />
-    <Compile Include="Data\Interfaces\ILeadersRepository.cs" />
-    <Compile Include="Data\Interfaces\IPhoneNumbersRepository.cs" />
-    <Compile Include="Data\Interfaces\IAddressesRepository.cs" />
-    <Compile Include="Data\Interfaces\IEventsRepository.cs" />
-    <Compile Include="Data\Interfaces\IIncidentReportsRepository.cs" />
-    <Compile Include="Data\Interfaces\ILaundrySignupRepository.cs" />
-    <Compile Include="Data\Interfaces\IMemberStatusRepository.cs" />
-    <Compile Include="Data\Repositories\ClassesTakenRepository.cs" />
-    <Compile Include="Data\Repositories\DepartmentsRepository.cs" />
-    <Compile Include="Data\Repositories\ClassesRepository.cs" />
-    <Compile Include="Data\Repositories\PledgeClassesRepository.cs" />
-    <Compile Include="Data\Repositories\PositionsRepository.cs" />
-    <Compile Include="Data\Repositories\LeadersRepository.cs" />
-    <Compile Include="Data\Repositories\PhoneNumbersRepository.cs" />
-    <Compile Include="Data\Repositories\AddressesRepository.cs" />
+    <Compile Include="Models\DspRoleProvider.cs" />
     <Compile Include="Migrations\201408190209458_Initial.cs" />
     <Compile Include="Migrations\201408190209458_Initial.Designer.cs">
       <DependentUpon>201408190209458_Initial.cs</DependentUpon>
@@ -344,31 +312,14 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
-    <Compile Include="Models\IOAuthWebSecurity.cs" />
-    <Compile Include="Data\Interfaces\ISemestersRepository.cs" />
-    <Compile Include="Data\Interfaces\IServiceHoursRepository.cs" />
-    <Compile Include="Data\Interfaces\ISoberDriversRepository.cs" />
-    <Compile Include="Data\Interfaces\IStudyHoursRepository.cs" />
-    <Compile Include="Models\IWebSecurity.cs" />
-    <Compile Include="Data\Repositories\EventsRepository.cs" />
-    <Compile Include="Data\Repositories\LaundrySignupRepository.cs" />
-    <Compile Include="Data\Repositories\MemberStatusRepository.cs" />
-    <Compile Include="Data\Repositories\SemestersRepository.cs" />
-    <Compile Include="Data\Repositories\ServiceHoursRepository.cs" />
-    <Compile Include="Data\Repositories\SoberDriversRepository.cs" />
-    <Compile Include="Data\Repositories\IncidentReportsRepository.cs" />
-    <Compile Include="Data\Repositories\StudyHoursRepository.cs" />
-    <Compile Include="Data\UnitOfWork\IUnitOfWork.cs" />
-    <Compile Include="Data\UnitOfWork\UnitOfWork.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\OAuthWebSecurityWrapper.cs" />
     <Compile Include="Models\ViewModels\AccountModels.cs" />
     <Compile Include="Models\Entities\Address.cs" />
     <Compile Include="Models\Entities\Class.cs" />
     <Compile Include="Models\Entities\Department.cs" />
-    <Compile Include="Models\DspContext.cs" />
+    <Compile Include="Models\DspDbContext.cs" />
     <Compile Include="Models\Entities\Event.cs" />
     <Compile Include="Models\ViewModels\ClassModels.cs" />
     <Compile Include="Models\Entities\IncidentReport.cs" />
@@ -398,12 +349,7 @@
     <Compile Include="Models\Entities\webpages_OAuthMembership.cs" />
     <Compile Include="Models\Entities\webpages_Roles.cs" />
     <Compile Include="Models\ViewModels\StudyHourModels.cs" />
-    <Compile Include="Models\WebSecurityWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Data\Repositories\GenericRepository.cs" />
-    <Compile Include="Data\Interfaces\IGenericRepository.cs" />
-    <Compile Include="Data\Interfaces\IMembersRepository.cs" />
-    <Compile Include="Data\Repositories\MembersRepository.cs" />
     <Compile Include="Controllers\EventsController.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -631,7 +577,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Filters\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201408190209458_Initial.resx">
