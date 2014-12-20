@@ -1,19 +1,17 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class PhoneNumbersController : BaseController
     {
-        public PhoneNumbersController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         public ActionResult Index(PhoneIndexFilterModel model)
         {
             if (model.IsBlank())
@@ -33,7 +31,7 @@
 
         public List<PhoneNumber> FilterPhoneNumbers(PhoneIndexFilterModel model)
         {
-            var phoneNumbers = uow.PhoneNumberRepository.SelectAll()
+            var phoneNumbers = _db.PhoneNumbers
                 .OrderBy(s => s.Member.StatusId)
                 .ThenBy(m => m.Member.LastName)
                 .ThenBy(a => a.Type).ToList();
@@ -74,12 +72,12 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var phoneNumber = uow.PhoneNumberRepository.SingleById(id);
+            var phoneNumber = _db.PhoneNumbers.Find(id);
             if (phoneNumber == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", phoneNumber.UserId);
+            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", phoneNumber.UserId);
             return View(phoneNumber);
         }
 
@@ -89,12 +87,12 @@
         {
             if (ModelState.IsValid)
             {
-                uow.PhoneNumberRepository.Update(phoneNumber);
-                uow.Save();
-                return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == phoneNumber.UserId
+                _db.Entry(phoneNumber).State = EntityState.Modified;
+                _db.SaveChanges();
+                return WebSecurity.GetUserId(WebSecurity.CurrentUserName) == phoneNumber.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", phoneNumber.UserId);
+            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", phoneNumber.UserId);
             return View(phoneNumber);
         }
     }

@@ -2,13 +2,13 @@
 {
     using App_Start;
     using Data;
-    using Data.UnitOfWork;
     using Microsoft.AspNet.Identity;
-    using Models;
+    using Microsoft.Web.WebPages.OAuth;
     using Models.Entities;
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net.Mail;
     using System.Web.Mvc;
@@ -18,8 +18,6 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AccountController : BaseController
     {
-        public AccountController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         [HttpGet]
         public ActionResult Index(string userName, ManageMessageId? message)
         {
@@ -39,14 +37,14 @@
             if (!string.IsNullOrEmpty(userName))
             {
                 if (!OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName)))
-                    userName = WebSecurity.CurrentUser.Identity.Name;
+                    userName = WebSecurity.CurrentUserName;
             }
             else if (string.IsNullOrEmpty(userName))
             {
-                userName = WebSecurity.CurrentUser.Identity.Name;
+                userName = WebSecurity.CurrentUserName;
             }
 
-            var member = uow.MemberRepository.Single(m => m.UserName == userName);
+            var member = _db.Members.Single(m => m.UserName == userName);
 
             ViewBag.StatusMessage = GetManageMessage(message);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
@@ -69,8 +67,7 @@
             {
                 if (model.SearchModel.CustomSearchRequested())
                 {
-                    IEnumerable<Member> guidedSearchResults = uow.MemberRepository
-                        .SelectAll()
+                    IEnumerable<Member> guidedSearchResults = _db.Members
                         .OrderBy(o => o.LastName)
                         .ToList();
                     if (model.SearchModel.SelectedStatusId != -1)
@@ -104,8 +101,7 @@
                 }
                 else
                 {
-                    model.Members = uow.MemberRepository
-                        .SelectAll()
+                    model.Members = _db.Members
                         .Where(m => 
                             m.MemberStatus.StatusName == "Pledge" ||
                             m.MemberStatus.StatusName == "Neophyte" ||
@@ -119,8 +115,7 @@
             {
                 model = new RosterModel
                 {
-                    Members = uow.MemberRepository
-                        .SelectAll()
+                    Members = _db.Members
                         .Where(m =>
                             m.MemberStatus.StatusName == "Pledge" ||
                             m.MemberStatus.StatusName == "Neophyte" ||
@@ -146,8 +141,8 @@
         public ActionResult Edit(string userName, AccountChangeMessageId? message)
         {
             var member = string.IsNullOrEmpty(userName)
-                ? uow.MemberRepository.Single(m => m.UserName == WebSecurity.CurrentUser.Identity.Name)
-                : uow.MemberRepository.Single(m => m.UserName == userName);
+                ? _db.Members.Single(m => m.UserName == WebSecurity.CurrentUserName)
+                : _db.Members.Single(m => m.UserName == userName);
             var model = new EditMemberInfoModel
             {
                 Member = member,
@@ -183,7 +178,7 @@
                 return View(model);
             }
 
-            var member = uow.MemberRepository.Single(m => m.UserId == model.Member.UserId);
+            var member = _db.Members.Single(m => m.UserId == model.Member.UserId);
             member.FirstName = model.Member.FirstName;
             member.LastName = model.Member.LastName;
             member.Email = model.Member.Email;
@@ -197,8 +192,9 @@
             member.ProctoredStudyHours = model.Member.ProctoredStudyHours;
             member.ShirtSize = model.Member.ShirtSize;
 
-            uow.MemberRepository.Update(member);
-            uow.Save();
+            _db.Members.Attach(member);
+            _db.Entry(member).State = EntityState.Modified;
+            _db.SaveChanges();
 
             ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
 
@@ -294,11 +290,11 @@
                         ProctoredStudyHours = 0, model.ShirtSize
                 });
 
-                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });
-                uow.AddressRepository.Insert(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Permanent" });
-                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mobile" });
-                uow.PhoneNumberRepository.Insert(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Emergency" });
-                uow.Save();
+                _db.Addresses.Add(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });
+                _db.Addresses.Add(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Permanent" });
+                _db.PhoneNumbers.Add(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mobile" });
+                _db.PhoneNumbers.Add(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Emergency" });
+                _db.SaveChanges();
 
                 message = RegistrationMessageId.RegistrationSuccess;
 
@@ -343,7 +339,7 @@
                 // Attempt to remove the user from the system
                 try
                 {
-                    var member = uow.MemberRepository.Single(m => m.UserId == model.SelectedUserId);
+                    var member = _db.Members.Single(m => m.UserId == model.SelectedUserId);
 
                     if(member.ClassesTaken.Count > 0 || member.SubmittedStudyHours.Count > 0 ||
                        member.Committees.Count > 0 || member.IncidentReports.Count > 0 ||
@@ -357,13 +353,13 @@
 
                     foreach (var address in member.Addresses.ToList())
                     {
-                        uow.AddressRepository.Delete(address);
+                        _db.Addresses.Remove(address);
                     }
                     foreach (var number in member.PhoneNumbers.ToList())
                     {
-                        uow.PhoneNumberRepository.Delete(number);
+                        _db.PhoneNumbers.Remove(number);
                     }
-                    uow.Save();
+                    _db.SaveChanges();
 
                     ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(member.UserName);
                     // deletes record from webpages_Membership table
@@ -453,7 +449,7 @@
 
             if (changePasswordSucceeded)
             {
-                var user = uow.MemberRepository.Single(m => m.UserName == userName);
+                var user = _db.Members.Single(m => m.UserName == userName);
                 var emailMessage = new IdentityMessage
                 {
                     Subject = "Account Password has been reset at deltasig-de.org",
@@ -495,7 +491,7 @@
                     break;
             }
 
-            var positions = uow.PositionRepository.SelectAll()
+            var positions = _db.Positions
                 .Where(p => !p.IsDisabled)
                 .OrderBy(p => p.Type)
                 .ThenBy(p => p.DisplayOrder).ToList();
@@ -507,7 +503,7 @@
                 if (position.PositionName == "Administrator") continue;
                 foreach(var semester in semesters)
                 {
-                    var leader = uow.LeaderRepository.SelectAll().ToList().SingleOrDefault(l =>
+                    var leader = _db.Leaders.ToList().SingleOrDefault(l =>
                         l.SemesterId == semester.SemesterId &&
                         l.PositionId == position.PositionId) ?? new Leader();
                     model.Add(new AppointmentModel
@@ -534,14 +530,14 @@
         [Authorize(Roles = "Administrator, President")]
         public ActionResult Appointments(IList<AppointmentModel> model)
         {
-            AppointmentMessageId? message = null;
+            AppointmentMessageId? message;
 
             try
             {
                 foreach (var ap in model)
                 {
                     // Check if a Leader entry already exists.
-                    var leader = uow.LeaderRepository.Single(m =>
+                    var leader = _db.Leaders.Single(m =>
                         m.SemesterId == ap.Leader.SemesterId &&
                         m.PositionId == ap.Leader.PositionId);
 
@@ -553,16 +549,16 @@
                     }
                     else if (ap.Leader.UserId == 0)
                     {
-                        uow.LeaderRepository.DeleteById(leader.LeaderId);
-                        uow.Save();
+                        var leaderToRemove = _db.Leaders.Find(leader.LeaderId);
+                        _db.Entry(leaderToRemove).State = EntityState.Deleted;
                     }
                     else if (ap.Leader.UserId != 0)
                     {
                         leader.UserId = ap.Leader.UserId;
-                        uow.LeaderRepository.Update(leader);
-                        uow.Save();
+                        _db.Entry(leader).State = EntityState.Modified;
                     }
                 }
+                _db.SaveChanges();
                 message = AppointmentMessageId.AppointmentSuccess;
             }
             catch (Exception)
