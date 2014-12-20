@@ -1,4 +1,4 @@
-﻿namespace DeltaSigmaPhiWebsite.Data
+﻿namespace DeltaSigmaPhiWebsite
 {
     using Models;
     using Models.Entities;
@@ -106,7 +106,7 @@
             }
         }
 
-        public void AddUserToRole(int userId, int positionId, int semesterId)
+        public async void AddUserToRole(int userId, int positionId, int semesterId)
         {
             try
             {
@@ -119,7 +119,7 @@
                         SemesterId = semesterId,
                         AppointedOn = DateTime.UtcNow
                     });
-                    db.SaveChanges();
+                    await db.SaveChangesAsync();
                 }
             }
             catch

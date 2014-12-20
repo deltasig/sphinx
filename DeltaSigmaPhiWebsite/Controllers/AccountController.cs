@@ -1,7 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using App_Start;
-    using Data;
     using Microsoft.AspNet.Identity;
     using Microsoft.Web.WebPages.OAuth;
     using Models.Entities;
@@ -11,6 +10,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Net.Mail;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Security;
     using WebMatrix.WebData;
@@ -19,7 +19,7 @@
     public class AccountController : BaseController
     {
         [HttpGet]
-        public ActionResult Index(string userName, ManageMessageId? message)
+        public async Task<ActionResult> Index(string userName, ManageMessageId? message)
         {
             switch (message)
             {
@@ -44,11 +44,11 @@
                 userName = WebSecurity.CurrentUserName;
             }
 
-            var member = _db.Members.Single(m => m.UserName == userName);
+            var member = await _db.Members.SingleAsync(m => m.UserName == userName);
 
             ViewBag.StatusMessage = GetManageMessage(message);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
-            var thisSemester = GetThisSemester();
+            var thisSemester = await GetThisSemesterAsync();
 
             var model = new AccountInformationModel
             {
@@ -61,39 +61,34 @@
         }
 
         [HttpGet]
-        public ActionResult Roster(RosterModel model)
+        public async Task<ActionResult> Roster(RosterModel model)
         {
             if (model.SearchModel != null)
             {
                 if (model.SearchModel.CustomSearchRequested())
                 {
-                    IEnumerable<Member> guidedSearchResults = _db.Members
+                    IEnumerable<Member> guidedSearchResults = await _db.Members
                         .OrderBy(o => o.LastName)
-                        .ToList();
+                        .ToListAsync();
                     if (model.SearchModel.SelectedStatusId != -1)
                     {
-                        guidedSearchResults =
-                            guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
+                        guidedSearchResults = guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
                     }
                     if (model.SearchModel.SelectedPledgeClassId != -1)
                     {
-                        guidedSearchResults =
-                            guidedSearchResults.Where(m => m.PledgeClassId == model.SearchModel.SelectedPledgeClassId);
+                        guidedSearchResults = guidedSearchResults.Where(m => m.PledgeClassId == model.SearchModel.SelectedPledgeClassId);
                     }
                     if (model.SearchModel.SelectedGraduationSemesterId != -1)
                     {
-                        guidedSearchResults =
-                            guidedSearchResults.Where(m => m.ExpectedGraduationId == model.SearchModel.SelectedGraduationSemesterId);
+                        guidedSearchResults = guidedSearchResults.Where(m => m.ExpectedGraduationId == model.SearchModel.SelectedGraduationSemesterId);
                     }
                     switch (model.SearchModel.LivingType)
                     {
                         case "InHouse":
-                            guidedSearchResults =
-                                guidedSearchResults.Where(m => m.Room != 0);
+                            guidedSearchResults = guidedSearchResults.Where(m => m.Room != 0);
                             break;
                         case "OutOfHouse":
-                            guidedSearchResults =
-                                guidedSearchResults.Where(m => m.Room == 0);
+                            guidedSearchResults = guidedSearchResults.Where(m => m.Room == 0);
                             break;
                     }
 
@@ -101,36 +96,36 @@
                 }
                 else
                 {
-                    model.Members = _db.Members
+                    model.Members = await _db.Members
                         .Where(m => 
                             m.MemberStatus.StatusName == "Pledge" ||
                             m.MemberStatus.StatusName == "Neophyte" ||
                             m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
-                        .ToList();
+                        .ToListAsync();
                 }
             }
             else
             {
                 model = new RosterModel
                 {
-                    Members = _db.Members
+                    Members = await _db.Members
                         .Where(m =>
                             m.MemberStatus.StatusName == "Pledge" ||
                             m.MemberStatus.StatusName == "Neophyte" ||
                             m.MemberStatus.StatusName == "Active")
                         .OrderBy(o => o.PledgeClassId)
                         .ThenBy(o => o.LastName)
-                        .ToList()
+                        .ToListAsync()
                 };
             }
 
             model.SearchModel = new RosterSearchModel
             {
-                Statuses = GetStatusListWithNone(),
-                PledgeClasses = GetPledgeClassListWithNone(),
-                Semesters = GetSemesterListWithNone(),
+                Statuses = await GetStatusListWithNoneAsync(),
+                PledgeClasses = await GetPledgeClassListWithNoneAsync(),
+                Semesters = await GetSemesterListWithNoneAsync(),
                 LivingType = "Both"
             };
 
@@ -138,18 +133,18 @@
         }
 
         [HttpGet]
-        public ActionResult Edit(string userName, AccountChangeMessageId? message)
+        public async Task<ActionResult> Edit(string userName, AccountChangeMessageId? message)
         {
             var member = string.IsNullOrEmpty(userName)
-                ? _db.Members.Single(m => m.UserName == WebSecurity.CurrentUserName)
-                : _db.Members.Single(m => m.UserName == userName);
+                ? await _db.Members.SingleAsync(m => m.UserName == WebSecurity.CurrentUserName)
+                : await _db.Members.SingleAsync(m => m.UserName == userName);
             var model = new EditMemberInfoModel
             {
                 Member = member,
-                Semesters = GetSemesterList(),
-                PledgeClasses = GetPledgeClassList(),
-                Statuses = GetStatusList(),
-                Members = GetUserIdListAsFullNameWithNone(),
+                Semesters = await GetSemesterListAsync(),
+                PledgeClasses = await GetPledgeClassListAsync(),
+                Statuses = await GetStatusListAsync(),
+                Members = await GetUserIdListAsFullNameWithNoneAsync(),
                 ShirtSizes = GetShirtSizesSelectList()
             };
 
@@ -158,7 +153,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(EditMemberInfoModel model)
+        public async Task<ActionResult> Edit(EditMemberInfoModel model)
         {
             if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && !User.IsInRole("Academics") && 
                !User.IsInRole("House Manager") && User.Identity.Name != model.Member.UserName)
@@ -166,10 +161,10 @@
                 RedirectToAction("Index");
             }
 
-            model.Semesters = GetSemesterList();
-            model.PledgeClasses = GetPledgeClassList();
-            model.Statuses = GetStatusList();
-            model.Members = GetUserIdListAsFullNameWithNone();
+            model.Semesters = await GetSemesterListAsync();
+            model.PledgeClasses = await GetPledgeClassListAsync();
+            model.Statuses = await GetStatusListAsync();
+            model.Members = await GetUserIdListAsFullNameWithNoneAsync();
             model.ShirtSizes = GetShirtSizesSelectList();
 
             if (!ModelState.IsValid)
@@ -178,7 +173,7 @@
                 return View(model);
             }
 
-            var member = _db.Members.Single(m => m.UserId == model.Member.UserId);
+            var member = await _db.Members.SingleAsync(m => m.UserId == model.Member.UserId);
             member.FirstName = model.Member.FirstName;
             member.LastName = model.Member.LastName;
             member.Email = model.Member.Email;
@@ -194,7 +189,7 @@
 
             _db.Members.Attach(member);
             _db.Entry(member).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
 
@@ -238,7 +233,7 @@
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Secretary")]
-        public ActionResult Registration(RegistrationMessageId? message)
+        public async Task<ActionResult> Registration(RegistrationMessageId? message)
         {
             switch (message)
             {
@@ -255,14 +250,14 @@
             {
                 RegisterModel = new RegisterModel
                 {
-                    StatusList = GetStatusList(), 
-                    PledgeClassList = GetPledgeClassList(),
-                    SemesterList = GetSemesterList(),
+                    StatusList = await GetStatusListAsync(), 
+                    PledgeClassList = await GetPledgeClassListAsync(),
+                    SemesterList = await GetSemesterListAsync(),
                     ShirtSizes = GetShirtSizesSelectList()
                 },
                 UnregisterModel = new UnregisterModel
                 {
-                    Users = GetUserIdListAsFullName()
+                    Users = await GetUserIdListAsFullNameAsync()
                 }
             };
 
@@ -272,7 +267,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Secretary")]
-        public ActionResult Register(RegisterModel model)
+        public async Task<ActionResult> Register(RegisterModel model)
         {
             RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
 
@@ -294,7 +289,7 @@
                 _db.Addresses.Add(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Permanent" });
                 _db.PhoneNumbers.Add(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mobile" });
                 _db.PhoneNumbers.Add(new PhoneNumber { UserId = WebSecurity.GetUserId(model.UserName), Type = "Emergency" });
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
 
                 message = RegistrationMessageId.RegistrationSuccess;
 
@@ -309,7 +304,7 @@
                 try
                 {
                     var emailService = new EmailService();
-                    emailService.SendAsync(emailMessage);
+                    await emailService.SendAsync(emailMessage);
                 }
                 catch (SmtpException e)
                 {
@@ -330,7 +325,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator")]
-        public ActionResult Unregister(UnregisterModel model)
+        public async Task<ActionResult> Unregister(UnregisterModel model)
         {
             RegistrationMessageId? message;
 
@@ -339,7 +334,7 @@
                 // Attempt to remove the user from the system
                 try
                 {
-                    var member = _db.Members.Single(m => m.UserId == model.SelectedUserId);
+                    var member = await _db.Members.SingleAsync(m => m.UserId == model.SelectedUserId);
 
                     if(member.ClassesTaken.Count > 0 || member.SubmittedStudyHours.Count > 0 ||
                        member.Committees.Count > 0 || member.IncidentReports.Count > 0 ||
@@ -359,7 +354,7 @@
                     {
                         _db.PhoneNumbers.Remove(number);
                     }
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
 
                     ((SimpleMembershipProvider)Membership.Provider).DeleteAccount(member.UserName);
                     // deletes record from webpages_Membership table
@@ -433,7 +428,7 @@
 
         [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public ActionResult ResetPassword(string userName)
+        public async Task<ActionResult> ResetPassword(string userName)
         {
             bool changePasswordSucceeded;
             var tempPassword = Membership.GeneratePassword(10, 5);;
@@ -449,7 +444,7 @@
 
             if (changePasswordSucceeded)
             {
-                var user = _db.Members.Single(m => m.UserName == userName);
+                var user = await _db.Members.SingleAsync(m => m.UserName == userName);
                 var emailMessage = new IdentityMessage
                 {
                     Subject = "Account Password has been reset at deltasig-de.org",
@@ -461,7 +456,7 @@
                 try
                 {
                     var emailService = new EmailService();
-                    emailService.SendAsync(emailMessage);
+                    await emailService.SendAsync(emailMessage);
                 }
                 catch (SmtpException e)
                 {
@@ -479,7 +474,7 @@
 
         [HttpGet]
         [Authorize(Roles = "Administrator, President")]
-        public ActionResult Appointments(AppointmentMessageId? message)
+        public async Task<ActionResult> Appointments(AppointmentMessageId? message)
         {
             switch (message)
             {
@@ -491,11 +486,12 @@
                     break;
             }
 
-            var positions = _db.Positions
+            var positions = await _db.Positions
                 .Where(p => !p.IsDisabled)
                 .OrderBy(p => p.Type)
-                .ThenBy(p => p.DisplayOrder).ToList();
-            var semesters = GetThisAndNextSemesterList().ToList();
+                .ThenBy(p => p.DisplayOrder)
+                .ToListAsync();
+            var semesters = await GetThisAndNextSemesterListAsync();
             var model = new List<AppointmentModel>();
 
             foreach(var position in positions)
@@ -503,7 +499,7 @@
                 if (position.PositionName == "Administrator") continue;
                 foreach(var semester in semesters)
                 {
-                    var leader = _db.Leaders.ToList().SingleOrDefault(l =>
+                    var leader = await _db.Leaders.SingleOrDefaultAsync(l =>
                         l.SemesterId == semester.SemesterId &&
                         l.PositionId == position.PositionId) ?? new Leader();
                     model.Add(new AppointmentModel
@@ -516,8 +512,8 @@
                             SemesterId = semester.SemesterId,
                             UserId = leader.UserId 
                         },
-                        Users = GetUserIdListAsFullNameWithNoneNonSelectList(),
-                        Alumni = GetAlumniIdListAsFullNameWithNoneNonSelectList()
+                        Users = await GetUserIdListAsFullNameWithNoneNonSelectListAsync(),
+                        Alumni = await GetAlumniIdListAsFullNameWithNoneNonSelectListAsync()
                     });
                 }
             }
@@ -528,7 +524,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, President")]
-        public ActionResult Appointments(IList<AppointmentModel> model)
+        public async Task<ActionResult> Appointments(IList<AppointmentModel> model)
         {
             AppointmentMessageId? message;
 
@@ -537,20 +533,19 @@
                 foreach (var ap in model)
                 {
                     // Check if a Leader entry already exists.
-                    var leader = _db.Leaders.Single(m =>
-                        m.SemesterId == ap.Leader.SemesterId &&
-                        m.PositionId == ap.Leader.PositionId);
+                    var leader = await _db.Leaders
+                        .SingleAsync(m => m.SemesterId == ap.Leader.SemesterId && 
+                                     m.PositionId == ap.Leader.PositionId);
 
                     if (leader == null)
                     {
                         if (ap.Leader.UserId == 0) continue;
-                        ((DspRoleProvider)Roles.Provider)
-                            .AddUserToRole(ap.Leader.UserId, ap.Leader.PositionId, ap.Leader.SemesterId);
+                        ((DspRoleProvider)Roles.Provider).AddUserToRole(ap.Leader.UserId, ap.Leader.PositionId, ap.Leader.SemesterId);
                     }
                     else if (ap.Leader.UserId == 0)
                     {
                         var leaderToRemove = _db.Leaders.Find(leader.LeaderId);
-                        _db.Entry(leaderToRemove).State = EntityState.Deleted;
+                        _db.Leaders.Remove(leaderToRemove);
                     }
                     else if (ap.Leader.UserId != 0)
                     {
@@ -558,7 +553,7 @@
                         _db.Entry(leader).State = EntityState.Modified;
                     }
                 }
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 message = AppointmentMessageId.AppointmentSuccess;
             }
             catch (Exception)

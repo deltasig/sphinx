@@ -1,21 +1,19 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
     {
-        private readonly DspDbContext _db = new DspDbContext();
-        
-        public ActionResult Index(AddressIndexFilterModel model)
+        public async Task<ActionResult> Index(AddressIndexFilterModel model)
         {
             if (model.IsBlank())
             {
@@ -28,16 +26,16 @@
                 return RedirectToAction("Index", model);
             }
 
-            model.Addresses = FilterAddresses(model);
+            model.Addresses = await FilterAddressesAsync(model);
             return View(model);
         }
 
-        public List<Address> FilterAddresses(AddressIndexFilterModel model)
+        public async Task<List<Address>> FilterAddressesAsync(AddressIndexFilterModel model)
         {
-            var addresses = _db.Addresses.ToList()
+            var addresses = await _db.Addresses
                 .OrderBy(s => s.Member.StatusId)
                 .ThenBy(m => m.Member.LastName)
-                .ThenBy(a => a.Type).ToList();
+                .ThenBy(a => a.Type).ToListAsync();
 
             if (!model.Pledges)
             {
@@ -69,34 +67,33 @@
             return addresses;
         }
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var address = _db.Addresses.Find(id);
+            var address = await _db.Addresses.FindAsync(id);
             if (address == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", address.UserId);
             return View(address);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "AddressId,UserId,Type,Address1,Address2,City,State,PostalCode,Country")] Address address)
+        public async Task<ActionResult> Edit([Bind(Include = "AddressId,UserId,Type,Address1,Address2,City,State,PostalCode,Country")] Address address)
         {
             if (ModelState.IsValid)
             {
-                _db.Addresses.Attach(address);
                 _db.Entry(address).State = EntityState.Modified;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return WebSecurity.GetUserId(WebSecurity.CurrentUserName) == address.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", address.UserId);
             return View(address);
         }
     }

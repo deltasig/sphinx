@@ -4,7 +4,9 @@
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
@@ -12,21 +14,21 @@
     public class ServiceHoursController : BaseController
     {
         [HttpGet]
-        public ActionResult Index(ServiceHourIndexFilterModel model)
+        public async Task<ActionResult> Index(ServiceHourIndexFilterModel model)
         {
             if(model.SelectedSemester == null)
             {
-                model.SelectedSemester = GetThisSemestersId();
+                model.SelectedSemester = await GetThisSemestersIdAsync();
             }
 
-            var activeMembers = GetAllActivePledgeNeophyteMembers();
+            var activeMembers = await GetAllActivePledgeNeophyteMembersAsync();
 
-            model.SemesterList = GetSemesterList();
+            model.SemesterList = await GetSemesterListAsync();
             model.ServiceHours = new List<ServiceHourIndexModel>();
-            var thisSemester = _db.Semesters.Find(model.SelectedSemester);
-            var previousSemester = _db.Semesters.ToList()
+            var thisSemester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var previousSemester = (await _db.Semesters
                 .Where(s => s.DateEnd < thisSemester.DateStart)
-                .OrderBy(s => s.DateEnd).LastOrDefault() ?? new Semester
+                .OrderBy(s => s.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
                     DateEnd = thisSemester.DateStart
@@ -38,9 +40,8 @@
                 {
                     Member = m,
                     Hours = m.ServiceHours
-                        .Where(e =>
-                            e.Event.DateTimeOccurred > previousSemester.DateEnd && 
-                            e.DateTimeSubmitted <= thisSemester.DateEnd)
+                        .Where(e => e.Event.DateTimeOccurred > previousSemester.DateEnd && 
+                                    e.DateTimeSubmitted <= thisSemester.DateEnd)
                         .Sum(h => h.DurationHours),
                     Semester = thisSemester
                 };
@@ -52,15 +53,15 @@
         }
 
         [HttpGet]
-        public ActionResult Submit()
+        public async Task<ActionResult> Submit()
         {
-            var model = new ServiceHourSubmissionModel { Events = GetAllEventIdsAsEventName() };
+            var model = new ServiceHourSubmissionModel { Events = await GetAllEventIdsAsEventNameAsync() };
             return PartialView(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Submit(ServiceHourSubmissionModel model)
+        public async Task<ActionResult> Submit(ServiceHourSubmissionModel model)
         {
             var message = "";
             // Invalid value
@@ -79,7 +80,7 @@
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             
             // Check if hours submitted is more than held for event
-            var selectedEvent = _db.Events.Single(e => e.EventId == model.SelectedEventId);
+            var selectedEvent = await _db.Events.SingleAsync(e => e.EventId == model.SelectedEventId);
             if (model.HoursServed > selectedEvent.DurationHours)
             {
                 message = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
@@ -87,21 +88,21 @@
             }
             
             // Check if submission has already been created
-            var duplicateSubmission = _db.ServiceHours.Where(e => (e.EventId == model.SelectedEventId && e.UserId == userId)).ToList();
+            var duplicateSubmission = await _db.ServiceHours.Where(e => (e.EventId == model.SelectedEventId && e.UserId == userId)).ToListAsync();
             if (duplicateSubmission.Any())
             {
                 // Delete existing record
                 if (model.HoursServed == 0.0)
                 {
                     _db.ServiceHours.Remove(duplicateSubmission.Single());
-                    _db.SaveChanges();
+                    await _db.SaveChangesAsync();
                     message = "Your submission was deleted.";
                     return RedirectToAction("Index", "Sphinx", new { message });
                 }
 
                 // Update submission
                 duplicateSubmission.First().DurationHours = model.HoursServed;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 message = "Your hours for" + selectedEvent.EventName + " event have been updated.";
                 return RedirectToAction("Index", "Sphinx", new { message });
             }
@@ -123,7 +124,7 @@
             };
 
             _db.ServiceHours.Add(submission);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             message = "Service hours submitted successfully.";
             return RedirectToAction("Index", "Sphinx", new { message });
         }

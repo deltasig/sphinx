@@ -1,6 +1,5 @@
 namespace DeltaSigmaPhiWebsite.Models
 {
-    using System.Diagnostics;
     using Entities;
     using System.Data.Entity;
 

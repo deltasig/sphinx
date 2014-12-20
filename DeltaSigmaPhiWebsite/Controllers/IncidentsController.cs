@@ -3,26 +3,26 @@
     using Models.Entities;
     using System;
     using System.Data.Entity;
-    using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            var model = _db.IncidentReports.ToList();
+            var model = await _db.IncidentReports.ToListAsync();
             return View(model);
         }
 
-        public ActionResult Details(int? id)
+        public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var incidentReport = _db.IncidentReports.Find(id);
+            var incidentReport = await _db.IncidentReports.FindAsync(id);
             if (incidentReport == null)
             {
                 return HttpNotFound();
@@ -37,26 +37,26 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
+        public async Task<ActionResult> Create([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
         {
             if (!ModelState.IsValid) return View(incidentReport);
             incidentReport.DateTimeSubmitted = DateTime.UtcNow;
-            incidentReport.ReportedBy = _db.Members.Single(m => m.UserName == User.Identity.Name).UserId;
+            incidentReport.ReportedBy = (await _db.Members.SingleAsync(m => m.UserName == User.Identity.Name)).UserId;
             
             _db.IncidentReports.Add(incidentReport);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var incidentReport = _db.IncidentReports.Find(id);
+            var incidentReport = await _db.IncidentReports.FindAsync(id);
             if (incidentReport == null)
             {
                 return HttpNotFound();
@@ -68,12 +68,12 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult Edit([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
+        public async Task<ActionResult> Edit([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
         {
             if (!ModelState.IsValid) return View(incidentReport);
 
             _db.Entry(incidentReport).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }
