@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
-    using System.EnterpriseServices.Internal;
     using Entities;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

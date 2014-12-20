@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
-    using System;
     using Entities;
+    using System;
     using System.Collections.Generic;
 
     public class TrackerModel

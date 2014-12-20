@@ -1,9 +1,9 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.Web.Mvc;
     using Entities;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Web.Mvc;
 
     public class ClassScheduleModel
     {
@@ -20,6 +20,6 @@
         public IEnumerable<SelectListItem> Semesters { get; set; }
 
         public IEnumerable<Class> AllClasses { get; set; }
-        public IList<ClassTaken> ClassesTaken { get; set; }
+        public List<ClassTaken> ClassesTaken { get; set; }
     }
 }

@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     [Authorize(Roles = "Administrator, President, Secretary, Academics")]
@@ -12,9 +13,9 @@
     {
         [HttpGet]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_db.Semesters.OrderByDescending(s => s.DateStart).ToList());
+            return View(await _db.Semesters.OrderByDescending(s => s.DateStart).ToListAsync());
         }
 
         [HttpGet]
@@ -27,25 +28,25 @@
         [HttpPost]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateSemesterModel model)
+        public async Task<ActionResult> Create(CreateSemesterModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
             _db.Semesters.Add(model.Semester);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = _db.Semesters.Find(id);
+            var semester = await _db.Semesters.FindAsync(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -56,24 +57,24 @@
         [HttpPost]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Semester semester)
+        public async Task<ActionResult> Edit(Semester semester)
         {
             if (!ModelState.IsValid) return View(semester);
 
             _db.Entry(semester).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
         [HttpGet]
         [Authorize(Roles = "Administrator")]
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = _db.Semesters.Find(id);
+            var semester = await _db.Semesters.FindAsync(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -84,11 +85,11 @@
         [HttpPost, ActionName("Delete")]
         [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var semester = _db.Semesters.Find(id);
+            var semester = await _db.Semesters.FindAsync(id);
             _db.Semesters.Remove(semester);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

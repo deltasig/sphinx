@@ -19,11 +19,11 @@
     public class SphinxController : BaseController
     {
         [HttpGet]
-        public ActionResult Index(string message = "")
+        public async Task<ActionResult> Index(string message = "")
         {
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            var member = _db.Members.Find(userId);
-            var events = GetAllCompletedEventsForUser(userId).ToList();
+            var member = await _db.Members.FindAsync(userId);
+            var events = await GetAllCompletedEventsForUserAsync(userId);
             var startOfTodayCst = ConvertUtcToCst(DateTime.UtcNow).Date;
             var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
             var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
@@ -33,21 +33,20 @@
                 startOfTodayUtc = startOfTodayUtc.AddDays(-1);
             }
 
-            var soberSignups = _db.SoberSchedule
-                .Where(s =>
-                    s.DateOfShift >= startOfTodayUtc &&
-                    s.DateOfShift <= sevenDaysAheadOfToday)
+            var soberSignups = await _db.SoberSchedule
+                .Where(s => s.DateOfShift >= startOfTodayUtc && 
+                            s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
                 .ThenBy(s => s.Type)
-                .ToList();
+                .ToListAsync();
 
-            var thisSemester = GetThisSemester();
-            var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
+            var thisSemester = await GetThisSemesterAsync();
+            var memberSoberSignups = await GetSoberSignupsForUserAsync(userId, thisSemester);
 
-            var laundrySignups = _db.LaundrySignups
+            var laundrySignups = await _db.LaundrySignups
                     .Where(l => l.DateTimeShift >= DateTime.UtcNow)
                     .OrderBy(l => l.DateTimeShift)
-                    .ToList();
+                    .ToListAsync();
             var laundryTake = laundrySignups.Count;
             if (laundrySignups.Count > 5)
             {
@@ -58,16 +57,16 @@
             {
                 MemberInfo = member,
                 Roles = Roles.GetRolesForUser(member.UserName),
-                RemainingCommunityServiceHours = GetRemainingServiceHoursForUser(userId),
-                RemainingStudyHours = GetRemainingStudyHoursForUser(userId),
-                RemainingProctoredStudyHours = GetRemainingProctoredStudyHoursForUser(userId),
+                RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(userId),
+                RemainingStudyHours = await GetRemainingStudyHoursForUserAsync(userId),
+                RemainingProctoredStudyHours = await GetRemainingProctoredStudyHoursForUserAsync(userId),
                 CompletedEvents = events,
-                StudyHours = GetStudyHoursForUser(userId),
+                StudyHours = await GetStudyHoursForUserAsync(userId),
                 SoberSignups = soberSignups,
                 LaundrySummary = laundrySignups.Take(laundryTake),
                 NeedsToSoberDrive = !memberSoberSignups.Any(),
                 CurrentSemester = thisSemester,
-                PreviousSemester = GetLastSemester()
+                PreviousSemester = await  GetLastSemesterAsync()
             };
 
             ViewBag.Message = message;
@@ -76,22 +75,23 @@
         }
 
         [HttpGet]
-        public ActionResult AlumniLeaders()
+        public async Task<ActionResult> AlumniLeaders()
         {
-            var currentSemester = GetThisSemester();
+            var currentSemester = await GetThisSemesterAsync();
 
             if (currentSemester == null) return View();
 
-            var model = _db.Leaders.Where(l => 
-                l.SemesterId == currentSemester.SemesterId && 
-                l.Position.Type == Position.PositionType.Alumni).ToList();
+            var model = await _db.Leaders
+                .Where(l => l.SemesterId == currentSemester.SemesterId && 
+                            l.Position.Type == Position.PositionType.Alumni)
+                .ToListAsync();
 
             return View(model);
         }
 
         #region Sober Scheduling
 
-        public ActionResult SoberSchedule(string message)
+        public async Task<ActionResult> SoberSchedule(string message)
         {
             ViewBag.Message = string.Empty;
 
@@ -102,72 +102,73 @@
 
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
 
-            var signups = _db.SoberSchedule
+            var signups = await _db.SoberSchedule
                 .Where(s => s.DateOfShift >= threeAmYesterday)
                 .OrderBy(s => s.DateOfShift)
-                .ToList();
+                .ToListAsync();
             return View(signups);
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult SoberScheduleManager()
+        public async Task<ActionResult> SoberScheduleManager()
         {
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
-            var vacantSignups = _db.SoberSchedule
-                .Where(s => s.DateOfShift >= startOfTodayUtc && s.UserId == null)
+            var vacantSignups = await _db.SoberSchedule
+                .Where(s => s.DateOfShift >= startOfTodayUtc && 
+                            s.UserId == null)
                 .OrderBy(s => s.DateOfShift)
-                .ToList();
+                .ToListAsync();
 
             return View(vacantSignups);
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult RequestSoberMember(SoberSignup signup)
+        public async Task<ActionResult> RequestSoberMember(SoberSignup signup)
         {
             if (!ModelState.IsValid) return RedirectToAction("SoberScheduleManager", "Sphinx");
 
             signup.DateOfShift = ConvertCstToUtc(signup.DateOfShift);
 
             _db.SoberSchedule.Add(signup);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("SoberScheduleManager", "Sphinx");
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult SoberSignupDelete(int? id)
+        public async Task<ActionResult> SoberSignupDelete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signupToCancel = _db.SoberSchedule.Find(id);
+            var signupToCancel = await _db.SoberSchedule.FindAsync(id);
             _db.SoberSchedule.Remove(signupToCancel);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("SoberSchedule", "Sphinx");
         }
 
-        public ActionResult SoberSignup(int? id)
+        public async Task<ActionResult> SoberSignup(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = _db.SoberSchedule.Find(id);
+            var signup = await _db.SoberSchedule.FindAsync(id);
 
             if (signup.UserId != null)
                 return RedirectToAction("SoberSchedule", "Sphinx");
             if (User.IsInRole("Pledge") && signup.Type == SoberSignupType.Officer)
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
-            signup.UserId = _db.Members.Single(m => m.UserName == User.Identity.Name).UserId;
+            signup.UserId = (await _db.Members.SingleAsync(m => m.UserName == User.Identity.Name)).UserId;
             signup.DateTimeSignedUp = DateTime.UtcNow;
 
             _db.Entry(signup).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("SoberSchedule", "Sphinx");
         }
@@ -179,7 +180,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = _db.SoberSchedule.Find(id);
+            var signup = await _db.SoberSchedule.FindAsync(id);
             var oldUserId = signup.UserId;
             var userId = WebSecurity.GetUserId(User.Identity.Name);
 
@@ -193,15 +194,15 @@
             signup.DateTimeSignedUp = null;
 
             _db.Entry(signup).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             if (WebSecurity.GetUserId(User.Identity.Name) != oldUserId)
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
-            var member = _db.Members.Find(oldUserId);
-            var currentSemesterId = GetThisSemestersId();
-            var position = _db.Positions.Single(p => p.PositionName == "Sergeant-at-Arms");
-            var saa = _db.Leaders.Single(l => l.SemesterId == currentSemesterId && l.PositionId == position.PositionId);
+            var member = await _db.Members.FindAsync(oldUserId);
+            var currentSemesterId = await GetThisSemestersIdAsync();
+            var position = await _db.Positions.SingleAsync(p => p.PositionName == "Sergeant-at-Arms");
+            var saa = await _db.Leaders.SingleAsync(l => l.SemesterId == currentSemesterId && l.PositionId == position.PositionId);
 
             var message = new IdentityMessage
             {
@@ -225,17 +226,17 @@
 
         [HttpGet]
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult EditSoberSignup(int? id)
+        public async Task<ActionResult> EditSoberSignup(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var signup = _db.SoberSchedule.Find(id);
+            var signup = await _db.SoberSchedule.FindAsync(id);
             var model = new EditSoberSignupModel
             {
                 SoberSignup = signup,
-                Members = GetUserIdListAsFullNameWithNone()
+                Members = await GetUserIdListAsFullNameWithNoneAsync()
             };
 
             if (signup.UserId != null)
@@ -247,12 +248,12 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public ActionResult EditSoberSignup(EditSoberSignupModel model)
+        public async Task<ActionResult> EditSoberSignup(EditSoberSignupModel model)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("SoberSchedule", new { message = "Failed to update sober signup." });
 
-            var existingSignup = _db.SoberSchedule.Find(model.SoberSignup.SignupId);
+            var existingSignup = await _db.SoberSchedule.FindAsync(model.SoberSignup.SignupId);
 
             if (model.SelectedMember <= 0)
                 existingSignup.UserId = null;
@@ -260,7 +261,7 @@
                 existingSignup.UserId = model.SelectedMember;
 
             _db.Entry(existingSignup).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("SoberSchedule", new { message = "Successfully updated sober signup." });
         }
@@ -270,7 +271,7 @@
         #region Laundry Scheduling
 
         [HttpGet]
-        public ActionResult LaundrySchedule(LaundrySignupMessage? message)
+        public async Task<ActionResult> LaundrySchedule(LaundrySignupMessage? message)
         {
             switch (message)
             {
@@ -288,7 +289,7 @@
             const int hoursInDay = 24;
             const int slotSize = 2;
 
-            var existingSignups = _db.LaundrySignups.Where(l => l.DateTimeShift > startOfTodayUtc).ToList();
+            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift > startOfTodayUtc).ToListAsync();
             var model = new List<List<LaundrySignup>>();
 
             for (var y = 0; y < 12; y++) // Hours in day
@@ -320,16 +321,17 @@
             return View(model);
         }
         [HttpPost]
-        public ActionResult ReserveLaundry(LaundrySignup signup)
+        public async Task<ActionResult> ReserveLaundry(LaundrySignup signup)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveFailed });
 
             var startOfToday = DateTime.UtcNow.Date;
             var currentUserId = WebSecurity.GetUserId(User.Identity.Name);
-            var existingSignups = _db.LaundrySignups
-                .Where(l => l.DateTimeShift >= startOfToday && l.UserId == currentUserId)
-                .ToList();
+            var existingSignups = await _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= startOfToday && 
+                            l.UserId == currentUserId)
+                .ToListAsync();
 
             var maxSignups = 2;
             if (User.IsInRole("House Steward")) maxSignups = 4;
@@ -344,20 +346,21 @@
             signup.DateTimeShift = ConvertCstToUtc(signup.DateTimeShift);
 
             _db.LaundrySignups.Add(signup);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveSuccess });
         }
         [HttpPost]
-        public ActionResult CancelReserveLaundry(LaundrySignup cancel)
+        public async Task<ActionResult> CancelReserveLaundry(LaundrySignup cancel)
         {
             cancel.DateTimeShift = ConvertCstToUtc(cancel.DateTimeShift);
-            var shift = _db.LaundrySignups.Single(s => s.DateTimeShift == cancel.DateTimeShift);
+            var shift = await _db.LaundrySignups.SingleAsync(s => s.DateTimeShift == cancel.DateTimeShift);
+
             if (shift == null)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
 
             _db.LaundrySignups.Remove(shift);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
         }

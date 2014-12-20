@@ -284,7 +284,7 @@
     <Compile Include="Controllers\ServiceHoursController.cs" />
     <Compile Include="Controllers\StudyHoursController.cs" />
     <Compile Include="Controllers\SphinxController.cs" />
-    <Compile Include="Models\DspRoleProvider.cs" />
+    <Compile Include="DspRoleProvider.cs" />
     <Compile Include="Migrations\201408190209458_Initial.cs" />
     <Compile Include="Migrations\201408190209458_Initial.Designer.cs">
       <DependentUpon>201408190209458_Initial.cs</DependentUpon>

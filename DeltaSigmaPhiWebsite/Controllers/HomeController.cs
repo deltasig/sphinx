@@ -1,6 +1,8 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Data.Entity;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     [AllowAnonymous]
@@ -11,13 +13,13 @@
             return View();
         }
 
-        public ActionResult Contacts()
+        public async Task<ActionResult> Contacts()
         {
-            var currentSemester = GetThisSemester();
+            var currentSemester = await GetThisSemesterAsync();
 
             if (currentSemester == null) return View();
 
-            var model = _db.Leaders.Where(l => l.SemesterId == currentSemester.SemesterId).ToList();
+            var model = await _db.Leaders.Where(l => l.SemesterId == currentSemester.SemesterId).ToListAsync();
 
             return View(model);
         }
