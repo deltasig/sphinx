@@ -1,12 +1,14 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Threading.Tasks;
     using Models.Entities;
     using Models.ViewModels;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Text;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
@@ -95,6 +97,29 @@
             }
             ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", phoneNumber.UserId);
             return View(phoneNumber);
+        }
+
+        public async Task<FileContentResult> Download()
+        {
+            var numbers = await _db.PhoneNumbers
+                .OrderBy(a => a.Member.MemberStatus.StatusId)
+                .ThenBy(a => a.Member.LastName)
+                .ToListAsync();
+            const string header = "First Name, Last Name, Member Status, Phone Type, Phone Number";
+            var sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach (var n in numbers)
+            {
+                var line = String.Format("{0},{1},{2},{3},{4}",
+                    n.Member.FirstName,
+                    n.Member.LastName,
+                    n.Member.MemberStatus.StatusName,
+                    n.Type,
+                    n.Number);
+                sb.AppendLine(line);
+            }
+
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-phone-numbers.csv");
         }
     }
 }
