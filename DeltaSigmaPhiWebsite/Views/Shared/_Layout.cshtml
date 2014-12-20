@@ -9,6 +9,8 @@
     @RenderSection("AdditionalMeta", false)
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.css">
     @Styles.Render("~/Content/bootstrap")
+    @Styles.Render("~/Content/custom-css")
+    @Styles.Render("~/Content/font-awesome")
     @Scripts.Render("~/bundles/modernizr")
 </head>
 <body style="padding: 0">
@@ -16,8 +18,8 @@
     @RenderSection("Title", required: false)
     @RenderBody()
     @{ Html.RenderPartial("Footer"); }
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    @Scripts.Render("~/bundles/otf")
+
+    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     @RenderSection("scripts", required: false)
