@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Text;
     using App_Start;
     using Microsoft.AspNet.Identity;
     using Microsoft.Web.WebPages.OAuth;
@@ -130,6 +131,37 @@
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<FileContentResult> DownloadRoster()
+        {
+            var members = await _db.Members
+                .OrderBy(m => m.MemberStatus.StatusId)
+                .ThenBy(m => m.LastName)
+                .ToListAsync();
+            const string header = "First Name, Last Name, Mobile, Email, Member Status, Pledge Class, Pin, Graduation, Room, Big Bro, T-Shirt";
+            var sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach (var m in members)
+            {
+                var phone = m.PhoneNumbers.SingleOrDefault(p => p.Type == "Mobile");
+                var line = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
+                    m.FirstName,
+                    m.LastName,
+                    phone == null ? "None" : phone.Number,
+                    m.Email,
+                    m.MemberStatus.StatusName,
+                    m.PledgeClass.PledgeClassName,
+                    m.Pin,
+                    m.Semester.ToString(),
+                    m.Room.ToString(),
+                    m.BigBrother == null ? "None" : m.BigBrother.FirstName + " " + m.BigBrother.LastName,
+                    m.ShirtSize);
+                sb.AppendLine(line);
+            }
+
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-roster.csv");
         }
 
         [HttpGet]

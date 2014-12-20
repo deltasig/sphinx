@@ -2,10 +2,12 @@
 {
     using Models.Entities;
     using Models.ViewModels;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;
@@ -95,6 +97,34 @@
             }
             ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", address.UserId);
             return View(address);
+        }
+
+        public async Task<FileContentResult> Download()
+        {
+            var addresses = await _db.Addresses
+                .OrderBy(a => a.Member.MemberStatus.StatusId)
+                .ThenBy(a => a.Member.LastName)
+                .ToListAsync();
+            const string header = "First Name, Last Name, Member Status, Address Type, Address 1, Address 2, City, State, Postal Code, Country";
+            var sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach(var a in addresses)
+            {
+                var line = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                    a.Member.FirstName,
+                    a.Member.LastName,
+                    a.Member.MemberStatus.StatusName,
+                    a.Type,
+                    a.Address1,
+                    a.Address2,
+                    a.City,
+                    a.State,
+                    a.PostalCode,
+                    a.Country);
+                sb.AppendLine(line);
+            }
+
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-addresses.csv");
         }
     }
 }
