@@ -372,19 +372,19 @@ namespace DeltaSigmaPhiWebsite.Migrations
 
             //context.SaveChanges();
 
-            //if (!WebSecurity.UserExists("tjm6f4"))
-            //    WebSecurity.CreateUserAndAccount("tjm6f4", "ultima0", new
+            //if (!WebSecurity.UserExists("yourusername"))
+            //    WebSecurity.CreateUserAndAccount("yourusername", "password", new
             //    {
-            //        FirstName = "Tyler", 
-            //        LastName = "Morrow", 
-            //        Email = "tjm6f4@mst.edu", 
+            //        FirstName = "John", 
+            //        LastName = "Doe", 
+            //        Email = "yourusername@mst.edu", 
             //        StatusId = context.MemberStatus.Single(s => s.StatusName == "Active").StatusId,
             //        ExpectedGraduationId = 9,
             //        PledgeClassId = 12,
             //        RequiredStudyHours = 0,
             //        ProctoredStudyHours = 0
             //    });
-            //var userId = WebSecurity.GetUserId("tjm6f4");
+            //var userId = WebSecurity.GetUserId("yourusername");
             //if (!context.Addresses.Select(a => a.UserId == userId).Any())
             //{
             //    context.Addresses.AddOrUpdate(
@@ -400,8 +400,8 @@ namespace DeltaSigmaPhiWebsite.Migrations
             //    context.SaveChanges();
             //}
 
-            //if (!Roles.GetRolesForUser("tjm6f4").Contains("Administrator"))
-            //    Roles.AddUsersToRoles(new[] { "tjm6f4" }, new[] { "Administrator" });
+            //if (!Roles.GetRolesForUser("yourusername").Contains("Administrator"))
+            //    Roles.AddUsersToRoles(new[] { "yourusername" }, new[] { "Administrator" });
         }
     }
 }
