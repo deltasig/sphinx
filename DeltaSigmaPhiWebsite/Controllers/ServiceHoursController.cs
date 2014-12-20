@@ -1,19 +1,16 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ServiceHoursController : BaseController
     {
-        public ServiceHoursController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         [HttpGet]
         public ActionResult Index(ServiceHourIndexFilterModel model)
         {
@@ -26,8 +23,8 @@
 
             model.SemesterList = GetSemesterList();
             model.ServiceHours = new List<ServiceHourIndexModel>();
-            var thisSemester = uow.SemesterRepository.SingleById(model.SelectedSemester);
-            var previousSemester = uow.SemesterRepository.SelectAll().ToList()
+            var thisSemester = _db.Semesters.Find(model.SelectedSemester);
+            var previousSemester = _db.Semesters.ToList()
                 .Where(s => s.DateEnd < thisSemester.DateStart)
                 .OrderBy(s => s.DateEnd).LastOrDefault() ?? new Semester
                 {
@@ -82,7 +79,7 @@
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             
             // Check if hours submitted is more than held for event
-            var selectedEvent = uow.EventRepository.Single(e => e.EventId == model.SelectedEventId);
+            var selectedEvent = _db.Events.Single(e => e.EventId == model.SelectedEventId);
             if (model.HoursServed > selectedEvent.DurationHours)
             {
                 message = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
@@ -90,21 +87,21 @@
             }
             
             // Check if submission has already been created
-            var duplicateSubmission = uow.ServiceHourRepository.SelectBy(e => (e.EventId == model.SelectedEventId && e.UserId == userId));
+            var duplicateSubmission = _db.ServiceHours.Where(e => (e.EventId == model.SelectedEventId && e.UserId == userId)).ToList();
             if (duplicateSubmission.Any())
             {
                 // Delete existing record
-                if (model.HoursServed == 0)
+                if (model.HoursServed == 0.0)
                 {
-                    uow.ServiceHourRepository.Delete(duplicateSubmission.Single());
-                    uow.Save();
+                    _db.ServiceHours.Remove(duplicateSubmission.Single());
+                    _db.SaveChanges();
                     message = "Your submission was deleted.";
                     return RedirectToAction("Index", "Sphinx", new { message });
                 }
 
                 // Update submission
                 duplicateSubmission.First().DurationHours = model.HoursServed;
-                uow.Save();
+                _db.SaveChanges();
                 message = "Your hours for" + selectedEvent.EventName + " event have been updated.";
                 return RedirectToAction("Index", "Sphinx", new { message });
             }
@@ -124,8 +121,9 @@
                 EventId = model.SelectedEventId,
                 DurationHours = model.HoursServed
             };
-            uow.ServiceHourRepository.Insert(submission);
-            uow.Save();
+
+            _db.ServiceHours.Add(submission);
+            _db.SaveChanges();
             message = "Service hours submitted successfully.";
             return RedirectToAction("Index", "Sphinx", new { message });
         }

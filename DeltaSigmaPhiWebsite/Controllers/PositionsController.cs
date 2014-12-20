@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Models;
     using Models.Entities;
     using System.Data.Entity;
     using System.Net;
@@ -8,10 +7,8 @@
     using System.Web.Mvc;
 
     [Authorize(Roles = "Administrator, President")]
-    public class PositionsController : Controller
+    public class PositionsController : BaseController
     {
-        private readonly DspContext _db = new DspContext();
-
         public async Task<ActionResult> Index()
         {
             return View(await _db.Positions.ToListAsync());
@@ -65,13 +62,11 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Position position)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Entry(position).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(position);
+            if (!ModelState.IsValid) return View(position);
+
+            _db.Entry(position).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Delete(int? id)
@@ -96,15 +91,6 @@
             _db.Positions.Remove(position);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

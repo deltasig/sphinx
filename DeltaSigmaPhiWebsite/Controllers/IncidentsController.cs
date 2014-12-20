@@ -1,9 +1,8 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using System;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
@@ -11,11 +10,9 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
-        public IncidentsController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         public ActionResult Index()
         {
-            var model = uow.IncidentReportRepository.SelectAll().ToList();
+            var model = _db.IncidentReports.ToList();
             return View(model);
         }
 
@@ -25,7 +22,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var incidentReport = uow.IncidentReportRepository.SingleById(id);
+            var incidentReport = _db.IncidentReports.Find(id);
             if (incidentReport == null)
             {
                 return HttpNotFound();
@@ -44,10 +41,10 @@
         {
             if (!ModelState.IsValid) return View(incidentReport);
             incidentReport.DateTimeSubmitted = DateTime.UtcNow;
-            incidentReport.ReportedBy = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
+            incidentReport.ReportedBy = _db.Members.Single(m => m.UserName == User.Identity.Name).UserId;
             
-            uow.IncidentReportRepository.Insert(incidentReport);
-            uow.Save();
+            _db.IncidentReports.Add(incidentReport);
+            _db.SaveChanges();
 
             return RedirectToAction("Index");
         }
@@ -59,7 +56,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var incidentReport = uow.IncidentReportRepository.SingleById(id);
+            var incidentReport = _db.IncidentReports.Find(id);
             if (incidentReport == null)
             {
                 return HttpNotFound();
@@ -74,8 +71,9 @@
         public ActionResult Edit([Bind(Include = "IncidentId,DateTimeSubmitted,ReportedBy,DateTimeOfIncident,PolicyBroken,Description,OfficialReport")] IncidentReport incidentReport)
         {
             if (!ModelState.IsValid) return View(incidentReport);
-            uow.IncidentReportRepository.Update(incidentReport);
-            uow.Save();
+
+            _db.Entry(incidentReport).State = EntityState.Modified;
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
     }

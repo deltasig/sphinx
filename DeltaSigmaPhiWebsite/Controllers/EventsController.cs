@@ -1,7 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System.Data.Entity;
@@ -12,10 +10,6 @@
     [Authorize(Roles = "Administrator, Service")]
     public class EventsController : BaseController
     {
-        private DspContext db = new DspContext();
-
-        public EventsController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         public ActionResult Index(EventIndexFilterModel model)
         {
             if (model.SelectedSemester == null)
@@ -23,8 +17,8 @@
                 model.SelectedSemester = GetThisSemestersId();
             }
 
-            var thisSemester = uow.SemesterRepository.SingleById(model.SelectedSemester);
-            var previousSemester = uow.SemesterRepository.SelectAll().ToList()
+            var thisSemester = _db.Semesters.Find(model.SelectedSemester);
+            var previousSemester = _db.Semesters.ToList()
                 .Where(s => s.DateEnd < thisSemester.DateStart)
                 .OrderBy(s => s.DateEnd).LastOrDefault() ?? new Semester
                 {
@@ -32,7 +26,7 @@
                     DateEnd = thisSemester.DateStart
                 };
 
-            model.Events = db.Events.Where(e =>
+            model.Events = _db.Events.Where(e =>
                 e.DateTimeOccurred < thisSemester.DateEnd &&
                 e.DateTimeOccurred >= previousSemester.DateEnd).ToList();
             model.SemesterList = GetSemesterList();
@@ -52,8 +46,8 @@
             if (!ModelState.IsValid) return View(@event);
 
             @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
-            db.Events.Add(@event);
-            db.SaveChanges();
+            _db.Events.Add(@event);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -63,7 +57,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var @event = db.Events.Find(id);
+            var @event = _db.Events.Find(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -78,8 +72,8 @@
             if (!ModelState.IsValid) return View(@event);
 
             @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
-            db.Entry(@event).State = EntityState.Modified;
-            db.SaveChanges();
+            _db.Entry(@event).State = EntityState.Modified;
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -89,7 +83,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var @event = db.Events.Find(id);
+            var @event = _db.Events.Find(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -101,9 +95,9 @@
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var @event = db.Events.Find(id);
-            db.Events.Remove(@event);
-            db.SaveChanges();
+            var @event = _db.Events.Find(id);
+            _db.Events.Remove(@event);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
     }

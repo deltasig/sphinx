@@ -1,10 +1,9 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
@@ -12,9 +11,6 @@
     [Authorize]
     public class ClassesController : BaseController
     {
-        public ClassesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
-
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Index(string message)
         {
@@ -24,7 +20,7 @@
             {
                 ViewBag.Message = message;
             }
-            var classes = uow.ClassesRepository.SelectAll().OrderBy(c => c.CourseShorthand).ToList();
+            var classes = _db.Classes.OrderBy(c => c.CourseShorthand).ToList();
             return View(classes);
         }
 
@@ -33,7 +29,7 @@
         {
             ViewBag.Message = string.Empty;
             ViewBag.DepartmentId = new SelectList(
-                uow.DepartmentsRepository.SelectAll().ToList().OrderBy(c => c.DepartmentName), 
+                _db.Departments.ToList().OrderBy(c => c.DepartmentName), 
                 "DepartmentId", "DepartmentName");
             return View();
         }
@@ -46,7 +42,7 @@
             ViewBag.Message = string.Empty;
             if (ModelState.IsValid)
             {
-                if (uow.ClassesRepository.SelectAll().ToList()
+                if (_db.Classes.ToList()
                     .Any(c => c.CourseShorthand == @class.CourseShorthand && 
                         c.DepartmentId == @class.DepartmentId))
                 {
@@ -54,13 +50,13 @@
                 }
                 else
                 {
-                    uow.ClassesRepository.Insert(@class);
-                    uow.Save();
+                    _db.Classes.Add(@class);
+                    _db.SaveChanges();
                     ViewBag.Message = "Class created successfully. ";
                 }
             }
 
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "DepartmentName", @class.DepartmentId);
             return View(@class);
         }
 
@@ -71,13 +67,13 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            Class @class = uow.ClassesRepository.SingleById(id);
+            Class @class = _db.Classes.Find(id);
             if (@class == null)
             {
                 return HttpNotFound();
             }
             ViewBag.DepartmentId = new SelectList(
-                uow.DepartmentsRepository.SelectAll().ToList().OrderBy(c => c.DepartmentName), 
+                _db.Departments.ToList().OrderBy(c => c.DepartmentName), 
                 "DepartmentId", "DepartmentName", 
                 @class.DepartmentId);
             return View(@class);
@@ -90,11 +86,11 @@
         {
             if (ModelState.IsValid)
             {
-                uow.ClassesRepository.Update(@class);
-                uow.Save();
+                _db.Entry(@class).State = EntityState.Modified;
+                _db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentId = new SelectList(uow.DepartmentsRepository.SelectAll(), "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "DepartmentName", @class.DepartmentId);
             return View(@class);
         }
 
@@ -106,7 +102,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            var @class = uow.ClassesRepository.SingleById(id);
+            var @class = _db.Classes.Find(id);
             if (@class == null)
             {
                 return HttpNotFound();
@@ -129,7 +125,7 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult DeleteConfirmed(int id)
         {
-            var @class = uow.ClassesRepository.SingleById(id);
+            var @class = _db.Classes.Find(id);
             if (@class.ClassesTaken.Any())
             {
                 return RedirectToAction("Index", new
@@ -138,8 +134,8 @@
                               "by one or more people, therefore it can't be deleted."
                 });
             }
-            uow.ClassesRepository.DeleteById(id);
-            uow.Save();
+            _db.Entry(@class).State = EntityState.Deleted;
+            _db.SaveChanges();
             return RedirectToAction("Index", new { message = "Course deleted." });
         }
 
@@ -148,7 +144,7 @@
             var model = new ClassScheduleModel
             {
                 Members = GetUserIdListAsFullName(),
-                AllClasses = uow.ClassesRepository.SelectAll().OrderBy(c => c.CourseShorthand).ToList(),
+                AllClasses = _db.Classes.OrderBy(c => c.CourseShorthand).ToList(),
                 Semesters = GetSemesterList(),
                 SelectedSemester = GetThisSemester().SemesterId,
                 ClassesTaken = new List<ClassTaken> { new ClassTaken() }
@@ -167,7 +163,7 @@
             {
                 foreach(var course in model.ClassesTaken)
                 {
-                    var classesTaken = uow.ClassesTakenRepository.SelectBy(c => 
+                    var classesTaken = _db.ClassesTaken.Where(c => 
                             c.ClassId == course.ClassId && 
                             c.SemesterId == model.SelectedSemester && 
                             c.UserId == model.SelectedMember)
@@ -180,9 +176,9 @@
 
                     course.SemesterId = model.SelectedSemester;
                     course.UserId = model.SelectedMember;
-                    uow.ClassesTakenRepository.Insert(course);
+                    _db.ClassesTaken.Add(course);
                 }
-                uow.Save();
+                _db.SaveChanges();
                 if(duplicateCount < model.ClassesTaken.Count)
                 {
                     message = "Class(es) added successfully. ";
@@ -192,7 +188,7 @@
                     message += duplicateCount + " class(es) were not added since the member was already enrolled.";
                 }
             }
-            var member = uow.MemberRepository.SingleById(model.SelectedMember);
+            var member = _db.Members.Find(model.SelectedMember);
             return RedirectToAction("Schedule", new { userName = member.UserName, message});
         }
 
@@ -209,8 +205,8 @@
             {
                 ViewBag.Message = message;
             }
-            var model = uow.ClassesTakenRepository
-                .SelectBy(c => c.Member.UserName == userName)
+            var model = _db.ClassesTaken
+                .Where(c => c.Member.UserName == userName)
                 .OrderByDescending(c => c.SemesterId)
                 .ToList();
             if(model.Count <= 0)
@@ -224,14 +220,14 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult DeleteFromSchedule(int id, int sid, int cid, string username)
         {
-            var entry = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
+            var entry = _db.ClassesTaken.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
             if (entry == null)
             {
                 return RedirectToAction("Schedule", new { userName = username, message = "Course not found. " });
             }
 
-            uow.ClassesTakenRepository.Delete(entry);
-            uow.Save();
+            _db.Entry(entry).State = EntityState.Deleted;
+            _db.SaveChanges();
 
             return RedirectToAction("Schedule", new { userName = username, message = "Course deleted from schedule. " });
         }
@@ -239,7 +235,7 @@
         [Authorize(Roles = "Administrator, Academics")]
         public ActionResult EditClassTaken(int id, int sid, int cid)
         {
-            var model = uow.ClassesTakenRepository.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
+            var model = _db.ClassesTaken.Single(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
             if (model == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -256,10 +252,10 @@
             if (!ModelState.IsValid) 
                 return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
 
-            uow.ClassesTakenRepository.Update(classTaken);
-            uow.Save();
+            _db.Entry(classTaken).State = EntityState.Modified;
+            _db.SaveChanges();
 
-            var member = uow.MemberRepository.SingleById(classTaken.UserId);
+            var member = _db.Members.Find(classTaken.UserId);
 
             return RedirectToAction("Schedule", new { userName = member.UserName, message = "Record updated." });
         }

@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using System;
@@ -11,16 +10,7 @@
 
     public class BaseController : Controller
     {
-        internal IWebSecurity WebSecurity { get; set; }
-        internal IOAuthWebSecurity OAuthWebSecurity { get; set; }
-
-        protected readonly IUnitOfWork uow = new UnitOfWork();
-        public BaseController(IUnitOfWork uow, IWebSecurity webSecurity, IOAuthWebSecurity oAuthWebSecurity)
-        {
-            this.uow = uow;
-            this.WebSecurity = webSecurity;
-            this.OAuthWebSecurity = oAuthWebSecurity;
-        }
+        protected readonly DspDbContext _db = new DspDbContext();
 
         protected virtual DateTime ConvertUtcToCst(DateTime utc)
         {
@@ -34,25 +24,25 @@
         }
         protected virtual IEnumerable<Member> GetAllActiveMembers()
         {
-            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active");
+            return _db.Members.Where(m => m.MemberStatus.StatusName == "Active").ToList();
         }
         protected virtual IEnumerable<Member> GetAllPledgeMembers()
         {
-            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Pledge");
+            return _db.Members.Where(m => m.MemberStatus.StatusName == "Pledge").ToList();
         }
         protected virtual IEnumerable<Member> GetAllActivePledgeNeophyteMembers()
         {
-            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Active" ||
+            return _db.Members.Where(m => m.MemberStatus.StatusName == "Active" ||
                 m.MemberStatus.StatusName == "Pledge" ||
                 m.MemberStatus.StatusName == "Neophyte").ToList();
         }
         protected virtual IEnumerable<Member> GetAllAlumniMembers()
         {
-            return uow.MemberRepository.SelectBy(m => m.MemberStatus.StatusName == "Alumnus");
+            return _db.Members.Where(m => m.MemberStatus.StatusName == "Alumnus").ToList();
         }
         protected virtual int? GetThisSemestersId()
         {
-            var semesters = uow.SemesterRepository.SelectAll().ToList();
+            var semesters = _db.Semesters.ToList();
             if (semesters.Count <= 0) return null;
 
             try
@@ -68,7 +58,7 @@
         protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
+            var thisAndComingSemesters = _db.Semesters
                 .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
                 .Take(2)
@@ -79,7 +69,7 @@
         protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterSelectList()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
+            var thisAndComingSemesters = _db.Semesters
                 .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
                 .ToList();
@@ -103,7 +93,7 @@
         protected virtual Semester GetThisOrLastSemester()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return uow.SemesterRepository.SelectAll()
+            return _db.Semesters
                 .Where(s => s.DateEnd <= now)
                 .OrderBy(s => s.DateStart)
                 .ToList()
@@ -112,7 +102,7 @@
         protected virtual Semester GetThisSemester()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return uow.SemesterRepository.SelectAll()
+            return _db.Semesters
                     .Where(s => s.DateEnd >= now)
                     .OrderBy(s => s.DateStart)
                     .ToList()
@@ -121,7 +111,7 @@
         protected virtual Semester GetLastSemester()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return uow.SemesterRepository.SelectAll()
+            return _db.Semesters
                     .Where(s => s.DateEnd < now)
                     .OrderBy(s => s.DateStart)
                     .ToList()
@@ -129,7 +119,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetSemesterList()
         {
-            var semesters = uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateEnd).ToList();
+            var semesters = _db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
             var newList = new List<object>();
 
             foreach (var s in semesters)
@@ -145,7 +135,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetSemesterListWithNone()
         {
-            var semesters = uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateEnd).ToList();
+            var semesters = _db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
             var newList = new List<object> { new { SemesterId = -1, Name = "--Graduating Semester (optional)--" } };
 
             foreach (var s in semesters)
@@ -207,7 +197,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetStatusList()
         {
-            var statusList = uow.MemberStatusRepository.SelectAll();
+            var statusList = _db.MemberStatus.ToList();
             var newList = new List<object>();
             foreach (var status in statusList)
             {
@@ -221,7 +211,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetStatusListWithNone()
         {
-            var statusList = uow.MemberStatusRepository.SelectAll();
+            var statusList = _db.MemberStatus.ToList();
             var newList = new List<object> { new { StatusId = -1, StatusName = "--Status (optional)--" } };
             foreach (var status in statusList)
             {
@@ -248,7 +238,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetPledgeClassList()
         {
-            var pledgeClasses = uow.PledgeClassRepository.SelectAll().OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var pledgeClasses = _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToList();
             var newList = new List<object>();
 
             foreach (var p in pledgeClasses)
@@ -264,7 +254,7 @@
         }
         protected virtual IEnumerable<SelectListItem> GetPledgeClassListWithNone()
         {
-            var pledgeClasses = uow.PledgeClassRepository.SelectAll().OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var pledgeClasses = _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToList();
             var newList = new List<object> { new { PledgeClassId = -1, PledgeClassName = "--Pledge Class (optional)--" } };
 
             foreach (var p in pledgeClasses)
@@ -286,12 +276,12 @@
         }
         protected virtual IEnumerable<Leader> GetRecentAppointments()
         {
-            var thisAndComingSemesters = uow.SemesterRepository.SelectAll()
+            var thisAndComingSemesters = _db.Semesters.ToList()
                 .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToList();
 
-            var leaders = uow.LeaderRepository.SelectAll().ToList();
+            var leaders = _db.Leaders.ToList();
 
             var recentAppointsments = leaders
                 .Where(l =>
@@ -311,11 +301,12 @@
             var totalHours = 0.0;
             try
             {
-                var serviceHours = uow.ServiceHourRepository.SelectAll()
+                var serviceHours = _db.ServiceHours
                     .Where(h => 
                         h.Member.UserId == userId && 
                         h.Event.DateTimeOccurred > lastSemester.DateEnd &&
-                        h.Event.DateTimeOccurred <= currentSemester.DateEnd);
+                        h.Event.DateTimeOccurred <= currentSemester.DateEnd)
+                    .ToList();
                 if (serviceHours.Any())
                     totalHours = serviceHours.Select(h => h.DurationHours).Sum();
             }
@@ -332,7 +323,7 @@
             var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today (12:00am of today)
             var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today, one year ago (12:00am of today)
             yearAgoToday -= new TimeSpan(365, 0, 0, 0);
-            var events = uow.EventRepository.SelectBy(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday)); //only retrieves events ranging one year back
+            var events = _db.Events.Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday)).ToList(); //only retrieves events ranging one year back
             return new SelectList(events, "EventId", "EventName");
         }
         protected IEnumerable<ServiceHour> GetAllCompletedEventsForUser(int userId)
@@ -340,26 +331,26 @@
             var thisSemester = GetThisSemester();
             var lastSemester = GetLastSemester();
 
-            return uow.ServiceHourRepository.SelectBy(e => 
+            return _db.ServiceHours.Where(e => 
                 e.UserId == userId &&
                 e.Event.DateTimeOccurred > lastSemester.DateEnd &&
                 e.Event.DateTimeOccurred <= thisSemester.DateEnd);
         }
         protected IEnumerable<SoberSignup> GetSoberSignupsForUser(int userId, Semester semester)
         {
-            var previousSemester = uow.SemesterRepository.SelectAll()
+            var previousSemester = _db.Semesters
                 .Where(s => s.DateEnd < semester.DateStart).ToList()
                 .OrderBy(s => s.DateStart)
                 .Last();
 
-            return uow.SoberSignupsRepository.SelectAll().Where(s =>
+            return _db.SoberSchedule.Where(s =>
                     s.UserId == userId &&
                     s.DateOfShift > previousSemester.DateEnd &&
-                    s.DateOfShift <= semester.DateEnd);
+                    s.DateOfShift <= semester.DateEnd).ToList();
         }
         protected IEnumerable<SelectListItem> GetAllApproverIds(int userId)
         {
-            var members = uow.MemberRepository.SelectBy(a => a.UserId != userId).OrderBy(o => o.LastName);
+            var members = _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToList();
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -374,12 +365,12 @@
         protected int GetRemainingStudyHoursForUser(int userId)
         {
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var member = uow.MemberRepository.SingleById(userId);
+            var member = _db.Members.Find(userId);
             var totalHours = 0.0;
 
             try
             {
-                totalHours = (from hour in uow.StudyHourRepository.SelectAll()
+                totalHours = (from hour in _db.StudyHours
                               where hour.SubmittedBy == userId &&
                                     hour.ApproverId != null &&
                                     hour.DateTimeStudied >= startOfThisWeek &&
@@ -396,7 +387,7 @@
         protected int GetRemainingProctoredStudyHoursForUser(int userId)
         {
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var member = uow.MemberRepository.SingleById(userId);
+            var member = _db.Members.Find(userId);
             var required = 0;
             if (member.ProctoredStudyHours != null) 
                 required = (int)member.ProctoredStudyHours;
@@ -404,7 +395,7 @@
 
             try
             {
-                totalHours = (from hour in uow.StudyHourRepository.SelectAll()
+                totalHours = (from hour in _db.StudyHours
                               where hour.SubmittedBy == userId &&
                                     hour.ApproverId != null &&
                                     hour.DateTimeStudied >= startOfThisWeek &&
@@ -420,7 +411,7 @@
         }
         protected IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
         {
-            var member = uow.MemberRepository.SingleById(userId);
+            var member = _db.Members.Find(userId);
 
             return member.SubmittedStudyHours.Where(s => s.DateTimeStudied >= GetStartOfCurrentWeek());
         }
@@ -445,7 +436,6 @@
                     return now.AddDays(-4);
             }
         }
-
         protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
         {
             //Rounds down based on the TimeSpan
@@ -459,7 +449,7 @@
         {
             if (disposing)
             {
-                uow.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

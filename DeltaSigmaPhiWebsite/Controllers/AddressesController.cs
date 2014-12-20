@@ -1,18 +1,19 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
     using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
     {
-        public AddressesController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
+        private readonly DspDbContext _db = new DspDbContext();
         
         public ActionResult Index(AddressIndexFilterModel model)
         {
@@ -33,7 +34,7 @@
 
         public List<Address> FilterAddresses(AddressIndexFilterModel model)
         {
-            var addresses = uow.AddressRepository.SelectAll()
+            var addresses = _db.Addresses.ToList()
                 .OrderBy(s => s.Member.StatusId)
                 .ThenBy(m => m.Member.LastName)
                 .ThenBy(a => a.Type).ToList();
@@ -74,12 +75,12 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var address = uow.AddressRepository.SingleById(id);
+            var address = _db.Addresses.Find(id);
             if (address == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", address.UserId);
             return View(address);
         }
 
@@ -89,12 +90,13 @@
         {
             if (ModelState.IsValid)
             {
-                uow.AddressRepository.Update(address);
-                uow.Save();
-                return WebSecurity.GetUserId(WebSecurity.CurrentUser.Identity.Name) == address.UserId
+                _db.Addresses.Attach(address);
+                _db.Entry(address).State = EntityState.Modified;
+                _db.SaveChanges();
+                return WebSecurity.GetUserId(WebSecurity.CurrentUserName) == address.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(uow.MemberRepository.SelectAll(), "UserId", "UserName", address.UserId);
+            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", address.UserId);
             return View(address);
         }
     }

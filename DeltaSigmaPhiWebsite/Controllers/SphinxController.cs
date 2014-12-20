@@ -1,30 +1,28 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using App_Start;
-    using Data.UnitOfWork;
     using Microsoft.AspNet.Identity;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Security;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class SphinxController : BaseController
     {
-        public SphinxController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         [HttpGet]
         public ActionResult Index(string message = "")
         {
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            var member = uow.MemberRepository.SingleById(userId);
+            var member = _db.Members.Find(userId);
             var events = GetAllCompletedEventsForUser(userId).ToList();
             var startOfTodayCst = ConvertUtcToCst(DateTime.UtcNow).Date;
             var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
@@ -35,7 +33,7 @@
                 startOfTodayUtc = startOfTodayUtc.AddDays(-1);
             }
 
-            var soberSignups = uow.SoberSignupsRepository.SelectAll()
+            var soberSignups = _db.SoberSchedule
                 .Where(s =>
                     s.DateOfShift >= startOfTodayUtc &&
                     s.DateOfShift <= sevenDaysAheadOfToday)
@@ -46,8 +44,8 @@
             var thisSemester = GetThisSemester();
             var memberSoberSignups = GetSoberSignupsForUser(userId, thisSemester);
 
-            var laundrySignups = uow.LaundrySignupRepository
-                    .SelectBy(l => l.DateTimeShift >= DateTime.UtcNow)
+            var laundrySignups = _db.LaundrySignups
+                    .Where(l => l.DateTimeShift >= DateTime.UtcNow)
                     .OrderBy(l => l.DateTimeShift)
                     .ToList();
             var laundryTake = laundrySignups.Count;
@@ -84,7 +82,7 @@
 
             if (currentSemester == null) return View();
 
-            var model = uow.LeaderRepository.SelectAll().Where(l => 
+            var model = _db.Leaders.Where(l => 
                 l.SemesterId == currentSemester.SemesterId && 
                 l.Position.Type == Position.PositionType.Alumni).ToList();
 
@@ -104,11 +102,10 @@
 
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
 
-            var signups =
-                uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= threeAmYesterday)
-                    .OrderBy(s => s.DateOfShift)
-                    .ToList();
+            var signups = _db.SoberSchedule
+                .Where(s => s.DateOfShift >= threeAmYesterday)
+                .OrderBy(s => s.DateOfShift)
+                .ToList();
             return View(signups);
         }
 
@@ -116,11 +113,10 @@
         public ActionResult SoberScheduleManager()
         {
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
-            var vacantSignups =
-                uow.SoberSignupsRepository.SelectAll()
-                    .Where(s => s.DateOfShift >= startOfTodayUtc && s.UserId == null)
-                    .OrderBy(s => s.DateOfShift)
-                    .ToList();
+            var vacantSignups = _db.SoberSchedule
+                .Where(s => s.DateOfShift >= startOfTodayUtc && s.UserId == null)
+                .OrderBy(s => s.DateOfShift)
+                .ToList();
 
             return View(vacantSignups);
         }
@@ -132,8 +128,8 @@
 
             signup.DateOfShift = ConvertCstToUtc(signup.DateOfShift);
 
-            uow.SoberSignupsRepository.Insert(signup);
-            uow.Save();
+            _db.SoberSchedule.Add(signup);
+            _db.SaveChanges();
 
             return RedirectToAction("SoberScheduleManager", "Sphinx");
         }
@@ -146,8 +142,9 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            uow.SoberSignupsRepository.DeleteById(id);
-            uow.Save();
+            var signupToCancel = _db.SoberSchedule.Find(id);
+            _db.SoberSchedule.Remove(signupToCancel);
+            _db.SaveChanges();
 
             return RedirectToAction("SoberSchedule", "Sphinx");
         }
@@ -159,18 +156,18 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = uow.SoberSignupsRepository.SingleById(id);
+            var signup = _db.SoberSchedule.Find(id);
 
             if (signup.UserId != null)
                 return RedirectToAction("SoberSchedule", "Sphinx");
             if (User.IsInRole("Pledge") && signup.Type == SoberSignupType.Officer)
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
-            signup.UserId = uow.MemberRepository.Single(m => m.UserName == User.Identity.Name).UserId;
+            signup.UserId = _db.Members.Single(m => m.UserName == User.Identity.Name).UserId;
             signup.DateTimeSignedUp = DateTime.UtcNow;
 
-            uow.SoberSignupsRepository.Update(signup);
-            uow.Save();
+            _db.Entry(signup).State = EntityState.Modified;
+            _db.SaveChanges();
 
             return RedirectToAction("SoberSchedule", "Sphinx");
         }
@@ -182,7 +179,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = uow.SoberSignupsRepository.SingleById(id);
+            var signup = _db.SoberSchedule.Find(id);
             var oldUserId = signup.UserId;
             var userId = WebSecurity.GetUserId(User.Identity.Name);
 
@@ -195,16 +192,16 @@
             signup.UserId = null;
             signup.DateTimeSignedUp = null;
 
-            uow.SoberSignupsRepository.Update(signup);
-            uow.Save();
+            _db.Entry(signup).State = EntityState.Modified;
+            _db.SaveChanges();
 
             if (WebSecurity.GetUserId(User.Identity.Name) != oldUserId)
                 return RedirectToAction("SoberSchedule", "Sphinx");
 
-            var member = uow.MemberRepository.SingleById(oldUserId);
+            var member = _db.Members.Find(oldUserId);
             var currentSemesterId = GetThisSemestersId();
-            var position = uow.PositionRepository.Single(p => p.PositionName == "Sergeant-at-Arms");
-            var saa = uow.LeaderRepository.Single(l => l.SemesterId == currentSemesterId && l.PositionId == position.PositionId);
+            var position = _db.Positions.Single(p => p.PositionName == "Sergeant-at-Arms");
+            var saa = _db.Leaders.Single(l => l.SemesterId == currentSemesterId && l.PositionId == position.PositionId);
 
             var message = new IdentityMessage
             {
@@ -234,7 +231,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var signup = uow.SoberSignupsRepository.SingleById(id);
+            var signup = _db.SoberSchedule.Find(id);
             var model = new EditSoberSignupModel
             {
                 SoberSignup = signup,
@@ -255,15 +252,15 @@
             if (!ModelState.IsValid)
                 return RedirectToAction("SoberSchedule", new { message = "Failed to update sober signup." });
 
-            var existingSignup = uow.SoberSignupsRepository.SingleById(model.SoberSignup.SignupId);
+            var existingSignup = _db.SoberSchedule.Find(model.SoberSignup.SignupId);
 
             if (model.SelectedMember <= 0)
                 existingSignup.UserId = null;
             else
                 existingSignup.UserId = model.SelectedMember;
 
-            uow.SoberSignupsRepository.Update(existingSignup);
-            uow.Save();
+            _db.Entry(existingSignup).State = EntityState.Modified;
+            _db.SaveChanges();
 
             return RedirectToAction("SoberSchedule", new { message = "Successfully updated sober signup." });
         }
@@ -291,7 +288,7 @@
             const int hoursInDay = 24;
             const int slotSize = 2;
 
-            var existingSignups = uow.LaundrySignupRepository.SelectBy(l => l.DateTimeShift > startOfTodayUtc).ToList();
+            var existingSignups = _db.LaundrySignups.Where(l => l.DateTimeShift > startOfTodayUtc).ToList();
             var model = new List<List<LaundrySignup>>();
 
             for (var y = 0; y < 12; y++) // Hours in day
@@ -330,9 +327,8 @@
 
             var startOfToday = DateTime.UtcNow.Date;
             var currentUserId = WebSecurity.GetUserId(User.Identity.Name);
-            var existingSignups = uow.LaundrySignupRepository.SelectBy(l =>
-                l.DateTimeShift >= startOfToday &&
-                l.UserId == currentUserId)
+            var existingSignups = _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= startOfToday && l.UserId == currentUserId)
                 .ToList();
 
             var maxSignups = 2;
@@ -347,8 +343,8 @@
             signup.DateTimeSignedUp = DateTime.UtcNow;
             signup.DateTimeShift = ConvertCstToUtc(signup.DateTimeShift);
 
-            uow.LaundrySignupRepository.Insert(signup);
-            uow.Save();
+            _db.LaundrySignups.Add(signup);
+            _db.SaveChanges();
 
             return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.ReserveSuccess });
         }
@@ -356,12 +352,12 @@
         public ActionResult CancelReserveLaundry(LaundrySignup cancel)
         {
             cancel.DateTimeShift = ConvertCstToUtc(cancel.DateTimeShift);
-            var shift = uow.LaundrySignupRepository.Single(s => s.DateTimeShift == cancel.DateTimeShift);
+            var shift = _db.LaundrySignups.Single(s => s.DateTimeShift == cancel.DateTimeShift);
             if (shift == null)
                 return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
 
-            uow.LaundrySignupRepository.Delete(shift);
-            uow.Save();
+            _db.LaundrySignups.Remove(shift);
+            _db.SaveChanges();
 
             return RedirectToAction("LaundrySchedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
         }

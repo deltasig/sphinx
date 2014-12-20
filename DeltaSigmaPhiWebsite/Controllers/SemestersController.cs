@@ -1,9 +1,8 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using Data.UnitOfWork;
-    using Models;
     using Models.Entities;
     using Models.ViewModels;
+    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Web.Mvc;
@@ -11,13 +10,11 @@
     [Authorize(Roles = "Administrator, President, Secretary, Academics")]
     public class SemestersController : BaseController
     {
-        public SemestersController(IUnitOfWork uow, IWebSecurity ws, IOAuthWebSecurity oaws) : base(uow, ws, oaws) { }
-
         [HttpGet]
         [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Index()
         {
-            return View(uow.SemesterRepository.SelectAll().OrderByDescending(s => s.DateStart).ToList());
+            return View(_db.Semesters.OrderByDescending(s => s.DateStart).ToList());
         }
 
         [HttpGet]
@@ -34,8 +31,8 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            uow.SemesterRepository.Insert(model.Semester);
-            uow.Save();
+            _db.Semesters.Add(model.Semester);
+            _db.SaveChanges();
             
             return RedirectToAction("Index");
         }
@@ -48,7 +45,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = uow.SemesterRepository.SingleById(id);
+            var semester = _db.Semesters.Find(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -63,8 +60,8 @@
         {
             if (!ModelState.IsValid) return View(semester);
 
-            uow.SemesterRepository.Update(semester);
-            uow.Save();
+            _db.Entry(semester).State = EntityState.Modified;
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
 
@@ -76,7 +73,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var semester = uow.SemesterRepository.SingleById(id);
+            var semester = _db.Semesters.Find(id);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -89,9 +86,9 @@
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            var semester = uow.SemesterRepository.SingleById(id);
-            uow.SemesterRepository.Delete(semester);
-            uow.Save();
+            var semester = _db.Semesters.Find(id);
+            _db.Semesters.Remove(semester);
+            _db.SaveChanges();
             return RedirectToAction("Index");
         }
     }

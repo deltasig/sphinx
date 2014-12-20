@@ -8,7 +8,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
     using Models.Entities;
     using WebMatrix.WebData;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<DspContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<DspDbContext>
     {
         public Configuration()
         {
@@ -16,7 +16,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
             AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(DspContext context)
+        protected override void Seed(DspDbContext context)
         {
             if (!WebSecurity.Initialized)
             {
