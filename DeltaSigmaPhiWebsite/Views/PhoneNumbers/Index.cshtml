@@ -15,6 +15,9 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
+            <a class="pull-right" href="@Url.Action("Download", "PhoneNumbers")">
+                <i class="fa fa-download fa-2x"></i>
+            </a>
             @using (Html.BeginForm("Index", "PhoneNumbers", FormMethod.Get, new { @class = "", role = "form" }))
             {
                 <input type="submit" value="Filter" class="btn btn-default" />
