@@ -4,7 +4,9 @@
     using Models.Entities;
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Security;
 
@@ -12,67 +14,44 @@
     {
         protected readonly DspDbContext _db = new DspDbContext();
 
-        protected virtual DateTime ConvertUtcToCst(DateTime utc)
+        protected virtual async Task<List<Member>> GetAllActiveMembersAsync()
         {
-            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+            return await _db.Members.Where(m => m.MemberStatus.StatusName == "Active").ToListAsync();
         }
-        protected virtual DateTime ConvertCstToUtc(DateTime cst)
+        protected virtual async Task<IEnumerable<Member>> GetAllPledgeMembersAsync()
         {
-            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+            return await _db.Members.Where(m => m.MemberStatus.StatusName == "Pledge").ToListAsync();
         }
-        protected virtual IEnumerable<Member> GetAllActiveMembers()
+        protected virtual async Task<IEnumerable<Member>> GetAllActivePledgeNeophyteMembersAsync()
         {
-            return _db.Members.Where(m => m.MemberStatus.StatusName == "Active").ToList();
+            return await _db.Members
+                .Where(m => m.MemberStatus.StatusName == "Active" ||
+                            m.MemberStatus.StatusName == "Pledge" ||
+                            m.MemberStatus.StatusName == "Neophyte")
+                .ToListAsync();
         }
-        protected virtual IEnumerable<Member> GetAllPledgeMembers()
+        protected virtual async Task<IEnumerable<Member>> GetAllAlumniMembersAsync()
         {
-            return _db.Members.Where(m => m.MemberStatus.StatusName == "Pledge").ToList();
+            return await _db.Members.Where(m => m.MemberStatus.StatusName == "Alumnus").ToListAsync();
         }
-        protected virtual IEnumerable<Member> GetAllActivePledgeNeophyteMembers()
-        {
-            return _db.Members.Where(m => m.MemberStatus.StatusName == "Active" ||
-                m.MemberStatus.StatusName == "Pledge" ||
-                m.MemberStatus.StatusName == "Neophyte").ToList();
-        }
-        protected virtual IEnumerable<Member> GetAllAlumniMembers()
-        {
-            return _db.Members.Where(m => m.MemberStatus.StatusName == "Alumnus").ToList();
-        }
-        protected virtual int? GetThisSemestersId()
-        {
-            var semesters = _db.Semesters.ToList();
-            if (semesters.Count <= 0) return null;
-
-            try
-            {
-                var thisSemester = GetThisSemester();
-                return thisSemester.SemesterId;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        protected virtual IEnumerable<Semester> GetThisAndNextSemesterList()
+        protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            var thisAndComingSemesters = _db.Semesters
+            var thisAndComingSemesters = await _db.Semesters
                 .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
                 .Take(2)
-                .ToList();
+                .ToListAsync();
 
             return thisAndComingSemesters;
         }
-        protected virtual IEnumerable<SelectListItem> GetThisAndNextSemesterSelectList()
+        protected virtual async Task<SelectList> GetThisAndNextSemesterSelectListAsync()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            var thisAndComingSemesters = _db.Semesters
+            var thisAndComingSemesters = await _db.Semesters
                 .Where(s => s.DateEnd >= now)
                 .OrderBy(s => s.DateStart)
-                .ToList();
+                .ToListAsync();
 
             var newList = new List<object>
             {
@@ -90,36 +69,79 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
-        protected virtual Semester GetThisOrLastSemester()
+        protected virtual async Task<Semester> GetThisOrLastSemesterAsync()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return _db.Semesters
+            return (await _db.Semesters
                 .Where(s => s.DateEnd <= now)
                 .OrderBy(s => s.DateStart)
-                .ToList()
+                .ToListAsync())
                 .Last();
         }
-        protected virtual Semester GetThisSemester()
+        protected virtual async Task<Semester> GetThisSemesterAsync()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return _db.Semesters
+            return (await _db.Semesters
                     .Where(s => s.DateEnd >= now)
                     .OrderBy(s => s.DateStart)
-                    .ToList()
+                    .ToListAsync())
                     .First();
         }
-        protected virtual Semester GetLastSemester()
+        protected virtual async Task<Semester> GetLastSemesterAsync()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow);
-            return _db.Semesters
+            return (await _db.Semesters
                     .Where(s => s.DateEnd < now)
                     .OrderBy(s => s.DateStart)
-                    .ToList()
+                    .ToListAsync())
                     .Last();
         }
-        protected virtual IEnumerable<SelectListItem> GetSemesterList()
+        protected virtual async Task<int?> GetThisSemestersIdAsync()
         {
-            var semesters = _db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
+            var semesters = await _db.Semesters.ToListAsync();
+            if (semesters.Count <= 0) return null;
+
+            try
+            {
+                var thisSemester = await GetThisSemesterAsync();
+                return thisSemester.SemesterId;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+        protected virtual async Task<IEnumerable<object>> GetUserIdListAsFullNameWithNoneNonSelectListAsync()
+        {
+            var members = (await GetAllActivePledgeNeophyteMembersAsync()).OrderBy(o => o.LastName);
+            var newList = new List<object> { new { UserId = 0, Name = "None" } };
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return newList;
+        }
+        protected virtual async Task<IEnumerable<object>> GetAlumniIdListAsFullNameWithNoneNonSelectListAsync()
+        {
+            var members = (await GetAllAlumniMembersAsync()).OrderBy(o => o.LastName);
+            var newList = new List<object> { new { UserId = 0, Name = "None" } };
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return newList;
+        }
+        protected virtual async Task<SelectList> GetSemesterListAsync()
+        {
+            var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
             var newList = new List<object>();
 
             foreach (var s in semesters)
@@ -131,11 +153,11 @@
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name", GetThisSemester().SemesterId);
+            return new SelectList(newList, "SemesterId", "Name", (await GetThisSemesterAsync()).SemesterId);
         }
-        protected virtual IEnumerable<SelectListItem> GetSemesterListWithNone()
+        protected virtual async Task<SelectList> GetSemesterListWithNoneAsync()
         {
-            var semesters = _db.Semesters.OrderByDescending(s => s.DateEnd).ToList();
+            var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
             var newList = new List<object> { new { SemesterId = -1, Name = "--Graduating Semester (optional)--" } };
 
             foreach (var s in semesters)
@@ -149,9 +171,9 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
-        protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullName()
+        protected virtual async Task<SelectList> GetUserIdListAsFullNameAsync()
         {
-            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.LastName);
+            var members = (await GetAllActivePledgeNeophyteMembersAsync()).OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -163,41 +185,13 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected virtual IEnumerable<SelectListItem> GetUserIdListAsFullNameWithNone()
+        protected virtual async Task<SelectList> GetUserIdListAsFullNameWithNoneAsync()
         {
-            return new SelectList(GetUserIdListAsFullNameWithNoneNonSelectList(), "UserId", "Name");
+            return new SelectList(await GetUserIdListAsFullNameWithNoneNonSelectListAsync(), "UserId", "Name");
         }
-        protected virtual IEnumerable<object> GetUserIdListAsFullNameWithNoneNonSelectList()
+        protected virtual async Task<SelectList> GetStatusListAsync()
         {
-            var members = GetAllActivePledgeNeophyteMembers().OrderBy(o => o.LastName);
-            var newList = new List<object> { new { UserId = 0, Name = "None" } };
-            foreach (var member in members)
-            {
-                newList.Add(new
-                {
-                    member.UserId,
-                    Name = member.FirstName + " " + member.LastName
-                });
-            }
-            return newList;
-        }
-        protected virtual IEnumerable<object> GetAlumniIdListAsFullNameWithNoneNonSelectList()
-        {
-            var members = GetAllAlumniMembers().OrderBy(o => o.LastName);
-            var newList = new List<object> { new { UserId = 0, Name = "None" } };
-            foreach (var member in members)
-            {
-                newList.Add(new
-                {
-                    member.UserId,
-                    Name = member.FirstName + " " + member.LastName
-                });
-            }
-            return newList;
-        }
-        protected virtual IEnumerable<SelectListItem> GetStatusList()
-        {
-            var statusList = _db.MemberStatus.ToList();
+            var statusList = await _db.MemberStatus.ToListAsync();
             var newList = new List<object>();
             foreach (var status in statusList)
             {
@@ -209,9 +203,9 @@
             }
             return new SelectList(newList, "StatusId", "StatusName");
         }
-        protected virtual IEnumerable<SelectListItem> GetStatusListWithNone()
+        protected virtual async Task<SelectList> GetStatusListWithNoneAsync()
         {
-            var statusList = _db.MemberStatus.ToList();
+            var statusList = await _db.MemberStatus.ToListAsync();
             var newList = new List<object> { new { StatusId = -1, StatusName = "--Status (optional)--" } };
             foreach (var status in statusList)
             {
@@ -223,22 +217,9 @@
             }
             return new SelectList(newList, "StatusId", "StatusName");
         }
-        protected virtual IEnumerable<SelectListItem> GetTerms()
+        protected virtual async Task<SelectList> GetPledgeClassListAsync()
         {
-            var terms = new List<string>
-            {
-                "Spring", "Fall"
-            };
-            return new SelectList(terms);
-        }
-        protected virtual IEnumerable<SelectListItem> GetPositionsList()
-        {
-            var positions = Roles.GetAllRoles();
-            return new SelectList(positions);
-        }
-        protected virtual IEnumerable<SelectListItem> GetPledgeClassList()
-        {
-            var pledgeClasses = _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var pledgeClasses = await _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToListAsync();
             var newList = new List<object>();
 
             foreach (var p in pledgeClasses)
@@ -252,9 +233,9 @@
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
-        protected virtual IEnumerable<SelectListItem> GetPledgeClassListWithNone()
+        protected virtual async Task<SelectList> GetPledgeClassListWithNoneAsync()
         {
-            var pledgeClasses = _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToList();
+            var pledgeClasses = await _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToListAsync();
             var newList = new List<object> { new { PledgeClassId = -1, PledgeClassName = "--Pledge Class (optional)--" } };
 
             foreach (var p in pledgeClasses)
@@ -268,18 +249,12 @@
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
         }
-        protected virtual IEnumerable<SelectListItem> GetShirtSizesSelectList()
+        protected virtual async Task<IEnumerable<Leader>> GetRecentAppointmentsAsync()
         {
-            var newList = new List<string> { "S", "M", "L", "XL", "2XL" };
-            var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
-            return list;
-        }
-        protected virtual IEnumerable<Leader> GetRecentAppointments()
-        {
-            var thisAndComingSemesters = _db.Semesters.ToList()
+            var thisAndComingSemesters = await _db.Semesters
                 .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
-                .ToList();
+                .ToListAsync();
 
             var leaders = _db.Leaders.ToList();
 
@@ -291,22 +266,21 @@
 
             return recentAppointsments;
         }
-        protected double GetRemainingServiceHoursForUser(int userId)
+        protected virtual async Task<double> GetRemainingServiceHoursForUserAsync(int userId)
         {
             const double requiredHours = 10;
 
-            var lastSemester = GetLastSemester();
-            var currentSemester = GetThisSemester();
+            var lastSemester = await GetLastSemesterAsync();
+            var currentSemester = await GetThisSemesterAsync();
 
             var totalHours = 0.0;
             try
             {
-                var serviceHours = _db.ServiceHours
-                    .Where(h => 
-                        h.Member.UserId == userId && 
-                        h.Event.DateTimeOccurred > lastSemester.DateEnd &&
-                        h.Event.DateTimeOccurred <= currentSemester.DateEnd)
-                    .ToList();
+                var serviceHours = await _db.ServiceHours
+                    .Where(h => h.Member.UserId == userId && 
+                                h.Event.DateTimeOccurred > lastSemester.DateEnd && 
+                                h.Event.DateTimeOccurred <= currentSemester.DateEnd)
+                    .ToListAsync();
                 if (serviceHours.Any())
                     totalHours = serviceHours.Select(h => h.DurationHours).Sum();
             }
@@ -318,39 +292,47 @@
             var remainingHours = requiredHours - totalHours;
             return remainingHours < 0 ? 0 : remainingHours;
         }
-        protected IEnumerable<SelectListItem> GetAllEventIdsAsEventName()
+        protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync()
         {
-            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today (12:00am of today)
-            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); //beginning of today, one year ago (12:00am of today)
+            // Beginning of today (12:00am of today).
+            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); 
+            // Beginning of today, one year ago (12:00am of today).
+            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); 
             yearAgoToday -= new TimeSpan(365, 0, 0, 0);
-            var events = _db.Events.Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday)).ToList(); //only retrieves events ranging one year back
+            // Only retrieve events occuring within the last year.
+            var events = await _db.Events
+                .Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday))
+                .ToListAsync(); 
             return new SelectList(events, "EventId", "EventName");
         }
-        protected IEnumerable<ServiceHour> GetAllCompletedEventsForUser(int userId)
+        protected virtual async Task<IEnumerable<ServiceHour>> GetAllCompletedEventsForUserAsync(int userId)
         {
-            var thisSemester = GetThisSemester();
-            var lastSemester = GetLastSemester();
+            var thisSemester = await GetThisSemesterAsync();
+            var lastSemester = await GetLastSemesterAsync();
 
-            return _db.ServiceHours.Where(e => 
-                e.UserId == userId &&
-                e.Event.DateTimeOccurred > lastSemester.DateEnd &&
-                e.Event.DateTimeOccurred <= thisSemester.DateEnd);
+            return await _db.ServiceHours
+                .Where(e => e.UserId == userId && 
+                            e.Event.DateTimeOccurred > lastSemester.DateEnd && 
+                            e.Event.DateTimeOccurred <= thisSemester.DateEnd)
+                .ToListAsync();
         }
-        protected IEnumerable<SoberSignup> GetSoberSignupsForUser(int userId, Semester semester)
+        protected virtual async Task<IEnumerable<SoberSignup>> GetSoberSignupsForUserAsync(int userId, Semester semester)
         {
-            var previousSemester = _db.Semesters
-                .Where(s => s.DateEnd < semester.DateStart).ToList()
+            var previousSemester = (await _db.Semesters
+                .Where(s => s.DateEnd < semester.DateStart)
                 .OrderBy(s => s.DateStart)
+                .ToListAsync())
                 .Last();
 
-            return _db.SoberSchedule.Where(s =>
-                    s.UserId == userId &&
-                    s.DateOfShift > previousSemester.DateEnd &&
-                    s.DateOfShift <= semester.DateEnd).ToList();
+            return await _db.SoberSchedule
+                .Where(s => s.UserId == userId && 
+                            s.DateOfShift > previousSemester.DateEnd && 
+                            s.DateOfShift <= semester.DateEnd)
+                .ToListAsync();
         }
-        protected IEnumerable<SelectListItem> GetAllApproverIds(int userId)
+        protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId)
         {
-            var members = _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToList();
+            var members = await _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToListAsync();
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -362,20 +344,22 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected int GetRemainingStudyHoursForUser(int userId)
+        protected virtual async Task<int> GetRemainingStudyHoursForUserAsync(int userId)
         {
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var member = _db.Members.Find(userId);
+            var member = await _db.Members.FindAsync(userId);
             var totalHours = 0.0;
 
             try
             {
-                totalHours = (from hour in _db.StudyHours
-                              where hour.SubmittedBy == userId &&
-                                    hour.ApproverId != null &&
-                                    hour.DateTimeStudied >= startOfThisWeek &&
-                                    !hour.IsProctored
-                              select hour.DurationHours).ToList().Sum();
+                var hours = await _db.StudyHours
+                    .Where(h => h.SubmittedBy == userId && 
+                                h.ApproverId != null && 
+                                h.DateTimeStudied >= startOfThisWeek && 
+                                !h.IsProctored)
+                    .Select(h => h.DurationHours)
+                    .ToListAsync();
+                totalHours = hours.Sum();
             }
             catch (Exception)
             {
@@ -384,10 +368,10 @@
 
             return (member.RequiredStudyHours - (int)totalHours);
         }
-        protected int GetRemainingProctoredStudyHoursForUser(int userId)
+        protected virtual async Task<int> GetRemainingProctoredStudyHoursForUserAsync(int userId)
         {
             var startOfThisWeek = GetStartOfCurrentWeek();
-            var member = _db.Members.Find(userId);
+            var member = await _db.Members.FindAsync(userId);
             var required = 0;
             if (member.ProctoredStudyHours != null) 
                 required = (int)member.ProctoredStudyHours;
@@ -395,12 +379,14 @@
 
             try
             {
-                totalHours = (from hour in _db.StudyHours
-                              where hour.SubmittedBy == userId &&
-                                    hour.ApproverId != null &&
-                                    hour.DateTimeStudied >= startOfThisWeek &&
-                                    hour.IsProctored
-                              select hour.DurationHours).ToList().Sum();
+                var hours = await _db.StudyHours
+                    .Where(h => h.SubmittedBy == userId &&
+                                h.ApproverId != null &&
+                                h.DateTimeStudied >= startOfThisWeek &&
+                                h.IsProctored)
+                    .Select(h => h.DurationHours)
+                    .ToListAsync();
+                totalHours = hours.Sum();
             }
             catch (Exception)
             {
@@ -409,13 +395,13 @@
 
             return (required - (int)totalHours);
         }
-        protected IEnumerable<StudyHour> GetStudyHoursForUser(int userId)
+        protected virtual async Task<IEnumerable<StudyHour>> GetStudyHoursForUserAsync(int userId)
         {
-            var member = _db.Members.Find(userId);
+            var member = await _db.Members.FindAsync(userId);
 
             return member.SubmittedStudyHours.Where(s => s.DateTimeStudied >= GetStartOfCurrentWeek());
         }
-        protected DateTime GetStartOfCurrentWeek()
+        protected virtual DateTime GetStartOfCurrentWeek()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow).Date;
             switch (now.DayOfWeek)
@@ -436,13 +422,42 @@
                     return now.AddDays(-4);
             }
         }
-        protected DateTime DateTimeFloor(DateTime date, TimeSpan span)
+        protected virtual DateTime DateTimeFloor(DateTime date, TimeSpan span)
         {
             //Rounds down based on the TimeSpan
             //Ex. date = DateTime.UtcNow, span = TimeSpan of one day
             //Results in 12:00am of today
             var ticks = (date.Ticks / span.Ticks);
             return new DateTime(ticks * span.Ticks);
+        }
+        protected virtual DateTime ConvertUtcToCst(DateTime utc)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+        }
+        protected virtual DateTime ConvertCstToUtc(DateTime cst)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+        }
+        protected virtual SelectList GetShirtSizesSelectList()
+        {
+            var newList = new List<string> { "S", "M", "L", "XL", "2XL" };
+            var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
+            return list;
+        }
+        protected virtual SelectList GetTerms()
+        {
+            var terms = new List<string>
+            {
+                "Spring", "Fall"
+            };
+            return new SelectList(terms);
+        }
+        protected virtual SelectList GetPositionsList()
+        {
+            var positions = Roles.GetAllRoles();
+            return new SelectList(positions);
         }
 
         protected override void Dispose(bool disposing)

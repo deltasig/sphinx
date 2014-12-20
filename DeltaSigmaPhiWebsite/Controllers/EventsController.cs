@@ -5,31 +5,33 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
 
     [Authorize(Roles = "Administrator, Service")]
     public class EventsController : BaseController
     {
-        public ActionResult Index(EventIndexFilterModel model)
+        public async Task<ActionResult> Index(EventIndexFilterModel model)
         {
             if (model.SelectedSemester == null)
             {
-                model.SelectedSemester = GetThisSemestersId();
+                model.SelectedSemester = await GetThisSemestersIdAsync();
             }
 
-            var thisSemester = _db.Semesters.Find(model.SelectedSemester);
-            var previousSemester = _db.Semesters.ToList()
+            var thisSemester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var previousSemester = (await _db.Semesters
                 .Where(s => s.DateEnd < thisSemester.DateStart)
-                .OrderBy(s => s.DateEnd).LastOrDefault() ?? new Semester
+                .OrderBy(s => s.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
                     DateEnd = thisSemester.DateStart
                 };
 
-            model.Events = _db.Events.Where(e =>
-                e.DateTimeOccurred < thisSemester.DateEnd &&
-                e.DateTimeOccurred >= previousSemester.DateEnd).ToList();
-            model.SemesterList = GetSemesterList();
+            model.Events = await _db.Events
+                .Where(e => e.DateTimeOccurred < thisSemester.DateEnd && 
+                            e.DateTimeOccurred >= previousSemester.DateEnd)
+                .ToListAsync();
+            model.SemesterList = await GetSemesterListAsync();
 
             return View(model);
         }
@@ -41,23 +43,23 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Event @event)
+        public async Task<ActionResult> Create(Event @event)
         {
             if (!ModelState.IsValid) return View(@event);
 
             @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
             _db.Events.Add(@event);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var @event = _db.Events.Find(id);
+            var @event = await _db.Events.FindAsync(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -67,23 +69,23 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(Event @event)
+        public async Task<ActionResult> Edit(Event @event)
         {
             if (!ModelState.IsValid) return View(@event);
 
             @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
             _db.Entry(@event).State = EntityState.Modified;
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        public ActionResult Delete(int? id)
+        public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var @event = _db.Events.Find(id);
+            var @event = await _db.Events.FindAsync(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -93,11 +95,11 @@
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var @event = _db.Events.Find(id);
+            var @event = await _db.Events.FindAsync(id);
             _db.Events.Remove(@event);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
     }

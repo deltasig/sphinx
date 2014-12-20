@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using System.Threading.Tasks;
     using Models.Entities;
     using Models.ViewModels;
     using System.Collections.Generic;
@@ -12,7 +13,7 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class PhoneNumbersController : BaseController
     {
-        public ActionResult Index(PhoneIndexFilterModel model)
+        public async Task<ActionResult> Index(PhoneIndexFilterModel model)
         {
             if (model.IsBlank())
             {
@@ -25,16 +26,16 @@
                 return RedirectToAction("Index", model);
             }
 
-            model.PhoneNumbers = FilterPhoneNumbers(model);
+            model.PhoneNumbers = await FilterPhoneNumbersAsync(model);
             return View(model);
         }
 
-        public List<PhoneNumber> FilterPhoneNumbers(PhoneIndexFilterModel model)
+        public async Task<List<PhoneNumber>> FilterPhoneNumbersAsync(PhoneIndexFilterModel model)
         {
-            var phoneNumbers = _db.PhoneNumbers
+            var phoneNumbers = await _db.PhoneNumbers
                 .OrderBy(s => s.Member.StatusId)
                 .ThenBy(m => m.Member.LastName)
-                .ThenBy(a => a.Type).ToList();
+                .ThenBy(a => a.Type).ToListAsync();
 
             if (!model.Pledges)
             {
@@ -66,33 +67,33 @@
             return phoneNumbers;
         }
 
-        public ActionResult Edit(int? id)
+        public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var phoneNumber = _db.PhoneNumbers.Find(id);
+            var phoneNumber = await _db.PhoneNumbers.FindAsync(id);
             if (phoneNumber == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", phoneNumber.UserId);
+            ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", phoneNumber.UserId);
             return View(phoneNumber);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "PhoneNumberId,UserId,Number,Type")] PhoneNumber phoneNumber)
+        public async Task<ActionResult> Edit([Bind(Include = "PhoneNumberId,UserId,Number,Type")] PhoneNumber phoneNumber)
         {
             if (ModelState.IsValid)
             {
                 _db.Entry(phoneNumber).State = EntityState.Modified;
-                _db.SaveChanges();
+                await _db.SaveChangesAsync();
                 return WebSecurity.GetUserId(WebSecurity.CurrentUserName) == phoneNumber.UserId
                     ? RedirectToAction("Index", "Account") : RedirectToAction("Index");
             }
-            ViewBag.UserId = new SelectList(_db.Members.ToList(), "UserId", "UserName", phoneNumber.UserId);
+            ViewBag.UserId = new SelectList(await _db.Members.ToListAsync(), "UserId", "UserName", phoneNumber.UserId);
             return View(phoneNumber);
         }
     }
