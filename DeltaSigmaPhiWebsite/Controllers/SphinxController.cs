@@ -1,8 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Net.Mail;
-    using System.Threading.Tasks;
-    using System.Web.UI.WebControls.WebParts;
     using App_Start;
     using Data.UnitOfWork;
     using Microsoft.AspNet.Identity;
@@ -11,9 +8,10 @@
     using Models.ViewModels;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Net.Mail;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Security;
 

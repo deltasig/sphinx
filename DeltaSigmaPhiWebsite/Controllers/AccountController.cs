@@ -1,6 +1,5 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System.Net.Mail;
     using App_Start;
     using Data;
     using Data.UnitOfWork;
@@ -11,7 +10,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Transactions;
+    using System.Net.Mail;
     using System.Web.Mvc;
     using System.Web.Security;
     using WebMatrix.WebData;
