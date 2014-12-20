@@ -53,9 +53,9 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Submit()
+        public ActionResult Submit()
         {
-            var model = new ServiceHourSubmissionModel { Events = await GetAllEventIdsAsEventNameAsync() };
+            var model = new ServiceHourSubmissionModel { Events = GetAllEventIdsAsEventName() };
             return PartialView(model);
         }
 
