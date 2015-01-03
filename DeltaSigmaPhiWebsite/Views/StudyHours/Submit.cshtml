@@ -1,47 +1,55 @@
-﻿@model StudyHour
+﻿@model StudyHourSubmissionModel
 
-<div class="modal fade" id="studyHourModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">Study Hour Submission Form</h4>
-            </div>
-            <div class="modal-body">
-                @using (Html.BeginForm("Submit", "StudyHours", FormMethod.Post, new { role = "form" }))
-                {
-                    @Html.AntiForgeryToken()
-                    @Html.ValidationSummary(true)
-                    
-                    @Html.HiddenFor(model => model.RequiredStudyHours)
-                    @Html.HiddenFor(model => model.ProctoredStudyHours)
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.DateTimeStudied)
-                        @Html.EditorFor(m => m.DateTimeStudied, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(m => m.DateTimeStudied, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.DurationHours)
-                        @Html.TextBoxFor(m => m.DurationHours, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.DurationHours, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.IsProctored)
-                        @Html.EditorFor(m => m.IsProctored)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.StudyLocation)
-                        @Html.TextBoxFor(m => m.StudyLocation, new { @class = "form-control" })
-                        @Html.ValidationMessageFor(m => m.StudyLocation, "", new { @class = "text-danger" })
-                    </div>
-    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-success">Submit</button>
-                    </div>
-                }
-            </div>
+@{
+    ViewBag.Title = "Study Hour Submission";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            @using (Html.BeginForm("Submit", "StudyHours", FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                <div class="form-group">
+                    @Html.Label("Assignment for which you are submitting hours")
+                    @Html.DropDownListFor(s => s.SelectedMemberAssignmentId, Model.MemberAssignments, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.Label("Approver")
+                    @Html.DropDownListFor(s => s.SelectedApproverId, Model.Approvers, new { @class = "form-control" })
+                </div>
+                
+                <div class="form-group">
+                    @Html.Label("Date & Time You Studied")
+                    @Html.EditorFor(m => m.Submission.DateTimeStudied, new { htmlAttributes = new { @class = "form-control", type = "datetime-local", @Value = Model.Submission.DateTimeStudied.ToString("yyyy-MM-ddTHH:mm:ss") } })
+                    @Html.ValidationMessageFor(m => m.Submission.DateTimeStudied, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.Label("Duration (Hours)")
+                    @Html.TextBoxFor(m => m.Submission.DurationHours, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Submission.DurationHours, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.EditorFor(m => m.Submission.IsProctored)
+                    @Html.Label("Proctored")
+                </div>
+                <div class="form-group">
+                    @Html.Label("Study Location")
+                    @Html.TextBoxFor(m => m.Submission.StudyLocation, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Submission.StudyLocation, "", new { @class = "text-danger" })
+                </div>
+
+                <input type="submit" value="Create" class="btn btn-default" /> @:|
+                @Html.ActionLink("Back to Sphinx", "Index", "Sphinx")
+            }
         </div>
     </div>
 </div>
+

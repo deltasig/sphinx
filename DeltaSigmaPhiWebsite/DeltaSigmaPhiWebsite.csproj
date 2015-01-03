@@ -305,6 +305,10 @@
     <Compile Include="Migrations\201412140013530_FallTransitionDate.Designer.cs">
       <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501030408147_StudyHourRefactorization.cs" />
+    <Compile Include="Migrations\201501030408147_StudyHourRefactorization.Designer.cs">
+      <DependentUpon>201501030408147_StudyHourRefactorization.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -477,6 +481,10 @@
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
+    <Content Include="Multiselect\css\multi-select.css" />
+    <Content Include="Multiselect\img\switch.png" />
+    <Content Include="Multiselect\js\jquery.multi-select.js" />
+    <Content Include="Multiselect\js\jquery.quicksearch.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\DataTables-1.10.4\extensions\AutoFill\js\dataTables.autoFill.js" />
@@ -595,8 +603,6 @@
     <Content Include="Views\Incidents\Index.cshtml" />
     <Content Include="Views\StudyHours\Unapproved.cshtml" />
     <Content Include="Views\StudyHours\Index.cshtml" />
-    <Content Include="Views\StudyHours\Tracker.cshtml" />
-    <Content Include="Views\StudyHours\_StudyHourProgressPartial.cshtml" />
     <Content Include="Views\Classes\CreateSchedule.cshtml" />
     <Content Include="Views\Classes\Schedule.cshtml" />
     <Content Include="Views\Classes\_ClassSchedulePartial.cshtml" />
@@ -610,6 +616,12 @@
     <Content Include="Views\Positions\Edit.cshtml" />
     <Content Include="Views\Positions\Index.cshtml" />
     <Content Include="Views\Sphinx\AlumniLeaders.cshtml" />
+    <Content Include="Views\StudyHours\CreateAssignment.cshtml" />
+    <Content Include="Views\StudyHours\EditAssignment.cshtml" />
+    <Content Include="Views\StudyHours\DeleteAssignment.cshtml" />
+    <Content Include="Views\StudyHours\AssignmentInfo.cshtml" />
+    <Content Include="Views\StudyHours\DeleteMemberAssignment.cshtml" />
+    <Content Include="Views\StudyHours\EditMemberAssignment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -635,6 +647,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201412140013530_FallTransitionDate.resx">
       <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501030408147_StudyHourRefactorization.resx">
+      <DependentUpon>201501030408147_StudyHourRefactorization.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

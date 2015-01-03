@@ -1,19 +1,32 @@
 ﻿namespace DeltaSigmaPhiWebsite.Models.ViewModels
 {
     using Entities;
-    using System;
     using System.Collections.Generic;
-
-    public class TrackerModel
+    using System.Web.Mvc;
+    
+    public class StudyHourAssignmentInfoModel
     {
-        public int Offset { get; set; }
-        public ProgressModel ThisWeek { get; set; }
-        public Semester ThisSemester { get; set; }
+        public StudyHourAssignment Assignment { get; set; }
+        public MemberStudyHourAssignment MemberAssignment { get; set; }
+        public int[] SelectedMemberIds { get; set; }
+        public IEnumerable<SelectListItem> Members { get; set; }
     }
-    public class ProgressModel
+
+    public class StudyHourSubmissionModel
     {
-        public IEnumerable<Member> Members { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public StudyHour Submission { get; set; }
+
+        public int SelectedMemberAssignmentId { get; set; }
+        public IEnumerable<SelectListItem> MemberAssignments { get; set; }
+        public int SelectedApproverId { get; set; }
+        public IEnumerable<SelectListItem> Approvers { get; set; }
+    }
+
+    public class StudyHourIndexModel
+    {
+        public IEnumerable<StudyHourAssignment> StudyHourAssignments { get; set; }
+
+        public int? SelectedSemester { get; set; }
+        public IEnumerable<SelectListItem> SemesterList { get; set; }
     }
 }

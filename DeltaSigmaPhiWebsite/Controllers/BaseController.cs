@@ -286,7 +286,7 @@
             }
             catch (Exception)
             {
-
+                return requiredHours - totalHours < 0 ? 0 : requiredHours - totalHours;
             }
 
             var remainingHours = requiredHours - totalHours;
@@ -343,12 +343,24 @@
                             s.DateOfShift <= semester.DateEnd)
                 .ToListAsync();
         }
-        protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId)
+        protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId, Semester semester)
         {
             var members = await _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToListAsync();
+            // TODO: Refactor this to be more intelligent; requires discussion with academic chairman to decide who can approve.
+            var membersOnStudyHours = (await _db.MemberStudyHourAssignments
+                .Where(m =>
+                    m.Assignment.Start >= semester.DateStart &&
+                    m.Assignment.End <= semester.DateEnd)
+                .ToListAsync())
+                .Select(m => m.AssignedMember.UserId)
+                .Distinct()
+                .ToList();
+
             var newList = new List<object>();
             foreach (var member in members)
             {
+                if (membersOnStudyHours.Contains(member.UserId)) continue;
+
                 newList.Add(new
                 {
                     member.UserId,
@@ -357,62 +369,46 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected virtual async Task<int> GetRemainingStudyHoursForUserAsync(int userId)
+        protected virtual async Task<StudyHourAssignment> GetStudyHourAssignmentForUserAsync(int userId)
         {
-            var startOfThisWeek = GetStartOfCurrentWeek();
             var member = await _db.Members.FindAsync(userId);
-            var totalHours = 0.0;
 
-            try
-            {
-                var hours = await _db.StudyHours
-                    .Where(h => h.SubmittedBy == userId && 
-                                h.ApproverId != null && 
-                                h.DateTimeStudied >= startOfThisWeek && 
-                                !h.IsProctored)
-                    .Select(h => h.DurationHours)
-                    .ToListAsync();
-                totalHours = hours.Sum();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return (member.RequiredStudyHours - (int)totalHours);
+            return member.StudyHourAssignments
+                .Select(a => a.Assignment)
+                .SingleOrDefault(s => 
+                    s.Start <= DateTime.UtcNow && 
+                    s.End >= DateTime.UtcNow);
         }
-        protected virtual async Task<int> GetRemainingProctoredStudyHoursForUserAsync(int userId)
+        protected virtual async Task<IEnumerable<MemberStudyHourAssignment>> GetStudyHourAssignmentsForUserAsync(int userId, Semester semester)
         {
-            var startOfThisWeek = GetStartOfCurrentWeek();
             var member = await _db.Members.FindAsync(userId);
-            var required = 0;
-            if (member.ProctoredStudyHours != null) 
-                required = (int)member.ProctoredStudyHours;
-            var totalHours = 0.0;
 
-            try
-            {
-                var hours = await _db.StudyHours
-                    .Where(h => h.SubmittedBy == userId &&
-                                h.ApproverId != null &&
-                                h.DateTimeStudied >= startOfThisWeek &&
-                                h.IsProctored)
-                    .Select(h => h.DurationHours)
-                    .ToListAsync();
-                totalHours = hours.Sum();
-            }
-            catch (Exception)
-            {
-
-            }
-
-            return (required - (int)totalHours);
+            return member.StudyHourAssignments
+                .Where(s =>
+                    s.Assignment.Start >= semester.DateStart &&
+                    s.Assignment.End <= semester.DateEnd)
+                .OrderByDescending(s => s.Assignment.Start);
         }
-        protected virtual async Task<IEnumerable<StudyHour>> GetStudyHoursForUserAsync(int userId)
+        protected virtual async Task<SelectList> GetStudyHourAssignmentsSelectListForUserAsync(int userId, Semester semester)
         {
             var member = await _db.Members.FindAsync(userId);
+            var memberAssignments = member.StudyHourAssignments
+                .Where(s =>
+                    s.Assignment.Start >= semester.DateStart &&
+                    s.Assignment.End <= semester.DateEnd)
+                .OrderByDescending(s => s.Assignment.Start);
 
-            return member.SubmittedStudyHours.Where(s => s.DateTimeStudied >= GetStartOfCurrentWeek());
+            var newList = new List<object>();
+            foreach (var a in memberAssignments)
+            {
+                newList.Add(new
+                {
+                    a.MemberStudyHourAssignmentId,
+                    Name = ConvertUtcToCst(a.Assignment.Start) + " to " + ConvertUtcToCst(a.Assignment.End)
+                });
+            }
+
+            return new SelectList(newList, "MemberStudyHourAssignmentId", "Name");
         }
         protected virtual DateTime GetStartOfCurrentWeek()
         {

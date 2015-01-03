@@ -1,0 +1,42 @@
+﻿@model MemberStudyHourAssignment
+@{
+    ViewBag.Title = "Edit Assignment Hours";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            <h4>@Model.AssignedMember | @Model.Assignment.Start to @Model.Assignment.End</h4>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.MemberStudyHourAssignmentId)
+                @Html.HiddenFor(m => m.AssignmentId)
+                @Html.HiddenFor(m => m.AssignedMemberId)
+                
+                <div class="form-group">
+                    @Html.Label("Unproctored", new { @class = "control-label" })
+                    @Html.EditorFor(m => m.UnproctoredAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.UnproctoredAmount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Proctored", new { @class = "control-label" })
+                    @Html.EditorFor(m => m.ProctoredAmount, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ProctoredAmount, "", new { @class = "text-danger" })
+                </div>
+                
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" /> |
+                    @Html.ActionLink("Back to Assignment", "AssignmentInfo", new { id = Model.AssignmentId })
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -368,11 +368,11 @@
                 {
                     var member = await _db.Members.SingleAsync(m => m.UserId == model.SelectedUserId);
 
-                    if(member.ClassesTaken.Count > 0 || member.SubmittedStudyHours.Count > 0 ||
+                    if(member.ClassesTaken.Count > 0 || member.StudyHourAssignments.Count > 0 ||
                        member.Committees.Count > 0 || member.IncidentReports.Count > 0 ||
                        member.OrganizationsJoined.Count > 0 || member.LaundrySignups.Count > 0 ||
                        member.LittleBrothers.Count > 0 || member.Majors.Count > 0 ||
-                       member.Leaders.Count > 0 || member.ApprovedStudyHours.Count > 0)
+                       member.Leaders.Count > 0 || member.StudyHourApprovals.Count > 0)
                     {
                         message = RegistrationMessageId.UnregisterFailed;
                         return RedirectToAction("Registration", new { Message = message });
