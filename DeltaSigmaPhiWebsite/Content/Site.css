@@ -84,10 +84,21 @@ iframe, object, embed {
     margin-bottom: 0;
 }
 
-
 .table td {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
 
+.full-width {
+    width: 100% !important;
+}
+
+dl {
+    margin-bottom:0;
+}
+
+.dl-horizontal dt{
+    text-align: left;
+    width: auto;
 }

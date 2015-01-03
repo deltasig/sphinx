@@ -13,7 +13,6 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ServiceHoursController : BaseController
     {
-        [HttpGet]
         public async Task<ActionResult> Index(ServiceHourIndexFilterModel model)
         {
             if(model.SelectedSemester == null)
@@ -52,7 +51,6 @@
             return View(model);
         }
 
-        [HttpGet]
         public ActionResult Submit()
         {
             var model = new ServiceHourSubmissionModel { Events = GetAllEventIdsAsEventName() };

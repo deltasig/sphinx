@@ -1,7 +1,7 @@
-﻿@model IEnumerable<StudyHour>
+﻿@model StudyHourIndexModel
 
 @{
-    ViewBag.Title = "Study Hour Index";
+    ViewBag.Title = "Study Hour Assignments";
 }
 
 @section Title
@@ -11,55 +11,57 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-6">
+            @using (Html.BeginForm("Index", "StudyHours", FormMethod.Get, new { @class = "form-inline", role = "form" }))
+            {
+                <div class="form-group">
+                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
+
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                    <br /><br />
+                </div>
+            }
+        </div>
+        <div class="col-xs-6 text-right">
+            @Html.ActionLink("Create Assignment", "CreateAssignment", null, new { @class = "btn btn-sm btn-success text-right" })
+        </div>
+    </div>
+    <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-condensed" id="hours-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateTimeStudied)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DurationHours)</th>
-                                    <th>@Html.DisplayNameFor(model => model.IsProctored)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateTimeSubmitted)</th>
-                                    <th>Approver</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateTimeApproved)</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <table class="table table-condensed" id="hours-table">
+                        <thead>
+                            <tr>
+                                <th>Start-End Date/Time</th>
+                                <th>Assigned Members</th>
+                                <th></th>
+                            </tr>
+                        </thead>
 
-                            <tbody>
-                                @foreach (var item in Model)
-                                {
-                                    <tr>
-                                        <td>@item.Submitter.FirstName @item.Submitter.LastName[0].</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DateTimeStudied)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DurationHours)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.DateTimeSubmitted)</td>
-                                        <td>
-                                            @if (item.Approver == null)
+                        <tbody>
+                            @foreach (var item in Model.StudyHourAssignments)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.ActionLink(item.Start + " to " + item.End, "AssignmentInfo", new { id = item.StudyHourAssignmentId })
+                                    </td>
+                                    <td>@item.MembersAssigned.Count</td>
+                                    <td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                        {
+                                            @Html.ActionLink("Edit", "EditAssignment", new { id = item.StudyHourAssignmentId })
+                                            if (!item.MembersAssigned.Any())
                                             {
-                                                @: None
+                                                @:|
+                                                @Html.ActionLink("Delete", "DeleteAssignment", new { id = item.StudyHourAssignmentId })
                                             }
-                                            else
-                                            {
-                                                @item.Approver.FirstName @:  @item.Approver.LastName[0].
-                                            }
-                                        </td>
-                                        <td>@Html.DisplayFor(modelItem => item.DateTimeApproved)</td>
-                                        <td>
-                                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                            {
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.StudyHourId })
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -71,7 +73,8 @@
         $('#hours-table').DataTable({
             pageLength: 25,
             lengthChange: false,
-            "oLanguage": { "sSearch": "" }
+            "oLanguage": { "sSearch": "" },
+            "order": [0, "dsc"]
         });
 
         $('div.dataTables_filter input').addClass('form-control');

@@ -34,6 +34,8 @@ namespace DeltaSigmaPhiWebsite.Models
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSchedule { get; set; }
         public virtual DbSet<StudyHour> StudyHours { get; set; }
+        public virtual DbSet<MemberStudyHourAssignment> MemberStudyHourAssignments { get; set; }
+        public virtual DbSet<StudyHourAssignment> StudyHourAssignments { get; set; }
         public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<webpages_Membership> webpages_Membership { get; set; }
         public virtual DbSet<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
@@ -160,16 +162,10 @@ namespace DeltaSigmaPhiWebsite.Models
                 .HasMany(e => e.ServiceHours)
                 .WithRequired(e => e.Member)
                 .WillCascadeOnDelete(false);
-
+            
             modelBuilder.Entity<Member>()
-                .HasMany(e => e.SubmittedStudyHours)
-                .WithRequired(e => e.Submitter)
-                .HasForeignKey(e => e.SubmittedBy)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.ApprovedStudyHours)
-                .WithOptional(e => e.Approver)
+                .HasMany(e => e.StudyHourApprovals)
+                .WithRequired(e => e.Approver)
                 .HasForeignKey(e => e.ApproverId)
                 .WillCascadeOnDelete(false);
 
