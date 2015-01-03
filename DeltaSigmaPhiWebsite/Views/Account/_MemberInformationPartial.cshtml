@@ -1,72 +1,57 @@
 ﻿@model Member
 
 <div class="panel panel-default">
-    <div class="panel-heading">Profile</div>
+    <div class="panel-heading">Information</div>
     <div class="panel-body">
-        <div class="media">
-            <div class="media-body">
-                <table class="table table-responsive table-condensed">
-                    <thead>
-                        <tr>
-                            <td colspan="2">
-                                <h2 class="media-heading">@Model.ToString()</h2>
-                            </td>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <th>User Name</th>
-                            <td>@Model.UserName</td>
-                        </tr>
-                        <tr>
-                            <th>Email</th>
-                            <td>@Model.Email</td>
-                        </tr>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Alumnus"))
-                        {
-                            <tr>
-                                <th>Pin</th>
-                                <td>@Model.Pin</td>
-                            </tr>
-                        }
-                        <tr>
-                            <th>Shirt Size</th>
-                            <td>@Model.ShirtSize</td>
-                        </tr>
-                        <tr>
-                            <th>Room</th>
-                            <td>@Model.RoomString()</td>
-                        </tr>
-                        <tr>
-                            <th>Status</th>
-                            <td>@Model.MemberStatus.StatusName</td>
-                        </tr>
-                        <tr>
-                            <th>Pledge Class</th>
-                            <td>@Model.PledgeClass.PledgeClassName</td>
-                        </tr>
-                        <tr>
-                            <th>Graduation</th>
-                            <td>@Model.Semester.ToString()</td>
-                        </tr>
-                        <tr>
-                            <th>Big Bro</th>
-                            <td>@(Model.BigBrother == null ? "None" : Model.BigBrother.ToString())</td>
-                        </tr>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte"))
-                        {
-                            <tr>
-                                <th>Unproctored Study Hours (weekly)</th>
-                                <td>@Model.RequiredStudyHours</td>
-                            </tr>
-                            <tr>
-                                <th>Proctored Study Hours (weekly)</th>
-                                <td>@Model.ProctoredStudyHours</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <h2 class="media-heading">@Model.ToString()</h2>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>User Name</th>
+                    <td>@Model.UserName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Email</td>
+                </tr>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Alumnus"))
+                {
+                    <tr>
+                        <th>Pin</th>
+                        <td>@Model.Pin</td>
+                    </tr>
+                }
+                <tr>
+                    <th>Shirt Size</th>
+                    <td>@Model.ShirtSize</td>
+                </tr>
+                <tr>
+                    <th>Room</th>
+                    <td>@Model.RoomString()</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>@Model.MemberStatus.StatusName</td>
+                </tr>
+                <tr>
+                    <th>Pledge Class</th>
+                    <td>@Model.PledgeClass.PledgeClassName</td>
+                </tr>
+                <tr>
+                    <th>Graduation</th>
+                    <td>@Model.Semester.ToString()</td>
+                </tr>
+                <tr>
+                    <th>Big Bro</th>
+                    <td>@(Model.BigBrother == null ? "None" : Model.BigBrother.ToString())</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>
