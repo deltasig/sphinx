@@ -1,0 +1,57 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Members.Models.RegisterModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">Register</div>
+    <div class="panel-body">
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(false)
+            
+            <div class="form-group">
+                @Html.LabelFor(m => m.UserName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", placeholder = "User Name" })
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+                @Html.ValidationMessageFor(m => m.Email)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.FirstName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = "First Name" })
+                @Html.ValidationMessageFor(m => m.FirstName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.LastName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = "Last Name" })
+                @Html.ValidationMessageFor(m => m.LastName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Room, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Room, new { @class = "form-control", placeholder = "Room #" })
+                @Html.ValidationMessageFor(m => m.LastName)
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.StatusId, new { @class = "control-label" })
+                @Html.DropDownListFor(m => m.StatusId, Model.StatusList, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.PledgeClassId, new { @class = "control-label" })
+                @Html.DropDownListFor(m => m.PledgeClassId, Model.PledgeClassList, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ExpectedGraduationId, new { @class = "control-label" })
+                @Html.DropDownListFor(m => m.ExpectedGraduationId, Model.SemesterList, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.ShirtSize, new { @class = "control-label" })
+                @Html.DropDownListFor(m => m.ShirtSize, Model.ShirtSizes, new { @class = "form-control" })
+            </div>
+            
+            <button type="submit" class="btn btn-success">Register</button>
+        }
+    </div>
+</div>
+

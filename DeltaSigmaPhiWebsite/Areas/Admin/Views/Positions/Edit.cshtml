@@ -1,0 +1,81 @@
+﻿@model DeltaSigmaPhiWebsite.Entities.Position
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Edit Position";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.PositionId)
+                @Html.HiddenFor(model => model.CanBeRemoved)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PositionName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.PositionName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.PositionName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label" })
+                    @Html.EnumDropDownListFor(model => model.Type, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DisplayOrder, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.DisplayOrder, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DisplayOrder, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsExecutive)
+                        E-Board
+                    </label>
+                </div>
+
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsElected)
+                        Elected
+                    </label>
+                </div>
+
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsDisabled)
+                        Disabled
+                    </label>
+                </div>
+
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsPublic)
+                        Public
+                    </label>
+                </div>
+                <br />
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-default" /> |
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+            }
+        </div>
+    </div>
+</div>
+

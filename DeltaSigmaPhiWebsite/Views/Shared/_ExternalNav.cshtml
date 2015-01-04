@@ -7,7 +7,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a href="@Url.Action("Index", "Home")">
+            <a href="~/">
                 <img src="~/Images/MobileTouch-57x57.png" width="40" height="40" alt="Edit" style="margin: 3px 10px 3px 0px" />
             </a>
         </div>
@@ -15,8 +15,8 @@
             <ul class="nav navbar-nav" id="menu">
                 @if (Request.IsAuthenticated && !User.IsInRole("Released"))
                 {
-                    <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
-                        @Html.ActionLink("Sphinx", "Index", "Sphinx", null, new { title = "Sphinx" })
+                    <li class="">
+                        @Html.ActionLink("Sphinx", "Index", "Home", new { area = "Sphinx" }, new { title = "Sphinx" })
                     </li>
                 }
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
