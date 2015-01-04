@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Members.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -84,6 +84,40 @@
             };
 
             return View(model);
+        }
+
+
+        [HttpGet, Authorize(Roles = "Administrator, Secretary")]
+        public async Task<ActionResult> InitiatePledges(string message)
+        {
+            ViewBag.SuccessMessage = message;
+
+            var model = new InitiatePledgesModel
+            {
+                Pledges = await GetPledgeUserIdListAsFullNameAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
+        public async Task<ActionResult> InitiatePledges(InitiatePledgesModel model)
+        {
+            var pledges = await _db.Members
+                .Where(m => 
+                    model.SelectedMemberIds.Contains(m.UserId))
+                .ToListAsync();
+            var activeId = (await _db.MemberStatus.SingleAsync(s => s.StatusName == "Active")).StatusId;
+
+            foreach(var p in pledges)
+            {
+                p.StatusId = activeId;
+                _db.Entry(p).State = EntityState.Modified;
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("InitiatePledges", new { message = "Pledges successfully moved to active status." });
         }
         
         [HttpGet]
