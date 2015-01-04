@@ -184,6 +184,20 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
+        protected virtual async Task<SelectList> GetPledgeUserIdListAsFullNameAsync()
+        {
+            var members = (await GetAllPledgeMembersAsync()).OrderBy(o => o.LastName);
+            var newList = new List<object>();
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return new SelectList(newList, "UserId", "Name");
+        }
         protected virtual async Task<SelectList> GetUserIdListAsFullNameWithNoneAsync()
         {
             return new SelectList(await GetUserIdListAsFullNameWithNoneNonSelectListAsync(), "UserId", "Name");
