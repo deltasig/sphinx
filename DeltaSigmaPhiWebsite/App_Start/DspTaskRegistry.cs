@@ -45,9 +45,10 @@
             {
                 From = new MailAddress("sphinxbot@deltasig-de.org", "Sphinx Bot"),
                 Subject = message.Subject,
-                Body = message.Body
+                Body = "<html><body>" + message.Body + "</body></html>"
             };
             mailMessage.To.Add(message.Destination);
+            mailMessage.IsBodyHtml = true;
 
             var smtpClient = new SmtpClient("mail.deltasig-de.org")
             {

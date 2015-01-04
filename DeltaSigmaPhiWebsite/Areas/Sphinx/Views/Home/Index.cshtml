@@ -1,0 +1,283 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Sphinx.Models.SphinxHomeIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sphinx";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    @if (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Administrator"))
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                @if (!string.IsNullOrEmpty(ViewBag.Message))
+                {
+                    <div class="alert alert-warning">
+                        @ViewBag.Message
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-5">
+                <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
+                        title="These are your remaining required service hours for this semester." id="serviceHourModalToggle">
+                    <span class="badge" style="font-weight: normal !important">
+                        @Model.RemainingCommunityServiceHours
+                    </span>
+                    <span>Serve</span>
+                </button>
+
+                <hr />
+
+                @{ Html.RenderAction("Submit", "Hours", new { area = "Service" }); }
+
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    <li class="active"><a href="#soberschedule" data-toggle="pill">Sober Schedule</a></li>
+                    <li><a href="#mysignups" data-toggle="pill">My Sober Schedule</a></li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="soberschedule">
+                        @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                    </div>
+                    <div class="tab-pane" id="mysignups">
+                        @if (!Model.NeedsToSoberDrive)
+                        {
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th colspan="3"><small>This Semester</small></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.MemberInfo.SoberSignups
+                                            .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
+                                        {
+                                            <tr>
+                                                <td>@item.Type</td>
+                                                <td>@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3)</td>
+                                                <td>@item.DateOfShift.ToShortDateString()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-warning">
+                                You haven't signed up to sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Sign up</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">Upcoming Laundry Reservations</div>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <tbody>
+                                @if (Model.LaundrySummary.Any())
+                                {
+
+                                    foreach (var signup in Model.LaundrySummary)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortDateString():
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).ToShortTimeString() -
+                                                @TimeZoneInfo.ConvertTimeFromUtc(signup.DateTimeShift, cstZone).AddHours(2).ToShortTimeString()
+                                            </td>
+                                            <td>@signup.Member.ToString()</td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td colspan="2">No reservations this week.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-7">
+                @if (Model.NeedsToSoberDrive)
+                {
+                    <div class="alert alert-warning">
+                        You haven't signed up to sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Sign up</a>
+                    </div>
+                }
+                @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
+                {
+                    <div class="alert alert-warning">
+                        Please enter your mailing address on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                    </div>
+                }
+                @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
+                {
+                    <div class="alert alert-warning">
+                        Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                    </div>
+                }
+                <!-- Service Hours Sections-->
+                <h3>Your Service Hours <small>this semester</small></h3>
+                @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
+                {
+                    <p>No service hours submitted</p>
+                }
+                else
+                {
+                    <table class="table table-condensed table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Hours</th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
+                        {
+                            <tr>
+                                <td>@item.Event.EventName</td>
+                                <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
+                                <td>@item.DurationHours</td>
+                            </tr>
+                        }
+                    </table>
+                }
+                @if (Model.MemberStudyHourAssignments.Any())
+                {
+                    <h3>Your Study Hour Assignments <small>this semester</small></h3>
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Assignment</th>
+                                <th>Unproctored</th>
+                                <th>Proctored</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.MemberStudyHourAssignments.OrderByDescending(a => a.Assignment.Start))
+                        {
+                            var start = TimeZoneInfo.ConvertTimeFromUtc(item.Assignment.Start, cstZone);
+                            var end = TimeZoneInfo.ConvertTimeFromUtc(item.Assignment.End, cstZone);
+                            var rowColor = "";
+                            if (DateTime.UtcNow >= item.Assignment.Start && DateTime.UtcNow <= item.Assignment.End)
+                            {
+                                rowColor = "success";
+                            }
+                            else if (DateTime.UtcNow < item.Assignment.Start)
+                            {
+                                rowColor = "active";
+                            }
+
+                            var unapprovedUnproctoredTurnIns = item.TurnIns.Where(t => !t.IsProctored && t.DateTimeApproved == null).Sum(t => t.DurationHours);
+                            var unapprovedProctoredTurnIns = item.TurnIns.Where(t => t.IsProctored && t.DateTimeApproved == null).Sum(t => t.DurationHours);
+                            var approvedUnproctoredTurnIns = item.TurnIns.Where(t => !t.IsProctored && t.DateTimeApproved != null).Sum(t => t.DurationHours);
+                            var approvedProctoredTurnIns = item.TurnIns.Where(t => t.IsProctored && t.DateTimeApproved != null).Sum(t => t.DurationHours);
+
+                            <tr class="@rowColor">
+                                <td>
+                                    @Html.ActionLink(start + " to " + end, "Info", "Assignments", new { id = item.AssignmentId, area = "Study" }, null)
+                                </td>
+                                <td>
+                                    @approvedUnproctoredTurnIns/@item.UnproctoredAmount (@unapprovedUnproctoredTurnIns pending)
+                                </td>
+                                <td>
+                                    @approvedProctoredTurnIns/@item.ProctoredAmount (@unapprovedProctoredTurnIns pending)
+                                </td>
+                                <td>
+                                    @Html.ActionLink("Submit", "Submit", "Hours", new { id = item.MemberStudyHourAssignmentId, area = "Study" }, null)
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+                @if (Model.ApprovalRequests.Any())
+                {
+                    <h3>
+                        Study Hour Approval Requests
+                        <small>
+                            <a data-toggle="tooltip" data-placement="top"
+                               title="If you do not want to approve a particular request, tell the Academic chairman or the requester to pick a new approver.">
+                                <i class="fa fa-question-circle"></i>
+                            </a>
+                        </small>
+                    </h3>
+                    
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Requested By</th>
+                                <th>Studied On</th>
+                                <th>Duration (Hrs.)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model.ApprovalRequests.OrderByDescending(s => s.DateTimeSubmitted))
+                        {
+                            var studiedOn = TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone);
+
+                            <tr>
+                                <td>@item.MemberAssignment.AssignedMember</td>
+                                <td>@studiedOn</td>
+                                <td>@item.DurationHours</td>
+                                <td>
+                                    @using (Html.BeginForm("Approve", "Hours", new { id = item.StudyHourId, area = "Study" }, FormMethod.Get))
+                                    {
+                                        <input type="submit" value="Approve" class="btn-link" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+        </div>
+    }
+    else if (User.IsInRole("Alumnus"))
+    {
+        <div class="col-sm-5">
+            @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
+        </div>
+        <div class="col-sm-7">
+            @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
+            {
+                <div class="alert alert-warning">
+                    Please enter your mailing address on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                </div>
+            }
+            @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
+            {
+                <div class="alert alert-warning">
+                    Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                </div>
+            }
+            <p>More Alumni content is forthcoming.</p>
+        </div>
+    }
+    else if (User.IsInRole("Affiliate"))
+    {
+        <p>Affiliate content is forthcoming.</p>
+    }
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('#serviceHourModalToggle').tooltip();
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}

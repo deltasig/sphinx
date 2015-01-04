@@ -1,4 +1,4 @@
-﻿@if (ViewContext.RouteData.Values.ContainsValue("Home") || !Request.IsAuthenticated)
+﻿@if (ViewContext.RouteData.DataTokens["area"] == null || !Request.IsAuthenticated)
 {
     @Html.Partial("_ExternalNav")
 }

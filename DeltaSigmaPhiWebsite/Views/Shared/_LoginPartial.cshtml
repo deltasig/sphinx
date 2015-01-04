@@ -2,10 +2,10 @@
     @if (Request.IsAuthenticated)
     {
         <li class="@(ViewBag.Title == "Account" ? "active" : "")">
-            @Html.ActionLink("Account", "Index", "Account")
+            @Html.ActionLink("Account", "Index", "Account", new { area = "Members" }, null)
         </li>
         <li>
-            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", style = "margin: 0" }))
+            @using (Html.BeginForm("LogOff", "Account", new { area = "Members" }, FormMethod.Post, new { id = "logoutForm", style = "margin: 0" }))
             {
                 // Example of link-based form submission
                 @Html.AntiForgeryToken()
@@ -18,7 +18,7 @@
     else
     {
         <li class="@(ViewContext.RouteData.Values.ContainsValue("Login") ? "active" : "")">
-            @Html.ActionLink("Log In", "Login", "Account")
+            @Html.ActionLink("Log In", "Login", "Account", new { area = "Members" }, null)
         </li>
     }
 </ul>
