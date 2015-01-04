@@ -19,7 +19,10 @@
 
             if (currentSemester == null) return View();
 
-            var model = await _db.Leaders.Where(l => l.SemesterId == currentSemester.SemesterId).ToListAsync();
+            var model = await _db.Leaders
+                .Where(l => 
+                    l.SemesterId == currentSemester.SemesterId)
+                .ToListAsync();
 
             return View(model);
         }

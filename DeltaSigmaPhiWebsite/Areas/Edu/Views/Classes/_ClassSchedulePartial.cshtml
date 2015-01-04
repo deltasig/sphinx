@@ -1,0 +1,71 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.ClassTaken>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        @if(Model.Any())
+        {
+            @: Classes
+            if(Model.Select(m => m.Member.ToString()).Distinct().Count() == 1)
+            {
+                @: for @Model.First().Member.ToString()
+            }
+            if (Model.Select(m => m.SemesterId).Distinct().Count() == 1)
+            {
+                @: | @Model.First().Semester.ToString()
+            }
+            if (!ViewContext.RouteData.Values.ContainsValue("Classes"))
+            {
+                @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.First().Member.UserName }, new { @class = "pull-right" })
+            }
+        }
+        else
+        {
+            @: Classes
+        }
+    </div>
+    <div class="panel-body">
+        @if (Model.Any())
+        {
+            <div class="table-responsive">
+                <table class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th>Semester</th>
+                            <th>Course</th>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                            {
+
+                                <th></th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Semester.ToString()</td>
+                                <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                {
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditClassTaken", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                        | @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            @: No classes added!
+        }
+    </div>
+    <div class="panel-footer">
+        Total Credit Hours: @Model.Sum(c => c.Class.CreditHours)
+    </div>
+</div>

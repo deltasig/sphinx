@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.Position>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Positions Index";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Create New", "Create")
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table" id="positions-table">
+                            <thead>
+                                <tr>
+                                    <th>Order</th>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>Exec</th>
+                                    <th>Elected</th>
+                                    <th>Disabled</th>
+                                    <th>Public</th>
+                                    <th>Appointments</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Where(p => p.PositionName != "Administrator").OrderBy(p => p.Type).ThenBy(p => p.DisplayOrder))
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(modelItem => item.DisplayOrder)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.PositionName)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IsExecutive)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IsElected)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IsDisabled)</td>
+                                        <td>@Html.DisplayFor(modelItem => item.IsPublic)</td>
+                                        <td>@item.Leaders.Count()</td>
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
+                                            @Html.ActionLink("Details", "Details", new { id = item.PositionId }) 
+                                            @if(!item.Leaders.Any())
+                                            {
+                                                @:|
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#positions-table').DataTable({
+            pageLength: 100,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" },
+            "order": [[2, "asc"], [0, "asc"]]
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}

@@ -1,7 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite
 {
-    using Models;
-    using Models.Entities;
+    using Entities;
     using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;

@@ -1,0 +1,55 @@
+﻿@using DeltaSigmaPhiWebsite.Entities
+@model IEnumerable<SoberSignup>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sober Schedule Manager";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.ActionLink("Back to Schedule", "Schedule")
+            <br/><br/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            @Html.Partial("_RequestSoberSignup", new SoberSignup())
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Volunteers are still needed on the following dates:
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table" style="text-align:left">
+                            <thead>
+                                <tr>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Type</td>
+                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+
+}

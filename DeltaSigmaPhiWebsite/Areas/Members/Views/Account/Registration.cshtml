@@ -1,0 +1,20 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Members.Models.RegistrationModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Registration";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-6">
+            @{Html.RenderPartial("_RegisterPartial", Model.RegisterModel);}
+        </div>
+        <div class="col-sm-12 col-md-6">
+            @{Html.RenderPartial("_UnregisterPartial", Model.UnregisterModel);}
+        </div>
+    </div>
+</div>

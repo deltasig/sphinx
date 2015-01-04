@@ -1,0 +1,107 @@
+﻿@using DeltaSigmaPhiWebsite.Entities
+@model IEnumerable<IEnumerable<LaundrySignup>>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Laundry Signup";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Important: </strong> You may only signup twice within any seven day period.
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-bordered" style="text-align:center">
+                            @if (Model.Any())
+                            {
+                                <thead>
+                                    <tr>
+                                        <th class="text-center active">Time Slot</th>
+                                        @foreach (var timeSlot in Model.First())
+                                        {
+                                            <th class="text-center">
+                                                @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
+                                            </th>
+                                        }
+                                    </tr>
+                                </thead>
+                            }
+                            @foreach (var day in Model)
+                            {
+                                <tr>
+                                    <td class="active">
+                                        <p>
+                                            <strong>
+                                                @day.First().DateTimeShift.ToShortTimeString() -
+                                                @day.First().DateTimeShift.AddHours(2).ToShortTimeString()
+                                            </strong>
+                                        </p>
+                                    </td>
+
+                                    @foreach (var timeSlot in day)
+                                    {
+                                        <td>
+                                            @if (timeSlot.Member != null)
+                                            {
+                                                // Reserved by current user
+                                                if (User.Identity.Name == timeSlot.Member.UserName)
+                                                {
+                                                    using (Html.BeginForm("Cancel", "Laundry", timeSlot))
+                                                    {
+                                                        @timeSlot.Member.ToString()
+                                                        <button type="submit" class="btn btn-sm btn-link" style="padding:0; margin:0; color:red">
+                                                            <i class="fa fa-minus-square"></i>
+                                                        </button>
+                                                    }
+                                                }
+                                                // Reserved by someone else
+                                                else
+                                                {
+                                                    <div class="text-center">
+                                                        <p>
+                                                            @timeSlot.Member.ToString()
+                                                            @if(timeSlot.Member.Room == 0)
+                                                            {
+                                                                @:*
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                }
+                                            }
+                                            // Unreserved, but in the past. Let's them sign up to an hour into the timeslot.
+                                            else if (timeSlot.DateTimeShift.AddHours(1) < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone))
+                                            {
+                                                <div class="text-center"></div>
+                                            }
+                                            // Unreserved, and in the future.
+                                            else
+                                            {
+                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = timeSlot.DateTimeShift }))
+                                                {
+                                                    <button type="submit" class="btn btn-sm btn-success">Open</button>
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    Current Time: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToShortTimeString() CST <br/>
+                    * Member lives Out-of-House
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

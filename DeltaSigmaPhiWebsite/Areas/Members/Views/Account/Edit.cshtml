@@ -1,0 +1,266 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Members.Models.EditMemberInfoModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Editing " + Model.Member;
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-4">
+            @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.Member.UserId)
+                @Html.HiddenFor(m => m.Member.UserName)
+
+                if (User.IsInRole("Administrator"))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Email, new {@class = "control-label"})
+                        @Html.EditorFor(m => m.Member.Email, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(m => m.Member.Email, "", new {@class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Pin, new {@class = "control-label"})
+                        @Html.EditorFor(m => m.Member.Pin, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(m => m.Member.Pin, "", new {@class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Room, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Room, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Room, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.RequiredStudyHours, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.RequiredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.RequiredStudyHours, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ProctoredStudyHours, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.ProctoredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.ProctoredStudyHours, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control" })
+                    </div>
+                }
+                else if (User.IsInRole("Secretary"))
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Pin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Pin, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control" })
+                    </div>
+                    @Html.HiddenFor(m => m.Member.Room)
+                    @Html.HiddenFor(m => m.Member.RequiredStudyHours)
+                    @Html.HiddenFor(m => m.Member.ProctoredStudyHours)
+                }
+                else if (User.IsInRole("House Manager"))
+                {
+                    if (User.Identity.Name == Model.Member.UserName)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(m => m.Member.FirstName)
+                        @Html.HiddenFor(m => m.Member.LastName)
+                        @Html.HiddenFor(m => m.Member.Email)
+                        @Html.HiddenFor(m => m.Member.ExpectedGraduationId)
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Room, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Room, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Room, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.HiddenFor(m => m.Member.Pin)
+                    @Html.HiddenFor(m => m.Member.StatusId)
+                    @Html.HiddenFor(m => m.Member.PledgeClassId)
+                    @Html.HiddenFor(m => m.Member.BigBroId)
+                    @Html.HiddenFor(m => m.Member.RequiredStudyHours)
+                    @Html.HiddenFor(m => m.Member.ProctoredStudyHours)
+                    @Html.HiddenFor(m => m.Member.ShirtSize)
+                }
+                else if (User.IsInRole("Academics"))
+                {
+                    if (User.Identity.Name == Model.Member.UserName)
+                    {
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.FirstName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                            @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                            @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.HiddenFor(m => m.Member.FirstName)
+                        @Html.HiddenFor(m => m.Member.LastName)
+                        @Html.HiddenFor(m => m.Member.Email)
+                        @Html.HiddenFor(m => m.Member.ExpectedGraduationId)
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.RequiredStudyHours, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.RequiredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.RequiredStudyHours, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ProctoredStudyHours, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.ProctoredStudyHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.ProctoredStudyHours, "", new { @class = "text-danger" })
+                    </div>
+                    @Html.HiddenFor(m => m.Member.Room)
+                    @Html.HiddenFor(m => m.Member.Pin)
+                    @Html.HiddenFor(m => m.Member.StatusId)
+                    @Html.HiddenFor(m => m.Member.PledgeClassId)
+                    @Html.HiddenFor(m => m.Member.BigBroId)
+                    @Html.HiddenFor(m => m.Member.ShirtSize)
+                }
+                else if (User.Identity.Name == Model.Member.UserName)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.FirstName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.Pin, new {@class = "control-label"})
+                        @Html.EditorFor(m => m.Member.Pin, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(m => m.Member.Pin, "", new {@class = "text-danger"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members, new { @class = "form-control" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control" })
+                    </div>
+                
+                    @Html.HiddenFor(m => m.Member.Room)
+                    @Html.HiddenFor(m => m.Member.StatusId)
+                    @Html.HiddenFor(m => m.Member.PledgeClassId)
+                    @Html.HiddenFor(m => m.Member.RequiredStudyHours)
+                    @Html.HiddenFor(m => m.Member.ProctoredStudyHours)
+                }
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" /> |
+                    @Html.ActionLink("Member Profile", "Index", "Account", new { userName = Model.Member.UserName, area = "Members" }, null) |
+                    @Html.ActionLink("Roster", "Index", "Roster", new { area = "Members" }, null)
+                </div>
+            }
+        </div>
+    </div>
+</div>

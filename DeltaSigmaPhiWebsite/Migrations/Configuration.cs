@@ -1,11 +1,7 @@
 namespace DeltaSigmaPhiWebsite.Migrations
 {
-    using System;
+    using Entities;
     using System.Data.Entity.Migrations;
-    using System.Linq;
-    using System.Web.Security;
-    using Models;
-    using Models.Entities;
     using WebMatrix.WebData;
 
     internal sealed class Configuration : DbMigrationsConfiguration<DspDbContext>
