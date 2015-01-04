@@ -1,0 +1,72 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Members.Models.InitiatePledgesModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Initiate Pledges";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Html.BeginForm("InitiatePledges", "Roster", FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                
+                <h4>
+                    <strong>Select the pledges to move to active status</strong>
+                </h4>
+
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-9">
+                        @Html.ListBoxFor(model => model.SelectedMemberIds, Model.Pledges, new { id = "pledge-selection", @class = "form-control" })
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <input type="submit" value="Submit" class="btn btn-default" /> | @Html.ActionLink("Back to Roster", "Index")
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        var settings = {
+            selectableHeader: "<label class='control-label'>Members</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+            selectionHeader: "<label class='control-label'>Selected Members</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+            afterInit: function (ms) {
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+            },
+            cssClass: "full-width"
+        };
+
+        $('#pledge-selection').multiSelect(settings);
+
+    </script>
+}
