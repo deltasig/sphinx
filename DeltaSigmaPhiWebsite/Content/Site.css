@@ -102,3 +102,7 @@ dl {
     text-align: left;
     width: auto;
 }
+
+.label-as-badge {
+    border-radius: 1em;
+}
