@@ -9,11 +9,11 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ClassesController : BaseController
     {
-        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Index(string message)
         {
             ViewBag.Message = string.Empty;
@@ -26,7 +26,6 @@
             return View(classes);
         }
 
-        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Create()
         {
             ViewBag.Message = string.Empty;
@@ -35,10 +34,8 @@
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Create([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(Class @class)
         {
             ViewBag.Message = string.Empty;
             if (ModelState.IsValid)
@@ -59,7 +56,6 @@
             return View(@class);
         }
 
-        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -77,10 +73,8 @@
             return View(@class);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Edit([Bind(Include = "ClassId,DepartmentId,CourseShorthand,CourseName,CreditHours")] Class @class)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(Class @class)
         {
             if (ModelState.IsValid)
             {
@@ -139,9 +133,28 @@
 
         public async Task<ActionResult> CreateSchedule()
         {
+            IEnumerable<SelectListItem> members;
+            if(User.IsInRole("Academics") || User.IsInRole("Administrator"))
+            {
+                members = await GetUserIdListAsFullNameAsync();
+            }
+            else
+            {
+                var member = await _db.Members.FindAsync(WebSecurity.CurrentUserId);
+                var list = new List<object>
+                {
+                    new
+                    {
+                        UserId = WebSecurity.CurrentUserId,
+                        Name = member.FirstName + " " + member.LastName
+                    }
+                };
+                members = new SelectList(list, "UserId", "Name");
+            }
+
             var model = new ClassScheduleModel
             {
-                Members = await GetUserIdListAsFullNameAsync(),
+                Members = members,
                 AllClasses = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync(),
                 Semesters = await GetSemesterListAsync(),
                 SelectedSemester = (await GetThisSemesterAsync()).SemesterId,
@@ -150,9 +163,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> CreateSchedule(ClassScheduleModel model)
         {
             var message = "";
@@ -245,7 +256,7 @@
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> EditClassTaken([Bind(Include = "UserId,ClassId,SemesterId,Instructor,MidtermGrade,FinalGrade,Dropped")] ClassTaken classTaken)
+        public async Task<ActionResult> EditClassTaken(ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 
                 return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
@@ -256,6 +267,85 @@
             var member = await _db.Members.FindAsync(classTaken.UserId);
 
             return RedirectToAction("Schedule", new { userName = member.UserName, message = "Record updated." });
+        }
+
+        public async Task<ActionResult> Transcript(string userName, ClassMessageId? message)
+        {
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") && WebSecurity.CurrentUserName != userName)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            
+            switch(message)
+            {
+                case ClassMessageId.UpdateTranscriptFailure:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case ClassMessageId.UpdateTranscriptSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
+            var member = await _db.Members.SingleAsync(m => m.UserName == userName);
+            var model = new List<ClassTranscriptModel>();
+            foreach (var c in member.ClassesTaken.OrderByDescending(c => c.Semester.DateStart).ThenBy(c => c.Class.CourseShorthand))
+            {
+                model.Add(new ClassTranscriptModel
+                {
+                    Member = member,
+                    ClassTaken = c,
+                    Grades = base.GetGrades()
+                });
+            }
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Transcript(IList<ClassTranscriptModel> model)
+        {
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") && 
+                !model.Any() && WebSecurity.CurrentUserName != model.First().Member.UserName)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            foreach(var c in model)
+            {
+                var c1 = c;
+                var classTaken = await _db.ClassesTaken
+                    .SingleAsync(t => 
+                        t.ClassId == c1.ClassTaken.ClassId &&
+                        t.SemesterId == c1.ClassTaken.SemesterId &&
+                        t.UserId == c1.ClassTaken.UserId);
+
+                classTaken.MidtermGrade = c.ClassTaken.MidtermGrade;
+                classTaken.FinalGrade = c.ClassTaken.FinalGrade;
+                classTaken.Dropped = c.ClassTaken.Dropped;
+                _db.Entry(classTaken).State = EntityState.Modified;
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Transcript", new
+            {
+                userName = model.First().Member.UserName, 
+                message = ClassMessageId.UpdateTranscriptSuccess
+            });
+        }
+
+        public static dynamic GetResultMessage(ClassMessageId? message)
+        {
+            return message == ClassMessageId.UpdateTranscriptFailure ? "Failed to update transcript for unknown reason, please contact your administrator."
+                : message == ClassMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
+                : "";
+        }
+
+        public enum ClassMessageId
+        {
+            UpdateTranscriptFailure,
+            UpdateTranscriptSuccess
         }
     }
 }

@@ -22,7 +22,10 @@
             }
         </div>
         <div class="col-xs-6 text-right">
-            @Html.ActionLink("New Period", "Create", "Periods", new { area = "Study" }, new { @class = "btn btn-sm btn-success text-right" })
+            @if(User.IsInRole("Administrator") || User.IsInRole("Academics"))
+            {
+                @Html.ActionLink("New Period", "Create", "Periods", new { area = "Study" }, new { @class = "btn btn-sm btn-success text-right" })
+            }
         </div>
     </div>
     <div class="row">

@@ -85,6 +85,7 @@
                 case HoursMessageId.SubmitOverLimitForDayFailure:
                 case HoursMessageId.SubmitDurationRangeFailure:
                 case HoursMessageId.SubmitFutureFailure:
+                case HoursMessageId.InvalidProctorFailure:
                     ViewBag.FailMessage = GetResultMessage(message);
                     break;
                 case HoursMessageId.SubmitSuccess:
@@ -124,6 +125,19 @@
                     id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitUnspecifiedFailure
                 });
+            }
+            if(model.Submission.IsProctored)
+            {
+                var approver = await _db.Members.FindAsync(model.Submission.ApproverId);
+                var approverPreviousSemesterGpa = base.GetSemesterGpa(approver, (await base.GetLastSemesterAsync()));
+                if (approverPreviousSemesterGpa < 3.0)
+                {
+                    return RedirectToAction("Submit", "Hours", new
+                    {
+                        id = model.Submission.AssignmentId,
+                        message = HoursMessageId.InvalidProctorFailure
+                    });
+                }
             }
 
             model.Submission.DateTimeStudied = base.ConvertCstToUtc(model.Submission.DateTimeStudied);
@@ -210,13 +224,14 @@
         
         public static dynamic GetResultMessage(HoursMessageId? message)
         {
-            return message == HoursMessageId.SubmitUnspecifiedFailure ? "hour submission failed for an unknown reason, please contact your administrator"
+            return message == HoursMessageId.SubmitUnspecifiedFailure ? "Study hour submission failed for an unknown reason, please contact your administrator"
                 : message == HoursMessageId.SubmitOutsideDateRangeFailure ? "Study hour submission failed - the date on which you studied did not fall between the dates of the assignment you were given."
                 : message == HoursMessageId.SubmitIncrementFailure ? "Study hour submission failed - the duration must be in increments of 0.5."
                 : message == HoursMessageId.SubmitOverLimitForDayFailure ? "Study hour submission failed - you can only submit up to 6 hours in one day."
                 : message == HoursMessageId.SubmitDurationRangeFailure ? "Study hour submission failed - keep the duration between 0.5 and 6 hours."
                 : message == HoursMessageId.SubmitFutureFailure ? "Study hour submission failed - you can't say that you studied in the future."
                 : message == HoursMessageId.SubmitSuccess ? "Study hours were submitted successfully."
+                : message == HoursMessageId.InvalidProctorFailure ? "The person you chose as an approver for your proctored study hours is not a proctor.  Please choose a valid member as an approver."
                 : "";
         }
 
@@ -229,6 +244,7 @@
             SubmitDurationRangeFailure,
             SubmitFutureFailure,
             SubmitSuccess,
+            InvalidProctorFailure,
         }
         private async void SendStudyHourSubmissionEmail(StudyHour submission)
         {
