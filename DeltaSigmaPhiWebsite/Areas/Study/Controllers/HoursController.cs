@@ -207,41 +207,7 @@
 
             return RedirectToAction("Index");
         }
-
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return HttpNotFound();
-            }
-            var member = await _db.Members.FindAsync(id);
-            if (member == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(member);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Edit(Member model)
-        {
-            var member = await _db.Members.FindAsync(model.UserId);
-            if (member == null)
-            {
-                return HttpNotFound();
-            }
-
-            member.RequiredStudyHours = model.RequiredStudyHours;
-            _db.Entry(member).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Index");
-        }
-
+        
         public static dynamic GetResultMessage(HoursMessageId? message)
         {
             return message == HoursMessageId.SubmitUnspecifiedFailure ? "hour submission failed for an unknown reason, please contact your administrator"
