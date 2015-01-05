@@ -10,7 +10,7 @@
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
-    [Authorize(Roles = "Neophyte, Pledge, Active")]
+    [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
     public class EventsController : BaseController
     {
         public async Task<ActionResult> Index(EventIndexFilterModel model, EventMessageId? message)
