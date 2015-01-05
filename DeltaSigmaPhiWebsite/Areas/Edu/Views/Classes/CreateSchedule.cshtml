@@ -49,16 +49,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for (int i = 0; i < Model.ClassesTaken.Count(); i++)
+                                @for (var i = 0; i < Model.ClassesTaken.Count(); i++)
                                 {
                                     <tr>
                                         <td>
                                             @Html.DropDownListFor(m => Model.ClassesTaken[i].ClassId,
                                                 new SelectList(Model.AllClasses, "ClassId", "CourseShorthand"),
-                                                new { @class = "form-control" })
+                                                new { @class = "form-control", autocomplete = "off" })
                                         </td>
                                         <td>
-                                            @Html.EditorFor(m => Model.ClassesTaken[i].Instructor, new { htmlAttributes = new { @class = "form-control", placeholder = "Instructor (optional)" } })
+                                            @Html.EditorFor(m => Model.ClassesTaken[i].Instructor, new { htmlAttributes = new { @class = "form-control", placeholder = "Instructor (optional)", autocomplete = "off" } })
                                         </td>
                                     </tr>
                                 }

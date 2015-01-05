@@ -23,19 +23,8 @@
             </div>
         </div>
         <div class="row">
+            <!-- LEFT COLUMN -->
             <div class="col-md-5">
-                <button class="btn btn-default btn-lg" data-toggle="modal" data-target="#serviceHourModal" data-placement="top"
-                        title="These are your remaining required service hours for this semester." id="serviceHourModalToggle">
-                    <span class="badge" style="font-weight: normal !important">
-                        @Model.RemainingCommunityServiceHours
-                    </span>
-                    <span>Serve</span>
-                </button>
-
-                <hr />
-
-                @{ Html.RenderAction("Submit", "Hours", new { area = "Service" }); }
-
                 <ul class="nav nav-tabs nav-justified" role="tablist">
                     <li class="active"><a href="#soberschedule" data-toggle="pill">Sober Schedule</a></li>
                     <li><a href="#mysignups" data-toggle="pill">My Sober Schedule</a></li>
@@ -108,7 +97,10 @@
                     </div>
                 </div>
             </div>
+            <!-- RIGHT COLUMN -->
             <div class="col-md-7">
+                
+                <!-- ALERTS -->
                 @if (Model.NeedsToSoberDrive)
                 {
                     <div class="alert alert-warning">
@@ -127,8 +119,16 @@
                         Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
                     </div>
                 }
-                <!-- Service Hours Sections-->
-                <h3>Your Service Hours <small>this semester</small></h3>
+                
+                <!-- SERVICE HOURS -->
+                <h3>
+                    Your Service Hours 
+                    <small>this semester</small>
+                    <small class="pull-right">
+                        @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+                        @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+                    </small>
+                </h3>
                 @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
                 {
                     <p>No service hours submitted</p>
@@ -153,7 +153,9 @@
                         }
                     </table>
                 }
-                @if (Model.MemberStudyHourAssignments.Any())
+
+                <!-- STUDY HOUR ASSIGNMENTS -->
+                @if (Model.StudyHourAssignments.Any())
                 {
                     <h3>Your Study Hour Assignments <small>this semester</small></h3>
                     <table class="table table-condensed">
@@ -165,16 +167,16 @@
                                 <th></th>
                             </tr>
                         </thead>
-                        @foreach (var item in Model.MemberStudyHourAssignments.OrderByDescending(a => a.Assignment.Start))
+                        @foreach (var item in Model.StudyHourAssignments.OrderByDescending(a => a.Period.Start))
                         {
-                            var start = TimeZoneInfo.ConvertTimeFromUtc(item.Assignment.Start, cstZone);
-                            var end = TimeZoneInfo.ConvertTimeFromUtc(item.Assignment.End, cstZone);
+                            var start = TimeZoneInfo.ConvertTimeFromUtc(item.Period.Start, cstZone);
+                            var end = TimeZoneInfo.ConvertTimeFromUtc(item.Period.End, cstZone);
                             var rowColor = "";
-                            if (DateTime.UtcNow >= item.Assignment.Start && DateTime.UtcNow <= item.Assignment.End)
+                            if (DateTime.UtcNow >= item.Period.Start && DateTime.UtcNow <= item.Period.End)
                             {
                                 rowColor = "success";
                             }
-                            else if (DateTime.UtcNow < item.Assignment.Start)
+                            else if (DateTime.UtcNow < item.Period.Start)
                             {
                                 rowColor = "active";
                             }
@@ -186,7 +188,7 @@
 
                             <tr class="@rowColor">
                                 <td>
-                                    @Html.ActionLink(start + " to " + end, "Info", "Assignments", new { id = item.AssignmentId, area = "Study" }, null)
+                                    @Html.ActionLink(start + " to " + end, "Info", "Periods", new { id = item.PeriodId, area = "Study" }, null)
                                 </td>
                                 <td>
                                     @approvedUnproctoredTurnIns/@item.UnproctoredAmount (@unapprovedUnproctoredTurnIns pending)
@@ -195,12 +197,14 @@
                                     @approvedProctoredTurnIns/@item.ProctoredAmount (@unapprovedProctoredTurnIns pending)
                                 </td>
                                 <td>
-                                    @Html.ActionLink("Submit", "Submit", "Hours", new { id = item.MemberStudyHourAssignmentId, area = "Study" }, null)
+                                    @Html.ActionLink("Submit", "Submit", "Hours", new { id = item.StudyAssignmentId, area = "Study" }, null)
                                 </td>
                             </tr>
                         }
                     </table>
                 }
+                
+                <!-- STUDY HOUR APPROVALS -->
                 @if (Model.ApprovalRequests.Any())
                 {
                     <h3>
@@ -227,7 +231,7 @@
                             var studiedOn = TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone);
 
                             <tr>
-                                <td>@item.MemberAssignment.AssignedMember</td>
+                                <td>@item.Assignment.AssignedMember</td>
                                 <td>@studiedOn</td>
                                 <td>@item.DurationHours</td>
                                 <td>
@@ -275,7 +279,6 @@
     <script type="text/javascript">
 
         $(function () {
-            $('#serviceHourModalToggle').tooltip();
             $('[data-toggle="tooltip"]').tooltip();
         });
 

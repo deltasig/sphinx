@@ -52,10 +52,13 @@
             return View(model);
         }
 
-        public ActionResult Submit()
+        public async Task<ActionResult> Submit()
         {
-            var model = new ServiceHourSubmissionModel { Events = GetAllEventIdsAsEventName() };
-            return PartialView(model);
+            var model = new ServiceHourSubmissionModel
+            {
+                Events = await base.GetAllEventIdsAsEventNameAsync()
+            };
+            return View(model);
         }
 
         [HttpPost]

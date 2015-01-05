@@ -40,10 +40,12 @@ namespace DeltaSigmaPhiWebsite.Migrations
                         CumulativeGPA = c.Double(),
                         RemainingBalance = c.Double(),
                         RequiredStudyHours = c.Int(nullable: false),
+                        ProctoredStudyHours = c.Int(),
                         StatusId = c.Int(nullable: false),
                         PledgeClassId = c.Int(nullable: false),
                         ExpectedGraduationId = c.Int(nullable: false),
                         BigBroId = c.Int(),
+                        ShirtSize = c.String(),
                         webpages_Roles_RoleId = c.Int(),
                     })
                 .PrimaryKey(t => t.UserId)
@@ -57,25 +59,6 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 .Index(t => t.ExpectedGraduationId)
                 .Index(t => t.BigBroId)
                 .Index(t => t.webpages_Roles_RoleId);
-            
-            CreateTable(
-                "dbo.StudyHours",
-                c => new
-                    {
-                        StudyHourId = c.Int(nullable: false, identity: true),
-                        SubmittedBy = c.Int(nullable: false),
-                        DateTimeStudied = c.DateTime(nullable: false),
-                        ApproverId = c.Int(),
-                        DurationHours = c.Double(nullable: false),
-                        IsProctored = c.Boolean(nullable: false),
-                        DateTimeSubmitted = c.DateTime(nullable: false),
-                        DateTimeApproved = c.DateTime(),
-                    })
-                .PrimaryKey(t => new { t.StudyHourId, t.SubmittedBy, t.DateTimeStudied })
-                .ForeignKey("dbo.Members", t => t.ApproverId)
-                .ForeignKey("dbo.Members", t => t.SubmittedBy)
-                .Index(t => t.SubmittedBy)
-                .Index(t => t.ApproverId);
             
             CreateTable(
                 "dbo.ClassesTaken",
@@ -103,7 +86,7 @@ namespace DeltaSigmaPhiWebsite.Migrations
                     {
                         ClassId = c.Int(nullable: false, identity: true),
                         DepartmentId = c.Int(nullable: false),
-                        CourseShorthand = c.String(nullable: false, maxLength: 7),
+                        CourseShorthand = c.String(nullable: false, maxLength: 15),
                         CourseName = c.String(nullable: false, maxLength: 100),
                         CreditHours = c.Int(nullable: false),
                     })
@@ -137,8 +120,10 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 c => new
                     {
                         SemesterId = c.Int(nullable: false, identity: true),
-                        DateStart = c.DateTime(nullable: false, storeType: "date"),
-                        DateEnd = c.DateTime(nullable: false, storeType: "date"),
+                        DateStart = c.DateTime(nullable: false),
+                        DateEnd = c.DateTime(nullable: false),
+                        FallTransitionDate = c.DateTime(nullable: false),
+                        MinimumServiceHours = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.SemesterId);
             
@@ -165,9 +150,15 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 c => new
                     {
                         PositionId = c.Int(nullable: false, identity: true),
-                        PositionName = c.String(maxLength: 50),
-                        IsExecutive = c.Boolean(),
-                        IsElected = c.Boolean(),
+                        PositionName = c.String(nullable: false, maxLength: 50),
+                        Description = c.String(maxLength: 100),
+                        Type = c.Int(nullable: false),
+                        IsExecutive = c.Boolean(nullable: false),
+                        IsElected = c.Boolean(nullable: false),
+                        DisplayOrder = c.Int(nullable: false),
+                        IsDisabled = c.Boolean(nullable: false),
+                        IsPublic = c.Boolean(nullable: false),
+                        CanBeRemoved = c.Boolean(nullable: false),
                     })
                 .PrimaryKey(t => t.PositionId);
             
@@ -245,11 +236,11 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 "dbo.LaundrySignup",
                 c => new
                     {
-                        UserId = c.Int(nullable: false),
                         DateTimeShift = c.DateTime(nullable: false),
+                        UserId = c.Int(nullable: false),
                         DateTimeSignedUp = c.DateTime(nullable: false),
                     })
-                .PrimaryKey(t => new { t.UserId, t.DateTimeShift })
+                .PrimaryKey(t => t.DateTimeShift)
                 .ForeignKey("dbo.Members", t => t.UserId)
                 .Index(t => t.UserId);
             
@@ -298,8 +289,12 @@ namespace DeltaSigmaPhiWebsite.Migrations
                         DateTimeOccurred = c.DateTime(nullable: false),
                         EventName = c.String(nullable: false, maxLength: 50),
                         DurationHours = c.Double(nullable: false),
+                        IsApproved = c.Boolean(nullable: false),
+                        SubmitterId = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.EventId);
+                .PrimaryKey(t => t.EventId)
+                .ForeignKey("dbo.Members", t => t.SubmitterId, cascadeDelete: true)
+                .Index(t => t.SubmitterId);
             
             CreateTable(
                 "dbo.SoberSignups",
@@ -308,12 +303,59 @@ namespace DeltaSigmaPhiWebsite.Migrations
                         SignupId = c.Int(nullable: false, identity: true),
                         UserId = c.Int(),
                         Type = c.Int(nullable: false),
-                        DateOfShift = c.DateTime(nullable: false, storeType: "date"),
+                        DateOfShift = c.DateTime(nullable: false),
                         DateTimeSignedUp = c.DateTime(),
                     })
                 .PrimaryKey(t => t.SignupId)
                 .ForeignKey("dbo.Members", t => t.UserId)
                 .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.StudyHours",
+                c => new
+                    {
+                        StudyHourId = c.Int(nullable: false, identity: true),
+                        DateTimeStudied = c.DateTime(nullable: false),
+                        AssignmentId = c.Int(nullable: false),
+                        DurationHours = c.Double(nullable: false),
+                        StudyLocation = c.String(nullable: false, maxLength: 50),
+                        ApproverId = c.Int(nullable: false),
+                        IsProctored = c.Boolean(nullable: false),
+                        DateTimeSubmitted = c.DateTime(nullable: false),
+                        DateTimeApproved = c.DateTime(),
+                    })
+                .PrimaryKey(t => t.StudyHourId)
+                .ForeignKey("dbo.StudyAssignments", t => t.AssignmentId, cascadeDelete: true)
+                .ForeignKey("dbo.Members", t => t.ApproverId)
+                .Index(t => new { t.DateTimeStudied, t.AssignmentId }, unique: true, name: "IX_DateTimeAssignment")
+                .Index(t => t.ApproverId);
+            
+            CreateTable(
+                "dbo.StudyAssignments",
+                c => new
+                    {
+                        StudyAssignmentId = c.Int(nullable: false, identity: true),
+                        AssignedMemberId = c.Int(nullable: false),
+                        PeriodId = c.Int(nullable: false),
+                        UnproctoredAmount = c.Double(nullable: false),
+                        ProctoredAmount = c.Double(nullable: false),
+                        AssignedOn = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.StudyAssignmentId)
+                .ForeignKey("dbo.Members", t => t.AssignedMemberId, cascadeDelete: true)
+                .ForeignKey("dbo.StudyPeriods", t => t.PeriodId, cascadeDelete: true)
+                .Index(t => new { t.AssignedMemberId, t.PeriodId, t.UnproctoredAmount, t.ProctoredAmount }, unique: true, name: "IX_AssignedMemberPeriodAmount");
+            
+            CreateTable(
+                "dbo.StudyPeriods",
+                c => new
+                    {
+                        PeriodId = c.Int(nullable: false, identity: true),
+                        Start = c.DateTime(nullable: false),
+                        End = c.DateTime(nullable: false),
+                    })
+                .PrimaryKey(t => t.PeriodId)
+                .Index(t => new { t.Start, t.End }, unique: true, name: "IX_PeriodDateTime");
             
             CreateTable(
                 "dbo.webpages_Membership",
@@ -425,9 +467,13 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropForeignKey("dbo.MealsCooked", "MealId", "dbo.Meals");
             DropForeignKey("dbo.webpages_OAuthMembership", "UserId", "dbo.Members");
             DropForeignKey("dbo.webpages_Membership", "UserId", "dbo.Members");
-            DropForeignKey("dbo.StudyHours", "SubmittedBy", "dbo.Members");
+            DropForeignKey("dbo.StudyHours", "ApproverId", "dbo.Members");
+            DropForeignKey("dbo.StudyHours", "AssignmentId", "dbo.StudyAssignments");
+            DropForeignKey("dbo.StudyAssignments", "PeriodId", "dbo.StudyPeriods");
+            DropForeignKey("dbo.StudyAssignments", "AssignedMemberId", "dbo.Members");
             DropForeignKey("dbo.SoberSignups", "UserId", "dbo.Members");
             DropForeignKey("dbo.ServiceHours", "UserId", "dbo.Members");
+            DropForeignKey("dbo.Events", "SubmitterId", "dbo.Members");
             DropForeignKey("dbo.ServiceHours", "EventId", "dbo.Events");
             DropForeignKey("dbo.PhoneNumbers", "UserId", "dbo.Members");
             DropForeignKey("dbo.OrganizationsJoined", "UserId", "dbo.Members");
@@ -454,7 +500,6 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropForeignKey("dbo.MemberMajors", "MajorId", "dbo.Majors");
             DropForeignKey("dbo.Classes", "DepartmentId", "dbo.Departments");
             DropForeignKey("dbo.ClassesTaken", "ClassId", "dbo.Classes");
-            DropForeignKey("dbo.StudyHours", "ApproverId", "dbo.Members");
             DropForeignKey("dbo.Addresses", "UserId", "dbo.Members");
             DropIndex("dbo.CommitteeMembers", new[] { "UserId" });
             DropIndex("dbo.CommitteeMembers", new[] { "LeaderId" });
@@ -463,7 +508,12 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropIndex("dbo.MealsCooked", new[] { "MealId" });
             DropIndex("dbo.webpages_OAuthMembership", new[] { "UserId" });
             DropIndex("dbo.webpages_Membership", new[] { "UserId" });
+            DropIndex("dbo.StudyPeriods", "IX_PeriodDateTime");
+            DropIndex("dbo.StudyAssignments", "IX_AssignedMemberPeriodAmount");
+            DropIndex("dbo.StudyHours", new[] { "ApproverId" });
+            DropIndex("dbo.StudyHours", "IX_DateTimeAssignment");
             DropIndex("dbo.SoberSignups", new[] { "UserId" });
+            DropIndex("dbo.Events", new[] { "SubmitterId" });
             DropIndex("dbo.ServiceHours", new[] { "EventId" });
             DropIndex("dbo.ServiceHours", new[] { "UserId" });
             DropIndex("dbo.PhoneNumbers", new[] { "UserId" });
@@ -483,8 +533,6 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropIndex("dbo.ClassesTaken", new[] { "SemesterId" });
             DropIndex("dbo.ClassesTaken", new[] { "ClassId" });
             DropIndex("dbo.ClassesTaken", new[] { "UserId" });
-            DropIndex("dbo.StudyHours", new[] { "ApproverId" });
-            DropIndex("dbo.StudyHours", new[] { "SubmittedBy" });
             DropIndex("dbo.Members", new[] { "webpages_Roles_RoleId" });
             DropIndex("dbo.Members", new[] { "BigBroId" });
             DropIndex("dbo.Members", new[] { "ExpectedGraduationId" });
@@ -499,6 +547,9 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropTable("dbo.Meals");
             DropTable("dbo.webpages_OAuthMembership");
             DropTable("dbo.webpages_Membership");
+            DropTable("dbo.StudyPeriods");
+            DropTable("dbo.StudyAssignments");
+            DropTable("dbo.StudyHours");
             DropTable("dbo.SoberSignups");
             DropTable("dbo.Events");
             DropTable("dbo.ServiceHours");
@@ -517,7 +568,6 @@ namespace DeltaSigmaPhiWebsite.Migrations
             DropTable("dbo.Departments");
             DropTable("dbo.Classes");
             DropTable("dbo.ClassesTaken");
-            DropTable("dbo.StudyHours");
             DropTable("dbo.Members");
             DropTable("dbo.Addresses");
         }

@@ -14,6 +14,7 @@
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class SobersController : BaseController
     {
         public async Task<ActionResult> Schedule(string message)

@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Sphinx.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -10,6 +10,7 @@
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class LaundryController : BaseController
     {
         [HttpGet]

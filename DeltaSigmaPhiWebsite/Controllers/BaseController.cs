@@ -110,6 +110,14 @@
                 return null;
             }
         }
+        protected virtual async Task<Semester> GetSemestersForUtcDateAsync(DateTime date)
+        {
+            return (await _db.Semesters
+                    .Where(s => s.DateEnd >= date)
+                    .OrderBy(s => s.DateStart)
+                    .ToListAsync())
+                    .First();
+        }
         protected virtual async Task<IEnumerable<object>> GetUserIdListAsFullNameWithNoneNonSelectListAsync()
         {
             var members = (await GetAllActivePledgeNeophyteMembersAsync()).OrderBy(o => o.LastName);
@@ -305,31 +313,29 @@
             var remainingHours = requiredHours - totalHours;
             return remainingHours < 0 ? 0 : remainingHours;
         }
-        protected virtual SelectList GetAllEventIdsAsEventName()
-        {
-            // Beginning of today (12:00am of today).
-            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
-            // Beginning of today, one year ago (12:00am of today).
-            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0));
-            yearAgoToday -= new TimeSpan(365, 0, 0, 0);
-            // Only retrieve events occuring within the last year.
-            var events = _db.Events
-                .Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday))
-                .ToList();
-            return new SelectList(events, "EventId", "EventName");
-        }
         protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync()
         {
-            // Beginning of today (12:00am of today).
-            var today = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); 
-            // Beginning of today, one year ago (12:00am of today).
-            var yearAgoToday = DateTimeFloor(DateTime.UtcNow, new TimeSpan(1, 0, 0, 0)); 
-            yearAgoToday -= new TimeSpan(365, 0, 0, 0);
-            // Only retrieve events occuring within the last year.
+            var lastSemester = await GetLastSemesterAsync();
+            var thisSemester = await GetThisSemesterAsync();
+
             var events = await _db.Events
-                .Where(e => (e.DateTimeOccurred <= today && e.DateTimeOccurred >= yearAgoToday))
-                .ToListAsync(); 
-            return new SelectList(events, "EventId", "EventName");
+                .Where(e => 
+                    e.DateTimeOccurred > lastSemester.DateEnd && 
+                    e.DateTimeOccurred >= thisSemester.DateStart)
+                .OrderByDescending(o => o.DateTimeOccurred)
+                .ToListAsync();
+
+            var newList = new List<object>();
+            foreach (var e in events)
+            {
+                newList.Add(new
+                {
+                    e.EventId,
+                    EventName = ConvertUtcToCst(e.DateTimeOccurred) + ": " + e.EventName + " (Lasted " + e.DurationHours + "hrs)"
+                });
+            }
+
+            return new SelectList(newList, "EventId", "EventName");
         }
         protected virtual async Task<IEnumerable<ServiceHour>> GetAllCompletedEventsForUserAsync(int userId)
         {
@@ -360,10 +366,10 @@
         {
             var members = await _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToListAsync();
             // TODO: Refactor this to be more intelligent; requires discussion with academic chairman to decide who can approve.
-            var membersOnStudyHours = (await _db.MemberStudyHourAssignments
+            var membersOnStudyHours = (await _db.StudyAssignments
                 .Where(m =>
-                    m.Assignment.Start >= semester.DateStart &&
-                    m.Assignment.End <= semester.DateEnd)
+                    m.Period.Start >= semester.DateStart &&
+                    m.Period.End <= semester.DateEnd)
                 .ToListAsync())
                 .Select(m => m.AssignedMember.UserId)
                 .Distinct()
@@ -382,42 +388,42 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected virtual async Task<StudyHourAssignment> GetStudyHourAssignmentForUserAsync(int userId)
+        protected virtual async Task<StudyPeriod> GetStudyHourAssignmentForUserAsync(int userId)
         {
             var member = await _db.Members.FindAsync(userId);
 
             return member.StudyHourAssignments
-                .Select(a => a.Assignment)
+                .Select(a => a.Period)
                 .SingleOrDefault(s => 
                     s.Start <= DateTime.UtcNow && 
                     s.End >= DateTime.UtcNow);
         }
-        protected virtual async Task<IEnumerable<MemberStudyHourAssignment>> GetStudyHourAssignmentsForUserAsync(int userId, Semester semester)
+        protected virtual async Task<IEnumerable<StudyAssignment>> GetStudyHourAssignmentsForUserAsync(int userId, Semester semester)
         {
             var member = await _db.Members.FindAsync(userId);
 
             return member.StudyHourAssignments
                 .Where(s =>
-                    s.Assignment.Start >= semester.DateStart &&
-                    s.Assignment.End <= semester.DateEnd)
-                .OrderByDescending(s => s.Assignment.Start);
+                    s.Period.Start >= semester.DateStart &&
+                    s.Period.End <= semester.DateEnd)
+                .OrderByDescending(s => s.Period.Start);
         }
         protected virtual async Task<SelectList> GetStudyHourAssignmentsSelectListForUserAsync(int userId, Semester semester)
         {
             var member = await _db.Members.FindAsync(userId);
             var memberAssignments = member.StudyHourAssignments
                 .Where(s =>
-                    s.Assignment.Start >= semester.DateStart &&
-                    s.Assignment.End <= semester.DateEnd)
-                .OrderByDescending(s => s.Assignment.Start);
+                    s.Period.Start >= semester.DateStart &&
+                    s.Period.End <= semester.DateEnd)
+                .OrderByDescending(s => s.Period.Start);
 
             var newList = new List<object>();
             foreach (var a in memberAssignments)
             {
                 newList.Add(new
                 {
-                    a.MemberStudyHourAssignmentId,
-                    Name = ConvertUtcToCst(a.Assignment.Start) + " to " + ConvertUtcToCst(a.Assignment.End)
+                    MemberStudyHourAssignmentId = a.StudyAssignmentId,
+                    Name = ConvertUtcToCst(a.Period.Start) + " to " + ConvertUtcToCst(a.Period.End)
                 });
             }
 

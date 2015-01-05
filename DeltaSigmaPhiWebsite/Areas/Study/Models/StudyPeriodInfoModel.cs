@@ -4,10 +4,10 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
 
-    public class StudyHourAssignmentInfoModel
+    public class StudyPeriodInfoModel
     {
-        public StudyHourAssignment Assignment { get; set; }
-        public MemberStudyHourAssignment MemberAssignment { get; set; }
+        public StudyPeriod Period { get; set; }
+        public StudyAssignment Assignment { get; set; }
         public int[] SelectedMemberIds { get; set; }
         public IEnumerable<SelectListItem> Members { get; set; }
     }

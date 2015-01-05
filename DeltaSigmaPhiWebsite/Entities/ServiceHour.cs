@@ -19,9 +19,12 @@ namespace DeltaSigmaPhiWebsite.Entities
         public double DurationHours { get; set; }
 
         public DateTime DateTimeSubmitted { get; set; }
+        
 
-        public virtual Event Event { get; set; }
-
+        [ForeignKey("UserId")]
         public virtual Member Member { get; set; }
+
+        [ForeignKey("EventId")]
+        public virtual Event Event { get; set; }
     }
 }

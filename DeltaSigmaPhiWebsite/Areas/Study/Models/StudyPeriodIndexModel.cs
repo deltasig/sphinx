@@ -4,9 +4,9 @@
     using System.Web.Mvc;
     using Entities;
 
-    public class StudyHourIndexModel
+    public class StudyPeriodIndexModel
     {
-        public IEnumerable<StudyHourAssignment> StudyHourAssignments { get; set; }
+        public IEnumerable<StudyPeriod> Periods { get; set; }
 
         public int? SelectedSemester { get; set; }
         public IEnumerable<SelectListItem> SemesterList { get; set; }

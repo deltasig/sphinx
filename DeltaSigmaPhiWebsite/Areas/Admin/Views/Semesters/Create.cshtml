@@ -39,7 +39,7 @@
                     
                     <div class="form-group">
                         @Html.LabelFor(model => model.Semester.MinimumServiceHours, htmlAttributes: new { @class = "control-label" })
-                        @Html.EditorFor(model => model.Semester.MinimumServiceHours, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.EditorFor(model => model.Semester.MinimumServiceHours, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                         @Html.ValidationMessageFor(model => model.Semester.MinimumServiceHours, "", new { @class = "text-danger" })
                     </div>
 

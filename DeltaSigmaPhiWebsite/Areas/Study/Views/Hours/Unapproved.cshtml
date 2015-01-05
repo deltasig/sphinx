@@ -26,16 +26,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.OrderByDescending(d => d.DateTimeSubmitted).ThenBy(s => s.MemberAssignment.AssignedMember.ToString()))
+                            @foreach (var item in Model.OrderByDescending(d => d.DateTimeSubmitted).ThenBy(s => s.Assignment.AssignedMember.ToString()))
                             {
                                 <tr>
-                                    <td>@item.MemberAssignment.AssignedMember.ToString()</td>
+                                    <td>@item.Assignment.AssignedMember.ToString()</td>
                                     <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone).ToShortDateString()</td>
                                     <td>@item.DurationHours</td>
                                     <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeSubmitted, cstZone)</td>
                                     <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
                                     <td>
-                                        @if (User.Identity.Name != item.MemberAssignment.AssignedMember.UserName)
+                                        @if (User.Identity.Name != item.Assignment.AssignedMember.UserName)
                                         {
                                             using (Html.BeginForm("Approve", "StudyHours", new { id = item.StudyHourId }, FormMethod.Post))
                                             {

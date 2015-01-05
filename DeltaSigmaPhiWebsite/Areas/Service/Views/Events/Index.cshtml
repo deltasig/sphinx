@@ -22,13 +22,13 @@
                 </div>
             }
         </div>
+        <div class="col-xs-6 text-right">
+            @Html.ActionLink("Create New", "Create", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success text-right" })
+        </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    @Html.ActionLink("Create New", "Create")
-                </div>
                 <div class="panel-body">
                     <table class="table table-condensed" id="events-table">
                         <thead>
@@ -37,7 +37,11 @@
                                 <th>Date/Time</th>
                                 <th>Event Name</th>
                                 <th>Duration (Hrs)</th>
-                                <th></th>
+                                <th>Approved</th>
+                                @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
+                                {
+                                    <th></th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -48,10 +52,18 @@
                                     <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("yyyy-MM-dd hh:mm tt")</td>
                                     <td>@item.EventName</td>
                                     <td>@item.DurationHours</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
-                                    </td>
+                                    <td>@Html.DisplayFor(m => item.IsApproved)</td>
+                                    @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
+                                    {
+                                        <td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.EventId })
+                                            @if (!item.ServiceHours.Any())
+                                            {
+                                                @:|
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
+                                            }
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>

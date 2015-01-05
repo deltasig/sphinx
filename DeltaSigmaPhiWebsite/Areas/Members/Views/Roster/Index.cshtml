@@ -60,8 +60,12 @@
                 <div class="panel-body">
                     <a class="" href="@Url.Action("Download", "Roster", new { area = "Members" })">
                         <i class="fa fa-download fa-lg"></i>
-                    </a> |
-                    @Html.ActionLink("Initiate Pledges", "InitiatePledges")
+                    </a>
+                    @if(User.IsInRole("Secretary") || User.IsInRole("Administrator"))
+                    {
+                        @:|
+                        @Html.ActionLink("Initiate Pledges", "InitiatePledges")
+                    }
                     <table class="table table-condensed" id="roster-table">
                         <thead>
                             <tr>
@@ -100,7 +104,7 @@
                                         <td>@item.RoomString()</td>
                                         <td>@item.ShirtSize</td>
                                         <td>
-                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName }, null) |
+                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
                                             {
                                                 @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName, area = "Members" }, null) @:|
