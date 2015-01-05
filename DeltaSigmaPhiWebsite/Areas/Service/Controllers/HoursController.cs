@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -21,33 +21,45 @@
                 model.SelectedSemester = await GetThisSemestersIdAsync();
             }
 
-            var activeMembers = await GetAllActivePledgeNeophyteMembersAsync();
-
-            model.SemesterList = await GetSemesterListAsync();
-            model.ServiceHours = new List<ServiceHourIndexModel>();
-            var thisSemester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
             var previousSemester = (await _db.Semesters
-                .Where(s => s.DateEnd < thisSemester.DateStart)
-                .OrderBy(s => s.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
+                .Where(s => s.DateEnd < semester.DateStart)
+                .OrderBy(s => s.DateEnd)
+                .ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
-                    DateEnd = thisSemester.DateStart
+                    DateEnd = semester.DateStart
                 };
 
-            foreach (var m in activeMembers)
+            model.ServiceHours = new List<ServiceHourIndexModel>();
+            var members = await _db.Members
+                .Where(d =>
+                    d.LastName != "Hirtz"  &&
+                    (d.MemberStatus.StatusName == "Alumnus" || 
+                        d.MemberStatus.StatusName == "Active" || 
+                        d.MemberStatus.StatusName == "Pledge" || 
+                        d.MemberStatus.StatusName == "Neophyte") &&
+                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
+                    d.GraduationSemester.DateEnd >= semester.DateEnd)
+                .ToListAsync();
+
+            foreach (var m in members)
             {
                 var member = new ServiceHourIndexModel
                 {
                     Member = m,
                     Hours = m.ServiceHours
-                        .Where(e => e.Event.DateTimeOccurred > previousSemester.DateEnd && 
-                                    e.DateTimeSubmitted <= thisSemester.DateEnd)
+                        .Where(e => 
+                            e.Event.DateTimeOccurred > previousSemester.DateEnd && 
+                            e.DateTimeSubmitted <= semester.DateEnd)
                         .Sum(h => h.DurationHours),
-                    Semester = thisSemester
+                    Semester = semester
                 };
 
                 model.ServiceHours.Add(member);
             }
+
+            model.SemesterList = await GetSemesterListAsync();
 
             return View(model);
         }

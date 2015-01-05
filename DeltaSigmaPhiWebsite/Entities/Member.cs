@@ -71,7 +71,7 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual PledgeClass PledgeClass { get; set; }
 
-        public virtual Semester Semester { get; set; }
+        public virtual Semester GraduationSemester { get; set; }
 
         public virtual webpages_Membership webpages_Membership { get; set; }
 
