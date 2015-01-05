@@ -141,7 +141,7 @@
                     m.MemberStatus.StatusName,
                     m.PledgeClass.PledgeClassName,
                     m.Pin,
-                    m.Semester.ToString(),
+                    m.GraduationSemester.ToString(),
                     m.Room.ToString(),
                     m.BigBrother == null ? "None" : m.BigBrother.FirstName + " " + m.BigBrother.LastName,
                     m.ShirtSize);

@@ -192,7 +192,7 @@ namespace DeltaSigmaPhiWebsite.Entities
 
             modelBuilder.Entity<Semester>()
                 .HasMany(e => e.Members)
-                .WithRequired(e => e.Semester)
+                .WithRequired(e => e.GraduationSemester)
                 .HasForeignKey(e => e.ExpectedGraduationId);
 
             modelBuilder.Entity<Semester>()
