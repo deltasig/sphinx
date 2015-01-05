@@ -123,7 +123,24 @@
                 <!-- SERVICE HOURS -->
                 <h3>
                     Your Service Hours 
-                    <small>this semester</small>
+                    <small>
+                        @{
+                            var labelColor = "label-default";
+                            var approvedHours = 0.0;
+                            if (Model.CompletedEvents.Any())
+                            {
+                                approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
+                                if (approvedHours > Model.CurrentSemester.MinimumServiceHours)
+                                {
+                                    labelColor = "label-success";
+                                }
+                            }
+                        }
+                        @Model.CurrentSemester
+                        <span class="label @labelColor label-as-badge" style="font-weight: normal !important">
+                            @approvedHours / @Model.CurrentSemester.MinimumServiceHours
+                        </span>
+                    </small>
                     <small class="pull-right">
                         @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
                         @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
@@ -131,7 +148,7 @@
                 </h3>
                 @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
                 {
-                    <p>No service hours submitted</p>
+                    <p class="text-danger">No service hours submitted</p>
                 }
                 else
                 {
@@ -141,6 +158,13 @@
                                 <th>Event</th>
                                 <th>Date</th>
                                 <th>Hours</th>
+                                <th>
+                                    Approved
+                                    <a data-toggle="tooltip" data-placement="top"
+                                       title="Hours submitted for events not yet approved by the Service Chairman don't count towards your semester requirement.">
+                                        <i class="fa fa-info-circle"></i>
+                                    </a>
+                                </th>
                             </tr>
                         </thead>
                         @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
@@ -149,6 +173,7 @@
                                 <td>@item.Event.EventName</td>
                                 <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
                                 <td>@item.DurationHours</td>
+                                <td>@Html.DisplayFor(modelItem => item.Event.IsApproved)</td>
                             </tr>
                         }
                     </table>
@@ -157,6 +182,7 @@
                 <!-- STUDY HOUR ASSIGNMENTS -->
                 @if (Model.StudyHourAssignments.Any())
                 {
+                    <hr />
                     <h3>Your Study Hour Assignments <small>this semester</small></h3>
                     <table class="table table-condensed">
                         <thead>
