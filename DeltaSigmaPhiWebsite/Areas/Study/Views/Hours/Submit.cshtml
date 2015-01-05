@@ -34,7 +34,7 @@
                 
                 <div class="form-group">
                     @Html.Label("Duration (Hours)")
-                    @Html.EditorFor(m => m.Submission.DurationHours, new { @class = "form-control", autocomplete = "off" })
+                    @Html.TextBoxFor(m => m.Submission.DurationHours, new { @class = "form-control", autocomplete = "off" })
                     @Html.ValidationMessageFor(m => m.Submission.DurationHours, "", new { @class = "text-danger" })
                 </div>
                 
@@ -52,6 +52,19 @@
                 <input type="submit" value="Create" class="btn btn-default" /> @:|
                 @Html.ActionLink("Back to Sphinx", "Index", "Home", new { area = "Sphinx" }, null)
             }
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <h3>Tips</h3>
+            <div class="panel panel-warning">
+                <div class="panel-heading">Submitting Hours</div>
+                <div class="panel-body">
+                    If you are submitting proctored study hours, make sure you check the box. <br /><br />
+                    Also, keep in mind that proctored hours must be approved by someone designated as a proctor.
+                    Proctors will appear in the Approver drop-down list with '(Proctor)' next to their name. <br /><br />
+                    If the person you want to approve your study hours doesn't appear in the drop-down, that's because they (1)
+                    have not entered their grades for last semester into the system and/or (2) did not make above a 2.5 gpa.
+                </div>
+            </div>
         </div>
     </div>
 </div>

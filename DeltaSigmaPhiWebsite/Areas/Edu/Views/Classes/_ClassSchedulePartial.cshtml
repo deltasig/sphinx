@@ -4,19 +4,19 @@
     <div class="panel-heading">
         @if(Model.Any())
         {
-            @: Classes
-            if(Model.Select(m => m.Member.ToString()).Distinct().Count() == 1)
-            {
-                @: for @Model.First().Member.ToString()
-            }
-            if (Model.Select(m => m.SemesterId).Distinct().Count() == 1)
-            {
-                @: | @Model.First().Semester.ToString()
-            }
-            if (!ViewContext.RouteData.Values.ContainsValue("Classes"))
-            {
-                @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.First().Member.UserName }, new { @class = "pull-right" })
-            }
+            <div class="row">
+                <div class="col-xs-6">
+                    Classes
+                    @if (Model.Select(m => m.SemesterId).Distinct().Count() == 1)
+                    {
+                        @: | @Model.First().Semester.ToString()
+                    }
+                </div>
+                <div class="col-xs-6 text-right">
+                    @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.First().Member.UserName, area = "Edu" }, new { @class = "" }) | 
+                    @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.First().Member.UserName, area = "Edu" }, new { @class = "" })
+                </div>
+            </div>
         }
         else
         {

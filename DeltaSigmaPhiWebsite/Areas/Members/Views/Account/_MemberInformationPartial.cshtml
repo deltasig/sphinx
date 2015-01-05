@@ -1,13 +1,21 @@
 ﻿@model DeltaSigmaPhiWebsite.Entities.Member
 
 <div class="panel panel-default">
-    <div class="panel-heading">Information</div>
+    <div class="panel-heading">
+        Information
+        @if (User.IsInRole("Administrator") || User.IsInRole("Academics") ||
+             User.IsInRole("House Manager") || User.IsInRole("Secretary") ||
+             User.Identity.Name == Model.UserName)
+        {
+            @Html.ActionLink("Edit", "Edit", "Account", new { userName = Model.UserName }, new { @class = "pull-right" })
+        }
+    </div>
     <div class="panel-body">
         <table class="table table-condensed">
             <thead>
                 <tr>
                     <td colspan="2">
-                        <h2 class="media-heading">@Model.ToString()</h2>
+                        <h4 class="media-heading">@Model.ToString()</h4>
                     </td>
                 </tr>
             </thead>
