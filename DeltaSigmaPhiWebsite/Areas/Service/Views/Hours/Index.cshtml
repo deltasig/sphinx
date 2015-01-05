@@ -24,7 +24,7 @@
     var activesFifteenPercentage = (int)(100 * (activesServedFifteen / (double)(actives.Count == 0 ? 1 : actives.Count)));
     var totalActiveHours = actives.Sum(m => m.Hours);
     var averageActiveHours = (totalActiveHours / (actives.Count == 0 ? 1 : actives.Count)).ToString("F1");
-    
+
     var pledgesServed = pledges.Count(m => m.Hours > 0);
     var pledgesServedPercentage = (int)(100 * (pledgesServed / (double)(pledges.Count == 0 ? 1 : pledges.Count)));
     var pledgesServedTen = pledges.Count(m => m.Hours >= 10);
@@ -48,13 +48,13 @@
                     @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
 
                     <input type="submit" value="Filter" class="btn btn-default" />
-                    <br/><br />
+                    <br /><br />
                 </div>
             }
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Quick Stats
@@ -102,19 +102,20 @@
                     </tbody>
                 </table>
                 <div class="panel-footer">
-                    <strong>Note: </strong> These numbers are pulled from all current actives, pledges, and neophytes. 
+                    <strong>Note: </strong> These numbers are pulled from all current actives, pledges, and neophytes.
                     Sober driving is not counted towards community service hours.
                 </div>
             </div>
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-md-offset-2">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    @if(Model.ServiceHours.Any())
+                    @if (Model.ServiceHours.Any())
                     {
                         @: Showing Service Hours for @Model.ServiceHours.First().Semester
-                    }
-                    else
-                    {
-                        
                     }
                 </div>
                 <div class="panel-body">
@@ -126,35 +127,54 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.ServiceHours)
+                            @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
                             {
                                 <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Hours</td>
+                                    <td>
+                                        <strong>@item.Member.LastName, @item.Member.FirstName</strong>
+                                    </td>
+                                    <td>
+                                        <strong>@item.Hours</strong>
+
+                                        <button class="btn btn-xs pull-right" type="button" data-toggle="collapse" data-target=".@item.Member.UserId"
+                                                aria-expanded="false" aria-controls="@item.Member.UserId">
+                                            Details
+                                        </button>
+                                    </td>
                                 </tr>
+                                foreach (var s in item.ServiceHours)
+                                {
+                                    <tr class="collapse @item.Member.UserId">
+                                        <td style="border: none">@s.Event.EventName</td>
+                                        <td style="border: none">
+                                            @s.DurationHours
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                                            {
+                                                <div class="pull-right text-right">
+                                                    @Html.ActionLink("Edit", "Edit", new { eid = s.EventId, uid = s.UserId }) |
+                                                    @Html.ActionLink("Delete", "Delete", new { eid = s.EventId, uid = s.UserId })
+                                                </div>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
                             }
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                            </table>
+                        </div>
                 <div class="panel-footer">
                     <strong>Note: </strong> The hours being reported here consist of hours served at events that occured after the end of the previous semester
                     and before the end of the current semester.
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
 @section scripts
 {
     <script type="text/javascript">
-        $('#service-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
     </script>
 }

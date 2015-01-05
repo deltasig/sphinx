@@ -37,6 +37,7 @@
                                 <th>Date/Time</th>
                                 <th>Event Name</th>
                                 <th>Duration (Hrs)</th>
+                                <th>Members</th>
                                 <th>Approved</th>
                                 @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                 {
@@ -52,6 +53,20 @@
                                     <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("yyyy-MM-dd hh:mm tt")</td>
                                     <td>@item.EventName</td>
                                     <td>@item.DurationHours</td>
+                                    <td>
+                                        @item.ServiceHours.Count
+                                        @{
+                                            var servers = "";
+                                            foreach(var s in item.ServiceHours)
+                                            {
+                                                servers += s.Member.FirstName + " " + s.Member.LastName + " (" + s.DurationHours + " hrs) <br/>";
+                                            }
+                                        }
+                                        <a href="#" tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
+                                           title="Members who served at this event" data-content="@servers">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </td>
                                     <td>@Html.DisplayFor(m => item.IsApproved)</td>
                                     @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                     {
@@ -85,5 +100,7 @@
 
         $('div.dataTables_filter input').addClass('form-control');
         $('div.dataTables_filter input').attr('placeholder', 'Search');
+        
+        $('[data-toggle="popover"]').popover();
     </script>
 }
