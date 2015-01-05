@@ -51,7 +51,8 @@
                     Hours = m.ServiceHours
                         .Where(e => 
                             e.Event.DateTimeOccurred > previousSemester.DateEnd && 
-                            e.DateTimeSubmitted <= semester.DateEnd)
+                            e.DateTimeSubmitted <= semester.DateEnd &&
+                            e.Event.IsApproved)
                         .Sum(h => h.DurationHours),
                     Semester = semester
                 };
