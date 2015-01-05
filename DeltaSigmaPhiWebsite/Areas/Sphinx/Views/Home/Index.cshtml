@@ -183,7 +183,7 @@
                 @if (Model.StudyHourAssignments.Any())
                 {
                     <hr />
-                    <h3>Your Study Hour Assignments <small>this semester</small></h3>
+                    <h3>Your Study Hour Assignments <small>@Model.CurrentSemester</small></h3>
                     <table class="table table-condensed">
                         <thead>
                             <tr>
