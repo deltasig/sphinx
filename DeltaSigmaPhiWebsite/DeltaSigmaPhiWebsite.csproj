@@ -297,8 +297,9 @@
     <Compile Include="Areas\Sphinx\Controllers\SobersController.cs" />
     <Compile Include="Areas\Sphinx\Models\EditSoberSignupModel.cs" />
     <Compile Include="Areas\Sphinx\SphinxAreaRegistration.cs" />
+    <Compile Include="Areas\Study\Controllers\PeriodsController.cs" />
     <Compile Include="Areas\Study\Controllers\AssignmentsController.cs" />
-    <Compile Include="Areas\Study\Models\StudyHourIndexModel.cs" />
+    <Compile Include="Areas\Study\Models\StudyPeriodIndexModel.cs" />
     <Compile Include="Areas\Study\Models\StudyHourSubmissionModel.cs" />
     <Compile Include="Areas\Study\StudyAreaRegistration.cs" />
     <Compile Include="Areas\Members\Controllers\AccountController.cs" />
@@ -315,33 +316,11 @@
     <Compile Include="Areas\Study\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="DspRoleProvider.cs" />
-    <Compile Include="Migrations\201408190209458_Initial.cs" />
-    <Compile Include="Migrations\201408190209458_Initial.Designer.cs">
-      <DependentUpon>201408190209458_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201411130333159_laundry primary key.cs" />
-    <Compile Include="Migrations\201411130333159_laundry primary key.Designer.cs">
-      <DependentUpon>201411130333159_laundry primary key.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201411130334547_ShirtSize.cs" />
-    <Compile Include="Migrations\201411130334547_ShirtSize.Designer.cs">
-      <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201412120410549_PositionUpdate.cs" />
-    <Compile Include="Migrations\201412120410549_PositionUpdate.Designer.cs">
-      <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201412140013530_FallTransitionDate.cs" />
-    <Compile Include="Migrations\201412140013530_FallTransitionDate.Designer.cs">
-      <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501030408147_StudyHourRefactorization.cs" />
-    <Compile Include="Migrations\201501030408147_StudyHourRefactorization.Designer.cs">
-      <DependentUpon>201501030408147_StudyHourRefactorization.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201501032358240_SemesterRemoveStudyHoursAddService.cs" />
-    <Compile Include="Migrations\201501032358240_SemesterRemoveStudyHoursAddService.Designer.cs">
-      <DependentUpon>201501032358240_SemesterRemoveStudyHoursAddService.cs</DependentUpon>
+    <Compile Include="Entities\StudyAssignment.cs" />
+    <Compile Include="Entities\StudyPeriod.cs" />
+    <Compile Include="Migrations\201501041342053_Initial.cs" />
+    <Compile Include="Migrations\201501041342053_Initial.Designer.cs">
+      <DependentUpon>201501041342053_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -381,7 +360,7 @@
     <Compile Include="Entities\webpages_Membership.cs" />
     <Compile Include="Entities\webpages_OAuthMembership.cs" />
     <Compile Include="Entities\webpages_Roles.cs" />
-    <Compile Include="Areas\Study\Models\StudyHourAssignmentInfoModel.cs" />
+    <Compile Include="Areas\Study\Models\StudyPeriodInfoModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Areas\Service\Controllers\EventsController.cs" />
   </ItemGroup>
@@ -644,7 +623,7 @@
     <Content Include="Areas\Members\Views\Incidents\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Index.cshtml" />
     <Content Include="Areas\Study\Views\Hours\Unapproved.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\Index.cshtml" />
+    <Content Include="Areas\Study\Views\Periods\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\CreateSchedule.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Schedule.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\_ClassSchedulePartial.cshtml" />
@@ -658,12 +637,12 @@
     <Content Include="Areas\Admin\Views\Positions\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Index.cshtml" />
     <Content Include="Areas\Alumni\Views\Leaders\Index.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\Create.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\Edit.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\Delete.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\Info.cshtml" />
+    <Content Include="Areas\Study\Views\Periods\Create.cshtml" />
+    <Content Include="Areas\Study\Views\Periods\Edit.cshtml" />
+    <Content Include="Areas\Study\Views\Periods\Delete.cshtml" />
+    <Content Include="Areas\Study\Views\Periods\Info.cshtml" />
     <Content Include="Areas\Study\Views\Assignments\Unassign.cshtml" />
-    <Content Include="Areas\Study\Views\Assignments\EditMemberAssignment.cshtml" />
+    <Content Include="Areas\Study\Views\Assignments\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -683,26 +662,8 @@
     <Folder Include="Areas\Study\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201408190209458_Initial.resx">
-      <DependentUpon>201408190209458_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201411130333159_laundry primary key.resx">
-      <DependentUpon>201411130333159_laundry primary key.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201411130334547_ShirtSize.resx">
-      <DependentUpon>201411130334547_ShirtSize.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412120410549_PositionUpdate.resx">
-      <DependentUpon>201412120410549_PositionUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201412140013530_FallTransitionDate.resx">
-      <DependentUpon>201412140013530_FallTransitionDate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501030408147_StudyHourRefactorization.resx">
-      <DependentUpon>201501030408147_StudyHourRefactorization.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201501032358240_SemesterRemoveStudyHoursAddService.resx">
-      <DependentUpon>201501032358240_SemesterRemoveStudyHoursAddService.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201501041342053_Initial.resx">
+      <DependentUpon>201501041342053_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -14,7 +14,7 @@
         public IEnumerable<string> Roles { get; set; }
         public IEnumerable<ServiceHour> CompletedEvents { get; set; }
         public IEnumerable<SoberSignup> SoberSignups { get; set; }
-        public IEnumerable<MemberStudyHourAssignment> MemberStudyHourAssignments { get; set; }
+        public IEnumerable<StudyAssignment> StudyHourAssignments { get; set; }
         public IEnumerable<StudyHour> ApprovalRequests { get; set; }
     }
 

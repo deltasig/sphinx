@@ -30,7 +30,7 @@
             }
 
             var model = new List<StudyHour>();
-            var allMemberAssignments = await _db.MemberStudyHourAssignments.ToListAsync();
+            var allMemberAssignments = await _db.StudyAssignments.ToListAsync();
             foreach (var m in allMemberAssignments)
             {
                 model.AddRange(m.TurnIns.Where(s => s.DateTimeApproved == null));
@@ -59,14 +59,14 @@
             return RedirectToAction("Index", "Home", new
             {
                 area = "Sphinx", 
-                message = "You successfully approved " + studyHour.MemberAssignment.AssignedMember + "'s study hours!"
+                message = "You successfully approved " + studyHour.Assignment.AssignedMember + "'s study hours!"
             });
         }
 
         public async Task<ActionResult> Submit(int? id, HoursMessageId? message)
         {
 
-            var memberAssignment = await _db.MemberStudyHourAssignments.FindAsync(id);
+            var memberAssignment = await _db.StudyAssignments.FindAsync(id);
             if (memberAssignment == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -107,7 +107,7 @@
 
             if(id != null)
             {
-                model.SelectedMemberAssignmentId = (int)id;
+                model.Submission.AssignmentId = (int)id;
             }
 
             return View(model);
@@ -121,19 +121,19 @@
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitUnspecifiedFailure
                 });
             }
 
             model.Submission.DateTimeStudied = base.ConvertCstToUtc(model.Submission.DateTimeStudied);
             #region Submission Validation
-            var memberAssignment = await _db.MemberStudyHourAssignments.FindAsync(model.Submission.AssignmentId);
-            if (model.Submission.DateTimeStudied < memberAssignment.Assignment.Start || model.Submission.DateTimeStudied > memberAssignment.Assignment.End)
+            var memberAssignment = await _db.StudyAssignments.FindAsync(model.Submission.AssignmentId);
+            if (model.Submission.DateTimeStudied < memberAssignment.Period.Start || model.Submission.DateTimeStudied > memberAssignment.Period.End)
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitOutsideDateRangeFailure
                 });
             }
@@ -141,7 +141,7 @@
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitDurationRangeFailure
                 });
             }
@@ -149,7 +149,7 @@
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitIncrementFailure
                 });
             }
@@ -158,7 +158,7 @@
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitOverLimitForDayFailure
                 });
             }
@@ -166,7 +166,7 @@
             {
                 return RedirectToAction("Submit", "Hours", new
                 {
-                    id = model.SelectedMemberAssignmentId,
+                    id = model.Submission.AssignmentId,
                     message = HoursMessageId.SubmitFutureFailure
                 });
             }
@@ -175,7 +175,7 @@
             _db.StudyHours.Add(model.Submission);
             await _db.SaveChangesAsync();
 
-            var submission = await _db.StudyHours
+            var submission = await _db.StudyHours.Include(s => s.Approver)
                 .SingleAsync(s => 
                     s.AssignmentId == model.Submission.AssignmentId && 
                     s.DateTimeStudied == model.Submission.DateTimeStudied &&
@@ -266,8 +266,8 @@
         }
         private async void SendStudyHourSubmissionEmail(StudyHour submission)
         {
-            var subject = "(Sphinx) Study Hour Approval Request: " + submission.MemberAssignment.AssignedMember + ", " + submission.DateTimeStudied;
-            var body = submission.MemberAssignment.AssignedMember + " has requested that you approve his study hours (" + 
+            var subject = "(Sphinx) Study Hour Approval Request: " + submission.Assignment.AssignedMember + ", " + submission.DateTimeStudied;
+            var body = submission.Assignment.AssignedMember + " has requested that you approve his study hours (" + 
                 submission.DurationHours + " hours).  " + "To approve them, ";
             body += @"<a href=""https://www.deltasig-de.org/study/hours/approve/" + submission.StudyHourId + @""">click here</a>.";
 

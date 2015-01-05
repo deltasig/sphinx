@@ -8,9 +8,7 @@
     {
         public StudyHour Submission { get; set; }
 
-        public int SelectedMemberAssignmentId { get; set; }
         public IEnumerable<SelectListItem> MemberAssignments { get; set; }
-        public int SelectedApproverId { get; set; }
         public IEnumerable<SelectListItem> Approvers { get; set; }
     }
 }

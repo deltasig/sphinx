@@ -2,7 +2,7 @@
 {
     using App_Start;
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using Microsoft.AspNet.Identity;
     using Microsoft.Web.WebPages.OAuth;
     using Models;
@@ -15,7 +15,7 @@
     using System.Web.Security;
     using WebMatrix.WebData;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize]
     public class AccountController : BaseController
     {
         [HttpGet]

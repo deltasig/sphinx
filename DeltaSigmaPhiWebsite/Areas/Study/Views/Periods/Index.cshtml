@@ -1,7 +1,7 @@
-﻿@model DeltaSigmaPhiWebsite.Areas.Study.Models.StudyHourIndexModel
+﻿@model DeltaSigmaPhiWebsite.Areas.Study.Models.StudyPeriodIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Study Hour Assignments";
+    ViewBag.Title = "Study Periods";
 }
 @section Title
 {
@@ -11,7 +11,7 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            @using (Html.BeginForm("Index", "Assignments", new { area = "Study" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
+            @using (Html.BeginForm("Index", "Periods", new { area = "Study" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
             {
                 <div class="form-group">
                     @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
@@ -22,7 +22,7 @@
             }
         </div>
         <div class="col-xs-6 text-right">
-            @Html.ActionLink("Create Assignment", "Create", "Assignments", new { area = "Study" }, new { @class = "btn btn-sm btn-success text-right" })
+            @Html.ActionLink("New Period", "Create", "Periods", new { area = "Study" }, new { @class = "btn btn-sm btn-success text-right" })
         </div>
     </div>
     <div class="row">
@@ -39,21 +39,21 @@
                         </thead>
 
                         <tbody>
-                            @foreach (var item in Model.StudyHourAssignments)
+                            @foreach (var item in Model.Periods)
                             {
                                 <tr>
                                     <td>
-                                        @Html.ActionLink(item.Start + " to " + item.End, "Info", "Assignments", new { id = item.StudyHourAssignmentId, area = "Study" }, null)
+                                        @Html.ActionLink(item.Start + " to " + item.End, "Info", "Periods", new { id = item.PeriodId, area = "Study" }, null)
                                     </td>
-                                    <td>@item.MembersAssigned.Count</td>
+                                    <td>@item.Assignments.Count</td>
                                     <td>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                         {
-                                            @Html.ActionLink("Edit", "Edit", "Assignments", new { id = item.StudyHourAssignmentId, area = "Study" }, null)
-                                            if (!item.MembersAssigned.Any())
+                                            @Html.ActionLink("Edit", "Edit", "Periods", new { id = item.PeriodId, area = "Study" }, null)
+                                            if (!item.Assignments.Any())
                                             {
                                                 @:|
-                                                @Html.ActionLink("Delete", "Delete", "Assignments", new { id = item.StudyHourAssignmentId, area = "Study" }, null)
+                                                @Html.ActionLink("Delete", "Delete", "Periods", new { id = item.PeriodId, area = "Study" }, null)
                                             }
                                         }
                                     </td>
