@@ -53,7 +53,7 @@
                 MemberInfo = member,
                 Roles = Roles.GetRolesForUser(member.UserName),
                 RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(userId),
-                MemberStudyHourAssignments = await GetStudyHourAssignmentsForUserAsync(userId, thisSemester),
+                StudyHourAssignments = await GetStudyHourAssignmentsForUserAsync(userId, thisSemester),
                 CompletedEvents = events,
                 SoberSignups = soberSignups,
                 LaundrySummary = laundrySignups.Take(laundryTake),

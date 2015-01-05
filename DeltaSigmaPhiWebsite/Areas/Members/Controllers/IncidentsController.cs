@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Members.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using System;
     using System.Data.Entity;
     using System.Net;

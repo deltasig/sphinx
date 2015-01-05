@@ -5,25 +5,6 @@ namespace DeltaSigmaPhiWebsite.Entities
 
     public partial class Member
     {
-        public Member()
-        {
-            Addresses = new HashSet<Address>();
-            ClassesTaken = new HashSet<ClassTaken>();
-            IncidentReports = new HashSet<IncidentReport>();
-            LaundrySignups = new HashSet<LaundrySignup>();
-            Leaders = new HashSet<Leader>();
-            LittleBrothers = new HashSet<Member>();
-            OrganizationsJoined = new HashSet<OrganizationsJoined>();
-            PhoneNumbers = new HashSet<PhoneNumber>();
-            ServiceHours = new HashSet<ServiceHour>();
-            SoberSignups = new HashSet<SoberSignup>();
-            StudyHourAssignments = new HashSet<MemberStudyHourAssignment>();
-            StudyHourApprovals = new HashSet<StudyHour>();
-            webpages_OAuthMembership = new HashSet<webpages_OAuthMembership>();
-            Committees = new HashSet<Leader>();
-            Majors = new HashSet<Major>();
-        }
-
         [Key]
         public int UserId { get; set; }
 
@@ -112,11 +93,13 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<ServiceHour> ServiceHours { get; set; }
 
+        public virtual ICollection<Event> SubmittedEvents { get; set; }
+
         public virtual ICollection<SoberSignup> SoberSignups { get; set; }
 
         public virtual ICollection<StudyHour> StudyHourApprovals { get; set; }
 
-        public virtual ICollection<MemberStudyHourAssignment> StudyHourAssignments { get; set; }
+        public virtual ICollection<StudyAssignment> StudyHourAssignments { get; set; }
 
         public virtual ICollection<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         

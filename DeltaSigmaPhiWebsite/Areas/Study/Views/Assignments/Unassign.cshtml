@@ -1,4 +1,4 @@
-﻿@model DeltaSigmaPhiWebsite.Entities.MemberStudyHourAssignment
+﻿@model DeltaSigmaPhiWebsite.Entities.StudyAssignment
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Unassign Member";
@@ -17,7 +17,7 @@
                 <dd>@Model.AssignedMember</dd>
 
                 <dt>Assignment</dt>
-                <dd>@Model.Assignment.Start to @Model.Assignment.End</dd>
+                <dd>@Model.Period.Start to @Model.Period.End</dd>
 
                 <dt>Unproctored</dt>
                 <dd>@Model.UnproctoredAmount</dd>
@@ -31,7 +31,7 @@
                 @Html.AntiForgeryToken()
 
                 <input type="submit" value="Unassign" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to Assignment", "Info", new { id = Model.AssignmentId })
+                @Html.ActionLink("Back to Assignment", "Info", "Periods", new { id = Model.PeriodId }, null)
             }
         </div>
     </div>

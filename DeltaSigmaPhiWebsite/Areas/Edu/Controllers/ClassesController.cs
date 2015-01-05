@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Edu.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using Models;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class ClassesController : BaseController
     {
         [Authorize(Roles = "Administrator, Academics")]
