@@ -111,8 +111,6 @@
             member.PledgeClassId = model.Member.PledgeClassId;
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
-            member.RequiredStudyHours = model.Member.RequiredStudyHours;
-            member.ProctoredStudyHours = model.Member.ProctoredStudyHours;
             member.ShirtSize = model.Member.ShirtSize;
 
             _db.Members.Attach(member);

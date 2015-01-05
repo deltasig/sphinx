@@ -35,21 +35,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         [DataType(DataType.Text)]
         [Display(Name = "Room (Enter 0 for Out-of-House)")]
         public int? Room { get; set; }
-
-        public double? PreviousSemesterGPA { get; set; }
-
-        public double? CumulativeGPA { get; set; }
-
-        public double? RemainingBalance { get; set; }
-
-        [Display(Name = "Required Unproctored Study Hours")]
-        [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
-        public int RequiredStudyHours { get; set; }
-
-        [Display(Name = "Required Proctored Study Hours")]
-        [Range(0, 12, ErrorMessage = "Please enter a number from 0-12")]
-        public int? ProctoredStudyHours { get; set; }
-
+        
         [Display(Name = "Member Status")]
         public int StatusId { get; set; }
 
