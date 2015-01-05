@@ -322,6 +322,10 @@
     <Compile Include="Migrations\201501041342053_Initial.Designer.cs">
       <DependentUpon>201501041342053_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501050946561_RemoveAcademicMemberColumns.cs" />
+    <Compile Include="Migrations\201501050946561_RemoveAcademicMemberColumns.Designer.cs">
+      <DependentUpon>201501050946561_RemoveAcademicMemberColumns.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -664,6 +668,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201501041342053_Initial.resx">
       <DependentUpon>201501041342053_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501050946561_RemoveAcademicMemberColumns.resx">
+      <DependentUpon>201501050946561_RemoveAcademicMemberColumns.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
