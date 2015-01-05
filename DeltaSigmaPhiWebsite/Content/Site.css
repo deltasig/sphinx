@@ -106,3 +106,6 @@ dl {
 .label-as-badge {
     border-radius: 1em;
 }
+.borderless td {
+    border: none;
+}
