@@ -364,30 +364,98 @@
         }
         protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId, Semester semester)
         {
-            var members = await _db.Members.Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToListAsync();
-            // TODO: Refactor this to be more intelligent; requires discussion with academic chairman to decide who can approve.
-            var membersOnStudyHours = (await _db.StudyAssignments
-                .Where(m =>
-                    m.Period.Start >= semester.DateStart &&
-                    m.Period.End <= semester.DateEnd)
-                .ToListAsync())
-                .Select(m => m.AssignedMember.UserId)
-                .Distinct()
-                .ToList();
+            var members = (await GetAllActiveMembersAsync()).Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToList();
+            var previousSemester = await GetLastSemesterAsync();
 
             var newList = new List<object>();
-            foreach (var member in members)
+            foreach(var m in members)
             {
-                if (membersOnStudyHours.Contains(member.UserId)) continue;
-
-                newList.Add(new
+                var lastSemesterGpa = GetSemesterGpa(m, previousSemester);
+                if (lastSemesterGpa >= 2.5)
                 {
-                    member.UserId,
-                    Name = member.LastName + ", " + member.FirstName
-                });
+                    if(lastSemesterGpa >= 3.0)
+                    {
+                        newList.Add(new
+                        {
+                            m.UserId,
+                            Name = m.LastName + ", " + m.FirstName + " (Proctor)"
+                        });
+                        continue;
+                    }
+                    newList.Add(new
+                    {
+                        m.UserId,
+                        Name = m.LastName + ", " + m.FirstName
+                    });
+                }
             }
+
             return new SelectList(newList, "UserId", "Name");
         }
+        protected virtual double GetSemesterGpa(Member member, Semester semester)
+        {
+            if (member.ClassesTaken.All(c => c.SemesterId != semester.SemesterId)) return 0.0;
+
+            var classesTaken = member.ClassesTaken
+                .Where(c => 
+                    c.SemesterId == semester.SemesterId && 
+                    (c.Dropped == false || c.Dropped == null) &&
+                    (c.FinalGrade == "A" || c.FinalGrade == "B" || c.FinalGrade == "C" || c.FinalGrade == "D" || c.FinalGrade == "F"))
+                .ToList();
+            var creditsEarned = 0.0;
+            foreach (var c in classesTaken)
+            {
+                switch (c.FinalGrade)
+                {
+                    case "A":
+                        creditsEarned += 4.0 * c.Class.CreditHours;
+                        break;
+                    case "B":
+                        creditsEarned += 3.0 * c.Class.CreditHours;
+                        break;
+                    case "C":
+                        creditsEarned += 2.0 * c.Class.CreditHours;
+                        break;
+                    case "D":
+                        creditsEarned += c.Class.CreditHours;
+                        break;
+                }
+            }
+            var creditsTaken = classesTaken.Sum(c => c.Class.CreditHours);
+            return creditsEarned / creditsTaken;
+        }
+        protected virtual double GetCumulativeGpa(Member member)
+        {
+            if (!member.ClassesTaken.Any()) return 0.0;
+
+            var classesTaken = member.ClassesTaken
+                .Where(c => 
+                    (c.Dropped == false || c.Dropped == null) &&
+                    (c.FinalGrade == "A" || c.FinalGrade == "B" || c.FinalGrade == "C" || c.FinalGrade == "D" || c.FinalGrade == "F"))
+                .ToList();
+            var creditsEarned = 0.0;
+            foreach (var c in classesTaken)
+            {
+                switch (c.FinalGrade)
+                {
+                    case "A":
+                        creditsEarned += 4.0 * c.Class.CreditHours;
+                        break;
+                    case "B":
+                        creditsEarned += 3.0 * c.Class.CreditHours;
+                        break;
+                    case "C":
+                        creditsEarned += 2.0 * c.Class.CreditHours;
+                        break;
+                    case "D":
+                        creditsEarned += c.Class.CreditHours;
+                        break;
+                }
+            }
+            var creditsTaken = classesTaken.Sum(c => c.Class.CreditHours);
+            return creditsEarned / creditsTaken;
+        }
+
         protected virtual async Task<StudyPeriod> GetStudyHourAssignmentForUserAsync(int userId)
         {
             var member = await _db.Members.FindAsync(userId);
@@ -472,6 +540,16 @@
         {
             var newList = new List<string> { "S", "M", "L", "XL", "2XL" };
             var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
+            return list;
+        }
+        protected virtual IEnumerable<object> GetGrades()
+        {
+            var gradeList = new List<string> { "A", "B", "C", "D", "F", "I", "S", "U" };
+            var list = new List<object>();
+            foreach(var g in gradeList)
+            {
+                list.Add(new { Value = g, Text = g } );
+            }
             return list;
         }
         protected virtual SelectList GetTerms()

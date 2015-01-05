@@ -207,8 +207,7 @@
                 WebSecurity.CreateUserAndAccount(model.UserName, tempPassword, new { 
                         model.FirstName, model.LastName, model.Email, 
                         model.Room, model.StatusId, model.PledgeClassId, 
-                        model.ExpectedGraduationId, RequiredStudyHours = 0, 
-                        ProctoredStudyHours = 0, model.ShirtSize
+                        model.ExpectedGraduationId, model.ShirtSize
                 });
 
                 _db.Addresses.Add(new Address { UserId = WebSecurity.GetUserId(model.UserName), Type = "Mailing" });

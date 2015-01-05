@@ -66,12 +66,8 @@
                             <ul class="dropdown-menu">
                                 <li>@Html.ActionLink("Study Periods", "Index", "Periods", new { area = "Study" }, null)</li>
                                 <li>@Html.ActionLink("Unapproved Study Hours", "Unapproved", "Hours", new { area = "Study" }, null)</li>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                {
-                                    <li class="dropdown-header">Chairman Only</li>
-                                    <li>@Html.ActionLink("Classes Index", "Index", "Classes", new { area = "Edu" }, null)</li>
-                                    <li>@Html.ActionLink("Class Scheduler", "CreateSchedule", "Classes", new { area = "Edu" }, null)</li>
-                                }
+                                <li>@Html.ActionLink("Classes Index", "Index", "Classes", new { area = "Edu" }, null)</li>
+                                <li>@Html.ActionLink("Class Scheduler", "CreateSchedule", "Classes", new { area = "Edu" }, null)</li>
                             </ul>
                         </li>
                     }
@@ -79,9 +75,8 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Service Hours", "Index", "Hours", new { area = "Service" }, null)</li>
-                            @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                             {
-                                <li class="dropdown-header">Chairman Only</li>
                                 <li>@Html.ActionLink("Service Events", "Index", "Events", new { area = "Service" }, null)</li>
                             }
                         </ul>

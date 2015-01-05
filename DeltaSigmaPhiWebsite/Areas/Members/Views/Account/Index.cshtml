@@ -9,25 +9,6 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
-            @if (User.IsInRole("Administrator") || User.IsInRole("Academics") ||
-                User.IsInRole("House Manager") || User.IsInRole("Secretary") ||
-                User.Identity.Name == Model.MemberInfo.UserName)
-            {
-                <div class="pull-right" style="margin-bottom: 20px">
-                    @Html.ActionLink("Edit Member", "Edit", "Account", new { userName = Model.MemberInfo.UserName }, new { @class = "btn btn-default btn-sm" })
-                    @if (User.IsInRole("Administrator"))
-                    {
-                        using (Html.BeginForm("ResetPassword", "Account", new { userName = Model.MemberInfo.UserName }, FormMethod.Post, new { style = "display: inline" }))
-                        {
-                            <button type="submit" class="btn btn-danger btn-sm">Reset Member's Password</button>
-                        }
-                    }
-                </div>
-            }
-        </div>
-    </div>
-    <div class="row">
         <div class="col-sm-6">
             @{ Html.RenderPartial("~/Areas/Members/Views/Account/_MemberInformationPartial.cshtml", Model.MemberInfo); }
             @{ Html.RenderPartial("~/Areas/Members/Views/Addresses/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
@@ -39,6 +20,20 @@
             @if (User.Identity.Name == Model.MemberInfo.UserName)
             {
                 @Html.Partial(ViewBag.HasLocalPassword ? "_ChangePasswordPartial" : "_SetPasswordPartial", Model.ChangePasswordModel)
+            }
+            @if (User.IsInRole("Administrator"))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Administrator Functions
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("ResetPassword", "Account", new { userName = Model.MemberInfo.UserName }, FormMethod.Post, new { style = "display: inline" }))
+                        {
+                            <button type="submit" class="btn btn-danger btn-sm">Reset Member's Password</button>
+                        }
+                    </div>
+                </div>
             }
         </div>
     </div>
