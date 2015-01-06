@@ -11,8 +11,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         [Column("PhoneNumber")]
         [DataType(DataType.PhoneNumber)]
-        [RegularExpression(@"^([0-9]{3})[-]([0-9]{3})[-]([0-9]{4})$", 
-            ErrorMessage = "Phone numbers must entered in the following format: ###-###-####")]
+        [RegularExpression(@"^(([0-9]{3}[-]([0-9]{3})[-][0-9]{4})|([+]?[0-9]{10,15}))$", 
+            ErrorMessage = "Phone number format was invalid.")]
         public string Number { get; set; }
 
         [StringLength(100)]
