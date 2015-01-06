@@ -3,6 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sphinx";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
+    var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
 }
 @section Title
 {
@@ -96,6 +98,21 @@
                         </table>
                     </div>
                 </div>
+
+                @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
+                {
+                    <div class="alert alert-warning">
+                        <strong>New Member: </strong>You do not appear to have classes entered for last semester.  
+
+                        <u>If this is your first semester in college after graduating high school, disregard this message.</u>
+
+                        Otherwise, please go fill out your classes for last semester with the 
+                        <a href="@Url.Action("CreateSchedule", "Classes", new { area = "Edu" })">Class Scheduler</a>.
+
+                        If you transferred here from another college you attended after graduating high school, 
+                        you still need to enter your previous semester classes.
+                    </div>
+                }
             </div>
             <!-- RIGHT COLUMN -->
             <div class="col-md-7">
@@ -117,6 +134,20 @@
                 {
                     <div class="alert alert-warning">
                         Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                    </div>
+                }
+                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => c.FinalGrade == string.Empty))
+                {
+                    <div class="alert alert-warning">
+                        You have not yet reported all of your grades for last semester. 
+                        <a href="@Url.Action("Transript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName })">Go to Transcript</a>!
+                    </div>
+                }
+                @if (!thisSemesterClasses.Any())
+                {
+                    <div class="alert alert-warning">
+                        You have not yet entered your courses for this semester. 
+                        <a href="@Url.Action("CreateSchedule", "Classes", new { area = "Edu" })">Go to Scheduler</a>!
                     </div>
                 }
                 

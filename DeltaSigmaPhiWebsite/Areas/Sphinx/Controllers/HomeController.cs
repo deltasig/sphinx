@@ -27,16 +27,26 @@
             {
                 startOfTodayUtc = startOfTodayUtc.AddDays(-1);
             }
+            
+            var thisSemester = await GetThisSemesterAsync();
+            var memberSoberSignups = await GetSoberSignupsForUserAsync(userId, thisSemester);
 
             var soberSignups = await _db.SoberSchedule
-                .Where(s => s.DateOfShift >= startOfTodayUtc && 
-                            s.DateOfShift <= sevenDaysAheadOfToday)
+                .Where(s => s.DateOfShift >= startOfTodayUtc &&
+                            s.DateOfShift <= thisSemester.DateEnd)
                 .OrderBy(s => s.DateOfShift)
                 .ThenBy(s => s.Type)
                 .ToListAsync();
-
-            var thisSemester = await GetThisSemesterAsync();
-            var memberSoberSignups = await GetSoberSignupsForUserAsync(userId, thisSemester);
+            var semesterSoberSignups = soberSignups
+                .Where(s => s.DateOfShift > DateTime.UtcNow &&
+                            s.DateOfShift <= thisSemester.DateEnd)
+                .ToList();
+            var soberSignupsNextSevenDays = soberSignups
+                .Where(s => s.DateOfShift >= startOfTodayUtc &&
+                            s.DateOfShift <= sevenDaysAheadOfToday)
+                .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.Type)
+                .ToList();
 
             var laundrySignups = await _db.LaundrySignups
                     .Where(l => l.DateTimeShift >= DateTime.UtcNow)
@@ -55,9 +65,9 @@
                 RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(userId),
                 StudyHourAssignments = await GetStudyHourAssignmentsForUserAsync(userId, thisSemester),
                 CompletedEvents = events,
-                SoberSignups = soberSignups,
+                SoberSignups = soberSignupsNextSevenDays,
                 LaundrySummary = laundrySignups.Take(laundryTake),
-                NeedsToSoberDrive = !memberSoberSignups.Any(),
+                NeedsToSoberDrive = !memberSoberSignups.Any() && semesterSoberSignups.Any(s => s.UserId == null),
                 CurrentSemester = thisSemester,
                 PreviousSemester = await GetLastSemesterAsync(),
                 ApprovalRequests = await _db.StudyHours.Where(s => s.ApproverId == userId && s.DateTimeApproved == null).ToListAsync()
