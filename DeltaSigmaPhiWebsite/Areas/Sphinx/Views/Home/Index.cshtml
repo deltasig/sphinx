@@ -307,7 +307,7 @@
     else if (User.IsInRole("Alumnus"))
     {
         <div class="col-sm-5">
-            @Html.Partial("_SoberSchedulePartial", Model.SoberSignups)
+            @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
         </div>
         <div class="col-sm-7">
             @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
