@@ -16,47 +16,45 @@
                     @Html.ActionLink("Create New", "Create")
                 </div>
                 <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table" id="positions-table">
-                            <thead>
+                    <table class="table table-condensed" id="positions-table">
+                        <thead>
+                            <tr>
+                                <th>Order</th>
+                                <th>Name</th>
+                                <th>Type</th>
+                                <th>Exec</th>
+                                <th>Elected</th>
+                                <th>Disabled</th>
+                                <th>Public</th>
+                                <th>Appointments</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Where(p => p.PositionName != "Administrator").OrderBy(p => p.Type).ThenBy(p => p.DisplayOrder))
+                            {
                                 <tr>
-                                    <th>Order</th>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>Exec</th>
-                                    <th>Elected</th>
-                                    <th>Disabled</th>
-                                    <th>Public</th>
-                                    <th>Appointments</th>
-                                    <th></th>
+                                    <td>@Html.DisplayFor(modelItem => item.DisplayOrder)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.PositionName)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IsExecutive)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IsElected)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IsDisabled)</td>
+                                    <td>@Html.DisplayFor(modelItem => item.IsPublic)</td>
+                                    <td>@item.Leaders.Count()</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.PositionId }) 
+                                        @if(!item.Leaders.Any())
+                                        {
+                                            @:|
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
+                                        }
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.Where(p => p.PositionName != "Administrator").OrderBy(p => p.Type).ThenBy(p => p.DisplayOrder))
-                                {
-                                    <tr>
-                                        <td>@Html.DisplayFor(modelItem => item.DisplayOrder)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.PositionName)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsExecutive)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsElected)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsDisabled)</td>
-                                        <td>@Html.DisplayFor(modelItem => item.IsPublic)</td>
-                                        <td>@item.Leaders.Count()</td>
-                                        <td>
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.PositionId }) |
-                                            @Html.ActionLink("Details", "Details", new { id = item.PositionId }) 
-                                            @if(!item.Leaders.Any())
-                                            {
-                                                @:|
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.PositionId })
-                                            }
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

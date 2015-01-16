@@ -26,12 +26,9 @@
                             <ul class="dropdown-menu">
                                 @if (User.IsInRole("Administrator"))
                                 {
-                                    <li class="dropdown-header">Leadership</li>
                                     <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
                                     <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                    <li class="dropdown-header">Members</li>
                                     <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
-                                    <li class="dropdown-header">System</li>
                                     <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
 
@@ -40,20 +37,16 @@
                                 {
                                     if (User.IsInRole("President"))
                                     {
-                                        <li class="dropdown-header">Leadership</li>
                                         <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
                                         <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                        <li class="dropdown-header">System</li>
                                         <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     }
                                     if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
                                     {
-                                        <li class="dropdown-header">Members</li>
                                         <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
                                     }
                                     if (User.IsInRole("Secretary") || User.IsInRole("Academics"))
                                     {
-                                        <li class="dropdown-header">System</li>
                                         <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     }
                                 }
