@@ -146,9 +146,28 @@
             }
             return newList;
         }
-        protected virtual async Task<SelectList> GetSemesterListAsync()
+        protected virtual async Task<SelectList> GetAllSemesterListAsync()
         {
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
+            var newList = new List<object>();
+
+            foreach (var s in semesters)
+            {
+                newList.Add(new
+                {
+                    s.SemesterId,
+                    Name = s.ToString()
+                });
+            }
+
+            return new SelectList(newList, "SemesterId", "Name", (await GetThisSemesterAsync()).SemesterId);
+        }
+        protected virtual async Task<SelectList> GetSemesterListAsync()
+        {
+            var currentSemester = await GetThisSemesterAsync();
+            var semesters = await _db.Semesters
+                .Where(s => s.DateEnd <= currentSemester.DateEnd)
+                .OrderByDescending(s => s.DateEnd).ToListAsync();
             var newList = new List<object>();
 
             foreach (var s in semesters)
