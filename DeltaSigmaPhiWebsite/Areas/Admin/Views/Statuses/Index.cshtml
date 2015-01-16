@@ -1,0 +1,53 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.MemberStatus>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Member Status Index";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading text-right">
+                    @Html.ActionLink("Create New", "Create")
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.StatusName</td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.StatusId })
+                                        @if (!item.Members.Any())
+                                        {
+                                            @:|
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.StatusId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        
+    </script>
+}
