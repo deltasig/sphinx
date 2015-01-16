@@ -32,7 +32,7 @@
             const int hoursInDay = 24;
             const int slotSize = 2;
 
-            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift > startOfTodayUtc).ToListAsync();
+            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= startOfTodayUtc).ToListAsync();
             var model = new List<List<LaundrySignup>>();
 
             for (var y = 0; y < 12; y++) // Hours in day
