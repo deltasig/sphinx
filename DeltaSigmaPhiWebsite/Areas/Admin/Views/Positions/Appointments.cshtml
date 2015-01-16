@@ -43,7 +43,7 @@
                                         {
                                             continue;
                                         }
-                                        <tr class="@(Model[i].Leader.Position.Type == Position.PositionType.Alumni ? "warning" : "success")">
+                                        <tr class="@(Model[i].Leader.Position.Type == Position.PositionType.Alumni ? "" : "")">
                                             <td>
                                                 @Html.DisplayFor(m => Model[i].Leader.Position.Type)
                                             </td>
