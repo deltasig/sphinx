@@ -29,6 +29,11 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
+        public virtual DbSet<ScholarshipAnswer> ScholarshipAnswers { get; set; }
+        public virtual DbSet<ScholarshipApp> ScholarshipApps { get; set; }
+        public virtual DbSet<ScholarshipType> ScholarshipTypes { get; set; }
+        public virtual DbSet<ScholarshipQuestion> ScholarshipQuestions { get; set; }
+        public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSchedule { get; set; }

@@ -1,0 +1,75 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.ScholarshipQuestion>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Question Index";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @Html.ActionLink("Back To Scholarships", "Index", "Applications", new { area = "Scholarships" }, new { @class = "" })
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                @Html.ActionLink("Create New", "Create", "Questions", new { area = "Scholarships" }, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed" id="apps-table">
+                        <thead>
+                            <tr>
+                                <th>Prompt</th>
+                                <th>Answer Minimum Length</th>
+                                <th>Answer Maximum Length</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="col-md-8">
+                                        @Html.DisplayFor(modelItem => item.Prompt)
+                                    </td>
+                                    <td class="col-md-1">
+                                        @Html.DisplayFor(modelItem => item.AnswerMinimumLength)
+                                    </td>
+                                    <td class="col-md-1">
+                                        @Html.DisplayFor(modelItem => item.AnswerMaximumLength)
+                                    </td>
+                                    <td class="col-md-3">
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipQuestionId }) |
+                                        @Html.ActionLink("Details", "Details", new { id = item.ScholarshipQuestionId }) |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipQuestionId })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#apps-table').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" },
+            "order": [[0, "asc"]]
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}

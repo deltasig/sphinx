@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Areas.Scholarships.Models;
     using Entities;
     using System;
     using System.Collections.Generic;
@@ -583,6 +584,40 @@
         {
             var positions = Roles.GetAllRoles();
             return new SelectList(positions);
+        }
+        protected virtual async Task<SelectList> GetScholarshipTypesSelectListAsync()
+        {
+            var types = await _db.ScholarshipTypes.ToListAsync();
+            var newList = new List<object>();
+
+            foreach (var t in types)
+            {
+                newList.Add(new
+                {
+                    t.ScholarshipTypeId,
+                    t.Name
+                });
+            }
+
+            return new SelectList(newList, "ScholarshipTypeId", "Name");
+        }
+        protected virtual async Task<List<QuestionSelectionModel>> GetScholarshipQuestionsAsync()
+        {
+            var questions = await _db.ScholarshipQuestions.ToListAsync();
+            var list = new List<QuestionSelectionModel>();
+            foreach (var q in questions)
+            {
+                var appQuestion = new ScholarshipAppQuestion();
+                appQuestion.ScholarshipQuestionId = q.ScholarshipQuestionId;
+                appQuestion.FormOrder = 0;
+                appQuestion.Question = q;
+
+                var selection = new QuestionSelectionModel();
+                selection.Question = appQuestion;
+                list.Add(selection);
+            }
+
+            return list;
         }
 
         protected override void Dispose(bool disposing)
