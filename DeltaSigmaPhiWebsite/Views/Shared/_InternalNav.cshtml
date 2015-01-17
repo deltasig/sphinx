@@ -18,7 +18,7 @@
                     <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
                         @Html.ActionLink("Sphinx", "Index", "Home", new { area = "Sphinx" }, new { title = "Sphinx" })
                     </li>
-                    if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Secretary") ||
+                    if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
                         User.IsInRole("Director of Recruitment") || User.IsInRole("Academics"))
                     {
                         <li class="dropdown">
@@ -44,6 +44,10 @@
                                     if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
                                     {
                                         <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                                    }
+                                    if (User.IsInRole("Director of Recruitment") || User.IsInRole("Vice President Growth"))
+                                    {
+                                        <li>@Html.ActionLink("Scholarships", "Index", "Applications", new { area = "Scholarships" }, null)</li>
                                     }
                                     if (User.IsInRole("Secretary") || User.IsInRole("Academics"))
                                     {
@@ -73,6 +77,12 @@
                             {
                                 <li>@Html.ActionLink("Service Events", "Index", "Events", new { area = "Service" }, null)</li>
                             }
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recruitment <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li>@Html.ActionLink("Scholarships", "Index", "Applications", new { area = "Scholarships" }, null)</li>
                         </ul>
                     </li>
                     <li class="dropdown">

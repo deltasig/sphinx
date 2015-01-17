@@ -1,0 +1,61 @@
+﻿@model DeltaSigmaPhiWebsite.Entities.ScholarshipApp
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Details";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-8 col-xs-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+                <div class="panel-body">
+                    <table class="table table-condensed" id="apps-table">
+                        <thead>
+                            <tr>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Submitted On</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Submissions)
+                            {
+                                <tr>
+                                    <td>@item.FirstName</td>
+                                    <td>@item.LastName</td>
+                                    <td>@item.SubmittedOn</td>
+                                    <td>
+                                        @Html.ActionLink("View", "Submission", new { id = item.ScholarshipSubmissionId }) 
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#apps-table').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" },
+            "order": [[2, "desc"]]
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}
