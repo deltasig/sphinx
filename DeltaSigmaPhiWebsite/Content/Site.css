@@ -84,12 +84,6 @@ iframe, object, embed {
     margin-bottom: 0;
 }
 
-.table td {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .full-width {
     width: 100% !important;
 }
@@ -108,4 +102,15 @@ dl {
 }
 .borderless td {
     border: none;
+}
+
+.pill-color .active a,
+.pill-color .active a:hover {
+    background-color: #e7e7e7 !important;
+    color: #555 !important;
+}
+
+.nav-pills > .active > a, .nav-pills > .active > a:hover {
+    background-color: #e7e7e7 !important;
+    color: #555 !important;
 }

@@ -1,5 +1,9 @@
-﻿namespace DeltaSigmaPhiWebsite.Controllers
+﻿using System.Web.WebPages;
+
+namespace DeltaSigmaPhiWebsite.Controllers
 {
+    using Entities;
+    using Models;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -20,8 +24,7 @@
             if (currentSemester == null) return View();
 
             var model = await _db.Leaders
-                .Where(l => 
-                    l.SemesterId == currentSemester.SemesterId)
+                .Where(l => l.SemesterId == currentSemester.SemesterId)
                 .ToListAsync();
 
             return View(model);
@@ -32,9 +35,20 @@
             return View();
         }
 
-        public ActionResult Scholarships()
+        public async Task<ActionResult> Scholarships(string message)
         {
-            return View();
+            if (!string.IsNullOrEmpty(message))
+            {
+                ViewBag.Message = message;
+            }
+
+            var model = new ExternalScholarshipModel
+            {
+                Applications = await _db.ScholarshipApps.Where(s => s.IsPublic).ToListAsync(),
+                Types = await _db.ScholarshipTypes.ToListAsync()
+            };
+
+            return View(model);
         }
         public ActionResult Academics()
         {

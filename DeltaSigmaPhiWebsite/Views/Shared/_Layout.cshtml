@@ -13,6 +13,7 @@
     @Styles.Render("~/Content/font-awesome")
     @Styles.Render("~/Content/Multiselect")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 </head>
 <body style="padding: 0">
     @{ Html.RenderPartial("Nav"); }
@@ -20,7 +21,6 @@
     @RenderBody()
     @{ Html.RenderPartial("Footer"); }
 
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/Multiselect")
     <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
