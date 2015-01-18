@@ -19,7 +19,11 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.DateOfShift, htmlAttributes: new { @class = "control-label" })
-                @Html.EditorFor(model => model.DateOfShift, new { htmlAttributes = new { @class = "form-control" } })
+                <div class='input-group date' id='datetimepicker1'>
+                    @Html.EditorFor(m => m.DateOfShift, new { htmlAttributes = new { @class = "form-control", type = "date" } })
+                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
                 @Html.ValidationMessageFor(model => model.DateOfShift, "", new { @class = "text-danger" })
             </div>
 
