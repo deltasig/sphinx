@@ -121,7 +121,7 @@
                 @if (Model.NeedsToSoberDrive)
                 {
                     <div class="alert alert-warning">
-                        You haven't signed up to sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Sign up</a>
+                        Shut up and sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Go to Schedule</a>
                     </div>
                 }
                 @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
@@ -136,7 +136,7 @@
                         Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
                     </div>
                 }
-                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => c.FinalGrade == string.Empty))
+                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => c.FinalGrade == null || c.FinalGrade == string.Empty))
                 {
                     <div class="alert alert-warning">
                         You have not yet reported all of your grades for last semester. 

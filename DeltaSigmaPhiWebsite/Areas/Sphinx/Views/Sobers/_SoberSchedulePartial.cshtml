@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.SoberSignup>
+﻿@using DeltaSigmaPhiWebsite.Entities
+@model IEnumerable<DeltaSigmaPhiWebsite.Entities.SoberSignup>
 
 <div class="table-responsive">
     <table class="table">
@@ -22,12 +23,40 @@
                     <td>@item.DateOfShift.ToShortDateString()</td>
                     @if (item.UserId == null)
                     {
-                        <td>None</td>
-                        <td></td>
+                        if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
+                        {
+                            <td>None</td>
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>None</td>
+                            <td>@Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)</td>
+                        }
+                    }
+                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                    {
+                        using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
+                            FormMethod.Get, new { style = "display: inline" }))
+                        {
+                            <td>
+                                @item.Member.ToString()
+                                <button type="submit" class="btn btn-sm btn-link" style="padding:0; color:red; display:inline">
+                                    <i class="fa fa-minus-square"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                    @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
+                                </a>
+                            </td>
+                        }
                     }
                     else
                     {
-                        <td>@item.Member.ToString()</td>
+                        <td>
+                            @item.Member.ToString()
+                        </td>
                         <td>
                             <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
                                 @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
