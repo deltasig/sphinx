@@ -178,7 +178,7 @@
                 {
                     StatusList = await GetStatusListAsync(), 
                     PledgeClassList = await GetPledgeClassListAsync(),
-                    SemesterList = await GetSemesterListAsync(),
+                    SemesterList = await GetAllSemesterListAsync(),
                     ShirtSizes = GetShirtSizesSelectList()
                 },
                 UnregisterModel = new UnregisterModel
