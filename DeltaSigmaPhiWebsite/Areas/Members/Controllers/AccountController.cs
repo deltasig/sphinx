@@ -69,7 +69,7 @@
             var model = new EditMemberInfoModel
             {
                 Member = member,
-                Semesters = await GetSemesterListAsync(),
+                Semesters = await GetAllSemesterListAsync(),
                 PledgeClasses = await GetPledgeClassListAsync(),
                 Statuses = await GetStatusListAsync(),
                 Members = await GetUserIdListAsFullNameWithNoneAsync(),
