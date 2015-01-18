@@ -19,7 +19,7 @@
                         @Html.ActionLink("Sphinx", "Index", "Home", new { area = "Sphinx" }, new { title = "Sphinx" })
                     </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
-                        User.IsInRole("Director of Recruitment") || User.IsInRole("Academics"))
+                        User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
                     {
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
@@ -31,7 +31,6 @@
                                     <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
                                     <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
-
                                 }
                                 else
                                 {
@@ -41,15 +40,12 @@
                                         <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
                                         <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     }
-                                    if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment"))
+                                    if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment") ||
+                                        User.IsInRole("New Member Education") || User.IsInRole("Vice President Growth"))
                                     {
                                         <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
                                     }
-                                    if (User.IsInRole("Director of Recruitment") || User.IsInRole("Vice President Growth"))
-                                    {
-                                        <li>@Html.ActionLink("Scholarships", "Index", "Applications", new { area = "Scholarships" }, null)</li>
-                                    }
-                                    if (User.IsInRole("Secretary") || User.IsInRole("Academics"))
+                                    if (User.IsInRole("Secretary") || User.IsInRole("Academics") || User.IsInRole("Service"))
                                     {
                                         <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                     }

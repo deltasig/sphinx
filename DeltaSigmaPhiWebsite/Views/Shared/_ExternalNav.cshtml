@@ -21,13 +21,13 @@
                 }
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">
-                    @Html.ActionLink("Recruitment", "Recruitment", "Home")
+                    @Html.ActionLink("Recruitment", "Recruitment", "Home", new { area = "" }, null)
                 </li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Scholarships") ? "active" : "")">
-                    @Html.ActionLink("Scholarships", "Scholarships", "Home")
+                    @Html.ActionLink("Scholarships", "Scholarships", "Home", new { area = "" }, null)
                 </li>
                 <li class="@(ViewContext.RouteData.Values.ContainsValue("Contacts") ? "active" : "")">
-                    @Html.ActionLink("Contacts", "Contacts", "Home")
+                    @Html.ActionLink("Contacts", "Contacts", "Home", new { area = "" }, null)
                 </li>
                 <li class="hidden-xs hidden-sm">
                     <a href="https://www.facebook.com/deltasig.de" target="_blank">
