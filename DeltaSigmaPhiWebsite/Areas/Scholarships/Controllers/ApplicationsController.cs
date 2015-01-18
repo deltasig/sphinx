@@ -289,8 +289,8 @@
                 "Thank you for submitting your application for one of our scholarships: " + submission.Application.Title + ". <br/>" +
                 "This email has been sent to confirm that we have successfully received your application.  " +
                 "Please refer to ";
-            body += @"<a href=""https://www.deltasig-de.org/scholarships/" + @""">our scholarship page</a>.";
-            body += " for details on when you should expect to hear back. <br/><br/>" +
+            body += @"<a href=""https://www.deltasig-de.org/scholarships/" + @""">our scholarship page</a> ";
+            body += "for details on when you should expect to hear back. <br/><br/>" +
                 "Regards, <br/>" +
                 "<em>The Gentlemen of Delta Sigma Phi</em>";
 

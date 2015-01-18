@@ -564,7 +564,7 @@
         }
         protected virtual IEnumerable<object> GetGrades()
         {
-            var gradeList = new List<string> { "A", "B", "C", "D", "F", "I", "S", "U" };
+            var gradeList = new List<string> { "", "A", "B", "C", "D", "F", "I", "S", "U" };
             var list = new List<object>();
             foreach(var g in gradeList)
             {
