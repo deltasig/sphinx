@@ -108,9 +108,16 @@
             }
 
             var userId = WebSecurity.GetUserId(User.Identity.Name);
-            
-            // Check if hours submitted is more than held for event
+
             var selectedEvent = await _db.Events.SingleAsync(e => e.EventId == model.SelectedEventId);
+            // Check if event is in the future
+            if (selectedEvent.DateTimeOccurred.AddHours(selectedEvent.DurationHours) > DateTime.UtcNow)
+            {
+                message = "You cannot submit service hours for an event that has not yet occurred.";
+                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+            }
+
+            // Check if hours submitted is more than held for event
             if (model.HoursServed > selectedEvent.DurationHours)
             {
                 message = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
