@@ -28,7 +28,12 @@
                 
                 <div class="form-group">
                     @Html.Label("Date & Time You Studied")
-                    @Html.EditorFor(m => m.Submission.DateTimeStudied, new { htmlAttributes = new { @class = "form-control", type = "datetime-local", @Value = Model.Submission.DateTimeStudied.ToString("yyyy-MM-ddTHH:mm:ss") } })
+                    <div class='input-group date' id='datetimepicker1'>
+                        @Html.EditorFor(m => m.Submission.DateTimeStudied, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = Model.Submission.DateTimeStudied }})
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+
                     @Html.ValidationMessageFor(m => m.Submission.DateTimeStudied, "", new { @class = "text-danger" })
                 </div>
                 
@@ -58,9 +63,13 @@
             <div class="panel panel-warning">
                 <div class="panel-heading">Submitting Hours</div>
                 <div class="panel-body">
-                    If you are submitting proctored study hours, make sure you check the box. <br /><br />
+                    If you are submitting proctored study hours, make sure you check the box.
+                    <br />
+                    <br />
                     Also, keep in mind that proctored hours must be approved by someone designated as a proctor.
-                    Proctors will appear in the Approver drop-down list with '(Proctor)' next to their name. <br /><br />
+                    Proctors will appear in the Approver drop-down list with '(Proctor)' next to their name.
+                    <br />
+                    <br />
                     If the person you want to approve your study hours doesn't appear in the drop-down, that's because they (1)
                     have not entered their grades for last semester into the system and/or (2) did not make above a 2.5 gpa.
                 </div>
@@ -68,4 +77,11 @@
         </div>
     </div>
 </div>
-
+@section scripts
+{
+    <script>
+        $(function () {
+            $('#datetimepicker1').datetimepicker();
+        });
+    </script>
+}
