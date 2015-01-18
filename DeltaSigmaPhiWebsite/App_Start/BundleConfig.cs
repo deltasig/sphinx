@@ -8,8 +8,7 @@
         {
             // Styles
             bundles.Add(new StyleBundle("~/Content/bootstrap")
-                .Include("~/Content/bootstrap.css")
-                .Include("~/Content/bootstrap-theme.css"));
+                .Include("~/Content/bootstrap/css/bootstrap.min.css"));
             bundles.Add(new StyleBundle("~/Content/custom-css")
                 .Include("~/Content/Site.css"));
             bundles.Add(new StyleBundle("~/Content/font-awesome")
