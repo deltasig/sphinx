@@ -96,7 +96,7 @@
             _db.Entry(signup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule");
+            return RedirectToAction("Index", "Home", new { area = "Sphinx", message = "You have successfully signed up to sober drive!" });
         }
 
         public async Task<ActionResult> CancelSignup(int? id)

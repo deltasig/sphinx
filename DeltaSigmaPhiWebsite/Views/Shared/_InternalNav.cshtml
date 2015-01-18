@@ -22,7 +22,7 @@
                         User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
                     {
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Administration <b class="caret"></b></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 @if (User.IsInRole("Administrator"))
                                 {
@@ -93,12 +93,12 @@
                         </ul>
                     </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">
-                        @Html.ActionLink("Sober Schedule", "Schedule", "Sobers", new { area = "Sphinx" }, null)
+                        @Html.ActionLink("Sobers", "Schedule", "Sobers", new { area = "Sphinx" }, null)
                     </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                     {
                         <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">
-                            @Html.ActionLink("Laundry Schedule", "Schedule", "Laundry", new { area = "Sphinx" }, null)
+                            @Html.ActionLink("Laundry", "Schedule", "Laundry", new { area = "Sphinx" }, null)
                         </li>
                     }
                 }
