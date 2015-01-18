@@ -177,7 +177,7 @@
                         @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
                     </small>
                 </h3>
-                @if (!Model.CompletedEvents.Any() && Model.NeedsToSoberDrive)
+                @if (!Model.CompletedEvents.Any())
                 {
                     <p class="text-danger">No service hours submitted</p>
                 }
