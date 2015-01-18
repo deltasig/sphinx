@@ -64,16 +64,16 @@
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
                                     {
                                         <td>
-                                        @if (!item.Submissions.Any())
-                                        {
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipAppId }) @:|
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipAppId })
-                                        }
-                                        else
-                                        {
-                                            @Html.ActionLink("Submissions", "Details", new { id = item.ScholarshipAppId })
-                                        }
-                                    </td>
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipAppId }) |
+                                            @if (!item.Submissions.Any())
+                                            {
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipAppId })
+                                            }
+                                            else
+                                            {
+                                                @Html.ActionLink("Submissions", "Details", new { id = item.ScholarshipAppId })
+                                            }
+                                        </td>
                                     }
                                 </tr>
                             }
