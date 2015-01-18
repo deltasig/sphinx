@@ -9,25 +9,22 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, President, Secretary, Academics")]
+    [Authorize(Roles = "Administrator, President, Secretary, Academics, Service")]
     public class SemestersController : BaseController
     {
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public async Task<ActionResult> Index()
         {
             return View(await _db.Semesters.OrderByDescending(s => s.DateStart).ToListAsync());
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateSemesterModel model)
         {
@@ -40,7 +37,6 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -56,7 +52,6 @@
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, President, Secretary, Academics")]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Semester semester)
         {

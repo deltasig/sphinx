@@ -158,7 +158,7 @@
         }
 
         [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Registration(RegistrationMessageId? message)
         {
             switch (message)
@@ -192,7 +192,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Secretary")]
+        [Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
             RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
