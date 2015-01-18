@@ -15,7 +15,7 @@
 
     public class ApplicationsController : BaseController
     {
-        [Authorize(Roles = "Administrator, Alumni, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
         public async Task<ActionResult> Index()
         {
             var apps = await _db.ScholarshipApps.ToListAsync();
@@ -29,7 +29,7 @@
             return View(apps);
         }
 
-        [Authorize(Roles = "Administrator, Alumni, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -263,7 +263,7 @@
             });
         }
 
-        [Authorize(Roles = "Administrator, Alumni, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
         public async Task<ActionResult> Submission(Guid? id)
         {
             if (id == null)
