@@ -37,13 +37,21 @@
 
                 <div class="form-group">
                     @Html.Label("Application Submission Period Begins On", htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "date", @Value = Model.Application.OpensOn.ToString("yyyy-MM-dd") } })
+                    <div class='input-group date' id='datetimepicker1'>
+                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.Application.OpensOn, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
                     @Html.Label("Application Submission Period Ends On", htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "date", @Value = Model.Application.ClosesOn.ToString("yyyy-MM-dd") } })
+                    <div class='input-group date' id='datetimepicker2'>
+                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.Application.ClosesOn, "", new { @class = "text-danger" })
                 </div>
 
@@ -94,3 +102,16 @@
         }
     </div>
 </div>
+@section scripts
+{
+    <script>
+        $(function() {
+            $('#datetimepicker1').datetimepicker({
+                pickTime: false
+            });
+            $('#datetimepicker2').datetimepicker({
+                pickTime: false
+            });
+        });
+    </script>
+}

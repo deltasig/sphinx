@@ -30,6 +30,9 @@
         {
             if (!ModelState.IsValid) return View(model);
 
+            model.Semester.DateStart = base.ConvertCstToUtc(model.Semester.DateStart);
+            model.Semester.DateEnd = base.ConvertCstToUtc(model.Semester.DateEnd);
+            model.Semester.FallTransitionDate = base.ConvertCstToUtc(model.Semester.FallTransitionDate);
             _db.Semesters.Add(model.Semester);
             await _db.SaveChangesAsync();
             
@@ -44,6 +47,9 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var semester = await _db.Semesters.FindAsync(id);
+            semester.DateStart = base.ConvertUtcToCst(semester.DateStart);
+            semester.DateEnd = base.ConvertUtcToCst(semester.DateEnd);
+            semester.FallTransitionDate = base.ConvertUtcToCst(semester.FallTransitionDate);
             if (semester == null)
             {
                 return HttpNotFound();
@@ -57,6 +63,9 @@
         {
             if (!ModelState.IsValid) return View(semester);
 
+            semester.DateStart = base.ConvertCstToUtc(semester.DateStart);
+            semester.DateEnd = base.ConvertCstToUtc(semester.DateEnd);
+            semester.FallTransitionDate = base.ConvertCstToUtc(semester.FallTransitionDate);
             _db.Entry(semester).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
