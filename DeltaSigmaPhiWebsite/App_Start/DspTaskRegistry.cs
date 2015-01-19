@@ -1,4 +1,8 @@
-﻿namespace DeltaSigmaPhiWebsite.App_Start
+﻿using System.Data.Entity;
+using System.Linq;
+using DeltaSigmaPhiWebsite.Entities;
+
+namespace DeltaSigmaPhiWebsite.App_Start
 {
     using System;
     using System.Net;
@@ -13,28 +17,60 @@
         {
             //Schedule(async () =>
             //{
-            //    var currentTime = DateTime.UtcNow;
-            //    if (currentTime.Hour == 2 && currentTime.Minute <= 5)
+            //    var currentTime = ConvertUtcToCst(DateTime.UtcNow);
+            //    //if (currentTime.Hour != 5 || currentTime.Minute > 0) return;
+
+            //    try
             //    {
+            //        var startOfTodayCst = ConvertUtcToCst(DateTime.UtcNow).Date;
+            //        var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
+            //        var db = new DspDbContext();
+            //        var sobers = await db.SoberSchedule
+            //            .Where(s => startOfTodayUtc == s.DateOfShift.Date)
+            //            .ToListAsync();
+            //        if (!sobers.Any()) return;
+
             //        var message = new IdentityMessage
             //        {
-            //            Subject = "Check check",
-            //            Body = "I'm rick james.",
+            //            Subject = "Sober Schedule - " + startOfTodayCst.ToShortDateString(),
+            //            Body = "<div>",
             //            Destination = "tjm6f4@mst.edu"
             //        };
 
-            //        try
+            //        message.Body += "<h4> Sober Drivers/Officers - " + startOfTodayCst.ToShortDateString() + "</h4>";
+            //        message.Body += "<div>";
+            //        foreach (var s in sobers)
             //        {
-            //            var emailService = new EmailService();
-            //            await emailService.SendAsync(message);
+            //            message.Body += @"<span style=""margin-right: 5px"">" + s.Type + "</span>";
+            //            message.Body += @"<span style=""margin-right: 5px"">" +
+            //                            (s.UserId == null ?
+            //                                @"<a href=""https://deltasig-de.org/sphinx/sobers/signup/" + s.SignupId + @""">Sign up</a>" :
+            //                                s.Member.FirstName + " " + s.Member.LastName) +
+            //                            "</span>";
             //        }
-            //        catch (SmtpException e)
-            //        {
+            //        message.Body += "</div>";
 
-            //        }
+            //        var emailService = new EmailService();
+            //        await emailService.SendAsync(message);
             //    }
-            //}).ToRunEvery(5).Minutes();
+            //    catch (SmtpException e)
+            //    {
+
+            //    }
+            //}).ToRunEvery(1).Minutes();
         }
+
+        protected virtual DateTime ConvertUtcToCst(DateTime utc)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+        }
+        protected virtual DateTime ConvertCstToUtc(DateTime cst)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+        }
+
     }
     public class EmailService : IIdentityMessageService
     {
@@ -44,7 +80,7 @@
             var mailMessage = new MailMessage
             {
                 From = new MailAddress("sphinxbot@deltasig-de.org", "Sphinx Bot"),
-                Subject = message.Subject,
+                Subject = "[Sphinx] " + message.Subject,
                 Body = "<html><body>" + message.Body + "</body></html>"
             };
             mailMessage.To.Add(message.Destination);
