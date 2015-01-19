@@ -38,7 +38,7 @@
                 <div class="form-group">
                     @Html.Label("Application Submission Period Begins On", htmlAttributes: new { @class = "control-label" })
                     <div class='input-group date' id='datetimepicker1'>
-                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
+                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
@@ -48,7 +48,7 @@
                 <div class="form-group">
                     @Html.Label("Application Submission Period Ends On", htmlAttributes: new { @class = "control-label" })
                     <div class='input-group date' id='datetimepicker2'>
-                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
+                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>

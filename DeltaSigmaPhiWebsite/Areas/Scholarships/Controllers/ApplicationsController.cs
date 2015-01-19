@@ -16,8 +16,18 @@
     public class ApplicationsController : BaseController
     {
         [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(ApplicationsMessageId? message)
         {
+            switch (message)
+            {
+                case ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess:
+                case ApplicationsMessageId.ApplicationCreationSuccess:
+                case ApplicationsMessageId.ApplicationEditSuccess:
+                case ApplicationsMessageId.ApplicationDeletedSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
             var apps = await _db.ScholarshipApps.ToListAsync();
 
             foreach (var a in apps)
@@ -79,14 +89,23 @@
             model.Application.OpensOn = base.ConvertCstToUtc(model.Application.OpensOn);
             model.Application.ClosesOn = base.ConvertCstToUtc(model.Application.ClosesOn);
             _db.ScholarshipApps.Add(model.Application);
-            if (model.Questions == null || !model.Questions.Any()) return RedirectToAction("Index");
+            if (model.Questions == null || !model.Questions.Any())
+            {
+                return RedirectToAction("Index", new
+                {
+                    message = ApplicationsMessageId.ApplicationCreationFailure
+                });
+            }
             var selections = model.Questions.Where(q => q.IsSelected);
             foreach (var s in selections)
             {
                 model.Application.Questions.Add(s.Question);
             }
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new
+            {
+                message = ApplicationsMessageId.ApplicationCreationSuccess
+            });
         }
 
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
@@ -157,8 +176,13 @@
                 .Include(s => s.Questions)
                 .SingleAsync(s => model.Application.ScholarshipAppId == s.ScholarshipAppId);
 
-            // TODO: Message for this.
-            if (scholarshipApp.Submissions.Any()) return RedirectToAction("Index");
+            if (scholarshipApp.Submissions.Any())
+            {
+                return RedirectToAction("Index", new
+                {
+                    message = ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess
+                });
+            }
 
             foreach (var s in scholarshipApp.Questions.ToList())
             {
@@ -173,7 +197,10 @@
             }
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new
+            {
+                message = ApplicationsMessageId.ApplicationEditSuccess
+            });
         }
 
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
@@ -199,7 +226,10 @@
             var scholarshipApp = await _db.ScholarshipApps.FindAsync(id);
             _db.ScholarshipApps.Remove(scholarshipApp);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new
+            {
+                message = ApplicationsMessageId.ApplicationDeletedSuccess
+            });
         }
         
         [AllowAnonymous]
@@ -303,6 +333,25 @@
 
             var emailService = new EmailService();
             await emailService.SendAsync(emailMessage);
+        }
+
+        public static dynamic GetResultMessage(ApplicationsMessageId? message)
+        {
+            return message == ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess ? "Application information was updated but any changes to the question selection were not because submissions have already been made."
+                : message == ApplicationsMessageId.ApplicationCreationSuccess ? "Application created successfully."
+                : message == ApplicationsMessageId.ApplicationEditSuccess ? "Application deleted successfully."
+                : message == ApplicationsMessageId.ApplicationDeletedSuccess ? "Application updated successfully."
+                : message == ApplicationsMessageId.ApplicationCreationFailure ? "Application creation failed because of an internal issue with questions. Please contact your administrator."
+                : "";
+        }
+
+        public enum ApplicationsMessageId
+        {
+            ApplicationSubmissionExistPartialSuccess,
+            ApplicationCreationSuccess,
+            ApplicationEditSuccess,
+            ApplicationDeletedSuccess,
+            ApplicationCreationFailure
         }
     }
 }
