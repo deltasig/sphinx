@@ -120,32 +120,32 @@
                 <!-- ALERTS -->
                 @if (Model.NeedsToSoberDrive)
                 {
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning delayed" style="display:none;">
                         Shut up and sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Go to Schedule</a>
                     </div>
                 }
                 @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
                 {
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning delayed" style="display:none;">
                         Please enter your mailing address on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
                     </div>
                 }
                 @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
                 {
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning delayed" style="display:none;">
                         Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
                     </div>
                 }
-                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => c.FinalGrade == null || c.FinalGrade == string.Empty))
+                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade)))
                 {
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning delayed" style="display:none;">
                         You have not yet reported all of your grades for last semester. 
-                        <a href="@Url.Action("Transript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName })">Go to Transcript</a>!
+                        <a href="@Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName })">Go to Transcript</a>!
                     </div>
                 }
                 @if (!thisSemesterClasses.Any())
                 {
-                    <div class="alert alert-warning">
+                    <div class="alert alert-warning delayed" style="display:none;">
                         You have not yet entered your courses for this semester. 
                         <a href="@Url.Action("CreateSchedule", "Classes", new { area = "Edu" })">Go to Scheduler</a>!
                     </div>
@@ -337,6 +337,8 @@
 
         $(function () {
             $('[data-toggle="tooltip"]').tooltip();
+
+            $('.delayed').delay(1000).show(500);
         });
 
     </script>
