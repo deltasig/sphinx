@@ -1,4 +1,6 @@
-﻿namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
+﻿using System.Text;
+
+namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
 {
     using System.Net;
     using DeltaSigmaPhiWebsite.Controllers;
@@ -35,6 +37,7 @@
             }
 
             var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var lastSemester = await base.GetLastSemesterAsync();
             var previousSemester = (await _db.Semesters
                 .Where(s => s.DateEnd < semester.DateStart)
                 .OrderBy(s => s.DateEnd)
@@ -61,7 +64,7 @@
                 var serviceHours = m.ServiceHours
                     .Where(e =>
                         e.Event.DateTimeOccurred > previousSemester.DateEnd &&
-                        e.DateTimeSubmitted <= semester.DateEnd &&
+                        e.Event.DateTimeOccurred <= semester.DateEnd &&
                         e.Event.IsApproved);
 
                 var member = new ServiceHourIndexModel
@@ -247,6 +250,95 @@
                 SelectedSemester = (await GetSemestersForUtcDateAsync(time)).SemesterId,
                 message = ServiceHourMessageId.DeleteSuccess
             });
+        }
+
+        public async Task<ActionResult> Download(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var semester = await _db.Semesters.FindAsync(id);
+            var previousSemester = (await _db.Semesters
+                .Where(s => s.DateEnd < semester.DateStart)
+                .OrderBy(s => s.DateEnd)
+                .ToListAsync()).LastOrDefault() ?? new Semester
+                {
+                    DateEnd = semester.DateStart
+                };
+
+            var members = await _db.Members
+                .Where(d =>
+                    d.LastName != "Hirtz" &&
+                    (d.MemberStatus.StatusName == "Alumnus" ||
+                        d.MemberStatus.StatusName == "Active" ||
+                        d.MemberStatus.StatusName == "Pledge" ||
+                        d.MemberStatus.StatusName == "Neophyte") &&
+                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
+                    d.GraduationSemester.DateEnd >= semester.DateEnd)
+                .OrderBy(m => m.LastName)
+                .ToListAsync();
+
+            var serviceHours = new List<ServiceHour>();
+            foreach (var m in members)
+            {
+                var hours = m.ServiceHours
+                    .Where(e =>
+                        e.Event.DateTimeOccurred > previousSemester.DateEnd &&
+                        e.Event.DateTimeOccurred <= semester.DateEnd &&
+                        e.Event.IsApproved);
+
+                serviceHours.AddRange(hours);
+            }
+
+            var events = serviceHours
+                .Select(h => h.Event)
+                .Distinct()
+                .OrderBy(e => e.EventName)
+                .ToList();
+
+            var header = "Last Name, First Name";
+            foreach (var e in events)
+            {
+                header += "," + e.EventName.Replace(",", ";") + "(" + e.DurationHours + " hrs)";
+            }
+            header += ",Member Totals";
+
+            var sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach (var m in members)
+            {
+                var line = m.LastName.Replace(",", "") + ", " + m.FirstName.Replace(",", "");
+                var hoursForMember = serviceHours
+                    .Where(h => h.UserId == m.UserId)
+                    .ToList();
+                foreach (var e in events)
+                {
+                    line += ",";
+                    var turnIns = hoursForMember
+                        .Where(h => h.EventId == e.EventId).ToList();
+                    if (turnIns.Any())
+                    {
+                        line += turnIns.Sum(h => h.DurationHours);
+                    }
+                    else
+                    {
+                        line += "0";
+                    }
+                }
+                line += "," + hoursForMember.Sum(h => h.DurationHours);
+                sb.AppendLine(line);
+            }
+            var totalsLine = ",Event Totals";
+            foreach (var e in events)
+            {
+                totalsLine += "," + e.ServiceHours.Sum(h => h.DurationHours);
+            }
+            totalsLine += "," + events.Sum(e => e.ServiceHours.Sum(h => h.DurationHours));
+            sb.AppendLine(totalsLine);
+
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-service-" + semester + ".csv");
         }
 
         public static dynamic GetResultMessage(ServiceHourMessageId? message)

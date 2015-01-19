@@ -36,9 +36,8 @@
         }
         protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()
         {
-            var now = ConvertUtcToCst(DateTime.UtcNow);
             var thisAndComingSemesters = await _db.Semesters
-                .Where(s => s.DateEnd >= now)
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .Take(2)
                 .ToListAsync();
@@ -47,9 +46,8 @@
         }
         protected virtual async Task<SelectList> GetThisAndNextSemesterSelectListAsync()
         {
-            var now = ConvertUtcToCst(DateTime.UtcNow);
             var thisAndComingSemesters = await _db.Semesters
-                .Where(s => s.DateEnd >= now)
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToListAsync();
 
@@ -71,27 +69,24 @@
         }
         protected virtual async Task<Semester> GetThisOrLastSemesterAsync()
         {
-            var now = ConvertUtcToCst(DateTime.UtcNow);
             return (await _db.Semesters
-                .Where(s => s.DateEnd <= now)
+                .Where(s => s.DateEnd <= DateTime.UtcNow)
                 .OrderBy(s => s.DateStart)
                 .ToListAsync())
                 .Last();
         }
         protected virtual async Task<Semester> GetThisSemesterAsync()
         {
-            var now = ConvertUtcToCst(DateTime.UtcNow);
             return (await _db.Semesters
-                    .Where(s => s.DateEnd >= now)
+                    .Where(s => s.DateEnd >= DateTime.UtcNow)
                     .OrderBy(s => s.DateStart)
                     .ToListAsync())
                     .First();
         }
         protected virtual async Task<Semester> GetLastSemesterAsync()
         {
-            var now = ConvertUtcToCst(DateTime.UtcNow);
             return (await _db.Semesters
-                    .Where(s => s.DateEnd < now)
+                    .Where(s => s.DateEnd < DateTime.UtcNow)
                     .OrderBy(s => s.DateStart)
                     .ToListAsync())
                     .Last();

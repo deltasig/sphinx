@@ -1,7 +1,7 @@
 ﻿@model DeltaSigmaPhiWebsite.Areas.Service.Models.ServiceHourIndexFilterModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Service Index";
+    ViewBag.Title = "Service Hours";
 
     var totalMembers = Model.ServiceHours.Count();
     var actives = Model.ServiceHours.Where(m => m.Member.PledgeClass.SemesterId != Model.SelectedSemester).ToList();
@@ -41,7 +41,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-3">
+        <div class="col-xs-6">
             @using (Html.BeginForm("Index", "Hours", new { area = "Service" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
             {
                 <div class="form-group">
@@ -51,6 +51,11 @@
                     <br /><br />
                 </div>
             }
+        </div>
+        <div class="col-xs-6 text-right">
+            <a href="@Url.Action("Download", "Hours", new { id = Model.SelectedSemester })">
+                <i class="fa fa-download fa-2x"></i>
+            </a>
         </div>
     </div>
     <div class="row">

@@ -397,6 +397,7 @@
     <Compile Include="Areas\Service\Controllers\EventsController.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker-build.css" />
@@ -643,6 +644,7 @@
     <Content Include="Multiselect\img\switch.png" />
     <Content Include="Multiselect\js\jquery.multi-select.js" />
     <Content Include="Multiselect\js\jquery.quicksearch.js" />
+    <Content Include="Scripts\bootstrap-combobox.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
