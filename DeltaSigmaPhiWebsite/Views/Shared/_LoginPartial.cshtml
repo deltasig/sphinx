@@ -1,25 +1,26 @@
-﻿<ul class="nav navbar-nav navbar-right">
-    @if (Request.IsAuthenticated)
-    {
-        <li><p class="navbar-text">Logged in as</p></li>
-        <li class="dropdown" style="margin-right: 50px">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">@User.Identity.Name <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li>@Html.ActionLink("Profile", "Index", "Account", new { area = "Members" }, null)</li>
-                <li>
-                    @using (Html.BeginForm("LogOff", "Account", new { area = "Members" }, FormMethod.Post, new { id = "logoutForm" }))
-                    {
-                        @Html.AntiForgeryToken()
-                    }
-                    <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
-                </li>
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li class="@(ViewContext.RouteData.Values.ContainsValue("Login") ? "active" : "")">
-            @Html.ActionLink("Log In", "Login", "Account", new { area = "Members" }, null)
-        </li>
-    }
-</ul>
+﻿@if (Request.IsAuthenticated)
+{
+    <li class="visible-lg"><p class="navbar-text">Logged in as</p></li>
+    <li class="dropdown" style="margin-right: 50px">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="hidden-lg">Logged in as</span> 
+            <strong>@User.Identity.Name</strong> <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+            <li>@Html.ActionLink("Profile", "Index", "Account", new { area = "Members" }, null)</li>
+            <li>
+                @using (Html.BeginForm("LogOff", "Account", new { area = "Members" }, FormMethod.Post, new { id = "logoutForm" }))
+                {
+                    @Html.AntiForgeryToken()
+                }
+                <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
+            </li>
+        </ul>
+    </li>
+}
+else
+{
+    <li class="@(ViewContext.RouteData.Values.ContainsValue("Login") ? "active" : "")">
+        @Html.ActionLink("Log In", "Login", "Account", new { area = "Members" }, null)
+    </li>
+}
