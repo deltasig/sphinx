@@ -130,77 +130,7 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", new { message = "Course deleted." });
         }
-
-        public async Task<ActionResult> CreateSchedule()
-        {
-            IEnumerable<SelectListItem> members;
-            if(User.IsInRole("Academics") || User.IsInRole("Administrator"))
-            {
-                members = await GetUserIdListAsFullNameAsync();
-            }
-            else
-            {
-                var member = await _db.Members.FindAsync(WebSecurity.CurrentUserId);
-                var list = new List<object>
-                {
-                    new
-                    {
-                        UserId = WebSecurity.CurrentUserId,
-                        Name = member.FirstName + " " + member.LastName
-                    }
-                };
-                members = new SelectList(list, "UserId", "Name");
-            }
-
-            var model = new ClassScheduleModel
-            {
-                Members = members,
-                AllClasses = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync(),
-                Semesters = await GetSemesterListAsync(),
-                SelectedSemester = (await GetThisSemesterAsync()).SemesterId,
-                ClassesTaken = new List<ClassTaken> { new ClassTaken() }
-            };
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> CreateSchedule(ClassScheduleModel model)
-        {
-            var message = "";
-            var duplicateCount = 0;
-            if(ModelState.IsValid)
-            {
-                foreach(var course in model.ClassesTaken)
-                {
-                    var classesTaken = await _db.ClassesTaken
-                        .Where(c => c.ClassId == course.ClassId && 
-                                    c.SemesterId == model.SelectedSemester && 
-                                    c.UserId == model.SelectedMember)
-                        .ToListAsync();
-                    if (classesTaken.Any())
-                    {
-                        duplicateCount++;
-                        continue;
-                    }
-
-                    course.SemesterId = model.SelectedSemester;
-                    course.UserId = model.SelectedMember;
-                    _db.ClassesTaken.Add(course);
-                }
-                await _db.SaveChangesAsync();
-                if(duplicateCount < model.ClassesTaken.Count)
-                {
-                    message = "Class(es) added successfully. ";
-                }
-                if (duplicateCount > 0)
-                {
-                    message += duplicateCount + " class(es) were not added since the member was already enrolled.";
-                }
-            }
-            var member = await _db.Members.FindAsync(model.SelectedMember);
-            return RedirectToAction("Schedule", new { userName = member.UserName, message});
-        }
-
+        
         public async Task<ActionResult> Schedule(string userName, string message)
         {
             ViewBag.Message = string.Empty;
@@ -214,16 +144,60 @@
             {
                 ViewBag.Message = message;
             }
-            var model = await _db.ClassesTaken
+
+            var classesTaken = await _db.ClassesTaken
                 .Where(c => c.Member.UserName == userName)
                 .OrderByDescending(c => c.SemesterId)
                 .ToListAsync();
-            if(model.Count <= 0)
+
+            var model = new ClassScheduleModel
+            {
+                SelectedUserName = userName,
+                AllClasses = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync(),
+                Semesters = await GetSemesterListAsync(),
+                ClassTaken = new ClassTaken
+                {
+                    SemesterId = (await GetThisSemesterAsync()).SemesterId,
+                    UserId = WebSecurity.GetUserId(userName)
+                },
+                ClassesTaken = classesTaken
+            };
+
+            if(!model.ClassesTaken.Any())
             {
                 ViewBag.Message += "No classes found for " + userName + ". ";
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> AddClassTaken(ClassScheduleModel model)
+        {
+            if (!ModelState.IsValid)
+                return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "Failed to add class." });
+
+            if (!User.IsInRole("Academics") && !User.IsInRole("Administrator") && WebSecurity.CurrentUserName != model.SelectedUserName)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+
+            var classesTaken = await _db.ClassesTaken
+                .Where(c => c.Member.UserName == model.SelectedUserName)
+                .OrderByDescending(c => c.SemesterId)
+                .ToListAsync();
+
+            if (classesTaken.Any(c => c.ClassId == model.ClassTaken.ClassId && c.UserId == model.ClassTaken.UserId && c.SemesterId == model.ClassTaken.SemesterId))
+            {
+                return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "That semester already contains the selected class." });
+            }
+
+            _db.ClassesTaken.Add(model.ClassTaken);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "Class added successfully." });
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -232,13 +206,27 @@
             var entry = await _db.ClassesTaken.SingleAsync(c => c.UserId == id && c.SemesterId == sid && c.ClassId == cid);
             if (entry == null)
             {
-                return RedirectToAction("Schedule", new { userName = username, message = "Course not found. " });
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            return View(entry);
+        }
+
+        [HttpPost, ActionName("DeleteFromSchedule")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> DeleteConfirmed(ClassTaken model)
+        {
+            var entry = await _db.ClassesTaken.SingleAsync(c => c.UserId == model.UserId && c.SemesterId == model.SemesterId && c.ClassId == model.ClassId);
+            var member = await _db.Members.FindAsync(model.UserId);
+            if (entry == null)
+            {
+                return RedirectToAction("Schedule", new { userName = member.UserName ?? WebSecurity.CurrentUserName, message = "Course not found. " });
             }
 
             _db.Entry(entry).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { userName = username, message = "Course deleted from schedule. " });
+            return RedirectToAction("Schedule", new { userName = member.UserName ?? WebSecurity.CurrentUserName, message = "Course deleted from schedule. " });
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -298,6 +286,7 @@
                 });
             }
 
+            ViewBag.UserName = userName;
             return View(model);
         }
 
