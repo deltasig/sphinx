@@ -173,7 +173,6 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> AddClassTaken(ClassScheduleModel model)
         {
             if (!ModelState.IsValid)
