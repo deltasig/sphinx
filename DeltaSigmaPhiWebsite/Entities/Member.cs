@@ -102,7 +102,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         {
             if (Room == null)
                 return "Unassigned";
-            return Room == 0 ? "Out-of-House" : Room.ToString();
+            return Room == 0 ? "OOH" : Room.ToString();
         }
     }
 }

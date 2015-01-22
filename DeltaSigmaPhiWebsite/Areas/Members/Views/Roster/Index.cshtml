@@ -69,14 +69,15 @@
                     <table class="table table-condensed" id="roster-table">
                         <thead>
                             <tr>
-                                <th>Member</th>
+                                <th>First</th>
+                                <th>Last</th>
                                 <th>Email</th>
                                 <th>Status</th>
-                                <th>Pledge Class</th>
+                                <th>P. Class</th>
                                 <th>Graduating</th>
                                 <th>Big Bro</th>
                                 <th>Room</th>
-                                <th>Shirt Size</th>
+                                <th>Shirt</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -86,7 +87,8 @@
                                 foreach (var item in Model.Members)
                                 {
                                     <tr>
-                                        <td>@item.ToString()</td>
+                                        <td>@item.FirstName</td>
+                                        <td>@item.LastName</td>
                                         <td><a href="mailto:@item.Email">@item.Email</a></td>
                                         <td>@item.MemberStatus.StatusName</td>
                                         <td>@item.PledgeClass.PledgeClassName</td>
@@ -94,22 +96,26 @@
                                         <td>
                                             @if (item.BigBroId != null)
                                             {
-                                                @item.BigBrother.ToString()
+                                                @item.BigBrother.FirstName
+                                                @: 
+                                                @item.BigBrother.LastName[0]
+                                                @:.
                                             }
                                             else
                                             {
                                                 @:None
-                                                }
+                                            }
                                         </td>
                                         <td>@item.RoomString()</td>
                                         <td>@item.ShirtSize</td>
                                         <td>
                                             @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
+                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null) 
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
                                             {
-                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName, area = "Members" }, null) @:|
-                                                }
-                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null)
+                                                @: |
+                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName, area = "Members" }, null) 
+                                            }
                                         </td>
                                     </tr>
                                 }

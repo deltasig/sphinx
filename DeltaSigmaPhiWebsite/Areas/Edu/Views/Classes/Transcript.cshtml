@@ -11,6 +11,19 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-6">
+            @Html.ActionLink("Back to Roster", "Index", "Roster", new { area = "Members" }, null)
+        </div>
+        <div class="col-xs-6 text-right">
+            @if (ViewBag != null && ViewBag.UserName.Length > 0)
+            {
+                @Html.ActionLink("Schedule", "Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"}, new {@class = ""})
+            }
+        </div>
+        <br />
+        <br />
+    </div>
+    <div class="row">
         <div class="col-xs-12">
             @using (Html.BeginForm("Transcript", "Classes", new { area = "Edu" }, FormMethod.Post, new { @class = "", role = "form" }))
             {
