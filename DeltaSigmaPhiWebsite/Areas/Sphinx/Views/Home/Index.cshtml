@@ -107,7 +107,7 @@
                         <u>If this is your first semester in college after graduating high school, disregard this message.</u>
 
                         Otherwise, please go fill out your classes for last semester with the 
-                        <a href="@Url.Action("CreateSchedule", "Classes", new { area = "Edu" })">Class Scheduler</a>.
+                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null).
 
                         If you transferred here from another college you attended after graduating high school, 
                         you still need to enter your previous semester classes.
@@ -147,7 +147,7 @@
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
                         You have not yet entered your courses for this semester. 
-                        <a href="@Url.Action("CreateSchedule", "Classes", new { area = "Edu" })">Go to Scheduler</a>!
+                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null)!
                     </div>
                 }
                 
