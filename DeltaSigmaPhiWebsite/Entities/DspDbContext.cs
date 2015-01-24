@@ -20,7 +20,12 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<Leader> Leaders { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
         public virtual DbSet<Meal> Meals { get; set; }
-        public virtual DbSet<MealCooked> MealsCooked { get; set; }
+        public virtual DbSet<MealItem> MealItems { get; set; }
+        public virtual DbSet<MealItemType> MealItemTypes { get; set; }
+        public virtual DbSet<MealPeriod> MealPeriods { get; set; }
+        public virtual DbSet<MealToItem> MealToItems { get; set; }
+        public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
+        public virtual DbSet<MealVote> MealVotes { get; set; }
         public virtual DbSet<Member> Members { get; set; }
         public virtual DbSet<MemberStatus> MemberStatus { get; set; }
         public virtual DbSet<OrganizationPosition> OrganizationPositions { get; set; }
@@ -60,11 +65,6 @@ namespace DeltaSigmaPhiWebsite.Entities
                 .HasMany(e => e.Members)
                 .WithMany(e => e.Committees)
                 .Map(m => m.ToTable("CommitteeMembers").MapLeftKey("LeaderId").MapRightKey("UserId"));
-
-            modelBuilder.Entity<Meal>()
-                .HasMany(e => e.MealsCooked)
-                .WithRequired(e => e.Meal)
-                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Position>()
                 .HasMany(e => e.Leaders)
