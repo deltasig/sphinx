@@ -2,20 +2,27 @@ namespace DeltaSigmaPhiWebsite.Entities
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class Meal
     {
-        public Meal()
-        {
-            MealsCooked = new HashSet<MealCooked>();
-        }
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MealId { get; set; }
 
-        [Required]
-        [StringLength(100)]
-        public string MealTitle { get; set; }
+        public virtual ICollection<MealToItem> MealsToItems { get; set; }
 
-        public virtual ICollection<MealCooked> MealsCooked { get; set; }
+        public virtual ICollection<MealToPeriod> MealsToPeriods { get; set; }
+
+        public override string ToString()
+        {
+            if (MealsToItems == null) return "No Meal Items";
+            var label = string.Empty;
+            foreach (var m in MealsToItems)
+            {
+                label += m.MealItem.Name + ", ";
+            }
+            return label.Substring(0, label.Length - 2);
+        }
     }
 }

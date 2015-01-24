@@ -93,6 +93,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<Major> Majors { get; set; }
 
+        public virtual ICollection<MealVote> MealVotes { get; set; }
+
         public override string ToString()
         {
             return FirstName + " " + LastName;
