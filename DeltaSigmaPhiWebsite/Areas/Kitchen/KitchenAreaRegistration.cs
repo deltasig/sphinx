@@ -2,21 +2,21 @@
 
 namespace DeltaSigmaPhiWebsite.Areas.Meals
 {
-    public class MealsAreaRegistration : AreaRegistration 
+    public class KitchenAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "Meals";
+                return "Kitchen";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-                "Meals_default",
-                "Meals/{controller}/{action}/{id}",
+                "Kitchen_default",
+                "Kitchen/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }
