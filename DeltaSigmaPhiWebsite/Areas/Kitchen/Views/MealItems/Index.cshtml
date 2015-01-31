@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.MealItem>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Meal Items";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @Html.ActionLink("Back to Meal Items", "Index", "Items", new { area = "Meals" }, new { @class = "" })
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                @Html.ActionLink("Create New", "Create", "Items", new { area = "Meals" }, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed" id="apps-table">
+                        <thead>
+                            <tr>
+                                <th>@Html.DisplayNameFor(model => model.MealItemType.Name)</th>
+                                <th>@Html.DisplayNameFor(model => model.Name)</th>
+                                <th>@Html.DisplayNameFor(model => model.IsGlutenFree)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.MealItemType.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @item.GetGlutenLabel()
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealItemTypeId })
+                                        @if (!item.MealToItems.Any())
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealItemTypeId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#apps-table').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" },
+        });
+
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
+}

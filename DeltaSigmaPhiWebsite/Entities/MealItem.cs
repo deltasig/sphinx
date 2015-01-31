@@ -27,5 +27,10 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<MealVote> MealVotes { get; set; }
 
+        public string GetGlutenLabel()
+        {
+            return IsGlutenFree ? "Yes" : "No";
+        }
+
     }
 }
