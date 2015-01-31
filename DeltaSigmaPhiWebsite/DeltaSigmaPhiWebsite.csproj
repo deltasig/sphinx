@@ -278,7 +278,9 @@
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
+    <Compile Include="Areas\Meals\Controllers\ItemsController.cs" />
     <Compile Include="Areas\Meals\Controllers\ItemTypesController.cs" />
+    <Compile Include="Areas\Meals\Controllers\MealsController.cs" />
     <Compile Include="Areas\Meals\MealsAreaRegistration.cs" />
     <Compile Include="Areas\Members\Controllers\RosterController.cs" />
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
@@ -657,6 +659,15 @@
     <Content Include="Areas\Meals\Views\ItemTypes\Delete.cshtml" />
     <Content Include="Areas\Meals\Views\ItemTypes\Edit.cshtml" />
     <Content Include="Areas\Meals\Views\ItemTypes\Index.cshtml" />
+    <Content Include="Areas\Meals\Views\Items\Create.cshtml" />
+    <Content Include="Areas\Meals\Views\Items\Delete.cshtml" />
+    <Content Include="Areas\Meals\Views\Items\Edit.cshtml" />
+    <Content Include="Areas\Meals\Views\Items\Index.cshtml" />
+    <Content Include="Areas\Meals\Views\Meals\Create.cshtml" />
+    <Content Include="Areas\Meals\Views\Meals\Delete.cshtml" />
+    <Content Include="Areas\Meals\Views\Meals\Details.cshtml" />
+    <Content Include="Areas\Meals\Views\Meals\Edit.cshtml" />
+    <Content Include="Areas\Meals\Views\Meals\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
