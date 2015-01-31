@@ -1,28 +1,70 @@
 ﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.Meal>
-
 @{
-    ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Meals";
+}
+@section Title
+{
+    @Html.Partial("_Title")
 }
 
-<h2>Index</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @Html.ActionLink("Back to Meal Items", "Index", "Item", new { area = "Kitchen" }, new { @class = "" })
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                @Html.ActionLink("Create New", "Create", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table class="table table-condensed" id="apps-table">
+                        <thead>
+                            <tr>
+                                <th>Meal</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.ToString()
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealId })
+                                        @if (!item.MealsToPeriods.Any() || !item.MealsToItems.Any())
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        $('#apps-table').DataTable({
+            pageLength: 10,
+            lengthChange: false,
+            "oLanguage": { "sSearch": "" },
+            "order": [[0, "asc"]]
+        });
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.MealId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.MealId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.MealId })
-        </td>
-    </tr>
+        $('div.dataTables_filter input').addClass('form-control');
+        $('div.dataTables_filter input').attr('placeholder', 'Search');
+    </script>
 }
-
-</table>
