@@ -8,55 +8,49 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DeltaSigmaPhiWebsite.Entities;
+using DeltaSigmaPhiWebsite.Controllers;
+using DeltaSigmaPhiWebsite.Areas.Kitchen.Models;
 
 namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
 {
-    public class MealsController : Controller
+    public class MealsController : BaseController
     {
-        private DspDbContext db = new DspDbContext();
 
         // GET: Meals/Meals
         public async Task<ActionResult> Index()
         {
-            return View(await db.Meals.ToListAsync());
-        }
-
-        // GET: Meals/Meals/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Meal meal = await db.Meals.FindAsync(id);
-            if (meal == null)
-            {
-                return HttpNotFound();
-            }
-            return View(meal);
+            return View(await _db.Meals.ToListAsync());
         }
 
         // GET: Meals/Meals/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            return View();
+            var model = new CreateMealModel();
+            model.MealItems = await base.GetMealItemsSelectListAsync();
+            return View(model);
         }
 
-        // POST: Meals/Meals/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "MealId")] Meal meal)
+        public async Task<ActionResult> Create(CreateMealModel model)
         {
-            if (ModelState.IsValid)
+            if (ModelState.IsValid && model.SelectedMealItemIds.Any())
             {
-                db.Meals.Add(meal);
-                await db.SaveChangesAsync();
+                var meal = new Meal();
+                _db.Meals.Add(meal);
+                await _db.SaveChangesAsync();
+                foreach(var id in model.SelectedMealItemIds)
+                {
+                    var item = new MealToItem();
+                    item.MealId = meal.MealId;
+                    item.MealItemId = id;
+                    _db.MealToItems.Add(item);
+                }
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
-            return View(meal);
+            return RedirectToAction("Create");
         }
 
         // GET: Meals/Meals/Edit/5
@@ -66,7 +60,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Meal meal = await db.Meals.FindAsync(id);
+            Meal meal = await _db.Meals.FindAsync(id);
             if (meal == null)
             {
                 return HttpNotFound();
@@ -83,8 +77,8 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(meal).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                _db.Entry(meal).State = EntityState.Modified;
+                await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
             return View(meal);
@@ -97,7 +91,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Meal meal = await db.Meals.FindAsync(id);
+            Meal meal = await _db.Meals.FindAsync(id);
             if (meal == null)
             {
                 return HttpNotFound();
@@ -110,9 +104,9 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Meal meal = await db.Meals.FindAsync(id);
-            db.Meals.Remove(meal);
-            await db.SaveChangesAsync();
+            Meal meal = await _db.Meals.FindAsync(id);
+            _db.Meals.Remove(meal);
+            await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
@@ -120,7 +114,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
         {
             if (disposing)
             {
-                db.Dispose();
+                _db.Dispose();
             }
             base.Dispose(disposing);
         }

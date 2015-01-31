@@ -22,21 +22,6 @@ namespace DeltaSigmaPhiWebsite.Areas.Meals.Controllers
             return View(await mealItems.ToListAsync());
         }
 
-        // GET: Meals/Items/Details/5
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            MealItem mealItem = await db.MealItems.FindAsync(id);
-            if (mealItem == null)
-            {
-                return HttpNotFound();
-            }
-            return View(mealItem);
-        }
-
         // GET: Meals/Items/Create
         public ActionResult Create()
         {
