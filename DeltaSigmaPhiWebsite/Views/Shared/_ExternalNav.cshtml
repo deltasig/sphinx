@@ -25,13 +25,13 @@
                     </li>
                 }
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
-                <li class="@(ViewContext.RouteData.Values.ContainsValue("Recruitment") ? "active" : "")">
+                <li class="@(ViewBag.Title.Contains("Recruitment") ? "active" : "")">
                     @Html.ActionLink("Recruitment", "Recruitment", "Home", new { area = "" }, null)
                 </li>
-                <li class="@(ViewContext.RouteData.Values.ContainsValue("Scholarships") ? "active" : "")">
+                <li class="@(ViewBag.Title.Contains("Scholarships") ? "active" : "")">
                     @Html.ActionLink("Scholarships", "Scholarships", "Home", new { area = "" }, null)
                 </li>
-                <li class="@(ViewContext.RouteData.Values.ContainsValue("Contacts") ? "active" : "")">
+                <li class="@(ViewBag.Title.Contains("Contacts") ? "active" : "")">
                     @Html.ActionLink("Contacts", "Contacts", "Home", new { area = "" }, null)
                 </li>
                 <li class="hidden-xs hidden-sm">

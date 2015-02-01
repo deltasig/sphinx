@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [Authorize(Roles = "Administrator, House Steward")]
     public class MealItemsController : BaseController
     {
         public async Task<ActionResult> Index()
@@ -21,8 +22,7 @@
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(MealItem mealItem)
         {
             if (!ModelState.IsValid) return RedirectToAction("Create");
@@ -47,8 +47,7 @@
             return View(mealItem);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(MealItem mealItem)
         {
             if (!ModelState.IsValid) return RedirectToAction("Edit", new { id = mealItem.MealItemId });
@@ -72,8 +71,7 @@
             return View(mealItem);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var mealItem = await _db.MealItems.FindAsync(id);
