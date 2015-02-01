@@ -278,6 +278,11 @@
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
+    <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
+    <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
+    <Compile Include="Areas\Kitchen\Controllers\MealsController.cs" />
+    <Compile Include="Areas\Kitchen\KitchenAreaRegistration.cs" />
+    <Compile Include="Areas\Kitchen\Models\CreateMealModel.cs" />
     <Compile Include="Areas\Members\Controllers\RosterController.cs" />
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\AccountInformationModel.cs" />
@@ -325,6 +330,12 @@
     <Compile Include="Areas\Study\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="DspRoleProvider.cs" />
+    <Compile Include="Entities\MealItem.cs" />
+    <Compile Include="Entities\MealItemType.cs" />
+    <Compile Include="Entities\MealPeriod.cs" />
+    <Compile Include="Entities\MealToItem.cs" />
+    <Compile Include="Entities\MealToPeriod.cs" />
+    <Compile Include="Entities\MealVote.cs" />
     <Compile Include="Entities\ScholarshipAnswer.cs" />
     <Compile Include="Entities\ScholarshipType.cs" />
     <Compile Include="Entities\ScholarshipAppQuestion.cs" />
@@ -353,6 +364,10 @@
     <Compile Include="Migrations\201501172154487_MessedUpSubmittedOnType.Designer.cs">
       <DependentUpon>201501172154487_MessedUpSubmittedOnType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201501242142277_MealsTables.cs" />
+    <Compile Include="Migrations\201501242142277_MealsTables.Designer.cs">
+      <DependentUpon>201501242142277_MealsTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -370,7 +385,6 @@
     <Compile Include="Entities\Leader.cs" />
     <Compile Include="Entities\Major.cs" />
     <Compile Include="Entities\Meal.cs" />
-    <Compile Include="Entities\MealCooked.cs" />
     <Compile Include="Entities\Member.cs" />
     <Compile Include="Entities\MemberStatus.cs" />
     <Compile Include="Entities\Organization.cs" />
@@ -641,14 +655,27 @@
     <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\bootstrap\bootstrap-datetimepicker.less" />
     <Content Include="Areas\Edu\Views\Classes\DeleteFromSchedule.cshtml" />
+    <Content Include="Areas\Kitchen\Views\web.config" />
+    <Content Include="Areas\Kitchen\Views\MealItemTypes\Create.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItemTypes\Delete.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItemTypes\Edit.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItemTypes\Index.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItems\Create.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItems\Delete.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItems\Edit.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealItems\Index.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Create.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Delete.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Edit.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy %282%29.pubxml" />
-    <Content Include="Multiselect\css\multi-select.css" />
-    <Content Include="Multiselect\img\switch.png" />
-    <Content Include="Multiselect\js\jquery.multi-select.js" />
-    <Content Include="Multiselect\js\jquery.quicksearch.js" />
+    <Content Include="Models\Multiselect\css\multi-select.css" />
+    <Content Include="Models\Multiselect\img\switch.png" />
+    <Content Include="Models\Multiselect\js\jquery.multi-select.js" />
+    <Content Include="Models\Multiselect\js\jquery.quicksearch.js" />
     <Content Include="Scripts\bootstrap-combobox.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
@@ -694,6 +721,7 @@
     <Content Include="Scripts\jquery-ui-1.11.2.js" />
     <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.quicksearch.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
@@ -1118,6 +1146,7 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\Edu\Views\Shared\" />
+    <Folder Include="Areas\Kitchen\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />
@@ -1138,6 +1167,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501172154487_MessedUpSubmittedOnType.resx">
       <DependentUpon>201501172154487_MessedUpSubmittedOnType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201501242142277_MealsTables.resx">
+      <DependentUpon>201501242142277_MealsTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
