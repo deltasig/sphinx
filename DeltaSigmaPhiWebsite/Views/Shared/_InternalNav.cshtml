@@ -105,6 +105,9 @@
                             @Html.ActionLink("Laundry", "Schedule", "Laundry", new { area = "Sphinx" }, null)
                         </li>
                     }
+                    <li class="@(ViewBag.Title == "Meal Schedule" ? "active" : "")">
+                        @Html.ActionLink("Meals", "Index", "Schedule", new { area = "Kitchen" }, null)
+                    </li>
                 }
                 else
                 {

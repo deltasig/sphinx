@@ -14,7 +14,7 @@
             bundles.Add(new StyleBundle("~/Content/font-awesome")
                 .Include("~/Content/font-awesome.css"));
             bundles.Add(new StyleBundle("~/Content/Multiselect")
-                .Include("~/Multiselect/css/multi-select.css"));
+                .Include("~/Content/multi-select.css"));
 
             // Scripts
             bundles.Add(new ScriptBundle("~/bundles/bootstrap")
@@ -30,8 +30,8 @@
             bundles.Add(new ScriptBundle("~/bundles/modernizr")
                 .Include("~/Scripts/modernizr-*"));
             bundles.Add(new ScriptBundle("~/bundles/Multiselect")
-                .Include("~/Multiselect/js/jquery.multi-select.js")
-                .Include("~/Multiselect/js/jquery.quicksearch.js"));
+                .Include("~/Scripts/jquery.multi-select.js")
+                .Include("~/Scripts/jquery.quicksearch.js"));
         }
     }
 }

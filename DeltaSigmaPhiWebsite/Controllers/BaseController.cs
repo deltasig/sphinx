@@ -614,6 +614,20 @@
 
             return list;
         }
+        protected virtual async Task<SelectList> GetMealItemsSelectListAsync()
+        {
+            var list = await _db.MealItems.ToListAsync();
+            var newList = new List<object>();
+            foreach (var m in list)
+            {
+                newList.Add(new
+                {
+                    m.MealItemId,
+                    Text = m.Name + (m.IsGlutenFree ? " (GF)" : "")
+                });
+            }
+            return new SelectList(newList, "MealItemId", "Text");
+        }
 
         protected override void Dispose(bool disposing)
         {
