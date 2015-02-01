@@ -20,7 +20,7 @@
         [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
         public async Task<ActionResult> Schedule(int week = 0)
         {
-
+            ViewBag.week = week;
 
 
 

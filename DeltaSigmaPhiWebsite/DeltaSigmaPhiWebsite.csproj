@@ -280,6 +280,7 @@
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
+    <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealsController.cs" />
     <Compile Include="Areas\Kitchen\KitchenAreaRegistration.cs" />
     <Compile Include="Areas\Kitchen\Models\EditMealModel.cs" />
@@ -672,6 +673,10 @@
     <Content Include="Areas\Kitchen\Views\Meals\Index.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\Schedule.cshtml" />
     <Content Include="Areas\Kitchen\Views\Shared\_MealsNavPartial.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealPeriods\Create.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealPeriods\Delete.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealPeriods\Edit.cshtml" />
+    <Content Include="Areas\Kitchen\Views\MealPeriods\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
