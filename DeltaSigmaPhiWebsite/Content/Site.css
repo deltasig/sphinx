@@ -114,3 +114,7 @@ dl {
     background-color: #e7e7e7 !important;
     color: #555 !important;
 }
+
+table.dataTable thead > tr > th {
+    padding-left: 5px !important;
+}
