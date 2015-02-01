@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace DeltaSigmaPhiWebsite.Areas.Meals
+namespace DeltaSigmaPhiWebsite.Areas.Kitchen
 {
     public class KitchenAreaRegistration : AreaRegistration 
     {

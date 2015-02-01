@@ -11,11 +11,16 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            @Html.ActionLink("Back to Meal Items", "Index", "Items", new { area = "Kitchen" }, new { @class = "" })
+            <div class="btn-group" role="group" aria-label="...">
+                @Html.ActionLink("Schedule", "Index", "MealSchedule", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+                @Html.ActionLink("Meals", "Index", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+                @Html.ActionLink("Meal Items", "Index", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default active" }) 
+                @Html.ActionLink("Item Types", "Index", "MealItemTypes", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+            </div>
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", "Items", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Create New", "Create", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>
@@ -26,9 +31,9 @@
                     <table class="table table-condensed" id="apps-table">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.MealItemType.Name)</th>
-                                <th>@Html.DisplayNameFor(model => model.Name)</th>
-                                <th>@Html.DisplayNameFor(model => model.IsGlutenFree)</th>
+                                <th>Type</th>
+                                <th>Name</th>
+                                <th>Gluten Free</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -36,21 +41,15 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
+                                    <td>@item.MealItemType.Name</td>
+                                    <td>@item.Name</td>
+                                    <td>@item.GetGlutenLabel()</td>
                                     <td>
-                                        @Html.DisplayFor(modelItem => item.MealItemType.Name)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Name)
-                                    </td>
-                                    <td>
-                                        @item.GetGlutenLabel()
-                                    </td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealItemTypeId })
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealItemId })
                                         @if (!item.MealToItems.Any())
                                         {
                                             @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealItemTypeId })
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealItemId })
                                         }
                                     </td>
                                 </tr>
@@ -69,6 +68,12 @@
             pageLength: 10,
             lengthChange: false,
             "oLanguage": { "sSearch": "" },
+            "order": [[0, "asc"], [1, "asc"]],
+            "columnDefs": [
+                { "width": "15%", "targets": 0 },
+                { "width": "15%", "targets": 2 },
+                { "width": "10%", "targets": 3 }
+            ]
         });
 
         $('div.dataTables_filter input').addClass('form-control');

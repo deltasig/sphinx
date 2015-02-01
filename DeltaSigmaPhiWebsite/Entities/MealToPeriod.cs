@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-
-namespace DeltaSigmaPhiWebsite.Entities
+﻿namespace DeltaSigmaPhiWebsite.Entities
 {
+    using System;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
     public partial class MealToPeriod
     {
         [Key]
@@ -17,6 +14,7 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public int MealId { get; set; }
 
+        [Required]
         [Column(TypeName="Date")]
         public DateTime Date { get; set; }
 

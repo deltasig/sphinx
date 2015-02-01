@@ -1,23 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-
-namespace DeltaSigmaPhiWebsite.Entities
+﻿namespace DeltaSigmaPhiWebsite.Entities
 {
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+
+
     public partial class MealItem
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MealItemId { get; set; }
 
+        [Required]
         public int MealItemTypeId { get; set; }
 
+        [Required]
         [StringLength(150)]
         public string Name { get; set; }
 
+        [Required]
         public bool IsGlutenFree { get; set; }
 
         [ForeignKey("MealItemTypeId")]

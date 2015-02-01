@@ -1,12 +1,13 @@
 ﻿@model DeltaSigmaPhiWebsite.Entities.MealItemType
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Edit Meal Item Type";
 }
 @section Title
 {
     @Html.Partial("_Title")
 }
+
 <div class="container">
     <div class="row">
         <div class="col-sm-6">
@@ -14,6 +15,7 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.MealItemTypeId)
                 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Name, new { @class = "control-label" })

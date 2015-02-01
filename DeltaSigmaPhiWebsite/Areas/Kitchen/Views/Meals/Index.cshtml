@@ -11,11 +11,16 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            @Html.ActionLink("Back to Meal Items", "Index", "Item", new { area = "Kitchen" }, new { @class = "" })
+            <div class="btn-group" role="group" aria-label="...">
+                @Html.ActionLink("Schedule", "Index", "MealSchedule", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+                @Html.ActionLink("Meals", "Index", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default active" }) 
+                @Html.ActionLink("Meal Items", "Index", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+                @Html.ActionLink("Item Types", "Index", "MealItemTypes", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+            </div>
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Create New", "Create", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" }) 
             </p>
         </div>
     </div>
@@ -34,9 +39,7 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>
-                                        @item.ToString()
-                                    </td>
+                                    <td>@item.ToString()</td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.MealId })
                                         @if (!item.MealsToPeriods.Any() || !item.MealsToItems.Any())
@@ -61,7 +64,10 @@
             pageLength: 10,
             lengthChange: false,
             "oLanguage": { "sSearch": "" },
-            "order": [[0, "asc"]]
+            "order": [[0, "asc"]],
+            "columnDefs": [
+                { "width": "10%", "targets": 1 }
+            ]
         });
 
         $('div.dataTables_filter input').addClass('form-control');

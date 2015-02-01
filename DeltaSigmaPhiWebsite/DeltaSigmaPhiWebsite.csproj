@@ -282,6 +282,7 @@
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealsController.cs" />
     <Compile Include="Areas\Kitchen\KitchenAreaRegistration.cs" />
+    <Compile Include="Areas\Kitchen\Models\EditMealModel.cs" />
     <Compile Include="Areas\Kitchen\Models\CreateMealModel.cs" />
     <Compile Include="Areas\Members\Controllers\RosterController.cs" />
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
@@ -477,6 +478,7 @@
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\multi-select.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -721,6 +723,7 @@
     <Content Include="Scripts\jquery-ui-1.11.2.js" />
     <Content Include="Scripts\jquery-ui-1.11.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.multi-select.js" />
     <Content Include="Scripts\jquery.quicksearch.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
     <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
