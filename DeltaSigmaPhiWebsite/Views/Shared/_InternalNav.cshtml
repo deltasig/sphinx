@@ -97,16 +97,22 @@
                         </ul>
                     </li>
                     <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">
-                        @Html.ActionLink("Sobers", "Schedule", "Sobers", new { area = "Sphinx" }, null)
+                        <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })">
+                            <i class="fa fa-taxi"></i> Sobers
+                        </a>
                     </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                     {
                         <li class="@(ViewBag.Title == "Laundry Signup" ? "active" : "")">
-                            @Html.ActionLink("Laundry", "Schedule", "Laundry", new { area = "Sphinx" }, null)
+                            <a href="@Url.Action("Schedule", "Laundry", new { area = "Sphinx" })">
+                                <i class="fa fa-calendar"></i> Laundry
+                            </a>
                         </li>
                     }
                     <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")">
-                        @Html.ActionLink("Meals", "Schedule", "Meals", new { area = "Kitchen" }, null)
+                        <a href="@Url.Action("Schedule", "Meals", new { area = "Kitchen" })">
+                            <i class="fa fa-cutlery"></i> Meals
+                        </a>
                     </li>
                 }
                 else
