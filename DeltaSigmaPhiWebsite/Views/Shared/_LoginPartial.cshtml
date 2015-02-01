@@ -7,13 +7,19 @@
             <strong>@User.Identity.Name</strong> <b class="caret"></b>
         </a>
         <ul class="dropdown-menu">
-            <li>@Html.ActionLink("Profile", "Index", "Account", new { area = "Members" }, null)</li>
+            <li>
+                <a href="@Url.Action("Index", "Account", new { area = "Members" })">
+                    <i class="fa fa-user"></i> Profile
+                </a>
+            </li>
             <li>
                 @using (Html.BeginForm("LogOff", "Account", new { area = "Members" }, FormMethod.Post, new { id = "logoutForm" }))
                 {
                     @Html.AntiForgeryToken()
                 }
-                <a href="javascript:document.getElementById('logoutForm').submit()">Log Off</a>
+                <a href="javascript:document.getElementById('logoutForm').submit()">
+                    <i class="fa fa-sign-out"></i> Log Off
+                </a>
             </li>
         </ul>
     </li>
@@ -21,6 +27,8 @@
 else
 {
     <li class="@(ViewContext.RouteData.Values.ContainsValue("Login") ? "active" : "")">
-        @Html.ActionLink("Log In", "Login", "Account", new { area = "Members" }, null)
+        <a href="@Url.Action("Login", "Account", new { area = "Members" })">
+            <i class="fa fa-sign-in"></i> Log In
+        </a>
     </li>
 }
