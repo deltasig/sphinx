@@ -670,6 +670,8 @@
     <Content Include="Areas\Kitchen\Views\Meals\Delete.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\Index.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Schedule.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Shared\_MealsNavPartial.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1149,7 +1151,6 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\Edu\Views\Shared\" />
-    <Folder Include="Areas\Kitchen\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />

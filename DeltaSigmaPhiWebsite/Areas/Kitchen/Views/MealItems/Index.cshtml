@@ -12,10 +12,7 @@
     <div class="row">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
-                @Html.ActionLink("Schedule", "Index", "MealSchedule", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
-                @Html.ActionLink("Meals", "Index", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
-                @Html.ActionLink("Meal Items", "Index", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default active" }) 
-                @Html.ActionLink("Item Types", "Index", "MealItemTypes", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-default" }) 
+                @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
             </div>
         </div>
         <div class="col-xs-6 text-right">
