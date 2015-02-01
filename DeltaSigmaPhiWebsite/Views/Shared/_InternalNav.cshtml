@@ -20,7 +20,7 @@
             <ul class="nav navbar-nav" id="menu">
                 @if (Request.IsAuthenticated && !User.IsInRole("Released"))
                 {
-                    <li class="@(ViewContext.RouteData.Values["Controller"] == "Sphinx" && ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")">
+                    <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
                         @Html.ActionLink("Sphinx", "Index", "Home", new { area = "Sphinx" }, new { title = "Sphinx" })
                     </li>
                     if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
@@ -105,8 +105,8 @@
                             @Html.ActionLink("Laundry", "Schedule", "Laundry", new { area = "Sphinx" }, null)
                         </li>
                     }
-                    <li class="@(ViewBag.Title == "Meal Schedule" ? "active" : "")">
-                        @Html.ActionLink("Meals", "Index", "Schedule", new { area = "Kitchen" }, null)
+                    <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")">
+                        @Html.ActionLink("Meals", "Schedule", "Meals", new { area = "Kitchen" }, null)
                     </li>
                 }
                 else

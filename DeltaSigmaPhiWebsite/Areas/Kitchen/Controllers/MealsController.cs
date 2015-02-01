@@ -9,11 +9,22 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [Authorize(Roles = "Administrator, House Steward")]
     public class MealsController : BaseController
     {
         public async Task<ActionResult> Index()
         {
             return View(await _db.Meals.ToListAsync());
+        }
+
+        [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
+        public async Task<ActionResult> Schedule(int week = 0)
+        {
+
+
+
+
+            return View();
         }
 
         public async Task<ActionResult> Create()
@@ -25,8 +36,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(CreateMealModel model)
         {
             if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Create");
@@ -68,8 +78,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMealModel model)
         {
             if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Edit", new { id = model.MealId });
@@ -118,8 +127,7 @@
             return View(meal);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var meal = await _db.Meals.FindAsync(id);
