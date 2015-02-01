@@ -1,30 +1,70 @@
-﻿@model DeltaSigmaPhiWebsite.Entities.Meal
-
+﻿@model DeltaSigmaPhiWebsite.Areas.Kitchen.Models.EditMealModel
 @{
-    ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Edit Meal";
+}
+@section Title
+{
+    @Html.Partial("_Title")
 }
 
-<h2>Edit</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.MealId)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Meal</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.MealId)
+                <div class="form-group">
+                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new { id = "meal-item-selection", @class = "form-control" })
+                </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" /> |
+                    @Html.ActionLink("Back to List", "Index")
+                </div>
+
+            }
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        var settings = {
+            selectableHeader: "<label class='control-label'>Meal Items</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+            selectionHeader: "<label class='control-label'>Selected Meal Items</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+            afterInit: function (ms) {
+                var that = this,
+                    $selectableSearch = that.$selectableUl.prev(),
+                    $selectionSearch = that.$selectionUl.prev(),
+                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
+                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+
+                that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which === 40) {
+                            that.$selectableUl.focus();
+                            return false;
+                        }
+                    });
+
+                that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                    .on('keydown', function (e) {
+                        if (e.which == 40) {
+                            that.$selectionUl.focus();
+                            return false;
+                        }
+                    });
+            },
+            cssClass: "full-width"
+        };
+
+        $('#meal-item-selection').multiSelect(settings);
+
+    </script>
+}
