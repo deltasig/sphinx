@@ -16,11 +16,16 @@
             </div>
         </div>
         <div class="col-xs-6 text-right">
-            <p>
-                @Html.ActionLink("Create New", "Create", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" }) 
-            </p>
+            <div class="btn-group" role="group" aria-label="...">
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week-1 })">
+                    <i class="fa fa-caret-left"></i> Previous Week
+                </a>
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week+1 })">
+                    Next Week <i class="fa fa-caret-right"></i>
+                </a>
+            </div>
         </div>
-    </div>
+    </div><br/>
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
@@ -28,7 +33,6 @@
                     <table class="table table-condensed" id="schedule-table">
                         <thead>
                             <tr>
-                                <th>Meal</th>
                                 <th></th>
                             </tr>
                         </thead>
