@@ -333,6 +333,7 @@
     <Compile Include="Areas\Study\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="DspRoleProvider.cs" />
+    <Compile Include="Entities\MealLatePlate.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealItemType.cs" />
     <Compile Include="Entities\MealPeriod.cs" />
@@ -370,6 +371,10 @@
     <Compile Include="Migrations\201501242142277_MealsTables.cs" />
     <Compile Include="Migrations\201501242142277_MealsTables.Designer.cs">
       <DependentUpon>201501242142277_MealsTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502020624508_Late Plates.cs" />
+    <Compile Include="Migrations\201502020624508_Late Plates.Designer.cs">
+      <DependentUpon>201502020624508_Late Plates.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1216,6 +1221,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201501242142277_MealsTables.resx">
       <DependentUpon>201501242142277_MealsTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502020624508_Late Plates.resx">
+      <DependentUpon>201502020624508_Late Plates.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
