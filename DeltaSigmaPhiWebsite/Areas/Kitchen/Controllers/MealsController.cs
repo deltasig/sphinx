@@ -1,4 +1,6 @@
-﻿namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
+﻿using WebMatrix.WebData;
+
+namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
@@ -18,7 +20,7 @@
             return View(await _db.Meals.ToListAsync());
         }
 
-        [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
+        [AllowAnonymous]
         public async Task<ActionResult> Schedule(int week = 0)
         {
             ViewBag.week = week;
@@ -30,6 +32,7 @@
             model.StartOfWeek = startOfWeekCst;
             model.Meals = await _db.Meals.ToListAsync();
             model.MealPeriods = await _db.MealPeriods.ToListAsync();
+            model.UsersVotes = (await _db.Members.FindAsync(WebSecurity.CurrentUserId)).MealVotes;
 
             var existingAssignments = await _db.MealToPeriods
                 .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
@@ -90,6 +93,94 @@
                         existingSlot.MealId = copy.MealId;
                         _db.Entry(existingSlot).State = EntityState.Modified;
                     }
+                }
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule", new { week });
+        }
+
+        public async Task<ActionResult> Upvote(int? id, int week = 0)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var mealItem = await _db.MealItems.FindAsync(id);
+            if (mealItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            var existingVote = await _db.MealVotes
+                    .SingleOrDefaultAsync(v => 
+                        v.UserId == WebSecurity.CurrentUserId && 
+                        v.MealItemId == mealItem.MealItemId);
+
+            if (existingVote == null)
+            {
+                _db.MealVotes.Add(new MealVote
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    MealItemId = mealItem.MealItemId,
+                    IsUpvote = true
+                });
+            }
+            else
+            {
+                if (existingVote.IsUpvote)
+                {
+                    _db.Entry(existingVote).State = EntityState.Deleted;
+                }
+                else
+                {
+                    existingVote.IsUpvote = true;
+                    _db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule", new { week });
+        }
+
+        public async Task<ActionResult> Downvote(int? id, int week = 0)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var mealItem = await _db.MealItems.FindAsync(id);
+            if (mealItem == null)
+            {
+                return HttpNotFound();
+            }
+
+            var existingVote = await _db.MealVotes
+                    .SingleOrDefaultAsync(v =>
+                        v.UserId == WebSecurity.CurrentUserId &&
+                        v.MealItemId == mealItem.MealItemId);
+
+            if (existingVote == null)
+            {
+                _db.MealVotes.Add(new MealVote
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    MealItemId = mealItem.MealItemId,
+                    IsUpvote = false
+                });
+            }
+            else
+            {
+                if (!existingVote.IsUpvote)
+                {
+                    _db.Entry(existingVote).State = EntityState.Deleted;
+                }
+                else
+                {
+                    existingVote.IsUpvote = false;
+                    _db.Entry(existingVote).State = EntityState.Modified;
                 }
             }
 
