@@ -33,7 +33,7 @@
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen" }, FormMethod.Post, new { @class = "", role = "form" }))
+            @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen", week = ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
