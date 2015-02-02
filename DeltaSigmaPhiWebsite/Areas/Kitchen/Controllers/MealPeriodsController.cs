@@ -7,6 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [Authorize(Roles = "Administrator, House Steward")]
     public class MealPeriodsController : BaseController
     {
         public async Task<ActionResult> Index()
