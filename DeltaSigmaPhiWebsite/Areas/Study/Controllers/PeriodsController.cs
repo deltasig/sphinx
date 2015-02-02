@@ -93,8 +93,8 @@
 
             var model = new StudyPeriod
             {
-                Start = base.GetStartOfCurrentWeek(),
-                End = base.GetStartOfCurrentWeek().AddDays(7).AddSeconds(-1)
+                Start = base.GetStartOfCurrentStudyWeek(),
+                End = base.GetStartOfCurrentStudyWeek().AddDays(7).AddSeconds(-1)
             };
 
             return View(model);
