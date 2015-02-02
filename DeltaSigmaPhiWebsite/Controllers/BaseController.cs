@@ -518,6 +518,27 @@
             switch (now.DayOfWeek)
             {
                 case DayOfWeek.Sunday:
+                    return now;
+                case DayOfWeek.Monday:
+                    return now.AddDays(-1);
+                case DayOfWeek.Tuesday:
+                    return now.AddDays(-2);
+                case DayOfWeek.Wednesday:
+                    return now.AddDays(-3);
+                case DayOfWeek.Thursday:
+                    return now.AddDays(-4);
+                case DayOfWeek.Friday:
+                    return now.AddDays(-5);
+                default: // Saturday
+                    return now.AddDays(-6);
+            }
+        }
+        protected virtual DateTime GetStartOfCurrentStudyWeek()
+        {
+            var now = ConvertUtcToCst(DateTime.UtcNow).Date;
+            switch (now.DayOfWeek)
+            {
+                case DayOfWeek.Sunday:
                     return now.AddDays(-5);
                 case DayOfWeek.Monday:
                     return now.AddDays(-6);
@@ -627,6 +648,34 @@
                 });
             }
             return new SelectList(newList, "MealItemId", "Text");
+        }
+        protected virtual async Task<SelectList> GetMealsSelectListAsync()
+        {
+            var list = await _db.Meals.ToListAsync();
+            var newList = new List<object>();
+            foreach (var m in list)
+            {
+                newList.Add(new
+                {
+                    m.MealId,
+                    Text = m.ToString()
+                });
+            }
+            return new SelectList(newList, "MealId", "Text");
+        }
+        protected virtual async Task<SelectList> GetMealsSelectListWithNoneAsync()
+        {
+            var list = await _db.Meals.ToListAsync();
+            var newList = new List<object> { new { MealId = -1, Text = "None" } };
+            foreach (var m in list)
+            {
+                newList.Add(new
+                {
+                    m.MealId,
+                    Text = m.ToString()
+                });
+            }
+            return new SelectList(newList, "MealId", "Text");
         }
 
         protected override void Dispose(bool disposing)

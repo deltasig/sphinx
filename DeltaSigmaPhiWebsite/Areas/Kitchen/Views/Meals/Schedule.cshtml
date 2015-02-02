@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.Meal>
+﻿@using DeltaSigmaPhiWebsite.Entities
+@model DeltaSigmaPhiWebsite.Areas.Kitchen.Models.MealScheduleModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meal Schedule";
@@ -17,37 +18,122 @@
         </div>
         <div class="col-xs-6 text-right">
             <div class="btn-group" role="group" aria-label="...">
-                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week-1 })">
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week - 1 })">
                     <i class="fa fa-caret-left"></i> Previous Week
                 </a>
-                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week+1 })">
+                <a class="btn btn-sm btn-default disabled" href="#">@Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()</a>
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">
                     Next Week <i class="fa fa-caret-right"></i>
                 </a>
             </div>
         </div>
-    </div><br/>
+    </div>
+</div>
+<br/>
+<div class="container">
     <div class="row">
         <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="table table-condensed" id="schedule-table">
-                        <thead>
-                            <tr>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            
-                        </tbody>
-                    </table>
+            @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen" }, FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <table class="table table-bordered" id="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th class="active text-right">Period</th>
+                                    <th class="text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                    <th class="text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var newList = new List<object> { new { MealId = -1, Text = "None" } };
+                                    foreach (var m in Model.Meals)
+                                    {
+                                        newList.Add(new
+                                        {
+                                            m.MealId,
+                                            Text = m.ToString()
+                                        });
+                                    }
+                                }
+                                @foreach (var p in Model.MealPeriods)
+                                {
+                                    <tr>
+                                        <td class="active text-right col-md-2">
+                                            @p.Name <br />
+                                            @p.StartTime.ToString("hh:mm tt") - @p.StartTime.ToString("hh:mm tt")
+                                        </td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                                        {
+                                            for (var i = 0; i < 7; i++)
+                                            {
+                                                var slot = Model.MealsToPeriods
+                                                    .Single(m => m.MealPeriodId == p.MealPeriodId && m.Date.Date == Model.StartOfWeek.AddDays(i).Date);
+                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId)
+                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealPeriodId)
+                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
+                                                
+                                                <td>
+                                                    @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId, 
+                                                        new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId), 
+                                                        new { @class = "form-control dd", data_live_search=true })
+                                                </td>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            for (var i = 0; i < 7; i++)
+                                            {
+                                                var slot = Model.MealsToPeriods
+                                                    .SingleOrDefault(m => m.MealPeriodId == p.MealPeriodId && m.Date == Model.StartOfWeek.AddDays(i).Date);
+                                                if (slot == null)
+                                                {
+                                                    <td></td>
+                                                }
+                                                else
+                                                {
+                                                    <td>
+                                                        @foreach (var item in slot.Meal.MealsToItems)
+                                                        {
+                                                            @item.MealItem.Name @(item.MealItem.IsGlutenFree ? "(GF)" : "") <br/>
+                                                        }
+                                                    </td>
+                                                }
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                    {
+                        <div class="panel-footer text-right">
+                            <input type="submit" value="Save Schedule" class="btn btn-default" />
+                        </div>
+                    }
                 </div>
-            </div>
+            }
         </div>
     </div>
 </div>
 @section scripts
 {
     <script type="text/javascript">
-        
+
+        $(document).ready(function() {
+            $('.dd').selectpicker({
+                width: 100
+            });
+        });
+
     </script>
 }

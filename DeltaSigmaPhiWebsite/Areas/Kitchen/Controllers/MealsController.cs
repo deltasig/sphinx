@@ -3,6 +3,7 @@
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using Models;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
@@ -21,10 +22,80 @@
         public async Task<ActionResult> Schedule(int week = 0)
         {
             ViewBag.week = week;
+            var startOfWeekCst = base.GetStartOfCurrentWeek().AddDays(7 * week);
+            var startOfWeekUtc = base.ConvertCstToUtc(startOfWeekCst);
+            var startOfNextWeekUtc = base.ConvertCstToUtc(startOfWeekCst.AddDays(7));
 
+            var model = new MealScheduleModel();
+            model.StartOfWeek = startOfWeekCst;
+            model.Meals = await _db.Meals.ToListAsync();
+            model.MealPeriods = await _db.MealPeriods.ToListAsync();
 
+            var existingAssignments = await _db.MealToPeriods
+                .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
+                .ToListAsync();
 
-            return View();
+            var allSlots = new List<MealToPeriod>();
+            foreach (var p in model.MealPeriods)
+            {
+                for (var i = 0; i < 7; i++)
+                {
+                    var slot = existingAssignments
+                        .SingleOrDefault(m => 
+                            m.MealPeriodId == p.MealPeriodId && 
+                            m.Date == startOfWeekUtc.AddDays(i).Date);
+                    if (slot == null)
+                    {
+                        slot = new MealToPeriod
+                        {
+                            MealPeriodId = p.MealPeriodId,
+                            Date = startOfWeekUtc.AddDays(i)
+                        };
+                    }
+                    allSlots.Add(slot);
+                }
+            }
+
+            model.MealsToPeriods = allSlots;
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Schedule(MealScheduleModel model)
+        {
+            if (!ModelState.IsValid) return RedirectToAction("Schedule");
+
+            foreach (var i in model.MealsToPeriods)
+            {
+                var copy = i;
+                var existingSlot = await _db.MealToPeriods
+                    .SingleOrDefaultAsync(m => 
+                        m.MealPeriodId == copy.MealPeriodId && m.Date == copy.Date);
+                if (existingSlot == null)
+                {
+                    if (copy.MealId > 0)
+                    {
+                        _db.MealToPeriods.Add(i);
+                    }
+                }
+                else
+                {
+                    if (i.MealId <= 0)
+                    {
+                        _db.Entry(existingSlot).State = EntityState.Deleted;
+                    }
+                    else
+                    {
+                        existingSlot.MealId = copy.MealId;
+                        _db.Entry(existingSlot).State = EntityState.Modified;
+                    }
+                }
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule");
         }
 
         public async Task<ActionResult> Create()
