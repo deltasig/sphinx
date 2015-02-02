@@ -62,9 +62,9 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Schedule(MealScheduleModel model)
+        public async Task<ActionResult> Schedule(MealScheduleModel model, int week = 0)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Schedule");
+            if (!ModelState.IsValid) return RedirectToAction("Schedule", new { week });
 
             foreach (var i in model.MealsToPeriods)
             {
@@ -95,7 +95,7 @@
 
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule");
+            return RedirectToAction("Schedule", new { week });
         }
 
         public async Task<ActionResult> Create()
