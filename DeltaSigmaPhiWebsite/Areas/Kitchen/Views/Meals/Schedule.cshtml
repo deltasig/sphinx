@@ -85,17 +85,20 @@
                                                 @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
                                                 
                                                 <td>
-                                                    <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
-                                                        data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
-                                                        @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
-                                                        {
-                                                            <i class="fa fa-lg fa-check-circle text-success"></i>
-                                                        }
-                                                        else
-                                                        {
-                                                            <i class="fa fa-pencil-square-o text-muted"></i>
-                                                        }
-                                                    </a>
+                                                    @if (slot.MealId > 0)
+                                                    {
+                                                        <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
+                                                            data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
+                                                            @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
+                                                            {
+                                                                <i class="fa fa-lg fa-check-circle text-success"></i>
+                                                            }
+                                                            else
+                                                            {
+                                                                <i class="fa fa-pencil-square-o text-muted"></i>
+                                                            }
+                                                        </a>
+                                                    }
                                                     @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
                                                         new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
                                                         new { @class = "form-control dd", data_live_search = true })
