@@ -22,18 +22,17 @@
                     <i class="fa fa-caret-left"></i> Previous Week
                 </a>
                 <a class="btn btn-sm btn-default disabled" href="#">@Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()</a>
-                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">
-                    Next Week <i class="fa fa-caret-right"></i>
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">Next Week <i class="fa fa-caret-right"></i>
                 </a>
             </div>
         </div>
     </div>
 </div>
-<br/>
+<br />
 <div class="container">
     <div class="row">
         <div class="col-sm-12">
-            @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen", week = ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
+            @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen", ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
@@ -68,10 +67,11 @@
                                 {
                                     <tr>
                                         <td class="active text-right col-md-2">
-                                            @p.Name <br />
-                                            @p.StartTime.ToString("hh:mm tt") - @p.StartTime.ToString("hh:mm tt")
+                                            @p.Name
+                                            <br />
+                                            @p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")
                                         </td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                                        @if (User.IsInRole("Administrator") && User.IsInRole("House Steward"))
                                         {
                                             for (var i = 0; i < 7; i++)
                                             {
@@ -82,9 +82,9 @@
                                                 @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
                                                 
                                                 <td>
-                                                    @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId, 
-                                                        new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId), 
-                                                        new { @class = "form-control dd", data_live_search=true })
+                                                    @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
+                                                        new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
+                                                        new { @class = "form-control dd", data_live_search = true })
                                                 </td>
                                             }
                                         }
@@ -103,7 +103,48 @@
                                                     <td>
                                                         @foreach (var item in slot.Meal.MealsToItems)
                                                         {
-                                                            @item.MealItem.Name @(item.MealItem.IsGlutenFree ? "(GF)" : "") <br/>
+                                                            <ul class="list-inline" style="margin: 0">
+                                                                <li style="padding: 0">
+                                                                    <small>@item.MealItem.Name @(item.MealItem.IsGlutenFree ? " (GF)" : "")</small>
+                                                                </li>
+                                                                @if (Request.IsAuthenticated)
+                                                                {
+                                                                    <li style="padding: 0">
+                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId , ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                                            @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote))
+                                                                            {
+                                                                                <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <i class="fa fa-arrow-circle-up text-muted"></i>
+                                                                            }
+                                                                        </a>
+                                                                    </li>
+                                                                    <li style="padding: 0">
+                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId , ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                                            @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote))
+                                                                            {
+                                                                                <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                                            }
+                                                                            else
+                                                                            {
+                                                                                <i class="fa fa-arrow-circle-down text-muted"></i>
+                                                                            }
+                                                                        </a>
+                                                                    </li>
+                                                                    <li style="padding: 0">
+                                                                        <small>
+                                                                            @using (Html.BeginForm("", "", null, FormMethod.Post, new { @class = "form-inline" }))
+                                                                            {
+                                                                                <button type="submit" class="btn-link" style="padding: 0; display: inline" data-toggle="tooltip" data-placement="top" title="Signup for a late plate">
+                                                                                    <i class="fa fa-pencil-square-o"></i>
+                                                                                </button>
+                                                                            }
+                                                                        </small>
+                                                                    </li>
+                                                                }
+                                                            </ul>
                                                         }
                                                     </td>
                                                 }
@@ -114,12 +155,19 @@
                             </tbody>
                         </table>
                     </div>
-                    @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-                    {
-                        <div class="panel-footer text-right">
-                            <input type="submit" value="Save Schedule" class="btn btn-default" />
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                GF = Gluten Free
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                                {
+                                    <input type="submit" value="Save Schedule" class="btn btn-default" />
+                                }
+                            </div>
                         </div>
-                    }
+                    </div>
                 </div>
             }
         </div>
@@ -129,10 +177,11 @@
 {
     <script type="text/javascript">
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.dd').selectpicker({
                 width: 100
             });
+            $('[data-toggle="tooltip"]').tooltip();
         });
 
     </script>
