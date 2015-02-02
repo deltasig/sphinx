@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Entities
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -23,5 +24,7 @@
 
         [ForeignKey("MealId")]
         public virtual Meal Meal { get; set; }
+
+        public virtual ICollection<MealLatePlate> MealLatePlates { get; set; }
     }
 }

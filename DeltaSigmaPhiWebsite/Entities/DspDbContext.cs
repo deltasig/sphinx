@@ -22,6 +22,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealItem> MealItems { get; set; }
         public virtual DbSet<MealItemType> MealItemTypes { get; set; }
+        public virtual DbSet<MealLatePlate> MealLatePlates { get; set; }
         public virtual DbSet<MealPeriod> MealPeriods { get; set; }
         public virtual DbSet<MealToItem> MealToItems { get; set; }
         public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
