@@ -1,6 +1,4 @@
-﻿using WebMatrix.WebData;
-
-namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
+﻿namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
@@ -11,10 +9,12 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
-    [Authorize(Roles = "Administrator, House Steward")]
+    [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
     public class MealsController : BaseController
     {
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Index()
         {
             return View(await _db.Meals.ToListAsync());
@@ -32,7 +32,12 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
             model.StartOfWeek = startOfWeekCst;
             model.Meals = await _db.Meals.ToListAsync();
             model.MealPeriods = await _db.MealPeriods.ToListAsync();
-            model.UsersVotes = (await _db.Members.FindAsync(WebSecurity.CurrentUserId)).MealVotes;
+            model.UsersVotes = Request.IsAuthenticated 
+                ? (await _db.Members.FindAsync(WebSecurity.CurrentUserId)).MealVotes 
+                : new List<MealVote>();
+            model.LatePlates = await _db.MealLatePlates
+                .Where(m => m.MealToPeriod.Date >= startOfWeekUtc.Date && m.MealToPeriod.Date < startOfNextWeekUtc.Date)
+                .ToListAsync();
 
             var existingAssignments = await _db.MealToPeriods
                 .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
@@ -65,6 +70,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Schedule(MealScheduleModel model, int week = 0)
         {
             if (!ModelState.IsValid) return RedirectToAction("Schedule", new { week });
@@ -189,6 +195,42 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
             return RedirectToAction("Schedule", new { week });
         }
 
+        public async Task<ActionResult> LatePlateSignup(int? id, int week = 0)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var mp = await _db.MealToPeriods.FindAsync(id);
+            if (mp == null)
+            {
+                return HttpNotFound();
+            }
+
+            var existingLatePlate = await _db.MealLatePlates
+                    .SingleOrDefaultAsync(v =>
+                        v.UserId == WebSecurity.CurrentUserId &&
+                        v.MealToPeriodId == mp.MealToPeriodId);
+
+            if (existingLatePlate == null)
+            {
+                _db.MealLatePlates.Add(new MealLatePlate
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    MealToPeriodId = mp.MealToPeriodId
+                });
+            }
+            else
+            {
+                _db.Entry(existingLatePlate).State = EntityState.Deleted;
+            }
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule", new { week });
+        }
+
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Create()
         {
             var model = new CreateMealModel
@@ -199,6 +241,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Create(CreateMealModel model)
         {
             if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Create");
@@ -219,6 +262,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -241,6 +285,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Edit(EditMealModel model)
         {
             if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Edit", new { id = model.MealId });
@@ -275,6 +320,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -290,6 +336,7 @@ namespace DeltaSigmaPhiWebsite.Areas.Kitchen.Controllers
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var meal = await _db.Meals.FindAsync(id);

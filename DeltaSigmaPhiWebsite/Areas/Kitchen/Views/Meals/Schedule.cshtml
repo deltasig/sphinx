@@ -31,17 +31,20 @@
 <br />
 <div class="container">
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-xs-12">
             @using (Html.BeginForm("Schedule", "Meals", new { area = "Kitchen", ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
                 <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Meal Schedule</strong>
+                    </div>
                     <div class="panel-body">
-                        <table class="table table-bordered" id="schedule-table">
+                            <table class="table table-bordered" id="schedule-table">
                             <thead>
                                 <tr>
-                                    <th class="active text-right">Period</th>
+                                    <th class="active text-center">Period</th>
                                     <th class="text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
                                     <th class="text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
                                     <th class="text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
@@ -66,12 +69,12 @@
                                 @foreach (var p in Model.MealPeriods)
                                 {
                                     <tr>
-                                        <td class="active text-right col-md-2">
-                                            @p.Name
+                                        <td class="active text-center col-md-2">
+                                            <strong>@p.Name</strong>
                                             <br />
-                                            @p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")
+                                            <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
                                         </td>
-                                        @if (User.IsInRole("Administrator") && User.IsInRole("House Steward"))
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                         {
                                             for (var i = 0; i < 7; i++)
                                             {
@@ -82,6 +85,17 @@
                                                 @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
                                                 
                                                 <td>
+                                                    <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
+                                                        data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
+                                                        @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
+                                                        {
+                                                            <i class="fa fa-lg fa-check-circle text-success"></i>
+                                                        }
+                                                        else
+                                                        {
+                                                            <i class="fa fa-pencil-square-o text-muted"></i>
+                                                        }
+                                                    </a>
                                                     @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
                                                         new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
                                                         new { @class = "form-control dd", data_live_search = true })
@@ -101,6 +115,20 @@
                                                 else
                                                 {
                                                     <td>
+                                                        @if (Request.IsAuthenticated)
+                                                        {
+                                                            <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
+                                                               data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
+                                                                @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
+                                                                {
+                                                                    <i class="fa fa-lg fa-check-circle text-success"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="fa fa-pencil-square-o text-muted"></i>
+                                                                }
+                                                            </a>
+                                                        }
                                                         @foreach (var item in slot.Meal.MealsToItems)
                                                         {
                                                             <ul class="list-inline" style="margin: 0">
@@ -110,7 +138,7 @@
                                                                 @if (Request.IsAuthenticated)
                                                                 {
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId , ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId, ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Upvote">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote))
                                                                             {
                                                                                 <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
@@ -122,7 +150,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId , ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId, ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Downvote">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote))
                                                                             {
                                                                                 <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
@@ -132,16 +160,6 @@
                                                                                 <i class="fa fa-arrow-circle-down text-muted"></i>
                                                                             }
                                                                         </a>
-                                                                    </li>
-                                                                    <li style="padding: 0">
-                                                                        <small>
-                                                                            @using (Html.BeginForm("", "", null, FormMethod.Post, new { @class = "form-inline" }))
-                                                                            {
-                                                                                <button type="submit" class="btn-link" style="padding: 0; display: inline" data-toggle="tooltip" data-placement="top" title="Signup for a late plate">
-                                                                                    <i class="fa fa-pencil-square-o"></i>
-                                                                                </button>
-                                                                            }
-                                                                        </small>
                                                                     </li>
                                                                 }
                                                             </ul>
@@ -173,6 +191,68 @@
         </div>
     </div>
 </div>
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Late Plate Signups</strong>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th class="active text-center">Period</th>
+                                <th class="text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                <th class="text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var p in Model.MealPeriods)
+                            {
+                                <tr>
+                                    <td class="active text-center col-md-2">
+                                        <strong>@p.Name</strong>
+                                        <br />
+                                        <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
+                                    </td>
+                                    @for (var i = 0; i < 7; i++)
+                                    {
+                                        var slot = Model.MealsToPeriods
+                                                    .SingleOrDefault(m => m.MealPeriodId == p.MealPeriodId && m.Date == Model.StartOfWeek.AddDays(i).Date);
+                                        if (slot == null)
+                                        {
+                                            <td></td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                @foreach (var item in slot.MealLatePlates)
+                                                {
+                                                    @(item.Member.FirstName+" "+item.Member.LastName.Substring(0, 1)+".")
+                                                    <br />
+                                                }
+                                            </td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section scripts
 {
     <script type="text/javascript">
