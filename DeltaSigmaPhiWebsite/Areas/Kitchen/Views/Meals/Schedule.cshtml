@@ -45,13 +45,13 @@
                             <thead>
                                 <tr>
                                     <th class="active text-center">Period</th>
-                                    <th class="text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
-                                    <th class="text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -205,13 +205,13 @@
                         <thead>
                             <tr>
                                 <th class="active text-center">Period</th>
-                                <th class="text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
-                                <th class="text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
                             </tr>
                         </thead>
                         <tbody>
