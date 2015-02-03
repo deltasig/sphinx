@@ -14,7 +14,7 @@
 
 
             <h4>
-                <strong>@Model.Period.Start to @Model.Period.End</strong>
+                <strong>@Model.Period.Start.ToString("MM/dd/yyyy HH:mm tt") to @Model.Period.End.ToString("MM/dd/yyyy HH:mm tt")</strong>
                 <small>@Html.ActionLink("Edit", "Edit", new { id = Model.Period.PeriodId }, new { @class = "" })</small>
             </h4>
         </div>
