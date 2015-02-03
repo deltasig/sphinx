@@ -30,7 +30,7 @@
                             <tr>
                                 <th>Type</th>
                                 <th>Name</th>
-                                <th>Gluten Free</th>
+                                <th>Votes</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -39,14 +39,52 @@
                             {
                                 <tr>
                                     <td>@item.MealItemType.Name</td>
-                                    <td>@item.Name</td>
-                                    <td>@item.GetGlutenLabel()</td>
                                     <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealItemId })
-                                        @if (!item.MealToItems.Any())
+                                        <ul class="list-inline" style="margin: 0">
+                                            <li style="padding: 0">
+                                                <small>@item.Name</small>
+                                            </li>
+                                            <li style="padding: 0">
+                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
+                                                    {
+                                                        <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-arrow-circle-up text-muted"></i>
+                                                    }
+                                                </a>
+                                            </li>
+                                            <li style="padding: 0">
+                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
+                                                    {
+                                                        <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                    }
+                                                    else
+                                                    {
+                                                        <i class="fa fa-arrow-circle-down text-muted"></i>
+                                                    }
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <i class="fa fa-arrow-circle-up text-success"></i>
+                                        @item.MealVotes.Count(v => v.IsUpvote)
+                                        <i class="fa fa-arrow-circle-down text-danger"></i>
+                                        @item.MealVotes.Count(v => !v.IsUpvote)
+                                    </td>
+                                    <td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                         {
-                                            @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealItemId })
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.MealItemId })
+                                            if (!item.MealToItems.Any())
+                                            {
+                                                @: |
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.MealItemId })
+                                            }
                                         }
                                     </td>
                                 </tr>
@@ -75,5 +113,7 @@
 
         $('div.dataTables_filter input').addClass('form-control');
         $('div.dataTables_filter input').attr('placeholder', 'Search');
+        
+        $('[data-toggle="tooltip"]').tooltip();
     </script>
 }

@@ -196,8 +196,11 @@
             }
 
             await _db.SaveChangesAsync();
-
-            return RedirectToAction("Schedule", new { week });
+            if (week != 0)
+            {
+                return RedirectToAction("Schedule", new { week });
+            }
+            return Redirect(Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Schedule");
         }
 
         public async Task<ActionResult> Downvote(int? id, int week = 0)
@@ -240,8 +243,11 @@
             }
 
             await _db.SaveChangesAsync();
-
-            return RedirectToAction("Schedule", new { week });
+            if (week != 0)
+            {
+                return RedirectToAction("Schedule", new { week });
+            }
+            return Redirect(Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Schedule");
         }
 
         public async Task<ActionResult> LatePlateSignup(int? id, int week = 0)

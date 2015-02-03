@@ -7,11 +7,12 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, House Steward")]
+    [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
     public class MealItemsController : BaseController
     {
         public async Task<ActionResult> Index()
         {
+            ViewBag.ReturnUrl = "MealItems/Index";
             var mealItems = _db.MealItems.Include(m => m.MealItemType);
             return View(await mealItems.ToListAsync());
         }
@@ -32,6 +33,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -48,6 +50,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Edit(MealItem mealItem)
         {
             if (!ModelState.IsValid) return RedirectToAction("Edit", new { id = mealItem.MealItemId });
@@ -57,6 +60,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -72,6 +76,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var mealItem = await _db.MealItems.FindAsync(id);

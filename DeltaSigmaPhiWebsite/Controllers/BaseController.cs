@@ -645,7 +645,7 @@
                 newList.Add(new
                 {
                     m.MealItemId,
-                    Text = m.Name + (m.IsGlutenFree ? " (GF)" : "")
+                    Text = m.Name
                 });
             }
             return new SelectList(newList, "MealItemId", "Text");
