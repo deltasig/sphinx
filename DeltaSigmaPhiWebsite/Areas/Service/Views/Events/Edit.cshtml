@@ -55,8 +55,9 @@
 @section scripts
 {
     <script>
-        $(function () {
+        $(function() {
             $('#dtp').datetimepicker();
+            $('#DateTimeOccurred').val($('#DateTimeOccurred').val().replace(/\-/g, "/"));
         });
     </script>
 }
