@@ -426,6 +426,7 @@
     <Content Include="Content\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\bootstrap-table.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap\css\bootstrap-datetimepicker-build.css" />
@@ -705,6 +706,11 @@
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\bootstrap-table-extensions\editable\bootstrap-table-editable.js" />
+    <Content Include="Scripts\bootstrap-table-extensions\export\bootstrap-table-export.js" />
+    <Content Include="Scripts\bootstrap-table-extensions\filter\bootstrap-table-filter.js" />
+    <Content Include="Scripts\bootstrap-table-extensions\flatJSON\bootstrap-table-flatJSON.js" />
+    <Content Include="Scripts\bootstrap-table.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\DataTables-1.10.4\extensions\AutoFill\js\dataTables.autoFill.js" />
@@ -730,6 +736,10 @@
     <Content Include="Scripts\DataTables-1.10.4\extensions\Responsive\Readme.md" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
+    <Content Include="Scripts\bootstrap-table-extensions\editable\README.md" />
+    <Content Include="Scripts\bootstrap-table-extensions\export\README.md" />
+    <Content Include="Scripts\bootstrap-table-extensions\filter\README.md" />
+    <Content Include="Scripts\bootstrap-table-extensions\flatJSON\README.md" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\DataTables-1.10.4\extensions\Scroller\js\dataTables.scroller.js" />
     <Content Include="Scripts\DataTables-1.10.4\extensions\Scroller\js\dataTables.scroller.min.js" />
