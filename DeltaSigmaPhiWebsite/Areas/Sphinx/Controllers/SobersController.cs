@@ -96,7 +96,7 @@
             _db.Entry(signup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home", new { area = "Sphinx", message = "You have successfully signed up to sober drive!" });
+            return RedirectToAction("Index", "Home", new { area = "Sphinx", message = "You have successfully signed up to be sober!" });
         }
 
         public async Task<ActionResult> CancelSignup(int? id)
@@ -112,7 +112,9 @@
 
             if (signup.UserId == null ||
                 (signup.UserId != userId && !User.IsInRole("Administrator") && !User.IsInRole("Sergeant-at-Arms")))
-                return RedirectToAction("Schedule", "Sobers");
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
             signup.UserId = null;
             signup.DateTimeSignedUp = null;
@@ -145,7 +147,11 @@
 
             }
 
-            return RedirectToAction("Schedule", "Sobers");
+            return RedirectToAction("Index", "Home", new
+            {
+                area = "Sphinx", 
+                message = "You have successfully unsigned up to be sober!"
+            });
         }
 
         [HttpGet]
