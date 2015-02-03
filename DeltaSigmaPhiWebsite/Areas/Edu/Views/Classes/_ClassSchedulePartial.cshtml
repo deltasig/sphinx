@@ -35,15 +35,19 @@
                         @foreach (var item in Model)
                         {
                             <tr>
-                                <td>@item.Semester.ToString()</td>
+                                <td>
+                                    @(item.IsSummerClass 
+                                        ? "Summer " + item.Semester.DateStart.Year 
+                                        : item.Semester.ToString())
+                                </td>
                                 <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
                                 @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                 {
                                     <td>
                                         @Html.ActionLink("Edit", "EditClassTaken", "Classes",
-                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null)
                                         | @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes",
-                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId, username = item.Member.UserName }, null)
+                                    new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null)
                                     </td>
                                 }
                             </tr>

@@ -376,6 +376,10 @@
     <Compile Include="Migrations\201502020624508_Late Plates.Designer.cs">
       <DependentUpon>201502020624508_Late Plates.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.cs" />
+    <Compile Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.Designer.cs">
+      <DependentUpon>201502030030473_MealItemOrderAndClassTakenSummer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -1224,6 +1228,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502020624508_Late Plates.resx">
       <DependentUpon>201502020624508_Late Plates.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.resx">
+      <DependentUpon>201502030030473_MealItemOrderAndClassTakenSummer.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
