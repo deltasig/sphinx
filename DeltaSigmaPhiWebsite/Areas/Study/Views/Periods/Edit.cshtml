@@ -52,7 +52,9 @@
     <script>
         $(function () {
             $('#datetimepicker1').datetimepicker();
+            $('#Start').val($('#Start').val().replace(/\-/g, "/"));
             $('#datetimepicker2').datetimepicker();
+            $('#End').val($('#End').val().replace(/\-/g, "/"));
         });
     </script>
 }
