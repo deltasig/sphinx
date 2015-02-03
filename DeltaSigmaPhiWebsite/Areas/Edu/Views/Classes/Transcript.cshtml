@@ -12,13 +12,13 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
+            @if (ViewBag != null && ViewBag.UserName.Length > 0)
+            {
+                @Html.ActionLink("Back to Schedule", "Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"}, new {@class = ""})
+            } | 
             @Html.ActionLink("Back to Roster", "Index", "Roster", new { area = "Members" }, null)
         </div>
         <div class="col-xs-6 text-right">
-            @if (ViewBag != null && ViewBag.UserName.Length > 0)
-            {
-                @Html.ActionLink("Schedule", "Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"}, new {@class = ""})
-            }
         </div>
         <br />
         <br />
@@ -49,8 +49,13 @@
                                         @Html.HiddenFor(m => Model[i].ClassTaken.ClassId)
                                         @Html.HiddenFor(m => Model[i].ClassTaken.SemesterId)
                                         @Html.HiddenFor(m => Model[i].ClassTaken.UserId)
+                                        @Html.HiddenFor(m => Model[i].ClassTaken.IsSummerClass)
                                         <tr>
-                                            <td>@Model[i].ClassTaken.Semester</td>
+                                            <td>
+                                                @(Model[i].ClassTaken.IsSummerClass 
+                                                    ? "Summer " + Model[i].ClassTaken.Semester.DateStart.Year 
+                                                    : Model[i].ClassTaken.Semester.ToString())
+                                            </td>
                                             <td>
                                                 @Model[i].ClassTaken.Class.CourseShorthand
                                                 <a data-toggle="tooltip" data-placement="top"

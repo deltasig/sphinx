@@ -34,6 +34,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public bool? Dropped { get; set; }
 
+        public bool IsSummerClass { get; set; }
+
         public virtual Class Class { get; set; }
 
         public virtual Semester Semester { get; set; }

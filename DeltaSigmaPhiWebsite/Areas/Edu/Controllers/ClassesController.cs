@@ -246,7 +246,7 @@
         public async Task<ActionResult> EditClassTaken(ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 
-                return RedirectToAction("Schedule", new {userName = classTaken.Member.UserName, message = "Failed to update record."});
+                return RedirectToAction("Schedule", new { userName = classTaken.Member.UserName, message = "Failed to update record." });
 
             _db.Entry(classTaken).State = EntityState.Modified;
             await _db.SaveChangesAsync();
@@ -311,6 +311,7 @@
                 classTaken.MidtermGrade = c.ClassTaken.MidtermGrade;
                 classTaken.FinalGrade = c.ClassTaken.FinalGrade;
                 classTaken.Dropped = c.ClassTaken.Dropped;
+                classTaken.IsSummerClass = c.ClassTaken.IsSummerClass;
                 _db.Entry(classTaken).State = EntityState.Modified;
             }
 

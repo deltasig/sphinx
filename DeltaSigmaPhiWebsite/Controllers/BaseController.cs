@@ -412,8 +412,9 @@
             if (member.ClassesTaken.All(c => c.SemesterId != semester.SemesterId)) return 0.0;
 
             var classesTaken = member.ClassesTaken
-                .Where(c => 
-                    c.SemesterId == semester.SemesterId && 
+                .Where(c =>
+                    c.SemesterId == semester.SemesterId &&
+                    !c.IsSummerClass &&
                     (c.Dropped == false || c.Dropped == null) &&
                     (c.FinalGrade == "A" || c.FinalGrade == "B" || c.FinalGrade == "C" || c.FinalGrade == "D" || c.FinalGrade == "F"))
                 .ToList();
