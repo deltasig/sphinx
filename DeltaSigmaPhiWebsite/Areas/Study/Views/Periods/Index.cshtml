@@ -46,7 +46,7 @@
                             {
                                 <tr>
                                     <td>
-                                        @Html.ActionLink(item.Start + " to " + item.End, "Info", "Periods", new { id = item.PeriodId, area = "Study" }, null)
+                                        @Html.ActionLink(item.Start.ToString("MM/dd/yyyy HH:mm tt") + " to " + item.End.ToString("MM/dd/yyyy HH:mm tt"), "Info", "Periods", new { id = item.PeriodId, area = "Study" }, null)
                                     </td>
                                     <td>@item.Assignments.Count</td>
                                     <td>
