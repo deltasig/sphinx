@@ -1,5 +1,4 @@
-﻿@using DeltaSigmaPhiWebsite.Entities
-@model DeltaSigmaPhiWebsite.Areas.Kitchen.Models.MealScheduleModel
+﻿@model DeltaSigmaPhiWebsite.Areas.Kitchen.Models.MealScheduleModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meal Schedule";
@@ -17,12 +16,21 @@
             </div>
         </div>
         <div class="col-xs-6 text-right">
+            @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+            {
+                <a class="btn btn-sm btn-info" href="@Url.Action("EditSchedule", "Meals", new { week = ViewBag.week })">
+                    <i class="fa fa-pencil"></i> Edit Schedule
+                </a>
+            }
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week - 1 })">
                     <i class="fa fa-caret-left"></i> Previous Week
                 </a>
-                <a class="btn btn-sm btn-default disabled" href="#">@Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()</a>
-                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">Next Week <i class="fa fa-caret-right"></i>
+                <a class="btn btn-sm btn-default disabled" href="#">
+                    @Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()
+                </a>
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">
+                    Next Week <i class="fa fa-caret-right"></i>
                 </a>
             </div>
         </div>
@@ -74,40 +82,7 @@
                                             <br />
                                             <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
                                         </td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-                                        {
-                                            for (var i = 0; i < 7; i++)
-                                            {
-                                                var slot = Model.MealsToPeriods
-                                                    .Single(m => m.MealPeriodId == p.MealPeriodId && m.Date.Date == Model.StartOfWeek.AddDays(i).Date);
-                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId)
-                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealPeriodId)
-                                                @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
-                                                
-                                                <td>
-                                                    @if (slot.MealId > 0)
-                                                    {
-                                                        <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
-                                                            data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
-                                                            @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
-                                                            {
-                                                                <i class="fa fa-lg fa-check-circle text-success"></i>
-                                                            }
-                                                            else
-                                                            {
-                                                                <i class="fa fa-pencil-square-o text-muted"></i>
-                                                            }
-                                                        </a>
-                                                    }
-                                                    @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
-                                                        new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
-                                                        new { @class = "form-control dd", data_live_search = true })
-                                                </td>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            for (var i = 0; i < 7; i++)
+                                            @for (var i = 0; i < 7; i++)
                                             {
                                                 var slot = Model.MealsToPeriods
                                                     .SingleOrDefault(m => m.MealPeriodId == p.MealPeriodId && m.Date == Model.StartOfWeek.AddDays(i).Date);
@@ -121,7 +96,7 @@
                                                         @if (Request.IsAuthenticated)
                                                         {
                                                             <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
-                                                               data-toggle="tooltip" data-placement="top" title="Sign up for a late plate" class="pull-right">
+                                                               data-toggle="tooltip" data-placement="top" title="Sign up for a late plate (Note: if you're Out-of-House, this will sign you up for a plate)" class="pull-right">
                                                                 @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
                                                                 {
                                                                     <i class="fa fa-lg fa-check-circle text-success"></i>
@@ -170,7 +145,6 @@
                                                     </td>
                                                 }
                                             }
-                                        }
                                     </tr>
                                 }
                             </tbody>
@@ -182,10 +156,7 @@
                                 GF = Gluten Free
                             </div>
                             <div class="col-xs-6 text-right">
-                                @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-                                {
-                                    <input type="submit" value="Save Schedule" class="btn btn-default" />
-                                }
+                                
                             </div>
                         </div>
                     </div>
@@ -205,50 +176,61 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="active text-center">Period</th>
-                                <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
-                                <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var p in Model.MealPeriods)
-                            {
+                            <thead>
                                 <tr>
-                                    <td class="active text-center col-md-2">
-                                        <strong>@p.Name</strong>
-                                        <br />
-                                        <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
-                                    </td>
-                                    @for (var i = 0; i < 7; i++)
-                                    {
-                                        var slot = Model.MealsToPeriods
-                                                    .SingleOrDefault(m => m.MealPeriodId == p.MealPeriodId && m.Date == Model.StartOfWeek.AddDays(i).Date);
-                                        if (slot == null)
-                                        {
-                                            <td></td>
-                                        }
-                                        else
-                                        {
-                                            <td>
-                                                @foreach (var item in slot.MealLatePlates)
-                                                {
-                                                    @(item.Member.FirstName+" "+item.Member.LastName.Substring(0, 1)+".")
-                                                    <br />
-                                                }
-                                            </td>
-                                        }
-                                    }
+                                    <th class="active text-center">Period</th>
+                                    <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.MealPeriods)
+                                {
+                                    <tr>
+                                        <td class="active text-center col-md-2">
+                                            <strong>@p.Name</strong>
+                                            <br />
+                                            <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
+                                        </td>
+                                        @for (var i = 0; i < 7; i++)
+                                        {
+                                            var slot = Model.MealsToPeriods
+                                                .SingleOrDefault(m => m.MealPeriodId == p.MealPeriodId && m.Date == Model.StartOfWeek.AddDays(i).Date);
+                                            if (slot == null)
+                                            {
+                                                <td></td>
+                                            }
+                                            else
+                                            {
+                                                <td>
+                                                    @foreach (var item in slot.MealLatePlates)
+                                                    {
+                                                        @(item.Member.FirstName+" "+item.Member.LastName.Substring(0, 1)+".") 
+                                                        <strong>@(item.Member.Room == 0 ? "*" : "") </strong>
+                                                        <br />
+                                                    }
+                                                </td>
+                                            }
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            * = Out-of-House
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            
+                        </div>
                     </div>
                 </div>
             </div>

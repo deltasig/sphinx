@@ -69,9 +69,58 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator, House Steward")]
+        public async Task<ActionResult> EditSchedule(int week = 0)
+        {
+            ViewBag.week = week;
+            var startOfWeekCst = base.GetStartOfCurrentWeek().AddDays(7 * week);
+            var startOfWeekUtc = base.ConvertCstToUtc(startOfWeekCst);
+            var startOfNextWeekUtc = base.ConvertCstToUtc(startOfWeekCst.AddDays(7));
+
+            var model = new MealScheduleModel();
+            model.StartOfWeek = startOfWeekCst;
+            model.Meals = await _db.Meals.ToListAsync();
+            model.MealPeriods = await _db.MealPeriods.ToListAsync();
+            model.UsersVotes = Request.IsAuthenticated
+                ? (await _db.Members.FindAsync(WebSecurity.CurrentUserId)).MealVotes
+                : new List<MealVote>();
+            model.LatePlates = await _db.MealLatePlates
+                .Where(m => m.MealToPeriod.Date >= startOfWeekUtc.Date && m.MealToPeriod.Date < startOfNextWeekUtc.Date)
+                .ToListAsync();
+
+            var existingAssignments = await _db.MealToPeriods
+                .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
+                .ToListAsync();
+
+            var allSlots = new List<MealToPeriod>();
+            foreach (var p in model.MealPeriods)
+            {
+                for (var i = 0; i < 7; i++)
+                {
+                    var slot = existingAssignments
+                        .SingleOrDefault(m =>
+                            m.MealPeriodId == p.MealPeriodId &&
+                            m.Date == startOfWeekUtc.AddDays(i).Date);
+                    if (slot == null)
+                    {
+                        slot = new MealToPeriod
+                        {
+                            MealPeriodId = p.MealPeriodId,
+                            Date = startOfWeekUtc.AddDays(i)
+                        };
+                    }
+                    allSlots.Add(slot);
+                }
+            }
+
+            model.MealsToPeriods = allSlots;
+
+            return View(model);
+        }
+
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Schedule(MealScheduleModel model, int week = 0)
+        public async Task<ActionResult> EditSchedule(MealScheduleModel model, int week = 0)
         {
             if (!ModelState.IsValid) return RedirectToAction("Schedule", new { week });
 
@@ -104,7 +153,7 @@
 
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { week });
+            return RedirectToAction("EditSchedule", new { week });
         }
 
         public async Task<ActionResult> Upvote(int? id, int week = 0)
