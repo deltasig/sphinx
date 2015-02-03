@@ -690,6 +690,7 @@
     <Content Include="Areas\Kitchen\Views\MealPeriods\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Index.cshtml" />
     <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="Areas\Kitchen\Views\Meals\EditSchedule.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
