@@ -1,20 +1,22 @@
-﻿@if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+﻿@if (Request.IsAuthenticated)
 {
-        @Html.ActionLink("Schedule", "Schedule", "Meals", new { area = "Kitchen" }, new
-        {
-            @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Schedule" ? "active" : "")
-        }) 
-    
+    @Html.ActionLink("Schedule", "Schedule", "Meals", new { area = "Kitchen" }, new
+    {
+        @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Schedule" ? "active" : "")
+    }) 
+    if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+    {
         @Html.ActionLink("Meals", "Index", "Meals", new { area = "Kitchen" }, new
-        {
-            @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meals" ? "active" : "")
-        }) 
-
-        @Html.ActionLink("Meal Items", "Index", "MealItems", new { area = "Kitchen" }, new
-        {
-            @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Items" ? "active" : "")
-        }) 
-
+    {
+        @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meals" ? "active" : "")
+    })
+    }
+    @Html.ActionLink("Meal Items", "Index", "MealItems", new { area = "Kitchen" }, new
+    {
+        @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Items" ? "active" : "")
+    }) 
+    if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+    {
         @Html.ActionLink("Item Types", "Index", "MealItemTypes", new { area = "Kitchen" }, new
         {
             @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Item Types" ? "active" : "")
@@ -24,4 +26,5 @@
         {
             @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Periods" ? "active" : "")
         }) 
+    }
 }
