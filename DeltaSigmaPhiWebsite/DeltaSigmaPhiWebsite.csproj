@@ -527,6 +527,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="google2da471a22d508cbe.html" />
     <Content Include="Images\back_disabled.png" />
     <Content Include="Images\back_enabled.png" />
     <Content Include="Images\back_enabled_hover.png" />
