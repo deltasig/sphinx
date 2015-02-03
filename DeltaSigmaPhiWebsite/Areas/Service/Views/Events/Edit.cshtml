@@ -19,7 +19,11 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.DateTimeOccurred, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.DateTimeOccurred, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class='input-group date' id='dtp'>
+                        @Html.EditorFor(m => m.DateTimeOccurred, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.DateTimeOccurred, "", new { @class = "text-danger" })
                 </div>
 
@@ -48,3 +52,11 @@
         </div>
     </div>
 </div>
+@section scripts
+{
+    <script>
+        $(function () {
+            $('#dtp').datetimepicker();
+        });
+    </script>
+}
