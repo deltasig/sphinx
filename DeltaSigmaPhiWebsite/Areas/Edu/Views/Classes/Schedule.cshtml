@@ -66,6 +66,13 @@
                                 @Html.Label("Instructor (optional)", new { @class = "control-label" })
                                 @Html.EditorFor(m => Model.ClassTaken.Instructor, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                             </div>
+                            
+                            <div class="checkbox form-group">
+                                <label class="control-label">
+                                    @Html.EditorFor(model => Model.ClassTaken.IsSummerClass)
+                                    Summer Class
+                                </label>
+                            </div>
                 
                             <button type="submit" class="btn btn-success">Add</button>
                         }
