@@ -114,12 +114,12 @@
                                                         {
                                                             <ul class="list-inline" style="margin: 0">
                                                                 <li style="padding: 0">
-                                                                    <small>@item.MealItem.Name @(item.MealItem.IsGlutenFree ? " (GF)" : "")</small>
+                                                                    <small>@item.MealItem.Name</small>
                                                                 </li>
                                                                 @if (Request.IsAuthenticated)
                                                                 {
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId, ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })" data-toggle="tooltip" data-placement="top" title="Upvote">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote))
                                                                             {
                                                                                 <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
@@ -131,7 +131,7 @@
                                                                         </a>
                                                                     </li>
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId, ViewBag.week })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })" data-toggle="tooltip" data-placement="top" title="Downvote">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote))
                                                                             {
                                                                                 <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
@@ -152,16 +152,6 @@
                                 }
                             </tbody>
                         </table>
-                    </div>
-                    <div class="panel-footer">
-                        <div class="row">
-                            <div class="col-xs-6">
-                                GF = Gluten Free
-                            </div>
-                            <div class="col-xs-6 text-right">
-                                
-                            </div>
-                        </div>
                     </div>
                 </div>
             }
@@ -245,12 +235,7 @@
 {
     <script type="text/javascript">
 
-        $(document).ready(function () {
-            $('.dd').selectpicker({
-                width: 100
-            });
-            $('[data-toggle="tooltip"]').tooltip();
-        });
+        $('[data-toggle="tooltip"]').tooltip();
 
     </script>
 }
