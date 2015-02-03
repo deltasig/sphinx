@@ -136,7 +136,7 @@
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, model.RememberMe))
+            if (ModelState.IsValid && WebSecurity.Login(model.UserName.ToLower(), model.Password, model.RememberMe))
             {
                 if (string.IsNullOrEmpty(model.ReturnUrl))
                     return RedirectToAction("Index", "Home", new { area = "Sphinx" });
