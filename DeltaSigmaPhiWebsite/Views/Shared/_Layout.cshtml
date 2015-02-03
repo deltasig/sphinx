@@ -12,13 +12,14 @@
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap-datetimepicker-build.css">
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-combobox.css">
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
     @Styles.Render("~/Content/custom-css")
     @Styles.Render("~/Content/font-awesome")
     @Styles.Render("~/Content/Multiselect")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     <link rel="stylesheet" type="text/css" href="~/Content/css/select2.css">
-    <script type="text/javascript" language="javascript" src="~/Scripts/select2.js"></script>
+    <script type="text/javascript" src="~/Scripts/select2.js"></script>
 </head>
 <body style="padding: 0">
     @{ Html.RenderPartial("Nav"); }
@@ -28,9 +29,10 @@
 
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/Multiselect")
-    <script type="text/javascript" language="javascript" src="~/Scripts/bootstrap-combobox.js"></script>
-    <script type="text/javascript" language="javascript" src="~/Scripts/bootstrap-select.js"></script>
-    <script type="text/javascript" language="javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-combobox.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-select.js"></script>
+    <script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/plug-ins/9dcbecd42ad/integration/bootstrap/3/dataTables.bootstrap.js"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

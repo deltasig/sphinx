@@ -67,18 +67,19 @@
                         @Html.ActionLink("Initiate Pledges", "InitiatePledges")
                         <i class="fa fa-bicycle"></i>
                     }
-                    <table class="table table-condensed" id="roster-table">
+                    <table class="table table-condensed" id="roster-table" data-toggle="table" 
+                        data-classes="table table-condensed" data-search="true" >
                         <thead>
                             <tr>
-                                <th>First</th>
-                                <th>Last</th>
-                                <th>Email</th>
-                                <th>Status</th>
-                                <th>P. Class</th>
-                                <th>Graduating</th>
-                                <th>Big Bro</th>
-                                <th>Room</th>
-                                <th>Shirt</th>
+                                <th data-sortable="true">First</th>
+                                <th data-sortable="true">Last</th>
+                                <th data-sortable="true">Email</th>
+                                <th data-sortable="true">Status</th>
+                                <th data-sortable="true">P. Class</th>
+                                <th data-sortable="true">Graduating</th>
+                                <th data-sortable="true">Big Bro</th>
+                                <th data-sortable="true">Room</th>
+                                <th data-sortable="true">Shirt</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -107,7 +108,7 @@
                                                 @:None
                                             }
                                         </td>
-                                        <td>@item.RoomString()</td>
+                                        <td>@(item.Room == 0 ? "OOH" : "#"+item.Room.ToString())</td>
                                         <td>@item.ShirtSize</td>
                                         <td>
                                             @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
@@ -132,13 +133,13 @@
 {
     <script type="text/javascript">
 
-        $('#roster-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
+        //$('#roster-table').DataTable({
+        //    pageLength: 100,
+        //    lengthChange: false,
+        //    "oLanguage": { "sSearch": "" }
+        //});
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+        //$('div.dataTables_filter input').addClass('form-control');
+        //$('div.dataTables_filter input').attr('placeholder', 'Search');
     </script>
 }
