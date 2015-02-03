@@ -1,8 +1,5 @@
-﻿using System.Text;
-
-namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
+﻿namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
 {
-    using System.Net;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using Models;
@@ -10,6 +7,8 @@ namespace DeltaSigmaPhiWebsite.Areas.Service.Controllers
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Net;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;

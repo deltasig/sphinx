@@ -336,7 +336,7 @@
             var events = await _db.Events
                 .Where(e => 
                     e.DateTimeOccurred > lastSemester.DateEnd && 
-                    e.DateTimeOccurred >= thisSemester.DateStart)
+                    e.DateTimeOccurred <= thisSemester.DateEnd)
                 .OrderByDescending(o => o.DateTimeOccurred)
                 .ToListAsync();
 
