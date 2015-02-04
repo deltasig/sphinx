@@ -25,55 +25,61 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-condensed" id="apps-table">
+                    <table class="table table-condensed" data-toggle="table" data-classes="table table-condensed" 
+                            data-search="true" data-pagination="true" data-page-size="25">
                         <thead>
                             <tr>
-                                <th>Type</th>
-                                <th>Name</th>
-                                <th>Votes</th>
-                                <th></th>
+                                <th class="col-sm-2" data-sortable="true">Type</th>
+                                <th data-sortable="true">Name</th>
+                                <th class="col-sm-1" data-sortable="true">
+                                    <i data-toggle="tooltip" data-placement="top" title="Total Upvotes" class="fa fa-arrow-circle-up text-success"></i>
+                                </th>
+                                <th class="col-sm-1" data-sortable="true">
+                                    <i data-toggle="tooltip" data-placement="top" title="Total Downvotes" class="fa fa-arrow-circle-down text-danger"></i>
+                                </th>
+                                <th class="col-sm-2"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.MealItemType.Name</td>
+                                    <td><small>@item.MealItemType.Name</small></td>
                                     <td>
                                         <ul class="list-inline" style="margin: 0">
                                             <li style="padding: 0">
-                                                <small>@item.Name</small>
+                                                @item.Name
                                             </li>
                                             <li style="padding: 0">
-                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })">
                                                     @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
                                                     {
-                                                        <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                        <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
                                                     }
                                                     else
                                                     {
-                                                        <i class="fa fa-arrow-circle-up text-muted"></i>
+                                                        <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
                                                     }
                                                 </a>
                                             </li>
                                             <li style="padding: 0">
-                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId })">
                                                     @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
                                                     {
-                                                        <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                        <i data-toggle="tooltip" data-placement="top" title="CancelDownvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
                                                     }
                                                     else
                                                     {
-                                                        <i class="fa fa-arrow-circle-down text-muted"></i>
+                                                        <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
                                                     }
                                                 </a>
                                             </li>
                                         </ul>
                                     </td>
                                     <td>
-                                        <i class="fa fa-arrow-circle-up text-success"></i>
                                         @item.MealVotes.Count(v => v.IsUpvote)
-                                        <i class="fa fa-arrow-circle-down text-danger"></i>
+                                    </td>
+                                    <td>
                                         @item.MealVotes.Count(v => !v.IsUpvote)
                                     </td>
                                     <td>
@@ -99,21 +105,10 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[0, "asc"], [1, "asc"]],
-            "columnDefs": [
-                { "width": "15%", "targets": 0 },
-                { "width": "15%", "targets": 2 },
-                { "width": "10%", "targets": 3 }
-            ]
-        });
-
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
         
-        $('[data-toggle="tooltip"]').tooltip();
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
+        
     </script>
 }
