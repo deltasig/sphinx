@@ -55,5 +55,9 @@ namespace DeltaSigmaPhiWebsite.Controllers
             return View();
         }
 
+        public ActionResult Check()
+        {
+            return Content("OK");
+        }
     }
 }
