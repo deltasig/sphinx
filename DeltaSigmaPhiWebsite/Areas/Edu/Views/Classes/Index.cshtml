@@ -29,12 +29,12 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <table class="table" data-toggle="table" data-classes="table table-condensed" 
-                            data-search="true" data-pagination="true" data-page-size="25">
+                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="shorthand">
                         <thead>
                             <tr>
-                                <th data-sortable="true">@Html.DisplayNameFor(model => model.CourseShorthand)</th>
-                                <th data-sortable="true">@Html.DisplayNameFor(model => model.CourseName)</th>
-                                <th data-sortable="true">@Html.DisplayNameFor(model => model.Department.DepartmentName)</th>
+                                <th data-sortable="true" data-field="shorthand">Shorthand</th>
+                                <th data-sortable="true">Name</th>
+                                <th data-sortable="true">Department</th>
                                 <th data-sortable="true">Total Times Taken</th>
                                 <th></th>
                             </tr>
