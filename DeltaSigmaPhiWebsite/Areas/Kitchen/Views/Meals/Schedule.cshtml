@@ -18,7 +18,8 @@
         endDay = 6;
         hideSaturday = true;
     }
-    
+
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 @section Title
 {
@@ -114,25 +115,29 @@
                                                     .SingleOrDefault(m =>
                                                         m.MealPeriodId == p.MealPeriodId &&
                                                         m.Date == Model.StartOfWeek.AddDays(i).Date);
-                                                
+
                                                 if (slot == null)
                                                 {
                                                     <td></td>
                                                 }
                                                 else
                                                 {
+                                                    var slotCst = TimeZoneInfo.ConvertTimeFromUtc(slot.MealPeriod.EndTime, cstZone);
+                                                    var slotDateTimeUtc = (new DateTime(slot.Date.Year, slot.Date.Month, slot.Date.Day, slotCst.Hour, slotCst.Minute, slotCst.Second)).ToUniversalTime();
                                                     <td>
-                                                        @if (Request.IsAuthenticated)
+                                                        @if (Request.IsAuthenticated && slotDateTimeUtc > DateTime.UtcNow.AddHours(-1))
                                                         {
                                                             <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
-                                                               data-toggle="tooltip" data-placement="top" title="Sign up for a late plate (Note: if you're Out-of-House, this will sign you up for a plate)" class="pull-right">
+                                                               class="pull-right">
                                                                 @if (Model.LatePlates.Any(l => l.UserId == WebSecurity.CurrentUserId && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
                                                                 {
-                                                                    <i class="fa fa-lg fa-check-circle text-success"></i>
+                                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel" 
+                                                                       class="fa fa-lg fa-check-circle text-success"></i>
                                                                 }
                                                                 else
                                                                 {
-                                                                    <i class="fa fa-pencil-square-o text-muted"></i>
+                                                                    <i data-toggle="tooltip" data-placement="top" title="Sign up for a late plate (Note: if you're Out-of-House, this will sign you up for a plate)" 
+                                                                       class="fa fa-pencil-square-o text-muted"></i>
                                                                 }
                                                             </a>
                                                         }
@@ -145,26 +150,26 @@
                                                                 @if (Request.IsAuthenticated)
                                                                 {
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })" data-toggle="tooltip" data-placement="top" title="Upvote">
+                                                                        <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote))
                                                                             {
-                                                                                <i class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                                                <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
                                                                             }
                                                                             else
                                                                             {
-                                                                                <i class="fa fa-arrow-circle-up text-muted"></i>
+                                                                                <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
                                                                             }
                                                                         </a>
                                                                     </li>
                                                                     <li style="padding: 0">
-                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })" data-toggle="tooltip" data-placement="top" title="Downvote">
+                                                                        <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl })">
                                                                             @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote))
                                                                             {
-                                                                                <i class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                                                <i data-toggle="tooltip" data-placement="top" title="CancelDownvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
                                                                             }
                                                                             else
                                                                             {
-                                                                                <i class="fa fa-arrow-circle-down text-muted"></i>
+                                                                                <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
                                                                             }
                                                                         </a>
                                                                     </li>
@@ -235,7 +240,7 @@
                                                 <td>
                                                     @foreach (var item in slot.MealLatePlates)
                                                     {
-                                                        @(item.Member.FirstName+" "+item.Member.LastName.Substring(0, 1)+".") 
+                                                        @(item.Member.FirstName + " " + item.Member.LastName.Substring(0, 1) + ".") 
                                                         <strong>@(item.Member.Room == 0 ? "*" : "") </strong>
                                                         <br />
                                                     }
@@ -267,7 +272,9 @@
 {
     <script type="text/javascript">
 
-        $('[data-toggle="tooltip"]').tooltip();
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
 
     </script>
 }
