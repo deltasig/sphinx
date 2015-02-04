@@ -1,7 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Admin.Controllers
 {
     using DeltaSigmaPhiWebsite.Controllers;
-    using DeltaSigmaPhiWebsite.Entities;
+    using Entities;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -162,7 +162,7 @@
                 {
                     // Check if a Leader entry already exists.
                     var leader = await _db.Leaders
-                        .SingleAsync(m => m.SemesterId == ap.Leader.SemesterId &&
+                        .SingleOrDefaultAsync(m => m.SemesterId == ap.Leader.SemesterId &&
                                      m.PositionId == ap.Leader.PositionId);
 
                     if (leader == null)
