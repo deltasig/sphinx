@@ -71,98 +71,98 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="mailing">
-                    <br />
-                    <div class="table-responsive">
-                        <table class="table table-condensed" id="mailing-address-table">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Status</th>
-                                    <th>Address</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="Address">Address</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
 
-                            @foreach (var item in mailing)
-                            {
-                                <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Member.MemberStatus.StatusName</td>
-                                    <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
-                                        @if (string.IsNullOrEmpty(item.Address1))
+                        @foreach (var item in mailing)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Address1))
+                                    {
+                                        @:missing
+                                    }
+                                    else
+                                    {
+                                        @item.Address1@:,
+                                        if (@item.Address2 != null)
                                         {
-                                            @:None entered.
+                                            @item.Address2@:,
                                         }
-                                        else
-                                        {
-                                            @item.Address1@:,
-                                            if (@item.Address2 != null)
-                                            {
-                                                @item.Address2@:,
-                                            }
-                                            @item.City@:, @item.State @item.PostalCode,
-                                            @item.Country
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
-                                        {
-                                            <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
-                                                <i class="fa fa-pencil fa-lg"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                                        @item.City@:, @item.State @item.PostalCode,
+                                        @item.Country
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
                 <div class="tab-pane" id="permanent">
-                    <br />
-                    <div class="table-responsive">
-                        <table class="table table-condensed" id="permanent-address-table">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Status</th>
-                                    <th>Address</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                        data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="Address">Address</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
 
-                            @foreach (var item in permanent)
-                            {
-                                <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Member.MemberStatus.StatusName</td>
-                                    <td class="@(string.IsNullOrEmpty(item.Address1) ? "warning" : "")">
-                                        @if (string.IsNullOrEmpty(item.Address1))
+                        @foreach (var item in permanent)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Address1))
+                                    {
+                                        @:missing
+                                    }
+                                    else
+                                    {
+                                        @item.Address1@:,
+                                        if (@item.Address2 != null)
                                         {
-                                            @:None entered.
+                                            @item.Address2@:,
                                         }
-                                        else
-                                        {
-                                            @item.Address1@:,
-                                            if (@item.Address2 != null)
-                                            {
-                                                @item.Address2@:,
-                                            }
-                                            @item.City@:, @item.State @item.PostalCode,
-                                            @item.Country
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
-                                        {
-                                            <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
-                                                <i class="fa fa-pencil fa-lg"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                                        @item.City@:, @item.State @item.PostalCode,
+                                        @item.Country
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
             </div>
         </div>
@@ -172,18 +172,7 @@
 {
     <script type="text/javascript">
 
-        $('#mailing-address-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
-        $('#permanent-address-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }

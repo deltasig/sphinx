@@ -31,18 +31,21 @@
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-condensed" id="events-table">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="served-on" data-sort-order="desc">
                         <thead>
                             <tr>
-                                <th>Day</th>
-                                <th>Date/Time</th>
-                                <th>Event Name</th>
-                                <th>Duration (Hrs)</th>
-                                <th>Members</th>
-                                <th>Approved</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="served-on">Date/Time</th>
+                                <th data-sortable="true" data-field="event">Event Name</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="duration">
+                                    Duration
+                                    <i data-toggle="tooltip" data-placement="top" title="Displayed in Hours" class="fa fa-info-circle text-info"></i>
+                                </th>
+                                <th class="col-sm-1" data-sortable="true" data-field="member-count">Members</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="is-approved">Approved</th>
                                 @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                 {
-                                    <th></th>
+                                    <th class="col-sm-2"></th>
                                 }
                             </tr>
                         </thead>
@@ -50,8 +53,7 @@
                             @foreach (var item in Model.Events)
                             {
                                 <tr>
-                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).DayOfWeek.ToString().Substring(0, 3)</td>
-                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("yyyy-MM-dd hh:mm tt")</td>
+                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("MM-dd-yyyy hh:mm tt (ddd)")</td>
                                     <td>@item.EventName</td>
                                     <td>@item.DurationHours</td>
                                     <td>
@@ -71,7 +73,7 @@
                                     <td>@Html.DisplayFor(m => item.IsApproved)</td>
                                     @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                     {
-                                        <td>
+                                        <td class="text-right">
                                             @Html.ActionLink("Edit", "Edit", new { id = item.EventId })
                                             @if (!item.ServiceHours.Any())
                                             {
@@ -92,16 +94,11 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#events-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[1, "asc"]]
-        });
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+        $(function() {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
         
-        $('[data-toggle="popover"]').popover();
     </script>
 }

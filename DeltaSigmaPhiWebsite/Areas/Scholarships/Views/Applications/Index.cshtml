@@ -28,17 +28,18 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-condensed" id="apps-table">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="ends-on" data-sort-order="desc">
                         <thead>
                             <tr>
-                                <th>Title</th>
-                                <th>Begins</th>
-                                <th>Ends</th>
-                                <th>Public</th>
-                                <th>Submissions</th>
+                                <th data-sortable="true" data-field="title">Title</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="begins-on">Begins On</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="ends-on">Ends On</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="is-public">Public</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="submission-count">Submissions</th>
                                 @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
                                 {
-                                    <th></th>
+                                    <th class="col-sm-2"></th>
                                 }
                             </tr>
                         </thead>
@@ -63,7 +64,7 @@
                                     </td>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
                                     {
-                                        <td>
+                                        <td class="text-right">
                                             @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipAppId }) |
                                             @if (!item.Submissions.Any())
                                             {
@@ -87,14 +88,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[2, "desc"]]
-        });
+        
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }

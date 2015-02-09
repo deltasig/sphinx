@@ -25,13 +25,14 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-condensed" id="apps-table">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>Start Time</th>
-                                <th>End Time</th>
-                                <th></th>
+                                <th data-sortable="true" data-field="name">Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="start-time">Start Time</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="end-time">End Time</th>
+                                <th class="col-sm-2"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,7 +42,7 @@
                                     <td>@item.Name</td>
                                     <td>@item.StartTime.ToShortTimeString()</td>
                                     <td>@item.EndTime.ToShortTimeString()</td>
-                                    <td>
+                                    <td class="text-right">
                                         @Html.ActionLink("Edit", "Edit", new { id = item.MealPeriodId })
                                         @if (!item.MealToPeriods.Any())
                                         {
@@ -61,20 +62,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[1, "desc"]],
-            "columnDefs": [
-                { "width": "30%", "targets": 0 },
-                { "width": "30%", "targets": 1 },
-                { "width": "30%", "targets": 2 },
-                { "width": "10%", "targets": 3 }
-            ]
-        });
+        
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }
