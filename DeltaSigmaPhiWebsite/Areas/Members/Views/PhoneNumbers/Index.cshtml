@@ -70,90 +70,90 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="mobile">
-                    <br />
-                    <div class="table-responsive">
-                        <table class="table table-condensed" id="mobile-phone-table">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Status</th>
-                                    <th>Phone Number</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-3" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="number">Phone Number</th>
+                                <th class="col-sm-2"></th>
+                            </tr>
+                        </thead>
 
-                            @foreach (var item in mobile)
-                            {
-                                <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Member.MemberStatus.StatusName</td>
-                                    <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "")">
-                                        @if (string.IsNullOrEmpty(item.Number))
-                                        {
-                                            @:None entered.
-                                        }
-                                        else
-                                        {
-                                            <a href="tel:@item.Number">
-                                                @item.Number
-                                            </a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
-                                        {
-                                            <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
-                                                <i class="fa fa-pencil fa-lg"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                        @foreach (var item in mobile)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Number) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Number))
+                                    {
+                                        @: missing
+                                    }
+                                    else
+                                    {
+                                        <a href="tel:@item.Number">
+                                            @item.Number
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
                 <div class="tab-pane" id="emergency">
-                    <br />
-                    <div class="table-responsive">
-                        <table class="table table-condensed" id="emergency-phone-table">
-                            <thead>
-                                <tr>
-                                    <th>Member</th>
-                                    <th>Status</th>
-                                    <th>Phone Number</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                        data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-3" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="number">Phone Number</th>
+                                <th class="col-sm-2"></th>
+                            </tr>
+                        </thead>
 
-                            @foreach (var item in emergency)
-                            {
-                                <tr>
-                                    <td>@item.Member.LastName, @item.Member.FirstName</td>
-                                    <td>@item.Member.MemberStatus.StatusName</td>
-                                    <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "")">
-                                        @if (string.IsNullOrEmpty(item.Number))
-                                        {
-                                            @:None entered.
-                                        }
-                                        else
-                                        {
-                                            <a href="tel:@item.Number">
-                                                @item.Number
-                                            </a>
-                                        }
-                                    </td>
-                                    <td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
-                                        {
-                                            <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
-                                                <i class="fa fa-pencil fa-lg"></i>
-                                            </a>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                        @foreach (var item in emergency)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Number) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Number))
+                                    {
+                                        @: missing
+                                    }
+                                    else
+                                    {
+                                        <a href="tel:@item.Number">
+                                            @item.Number
+                                        </a>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == WebSecurity.CurrentUserId)
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
             </div>
         </div>
@@ -163,20 +163,8 @@
 @section scripts
 {
     <script type="text/javascript">
+        
 
-        $('#mobile-phone-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
-        $('#emergency-phone-table').DataTable({
-            pageLength: 100,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
-
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
 
     </script>
 }

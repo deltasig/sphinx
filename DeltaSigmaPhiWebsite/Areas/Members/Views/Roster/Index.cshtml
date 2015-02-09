@@ -67,19 +67,19 @@
                         @Html.ActionLink("Initiate Pledges", "InitiatePledges")
                         <i class="fa fa-bicycle"></i>
                     }
-                    <table class="table table-condensed" id="roster-table" data-toggle="table" 
-                        data-classes="table table-condensed" data-search="true" >
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-sort-name="last-name" data-sort-order="asc">
                         <thead>
                             <tr>
-                                <th data-sortable="true">First</th>
-                                <th data-sortable="true">Last</th>
-                                <th data-sortable="true">Email</th>
-                                <th data-sortable="true">Status</th>
-                                <th data-sortable="true">P. Class</th>
-                                <th data-sortable="true">Graduating</th>
-                                <th data-sortable="true">Big Bro</th>
-                                <th data-sortable="true">Room</th>
-                                <th data-sortable="true">Shirt</th>
+                                <th data-sortable="true" data-field="first-name">First</th>
+                                <th data-sortable="true" data-field="last-name">Last</th>
+                                <th data-sortable="true" data-field="email">Email</th>
+                                <th data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="pledge-class">P. Class</th>
+                                <th data-sortable="true" data-field="grad">Graduating</th>
+                                <th data-sortable="true" data-field="big-bro">Big Bro</th>
+                                <th data-sortable="true" data-field="room">Room</th>
+                                <th data-sortable="true" data-field="shirt">Shirt</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -110,7 +110,7 @@
                                         </td>
                                         <td>@(item.Room == 0 ? "OOH" : "#"+item.Room.ToString())</td>
                                         <td>@item.ShirtSize</td>
-                                        <td>
+                                        <td class="text-right">
                                             @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
                                             @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null) 
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
@@ -133,13 +133,7 @@
 {
     <script type="text/javascript">
 
-        //$('#roster-table').DataTable({
-        //    pageLength: 100,
-        //    lengthChange: false,
-        //    "oLanguage": { "sSearch": "" }
-        //});
 
-        //$('div.dataTables_filter input').addClass('form-control');
-        //$('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }

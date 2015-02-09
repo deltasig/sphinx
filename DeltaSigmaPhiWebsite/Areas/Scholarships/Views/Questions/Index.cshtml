@@ -23,29 +23,30 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table table-condensed" id="apps-table">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="prompt" data-sort-order="desc">
                         <thead>
                             <tr>
-                                <th>Prompt</th>
-                                <th>Answer Minimum Length</th>
-                                <th>Answer Maximum Length</th>
-                                <th></th>
+                                <th data-sortable="true" data-field="prompt">Prompt</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="min-length">
+                                    Min <i tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"
+                                        data-content="The minimum amount of characters that an answer to a question is allowed to have." class="fa fa-info-circle text-info"></i>
+                                </th>
+                                <th class="col-sm-1" data-sortable="true" data-field="max-length">
+                                    Max <i tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"
+                                        data-content="The maximum amount of characters that an answer to a question is allowed to have." class="fa fa-info-circle text-info"></i>
+                                </th>
+                                <th class="col-sm-2"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td class="col-md-8">
-                                        @Html.DisplayFor(modelItem => item.Prompt)
-                                    </td>
-                                    <td class="col-md-1">
-                                        @Html.DisplayFor(modelItem => item.AnswerMinimumLength)
-                                    </td>
-                                    <td class="col-md-1">
-                                        @Html.DisplayFor(modelItem => item.AnswerMaximumLength)
-                                    </td>
-                                    <td class="col-md-3">
+                                    <td>@item.Prompt</td>
+                                    <td>@item.AnswerMinimumLength</td>
+                                    <td>@item.AnswerMaximumLength</td>
+                                    <td class="text-right">
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipQuestionId }) |
                                         @Html.ActionLink("Details", "Details", new { id = item.ScholarshipQuestionId }) |
                                         @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipQuestionId })
@@ -62,14 +63,10 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[0, "asc"]]
-        });
+        
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+        })
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
     </script>
 }

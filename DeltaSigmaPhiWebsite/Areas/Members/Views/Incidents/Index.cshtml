@@ -17,25 +17,30 @@
                     @Html.ActionLink("Create New", "Create")
                 </div>
                 <div class="panel-body">
-                    <table class="table table-condensed" id="incidents-table">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="submitted-on" data-sort-order="desc">
                         <thead>
                             <tr>
-                                <th>@Html.DisplayNameFor(model => model.DateTimeSubmitted)</th>
-                                <th>@Html.DisplayNameFor(model => model.DateTimeOfIncident)</th>
-                                <th>@Html.DisplayNameFor(model => model.PolicyBroken)</th>
-                                <th></th>
+                                <th class="col-sm-3" data-sortable="true" data-field="submitted-on">Submitted On</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="occurred-on">Occurred On</th>
+                                <th data-sortable="true" data-field="policy">Policy Broken</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="start"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@Html.DisplayFor(modelItem => item.DateTimeSubmitted)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.DateTimeOfIncident)</td>
-                                    <td>@Html.DisplayFor(modelItem => item.PolicyBroken)</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.IncidentId }) |
+                                    <td>@item.DateTimeSubmitted.ToString("MM/dd/yyyy hh:mm tt")</td>
+                                    <td>@item.DateTimeOfIncident.ToString("MM/dd/yyyy hh:mm tt")</td>
+                                    <td>@item.PolicyBroken</td>
+                                    <td class="text-right">
                                         @Html.ActionLink("Details", "Details", new { id = item.IncidentId })
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms") || User.IsInRole("President"))
+                                        {
+                                            @: | 
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.IncidentId })
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -49,13 +54,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#incidents-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" }
-        });
+        
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }
