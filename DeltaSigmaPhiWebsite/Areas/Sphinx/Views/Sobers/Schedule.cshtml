@@ -39,15 +39,16 @@
                     </div>
                 }
                 <div class="panel-body">
-                    <table class="table table-condensed" id="schedule-table">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="date" data-sort-order="desc">
                         <thead>
                             <tr>
-                                <th>Requested</th>
-                                <th>Date</th>
-                                <th>Volunteer</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="date">Date</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="request-type">Type</th>
+                                <th data-sortable="true" data-field="volunteer">Volunteer</th>
                                 @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                 {
-                                    <th></th>
+                                    <th class="col-sm-2"></th>
                                 }
                             </tr>
                         </thead>
@@ -55,8 +56,8 @@
                             @foreach (var item in Model.OrderBy(s => s.DateOfShift))
                             {
                                 <tr>
-                                    <td>@item.Type</td>
                                     <td>@item.DateOfShift.ToShortDateString()</td>
+                                    <td>@item.Type</td>
                                     <td>
                                         @if (item.UserId == null)
                                         {
@@ -83,12 +84,12 @@
                                     </td>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                     {
-                                        <td>
+                                        <td class="text-right">
                                             <a class="" href="@Url.Action("EditSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" })">
-                                                <i class="fa fa-pencil fa-lg"></i>
-                                            </a>
+                                                Edit
+                                            </a> | 
                                             <a class="" href="@Url.Action("DeleteSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" })">
-                                                <i class="fa fa-times fa-lg"></i>
+                                                Delete
                                             </a>
                                         </td>
                                     }
@@ -111,14 +112,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#schedule-table').DataTable({
-            pageLength: 25,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[1, "asc"], [0, "asc"]]
-        });
+        
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+
     </script>
 }
