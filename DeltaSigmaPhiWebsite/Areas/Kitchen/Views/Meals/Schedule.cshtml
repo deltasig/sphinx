@@ -194,17 +194,11 @@
             </div>
             <div class="panel panel-default visible-xs">
                 <div class="panel-body">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
+                    <table class="table table-condensed table-bordered">
                         <tbody>
                             @for (var i = startDay; i < endDay; i++)
                             {
-                                <tr>
+                                <tr class="active">
                                     <td colspan="2">
                                         <strong>@Model.StartOfWeek.AddDays(i).DayOfWeek, @Model.StartOfWeek.AddDays(i).ToShortDateString()</strong>
                                     </td>
@@ -342,17 +336,11 @@
                     <strong>Late Plate Signups</strong>
                 </div>
                 <div class="panel-body">
-                    <table class="table table-condensed">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                        </thead>
+                    <table class="table table-condensed table-bordered">
                         <tbody>
                             @for (var i = startDay; i < endDay; i++)
                             {
-                                <tr>
+                                <tr class="active">
                                     <td colspan="2">
                                         <strong>@Model.StartOfWeek.AddDays(i).DayOfWeek, @Model.StartOfWeek.AddDays(i).ToShortDateString()</strong>
                                     </td>
