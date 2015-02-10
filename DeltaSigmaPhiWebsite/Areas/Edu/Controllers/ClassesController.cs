@@ -23,7 +23,12 @@
                 ViewBag.Message = message;
             }
             var classes = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync();
-            return View(classes);
+            var model = new ClassIndexModel
+            {
+                Classes = classes, 
+                CurrentSemester = await base.GetThisSemesterAsync()
+            };
+            return View(model);
         }
 
         public async Task<ActionResult> Create()

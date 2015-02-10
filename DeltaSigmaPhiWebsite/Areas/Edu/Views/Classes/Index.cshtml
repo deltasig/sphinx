@@ -1,4 +1,4 @@
-﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.Class>
+﻿@model DeltaSigmaPhiWebsite.Areas.Edu.Models.ClassIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Class Index";
@@ -35,18 +35,32 @@
                                 <th data-sortable="true" data-field="shorthand">Shorthand</th>
                                 <th data-sortable="true">Name</th>
                                 <th data-sortable="true">Department</th>
-                                <th data-sortable="true">Total Times Taken</th>
+                                <th data-sortable="true">Times Taken</th>
                                 <th></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Classes)
                             {
                                 <tr>
                                     <td>@item.CourseShorthand</td>
                                     <td>@item.CourseName</td>
                                     <td>@item.Department.DepartmentName</td>
-                                    <td>@item.ClassesTaken.Count</td>
+                                    <td>
+                                        @item.ClassesTaken.Count
+                                        @{
+                                            var enrolled = "";
+                                            foreach(var s in item.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId))
+                                            {
+                                                enrolled += s.Member.FirstName + " " + s.Member.LastName + " <br/>";
+                                            }
+                                        }
+                                        <a href="#" onclick="return false;" tabindex="0" class="" role="button" data-toggle="popover" 
+                                           data-trigger="focus" data-html="true" data-content="@enrolled" data-placement="left"
+                                           title="Members enrolled this semester (@Model.CurrentSemester)">
+                                            <i class="fa fa-info-circle"></i>
+                                        </a>
+                                    </td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ClassId }) 
                                         @if(User.IsInRole("Administrator") || User.IsInRole("Academics") && !item.ClassesTaken.Any())
@@ -67,6 +81,11 @@
 @section scripts
 {
     <script type="text/javascript">
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
 
     </script>
 }
