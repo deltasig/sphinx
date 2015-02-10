@@ -1,5 +1,4 @@
-﻿@using DeltaSigmaPhiWebsite.Entities
-@model IEnumerable<SoberSignup>
+﻿@model DeltaSigmaPhiWebsite.Areas.Sphinx.Models.SoberManagerModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Schedule Manager";
@@ -12,13 +11,92 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            @Html.ActionLink("Back to Schedule", "Schedule")
-            <br/><br/>
+            <p>
+                <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sober Schedule
+                </a>
+            </p>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
-            @Html.Partial("_RequestSoberSignup", new SoberSignup())
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="active"><a href="#single-add" data-toggle="pill">Single-Add Tool</a></li>
+                <li><a href="#multi-add" data-toggle="pill">Multi-Add Tool</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="single-add">
+                    @using (Html.BeginForm("AddSignup", "Sobers", FormMethod.Post, new { @class = "", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewSignup.Type, new { @class = "control-label" })
+                            @Html.EnumDropDownListFor(m => m.NewSignup.Type, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(m => m.NewSignup.Type, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewSignup.DateOfShift, new { @class = "control-label" })
+                            <div class="input-group date" id="dp1">
+                                @Html.EditorFor(m => m.NewSignup.DateOfShift, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() } })
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.NewSignup.DateOfShift, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="form-group text-right">
+                            <input type="submit" value="Submit" class="btn btn-success" />
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" id="multi-add">
+                        @using (Html.BeginForm("MultiAddSignup", "Sobers", FormMethod.Post, new { @class = "", role = "form", id = "multi-form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                            
+                            <div class="form-group">
+                                <div class="alert alert-warning">
+                                    <strong>How this works</strong><br/>
+                                    The numbers of drivers and officers entered below 
+                                    will be generated <em>for each</em> selected date. <br/>
+                                    <small>
+                                        For example, if you enter 2 for drivers, 3 for officers, and select 5 dates, a total of 
+                                        25 signups will be generated (each date will have 2 drivers and 3 officers: 5*(2+3) = <em>25</em>).
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Number of Drivers", new { @class = "control-label" })
+                                @Html.EditorFor(m => m.MultiAddModel.DriverAmount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter amount" } })
+                                @Html.ValidationMessageFor(m => m.MultiAddModel.DriverAmount, "", new { @class = "text-danger" })
+                            </div>
+
+                            <div class="form-group">
+                                @Html.Label("Number of Officers", new { @class = "control-label" })
+                                @Html.EditorFor(m => m.MultiAddModel.OfficerAmount, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter amount" } })
+                                @Html.ValidationMessageFor(m => m.MultiAddModel.OfficerAmount, "", new { @class = "text-danger" })
+                            </div>
+                                    
+                            <div class="form-group">
+                                @Html.Label("Date Selection", new { @class = "control-label" })
+                                <div class="input-group date" id="dp2">
+                                    @Html.EditorFor(m => m.MultiAddModel.DateString, new { htmlAttributes = new { @class = "form-control" } })
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                                </div>
+                                @Html.ValidationMessageFor(m => m.NewSignup.DateOfShift, "", new { @class = "text-danger" })
+                            </div>
+                            
+                            <div class="form-group text-right">
+                                <input type="submit" value="Submit" class="btn btn-success" />
+                            </div>
+                        }
+                </div>
+            </div>
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
@@ -34,7 +112,7 @@
                                     <th>Date</th>
                                 </tr>
                             </thead>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.Signups)
                             {
                                 <tr>
                                     <td>@item.Type</td>
@@ -47,7 +125,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 @section scripts
@@ -55,8 +132,13 @@
     <script type="text/javascript">
 
         $(function () {
-            $('#datetimepicker1').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $('#dp1').datepicker({
+                orientation: "top left"
+            });
+
+            $('#dp2').datepicker({
+                orientation: "top left",
+                multidate: true
             });
         });
 

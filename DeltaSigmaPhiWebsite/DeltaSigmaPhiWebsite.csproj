@@ -312,6 +312,8 @@
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
     <Compile Include="Areas\Sphinx\Controllers\LaundryController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\SobersController.cs" />
+    <Compile Include="Areas\Sphinx\Models\MultiAddSoberSignupModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\SoberManagerModel.cs" />
     <Compile Include="Areas\Sphinx\Models\EditSoberSignupModel.cs" />
     <Compile Include="Areas\Sphinx\SphinxAreaRegistration.cs" />
     <Compile Include="Areas\Study\Controllers\PeriodsController.cs" />
@@ -439,6 +441,7 @@
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\datepicker.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
@@ -651,6 +654,7 @@
     <Content Include="Models\Multiselect\js\jquery.multi-select.js" />
     <Content Include="Models\Multiselect\js\jquery.quicksearch.js" />
     <Content Include="Scripts\bootstrap-combobox.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap-select.js" />
@@ -981,7 +985,6 @@
     <Content Include="Areas\Edu\Views\Classes\Delete.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Edit.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Index.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\_RequestSoberSignup.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\_SoberSchedulePartial.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Create.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Details.cshtml" />
