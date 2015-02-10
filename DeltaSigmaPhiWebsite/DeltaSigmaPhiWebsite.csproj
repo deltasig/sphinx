@@ -277,6 +277,7 @@
     <Compile Include="Areas\Alumni\AlumniAreaRegistration.cs" />
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
+    <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
