@@ -53,27 +53,15 @@
                             @foreach (var item in Model.Events)
                             {
                                 <tr>
-                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("MM-dd-yyyy hh:mm tt (ddd)")</td>
+                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(@item.DateTimeOccurred, cstZone).ToString("MM-dd@hh:mm tt (ddd)")</td>
                                     <td>@item.EventName</td>
                                     <td>@item.DurationHours</td>
-                                    <td>
-                                        @item.ServiceHours.Count
-                                        @{
-                                            var servers = "";
-                                            foreach(var s in item.ServiceHours)
-                                            {
-                                                servers += s.Member.FirstName + " " + s.Member.LastName + " (" + s.DurationHours + " hrs) <br/>";
-                                            }
-                                        }
-                                        <a href="#" onclick="return false;" tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus" data-html="true"
-                                           title="Members who served at this event" data-content="@servers">
-                                            <i class="fa fa-info-circle"></i>
-                                        </a>
-                                    </td>
+                                    <td>@item.ServiceHours.Count</td>
                                     <td>@Html.DisplayFor(m => item.IsApproved)</td>
                                     @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                     {
                                         <td class="text-right">
+                                            @Html.ActionLink("Details", "Details", new { id = item.EventId }) | 
                                             @Html.ActionLink("Edit", "Edit", new { id = item.EventId })
                                             @if (!item.ServiceHours.Any())
                                             {

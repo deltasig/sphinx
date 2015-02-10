@@ -79,6 +79,24 @@
             });
         }
 
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var @event = await _db.Events.FindAsync(id);
+            if (@event == null)
+            {
+                return HttpNotFound();
+            }
+            var semester = await GetSemestersForUtcDateAsync(@event.DateTimeOccurred);
+            @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
+
+            ViewBag.Semester = semester.SemesterId;
+            return View(@event);
+        }
+
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> Edit(int? id)
         {
