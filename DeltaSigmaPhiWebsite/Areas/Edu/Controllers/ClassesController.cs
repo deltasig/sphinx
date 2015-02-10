@@ -61,6 +61,25 @@
             return View(@class);
         }
 
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var course = await _db.Classes.FindAsync(id);
+            if (course == null)
+            {
+                return HttpNotFound();
+            }
+            var model = new ClassDetailsModel
+            {
+                Class = course,
+                CurrentSemester = await base.GetThisSemesterAsync()
+            };
+            return View(model);
+        }
+
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)

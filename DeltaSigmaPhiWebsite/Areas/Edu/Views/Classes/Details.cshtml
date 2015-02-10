@@ -1,0 +1,39 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.Edu.Models.ClassDetailsModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Class Details";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            @Html.ActionLink("Back to Index", "Index")
+
+            <h4>@Model.Class.CourseShorthand: @Model.Class.CourseName</h4>
+            
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(m => m.Class.Department.DepartmentName)</dt>
+                    <dd>@Html.DisplayFor(m => m.Class.Department.DepartmentName)</dd>
+                    <dt>@Html.DisplayNameFor(m => m.Class.CourseShorthand)</dt>
+                    <dd>@Html.DisplayFor(m => m.Class.CourseShorthand)</dd>
+                    <dt>@Html.DisplayNameFor(m => m.Class.CourseName)</dt>
+                    <dd>@Html.DisplayFor(m => m.Class.CourseName)</dd>
+                    <dt>Enrolled This Semester</dt>
+                    <dd>
+                        @foreach(var s in Model.Class.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId))
+                        {
+                            @(s.Member.FirstName + " " + s.Member.LastName) <br/>
+                        }
+                    </dd>
+                    <dt>Total Enrolled</dt>
+                    <dd>@Model.Class.ClassesTaken.Count</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
