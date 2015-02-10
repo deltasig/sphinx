@@ -648,6 +648,7 @@
     <Content Include="Content\less\_bootstrap-datetimepicker.less" />
     <Content Include="fonts\OpenSans-Regular.ttf" />
     <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
+    <Content Include="Areas\Service\Views\Events\Details.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
