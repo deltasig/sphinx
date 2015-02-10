@@ -22,22 +22,23 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-sm-6">
+            
+        </div>
+        <div class="col-sm-6 text-right">
+            @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+            {
+                <p>
+                    <a href="@Url.Action("Manager", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-info">
+                        <i class="fa fa-wrench"></i> Manage
+                    </a>
+                </p>
+            }
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
-                @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                {
-                    <div class="panel-heading">
-                        @if (Model.Any())
-                        {
-                            @: Sign up for sober duty below.
-                        }
-                        else
-                        {
-                            @: No shifts have been added yet.
-                        }
-                        @Html.ActionLink("Manage", "Manager", "Sobers", new { area = "Sphinx" }, new { @class = "pull-right" })
-                    </div>
-                }
                 <div class="panel-body">
                     <table data-toggle="table" data-classes="table table-condensed" 
                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="date" data-sort-order="asc">

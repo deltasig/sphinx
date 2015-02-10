@@ -44,18 +44,73 @@
                             s.UserId == null)
                 .OrderBy(s => s.DateOfShift)
                 .ToListAsync();
+            var model = new SoberManagerModel
+            {
+                Signups = vacantSignups,
+                NewSignup = new SoberSignup(),
+                MultiAddModel = new MultiAddSoberSignupModel
+                {
+                    DriverAmount = 0, 
+                    OfficerAmount = 0
+                }
+            };
 
-            return View(vacantSignups);
+            return View(model);
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public async Task<ActionResult> AddSignup(SoberSignup signup)
+        public async Task<ActionResult> AddSignup(SoberManagerModel model)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Manager", "Sphinx");
+            if (!ModelState.IsValid) return RedirectToAction("Manager");
 
-            signup.DateOfShift = ConvertCstToUtc(signup.DateOfShift);
+            model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
 
-            _db.SoberSchedule.Add(signup);
+            _db.SoberSchedule.Add(model.NewSignup);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Manager");
+        }
+
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+        public async Task<ActionResult> MultiAddSignup(SoberManagerModel model)
+        {
+            if ((model.MultiAddModel.DriverAmount == 0 && model.MultiAddModel.OfficerAmount == 0) ||
+                string.IsNullOrEmpty(model.MultiAddModel.DateString))
+                return RedirectToAction("Manager");
+
+            var dateStrings = model.MultiAddModel.DateString.Split(',');
+
+            if (dateStrings.Any())
+            {
+                foreach (var s in dateStrings)
+                {
+                    DateTime date;
+                    var parsed = DateTime.TryParse(s, out date);
+                    if (!parsed) continue;
+                    var utcDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
+                    var cstDate = base.ConvertUtcToCst(utcDate);
+                    var difference = Math.Abs((utcDate - cstDate).Hours);
+                    date = date.AddHours(difference);
+
+                    for (var i = 0; i < model.MultiAddModel.DriverAmount; i++)
+                    {
+                        _db.SoberSchedule.Add(new SoberSignup
+                        {
+                            DateOfShift = date,
+                            Type = SoberSignupType.Driver
+                        });
+                    }
+                    for (var i = 0; i < model.MultiAddModel.OfficerAmount; i++)
+                    {
+                        _db.SoberSchedule.Add(new SoberSignup
+                        {
+                            DateOfShift = date,
+                            Type = SoberSignupType.Officer
+                        });
+                    }
+                }
+            }
+
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Manager");
