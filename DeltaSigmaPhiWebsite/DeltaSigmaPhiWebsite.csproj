@@ -279,6 +279,7 @@
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
+    <Compile Include="Areas\Edu\Models\ClassDetailsModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
@@ -646,6 +647,7 @@
     <Content Include="Content\less\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\less\_bootstrap-datetimepicker.less" />
     <Content Include="fonts\OpenSans-Regular.ttf" />
+    <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
