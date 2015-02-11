@@ -14,25 +14,45 @@
             @Html.ActionLink("Back to Index", "Index")
 
             <h4>@Model.Class.CourseShorthand: @Model.Class.CourseName</h4>
-            
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
             <div class="form-group">
                 <dl class="dl-horizontal">
                     <dt>@Html.DisplayNameFor(m => m.Class.Department.DepartmentName)</dt>
                     <dd>@Html.DisplayFor(m => m.Class.Department.DepartmentName)</dd>
-                    <dt>@Html.DisplayNameFor(m => m.Class.CourseShorthand)</dt>
-                    <dd>@Html.DisplayFor(m => m.Class.CourseShorthand)</dd>
-                    <dt>@Html.DisplayNameFor(m => m.Class.CourseName)</dt>
-                    <dd>@Html.DisplayFor(m => m.Class.CourseName)</dd>
-                    <dt>Enrolled This Semester</dt>
-                    <dd>
-                        @foreach(var s in Model.Class.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId))
-                        {
-                            @(s.Member.FirstName + " " + s.Member.LastName) <br/>
-                        }
-                    </dd>
-                    <dt>Total Enrolled</dt>
+                    <dt>Enrolled (all-time)</dt>
                     <dd>@Model.Class.ClassesTaken.Count</dd>
+                    <dt>Enrolled (currently)</dt>
+                    <dd>@Model.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</dd>
                 </dl>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        @foreach(var s in Model.Class.ClassesTaken
+                            .OrderByDescending(c => c.Semester.DateEnd)
+                            .ThenBy(c => c.Member.LastName))
+                        {
+                            if (s.SemesterId == Model.CurrentSemester.SemesterId)
+                            {
+                                <dt class="text-success"><strong>@(s.Member.FirstName + " " + s.Member.LastName)</strong></dt>
+                                <dd class="text-success"><strong>@("(" + s.Semester + ")")</strong></dd>
+                            }
+                            else
+                            {
+                                <dt><small>@(s.Member.FirstName + " " + s.Member.LastName)</small></dt>
+                                <dd><small>@("(" + s.Semester + ")")</small></dd>
+                            }
+                        }  
+                    </dl>
+                </div>
             </div>
         </div>
     </div>
