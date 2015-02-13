@@ -68,7 +68,7 @@
                                                  @((item.UnproctoredAmount + item.ProctoredAmount - approvedUnproctoredTurnIns - approvedProctoredTurnIns) * 5)
                                              }
                                         </td>
-                                        <td>
+                                        <td class="text-right">
                                             @Html.ActionLink("Edit", "Edit", "Assignments", new { id = item.StudyAssignmentId }, null)
                                             @if (!item.TurnIns.Any())
                                             {
