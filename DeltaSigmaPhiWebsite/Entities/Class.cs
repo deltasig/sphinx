@@ -2,14 +2,13 @@ namespace DeltaSigmaPhiWebsite.Entities
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     public partial class Class
     {
-        public Class()
-        {
-            ClassesTaken = new HashSet<ClassTaken>();
-        }
 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ClassId { get; set; }
 
         [Required]
@@ -37,5 +36,6 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual Department Department { get; set; }
 
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
+        public virtual ICollection<ClassFile> ClassFiles { get; set; }
     }
 }
