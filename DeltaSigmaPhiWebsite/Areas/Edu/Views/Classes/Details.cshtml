@@ -3,6 +3,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Class Details";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 @section Title
 {
@@ -28,6 +29,76 @@
                     <dd>@Model.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</dd>
                 </dl>
             </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-folder-open"></i> <strong>Files</strong>
+                </div>
+                <div class="panel-body">
+                    @if (Model.Class.ClassFiles.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var f in Model.Class.ClassFiles)
+                            {
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-xs-10">
+                                            <a href="@Url.Action("DownloadFile", new { id = f.ClassFileId })" class="btn btn-default btn-sm">
+                                                <i class="fa fa-cloud-download"></i>
+                                                @f.AwsCode.Split('/')[1]
+                                            </a>
+                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">@f.DownloadCount</span>
+                                        </div>
+                                        <div class="col-xs-2 text-right">
+                                            <i data-toggle="tooltip" data-placement="top" title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)" 
+                                                class="fa fa-info-circle fa-lg text-info"></i>
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                            {
+                                                <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })">
+                                                    <i data-toggle="tooltip" data-placement="right" title="Delete"
+                                                        class="fa fa-times-circle-o fa-lg text-danger"></i>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <strong>No files uploaded yet for this class.</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-cloud-upload"></i> <strong>Upload a New File</strong>
+                    <i data-toggle="tooltip" data-placement="right" title=".pdf files only"
+                       class="fa fa-info-circle text-info"></i>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("UploadFile", "Classes", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        
+                        @Html.HiddenFor(m => Model.Class.ClassId)
+                        @Html.HiddenFor(m => Model.Class.CourseName)
+                        @Html.HiddenFor(m => Model.Class.CourseShorthand)
+
+                        <div class="form-group">
+                            <span class="btn btn-info btn-sm btn-file">Choose File
+                                <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
+                            </span>
+                            <label id="upload-text"></label>
+                            <div class="pull-right">
+                                <input type="submit" value="Upload" class="btn btn-sm btn-default" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
         <div class="col-sm-6">
             <div class="panel panel-default">
@@ -36,7 +107,7 @@
                 </div>
                 <div class="panel-body">
                     <dl class="dl-horizontal">
-                        @foreach(var s in Model.Class.ClassesTaken
+                        @foreach (var s in Model.Class.ClassesTaken
                             .OrderByDescending(c => c.Semester.DateEnd)
                             .ThenBy(c => c.Member.LastName))
                         {
@@ -50,10 +121,27 @@
                                 <dt><small>@(s.Member.FirstName + " " + s.Member.LastName)</small></dt>
                                 <dd><small>@("(" + s.Semester + ")")</small></dd>
                             }
-                        }  
+                        }
                     </dl>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $(document).on('change', '.btn-file :file', function () {
+                var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                $('#upload-text').text(label);
+                input.trigger('fileselect', [numFiles, label]);
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

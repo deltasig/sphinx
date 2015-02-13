@@ -12,6 +12,7 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<ClassFile> ClassesFiles { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Event> Events { get; set; }

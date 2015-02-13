@@ -69,6 +69,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="AWSSDK">
+      <HintPath>..\packages\AWSSDK.2.3.19.0\lib\net45\AWSSDK.dll</HintPath>
+    </Reference>
     <Reference Include="DotNetOpenAuth.AspNet, Version=4.3.0.0, Culture=neutral, PublicKeyToken=2780ccd10d57b246, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DotNetOpenAuth.AspNet.4.3.4.13329\lib\net45-full\DotNetOpenAuth.AspNet.dll</HintPath>
@@ -280,6 +283,7 @@
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassDetailsModel.cs" />
+    <Compile Include="Areas\Edu\Models\FileInfoModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
@@ -337,6 +341,7 @@
     <Compile Include="Areas\Study\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="DspRoleProvider.cs" />
+    <Compile Include="Entities\ClassFile.cs" />
     <Compile Include="Entities\MealLatePlate.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealItemType.cs" />
@@ -383,6 +388,10 @@
     <Compile Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.cs" />
     <Compile Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.Designer.cs">
       <DependentUpon>201502030030473_MealItemOrderAndClassTakenSummer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502130714026_ClassFiles.cs" />
+    <Compile Include="Migrations\201502130714026_ClassFiles.Designer.cs">
+      <DependentUpon>201502130714026_ClassFiles.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -649,6 +658,7 @@
     <Content Include="fonts\OpenSans-Regular.ttf" />
     <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
     <Content Include="Areas\Service\Views\Events\Details.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1076,6 +1086,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502030030473_MealItemOrderAndClassTakenSummer.resx">
       <DependentUpon>201502030030473_MealItemOrderAndClassTakenSummer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502130714026_ClassFiles.resx">
+      <DependentUpon>201502130714026_ClassFiles.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
