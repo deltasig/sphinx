@@ -1,10 +1,11 @@
 ﻿namespace DeltaSigmaPhiWebsite.Entities
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class ClassFile
+    public partial class ClassFile
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -28,5 +29,7 @@
         
         [ForeignKey("UserId")]
         public virtual Member Uploader { get; set; }
+        
+        public virtual ICollection<ClassFileVote> ClassFileVotes { get; set; }
     }
 }

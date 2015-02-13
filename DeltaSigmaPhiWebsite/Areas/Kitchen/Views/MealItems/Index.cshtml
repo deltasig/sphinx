@@ -66,7 +66,7 @@
                                                 <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId })">
                                                     @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
                                                     {
-                                                        <i data-toggle="tooltip" data-placement="top" title="CancelDownvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                        <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
                                                     }
                                                     else
                                                     {

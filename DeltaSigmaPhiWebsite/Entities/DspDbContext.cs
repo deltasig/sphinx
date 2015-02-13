@@ -4,15 +4,15 @@ namespace DeltaSigmaPhiWebsite.Entities
 
     public partial class DspDbContext : DbContext
     {
-        public DspDbContext()
-            : base("name=DefaultConnection")
+        public DspDbContext() : base("name=DefaultConnection")
         {
             //Database.Log = sql => Debug.Write(sql);
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<ClassFile> ClassesFiles { get; set; }
+        public virtual DbSet<ClassFile> ClassFiles { get; set; }
+        public virtual DbSet<ClassFileVote> ClassFileVotes { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Event> Events { get; set; }
@@ -54,6 +54,21 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<ClassFile>()
+                .HasMany(e => e.ClassFileVotes)
+                .WithRequired(v => v.ClassFile)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.ClassFileVotes)
+                .WithRequired(v => v.Member)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.ClassFileUploads)
+                .WithRequired(f => f.Uploader)
+                .WillCascadeOnDelete(false);
+
             modelBuilder.Entity<Event>()
                 .HasMany(e => e.ServiceHours)
                 .WithRequired(e => e.Event)

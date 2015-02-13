@@ -342,6 +342,7 @@
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="DspRoleProvider.cs" />
     <Compile Include="Entities\ClassFile.cs" />
+    <Compile Include="Entities\ClassFileVote.cs" />
     <Compile Include="Entities\MealLatePlate.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealItemType.cs" />
@@ -392,6 +393,10 @@
     <Compile Include="Migrations\201502130714026_ClassFiles.cs" />
     <Compile Include="Migrations\201502130714026_ClassFiles.Designer.cs">
       <DependentUpon>201502130714026_ClassFiles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502132102585_ClassFileVotes.cs" />
+    <Compile Include="Migrations\201502132102585_ClassFileVotes.Designer.cs">
+      <DependentUpon>201502132102585_ClassFileVotes.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1088,6 +1093,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502130714026_ClassFiles.resx">
       <DependentUpon>201502130714026_ClassFiles.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502132102585_ClassFileVotes.resx">
+      <DependentUpon>201502132102585_ClassFileVotes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
