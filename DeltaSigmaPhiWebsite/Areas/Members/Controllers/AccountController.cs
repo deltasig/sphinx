@@ -54,7 +54,8 @@
             {
                 MemberInfo = member,
                 ChangePasswordModel = new LocalPasswordModel(),
-                ThisSemesterCourses = member.ClassesTaken.Where(c => c.SemesterId == thisSemester.SemesterId).ToList()
+                ThisSemesterCourses = member.ClassesTaken.Where(c => c.SemesterId == thisSemester.SemesterId).ToList(),
+                CurrentSemester = thisSemester
             };
 
             return View(model);

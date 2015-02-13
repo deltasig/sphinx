@@ -1007,7 +1007,6 @@
     <Content Include="Areas\Study\Views\Hours\Unapproved.cshtml" />
     <Content Include="Areas\Study\Views\Periods\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Schedule.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\_ClassSchedulePartial.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\EditClassTaken.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Index.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Submit.cshtml" />
