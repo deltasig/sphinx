@@ -29,13 +29,14 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <table class="table" data-toggle="table" data-classes="table table-condensed" 
-                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="shorthand">
+                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="class-number">
                         <thead>
                             <tr>
-                                <th data-sortable="true" data-field="shorthand">Shorthand</th>
+                                <th data-sortable="true" data-field="class-number">Class #</th>
                                 <th data-sortable="true">Name</th>
-                                <th data-sortable="true">Total Enrolled</th>
-                                <th data-sortable="true">Currently Enrolled</th>
+                                <th data-sortable="true">Enrollment <small>(all-time)</small></th>
+                                <th data-sortable="true">Enrollment <small>(current)</small></th>
+                                <th data-sortable="true">Files</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -47,6 +48,7 @@
                                     <td>@item.CourseName</td>
                                     <td>@item.ClassesTaken.Count</td>
                                     <td>@item.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</td>
+                                    <td>@item.ClassFiles.Count</td>
                                     <td>
                                         @Html.ActionLink("Details", "Details", new { id = item.ClassId }) | 
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ClassId }) 

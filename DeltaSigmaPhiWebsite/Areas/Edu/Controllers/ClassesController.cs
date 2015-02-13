@@ -1,5 +1,10 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Edu.Controllers
 {
+    using System;
+    using System.IO;
+    using System.Web.Configuration;
+    using Amazon.S3;
+    using Amazon.S3.Model;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using Models;
@@ -75,7 +80,11 @@
             var model = new ClassDetailsModel
             {
                 Class = course,
-                CurrentSemester = await base.GetThisSemesterAsync()
+                CurrentSemester = await base.GetThisSemesterAsync(),
+                FileInfoModel = new FileInfoModel
+                {
+                    ExistingFiles = new List<string> { "tests.pdf", "homework.pdf", "notes.pdf" }
+                }
             };
             return View(model);
         }
@@ -346,6 +355,170 @@
                 userName = model.First().Member.UserName, 
                 message = ClassMessageId.UpdateTranscriptSuccess
             });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> UploadFile(ClassDetailsModel model)
+        {
+            if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0) 
+                return RedirectToAction("Details", new
+                {
+                    id = model.Class.ClassId
+                });
+            if (model.FileInfoModel.File.ContentType != "application/pdf") 
+                return RedirectToAction("Details", new
+                {
+                    id = model.Class.ClassId
+                });
+
+            var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
+            var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
+            var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
+
+            try
+            {
+                IAmazonS3 client;
+                var key = string.Format(model.Class.CourseShorthand + "/{0}", model.FileInfoModel.File.FileName);
+                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                {
+                    var request = new PutObjectRequest()
+                    {
+                        BucketName = awsBucket,
+                        CannedACL = S3CannedACL.Private,
+                        Key = key,
+                        InputStream = model.FileInfoModel.File.InputStream
+                    };
+
+                    client.PutObject(request);
+                }
+
+                var file = new ClassFile
+                {
+                    ClassId = model.Class.ClassId, 
+                    UserId = WebSecurity.CurrentUserId,
+                    AwsCode = key, 
+                    UploadedOn = DateTime.UtcNow,
+                };
+                _db.ClassesFiles.Add(file);
+                await _db.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return RedirectToAction("Details", new { id = model.Class.ClassId });
+        }
+
+        public async Task<ActionResult> DownloadFile(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            var file = await _db.ClassesFiles.FindAsync(id);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
+
+            try
+            {
+                var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
+                var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
+                var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
+                IAmazonS3 client;
+                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                {
+                    var request = new GetObjectRequest
+                    {
+                        BucketName = awsBucket, 
+                        Key = file.AwsCode
+                    };
+                    // Make AWS Request for file.
+                    var response = client.GetObject(request);
+
+                    using(var memoryStream = new MemoryStream())
+                    {
+                        // Convert response to a readable format.
+                        response.ResponseStream.CopyTo(memoryStream);
+                        var contents = memoryStream.ToArray();
+                        var fileName = file.AwsCode.Split('/').Last();
+
+                        // Update file access time in database.
+                        file.LastAccessedOn = DateTime.UtcNow;
+                        file.DownloadCount++;
+                        _db.Entry(file).State = EntityState.Modified;
+                        await _db.SaveChangesAsync();
+
+                        // Return file to user's browser.
+                        return File(contents, "application/pdf", fileName);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+        }
+
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> DeleteFile(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
+            var file = await _db.ClassesFiles.FindAsync(id);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(file);
+        }
+
+        [HttpPost, ActionName("DeleteFile")]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> DeleteFileConfirmed(int id, int classId)
+        {
+            var file = await _db.ClassesFiles.SingleAsync(f => f.ClassFileId == id);
+            if (file == null)
+            {
+                return RedirectToAction("Details", new
+                {
+                    id = classId, 
+                    message = "Course not found."
+                });
+            }
+
+            try
+            {
+                var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
+                var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
+                var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
+                IAmazonS3 client;
+                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                {
+                    var request = new DeleteObjectRequest
+                    {
+                        BucketName = awsBucket,
+                        Key = file.AwsCode
+                    };
+                    client.DeleteObject(request);
+                }
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction("Details", new { id = classId, message = "File could not be deleted." });
+            }
+
+            _db.Entry(file).State = EntityState.Deleted;
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Details", new { id = classId, message = "File deleted from schedule." });
         }
 
         public static dynamic GetResultMessage(ClassMessageId? message)
