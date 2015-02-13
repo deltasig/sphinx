@@ -66,7 +66,7 @@
             return View(@class);
         }
 
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int? id, ClassesMessageId? message)
         {
             if (id == null)
             {
@@ -77,6 +77,21 @@
             {
                 return HttpNotFound();
             }
+
+            switch (message)
+            {
+                case ClassesMessageId.UploadInvalidFailure:
+                case ClassesMessageId.UploadInvalidFileTypeFailure:
+                case ClassesMessageId.DownloadFileAwsFailure:
+                case ClassesMessageId.DeleteFileAwsFailure:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case ClassesMessageId.UploadFileSuccessful:
+                case ClassesMessageId.DeleteFileSuccessful:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
             var model = new ClassDetailsModel
             {
                 Class = course,
@@ -289,7 +304,7 @@
             return RedirectToAction("Schedule", new { userName = member.UserName, message = "Record updated." });
         }
 
-        public async Task<ActionResult> Transcript(string userName, ClassMessageId? message)
+        public async Task<ActionResult> Transcript(string userName, ClassesMessageId? message)
         {
             if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") && WebSecurity.CurrentUserName != userName)
             {
@@ -298,10 +313,10 @@
             
             switch(message)
             {
-                case ClassMessageId.UpdateTranscriptFailure:
+                case ClassesMessageId.UpdateTranscriptFailure:
                     ViewBag.FailMessage = GetResultMessage(message);
                     break;
-                case ClassMessageId.UpdateTranscriptSuccess:
+                case ClassesMessageId.UpdateTranscriptSuccess:
                     ViewBag.SuccessMessage = GetResultMessage(message);
                     break;
             }
@@ -353,7 +368,7 @@
             return RedirectToAction("Transcript", new
             {
                 userName = model.First().Member.UserName, 
-                message = ClassMessageId.UpdateTranscriptSuccess
+                message = ClassesMessageId.UpdateTranscriptSuccess
             });
         }
 
@@ -364,12 +379,14 @@
             if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0) 
                 return RedirectToAction("Details", new
                 {
-                    id = model.Class.ClassId
+                    id = model.Class.ClassId,
+                    message = ClassesMessageId.UploadInvalidFailure
                 });
             if (model.FileInfoModel.File.ContentType != "application/pdf") 
                 return RedirectToAction("Details", new
                 {
-                    id = model.Class.ClassId
+                    id = model.Class.ClassId,
+                    message = ClassesMessageId.UploadInvalidFileTypeFailure
                 });
 
             var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
@@ -408,7 +425,11 @@
 
             }
 
-            return RedirectToAction("Details", new { id = model.Class.ClassId });
+            return RedirectToAction("Details", new
+            {
+                id = model.Class.ClassId,
+                message = ClassesMessageId.UploadFileSuccessful
+            });
         }
 
         public async Task<ActionResult> DownloadFile(int? id)
@@ -459,7 +480,11 @@
             }
             catch (Exception ex)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+                return RedirectToAction("Details", new
+                {
+                    id = file.Class.ClassId,
+                    message = ClassesMessageId.DownloadFileAwsFailure
+                });
             }
         }
 
@@ -487,11 +512,7 @@
             var file = await _db.ClassesFiles.SingleAsync(f => f.ClassFileId == id);
             if (file == null)
             {
-                return RedirectToAction("Details", new
-                {
-                    id = classId, 
-                    message = "Course not found."
-                });
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
             try
@@ -512,26 +533,46 @@
             }
             catch (Exception ex)
             {
-                return RedirectToAction("Details", new { id = classId, message = "File could not be deleted." });
+                return RedirectToAction("Details", new
+                {
+                    id = classId,
+                    message = ClassesMessageId.DeleteFileAwsFailure
+                });
             }
 
             _db.Entry(file).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Details", new { id = classId, message = "File deleted from schedule." });
+            return RedirectToAction("Details", new
+            {
+                id = classId,
+                message = ClassesMessageId.DeleteFileSuccessful
+            });
         }
 
-        public static dynamic GetResultMessage(ClassMessageId? message)
+        public static dynamic GetResultMessage(ClassesMessageId? message)
         {
-            return message == ClassMessageId.UpdateTranscriptFailure ? "Failed to update transcript for unknown reason, please contact your administrator."
-                : message == ClassMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
+            return message == ClassesMessageId.UpdateTranscriptFailure ? "Failed to update transcript for unknown reason, please contact your administrator."
+                : message == ClassesMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
+                : message == ClassesMessageId.UploadInvalidFailure ? "Could not upload file because there was nothing selected to upload."
+                : message == ClassesMessageId.UploadInvalidFileTypeFailure ? "Could not upload file because it is not a properly formatted PDF."
+                : message == ClassesMessageId.UploadFileSuccessful ? "File was uploaded successfully!"
+                : message == ClassesMessageId.DownloadFileAwsFailure ? "Could not download file because of a server error.  If the problem persists, please contact your administrator."
+                : message == ClassesMessageId.DeleteFileAwsFailure ? "Could not delete file because of a server error.  If the problem persists, please contact your administrator."
+                : message == ClassesMessageId.DeleteFileSuccessful ? "File was deleted successfully!"
                 : "";
         }
 
-        public enum ClassMessageId
+        public enum ClassesMessageId
         {
             UpdateTranscriptFailure,
-            UpdateTranscriptSuccess
+            UpdateTranscriptSuccess,
+            UploadInvalidFailure,
+            UploadInvalidFileTypeFailure,
+            UploadFileSuccessful,
+            DownloadFileAwsFailure,
+            DeleteFileAwsFailure,
+            DeleteFileSuccessful
         }
     }
 }
