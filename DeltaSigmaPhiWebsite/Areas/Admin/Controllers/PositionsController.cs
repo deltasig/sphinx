@@ -70,7 +70,26 @@
         {
             if (!ModelState.IsValid) return View(position);
 
-            _db.Entry(position).State = EntityState.Modified;
+            var oldPosition = await _db.Positions.AsNoTracking().SingleAsync(p => p.PositionId == position.PositionId);
+            // Check if order changed.
+            if (oldPosition.DisplayOrder != position.DisplayOrder)
+            {
+                // Adjust ordering of all positions to accomodate change.
+                var positions = await _db.Positions
+                    .Where(p => 
+                        p.Type == position.Type &&
+                        p.PositionId != position.PositionId)
+                    .OrderBy(p => p.DisplayOrder)
+                    .ToListAsync();
+                positions.Insert(position.DisplayOrder, position);
+
+                for (var i = 0; i < positions.Count; i++)
+                {
+                    positions[i].DisplayOrder = i;
+                    _db.Entry(positions[i]).State = EntityState.Modified;
+                }
+            }
+
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
