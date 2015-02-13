@@ -105,6 +105,22 @@
         }
 
         [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var model = await _db.StudyAssignments.FindAsync(id);
+            if (model == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Unassign(int? id)
         {
             if (id == null)

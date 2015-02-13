@@ -69,6 +69,7 @@
                                              }
                                         </td>
                                         <td class="text-right">
+                                            @Html.ActionLink("Details", "Details", "Assignments", new { id = item.StudyAssignmentId }, null) | 
                                             @Html.ActionLink("Edit", "Edit", "Assignments", new { id = item.StudyAssignmentId }, null)
                                             @if (!item.TurnIns.Any())
                                             {
