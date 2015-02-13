@@ -63,6 +63,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<Address> Addresses { get; set; }
 
+        public virtual ICollection<ClassFile> ClassFileUploads { get; set; }
+
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
 
         public virtual ICollection<IncidentReport> IncidentReports { get; set; }
