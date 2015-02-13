@@ -65,6 +65,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<ClassFile> ClassFileUploads { get; set; }
 
+        public virtual ICollection<ClassFileVote> ClassFileVotes { get; set; }
+
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
 
         public virtual ICollection<IncidentReport> IncidentReports { get; set; }
