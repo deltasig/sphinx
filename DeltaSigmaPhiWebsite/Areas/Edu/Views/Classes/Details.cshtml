@@ -41,24 +41,53 @@
                             {
                                 <li class="list-group-item">
                                     <div class="row">
-                                        <div class="col-xs-10">
+                                        <div class="@(User.IsInRole("Administrator") || User.IsInRole("Academics") ? "col-xs-10" : "col-xs-12")">
                                             <a href="@Url.Action("DownloadFile", new { id = f.ClassFileId })" class="btn btn-default btn-sm">
                                                 <i class="fa fa-cloud-download"></i>
                                                 @f.AwsCode.Split('/')[1]
                                             </a>
-                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">@f.DownloadCount</span>
+                                            
+                                            <i data-toggle="tooltip" data-placement="top" 
+                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)" 
+                                               class="fa fa-info-circle fa-lg text-info"></i>
+                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">
+                                                <i class="fa fa-cloud-download"></i>
+                                                @f.DownloadCount
+                                            </span>
+                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Upvotes | Downvotes">
+                                                @f.ClassFileVotes.Count(v => v.IsUpvote) | 
+                                                @f.ClassFileVotes.Count(v => !v.IsUpvote)
+                                            </span>
+                                            <a href="@Url.Action("Upvote", "Classes", new { id = f.ClassFileId })">
+                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
+                                                }
+                                            </a>
+                                            <a href="@Url.Action("Downvote", "Classes", new { id = f.ClassFileId })">
+                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && !v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
+                                                }
+                                            </a>
                                         </div>
-                                        <div class="col-xs-2 text-right">
-                                            <i data-toggle="tooltip" data-placement="top" title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)" 
-                                                class="fa fa-info-circle fa-lg text-info"></i>
-                                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                            {
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                        {
+                                            <div class="col-xs-2 text-right">
                                                 <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })">
-                                                    <i data-toggle="tooltip" data-placement="right" title="Delete"
-                                                        class="fa fa-times-circle-o fa-lg text-danger"></i>
+                                                    <i data-toggle="tooltip" data-placement="top" title="Delete"
+                                                        class="fa fa-times-circle-o fa-2x text-danger"></i>
                                                 </a>
-                                            }
-                                        </div>
+                                            </div>
+                                        }
                                     </div>
                                 </li>
                             }

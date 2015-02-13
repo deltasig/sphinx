@@ -1,18 +1,18 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Edu.Controllers
 {
-    using System;
-    using System.IO;
-    using System.Web.Configuration;
     using Amazon.S3;
     using Amazon.S3.Model;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using Models;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
+    using System.Web.Configuration;
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
@@ -102,6 +102,92 @@
                 }
             };
             return View(model);
+        }
+
+        public async Task<ActionResult> Upvote(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var file = await _db.ClassFiles.FindAsync(id);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
+
+            var existingVote = await _db.ClassFileVotes
+                    .SingleOrDefaultAsync(v =>
+                        v.UserId == WebSecurity.CurrentUserId &&
+                        v.ClassFileId == file.ClassFileId);
+
+            if (existingVote == null)
+            {
+                _db.ClassFileVotes.Add(new ClassFileVote
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    ClassFileId = file.ClassFileId,
+                    IsUpvote = true
+                });
+            }
+            else
+            {
+                if (existingVote.IsUpvote)
+                {
+                    _db.Entry(existingVote).State = EntityState.Deleted;
+                }
+                else
+                {
+                    existingVote.IsUpvote = true;
+                    _db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = file.ClassId });
+        }
+
+        public async Task<ActionResult> Downvote(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var file = await _db.ClassFiles.FindAsync(id);
+            if (file == null)
+            {
+                return HttpNotFound();
+            }
+
+            var existingVote = await _db.ClassFileVotes
+                    .SingleOrDefaultAsync(v =>
+                        v.UserId == WebSecurity.CurrentUserId &&
+                        v.ClassFileId == file.ClassFileId);
+
+            if (existingVote == null)
+            {
+                _db.ClassFileVotes.Add(new ClassFileVote
+                {
+                    UserId = WebSecurity.CurrentUserId,
+                    ClassFileId = file.ClassFileId,
+                    IsUpvote = false
+                });
+            }
+            else
+            {
+                if (!existingVote.IsUpvote)
+                {
+                    _db.Entry(existingVote).State = EntityState.Deleted;
+                }
+                else
+                {
+                    existingVote.IsUpvote = false;
+                    _db.Entry(existingVote).State = EntityState.Modified;
+                }
+            }
+
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = file.ClassId });
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -417,7 +503,7 @@
                     AwsCode = key, 
                     UploadedOn = DateTime.UtcNow,
                 };
-                _db.ClassesFiles.Add(file);
+                _db.ClassFiles.Add(file);
                 await _db.SaveChangesAsync();
             }
             catch (Exception ex)
@@ -438,7 +524,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            var file = await _db.ClassesFiles.FindAsync(id);
+            var file = await _db.ClassFiles.FindAsync(id);
             if (file == null)
             {
                 return HttpNotFound();
@@ -495,7 +581,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            var file = await _db.ClassesFiles.FindAsync(id);
+            var file = await _db.ClassFiles.FindAsync(id);
             if (file == null)
             {
                 return HttpNotFound();
@@ -509,7 +595,7 @@
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteFileConfirmed(int id, int classId)
         {
-            var file = await _db.ClassesFiles.SingleAsync(f => f.ClassFileId == id);
+            var file = await _db.ClassFiles.SingleAsync(f => f.ClassFileId == id);
             if (file == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -538,6 +624,11 @@
                     id = classId,
                     message = ClassesMessageId.DeleteFileAwsFailure
                 });
+            }
+
+            foreach (var v in file.ClassFileVotes.ToList())
+            {
+                _db.Entry(v).State = EntityState.Deleted;
             }
 
             _db.Entry(file).State = EntityState.Deleted;
