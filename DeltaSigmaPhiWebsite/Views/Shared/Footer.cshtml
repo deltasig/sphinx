@@ -1,31 +1,43 @@
-﻿@if (ViewContext.RouteData.Values.ContainsValue("Home"))
+﻿@if (ViewContext.RouteData.Values.ContainsValue("Home") && ViewBag.Title != "Delta Sigma Phi")
 {
-    <div class="footer">
-        <p>
-            <ul class="list-inline text-center">
-                <li>
-                    <a href="https://www.facebook.com/deltasig.de" target="_blank">
-                        <i class="fa fa-facebook-square fa-lg"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="https://twitter.com/DSPDeltaEpsilon" target="_blank">
-                        <i class="fa fa-twitter fa-lg"></i>
-                    </a>
-                </li>
-                @*<li>
-                        <a href="https://www.youtube.com/user/mstdeltasig" target="_blank" style="color: red">
-                            <i class="fa fa-youtube fa-lg"></i>
-                        </a>
-                    </li>*@
-            </ul>
-        </p>
-        <p class="text-center">
-            Delta Sigma Phi, Delta Epsilon Chapter - 215 W. 8th Street, Rolla, MO 65401
-        </p>
-        <p class="text-center">
-            This is the official website of the <a href="http://www.mst.edu" target="_blank">Missouri S&amp;T</a> chapter
-            of <a href="http://www.deltasig.org" target="_blank">Delta Sigma Phi Fraternity</a>.
-        </p>
+    <div class="footer" style="background-color: #333333; color: white;">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-2 col-xs-4">
+                    <h4>Social</h4>
+                    <ul class="list-inline">
+                        <li>
+                            <a href="https://www.facebook.com/deltasig.de" target="_blank">
+                                <i class="fa fa-facebook-square fa-lg"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://twitter.com/deltasig_de" target="_blank">
+                                <i class="fa fa-twitter fa-lg"></i>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.youtube.com/channel/UCklKkFyVqUIG-bNE_u2vOSg" target="_blank" style="width: 50px">
+                                <i class="fa fa-youtube-play fa-lg"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-sm-3 col-xs-8">
+                    <h4>Address</h4>
+                    <p>
+                        Delta Sigma Phi<br />
+                        <small>215 W. 8th Street, Rolla, MO 65401</small><br />
+                    </p>
+                </div>
+                <div class="col-sm-7 hidden-xs">
+                    <h4>This is the official website of the</h4>
+                    <p>
+                        <a href="http://www.mst.edu" target="_blank">Missouri S&amp;T</a> 
+                        chapter of Delta Sigma Phi Fraternity.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 }
