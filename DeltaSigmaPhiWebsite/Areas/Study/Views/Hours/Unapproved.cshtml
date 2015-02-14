@@ -43,15 +43,16 @@
                                             using (Html.BeginForm("Approve", "StudyHours", new { id = item.StudyHourId }, FormMethod.Post))
                                             {
                                                 @Html.AntiForgeryToken()
-                                                <input type="submit" value="Approve" class="btn-link" />
+                                                <input type="submit" value="Approve" class="btn btn-link" style="padding: 0" />
+                                                if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                                {
+                                                    @:|
+                                                    @Html.ActionLink("Delete", "Delete", new { id = item.StudyHourId })
+                                                }
                                             }
                                         }
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                        else if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                         {
-                                            if (User.Identity.Name != item.Assignment.AssignedMember.UserName)
-                                            {
-                                                @:|
-                                            }
                                             @Html.ActionLink("Delete", "Delete", new { id = item.StudyHourId })
                                         }
                                     </td>
