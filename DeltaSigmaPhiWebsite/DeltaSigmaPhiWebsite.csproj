@@ -673,6 +673,7 @@
     <Content Include="Models\Multiselect\img\switch.png" />
     <Content Include="Models\Multiselect\js\jquery.multi-select.js" />
     <Content Include="Models\Multiselect\js\jquery.quicksearch.js" />
+    <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap-combobox.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
