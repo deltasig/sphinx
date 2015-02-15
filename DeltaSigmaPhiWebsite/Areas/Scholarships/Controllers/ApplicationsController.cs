@@ -339,8 +339,8 @@
         {
             return message == ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess ? "Application information was updated but any changes to the question selection were not because submissions have already been made."
                 : message == ApplicationsMessageId.ApplicationCreationSuccess ? "Application created successfully."
-                : message == ApplicationsMessageId.ApplicationEditSuccess ? "Application deleted successfully."
-                : message == ApplicationsMessageId.ApplicationDeletedSuccess ? "Application updated successfully."
+                : message == ApplicationsMessageId.ApplicationEditSuccess ? "Application updated successfully."
+                : message == ApplicationsMessageId.ApplicationDeletedSuccess ? "Application deleted successfully."
                 : message == ApplicationsMessageId.ApplicationCreationFailure ? "Application creation failed because of an internal issue with questions. Please contact your administrator."
                 : "";
         }
