@@ -292,6 +292,7 @@
     <Compile Include="Areas\Kitchen\Models\EditMealModel.cs" />
     <Compile Include="Areas\Kitchen\Models\CreateMealModel.cs" />
     <Compile Include="Areas\Kitchen\Models\MealScheduleModel.cs" />
+    <Compile Include="Areas\Kitchen\Models\ReorderModel.cs" />
     <Compile Include="Areas\Members\Controllers\RosterController.cs" />
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\AccountInformationModel.cs" />
@@ -665,6 +666,7 @@
     <Content Include="Areas\Service\Views\Events\Details.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
     <Content Include="Areas\Study\Views\Assignments\Details.cshtml" />
+    <Content Include="Areas\Kitchen\Views\Meals\Reorder.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />

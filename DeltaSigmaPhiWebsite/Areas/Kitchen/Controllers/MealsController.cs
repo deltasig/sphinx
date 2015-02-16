@@ -376,6 +376,40 @@
         }
 
         [Authorize(Roles = "Administrator, House Steward")]
+        public async Task<ActionResult> Reorder(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var meal = await _db.Meals.FindAsync(id);
+            if (meal == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(meal.MealsToItems.OrderBy(i => i.DisplayOrder).ToList());
+        }
+
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, House Steward")]
+        public async Task<ActionResult> Reorder(IList<MealToItem> model)
+        {
+            if (!ModelState.IsValid || !model.Any()) return RedirectToAction("Index", new {  });
+
+            var items = model.OrderBy(m => m.DisplayOrder).ToList();
+            for (var i = 0; i < model.Count; i++)
+            {
+                items[i].DisplayOrder = i;
+                _db.Entry(items[i]).State = EntityState.Modified;
+            }
+            
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
