@@ -39,7 +39,8 @@
                                 <tr>
                                     <td>@item.ToString()</td>
                                     <td class="text-right">
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealId })
+                                        @Html.ActionLink("Reorder", "Reorder", new { id = item.MealId }) |
+                                        @Html.ActionLink("Contents", "Edit", new { id = item.MealId })
                                         @if (!item.MealsToPeriods.Any() || !item.MealsToItems.Any())
                                         {
                                             @: |
