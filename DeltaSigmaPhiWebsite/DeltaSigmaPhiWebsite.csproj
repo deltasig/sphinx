@@ -344,6 +344,7 @@
     <Compile Include="DspRoleProvider.cs" />
     <Compile Include="Entities\ClassFile.cs" />
     <Compile Include="Entities\ClassFileVote.cs" />
+    <Compile Include="Entities\MajorToMember.cs" />
     <Compile Include="Entities\MealLatePlate.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealItemType.cs" />
@@ -398,6 +399,10 @@
     <Compile Include="Migrations\201502132102585_ClassFileVotes.cs" />
     <Compile Include="Migrations\201502132102585_ClassFileVotes.Designer.cs">
       <DependentUpon>201502132102585_ClassFileVotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502172152242_Majors.cs" />
+    <Compile Include="Migrations\201502172152242_Majors.Designer.cs">
+      <DependentUpon>201502172152242_Majors.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1100,6 +1105,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502132102585_ClassFileVotes.resx">
       <DependentUpon>201502132102585_ClassFileVotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502172152242_Majors.resx">
+      <DependentUpon>201502172152242_Majors.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

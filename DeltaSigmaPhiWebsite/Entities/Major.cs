@@ -6,11 +6,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
     public partial class Major
     {
-        public Major()
-        {
-            Members = new HashSet<Member>();
-        }
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MajorId { get; set; }
 
         public int DepartmentId { get; set; }
@@ -22,6 +19,6 @@ namespace DeltaSigmaPhiWebsite.Entities
         [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; }
 
-        public virtual ICollection<Member> Members { get; set; }
+        public virtual ICollection<MajorToMember> MajorToMembers { get; set; }
     }
 }
