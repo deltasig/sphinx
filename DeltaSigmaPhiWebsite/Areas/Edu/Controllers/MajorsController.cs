@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Edu.Controllers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
@@ -7,6 +8,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class MajorsController : BaseController
@@ -78,6 +80,37 @@
         {
             var model = await _db.Majors.FindAsync(id);
             _db.Majors.Remove(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        
+        public async Task<ActionResult> Assign()
+        {
+            if (User.IsInRole("Administrator") && User.IsInRole("Academics"))
+            {
+                ViewBag.UserId = await base.GetUserIdListAsFullNameAsync();
+            }
+            else
+            {
+                var member = await _db.Members.FindAsync(WebSecurity.CurrentUserId);
+                ViewBag.UserId = new SelectList(new List<object> 
+                { 
+                    new { member.UserId, Name = member.FirstName + " " + member.LastName } 
+                }, "UserId", "Name");
+            }
+
+            ViewBag.MajorId = new SelectList(await _db.Majors.OrderBy(c => c.MajorName).ToListAsync(),
+                    "MajorId", "MajorName");
+
+            return View(new MajorToMember());
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Assign(MajorToMember model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            _db.MajorsToMembers.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

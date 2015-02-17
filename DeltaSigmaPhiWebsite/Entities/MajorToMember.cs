@@ -11,12 +11,18 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         [Column(Order = 0)]
         [Index("IX_MajorToMember", 0, IsUnique = true)]
+        [Required]
+        [Display(Name = "Major")]
         public int MajorId { get; set; }
 
         [Column(Order = 1)]
         [Index("IX_MajorToMember", 1, IsUnique = true)]
+        [Required]
+        [Display(Name = "Member")]
         public int UserId { get; set; }
 
+        [Required]
+        [Display(Name = "Degree Level")]
         public DegreeLevel DegreeLevel { get; set; }
 
         [ForeignKey("MajorId")]
