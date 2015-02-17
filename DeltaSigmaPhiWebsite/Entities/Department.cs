@@ -5,18 +5,12 @@ namespace DeltaSigmaPhiWebsite.Entities
 
     public partial class Department
     {
-        public Department()
-        {
-            Majors = new HashSet<Major>();
-            Classes = new HashSet<Class>();
-        }
-
         public int DepartmentId { get; set; }
 
         [Required]
-        [Display(Name = "Department")]
+        [Display(Name = "Name")]
         [StringLength(100)]
-        public string DepartmentName { get; set; }
+        public string Name { get; set; }
 
         public virtual ICollection<Major> Majors { get; set; }
 
