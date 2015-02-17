@@ -167,11 +167,11 @@ table.dataTable thead > tr > th {
 }
 
 a {
-    color: #33b771;
+    color: #278955;
     text-decoration: none;
 }
 
 a:hover, a:focus {
-    color: #3cce80;
+    color: #2b975e;
     text-decoration: underline;
 }
