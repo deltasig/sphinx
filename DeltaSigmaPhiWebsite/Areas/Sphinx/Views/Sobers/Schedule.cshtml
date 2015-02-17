@@ -57,7 +57,7 @@
                             @foreach (var item in Model.OrderBy(s => s.DateOfShift))
                             {
                                 <tr>
-                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                    <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
                                     <td>@item.Type</td>
                                     <td>
                                         @if (item.UserId == null)
