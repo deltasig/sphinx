@@ -1,5 +1,6 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Edu.Controllers
 {
+    using System.Linq;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using System.Data.Entity;
@@ -8,24 +9,26 @@
     using System.Web.Mvc;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
-    public class DepartmentsController : BaseController
+    public class MajorsController : BaseController
     {
         public async Task<ActionResult> Index()
         {
-            return View(await _db.Departments.ToListAsync());
+            return View(await _db.Majors.ToListAsync());
         }
 
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
+            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(),
+                "DepartmentId", "Name");
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Department model)
+        public async Task<ActionResult> Create(Major model)
         {
             if (!ModelState.IsValid) return View(model);
 
-            _db.Departments.Add(model);
+            _db.Majors.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
@@ -36,16 +39,18 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = await _db.Departments.FindAsync(id);
+            var model = await _db.Majors.FindAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
             }
+            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(),
+                "DepartmentId", "Name", model.DepartmentId);
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Department model)
+        public async Task<ActionResult> Edit(Major model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -60,7 +65,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = await _db.Departments.FindAsync(id);
+            var model = await _db.Majors.FindAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -71,8 +76,8 @@
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var model = await _db.Departments.FindAsync(id);
-            _db.Departments.Remove(model);
+            var model = await _db.Majors.FindAsync(id);
+            _db.Majors.Remove(model);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

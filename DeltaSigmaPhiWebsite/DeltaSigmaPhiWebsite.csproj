@@ -279,6 +279,7 @@
     <Compile Include="Areas\Admin\Models\AppointmentModel.cs" />
     <Compile Include="Areas\Alumni\AlumniAreaRegistration.cs" />
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
+    <Compile Include="Areas\Edu\Controllers\MajorsController.cs" />
     <Compile Include="Areas\Edu\Controllers\DepartmentsController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
@@ -681,6 +682,10 @@
     <Content Include="Areas\Edu\Views\Departments\Delete.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Edit.cshtml" />
+    <Content Include="Areas\Edu\Views\Majors\Create.cshtml" />
+    <Content Include="Areas\Edu\Views\Majors\Delete.cshtml" />
+    <Content Include="Areas\Edu\Views\Majors\Edit.cshtml" />
+    <Content Include="Areas\Edu\Views\Majors\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />

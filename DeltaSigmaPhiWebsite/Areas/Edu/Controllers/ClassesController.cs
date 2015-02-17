@@ -40,7 +40,7 @@
         {
             ViewBag.Message = string.Empty;
             ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
-                "DepartmentId", "DepartmentName");
+                "DepartmentId", "Name");
             return View();
         }
 
@@ -62,7 +62,7 @@
                 }
             }
 
-            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "Name", @class.DepartmentId);
             return View(@class);
         }
 
@@ -202,7 +202,7 @@
                 return HttpNotFound();
             }
             ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
-                "DepartmentId", "DepartmentName", 
+                "DepartmentId", "Name", 
                 @class.DepartmentId);
             return View(@class);
         }
@@ -216,7 +216,7 @@
                 await _db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "DepartmentName", @class.DepartmentId);
+            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "Name", @class.DepartmentId);
             return View(@class);
         }
 
