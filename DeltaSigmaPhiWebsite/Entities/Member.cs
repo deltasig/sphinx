@@ -95,7 +95,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         
         public virtual ICollection<Leader> Committees { get; set; }
 
-        public virtual ICollection<Major> Majors { get; set; }
+        public virtual ICollection<MajorToMember> MajorsToMember { get; set; }
 
         public virtual ICollection<MealVote> MealVotes { get; set; }
 

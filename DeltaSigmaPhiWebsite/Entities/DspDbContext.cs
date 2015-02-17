@@ -20,6 +20,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
         public virtual DbSet<Leader> Leaders { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
+        public virtual DbSet<MajorToMember> MajorsToMembers { get; set; }
         public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealItem> MealItems { get; set; }
         public virtual DbSet<MealItemType> MealItemTypes { get; set; }
@@ -114,11 +115,6 @@ namespace DeltaSigmaPhiWebsite.Entities
                 .HasMany(e => e.Classes)
                 .WithRequired(e => e.Department)
                 .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Major>()
-                .HasMany(e => e.Members)
-                .WithMany(e => e.Majors)
-                .Map(m => m.ToTable("MemberMajors").MapLeftKey("MajorId").MapRightKey("UserId"));
 
             #endregion
 
