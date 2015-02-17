@@ -279,6 +279,7 @@
     <Compile Include="Areas\Admin\Models\AppointmentModel.cs" />
     <Compile Include="Areas\Alumni\AlumniAreaRegistration.cs" />
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
+    <Compile Include="Areas\Edu\Controllers\DepartmentsController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
@@ -403,6 +404,10 @@
     <Compile Include="Migrations\201502172152242_Majors.cs" />
     <Compile Include="Migrations\201502172152242_Majors.Designer.cs">
       <DependentUpon>201502172152242_Majors.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201502172159125_RefactorDepartment.cs" />
+    <Compile Include="Migrations\201502172159125_RefactorDepartment.Designer.cs">
+      <DependentUpon>201502172159125_RefactorDepartment.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -672,6 +677,10 @@
     <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
     <Content Include="Areas\Study\Views\Assignments\Details.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\Reorder.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Create.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Delete.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Index.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1108,6 +1117,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502172152242_Majors.resx">
       <DependentUpon>201502172152242_Majors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201502172159125_RefactorDepartment.resx">
+      <DependentUpon>201502172159125_RefactorDepartment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

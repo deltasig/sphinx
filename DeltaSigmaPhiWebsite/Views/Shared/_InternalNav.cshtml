@@ -63,9 +63,14 @@
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics <b class="caret"></b></a>
                             <ul class="dropdown-menu">
+                                <li class="dropdown-header">Study Hours</li>
                                 <li>@Html.ActionLink("Study Periods", "Index", "Periods", new { area = "Study" }, null)</li>
-                                <li>@Html.ActionLink("Unapproved Study Hours", "Unapproved", "Hours", new { area = "Study" }, null)</li>
-                                <li>@Html.ActionLink("Class Index", "Index", "Classes", new { area = "Edu" }, null)</li>
+                                <li>@Html.ActionLink("Unapproved Submissions", "Unapproved", "Hours", new { area = "Study" }, null)</li>
+                                <li role="presentation" class="divider"></li>
+                                <li class="dropdown-header">Class-Related</li>
+                                <li>@Html.ActionLink("Classes", "Index", "Classes", new { area = "Edu" }, null)</li>
+                                <li>@Html.ActionLink("Departments", "Index", "Departments", new { area = "Edu" }, null)</li>
+                                <li>@Html.ActionLink("Majors", "Index", "Majors", new { area = "Edu" }, null)</li>
                             </ul>
                         </li>
                     }
@@ -92,6 +97,7 @@
                             <li>@Html.ActionLink("Addresses", "Index", "Addresses", new { area = "Members" }, null)</li>
                             <li>@Html.ActionLink("Phone Numbers", "Index", "PhoneNumbers", new { area = "Members" }, null)</li>
                             <li>@Html.ActionLink("Incidents", "Index", "Incidents", new { area = "Members" }, null)</li>
+                            <li role="presentation" class="divider"></li>
                             <li class="dropdown-header">Alumni-Related</li>
                             <li>@Html.ActionLink("Alumni Leaders", "Index", "Leaders", new { area = "Alumni" }, null)</li>
                         </ul>
