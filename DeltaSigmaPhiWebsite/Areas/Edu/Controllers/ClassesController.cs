@@ -39,7 +39,7 @@
         public async Task<ActionResult> Create()
         {
             ViewBag.Message = string.Empty;
-            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.DepartmentName).ToListAsync(), 
+            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
                 "DepartmentId", "DepartmentName");
             return View();
         }
@@ -201,7 +201,7 @@
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.DepartmentName).ToListAsync(), 
+            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
                 "DepartmentId", "DepartmentName", 
                 @class.DepartmentId);
             return View(@class);

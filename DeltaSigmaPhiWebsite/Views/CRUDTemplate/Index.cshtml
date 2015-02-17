@@ -16,7 +16,8 @@
                     @Html.ActionLink("Create New", "Create")
                 </div>
                 <div class="panel-body">
-                    <table class="table table-condensed" id="apps-table">
+                    <table class="table" data-toggle="table" data-classes="table table-condensed" 
+                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="class-number">
                         <thead>
                             <tr>
                                 <th></th>
@@ -38,14 +39,6 @@
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[0, "asc"]]
-        });
-
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
+        
     </script>
 }
