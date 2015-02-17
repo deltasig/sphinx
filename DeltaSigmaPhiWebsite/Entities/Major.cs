@@ -10,9 +10,12 @@ namespace DeltaSigmaPhiWebsite.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int MajorId { get; set; }
 
+        [Required]
+        [Display(Name = "Department")]
         public int DepartmentId { get; set; }
 
         [Required]
+        [Display(Name = "Name")]
         [StringLength(100)]
         public string MajorName { get; set; }
 

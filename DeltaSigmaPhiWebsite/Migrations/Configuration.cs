@@ -269,30 +269,30 @@ namespace DeltaSigmaPhiWebsite.Migrations
 
             #endregion
 
-            //context.Departments.AddOrUpdate(d => d.DepartmentName,
-            //    new Department { DepartmentName = "Aerospace & Mechanical Engineering" },
-            //    new Department { DepartmentName = "Arts, Languages, and Philosophy" },
-            //    new Department { DepartmentName = "Biological Sciences" },
-            //    new Department { DepartmentName = "Business" },
-            //    new Department { DepartmentName = "Materials Science & Engineering" }, //5
-            //    new Department { DepartmentName = "Chemical & Biochemical Engineering" },
-            //    new Department { DepartmentName = "Chemistry" },
-            //    new Department { DepartmentName = "Civil, Architectural, and Environmental Engineering" },
-            //    new Department { DepartmentName = "Computer Science" },
-            //    new Department { DepartmentName = "Economics" }, //10
-            //    new Department { DepartmentName = "Education" },
-            //    new Department { DepartmentName = "Electrical & Computer Engineering" },
-            //    new Department { DepartmentName = "Engineering Management & Systems Engineering" },
-            //    new Department { DepartmentName = "English & Technical Communication" },
-            //    new Department { DepartmentName = "Geosciences & Geological & Petroleum Engineering" }, //15
-            //    new Department { DepartmentName = "Information Science & Technology" },
-            //    new Department { DepartmentName = "Mathematics & Statistics" },
-            //    new Department { DepartmentName = "Mining Engineering" },
-            //    new Department { DepartmentName = "Nuclear Engineering" },
-            //    new Department { DepartmentName = "Physics" }, //20
-            //    new Department { DepartmentName = "Psychology" },
-            //    new Department { DepartmentName = "Military Science" },
-            //    new Department { DepartmentName = "History & Political Science" }
+            //context.Departments.AddOrUpdate(d => d.Name,
+            //    new Department { Name = "Aerospace & Mechanical Engineering" },
+            //    new Department { Name = "Arts, Languages, and Philosophy" },
+            //    new Department { Name = "Biological Sciences" },
+            //    new Department { Name = "Business" },
+            //    new Department { Name = "Materials Science & Engineering" }, //5
+            //    new Department { Name = "Chemical & Biochemical Engineering" },
+            //    new Department { Name = "Chemistry" },
+            //    new Department { Name = "Civil, Architectural, and Environmental Engineering" },
+            //    new Department { Name = "Computer Science" },
+            //    new Department { Name = "Economics" }, //10
+            //    new Department { Name = "Education" },
+            //    new Department { Name = "Electrical & Computer Engineering" },
+            //    new Department { Name = "Engineering Management & Systems Engineering" },
+            //    new Department { Name = "English & Technical Communication" },
+            //    new Department { Name = "Geosciences & Geological & Petroleum Engineering" }, //15
+            //    new Department { Name = "Information Science & Technology" },
+            //    new Department { Name = "Mathematics & Statistics" },
+            //    new Department { Name = "Mining Engineering" },
+            //    new Department { Name = "Nuclear Engineering" },
+            //    new Department { Name = "Physics" }, //20
+            //    new Department { Name = "Psychology" },
+            //    new Department { Name = "Military Science" },
+            //    new Department { Name = "History & Political Science" }
             //);
 
             //context.SaveChanges();
