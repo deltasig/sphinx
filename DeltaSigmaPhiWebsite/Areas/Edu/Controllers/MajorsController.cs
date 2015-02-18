@@ -33,6 +33,7 @@
             return View(await _db.Majors.ToListAsync());
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Create()
         {
             ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(),
@@ -40,6 +41,7 @@
             return View();
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Major model)
         {
@@ -54,6 +56,7 @@
             return RedirectToAction("Index", new { message = MajorsMessageId.CreateSuccess });
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -70,6 +73,7 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Major model)
         {
@@ -84,6 +88,7 @@
             return RedirectToAction("Index", new { message = MajorsMessageId.UpdateSuccess });
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -98,6 +103,7 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
@@ -144,6 +150,10 @@
                 ViewBag.FailMessage = GetResultMessage(MajorsMessageId.AssignFailureModelInvalid);
                 return View(model);
             }
+            if (model.UserId != WebSecurity.CurrentUserId && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
             _db.MajorsToMembers.Add(model);
             await _db.SaveChangesAsync();
@@ -161,6 +171,10 @@
             {
                 return HttpNotFound();
             }
+            if (model.UserId != WebSecurity.CurrentUserId && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             return View(model);
         }
 
@@ -168,6 +182,10 @@
         public async Task<ActionResult> Unassign(int id)
         {
             var model = await _db.MajorsToMembers.FindAsync(id);
+            if (model.UserId != WebSecurity.CurrentUserId && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
             var userName = model.Member.UserName;
             _db.MajorsToMembers.Remove(model);
             await _db.SaveChangesAsync();

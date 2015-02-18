@@ -69,7 +69,10 @@
                                 <li role="presentation" class="divider"></li>
                                 <li class="dropdown-header">Class-Related</li>
                                 <li>@Html.ActionLink("Classes", "Index", "Classes", new { area = "Edu" }, null)</li>
-                                <li>@Html.ActionLink("Departments", "Index", "Departments", new { area = "Edu" }, null)</li>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                {
+                                    <li>@Html.ActionLink("Departments", "Index", "Departments", new { area = "Edu" }, null)</li>
+                                }
                                 <li>@Html.ActionLink("Majors", "Index", "Majors", new { area = "Edu" }, null)</li>
                             </ul>
                         </li>

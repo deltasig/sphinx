@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
+    [Authorize(Roles = "Administrator, Academics")]
     public class DepartmentsController : BaseController
     {
         public async Task<ActionResult> Index()
