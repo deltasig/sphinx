@@ -2,6 +2,7 @@
 {
     using App_Start;
     using DeltaSigmaPhiWebsite.Controllers;
+    using Edu.Controllers;
     using Entities;
     using Microsoft.AspNet.Identity;
     using Microsoft.Web.WebPages.OAuth;
@@ -19,21 +20,28 @@
     public class AccountController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string userName, ManageMessageId? message)
+        public async Task<ActionResult> Index(string userName, ManageMessageId? accountMessage, MajorsController.MajorsMessageId? majorMessage)
         {
-            switch (message)
+            switch (accountMessage)
             {
                 case ManageMessageId.AddLoginSuccess:
                 case ManageMessageId.ChangePasswordSuccess:
                 case ManageMessageId.RemoveLoginSuccess:
                 case ManageMessageId.SetPasswordSuccess:
-                    ViewBag.SuccessMessage = GetManageMessage(message);
+                    ViewBag.SuccessMessage = GetManageMessage(accountMessage);
                     break;
                 case ManageMessageId.ChangePasswordFailure:
                 case ManageMessageId.SetPasswordFailure:
-                    ViewBag.FailMessage = GetManageMessage(message);
+                    ViewBag.FailMessage = GetManageMessage(accountMessage);
                     break;
             }
+            switch (majorMessage)
+            {
+                case MajorsController.MajorsMessageId.UnassignSuccess:
+                    ViewBag.SuccessMessage = MajorsController.GetResultMessage(majorMessage);
+                    break;
+            }
+
             if (!string.IsNullOrEmpty(userName))
             {
                 if (!OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName)))
@@ -46,7 +54,7 @@
 
             var member = await _db.Members.SingleAsync(m => m.UserName == userName);
 
-            ViewBag.StatusMessage = GetManageMessage(message);
+            ViewBag.StatusMessage = GetManageMessage(accountMessage);
             ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(WebSecurity.GetUserId(userName));
             var thisSemester = await GetThisSemesterAsync();
 
