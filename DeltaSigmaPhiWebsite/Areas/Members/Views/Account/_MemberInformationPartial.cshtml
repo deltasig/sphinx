@@ -28,13 +28,45 @@
                     <th>Email</th>
                     <td>@Model.Email</td>
                 </tr>
-                @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Alumnus"))
-                {
-                    <tr>
-                        <th>Pin</th>
-                        <td>@Model.Pin</td>
-                    </tr>
-                }
+                <tr>
+                    <th>Major(s)
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.IsInRole("Secretary") ||
+                                WebSecurity.CurrentUserId == Model.UserId)
+                            {
+                                <a href="@Url.Action("Assign", "Majors", new { area = "Edu", id = Model.UserId })">
+                                    <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
+                                        title="Add a new major"></i>
+                                </a>
+                            }
+                    </th>
+                    <td>
+                        @if (Model.MajorsToMember.Any())
+                        {
+                            foreach (var m in Model.MajorsToMember)
+                            {
+                                @m.Major.MajorName @:(@m.DegreeLevel)
+                                if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.IsInRole("Secretary") ||
+                                    WebSecurity.CurrentUserId == Model.UserId)
+                                {
+                                    <a href="@Url.Action("Unassign", "Majors", new { area = "Edu", id = m.MajorToMemberId })" 
+                                        class="pull-right">
+                                        <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
+                                            title="Remove this major"></i>
+                                    </a>
+                                }
+                                <br />
+                            }
+                        }
+                        else
+                        {
+                            @: None added 
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Pin</th>
+                    <td>@Model.Pin</td>
+                </tr>
                 <tr>
                     <th>Shirt Size</th>
                     <td>@Model.ShirtSize</td>

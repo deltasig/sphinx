@@ -36,7 +36,8 @@
 
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to List", "Index")
+                    @Html.ActionLink("Majors", "Index", "Majors", new { area = "Edu" }, null) |
+                    @Html.ActionLink("To Profile", "Index", "Account", new { area = "Members", userName = ViewBag.UserName }, null)
                 </div>
             }
         </div>
