@@ -84,9 +84,17 @@
             return RedirectToAction("Index");
         }
         
-        public async Task<ActionResult> Assign()
+        public async Task<ActionResult> Assign(int? id)
         {
-            if (User.IsInRole("Administrator") && User.IsInRole("Academics"))
+            if (id != null)
+            {
+                var member = await _db.Members.FindAsync(id);
+                if (member != null)
+                {
+                    ViewBag.UserName = member.UserName;
+                }
+            }
+            if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
             {
                 ViewBag.UserId = await base.GetUserIdListAsFullNameAsync();
             }
@@ -113,6 +121,30 @@
             _db.MajorsToMembers.Add(model);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> Unassign(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var model = await _db.MajorsToMembers.FindAsync(id);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
+        [HttpPost, ActionName("Unassign"), ValidateAntiForgeryToken]
+        public async Task<ActionResult> Unassign(int id)
+        {
+            var model = await _db.MajorsToMembers.FindAsync(id);
+            var userName = model.Member.UserName;
+            _db.MajorsToMembers.Remove(model);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index", "Account", new { area = "Members", userName });
         }
     }
 }

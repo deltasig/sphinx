@@ -688,6 +688,7 @@
     <Content Include="Areas\Edu\Views\Majors\Edit.cshtml" />
     <Content Include="Areas\Edu\Views\Majors\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Majors\Assign.cshtml" />
+    <Content Include="Areas\Edu\Views\Majors\Unassign.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
