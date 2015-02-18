@@ -121,19 +121,26 @@
                 if (member != null)
                 {
                     ViewBag.UserName = member.UserName;
+                    ViewBag.UserId = new SelectList(new List<object> 
+                    { 
+                        new { member.UserId, Name = member.FirstName + " " + member.LastName } 
+                    }, "UserId", "Name");
                 }
-            }
-            if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-            {
-                ViewBag.UserId = await base.GetUserIdListAsFullNameAsync();
             }
             else
             {
-                var member = await _db.Members.FindAsync(WebSecurity.CurrentUserId);
-                ViewBag.UserId = new SelectList(new List<object> 
-                { 
-                    new { member.UserId, Name = member.FirstName + " " + member.LastName } 
-                }, "UserId", "Name");
+                if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                {
+                    ViewBag.UserId = await base.GetUserIdListAsFullNameAsync();
+                }
+                else
+                {
+                    var member = await _db.Members.FindAsync(WebSecurity.CurrentUserId);
+                    ViewBag.UserId = new SelectList(new List<object> 
+                    { 
+                        new { member.UserId, Name = member.FirstName + " " + member.LastName } 
+                    }, "UserId", "Name");
+                }
             }
 
             ViewBag.MajorId = new SelectList(await _db.Majors.OrderBy(c => c.MajorName).ToListAsync(),
@@ -200,7 +207,7 @@
                 : message == MajorsMessageId.UpdateSuccess ? "Major update was successful."
                 : message == MajorsMessageId.DeleteSuccess ? "Major deletion was successful."
                 : message == MajorsMessageId.AssignFailureModelInvalid ? "Failed to assign member from major because the submission was invalid.  Please try again."
-                : message == MajorsMessageId.AssignSuccess ? "Member was successfully assigned from major."
+                : message == MajorsMessageId.AssignSuccess ? "Member was successfully assigned to major."
                 : message == MajorsMessageId.UnassignSuccess ? "Member was successfully unassigned from major."
                 : "";
         }
