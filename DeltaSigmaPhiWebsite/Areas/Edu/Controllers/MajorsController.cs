@@ -13,8 +13,23 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class MajorsController : BaseController
     {
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(MajorsMessageId? message)
         {
+            switch (message)
+            {
+                case MajorsMessageId.CreateFailureModelInvalid:
+                case MajorsMessageId.UpdateFailureModelInvalid:
+                case MajorsMessageId.AssignFailureModelInvalid:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case MajorsMessageId.CreateSuccess:
+                case MajorsMessageId.UpdateSuccess:
+                case MajorsMessageId.DeleteSuccess:
+                case MajorsMessageId.AssignSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
             return View(await _db.Majors.ToListAsync());
         }
 
@@ -28,11 +43,15 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Major model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.FailMessage = GetResultMessage(MajorsMessageId.CreateFailureModelInvalid);
+                return View(model);
+            }
 
             _db.Majors.Add(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = MajorsMessageId.CreateSuccess });
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -54,11 +73,15 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Major model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.FailMessage = GetResultMessage(MajorsMessageId.UpdateFailureModelInvalid);
+                return View(model);
+            }
 
             _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = MajorsMessageId.UpdateSuccess });
         }
 
         public async Task<ActionResult> Delete(int? id)
@@ -81,7 +104,7 @@
             var model = await _db.Majors.FindAsync(id);
             _db.Majors.Remove(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = MajorsMessageId.DeleteSuccess });
         }
         
         public async Task<ActionResult> Assign(int? id)
@@ -116,11 +139,15 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Assign(MajorToMember model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.FailMessage = GetResultMessage(MajorsMessageId.AssignFailureModelInvalid);
+                return View(model);
+            }
 
             _db.MajorsToMembers.Add(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { message = MajorsMessageId.AssignSuccess });
         }
 
         public async Task<ActionResult> Unassign(int? id)
@@ -144,7 +171,32 @@
             var userName = model.Member.UserName;
             _db.MajorsToMembers.Remove(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Account", new { area = "Members", userName });
+            return RedirectToAction("Index", "Account", new { area = "Members", userName, message = MajorsMessageId.UnassignSuccess });
+        }
+
+        public static dynamic GetResultMessage(MajorsMessageId? message)
+        {
+            return message == MajorsMessageId.CreateFailureModelInvalid ? "Failed to create major because the submission was invalid.  Please try again."
+                : message == MajorsMessageId.CreateSuccess ? "Major creation was successful."
+                : message == MajorsMessageId.UpdateFailureModelInvalid ? "Failed to update major because the submission was invalid.  Please try again."
+                : message == MajorsMessageId.UpdateSuccess ? "Major update was successful."
+                : message == MajorsMessageId.DeleteSuccess ? "Major deletion was successful."
+                : message == MajorsMessageId.AssignFailureModelInvalid ? "Failed to assign member from major because the submission was invalid.  Please try again."
+                : message == MajorsMessageId.AssignSuccess ? "Member was successfully assigned from major."
+                : message == MajorsMessageId.UnassignSuccess ? "Member was successfully unassigned from major."
+                : "";
+        }
+
+        public enum MajorsMessageId
+        {
+            CreateFailureModelInvalid,
+            CreateSuccess,
+            UpdateFailureModelInvalid,
+            UpdateSuccess,
+            DeleteSuccess,
+            AssignFailureModelInvalid,
+            AssignSuccess,
+            UnassignSuccess
         }
     }
 }
