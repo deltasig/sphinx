@@ -141,14 +141,6 @@
                     </tbody>
                 </table>
             </div>
-
-            @using (Html.BeginForm())
-            {
-                @Html.AntiForgeryToken()
-
-                <input type="submit" value="Delete" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to Assignments", "Info", "Periods", new { id = Model.Period.PeriodId }, null)
-            }
         </div>
     </div>
 </div>
