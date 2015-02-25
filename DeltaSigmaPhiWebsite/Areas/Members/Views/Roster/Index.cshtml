@@ -94,7 +94,10 @@
                                         <td><a href="mailto:@item.Email">@item.Email</a></td>
                                         <td>@item.MemberStatus.StatusName</td>
                                         <td>@item.PledgeClass.PledgeClassName</td>
-                                        <td>@item.GraduationSemester.ToString()</td>
+                                        <td>
+                                            @item.GraduationSemester.DateStart.Year 
+                                            @(item.GraduationSemester.DateStart.Month < 6 ? "Spring " : "Fall ")
+                                        </td>
                                         <td>
                                             @if (item.BigBroId != null)
                                             {
