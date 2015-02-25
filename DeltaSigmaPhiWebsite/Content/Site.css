@@ -175,3 +175,11 @@ a:hover, a:focus {
     color: #2b975e;
     text-decoration: underline;
 }
+
+.btn-link {
+    color: #278955;
+}
+.btn-link:hover, .btn-link:focus {
+    color: #2b975e;
+    text-decoration: underline;
+}
