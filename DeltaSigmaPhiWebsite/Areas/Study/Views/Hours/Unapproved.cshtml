@@ -33,9 +33,9 @@
                             {
                                 <tr>
                                     <td>@item.Assignment.AssignedMember.ToString()</td>
-                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone).ToShortDateString()</td>
+                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeStudied, cstZone).ToString("MM/dd/yyyy")</td>
                                     <td>@item.DurationHours</td>
-                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeSubmitted, cstZone)</td>
+                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeSubmitted, cstZone).ToString("MM/dd/yyyy hh:mm tt")</td>
                                     <td>@Html.DisplayFor(modelItem => item.IsProctored)</td>
                                     <td class="text-right">
                                         @if (User.Identity.Name != item.Assignment.AssignedMember.UserName)
