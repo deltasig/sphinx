@@ -1,4 +1,5 @@
-﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.MealItem>
+﻿@using System.Activities.Statements
+@model IEnumerable<DeltaSigmaPhiWebsite.Entities.MealItem>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meal Items";
@@ -37,6 +38,9 @@
                                 <th class="col-sm-1" data-sortable="true" data-field="downs">
                                     <i data-toggle="tooltip" data-placement="top" title="Total Downvotes" class="fa fa-arrow-circle-down text-danger"></i>
                                 </th>
+                                <th class="col-sm-1" data-sortable="true" data-field="favor">
+                                    Favorability
+                                </th>
                                 <th class="col-sm-2"></th>
                             </tr>
                         </thead>
@@ -47,9 +51,6 @@
                                     <td><small>@item.MealItemType.Name</small></td>
                                     <td>
                                         <ul class="list-inline" style="margin: 0">
-                                            <li style="padding: 0">
-                                                @item.Name
-                                            </li>
                                             <li style="padding: 0">
                                                 <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })">
                                                     @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
@@ -74,14 +75,44 @@
                                                     }
                                                 </a>
                                             </li>
+                                            <li style="padding: 0">
+                                                @item.Name
+                                            </li>
                                         </ul>
                                     </td>
+                                    @{
+                                        var ups = item.MealVotes.Count(v => v.IsUpvote);
+                                        var downs = item.MealVotes.Count(v => !v.IsUpvote);
+                                        var favor = 0.0;
+                                        var favorability = "No Votes";
+                                        var color = string.Empty;
+                                        if (item.MealVotes.Any())
+                                        {
+                                            favor = (ups/(double) item.MealVotes.Count())*100.0;
+                                            favorability = (favor).ToString("F");
+                                        }
+                                        if (favor >= 80.0)
+                                        {
+                                            color = "success";
+                                        }
+                                        else if (favor >= 40)
+                                        {
+                                            color = "warning";
+                                        }
+                                        else if (favor > 0)
+                                        {
+                                            color = "danger";
+                                        }
+                                    }
                                     <td>
-                                        @item.MealVotes.Count(v => v.IsUpvote)
+                                        @ups
                                     </td>
                                     <td>
-                                        @item.MealVotes.Count(v => !v.IsUpvote)
+                                        @downs
                                     </td>
+                                    <td class="@color">
+                                        @favorability
+                                    </td>   
                                     <td class="text-right">
                                         @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                         {
