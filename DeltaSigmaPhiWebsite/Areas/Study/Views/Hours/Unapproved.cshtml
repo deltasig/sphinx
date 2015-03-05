@@ -40,7 +40,7 @@
                                     <td class="text-right">
                                         @if (User.Identity.Name != item.Assignment.AssignedMember.UserName)
                                         {
-                                            using (Html.BeginForm("Approve", "StudyHours", new { id = item.StudyHourId }, FormMethod.Post))
+                                            using (Html.BeginForm("Approve", "Hours", new { area = "Study", id = item.StudyHourId }, FormMethod.Post))
                                             {
                                                 @Html.AntiForgeryToken()
                                                 <input type="submit" value="Approve" class="btn btn-link" style="padding: 0" />
