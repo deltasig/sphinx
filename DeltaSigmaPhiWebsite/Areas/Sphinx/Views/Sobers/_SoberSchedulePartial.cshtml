@@ -1,7 +1,8 @@
 ﻿@using DeltaSigmaPhiWebsite.Entities
 @model IEnumerable<SoberSignup>
 
-<div class="table-responsive">
+<!-- Standard view. -->
+<div class="hidden-xs hidden-md">
     <table class="table">
         <thead>
             <tr>
@@ -25,18 +26,17 @@
                             (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
                         </small>
                     </td>
-                    <td></td>
                     @if (item.UserId == null)
                     {
                         if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
                         {
-                        <td>None</td>
-                        <td></td>
+                            <td>None</td>
+                            <td></td>
                         }
                         else
                         {
-                        <td>None</td>
-                        <td>@Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)</td>
+                            <td>None</td>
+                            <td>@Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)</td>
                         }
                     }
                     else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
@@ -44,17 +44,17 @@
                         using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
                             FormMethod.Get, new { style = "display: inline" }))
                         {
-                        <td>
-                            <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
-                                <i class="fa fa-minus-square"></i>
-                            </button>
-                            @item.Member.ToString()
-                        </td>
-                        <td>
-                            <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                            </a>
-                        </td>
+                            <td>
+                                <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
+                                    <i class="fa fa-minus-square"></i>
+                                </button>
+                                @item.Member.ToString()
+                            </td>
+                            <td>
+                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                    @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
+                                </a>
+                            </td>
                         }
                     }
                     else
@@ -63,6 +63,88 @@
                             @item.Member.ToString()
                         </td>
                         <td>
+                            <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
+                            </a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<!-- Compact view. -->
+<div class="visible-xs visible-md">
+    <table class="table">
+        <thead>
+            <tr>
+                <th><small>Next 7 Days</small></th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td>No lifeguards on duty</td>
+                </tr>
+            }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    @if (item.UserId == null)
+                    {
+                        if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
+                        {
+                            <td>
+                                <small class="pull-right">
+                                    @item.DateOfShift.ToString("MM-dd")
+                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
+                                </small>
+                                None <small>@item.Type</small>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                <small class="pull-right">
+                                    @item.DateOfShift.ToString("MM-dd")
+                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
+                                </small>
+                                @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null) 
+                                <small>@item.Type</small>
+                            </td>
+                        }
+                    }
+                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                    {
+                        using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
+                            FormMethod.Get, new { style = "display: inline" }))
+                        {
+                            <td>
+                                <small class="pull-right">
+                                    @item.DateOfShift.ToString("MM-dd")
+                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
+                                </small>
+                                <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
+                                    <i class="fa fa-minus-square"></i>
+                                </button>
+                                @item.Member.ToString()
+                                <small>@item.Type</small><br/>
+                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                    @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
+                                </a>
+                            </td>
+                        }
+                    }
+                    else
+                    {
+                        <td>
+                            <small class="pull-right">
+                                @item.DateOfShift.ToString("MM-dd")
+                                (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
+                            </small>
+                            @item.Member.ToString()
+                            <small>@item.Type</small><br/>
                             <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
                                 @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
                             </a>
