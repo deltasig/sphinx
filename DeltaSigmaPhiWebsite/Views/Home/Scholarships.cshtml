@@ -52,8 +52,9 @@
                                 {
                                     <div class="alert alert-success">
                                         <p>
-                                            Applications are currently being accepted.
-                                            @Html.ActionLink("Click Here to Apply!", "Submit", "Applications", new { area = "Scholarships", id = a.ScholarshipAppId }, new { })
+                                            Applications are now being accepted until 
+                                            <strong>11:59 PM on @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy")</strong>. 
+                                            @Html.ActionLink("Click here to apply!", "Submit", "Applications", new { area = "Scholarships", id = a.ScholarshipAppId }, new { })
                                         </p>
                                     </div>
                                 }
