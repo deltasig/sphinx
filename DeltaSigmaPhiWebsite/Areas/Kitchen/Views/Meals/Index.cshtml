@@ -30,7 +30,7 @@
                         <thead>
                             <tr>
                                 <th data-sortable="true" data-field="meal">Meal</th>
-                                <th class="col-sm-2"></th>
+                                <th class="col-sm-3"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -45,6 +45,10 @@
                                         {
                                             @: |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.MealId })
+                                        }
+                                        else
+                                        {
+                                            @: | Delete
                                         }
                                     </td>
                                 </tr>
