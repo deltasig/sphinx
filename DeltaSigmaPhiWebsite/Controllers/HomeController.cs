@@ -50,10 +50,6 @@ namespace DeltaSigmaPhiWebsite.Controllers
 
             return View(model);
         }
-        public ActionResult Academics()
-        {
-            return View();
-        }
 
         public ActionResult Check()
         {
