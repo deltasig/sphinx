@@ -969,6 +969,7 @@
     <Content Include="Scripts\tinymce\themes\modern\theme.min.js" />
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
+    <Content Include="sitemap.xml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -991,7 +992,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Recruitment.cshtml" />
-    <Content Include="Views\Home\Academics.cshtml" />
     <Content Include="Views\Home\Scholarships.cshtml" />
     <Content Include="Views\Shared\Nav.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Appointments.cshtml" />
