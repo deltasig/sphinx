@@ -9,6 +9,8 @@
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute("elmah.axd");
+            routes.IgnoreRoute("robots.txt");
+            routes.IgnoreRoute("sitemap.xml");
             routes.LowercaseUrls = true;
 
             routes.MapRoute(
@@ -34,7 +36,7 @@
                  "Default", 
                  "{controller}/{action}/{id}",
                  new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                 new [] { "DeltaSigmaPhiWebsite.Controllers" }
+                new[] { "DeltaSigmaPhiWebsite.Controllers" }
             );
         }
     }
