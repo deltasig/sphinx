@@ -1,0 +1,8 @@
+﻿User-agent: *
+
+disallow: /Scholarships/pdp*
+disallow: /scholarships/bbms*
+disallow: /contact-us*
+disallow: /scholarships/applications*
+
+sitemap: https://www.deltasig-de.org/sitemap.xml
