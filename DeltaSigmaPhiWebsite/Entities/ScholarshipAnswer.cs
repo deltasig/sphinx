@@ -14,8 +14,8 @@
 
         public int ScholarshipQuestionId { get; set; }
 
-        [Required]
         [StringLength(3000)]
+        [Display(Name = "Answer")]
         [DataType(DataType.MultilineText)]
         public string AnswerText { get; set; }
 
