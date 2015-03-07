@@ -18,16 +18,20 @@
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Last Name")]
         public string LastName { get; set; }
 
         [Required]
+        [Display(Name = "Student Number")]
         public string StudentNumber { get; set; }
 
         [Required]
+        [Display(Name = "Phone Number")]
         [DataType(DataType.PhoneNumber)]
         [RegularExpression(@"^(([0-9]{3}[-]([0-9]{3})[-][0-9]{4})|([+]?[0-9]{10,15}))$",
             ErrorMessage = "Phone number format was invalid (enter US as ###-###-#### or international as +1 followed by up to 15 digits).")]
@@ -41,6 +45,7 @@
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "Address 1")]
         public string Address1 { get; set; }
 
         [StringLength(100)]
@@ -48,31 +53,39 @@
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "City")]
         public string City { get; set; }
 
         [StringLength(2)]
+        [Display(Name = "State")]
         public string State { get; set; }
 
+        [Display(Name = "Postal Code")]
         public int PostalCode { get; set; }
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Country")]
         public string Country { get; set; }
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "High School")]
         public string HighSchool { get; set; }
 
         [Required]
         [Range(0, 2400)]
+        [Display(Name = "ACT or SAT")]
         public int ActSatScore { get; set; }
 
         [Required]
-        [Range(0, 10)]
+        [Range(0, 5)]
+        [Display(Name = "GPA")]
         public double Gpa { get; set; }
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "How Did You Heard About Us")]
         public string HearAboutScholarship { get; set; }
 
         [ForeignKey("ScholarshipAppId")]

@@ -16,21 +16,25 @@
 
         [Required]
         [StringLength(100)]
+        [Display(Name = "Title")]
         public string Title { get; set; }
 
         [Required]
         [StringLength(3000)]
         [DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
         [AllowHtml]
         [UIHint("tinymce_full")]
         public string AdditionalText { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Open Date")]
         public DateTime OpensOn { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Close Date")]
         public DateTime ClosesOn { get; set; }
 
         public bool IsPublic { get; set; }

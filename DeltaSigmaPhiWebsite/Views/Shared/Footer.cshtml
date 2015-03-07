@@ -1,4 +1,4 @@
-﻿@if (ViewContext.RouteData.Values.ContainsValue("Home") && ViewBag.Title != "Delta Sigma Phi")
+﻿@if ((ViewContext.RouteData.Values.ContainsValue("Home") && ViewBag.Title != "Delta Sigma Phi") || ViewBag.Title == "Scholarship Submission")
 {
     <div class="footer" style="background-color: #282725; color: white;">
         <div class="container">
