@@ -1,65 +1,123 @@
-﻿@{
+﻿@model IEnumerable<ScholarshipApp>
+@{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Recruitment";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
+
 @section AdditionalMeta {
     <meta name="description" content="Learn about how you can join Delta Sig's mission to change the fraternity experience." >
 }
 
+<div class="container-fluid" style="background-color: black; padding: 5px 0 0 0; margin-top: 50px; margin-bottom: 0">
+    <div class="row" style="margin-right:0; padding-right:0">
+        <div class="visible-xs col-xs-12">
+            <iframe width="100%" height="250" frameborder="0"
+                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
+        </div>
+        <div class="visible-sm col-sm-8 col-sm-offset-2">
+            <iframe width="100%" height="350" frameborder="0"
+                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
+        </div>
+        <div class="visible-md visible-lg col-md-6 col-md-offset-3">
+            <iframe width="100%" height="450" frameborder="0"
+                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
+        </div>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <div class="alert alert-warning">
-                <p>
-                    <strong>Attention first-semester students!</strong>  
-                    If you have not applied for our scholarship, @Html.ActionLink("click here", "Scholarships", "Home") to learn more!
-                </p>
-            </div>
-            <p>
-                Our recruitment process is values-based and we are proud of it. For those who are right for Delta Sig, you already believe what we believe. 
-                You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded 
-                individuals will accelerate the realization of that vision. 
-                If Delta Sig isn't the right place for you, we will help you find a fraternity that is. 
-            </p>
+            <h1><strong>@ViewBag.Title.ToUpper()</strong></h1>
+            <hr/>
         </div>
     </div>
-    <h2>
-        Delta Sig Recruitment Book
-        <small>
-            <a href="https://docs.google.com/a/mst.edu/uc?authuser=0&id=0ByzeXLX1ZvcneWROMDc0bFVkMnc&export=download"
-               target="_blank">Download</a>
-        </small>
-    </h2>
+</div>
+
+<div class="container">
+    @if (Model.Any())
+    {
+        if (Model.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow))
+        {
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="alert alert-warning">
+                        <p>
+                            <strong>Attention first-semester students!</strong>  
+                            If you have not applied for our scholarship, @Html.ActionLink("click here", "Scholarships", "Home") to learn more!
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    }
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-sm-6">
+            <h3>
+                <i class="fa fa-lightbulb-o"></i>
+                Introduction
+            </h3>
             <p>
-                Our chapter publishes a booklet every semester, which we call the <em>Recruitment Book</em>, that is aimed 
-                at answering the questions of potential new members and their families.  If you look through it and still have more questions, 
+                Our recruitment process is values-based.  This means that our members make an intentional effort to get
+                to know every potential new member before we extend a bid card (an invitation for membership).  
+                Our goal is to build a group of very diverse individuals, all of which exhibit excellence in some way and share
+                a vision for making themselves and the community a better place.
+            </p>
+            <p>
+                Each fraternity has a different culture and offers different experiences and friendships.
+                That is why we encourage all potential new members to not only get to know us first, but to also get to know other fraternities.
+                In other words, if Delta Sig isn't the right place for you, we will help you find a fraternity that is.
+                We believe in the value of Greek Life that much, while also acknowledging that Greek Life isn't for everyone.
+            </p>
+            <h3>
+                <i class="fa fa-envelope-o"></i>
+                Getting in Touch
+            </h3>
+            <p>
+                A vast majority of our members we originally met within our classes, involvements, and existing social circles.
+                However, sometimes potential new members seek us out themselves, and there is nothing wrong with that.
+            </p>
+            <p>
+                If you are looking to start getting to know us, simply <a href="@Url.Action("Contacts")">send an email to our Director of Recruitment </a> 
+                introducing yourself. Once we know you're out there, we can get your involved in Delta Sig before you even commit, 
+                whether it just be answering your questions, coming over to hang out, or attending events.
+            </p>
+        </div>
+        <div class="col-sm-6">
+            <h3>
+                <i class="fa fa-book"></i>
+                Recruitment Booklet
+                <a href="https://docs.google.com/a/mst.edu/uc?authuser=0&id=0ByzeXLX1ZvcneWROMDc0bFVkMnc&export=download"
+                   target="_blank" class="btn btn-default btn-sm btn-success pull-right"><i class="fa fa-arrow-circle-o-down"></i> Download</a>
+            </h3>
+            <p>
+                The <em>Recruitment Booklet</em> is aimed at answering the questions of 
+                potential new members and their families, such as:  
+            </p>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    Common Concerns
+                    <span class="badge">Page 1</span>
+                </li>
+                <li class="list-group-item">
+                    New Member Education
+                    <span class="badge">Pages 2-3</span>
+                </li>
+                <li class="list-group-item">
+                    Costs
+                    <span class="badge">Page 4</span>
+                </li>
+                <li class="list-group-item">
+                    Housing
+                    <span class="badge">Page 5</span>
+                </li>
+            </ul>
+            <p>
+                If you look through it and still have more questions, 
                 please feel free to @Html.ActionLink("contact", "Contacts", "Home") our Director of Recruitment directly via email.
+                We update the booklet every bi-annually to make sure all of the information is consistent with university costs
+                and our fraternity policies.
             </p>
-        </div>
-    </div>
-    <h2>
-        Videos from our National Office
-    </h2>
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="well">
-                <embed width="100%" height="300"
-                       src="https://www.youtube.com/v/A4dlXvg4Ra8"
-                       type="application/x-shockwave-flash">
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="well">
-                <embed width="100%" height="300"
-                       src="https://www.youtube.com/v/7JZBnRRM1WU"
-                       type="application/x-shockwave-flash">
-            </div>
         </div>
     </div>
 </div>

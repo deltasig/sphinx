@@ -30,9 +30,10 @@ namespace DeltaSigmaPhiWebsite.Controllers
             return View(model);
         }
 
-        public ActionResult Recruitment()
+        public async Task<ActionResult> Recruitment()
         {
-            return View();
+            return View(await _db.ScholarshipApps
+                .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
 
         public async Task<ActionResult> Scholarships(string message)
