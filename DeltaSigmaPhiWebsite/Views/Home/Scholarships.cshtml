@@ -53,16 +53,18 @@
                                 <h4 class="visible-xs" style="margin-top: 0">@a.Title</h4>
                                 if (a.ClosesOn >= DateTime.UtcNow.AddDays(-1) && a.OpensOn <= DateTime.UtcNow)
                                 {
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <h4 class="text-success">
-                                                Applications are now being accepted until <br/>
-                                                <strong>11:59 PM on @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy")</strong>. 
-                                            </h4>
-                                        </div>
-                                        <div class="col-md-3">
-                                            @Html.ActionLink("Apply Now!", "Submit", "Applications", new { area = "Scholarships", id = a.ScholarshipAppId }, new { @class = "btn btn-lg btn-block btn-default" })
-                                        </div>
+                                    <div class="alert alert-success">
+                                        <p>
+                                            Applications are now being accepted until 
+                                            <strong>11:59 PM on @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy")</strong>. 
+                                            @Html.ActionLink("Apply Now!", "Submit", "Applications", new
+                                            {
+                                                area = "Scholarships", id = a.ScholarshipAppId
+                                            }, new
+                                            {
+                                                @class = "btn btn-sm btn-default"
+                                            })
+                                        </p>
                                     </div>
                                 }
                                 else if (a.OpensOn >= DateTime.UtcNow.AddDays(-1))
