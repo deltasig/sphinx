@@ -365,7 +365,7 @@
         public async Task<ActionResult> ResetPassword(string userName)
         {
             bool changePasswordSucceeded;
-            var tempPassword = Membership.GeneratePassword(10, 5);;
+            var tempPassword = Membership.GeneratePassword(10, 0);;
             try
             {
                 var token = WebSecurity.GeneratePasswordResetToken(userName, 5);
