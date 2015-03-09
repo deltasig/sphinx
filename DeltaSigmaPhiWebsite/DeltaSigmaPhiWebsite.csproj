@@ -287,6 +287,8 @@
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassDetailsModel.cs" />
     <Compile Include="Areas\Edu\Models\FileInfoModel.cs" />
+    <Compile Include="Areas\Housing\Controllers\RoomsController.cs" />
+    <Compile Include="Areas\Housing\HousingAreaRegistration.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
@@ -689,6 +691,8 @@
     <Content Include="Areas\Edu\Views\Majors\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Majors\Assign.cshtml" />
     <Content Include="Areas\Edu\Views\Majors\Unassign.cshtml" />
+    <Content Include="Areas\Housing\Views\web.config" />
+    <Content Include="Areas\Housing\Views\Rooms\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1087,6 +1091,8 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\Edu\Views\Shared\" />
+    <Folder Include="Areas\Housing\Models\" />
+    <Folder Include="Areas\Housing\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />
