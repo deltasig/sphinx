@@ -333,10 +333,10 @@
 
                 if (changePasswordSucceeded)
                 {
-                    return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordSuccess });
+                    return RedirectToAction("Index", new { accountMessage = ManageMessageId.ChangePasswordSuccess });
                 }
 
-                return RedirectToAction("Index", new { Message = ManageMessageId.ChangePasswordFailure });
+                return RedirectToAction("Index", new { accountMessage = ManageMessageId.ChangePasswordFailure });
             }
             else
             {
@@ -396,10 +396,10 @@
                 {
 
                 }
-                return RedirectToAction("Index", new { userName, Message = ManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", new { userName, accountMessage = ManageMessageId.ChangePasswordSuccess });
             }
 
-            return RedirectToAction("Index", new { userName, Message = ManageMessageId.ChangePasswordFailure });
+            return RedirectToAction("Index", new { userName, accountMessage = ManageMessageId.ChangePasswordFailure });
         }
 
         #endregion
