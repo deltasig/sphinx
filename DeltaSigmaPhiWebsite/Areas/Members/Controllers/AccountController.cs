@@ -10,6 +10,7 @@
     using System;
     using System.Data.Entity;
     using System.Linq;
+    using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -360,15 +361,30 @@
             }
         }
 
-        [HttpPost]
         [Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> ResetPassword(string userName)
+        public async Task<ActionResult> ResetPassword(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var member = await _db.Members.FindAsync(id);
+            if (member == null)
+            {
+                return HttpNotFound();
+            }
+            return View(member);
+        }
+        
+        [Authorize(Roles = "Administrator")]
+        [HttpPost, ValidateAntiForgeryToken, ActionName("ResetPassword")]
+        public async Task<ActionResult> ResetPasswordConfirmed(Member member)
         {
             bool changePasswordSucceeded;
             var tempPassword = Membership.GeneratePassword(10, 0);;
             try
             {
-                var token = WebSecurity.GeneratePasswordResetToken(userName, 5);
+                var token = WebSecurity.GeneratePasswordResetToken(member.UserName, 5);
                 changePasswordSucceeded = WebSecurity.ResetPassword(token, tempPassword);
             }
             catch (Exception)
@@ -378,11 +394,11 @@
 
             if (changePasswordSucceeded)
             {
-                var user = await _db.Members.SingleAsync(m => m.UserName == userName);
+                var user = await _db.Members.SingleAsync(m => m.UserName == member.UserName);
                 var emailMessage = new IdentityMessage
                 {
                     Subject = "Account Password has been reset at deltasig-de.org",
-                    Body = "Your account password has been reset on deltasig-de.org. Your username is " + userName +
+                    Body = "Your account password has been reset on deltasig-de.org. Your username is " + member.UserName +
                         " and your new temporary password (change it when you log in) is: " + tempPassword,
                     Destination = user.Email
                 };
@@ -396,10 +412,10 @@
                 {
 
                 }
-                return RedirectToAction("Index", new { userName, accountMessage = ManageMessageId.ChangePasswordSuccess });
+                return RedirectToAction("Index", new { member.UserName, accountMessage = ManageMessageId.ResetPasswordSuccess });
             }
 
-            return RedirectToAction("Index", new { userName, accountMessage = ManageMessageId.ChangePasswordFailure });
+            return RedirectToAction("Index", new { member.UserName, accountMessage = ManageMessageId.ResetPasswordFailure });
         }
 
         #endregion
@@ -416,12 +432,14 @@
         }
         private static dynamic GetManageMessage(ManageMessageId? message)
         {
-            return message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-            : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
+            return message == ManageMessageId.ChangePasswordSuccess ? "The password for this account has been changed."
+            : message == ManageMessageId.SetPasswordSuccess ? "The password for this account password has been set."
+            : message == ManageMessageId.ResetPasswordSuccess ? "The password for this account password has been reset."
             : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
             : message == ManageMessageId.AddLoginSuccess ? "External login was added."
             : message == ManageMessageId.SetPasswordFailure ? "The current password is incorrect or the new password is invalid."
             : message == ManageMessageId.ChangePasswordFailure ? "Failed to change password. Your old password was probably incorrect."
+            : message == ManageMessageId.ResetPasswordFailure ? "The password for this account password has been reset."
             : "";
         }
         private static dynamic GetAccountChangeMessage(AccountChangeMessageId? message)
@@ -473,6 +491,8 @@
         {
             ChangePasswordSuccess,
             ChangePasswordFailure,
+            ResetPasswordSuccess,
+            ResetPasswordFailure,
             SetPasswordSuccess,
             SetPasswordFailure,
             RemoveLoginSuccess,

@@ -81,10 +81,7 @@
                         Administrator Functions
                     </div>
                     <div class="panel-body">
-                        @using (Html.BeginForm("ResetPassword", "Account", new { userName = Model.MemberInfo.UserName }, FormMethod.Post, new { style = "display: inline" }))
-                        {
-                            <button type="submit" class="btn btn-danger btn-sm">Reset Member's Password</button>
-                        }
+                        @Html.ActionLink("Reset Password", "ResetPassword", "Account", new { id = Model.MemberInfo.UserId }, new { @class = "btn btn-sm btn-danger" })
                     </div>
                 </div>
             }
