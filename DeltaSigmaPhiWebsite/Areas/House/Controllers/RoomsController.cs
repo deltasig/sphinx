@@ -1,4 +1,4 @@
-﻿namespace DeltaSigmaPhiWebsite.Areas.Housing.Controllers
+﻿namespace DeltaSigmaPhiWebsite.Areas.House.Controllers
 {
 	using System.Web.Mvc;
 	using DeltaSigmaPhiWebsite.Controllers;

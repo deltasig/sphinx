@@ -1,22 +1,22 @@
 ﻿using System.Web.Mvc;
 
-namespace DeltaSigmaPhiWebsite.Areas.Housing
+namespace DeltaSigmaPhiWebsite.Areas.House
 {
-    public class HousingAreaRegistration : AreaRegistration 
+    public class HouseAreaRegistration : AreaRegistration 
     {
         public override string AreaName 
         {
             get 
             {
-                return "Housing";
+                return "House";
             }
         }
 
         public override void RegisterArea(AreaRegistrationContext context) 
         {
             context.MapRoute(
-                "Housing_default",
-                "Housing/{controller}/{action}/{id}",
+                "House_default",
+                "House/{controller}/{action}/{id}",
                 new { action = "Index", id = UrlParameter.Optional }
             );
         }
