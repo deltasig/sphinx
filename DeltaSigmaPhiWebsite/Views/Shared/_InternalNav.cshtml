@@ -58,41 +58,47 @@
                             </ul>
                         </li>
                     }
-                    if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
-                    {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Academics <b class="caret"></b></a>
-                            <ul class="dropdown-menu">
+                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Operations <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+                            {
                                 <li class="dropdown-header">Study Hours</li>
                                 <li>@Html.ActionLink("Study Periods", "Index", "Periods", new { area = "Study" }, null)</li>
                                 <li>@Html.ActionLink("Unapproved Submissions", "Unapproved", "Hours", new { area = "Study" }, null)</li>
+                            }
+                            <li role="presentation" class="divider"></li>
+                            <li class="dropdown-header">Service</li>
+                            <li>@Html.ActionLink("Hours", "Index", "Hours", new {area = "Service"}, null)</li>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+                            {
+                                <li>@Html.ActionLink("Events", "Index", "Events", new {area = "Service"}, null)</li>
+                            }
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
+                            {
                                 <li role="presentation" class="divider"></li>
                                 <li class="dropdown-header">Class-Related</li>
                                 <li>@Html.ActionLink("Classes", "Index", "Classes", new { area = "Edu" }, null)</li>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                 {
                                     <li>@Html.ActionLink("Departments", "Index", "Departments", new { area = "Edu" }, null)</li>
                                 }
                                 <li>@Html.ActionLink("Majors", "Index", "Majors", new { area = "Edu" }, null)</li>
-                            </ul>
-                        </li>
-                    }
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Service <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li>@Html.ActionLink("Service Hours", "Index", "Hours", new { area = "Service" }, null)</li>
-                            @if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
-                            {
-                                <li>@Html.ActionLink("Service Events", "Index", "Events", new { area = "Service" }, null)</li>
                             }
+                            <li role="presentation" class="divider"></li>
+                            <li class="dropdown-header">Housing</li>
+                            <li>@Html.ActionLink("Rooms", "Index", "Rooms", new {area = "House"}, null)</li>
                         </ul>
                     </li>
+                    
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Recruitment <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Growth <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Scholarships", "Index", "Applications", new { area = "Scholarships" }, null)</li>
                         </ul>
                     </li>
+                    
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Members <b class="caret"></b></a>
                         <ul class="dropdown-menu">
