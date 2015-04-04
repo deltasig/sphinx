@@ -212,7 +212,7 @@
         {
             var newList = new List<object>();
 
-            foreach (var s in list)
+            foreach (var s in list.OrderByDescending(s => s.DateEnd))
             {
                 newList.Add(new
                 {
