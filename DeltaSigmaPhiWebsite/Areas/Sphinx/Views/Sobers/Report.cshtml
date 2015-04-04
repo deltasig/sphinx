@@ -11,6 +11,18 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-12">
+            <div class="alert alert-warning">
+                <p>
+                    <i class="fa fa-exclamation-triangle"></i>
+                    <strong>Notice:</strong> What you're seeing is an experimental portion of the website that is not yet intended to be fully functional.
+                    The reason it's accessible now is because it may still serve some useful purpose in the meantime, or because it's just neat as hell.
+                    So enjoy the view, and please hold off on reporting things that don't work on this page until this message is removed.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-4">
             <p>
                 <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-default">
@@ -38,25 +50,25 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <table data-toggle="table" data-classes="table table-condensed"
-                       data-search="true" data-pagination="true" data-page-size="100" 
-                       data-sort-name="last-name" data-sort-order="desc">
-                    <thead>
+                           data-search="true" data-pagination="true" data-page-size="100"
+                           data-sort-name="last-name" data-sort-order="desc">
+                        <thead>
                         <tr>
                             <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
                             <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="officer-signups">Officer Signups</th>
                             <th class="col-sm-2" data-sortable="true" data-field="driver-signups">Driver Signups</th>
+                            <th class="col-sm-2" data-sortable="true" data-field="officer-signups">Officer Signups</th>
                             <th class="col-sm-2" data-sortable="true" data-field="other">Total Signups</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach (var m in Model.Members)
                         {
                             <tr>
                                 <td>@m.FirstName</td>
                                 <td>@m.LastName</td>
                                 <td>
-                                    @m.SoberSignups.Count(s => s.Type == SoberSignupType.Officer &&
+                                    @m.SoberSignups.Count(s => s.Type == SoberSignupType.Driver &&
                                                                s.DateOfShift >= Model.Semester.DateStart &&
                                                                s.DateOfShift <= Model.Semester.DateEnd)
                                 </td>
@@ -71,8 +83,8 @@
                                 </td>
                             </tr>
                         }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
