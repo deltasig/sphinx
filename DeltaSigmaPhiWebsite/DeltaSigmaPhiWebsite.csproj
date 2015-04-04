@@ -327,6 +327,7 @@
     <Compile Include="Areas\Sphinx\Models\MultiAddSoberSignupModel.cs" />
     <Compile Include="Areas\Sphinx\Models\SoberManagerModel.cs" />
     <Compile Include="Areas\Sphinx\Models\EditSoberSignupModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\SoberReportModel.cs" />
     <Compile Include="Areas\Sphinx\SphinxAreaRegistration.cs" />
     <Compile Include="Areas\Study\Controllers\PeriodsController.cs" />
     <Compile Include="Areas\Study\Controllers\AssignmentsController.cs" />
@@ -694,6 +695,7 @@
     <Content Include="Areas\House\Views\web.config" />
     <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
+    <Content Include="Areas\Sphinx\Views\Sobers\Report.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />

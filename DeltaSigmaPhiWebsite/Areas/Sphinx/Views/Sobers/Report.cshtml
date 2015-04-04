@@ -1,0 +1,89 @@
+﻿@using DeltaSigmaPhiWebsite.Entities
+@model DeltaSigmaPhiWebsite.Areas.Sphinx.Models.SoberReportModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sober Schedule Report";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4">
+            <p>
+                <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sober Schedule
+                </a>
+            </p>
+        </div>
+        <div class="col-sm-4 text-center">
+            <strong>Current Semester: </strong> @Model.Semester
+        </div>
+        <div class="col-sm-4 text-right">
+            @using (Html.BeginForm("Report", "Sobers", new {area = "Sphinx", sid = Model.SelectedSemester}, FormMethod.Get, new {@class = "form-inline", role = "form"}))
+            {
+                <div class="form-group">
+                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new {@class = "form-control"})
+
+                    <input type="submit" value="Filter" class="btn btn-default"/>
+                    <br/><br/>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                       data-search="true" data-pagination="true" data-page-size="100" 
+                       data-sort-name="last-name" data-sort-order="desc">
+                    <thead>
+                        <tr>
+                            <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                            <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                            <th class="col-sm-2" data-sortable="true" data-field="officer-signups">Officer Signups</th>
+                            <th class="col-sm-2" data-sortable="true" data-field="driver-signups">Driver Signups</th>
+                            <th class="col-sm-2" data-sortable="true" data-field="other">Total Signups</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var m in Model.Members)
+                        {
+                            <tr>
+                                <td>@m.FirstName</td>
+                                <td>@m.LastName</td>
+                                <td>
+                                    @m.SoberSignups.Count(s => s.Type == SoberSignupType.Officer &&
+                                                               s.DateOfShift >= Model.Semester.DateStart &&
+                                                               s.DateOfShift <= Model.Semester.DateEnd)
+                                </td>
+                                <td>
+                                    @m.SoberSignups.Count(s => s.Type == SoberSignupType.Officer &&
+                                                               s.DateOfShift >= Model.Semester.DateStart &&
+                                                               s.DateOfShift <= Model.Semester.DateEnd)
+                                </td>
+                                <td>
+                                    @m.SoberSignups.Count(s => s.DateOfShift >= Model.Semester.DateStart &&
+                                                               s.DateOfShift <= Model.Semester.DateEnd)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+
+
+    </script>
+}
