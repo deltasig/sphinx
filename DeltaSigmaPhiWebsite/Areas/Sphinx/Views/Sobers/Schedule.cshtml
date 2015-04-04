@@ -32,7 +32,7 @@
                 </a>
                 @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                 {
-                    <a href="@Url.Action("Manager", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-default">
+                    <a href="@Url.Action("Manager", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-info">
                         <i class="fa fa-wrench"></i> Manage
                     </a>
                 }
@@ -75,10 +75,10 @@
                                             using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
                                                 FormMethod.Get, new { style = "display: inline" }))
                                             {
-                                                @item.Member.ToString()
                                                 <button type="submit" class="btn btn-sm btn-link" style="padding:0;  color:#d9534f; display:inline">
                                                     <i class="fa fa-minus-square"></i>
                                                 </button>
+                                                @item.Member.ToString()
                                             }
                                         }
                                         else
