@@ -6,6 +6,7 @@
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
@@ -249,6 +250,38 @@
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Schedule", new { message = "Successfully updated sober signup." });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Report(SoberReportModel model)
+        {
+            // Identify semester
+            Semester semester;
+            if (model.SelectedSemester == null)
+                semester = await base.GetThisSemesterAsync();
+            else
+                semester = await _db.Semesters.FindAsync(model.SelectedSemester);
+
+            // Identify valid semesters for dropdown
+            var signups = await _db.SoberSchedule.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var semesters = new List<Semester>();
+            foreach (var s in allSemesters)
+            {
+                if (signups.Any(i => i.DateOfShift >= s.DateStart && i.DateOfShift <= s.DateEnd))
+                {
+                    semesters.Add(s);
+                }
+            }
+
+            // Build model for view
+            model.SelectedSemester = semester.SemesterId;
+            model.Semester = semester;
+            model.SemesterList = await base.GetCustomSemesterListAsync(semesters);
+            // Identify members for current semester
+            model.Members = await base.GetRosterForSemester(semester);;
+
+            return View(model);
         }
     }
 }

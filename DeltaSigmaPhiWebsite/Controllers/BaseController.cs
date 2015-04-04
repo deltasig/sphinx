@@ -34,6 +34,21 @@
         {
             return await _db.Members.Where(m => m.MemberStatus.StatusName == "Alumnus").ToListAsync();
         }
+        protected virtual async Task<List<Member>> GetRosterForSemester(Semester semester)
+        {
+            var members = await _db.Members
+                .Where(d =>
+                    d.LastName != "Hirtz" &&
+                    (d.MemberStatus.StatusName == "Alumnus" ||
+                        d.MemberStatus.StatusName == "Active" ||
+                        d.MemberStatus.StatusName == "Pledge" ||
+                        d.MemberStatus.StatusName == "Neophyte") &&
+                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
+                    d.GraduationSemester.DateEnd >= semester.DateEnd)
+                .ToListAsync();
+
+            return members;
+        }
         protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()
         {
             var thisAndComingSemesters = await _db.Semesters
@@ -183,6 +198,21 @@
             var newList = new List<object> { new { SemesterId = -1, Name = "--Graduating Semester (optional)--" } };
 
             foreach (var s in semesters)
+            {
+                newList.Add(new
+                {
+                    s.SemesterId,
+                    Name = s.ToString()
+                });
+            }
+
+            return new SelectList(newList, "SemesterId", "Name");
+        }
+        protected virtual async Task<SelectList> GetCustomSemesterListAsync(IEnumerable<Semester> list)
+        {
+            var newList = new List<object>();
+
+            foreach (var s in list)
             {
                 newList.Add(new
                 {

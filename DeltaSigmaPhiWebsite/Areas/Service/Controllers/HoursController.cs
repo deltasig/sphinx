@@ -47,16 +47,7 @@
                 };
 
             model.ServiceHours = new List<ServiceHourIndexModel>();
-            var members = await _db.Members
-                .Where(d =>
-                    d.LastName != "Hirtz"  &&
-                    (d.MemberStatus.StatusName == "Alumnus" || 
-                        d.MemberStatus.StatusName == "Active" || 
-                        d.MemberStatus.StatusName == "Pledge" || 
-                        d.MemberStatus.StatusName == "Neophyte") &&
-                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
-                    d.GraduationSemester.DateEnd >= semester.DateEnd)
-                .ToListAsync();
+            var members = await base.GetRosterForSemester(semester);
 
             foreach (var m in members)
             {

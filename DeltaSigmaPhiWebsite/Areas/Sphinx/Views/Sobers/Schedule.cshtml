@@ -26,14 +26,17 @@
             
         </div>
         <div class="col-sm-6 text-right">
-            @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-            {
-                <p>
-                    <a href="@Url.Action("Manager", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-info">
+            <p>
+                <a href="@Url.Action("Report", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-file-text-o"></i> Sober Report
+                </a>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                {
+                    <a href="@Url.Action("Manager", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-default">
                         <i class="fa fa-wrench"></i> Manage
                     </a>
-                </p>
-            }
+                }
+            </p>
         </div>
     </div>
     <div class="row">
