@@ -31,8 +31,9 @@ namespace DeltaSigmaPhiWebsite.Entities
         [StringLength(1500)]
         public string Description { get; set; }
 
-        [StringLength(1500)]
+        [Display(Name = "Official Report")]
         [DataType(DataType.MultilineText)]
+        [StringLength(1500)]
         public string OfficialReport { get; set; }
 
         public virtual Member Member { get; set; }

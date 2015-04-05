@@ -1038,7 +1038,7 @@
     <Content Include="Areas\Edu\Views\Classes\Edit.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Index.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\_SoberSchedulePartial.cshtml" />
-    <Content Include="Areas\Members\Views\Incidents\Create.cshtml" />
+    <Content Include="Areas\Members\Views\Incidents\Submit.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Details.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Index.cshtml" />
