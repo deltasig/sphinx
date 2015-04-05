@@ -183,3 +183,8 @@ a:hover, a:focus {
     color: #2b975e;
     text-decoration: underline;
 }
+
+ul, ol {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}

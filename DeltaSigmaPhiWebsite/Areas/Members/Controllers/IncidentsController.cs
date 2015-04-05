@@ -31,14 +31,14 @@
             return View(incidentReport);
         }
 
-        public ActionResult Create()
+        public ActionResult Submit()
         {
             return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(IncidentReport incidentReport)
+        public async Task<ActionResult> Submit(IncidentReport incidentReport)
         {
             if (!ModelState.IsValid) return View(incidentReport);
             incidentReport.DateTimeSubmitted = DateTime.UtcNow;

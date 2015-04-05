@@ -9,32 +9,68 @@
 }
 <div class="container">
     <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Incident Reports
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
 
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
                 @Html.HiddenFor(model => model.IncidentId)
                 @Html.HiddenFor(model => model.DateTimeOfIncident)
                 @Html.HiddenFor(model => model.DateTimeSubmitted)
-                @Html.HiddenFor(model => model.PolicyBroken)
                 @Html.HiddenFor(model => model.Description)
                 @Html.HiddenFor(model => model.ReportedBy)
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.OfficialReport, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.OfficialReport, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.OfficialReport, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new {@class = "control-label"})
+                    <p class="well well-sm">
+                        @Html.DisplayFor(model => model.Description, new {htmlAttributes = new {@class = "form-control"}})
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PolicyBroken, htmlAttributes: new {@class = "control-label"})
+                    @Html.EditorFor(model => model.PolicyBroken, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.PolicyBroken, "", new {@class = "text-danger"})
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OfficialReport, htmlAttributes: new {@class = "control-label"})
+                    @Html.EditorFor(model => model.OfficialReport, new {htmlAttributes = new {@class = "form-control", rows = 10}})
+                    @Html.ValidationMessageFor(model => model.OfficialReport, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" />
+                    <input type="submit" value="Save" class="btn btn-default"/>
                 </div>
             }
-
-            <div>
-                @Html.ActionLink("Back to List", "Index")
+        </div>
+        <div class="col-sm-6">
+            <div class="alert alert-warning">
+                <strong>Policy Broken</strong>
+                <p>
+                    This should briefly describe at a very high level what occurred.
+                    It is important to be accurate with this information because it
+                    will be easier for others to search incident reports back on the incident report list.
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Official Report</strong>
+                <p>
+                    The official report is visible to all members.
+                    The purpose of the official report is to provide future members
+                    a record of how incidents have been handled. For this reason,
+                    it is advised that official reports only contain <strong>necessary</strong> 
+                    details from the (1) incident description and (2) the actions taken in response to the incident.
+                </p>
             </div>
         </div>
     </div>

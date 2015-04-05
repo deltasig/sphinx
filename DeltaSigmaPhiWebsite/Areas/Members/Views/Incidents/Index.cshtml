@@ -16,7 +16,7 @@
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Submit Incident Report", "Submit", null, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>
@@ -24,7 +24,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
+                    <table data-toggle="table" data-classes="table table-condensed" data-search="true"
                            data-pagination="true" data-page-size="25" data-sort-name="submitted-on" data-sort-order="desc">
                         <thead>
                             <tr>
