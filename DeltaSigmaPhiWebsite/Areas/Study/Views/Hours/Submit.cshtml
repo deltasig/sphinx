@@ -10,7 +10,16 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-sm-6">
+            <p>
+                <a href="@Url.Action("Index", "Home", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sphinx
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
             @using (Html.BeginForm("Submit", "Hours", FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -54,11 +63,10 @@
                     @Html.ValidationMessageFor(m => m.Submission.StudyLocation, "", new { @class = "text-danger" })
                 </div>
 
-                <input type="submit" value="Create" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to Sphinx", "Index", "Home", new { area = "Sphinx" }, null)
+                <input type="submit" value="Create" class="btn btn-default" /> 
             }
         </div>
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-sm-6">
             <h3>Tips</h3>
             <div class="panel panel-warning">
                 <div class="panel-heading">Submitting Hours</div>

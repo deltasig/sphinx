@@ -9,29 +9,43 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-xs-12">
-            <h3>Are you sure you want to unassign @Model.AssignedMember.FirstName from this assignment?</h3>
+        <div class="col-sm-6">
+            <p>
+                <a href="@Url.Action("Info", "Periods", new { id = Model.PeriodId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Study Period
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="alert alert-danger">
+                <p>Are you sure you want to take <strong>@Model.AssignedMember.FirstName</strong> off of this assignment?</p>
+            </div>
 
-            <dl class="dl-horizontal">
-                <dt>Member</dt>
-                <dd>@Model.AssignedMember</dd>
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>Member</dt>
+                    <dd>@Model.AssignedMember</dd>
 
-                <dt>Assignment</dt>
-                <dd>@Model.Period.Start to @Model.Period.End</dd>
+                    <dt>Assignment</dt>
+                    <dd>@Model.Period.Start to @Model.Period.End</dd>
 
-                <dt>Unproctored</dt>
-                <dd>@Model.UnproctoredAmount</dd>
+                    <dt>Unproctored</dt>
+                    <dd>@Model.UnproctoredAmount</dd>
 
-                <dt>Proctored</dt>
-                <dd>@Model.ProctoredAmount</dd>
-            </dl>
+                    <dt>Proctored</dt>
+                    <dd>@Model.ProctoredAmount</dd>
+                </dl>
+            </div>
 
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
 
-                <input type="submit" value="Unassign" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to Assignment", "Info", "Periods", new { id = Model.PeriodId }, null)
+                <div class="form-group">
+                    <input type="submit" value="Unassign" class="btn btn-default" /> 
+                </div>
             }
         </div>
     </div>

@@ -1,7 +1,8 @@
 ﻿@model DeltaSigmaPhiWebsite.Areas.Study.Models.StudyPeriodInfoModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Study Period Info";
+    ViewBag.Title = "Study Period";
+    ViewBag.Subtitle = Model.Period.Start.ToString("MM/dd/yyyy HH:mm tt") + " to " + Model.Period.End.ToString("MM/dd/yyyy HH:mm tt");
 }
 @section Title
 {
@@ -9,15 +10,22 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-xs-12 col-sm-6">
-            @Html.ActionLink("Back to Study Periods", "Index")
-
-
-            <h4>
-                <strong>@Model.Period.Start.ToString("MM/dd/yyyy HH:mm tt") to @Model.Period.End.ToString("MM/dd/yyyy HH:mm tt")</strong>
-                <small>@Html.ActionLink("Edit", "Edit", new { id = Model.Period.PeriodId }, new { @class = "" })</small>
-            </h4>
+        <div class="col-xs-6">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Study Periods
+                </a>
+            </p>
         </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a href="@Url.Action("Edit", new { id = Model.Period.PeriodId })" class="btn btn-sm btn-info">
+                    <i class="fa fa-wrench"></i> Edit
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">

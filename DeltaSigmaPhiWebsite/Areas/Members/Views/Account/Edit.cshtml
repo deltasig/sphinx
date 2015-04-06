@@ -10,7 +10,19 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index", "Account", new { userName = Model.Member.UserName, area = "Members" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Member Profile
+                </a>
+                <a href="@Url.Action("Index", "Roster", new { area = "Members" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Roster
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
             @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -199,9 +211,7 @@
                     @Html.HiddenFor(m => m.Member.PledgeClassId)
                 }
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" /> |
-                    @Html.ActionLink("Member Profile", "Index", "Account", new { userName = Model.Member.UserName, area = "Members" }, null) |
-                    @Html.ActionLink("Roster", "Index", "Roster", new { area = "Members" }, null)
+                    <input type="submit" value="Save" class="btn btn-default" /> 
                 </div>
             }
         </div>

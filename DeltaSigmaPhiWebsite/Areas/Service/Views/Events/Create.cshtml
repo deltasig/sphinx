@@ -10,6 +10,15 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Events
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6 col-xs-12">
             @using (Html.BeginForm())
             {
@@ -39,23 +48,22 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to List", "Index")
+                    <input type="submit" value="Create" class="btn btn-default" />
                 </div>
             }
         </div>
         <div class="col-sm-6 col-xs-12">
-            <h3>Tips</h3>
-            <div class="panel panel-warning">
-                <div class="panel-heading">Event Approval</div>
-                <div class="panel-body">
+            <div class="alert alert-warning">
+                <strong>Event Approval</strong>
+                <hr />
+                <p>
                     Anyone can create an event in Sphinx.
-                    
-                    However, be aware that an event must be approved by the Service Chairman before any service hours submitted for that event count towards 
+
+                    However, be aware that an event must be approved by the Service Chairman before any service hours submitted for that event count towards
                     the semester minimum requirement.
-                    
+
                     Events created by the Service Chairman are approved by default.
-                </div>
+                </p>
             </div>
         </div>
     </div>

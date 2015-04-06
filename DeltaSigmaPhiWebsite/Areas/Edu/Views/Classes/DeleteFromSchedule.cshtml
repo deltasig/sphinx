@@ -10,6 +10,15 @@
 }
 <div class="container">
     <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Schedule", new { userName = Model.Member.UserName })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Classes
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6 col-xs-12">
             <div class="alert alert-danger">
                 <p>Are you sure you want to delete this <strong>class</strong>?</p>
@@ -34,8 +43,7 @@
                 @Html.HiddenFor(m => m.IsSummerClass)
 
                 <div>
-                    <input type="submit" value="Delete" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to Classes", "Schedule", new { userName = Model.Member.UserName })
+                    <input type="submit" value="Delete" class="btn btn-default" /> 
                 </div>
             }
         </div>
