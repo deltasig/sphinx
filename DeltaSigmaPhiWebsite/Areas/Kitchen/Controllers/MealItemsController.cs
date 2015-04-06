@@ -28,6 +28,8 @@
         {
             if (!ModelState.IsValid) return RedirectToAction("Create");
 
+            mealItem.Name = base.ToTitleCaseString(mealItem.Name);
+            mealItem.Name = mealItem.Name.Replace("And", "&");
             _db.MealItems.Add(mealItem);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -55,6 +57,8 @@
         {
             if (!ModelState.IsValid) return RedirectToAction("Edit", new { id = mealItem.MealItemId });
 
+            mealItem.Name = base.ToTitleCaseString(mealItem.Name);
+            mealItem.Name = mealItem.Name.Replace("And", "&");
             _db.Entry(mealItem).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
