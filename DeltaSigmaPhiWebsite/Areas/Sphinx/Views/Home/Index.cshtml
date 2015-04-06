@@ -50,7 +50,7 @@
                                             .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
                                         {
                                             <tr>
-                                                <td>@item.Type</td>
+                                                <td>@item.SoberType.Name</td>
                                                 <td>@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3)</td>
                                                 <td>@item.DateOfShift.ToShortDateString()</td>
                                             </tr>

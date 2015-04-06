@@ -1,12 +1,14 @@
 ﻿@using DeltaSigmaPhiWebsite.Entities
 @model IEnumerable<SoberSignup>
-
+@{
+    var dates = Model.Select(s => s.DateOfShift).Distinct();
+}
 <!-- Standard view. -->
 <div class="hidden-xs hidden-md">
-    <table class="table">
+    <table class="table table-condensed">
         <thead>
             <tr>
-                <th colspan="4"><small>Next 7 Days</small></th>
+                <th colspan="2"><small>Next 7 Days</small></th>
             </tr>
         </thead>
         <tbody>
@@ -16,59 +18,53 @@
                     <td>No lifeguards on duty</td>
                 </tr>
             }
-            @foreach (var item in Model)
+            @foreach (var date in dates)
             {
                 <tr>
-                    <td><small>@item.Type</small></td>
-                    <td>
-                        <small>
-                            @item.DateOfShift.ToString("MM-dd")
-                            (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
-                        </small>
-                    </td>
-                    @if (item.UserId == null)
-                    {
-                        if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
-                        {
-                            <td>None</td>
-                            <td></td>
-                        }
-                        else
-                        {
-                            <td>None</td>
-                            <td>@Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)</td>
-                        }
-                    }
-                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                    {
-                        using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
-                            FormMethod.Get, new { style = "display: inline" }))
-                        {
-                            <td>
-                                <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
-                                    <i class="fa fa-minus-square"></i>
-                                </button>
-                                @item.Member.ToString()
-                            </td>
-                            <td>
-                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                    @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                                </a>
-                            </td>
-                        }
-                    }
-                    else
-                    {
-                        <td>
-                            @item.Member.ToString()
-                        </td>
-                        <td>
-                            <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                            </a>
-                        </td>
-                    }
+                    <td colspan="2"><strong>@date.ToString("MM-dd") (@date.DayOfWeek.ToString().Substring(0, 3))</strong> <br /></td>
                 </tr>
+                foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
+                {
+                    <tr>
+                        <td>
+                            <small>@item.SoberType.Name</small>
+                        </td>
+                        <td>
+                            <small>
+                                @if (item.UserId == null)
+                                {
+                                    if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
+                                    {
+                                        @: None
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)
+                                    }
+                                }
+                                else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                {
+                                    using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
+                                        FormMethod.Get, new { style = "display: inline" }))
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
+                                            <i class="fa fa-minus-square"></i>
+                                        </button>
+                                        <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                            @item.Member.ToString()
+                                        </a>
+                                    }
+                                }
+                                else
+                                {
+                                    <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                        @item.Member.ToString()
+                                    </a>
+                                }
+                            </small>
+                        </td>
+                    </tr>
+                }
             }
         </tbody>
     </table>

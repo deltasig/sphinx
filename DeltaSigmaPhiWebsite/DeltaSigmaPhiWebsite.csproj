@@ -364,6 +364,7 @@
     <Compile Include="Entities\ScholarshipApp.cs" />
     <Compile Include="Entities\ScholarshipSubmission.cs" />
     <Compile Include="Entities\ScholarshipQuestion.cs" />
+    <Compile Include="Entities\SoberType.cs" />
     <Compile Include="Entities\StudyAssignment.cs" />
     <Compile Include="Entities\StudyPeriod.cs" />
     <Compile Include="Migrations\201501041342053_Initial.cs" />
@@ -413,6 +414,10 @@
     <Compile Include="Migrations\201502172159125_RefactorDepartment.cs" />
     <Compile Include="Migrations\201502172159125_RefactorDepartment.Designer.cs">
       <DependentUpon>201502172159125_RefactorDepartment.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504060222168_SoberTypeStage1.cs" />
+    <Compile Include="Migrations\201504060222168_SoberTypeStage1.Designer.cs">
+      <DependentUpon>201504060222168_SoberTypeStage1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1137,6 +1142,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201502172159125_RefactorDepartment.resx">
       <DependentUpon>201502172159125_RefactorDepartment.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504060222168_SoberTypeStage1.resx">
+      <DependentUpon>201504060222168_SoberTypeStage1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

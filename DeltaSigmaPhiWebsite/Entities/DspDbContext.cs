@@ -44,7 +44,8 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
-        public virtual DbSet<SoberSignup> SoberSchedule { get; set; }
+        public virtual DbSet<SoberSignup> SoberSignups { get; set; }
+        public virtual DbSet<SoberType> SoberTypes { get; set; }
         public virtual DbSet<StudyHour> StudyHours { get; set; }
         public virtual DbSet<StudyAssignment> StudyAssignments { get; set; }
         public virtual DbSet<StudyPeriod> StudyPeriods { get; set; }
