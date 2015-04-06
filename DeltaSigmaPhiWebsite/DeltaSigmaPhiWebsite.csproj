@@ -424,6 +424,10 @@
     <Compile Include="Migrations\201504062224370_RemoveOldSoberType.Designer.cs">
       <DependentUpon>201504062224370_RemoveOldSoberType.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504062243559_SoberTypeDescription.cs" />
+    <Compile Include="Migrations\201504062243559_SoberTypeDescription.Designer.cs">
+      <DependentUpon>201504062243559_SoberTypeDescription.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -710,6 +714,7 @@
     <Content Include="Areas\Sphinx\Views\SoberTypes\Delete.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Edit.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Index.cshtml" />
+    <Content Include="Areas\Sphinx\Views\SoberTypes\Info.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1157,6 +1162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504062224370_RemoveOldSoberType.resx">
       <DependentUpon>201504062224370_RemoveOldSoberType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504062243559_SoberTypeDescription.resx">
+      <DependentUpon>201504062243559_SoberTypeDescription.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

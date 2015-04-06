@@ -1,0 +1,37 @@
+﻿@model DeltaSigmaPhiWebsite.Entities.SoberType
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Sober Type Info";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-12">
+            <p>
+                <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sober Schedule
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 col-sm-12">
+            <h5><strong>@Model.Name</strong></h5>
+
+            <p class="well">
+                @if (string.IsNullOrEmpty(Model.Description))
+                {
+                    @: No description is currently available.  The Sergeant is slacking. >=(
+                }
+                else
+                {
+                    @Model.Description
+                }
+            </p>
+        </div>
+    </div>
+</div>
