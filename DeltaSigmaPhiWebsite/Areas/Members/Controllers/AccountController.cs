@@ -82,7 +82,7 @@
                 Semesters = await GetAllSemesterListAsync(),
                 PledgeClasses = await GetPledgeClassListAsync(),
                 Statuses = await GetStatusListAsync(),
-                Members = await GetUserIdListAsFullNameWithNoneAsync(),
+                Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync(),
                 ShirtSizes = GetShirtSizesSelectList()
             };
 
@@ -99,10 +99,10 @@
                 RedirectToAction("Index");
             }
 
-            model.Semesters = await GetSemesterListAsync();
+            model.Semesters = await GetAllSemesterListAsync();
             model.PledgeClasses = await GetPledgeClassListAsync();
             model.Statuses = await GetStatusListAsync();
-            model.Members = await GetUserIdListAsFullNameWithNoneAsync();
+            model.Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync();
             model.ShirtSizes = GetShirtSizesSelectList();
 
             if (!ModelState.IsValid)
