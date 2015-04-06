@@ -62,7 +62,13 @@
                             {
                                 <tr>
                                     <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
-                                    <td>@item.SoberType.Name</td>
+                                    <td>
+                                        @item.SoberType.Name
+                                        <a href="@Url.Action("Info", "SoberTypes", new {id = item.SoberTypeId})">
+                                            <i data-toggle="tooltip" data-placement="top" class="fa fa-info-circle text-info"
+                                               title="Click to learn about this job."></i>
+                                        </a>
+                                    </td>
                                     <td>@item.Description</td>
                                     <td>
                                         @if (item.UserId == null)
@@ -118,8 +124,10 @@
 @section scripts
 {
     <script type="text/javascript">
-        
 
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        })
 
     </script>
 }

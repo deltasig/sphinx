@@ -76,5 +76,20 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
+        public async Task<ActionResult> Info(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var soberType = await _db.SoberTypes.FindAsync(id);
+            if (soberType == null)
+            {
+                return HttpNotFound();
+            }
+            return View(soberType);
+        }
     }
 }
