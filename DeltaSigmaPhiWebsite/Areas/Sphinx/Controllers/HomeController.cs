@@ -31,7 +31,7 @@
             var thisSemester = await GetThisSemesterAsync();
             var memberSoberSignups = await GetSoberSignupsForUserAsync(userId, thisSemester);
 
-            var soberSignups = await _db.SoberSchedule
+            var soberSignups = await _db.SoberSignups
                 .Where(s => s.DateOfShift >= startOfTodayUtc &&
                             s.DateOfShift <= thisSemester.DateEnd)
                 .OrderBy(s => s.DateOfShift)

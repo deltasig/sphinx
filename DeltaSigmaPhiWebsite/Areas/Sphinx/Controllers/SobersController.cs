@@ -29,7 +29,7 @@
 
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
 
-            var signups = await _db.SoberSchedule
+            var signups = await _db.SoberSignups
                 .Where(s => s.DateOfShift >= threeAmYesterday)
                 .OrderBy(s => s.DateOfShift)
                 .ToListAsync();
@@ -40,14 +40,16 @@
         public async Task<ActionResult> Manager()
         {
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
-            var vacantSignups = await _db.SoberSchedule
+            var vacantSignups = await _db.SoberSignups
                 .Where(s => s.DateOfShift >= startOfTodayUtc &&
                             s.UserId == null)
                 .OrderBy(s => s.DateOfShift)
+                .Include(s => s.SoberType)
                 .ToListAsync();
             var model = new SoberManagerModel
             {
                 Signups = vacantSignups,
+                SignupTypes = await GetSoberTypesSelectList(),
                 NewSignup = new SoberSignup(),
                 MultiAddModel = new MultiAddSoberSignupModel
                 {
@@ -63,10 +65,10 @@
         public async Task<ActionResult> AddSignup(SoberManagerModel model)
         {
             if (!ModelState.IsValid) return RedirectToAction("Manager");
-
+            
             model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
 
-            _db.SoberSchedule.Add(model.NewSignup);
+            _db.SoberSignups.Add(model.NewSignup);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Manager");
@@ -95,7 +97,7 @@
 
                     for (var i = 0; i < model.MultiAddModel.DriverAmount; i++)
                     {
-                        _db.SoberSchedule.Add(new SoberSignup
+                        _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
                             Type = SoberSignupType.Driver
@@ -103,7 +105,7 @@
                     }
                     for (var i = 0; i < model.MultiAddModel.OfficerAmount; i++)
                     {
-                        _db.SoberSchedule.Add(new SoberSignup
+                        _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
                             Type = SoberSignupType.Officer
@@ -125,8 +127,8 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signupToCancel = await _db.SoberSchedule.FindAsync(id);
-            _db.SoberSchedule.Remove(signupToCancel);
+            var signupToCancel = await _db.SoberSignups.FindAsync(id);
+            _db.SoberSignups.Remove(signupToCancel);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Schedule");
@@ -139,7 +141,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = await _db.SoberSchedule.FindAsync(id);
+            var signup = await _db.SoberSignups.FindAsync(id);
 
             if (signup.UserId != null)
                 return RedirectToAction("Schedule");
@@ -162,7 +164,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signup = await _db.SoberSchedule.FindAsync(id);
+            var signup = await _db.SoberSignups.FindAsync(id);
             var oldUserId = signup.UserId;
             var userId = WebSecurity.GetUserId(User.Identity.Name);
 
@@ -218,7 +220,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var signup = await _db.SoberSchedule.FindAsync(id);
+            var signup = await _db.SoberSignups.FindAsync(id);
             var model = new EditSoberSignupModel
             {
                 SoberSignup = signup,
@@ -239,13 +241,14 @@
             if (!ModelState.IsValid)
                 return RedirectToAction("Schedule", new { message = "Failed to update sober signup." });
 
-            var existingSignup = await _db.SoberSchedule.FindAsync(model.SoberSignup.SignupId);
+            var existingSignup = await _db.SoberSignups.FindAsync(model.SoberSignup.SignupId);
 
             if (model.SelectedMember <= 0)
                 existingSignup.UserId = null;
             else
                 existingSignup.UserId = model.SelectedMember;
 
+            existingSignup.Description = model.SoberSignup.Description;
             _db.Entry(existingSignup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
@@ -263,7 +266,7 @@
                 semester = await _db.Semesters.FindAsync(model.SelectedSemester);
 
             // Identify valid semesters for dropdown
-            var signups = await _db.SoberSchedule.ToListAsync();
+            var signups = await _db.SoberSignups.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
             var semesters = new List<Semester>();
             foreach (var s in allSemesters)

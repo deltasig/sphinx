@@ -13,24 +13,29 @@
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @using (Html.BeginForm("EditSignup", "Sobers", FormMethod.Post, new { @class = "", role = "form" }))
+                    @using (Html.BeginForm("EditSignup", "Sobers", FormMethod.Post, new {@class = "", role = "form"}))
                     {
                         @Html.AntiForgeryToken()
 
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                        
+                        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
                         @Html.HiddenFor(m => m.SoberSignup.SignupId)
-                        
+
                         <div class="form-group">
                             <h4>@Model.SoberSignup.Type on @Model.SoberSignup.DateOfShift.DayOfWeek, @Model.SoberSignup.DateOfShift.ToShortDateString()</h4>
                         </div>
                         <div class="form-group">
-                            @Html.LabelFor(m => Model.SelectedMember, new { @class = "control-label" })
-                            @Html.DropDownListFor(m => Model.SelectedMember, Model.Members, new { @class = "form-control" })
+                            @Html.LabelFor(m => Model.SelectedMember, new {@class = "control-label"})
+                            @Html.DropDownListFor(m => Model.SelectedMember, Model.Members, 
+                                    new { @class = "form-control", autocomplete = "off", id = "class-dd" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => Model.SoberSignup.Description, new {@class = "control-label"})
+                            @Html.EditorFor(m => Model.SoberSignup.Description, new { htmlAttributes = new { @class = "form-control" } })
                         </div>
 
                         <div class="form-group">
-                            <input type="submit" value="Assign" class="btn btn-default pull-right" />
+                            <input type="submit" value="Save" class="btn btn-default pull-right"/>
                         </div>
                     }
                 </div>
@@ -38,3 +43,14 @@
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $("#class-dd").select2();
+        });
+
+    </script>
+}

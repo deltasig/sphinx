@@ -44,12 +44,13 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <table data-toggle="table" data-classes="table table-condensed" 
-                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="date" data-sort-order="asc">
+                           data-search="true" data-pagination="true" data-page-size="25">
                         <thead>
                             <tr>
                                 <th class="col-sm-2" data-sortable="true" data-field="date">Date</th>
-                                <th class="col-sm-2" data-sortable="true" data-field="request-type">Type</th>
-                                <th data-sortable="true" data-field="volunteer">Volunteer</th>
+                                <th class="col-sm-3" data-sortable="true" data-field="request-type">Type</th>
+                                <th data-sortable="true" data-field="description">Description</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="volunteer">Volunteer</th>
                                 @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                 {
                                     <th class="col-sm-2"></th>
@@ -57,11 +58,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.OrderBy(s => s.DateOfShift))
+                            @foreach (var item in Model.OrderBy(s => s.DateOfShift).ThenBy(s => s.SoberTypeId).ThenBy(s => s.Description))
                             {
                                 <tr>
                                     <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
-                                    <td>@item.Type</td>
+                                    <td>@item.SoberType.Name</td>
+                                    <td>@item.Description</td>
                                     <td>
                                         @if (item.UserId == null)
                                         {

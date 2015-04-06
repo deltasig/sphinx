@@ -11,8 +11,14 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public int? UserId { get; set; }
 
-        [Required]
+        [Display(Name = "Type")]
+        public int SoberTypeId { get; set; }
+
         public SoberSignupType Type { get; set; }
+
+        [Display(Name = "Description")]
+        [StringLength(100)]
+        public string Description { get; set; }
 
         [Required]
         [Display(Name = "Date of Shift")]
@@ -21,6 +27,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public DateTime? DateTimeSignedUp { get; set; }
 
+        [ForeignKey("SoberTypeId")]
+        public virtual SoberType SoberType { get; set; }
         public virtual Member Member { get; set; }
     }
 
@@ -28,5 +36,5 @@ namespace DeltaSigmaPhiWebsite.Entities
     {
         Driver,
         Officer
-    }    
+    }
 }

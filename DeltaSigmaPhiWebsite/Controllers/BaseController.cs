@@ -401,7 +401,7 @@
                 .ToListAsync())
                 .Last();
 
-            return await _db.SoberSchedule
+            return await _db.SoberSignups
                 .Where(s => s.UserId == userId && 
                             s.DateOfShift > previousSemester.DateEnd && 
                             s.DateOfShift <= semester.DateEnd)
@@ -707,6 +707,21 @@
                 });
             }
             return new SelectList(newList, "MealId", "Text");
+        }
+
+        protected virtual async Task<SelectList> GetSoberTypesSelectList()
+        {
+            var list = await _db.SoberTypes.ToListAsync();
+            var newList = new List<object>();
+            foreach (var m in list)
+            {
+                newList.Add(new
+                {
+                    m.SoberTypeId,
+                    Text = m.Name
+                });
+            }
+            return new SelectList(newList, "SoberTypeId", "Text");
         }
 
         protected override void Dispose(bool disposing)
