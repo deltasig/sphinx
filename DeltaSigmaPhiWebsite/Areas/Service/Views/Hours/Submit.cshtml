@@ -27,7 +27,8 @@
                 
                 <div class="form-group">
                     @Html.LabelFor(m => m.SelectedEventId)
-                    @Html.DropDownListFor(m => m.SelectedEventId, Model.Events, new { @class = "form-control" })
+                    @Html.DropDownListFor(m => m.SelectedEventId, Model.Events,
+                                    new { @class = "form-control", autocomplete = "off", id = "events-dd" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.HoursServed)
@@ -61,3 +62,13 @@
     </div>
 </div>
 
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $("#events-dd").select2();
+        });
+
+    </script>
+}
