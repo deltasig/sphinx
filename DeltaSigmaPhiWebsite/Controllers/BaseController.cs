@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -740,6 +741,34 @@
                 });
             }
             return new SelectList(newList, "SoberTypeId", "Text");
+        }
+
+        protected virtual string ToTitleCaseString(string original)
+        {
+            var formattedText = string.Empty;
+
+            var words = original.Split(' ');
+            for(var i = 0; i < words.Length; i++)
+            {
+                if (!IsAllUpper(words[i]))
+                {
+                    words[i] = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(words[i].ToLowerInvariant());
+                }
+                formattedText += words[i];
+                if (i < words.Length - 1)
+                    formattedText += " ";
+            }
+
+            return formattedText;
+        }
+        private bool IsAllUpper(string input)
+        {
+            for (var i = 0; i < input.Length; i++)
+            {
+                if (Char.IsLetter(input[i]) && !Char.IsUpper(input[i]))
+                    return false;
+            }
+            return true;
         }
 
         protected override void Dispose(bool disposing)
