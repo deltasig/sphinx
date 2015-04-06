@@ -1,7 +1,7 @@
 ﻿@model DeltaSigmaPhiWebsite.Entities.StudyPeriod
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Edit Study Hour Assignment";
+    ViewBag.Title = "Edit Study Period";
 }
 @section Title
 {
@@ -10,10 +10,23 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-sm-6 col-xs-12">
-            @Html.ActionLink("Back to Study Periods", "Index")
-            @Html.ActionLink("Go to Info", "Info", new { id = Model.PeriodId }, new { @class = "pull-right" })
-            <br /><br />
+        <div class="col-xs-6 col-sm-3">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Study Periods
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-6 col-sm-3 text-right">
+            <p>
+                <a href="@Url.Action("Info", new { id = Model.PeriodId })" class="btn btn-sm btn-default">
+                    Go to Period Info <i class="fa fa-caret-right"></i> 
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()

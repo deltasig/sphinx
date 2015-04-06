@@ -14,9 +14,13 @@
         <div class="col-xs-6">
             @if (ViewBag != null && ViewBag.UserName.Length > 0)
             {
-                @Html.ActionLink("Back to Schedule", "Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"}, new {@class = ""})
-            } | 
-            @Html.ActionLink("Back to Roster", "Index", "Roster", new { area = "Members" }, null)
+                <a href="@Url.Action("Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"})" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Schedule
+                </a>
+            } 
+            <a href="@Url.Action("Index", "Roster", new { area = "Members" })" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Roster
+            </a>
         </div>
         <div class="col-xs-6 text-right">
         </div>
