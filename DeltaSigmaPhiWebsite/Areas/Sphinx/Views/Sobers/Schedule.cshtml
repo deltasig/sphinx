@@ -67,7 +67,7 @@
                                     <td>
                                         @if (item.UserId == null)
                                         {
-                                            if (!User.IsInRole("Pledge") || item.Type != SoberSignupType.Officer)
+                                            if (!User.IsInRole("Pledge") || item.SoberType.Name == "Officer")
                                             {
                                                 @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)
                                             }
