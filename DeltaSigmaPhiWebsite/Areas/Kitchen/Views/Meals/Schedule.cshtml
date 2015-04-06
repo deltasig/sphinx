@@ -40,7 +40,7 @@
             @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
             {
                 <a class="btn btn-sm btn-info" href="@Url.Action("EditSchedule", "Meals", new { ViewBag.week })">
-                    <i class="fa fa-pencil"></i>Edit Schedule
+                    <i class="fa fa-pencil"></i> Edit Schedule
                 </a>
             }
             <div class="btn-group" role="group" aria-label="...">
