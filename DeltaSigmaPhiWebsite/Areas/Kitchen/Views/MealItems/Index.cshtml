@@ -52,6 +52,9 @@
                                     <td>
                                         <ul class="list-inline" style="margin: 0">
                                             <li style="padding: 0">
+                                                @item.Name
+                                            </li>
+                                            <li style="padding: 0">
                                                 <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })">
                                                     @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote && v.UserId == WebSecurity.CurrentUserId))
                                                     {
@@ -75,16 +78,13 @@
                                                     }
                                                 </a>
                                             </li>
-                                            <li style="padding: 0">
-                                                @item.Name
-                                            </li>
                                         </ul>
                                     </td>
                                     @{
                                         var ups = item.MealVotes.Count(v => v.IsUpvote);
                                         var downs = item.MealVotes.Count(v => !v.IsUpvote);
                                         var favor = 0.0;
-                                        var favorability = "No Votes";
+                                        var favorability = "0.00";
                                         var color = string.Empty;
                                         if (item.MealVotes.Any())
                                         {
