@@ -35,7 +35,7 @@
                 .Where(s => s.DateOfShift >= startOfTodayUtc &&
                             s.DateOfShift <= thisSemester.DateEnd)
                 .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.Type)
+                .ThenBy(s => s.SoberTypeId)
                 .ToListAsync();
             var semesterSoberSignups = soberSignups
                 .Where(s => s.DateOfShift > DateTime.UtcNow &&
@@ -45,7 +45,7 @@
                 .Where(s => s.DateOfShift >= startOfTodayUtc &&
                             s.DateOfShift <= sevenDaysAheadOfToday)
                 .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.Type)
+                .ThenBy(s => s.SoberTypeId)
                 .ToList();
 
             var laundrySignups = await _db.LaundrySignups
