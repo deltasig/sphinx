@@ -143,6 +143,20 @@
             }
             return newList;
         }
+        protected virtual async Task<SelectList> GetAllUserIdsSelectListAsFullNameWithNoneAsync()
+        {
+            var members = (await _db.Members.ToListAsync()).OrderBy(o => o.LastName);
+            var newList = new List<object> { new { UserId = 0, Name = "None" } };
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    member.UserId,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return new SelectList(newList, "UserId", "Name");
+        }
         protected virtual async Task<IEnumerable<object>> GetAlumniIdListAsFullNameWithNoneNonSelectListAsync()
         {
             var members = (await GetAllAlumniMembersAsync()).OrderBy(o => o.LastName);
@@ -252,6 +266,10 @@
             return new SelectList(newList, "UserId", "Name");
         }
         protected virtual async Task<SelectList> GetUserIdListAsFullNameWithNoneAsync()
+        {
+            return new SelectList(await GetUserIdListAsFullNameWithNoneNonSelectListAsync(), "UserId", "Name");
+        }
+        protected virtual async Task<SelectList> GetAllUserIdsListAsFullNameWithNoneAsync()
         {
             return new SelectList(await GetUserIdListAsFullNameWithNoneNonSelectListAsync(), "UserId", "Name");
         }
