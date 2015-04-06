@@ -14,6 +14,10 @@ namespace DeltaSigmaPhiWebsite.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
+        [StringLength(2000)]
+        [DataType(DataType.MultilineText)]
+        public string Description { get; set; }
+
         public virtual ICollection<SoberSignup> Signups { get; set; }
     }
 }

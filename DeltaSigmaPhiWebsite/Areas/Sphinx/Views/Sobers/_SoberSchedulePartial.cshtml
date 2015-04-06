@@ -33,7 +33,7 @@
                             <small>
                                 @if (item.UserId == null)
                                 {
-                                    if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
+                                    if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
                                     {
                                         @: None
                                     }
@@ -89,14 +89,14 @@
                 <tr>
                     @if (item.UserId == null)
                     {
-                        if (User.IsInRole("Pledge") && item.Type == SoberSignupType.Officer)
+                        if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
                         {
                             <td>
                                 <small class="pull-right">
                                     @item.DateOfShift.ToString("MM-dd")
                                     (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
                                 </small>
-                                None <small>@item.Type</small>
+                                None <small>@item.SoberType.Name</small>
                             </td>
                         }
                         else
@@ -107,7 +107,7 @@
                                     (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
                                 </small>
                                 @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null) 
-                                <small>@item.Type</small>
+                                <small>@item.SoberType.Name</small>
                             </td>
                         }
                     }
@@ -125,7 +125,7 @@
                                     <i class="fa fa-minus-square"></i>
                                 </button>
                                 @item.Member.ToString()
-                                <small>@item.Type</small><br/>
+                                <small>@item.SoberType.Name</small><br/>
                                 <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
                                     @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
                                 </a>
@@ -140,7 +140,7 @@
                                 (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
                             </small>
                             @item.Member.ToString()
-                            <small>@item.Type</small><br/>
+                            <small>@item.SoberType.Name</small><br/>
                             <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
                                 @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
                             </a>
