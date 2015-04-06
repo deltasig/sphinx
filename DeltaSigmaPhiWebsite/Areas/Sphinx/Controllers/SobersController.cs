@@ -82,6 +82,20 @@
                 return RedirectToAction("Manager");
 
             var dateStrings = model.MultiAddModel.DateString.Split(',');
+            var driverType = await _db.SoberTypes.SingleOrDefaultAsync(t => t.Name == "Driver");
+            var officerType = await _db.SoberTypes.SingleOrDefaultAsync(t => t.Name == "Officer");
+
+            if (driverType == null || officerType == null)
+            {
+                return RedirectToAction("Index", "Home", new
+                {
+                    area = "Sphinx",
+                    message = "There was an error with the multi-add tool.  " +
+                              "This is most likely because the sober types Driver and Officer do not both exist.  " +
+                              "If Driver and Officer types exist exactly as they are spelled here and you still " +
+                              "get this message, contact Ty Morrow."
+                });
+            }
 
             if (dateStrings.Any())
             {
@@ -100,7 +114,7 @@
                         _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
-                            Type = SoberSignupType.Driver
+                            SoberTypeId = driverType.SoberTypeId
                         });
                     }
                     for (var i = 0; i < model.MultiAddModel.OfficerAmount; i++)
@@ -108,7 +122,7 @@
                         _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
-                            Type = SoberSignupType.Officer
+                            SoberTypeId = officerType.SoberTypeId
                         });
                     }
                 }
@@ -145,7 +159,7 @@
 
             if (signup.UserId != null)
                 return RedirectToAction("Schedule");
-            if (User.IsInRole("Pledge") && signup.Type == SoberSignupType.Officer)
+            if (User.IsInRole("Pledge") && signup.SoberType.Name == "Officer")
                 return RedirectToAction("Schedule");
 
             signup.UserId = (await _db.Members.SingleAsync(m => m.UserName == User.Identity.Name)).UserId;
