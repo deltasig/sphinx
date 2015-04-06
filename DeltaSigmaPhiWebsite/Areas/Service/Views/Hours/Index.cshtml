@@ -53,9 +53,8 @@
             }
         </div>
         <div class="col-xs-6 text-right">
-            <a href="@Url.Action("Download", "Hours", new { id = Model.SelectedSemester })">
-                <i class="fa fa-download fa-2x"></i>
-            </a>
+            @Html.ActionLink("Service Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-default" })
+            @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
         </div>
     </div>
     <div class="row">
@@ -122,6 +121,9 @@
                     {
                         @: Showing Service Hours for @Model.ServiceHours.First().Semester
                     }
+                    <a href="@Url.Action("Download", "Hours", new { id = Model.SelectedSemester })" class="pull-right">
+                        <i class="fa fa-download fa-lg"></i>
+                    </a>
                 </div>
                 <div class="panel-body">
                     <table class="table table-condensed">
