@@ -11,11 +11,15 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            <div class="form-group">
-                <a class="btn btn-sm btn-default" href="@Url.Action("Info", "Periods", new { id = Model.PeriodId }, null)">
-                    <i class="fa fa-caret-left"></i> Back to Assignment
+            <p>
+                <a href="@Url.Action("Info", "Periods", new { id = Model.PeriodId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Study Period
                 </a>
-            </div>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
             <div class="form-group">
                 <dl class="dl-horizontal">
                     <dt>Assignee</dt>

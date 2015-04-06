@@ -6,7 +6,9 @@
             <div class="page-header" style="margin-top: 65px">
                 <div class="row">
                     <div class="col-xs-12">
-                        <h1><strong>@ViewBag.Title.ToUpper()</strong></h1>
+                        <h1>
+                            <strong>@ViewBag.Title.ToUpper()</strong>
+                        </h1>
                     </div>
                 </div>
             </div>
@@ -19,7 +21,10 @@ else
         <div class="page-header" style="margin-top: 50px">
             <div class="row">
                 <div class="col-lg-12">
-                    <h1><strong>@ViewBag.Title.ToUpper()</strong></h1>
+                    <h1>
+                        <strong>@ViewBag.Title.ToUpper()</strong>
+                        <small>@ViewBag.Subtitle</small>
+                    </h1>
                     <p class="text-success">@ViewBag.SuccessMessage</p>
                     <p class="text-warning">@ViewBag.FailMessage</p>
                 </div>

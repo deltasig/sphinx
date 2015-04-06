@@ -10,8 +10,17 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Statuses
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-xs-12 col-sm-6">
-            <h3>Change Status Name From @Model.StatusName to</h3>
+            <p>Change Status Name From <strong>@Model.StatusName</strong> to</p>
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
@@ -27,9 +36,6 @@
                     <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             }
-            <div>
-                @Html.ActionLink("Back to List", "Index")
-            </div>
         </div>
     </div>
 </div>

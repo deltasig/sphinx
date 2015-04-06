@@ -10,8 +10,17 @@
 
 <div class="container">
     <div class="row">
+        <div class="col-sm-6">
+            <p>
+                <a href="@Url.Action("Info", "Periods", new { id = Model.PeriodId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Study Period
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-sm-6 col-xs-12">
-            <h4>@Model.AssignedMember | @Model.Period.Start to @Model.Period.End</h4>
+            <h4>@Model.AssignedMember <small>assignment for</small><br/> @Model.Period.Start to @Model.Period.End</h4>
 
             @using (Html.BeginForm())
             {
@@ -33,8 +42,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to Assignment", "Info", "Periods", new { id = Model.PeriodId }, null)
+                    <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             }
         </div>
