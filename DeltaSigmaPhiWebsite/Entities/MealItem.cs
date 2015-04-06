@@ -12,6 +12,7 @@
         public int MealItemId { get; set; }
 
         [Required]
+        [Display(Name = "Type")]
         public int MealItemTypeId { get; set; }
 
         [Required]
