@@ -68,7 +68,19 @@
                 model.ServiceHours.Add(member);
             }
 
-            model.SemesterList = await GetSemesterListAsync();
+            // Identify valid semesters for dropdown
+            var events = await _db.Events.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var semesters = new List<Semester>();
+            foreach (var s in allSemesters)
+            {
+                if (events.Any(i => i.DateTimeOccurred >= s.DateStart && i.DateTimeOccurred <= s.DateEnd))
+                {
+                    semesters.Add(s);
+                }
+            }
+
+            model.SemesterList = await GetCustomSemesterListAsync(semesters);
 
             return View(model);
         }
