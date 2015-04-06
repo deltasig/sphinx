@@ -323,6 +323,7 @@
     <Compile Include="Areas\Service\Models\ServiceHourIndexModel.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
     <Compile Include="Areas\Sphinx\Controllers\LaundryController.cs" />
+    <Compile Include="Areas\Sphinx\Controllers\SoberTypesController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\SobersController.cs" />
     <Compile Include="Areas\Sphinx\Models\MultiAddSoberSignupModel.cs" />
     <Compile Include="Areas\Sphinx\Models\SoberManagerModel.cs" />
@@ -701,6 +702,10 @@
     <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Report.cshtml" />
+    <Content Include="Areas\Sphinx\Views\SoberTypes\Create.cshtml" />
+    <Content Include="Areas\Sphinx\Views\SoberTypes\Delete.cshtml" />
+    <Content Include="Areas\Sphinx\Views\SoberTypes\Edit.cshtml" />
+    <Content Include="Areas\Sphinx\Views\SoberTypes\Index.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />

@@ -1,7 +1,7 @@
 ﻿@model DeltaSigmaPhiWebsite.Areas.Sphinx.Models.SoberManagerModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Sober Schedule Manager";
+    ViewBag.Title = "Sober Manager";
 }
 @section Title
 {
@@ -10,10 +10,17 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-xs-6">
             <p>
                 <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Sober Schedule
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a href="@Url.Action("Index", "SoberTypes", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                    Sober Types
                 </a>
             </p>
         </div>
