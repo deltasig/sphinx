@@ -41,7 +41,7 @@
                             {
                                 <tr>
                                     <td>@item.Name</td>
-                                    <td>@item.Description</td>
+                                    <td>@Html.Raw(item.Description)</td>
                                     <td class="text-right">
                                         @Html.ActionLink("Edit", "Edit", new { id = item.SoberTypeId })
                                         @if (!item.Signups.Any())
