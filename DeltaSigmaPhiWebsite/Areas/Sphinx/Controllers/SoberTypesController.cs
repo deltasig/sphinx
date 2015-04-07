@@ -7,19 +7,22 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
     public class SoberTypesController : BaseController
     {
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> Index()
         {
             return View(await _db.SoberTypes.Include(m => m.Signups).ToListAsync());
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public ActionResult Create()
         {
             return View();
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(SoberType soberType)
         {
@@ -30,6 +33,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -44,6 +48,7 @@
             return View(soberType);
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(SoberType soberType)
         {
@@ -54,6 +59,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -68,6 +74,7 @@
             return View(soberType);
         }
 
+        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
@@ -77,7 +84,6 @@
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
         public async Task<ActionResult> Info(int? id)
         {
             if (id == null)
