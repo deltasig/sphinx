@@ -10,7 +10,7 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-md-6 col-md-offset-3 col-sm-12">
+        <div class="col-md-6 col-sm-12">
             <p>
                 <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Sober Schedule
@@ -19,7 +19,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6 col-md-offset-3 col-sm-12">
+        <div class="col-md-6 col-sm-12">
             <h3><strong>@Model.Name</strong></h3>
 
             @if (string.IsNullOrEmpty(Model.Description))
