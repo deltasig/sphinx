@@ -20,18 +20,16 @@
     </div>
     <div class="row">
         <div class="col-md-6 col-md-offset-3 col-sm-12">
-            <h5><strong>@Model.Name</strong></h5>
+            <h3><strong>@Model.Name</strong></h3>
 
-            <p class="well">
-                @if (string.IsNullOrEmpty(Model.Description))
-                {
-                    @: No description is currently available.  The Sergeant is slacking. >=(
-                }
-                else
-                {
-                    @Model.Description
-                }
-            </p>
+            @if (string.IsNullOrEmpty(Model.Description))
+            {
+                @: No description is currently available.  The Sergeant is slacking. >=(
+            }
+            else
+            {
+                @Html.Raw(Model.Description)
+            }
         </div>
     </div>
 </div>
