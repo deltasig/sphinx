@@ -193,3 +193,8 @@ hr {
     margin-top: 5px;
     margin-bottom: 5px;
 }
+
+/* Removes the underlines under fontawesome links */
+a.social { 
+   text-decoration: none;
+}

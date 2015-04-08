@@ -39,7 +39,12 @@
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)
+                                        <a href="@Url.Action("Signup", "Sobers", new {id = item.SignupId, area = "Sphinx"})"
+                                           class="social"
+                                           data-toggle="tooltip" data-placement="top"
+                                           title="Sign up">
+                                            <i class="fa fa-plus-square fa-lg text-success"></i>
+                                        </a>
                                     }
                                 }
                                 else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
@@ -47,12 +52,19 @@
                                     using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
                                         FormMethod.Get, new { style = "display: inline" }))
                                     {
-                                        <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
+                                        <button type="submit" class="btn btn-sm btn-link"
+                                                style="padding: 0; color: #d9534f; display: inline"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Cancel signup">
                                             <i class="fa fa-minus-square"></i>
                                         </button>
-                                        <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                            @item.Member.ToString()
+                                        <a data-toggle="tooltip" data-placement="top"
+                                           class="social"
+                                           title="@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                            <i class="fa fa-phone-square fa-lg text-info"></i>
                                         </a>
+
+                                        @item.Member.ToString()
                                     }
                                 }
                                 else
