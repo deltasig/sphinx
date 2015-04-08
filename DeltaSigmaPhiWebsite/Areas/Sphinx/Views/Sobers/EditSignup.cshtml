@@ -22,7 +22,13 @@
                         @Html.HiddenFor(m => m.SoberSignup.SignupId)
 
                         <div class="form-group">
-                            <h4>@Model.SoberSignup.Type on @Model.SoberSignup.DateOfShift.DayOfWeek, @Model.SoberSignup.DateOfShift.ToShortDateString()</h4>
+                            <h4>
+                                @Model.SoberSignup.SoberType.Name <br/>
+                                <small>
+                                    @Model.SoberSignup.DateOfShift.DayOfWeek,
+                                    @Model.SoberSignup.DateOfShift.ToShortDateString()
+                                </small>
+                            </h4>
                         </div>
                         <div class="form-group">
                             @Html.LabelFor(m => Model.SelectedMember, new {@class = "control-label"})
