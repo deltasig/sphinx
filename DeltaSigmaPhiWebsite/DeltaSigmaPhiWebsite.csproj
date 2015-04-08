@@ -351,6 +351,8 @@
     <Compile Include="DspRoleProvider.cs" />
     <Compile Include="Entities\ClassFile.cs" />
     <Compile Include="Entities\ClassFileVote.cs" />
+    <Compile Include="Entities\Email.cs" />
+    <Compile Include="Entities\EmailType.cs" />
     <Compile Include="Entities\MajorToMember.cs" />
     <Compile Include="Entities\MealLatePlate.cs" />
     <Compile Include="Entities\MealItem.cs" />
@@ -431,6 +433,10 @@
     <Compile Include="Migrations\201504081822008_IncSoberTypeDescLength.cs" />
     <Compile Include="Migrations\201504081822008_IncSoberTypeDescLength.Designer.cs">
       <DependentUpon>201504081822008_IncSoberTypeDescLength.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504082325067_Emails.cs" />
+    <Compile Include="Migrations\201504082325067_Emails.Designer.cs">
+      <DependentUpon>201504082325067_Emails.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1172,6 +1178,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504081822008_IncSoberTypeDescLength.resx">
       <DependentUpon>201504081822008_IncSoberTypeDescLength.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504082325067_Emails.resx">
+      <DependentUpon>201504082325067_Emails.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
