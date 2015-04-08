@@ -36,7 +36,6 @@
             }
 
             var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
-            var lastSemester = await base.GetLastSemesterAsync();
             var previousSemester = (await _db.Semesters
                 .Where(s => s.DateEnd < semester.DateStart)
                 .OrderBy(s => s.DateEnd)
@@ -81,6 +80,8 @@
             }
 
             model.SemesterList = await GetCustomSemesterListAsync(semesters);
+            model.Semester = semester;
+            model.PreviousSemester = previousSemester;
 
             return View(model);
         }

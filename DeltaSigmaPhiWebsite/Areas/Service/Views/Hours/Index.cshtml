@@ -170,8 +170,10 @@
                             </table>
                         </div>
                 <div class="panel-footer">
-                    <strong>Note: </strong> The hours being reported here consist of hours served at events that occured after the end of the previous semester
-                    and before the end of the current semester.
+                    <strong>Note: </strong>
+                    These numbers are made up of hours served at events occurring
+                    before @Model.Semester.DateEnd.ToShortDateString() and 
+                    after @Model.PreviousSemester.DateEnd.ToShortDateString().
                 </div>
             </div>
         </div>
