@@ -15,6 +15,8 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<ClassFileVote> ClassFileVotes { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Email> Emails { get; set; }
+        public virtual DbSet<EmailType> EmailTypes { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
