@@ -428,6 +428,10 @@
     <Compile Include="Migrations\201504062243559_SoberTypeDescription.Designer.cs">
       <DependentUpon>201504062243559_SoberTypeDescription.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504081822008_IncSoberTypeDescLength.cs" />
+    <Compile Include="Migrations\201504081822008_IncSoberTypeDescLength.Designer.cs">
+      <DependentUpon>201504081822008_IncSoberTypeDescLength.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -1165,6 +1169,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504062243559_SoberTypeDescription.resx">
       <DependentUpon>201504062243559_SoberTypeDescription.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504081822008_IncSoberTypeDescLength.resx">
+      <DependentUpon>201504081822008_IncSoberTypeDescLength.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

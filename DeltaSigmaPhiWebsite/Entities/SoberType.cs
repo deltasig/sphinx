@@ -15,7 +15,7 @@ namespace DeltaSigmaPhiWebsite.Entities
         [StringLength(100)]
         public string Name { get; set; }
 
-        [StringLength(2000)]
+        [StringLength(3000)]
         [DataType(DataType.MultilineText)]
         [AllowHtml]
         [UIHint("tinymce_full")]
