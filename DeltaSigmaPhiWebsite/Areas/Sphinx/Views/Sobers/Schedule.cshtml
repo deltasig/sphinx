@@ -43,7 +43,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
+                    <table data-toggle="table" data-classes="table table-condensed table-hover" 
                            data-search="true" data-pagination="true" data-page-size="25">
                         <thead>
                             <tr>
@@ -63,11 +63,11 @@
                                 <tr>
                                     <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
                                     <td>
-                                        @item.SoberType.Name
-                                        <a href="@Url.Action("Info", "SoberTypes", new {id = item.SoberTypeId})">
+                                        <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">
                                             <i data-toggle="tooltip" data-placement="top" class="fa fa-info-circle text-info"
                                                title="Click to learn about this job."></i>
                                         </a>
+                                        @item.SoberType.Name
                                     </td>
                                     <td>@item.Description</td>
                                     <td>

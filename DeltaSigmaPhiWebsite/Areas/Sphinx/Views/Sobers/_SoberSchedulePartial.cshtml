@@ -24,14 +24,24 @@
             @foreach (var date in dates)
             {
                 <tr class="active">
-                    <td><strong>@date.ToString("MM-dd") (@date.DayOfWeek.ToString().Substring(0, 3))</strong></td>
+                    <td>
+                        <strong>
+                            @date.DayOfWeek.ToString(), @date.ToString("MMMM dd")
+                        </strong>
+                    </td>
                     <td></td>
                 </tr>
                 foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
                 {
                     <tr>
                         <td>
-                            <small>@item.SoberType.Name</small>
+                            <small>
+                                <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">
+                                    <i data-toggle="tooltip" data-placement="top" class="fa fa-lg fa-info-circle text-info"
+                                       title="Click to learn about this job."></i>
+                                </a>
+                                @item.SoberType.Name
+                            </small>
                         </td>
                         <td id="@(item.SignupId)cell">
                             @if (item.UserId == null)
