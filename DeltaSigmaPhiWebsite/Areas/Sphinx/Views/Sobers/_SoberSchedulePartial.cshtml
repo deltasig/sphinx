@@ -68,6 +68,8 @@
                                 using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
                                     FormMethod.Get, new { style = "display: inline" }))
                                 {
+                                    var number = @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
+                                    
                                     <button type="submit" class="btn btn-sm btn-link"
                                             style="padding: 0; color: #d9534f; display: inline; margin:0"
                                             data-toggle="tooltip" data-placement="top"
@@ -79,13 +81,16 @@
                                     </small>
                                     <small id="@(item.SignupId)num">
                                         <strong>
-                                            @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
+                                            @number
                                         </strong>
                                     </small>
 
-                                    <a class="social pull-right" id="@(item.SignupId)show">
+                                    <button class="btn btn-link pull-right" id="@(item.SignupId)show" type="button"
+                                            style="padding: 0; display: inline; margin: 0; border: none"
+                                            data-toggle="tooltip" data-placement="top"
+                                            title="Click to copy to clipboard">
                                         <i class="fa fa-phone-square fa-lg text-info"></i>
-                                    </a>
+                                    </button>
                                     <script>
                                         $('#@(item.SignupId)num').hide();
                                         $('#@(item.SignupId)show').hover(function () {
@@ -96,6 +101,10 @@
                                             $('#@(item.SignupId)num').hide();
                                             $('#@(item.SignupId)cell').removeClass('warning');
                                             $('#@(item.SignupId)').show();
+                                        });
+                                        $('#@(item.SignupId)show').on("click", function () {
+                                            var number = $('#@(item.SignupId)num strong').text().trim();
+                                            window.prompt("Copy to clipboard: Ctrl+C, Enter", number);
                                         });
                                     </script>
                                 }
