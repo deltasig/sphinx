@@ -198,3 +198,11 @@ hr {
 a.social { 
    text-decoration: none;
 }
+
+.page-header {
+    margin-bottom: 10px;
+}
+
+.table {
+    margin-bottom: 0px;
+}
