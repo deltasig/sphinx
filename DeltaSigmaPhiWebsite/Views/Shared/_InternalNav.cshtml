@@ -1,5 +1,5 @@
 ﻿<div class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0">
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                 <span class="sr-only">Toggle navigation</span>
@@ -111,7 +111,7 @@
                             <li>@Html.ActionLink("Alumni Leaders", "Index", "Leaders", new { area = "Alumni" }, null)</li>
                         </ul>
                     </li>
-                    <li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">
+                    @*<li class="@(ViewBag.Title == "Sober Schedule" ? "active" : "")">
                         <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })">
                             <i class="fa fa-taxi"></i> Sobers
                         </a>
@@ -123,7 +123,7 @@
                                 <i class="fa fa-calendar"></i> Laundry
                             </a>
                         </li>
-                    }
+                    }*@
                     <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")">
                         <a href="@Url.Action("Schedule", "Meals", new { area = "Kitchen" })">
                             <i class="fa fa-cutlery"></i> Meals
