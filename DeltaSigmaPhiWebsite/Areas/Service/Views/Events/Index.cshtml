@@ -18,14 +18,15 @@
                     @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
 
                     <input type="submit" value="Filter" class="btn btn-default" />
-                    <br /><br />
                 </div>
             }
         </div>
         <div class="col-xs-6 text-right">
-            @Html.ActionLink("Service Hours", "Index", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-default" })
-            @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
-            @Html.ActionLink("Add New Event", "Create", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+            <p>
+                @Html.ActionLink("Service Hours", "Index", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-default" })
+                @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Add New Event", "Create", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+            </p>
         </div>
     </div>
     <div class="row">
