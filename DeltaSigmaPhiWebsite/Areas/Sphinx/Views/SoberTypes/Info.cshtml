@@ -1,7 +1,8 @@
 ﻿@model DeltaSigmaPhiWebsite.Entities.SoberType
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Sober Type Info";
+    ViewBag.Title = Model.Name;
+    ViewBag.Subtitle = "Description";
 }
 @section Title
 {
@@ -27,8 +28,6 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <h3><strong>@Model.Name</strong></h3>
-
             @if (string.IsNullOrEmpty(Model.Description))
             {
                 @: No description is currently available.  The Sergeant is slacking. >=(
