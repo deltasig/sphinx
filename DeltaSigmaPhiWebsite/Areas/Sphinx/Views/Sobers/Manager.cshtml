@@ -113,19 +113,22 @@
                     }
                 </div>
             </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">Manually Send Sober Schedule Email</div>
-                <div class="panel-body">
-                    <div class="alert alert-danger">
-                        Clicking the button below will <strong>immediately</strong> send the sober schedule email.
-                        It will contain all of the sober signup information that is currently visible on the Sphinx page.
+            @if (User.IsInRole("Sergeant-at-Arms") || User.Identity.Name == "tjm6f4")
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">Manually Send Sober Schedule Email</div>
+                    <div class="panel-body">
+                        <div class="alert alert-danger">
+                            Clicking the button below will <strong>immediately</strong> send the sober schedule email.
+                            It will contain all of the sober signup information that is currently visible on the Sphinx page.
+                        </div>
+                        <a class="btn btn-sm btn-default"
+                           href="@Url.Action("EmailSoberSchedule", "Home", new { area = "" })">
+                            Send Email
+                        </a>
                     </div>
-                    <a class="btn btn-sm btn-default"
-                       href="@Url.Action("EmailSoberSchedule", "Home", new { area = "" })">
-                        Send Email
-                    </a>
                 </div>
-            </div>
+            }
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
