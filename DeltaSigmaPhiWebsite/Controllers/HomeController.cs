@@ -68,10 +68,13 @@
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
             if (type == null || string.IsNullOrEmpty(type.Destination)) 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var mostRecentEmail = await _db.Emails
-                .Where(e => e.EmailTypeId == type.EmailTypeId)
+            var emails = await _db.Emails
+                .Where(e => 
+                    e.EmailTypeId == type.EmailTypeId && 
+                    e.Destination == type.Destination)
                 .OrderByDescending(e => e.SentOn)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
+            var mostRecentEmail = emails.FirstOrDefault();
 
             // Check if it has been over 24 hours since the last email.
             var noPreviousEmail = mostRecentEmail == null || (now - mostRecentEmail.SentOn).Hours > 24;
@@ -92,7 +95,7 @@
 
             var message = new IdentityMessage
             {
-                Subject = "Sober Schedule: " + 
+                Subject = "Sober Schedule " + (emails.Count + 1) + ": " + 
                 base.ConvertUtcToCst(now).ToShortDateString() + " - " + base.ConvertUtcToCst(now.AddDays(7)).ToShortDateString(),
                 Body = body,
                 Destination = type.Destination
