@@ -28,8 +28,8 @@ else
                             @ViewBag.Title
                             <small>@ViewBag.Subtitle</small>
                         </h3>
-                        <p class="text-success">@ViewBag.SuccessMessage</p>
-                        <p class="text-warning">@ViewBag.FailMessage</p>
+                        <p id="success-message" class="text-success">@ViewBag.SuccessMessage</p>
+                        <p id="failure-message" class="text-warning">@ViewBag.FailMessage</p>
                     </div>
                     <div class="col-sm-6 text-right" style="padding-top: 20px">
                         @if (ViewContext.RouteData.DataTokens["area"] == "Sphinx")
@@ -56,3 +56,15 @@ else
         </div>
     </div>
 }
+
+<script>
+    $(function () {
+        // setTimeout() function will be fired after page is loaded
+        // it will wait for 5 sec. and then will fire
+        // $("#successMessage").hide() function
+        setTimeout(function () {
+            $("#success-message").hide('blind', {}, 1000);
+            $("#failure-message").hide('blind', {}, 1000);
+        }, 5000);
+    });
+</script>
