@@ -77,7 +77,7 @@
             var noPreviousEmail = mostRecentEmail == null || (now - mostRecentEmail.SentOn).Hours > 24;
             // Check if the current time is between the arbitrary range.
             var isTime = (now.DayOfWeek == DayOfWeek.Friday &&
-                          now.Hour >= 14 && now.Hour <= 16);
+                          now.Hour >= 10 && now.Hour <= 12);
             // If an admin or the sergeant is trying to manually send the email, just allow it.
             var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Seargent-at-Arms"));
 
