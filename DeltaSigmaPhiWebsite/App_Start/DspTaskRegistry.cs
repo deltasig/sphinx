@@ -1,8 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using DeltaSigmaPhiWebsite.Entities;
-
-namespace DeltaSigmaPhiWebsite.App_Start
+﻿namespace DeltaSigmaPhiWebsite.App_Start
 {
     using System;
     using System.Net;
@@ -83,6 +79,38 @@ namespace DeltaSigmaPhiWebsite.App_Start
                 Subject = "[Sphinx] " + message.Subject,
                 Body = "<html><body>" + message.Body + "</body></html>"
             };
+            mailMessage.To.Add(message.Destination);
+            mailMessage.IsBodyHtml = true;
+
+            var smtpClient = new SmtpClient("mail.deltasig-de.org")
+            {
+                Port = 26,
+                Credentials = new NetworkCredential("sphinxbot@deltasig-de.org", "1q2w#E$R")
+            };
+
+            try
+            {
+                smtpClient.Send(mailMessage);
+                return Task.FromResult(1);
+            }
+            catch (SmtpException e)
+            {
+
+            }
+
+            return Task.FromResult(0);
+        }
+        public Task SendTemplatedAsync(IdentityMessage message)
+        {
+            // Plug in your email service here to send an email.
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress("sphinxbot@deltasig-de.org", "Sphinx Bot"),
+                Subject = "[Sphinx] " + message.Subject,
+                Body = message.Body
+            };
+            mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
+            mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
             mailMessage.To.Add(message.Destination);
             mailMessage.IsBodyHtml = true;
 
