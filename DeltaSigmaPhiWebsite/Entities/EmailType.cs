@@ -13,6 +13,9 @@
         [StringLength(100)]
         public string Name { get; set; }
 
+        [StringLength(100)]
+        public string Destination { get; set; }
+
         public virtual ICollection<Email> Emails { get; set; }
     }
 }

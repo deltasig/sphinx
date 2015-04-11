@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using System;
+    using System.IO;
     using Entities;
     using Models;
     using System.Data.Entity;
@@ -11,6 +12,7 @@
     using System.Web.Mvc;
     using App_Start;
     using Microsoft.AspNet.Identity;
+    using System.Text;
 
     [AllowAnonymous]
     public class HomeController : BaseController
@@ -64,7 +66,8 @@
         {
             var now = DateTime.UtcNow;
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
-            if (type == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (type == null || string.IsNullOrEmpty(type.Destination)) 
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var mostRecentEmail = await _db.Emails
                 .Where(e => e.EmailTypeId == type.EmailTypeId)
                 .OrderByDescending(e => e.SentOn)
@@ -82,20 +85,23 @@
             if ((!isTime || !noPreviousEmail) && !canOverride) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
             // Build Body
-            var body = string.Empty;
-            const string destination = "tjm6f4@mst.edu";
+            var data = await GetSoberSignupsNextSevenDaysAsync(now);
+            var body = RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
+            var bytes = Encoding.Default.GetBytes(body);
+            body = Encoding.UTF8.GetString(bytes);
 
             var message = new IdentityMessage
             {
-                Subject = "Sober Schedule",
+                Subject = "Sober Schedule: " + 
+                base.ConvertUtcToCst(now).ToShortDateString() + " - " + base.ConvertUtcToCst(now.AddDays(7)).ToShortDateString(),
                 Body = body,
-                Destination = destination
+                Destination = type.Destination
             };
 
             try
             {
                 var emailService = new EmailService();
-                await emailService.SendAsync(message);
+                await emailService.SendTemplatedAsync(message);
             }
             catch (SmtpException e)
             {
@@ -106,7 +112,7 @@
             {
                 SentOn = now, 
                 EmailTypeId = type.EmailTypeId, 
-                Destination = destination, 
+                Destination = type.Destination, 
                 Body = body
             };
 
@@ -114,6 +120,19 @@
             await _db.SaveChangesAsync();
 
             return Content("OK");
+        }
+
+        public string RenderRazorViewToString(string viewName, object model)
+        {
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
+                return sw.GetStringBuilder().ToString();
+            }
         }
     }
 }

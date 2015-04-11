@@ -426,6 +426,26 @@
                             s.DateOfShift <= semester.DateEnd)
                 .ToListAsync();
         }
+        protected virtual async Task<List<SoberSignup>> GetSoberSignupsNextSevenDaysAsync(DateTime date)
+        {
+            var startOfTodayCst = ConvertUtcToCst(date).Date;
+            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
+            var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
+            var thisSemester = await GetThisSemesterAsync();
+            var soberSignups = await _db.SoberSignups
+                .Where(s => s.DateOfShift >= startOfTodayUtc &&
+                            s.DateOfShift <= thisSemester.DateEnd)
+                .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.SoberTypeId)
+                .ToListAsync();
+            var data = soberSignups
+                .Where(s => s.DateOfShift >= startOfTodayUtc &&
+                            s.DateOfShift <= sevenDaysAheadOfToday)
+                .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.SoberTypeId)
+                .ToList();
+            return data;
+        }
         protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId, Semester semester)
         {
             var members = (await GetAllActiveMembersAsync()).Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToList();
