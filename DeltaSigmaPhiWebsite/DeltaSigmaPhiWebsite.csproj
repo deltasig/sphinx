@@ -320,6 +320,7 @@
     <Compile Include="Areas\Scholarships\Models\SubmitScholarshipAppModel.cs" />
     <Compile Include="Areas\Scholarships\ScholarshipsAreaRegistration.cs" />
     <Compile Include="Areas\Service\Models\EventIndexFilterModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\LaundryIndexModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourIndexFilterModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourIndexModel.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />

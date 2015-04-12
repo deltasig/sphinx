@@ -8,7 +8,9 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Models;
     using WebMatrix.WebData;
+    using Newtonsoft.Json;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class LaundryController : BaseController
@@ -33,7 +35,7 @@
             const int slotSize = 2;
 
             var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= startOfTodayUtc).ToListAsync();
-            var model = new List<List<LaundrySignup>>();
+            var slots = new List<List<LaundrySignup>>();
 
             for (var y = 0; y < 12; y++) // Hours in day
             {
@@ -58,9 +60,26 @@
                         timeSlotSchedule.Add(new LaundrySignup { DateTimeShift = ConvertUtcToCst(timeSlot) });
                     }
                 }
-                model.Add(timeSlotSchedule);
+                slots.Add(timeSlotSchedule);
             }
 
+            // Get semester list
+            var signups = await _db.LaundrySignups.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var semesters = new List<Semester>();
+            foreach (var s in allSemesters)
+            {
+                if (signups.Any(i => i.DateTimeShift >= s.DateStart && i.DateTimeShift <= s.DateEnd))
+                {
+                    semesters.Add(s);
+                }
+            }
+
+            var model = new LaundryIndexModel
+            {
+                Slots = slots,
+                SemesterList = await GetCustomSemesterListAsync(semesters)
+            };
             return View(model);
         }
         [HttpPost]
@@ -106,6 +125,29 @@
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
+        }
+        [HttpGet]
+        public async Task<ActionResult> GetSignups(int? sid)
+        {
+            var semester = await _db.Semesters.FindAsync(sid);
+            if (semester == null)
+                semester = await base.GetThisSemesterAsync();
+
+            var signups = await _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= semester.DateStart && l.DateTimeShift <= semester.DateEnd)
+                .OrderBy(l => l.DateTimeShift)
+                .ToListAsync();
+
+            var data = signups.Select(l => new
+                {
+                    DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
+                    DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
+                    l.UserId
+                }).ToList();
+
+            var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+
+            return Json(json, JsonRequestBehavior.AllowGet);
         }
 
         private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
