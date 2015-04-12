@@ -28,8 +28,12 @@ else
                             @ViewBag.Title
                             <small>@ViewBag.Subtitle</small>
                         </h3>
-                        <p id="success-message" class="text-success">@ViewBag.SuccessMessage</p>
-                        <p id="failure-message" class="text-warning">@ViewBag.FailMessage</p>
+                        @{
+                            var hideMessage = string.IsNullOrEmpty(ViewBag.SuccessMessage) || string.IsNullOrEmpty(ViewBag.FailMessage) 
+                                ? "hidden" : "";
+                        }
+                        <p id="success-message" class="text-success @(hideMessage)">@ViewBag.SuccessMessage</p>
+                        <p id="failure-message" class="text-warning @(hideMessage)">@ViewBag.FailMessage</p>
                     </div>
                     <div class="col-sm-6 text-right" style="padding-top: 20px">
                         @if (ViewContext.RouteData.DataTokens["area"] == "Sphinx")
