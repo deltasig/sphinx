@@ -1,5 +1,6 @@
-﻿@using DeltaSigmaPhiWebsite.Entities
-@model IEnumerable<IEnumerable<LaundrySignup>>
+﻿@using System.Web.Mvc.Html
+@using DeltaSigmaPhiWebsite.Entities
+@model DeltaSigmaPhiWebsite.Areas.Sphinx.Models.LaundryIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Laundry Signup";
@@ -9,9 +10,6 @@
 @section Title
 {
     @Html.Partial("_Title")
-}
-@section AdditionalMeta{
-    <meta http-equiv="refresh" content="60">
 }
 
 <div class="container">
@@ -23,22 +21,22 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed table-bordered" style="text-align:center">
-                            @if (Model.Any())
+                        <table class="table table-condensed table-bordered" style="text-align: center">
+                            @if (Model.Slots.Any())
                             {
                                 <thead>
-                                    <tr>
-                                        <th class="text-center active">Time Slot</th>
-                                        @foreach (var timeSlot in Model.First())
-                                        {
-                                            <th class="text-center">
-                                                @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
-                                            </th>
-                                        }
-                                    </tr>
+                                <tr>
+                                    <th class="text-center active">Time Slot</th>
+                                    @foreach (var timeSlot in Model.Slots.First())
+                                    {
+                                        <th class="text-center">
+                                            @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
+                                        </th>
+                                    }
+                                </tr>
                                 </thead>
                             }
-                            @foreach (var day in Model)
+                            @foreach (var day in Model.Slots)
                             {
                                 <tr>
                                     <td class="active">
@@ -60,8 +58,8 @@
                                                 {
                                                     using (Html.BeginForm("Cancel", "Laundry", timeSlot))
                                                     {
-                                                        @(timeSlot.Member.FirstName+" "+timeSlot.Member.LastName.Substring(0, 1)+".")
-                                                        <button type="submit" class="btn btn-sm btn-link" style="padding:0; margin:0;  color:#d9534f;">
+                                                        @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
+                                                        <button type="submit" class="btn btn-sm btn-link" style="padding: 0; margin: 0; color: #d9534f;">
                                                             <i class="fa fa-minus-square"></i>
                                                         </button>
                                                     }
@@ -71,8 +69,8 @@
                                                 {
                                                     <div class="text-center">
                                                         <p>
-                                                            @(timeSlot.Member.FirstName+" "+timeSlot.Member.LastName.Substring(0, 1)+".")
-                                                            @if(timeSlot.Member.Room == 0)
+                                                            @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
+                                                            @if (timeSlot.Member.Room == 0)
                                                             {
                                                                 @:*
                                                             }
@@ -88,7 +86,7 @@
                                             // Unreserved, and in the future.
                                             else
                                             {
-                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = timeSlot.DateTimeShift }))
+                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup {DateTimeShift = timeSlot.DateTimeShift}))
                                                 {
                                                     <button type="submit" class="btn btn-sm btn-success">Open</button>
                                                 }
@@ -107,4 +105,50 @@
             </div>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <h4>Statistics <i id="loading" class="fa fa-lg fa-spinner fa-spin"></i></h4>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownList("Semesters", Model.SemesterList, new {@class = "form-control", id = "semester-list"})
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div id="stats" class="">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section scripts{
+
+    <script>
+        LoadStats();
+        $('#loading').hide();
+
+        $('#semester-list').change(function () {
+            $('#loading').show();
+            LoadStats();
+            $('#loading').hide();
+        });
+
+        function LoadStats() {
+            var options = {};
+            options.sid = $('#semester-list option:selected').val();
+            $.getJSON('GetSignups', options).done(function (data) {
+                $("#stats").text(data);
+            });
+        }
+
+    </script>
+
+}
