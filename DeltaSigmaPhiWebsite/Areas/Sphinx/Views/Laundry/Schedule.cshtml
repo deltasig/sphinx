@@ -120,8 +120,36 @@
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div id="stats" class="">
-                        
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <dl class="dl-horizontal">
+                                <dt id="">Semester</dt>
+                                <dd id="dates"></dd>
+                                <dt id="">Total Signups</dt>
+                                <dd id="totals"></dd>
+                                <dt id="">Signups/Week</dt>
+                                <dd id="week-avg"></dd>
+                                <dt id="">Signups/Month</dt>
+                                <dd id="month-avg"></dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-6">
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Daily Averages</h4>
+                            <div id="week-well" class="">
+                                <canvas id="week-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Month Totals</h4>
+                            <div id="month-well" class="">
+                                <canvas id="month-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -131,11 +159,14 @@
 
 @section scripts{
 
+    <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
     <script>
+        Chart.defaults.global.responsive = true;
+
         LoadStats();
         $('#loading').hide();
 
-        $('#semester-list').change(function () {
+        $('#semester-list').change(function() {
             $('#loading').show();
             LoadStats();
             $('#loading').hide();
@@ -144,8 +175,52 @@
         function LoadStats() {
             var options = {};
             options.sid = $('#semester-list option:selected').val();
-            $.getJSON('GetSignups', options).done(function (data) {
-                $("#stats").text(data);
+            $.getJSON('GetStats', options).done(function (data) {
+
+                data = $.parseJSON(data);
+                var weekData = {
+                    labels: data.WeekChartXLabels,
+                    datasets: [
+                        {
+                            label: "Week Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.WeekChartXValues
+                        }
+                    ]
+                };
+                var monthData = {
+                    labels: data.MonthChartXLabels,
+                    datasets: [
+                        {
+                            label: "Month Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.MonthChartXValues
+                        }
+                    ]
+                };
+                $('#dates').text(data.Semester + " (" + data.StartDate + " - " + data.EndDate + ")");
+                $('#totals').text(data.TotalSignups);
+                $('#week-avg').text(data.WeekAverage);
+                $('#month-avg').text(data.MonthAverage);
+
+                $('#week-chart').remove();
+                $('#month-chart').remove();
+                $('#week-well').append('<canvas id="week-chart"></canvas>');
+                $('#month-well').append('<canvas id="month-chart"></canvas>');
+                var weekChart = document.getElementById('week-chart').getContext('2d');
+                var monthChart = document.getElementById('month-chart').getContext('2d');
+                new Chart(weekChart).Line(weekData);
+                new Chart(monthChart).Line(monthData);
             });
         }
 

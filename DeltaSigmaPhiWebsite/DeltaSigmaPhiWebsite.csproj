@@ -327,6 +327,7 @@
     <Compile Include="Areas\Sphinx\Controllers\LaundryController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\SoberTypesController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\SobersController.cs" />
+    <Compile Include="Areas\Sphinx\Models\LaundryStatsModel.cs" />
     <Compile Include="Areas\Sphinx\Models\MultiAddSoberSignupModel.cs" />
     <Compile Include="Areas\Sphinx\Models\SoberManagerModel.cs" />
     <Compile Include="Areas\Sphinx\Models\EditSoberSignupModel.cs" />
@@ -759,6 +760,8 @@
     <Content Include="Scripts\bootstrap-table-extensions\export\README.md" />
     <Content Include="Scripts\bootstrap-table-extensions\filter\README.md" />
     <Content Include="Scripts\bootstrap-table-extensions\flatJSON\README.md" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\i18n\defaults-cs_CZ.js" />
     <Content Include="Scripts\i18n\defaults-cs_CZ.min.js" />
     <Content Include="Scripts\i18n\defaults-de_DE.js" />
@@ -789,6 +792,9 @@
     <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
+    <Content Include="Scripts\Chart.min.js.map">
+      <DependentUpon>Chart.js</DependentUpon>
+    </Content>
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
