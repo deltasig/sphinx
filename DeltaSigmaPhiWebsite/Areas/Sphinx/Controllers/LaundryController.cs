@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -127,8 +128,10 @@
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
         }
         [HttpGet]
-        public async Task<ActionResult> GetSignups(int? sid)
+        public async Task<ActionResult> GetStats(int? sid)
         {
+            var model = new LaundryStatsModel();
+
             var semester = await _db.Semesters.FindAsync(sid);
             if (semester == null)
                 semester = await base.GetThisSemesterAsync();
@@ -138,17 +141,77 @@
                 .OrderBy(l => l.DateTimeShift)
                 .ToListAsync();
 
-            var data = signups.Select(l => new
-                {
-                    DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
-                    DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
-                    l.UserId
-                }).ToList();
+            var formattedSignups = signups.Select(l => new
+            {
+                DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
+                DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
+                l.UserId
+            }).ToList();
 
-            var json = JsonConvert.SerializeObject(data, Formatting.Indented);
+            // Build model
+            model.TotalSignups = formattedSignups.Count();
+            model.Semester = semester.ToString();
+            model.StartDate = base.ConvertUtcToCst(semester.DateStart).ToShortDateString();
+            model.EndDate = base.ConvertUtcToCst(semester.DateEnd).ToShortDateString();
 
+            // Month Calculations
+            var months = MonthsBetween(semester.DateStart, semester.DateEnd).OrderBy(m => m.Month).ToList();
+            var monthValues = months.Select(m => m.Month).Distinct();
+            model.MonthChartXLabels = months.Select(m => CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(m.Month)).ToList();
+            model.MonthChartXValues = new List<int>();
+            foreach (var m in monthValues)
+            {
+                model.MonthChartXValues.Add(signups.Count(s => s.DateTimeShift.Month == m));
+            }
+            model.MonthAverage = (decimal)model.TotalSignups / months.Count;
+
+            // Week Calculations
+            var startWeek = GetIso8601WeekOfYear(semester.DateStart);
+            var endWeek = GetIso8601WeekOfYear(semester.DateEnd);
+            var totalWeeks = endWeek - startWeek;
+            model.WeekChartXLabels = new List<string>(GetDayNames());
+            model.WeekChartXValues = new List<decimal>();
+            for (var w = 0; w <= 6; w++)
+            {
+                var averageSignups = (decimal)signups.Count(s => (int)s.DateTimeShift.DayOfWeek == w) / totalWeeks;
+                model.WeekChartXValues.Add(decimal.Round(averageSignups, 2, MidpointRounding.AwayFromZero));
+            }
+            model.WeekAverage = decimal.Round((decimal)model.TotalSignups / totalWeeks, 2, MidpointRounding.AwayFromZero);
+
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
+        public static string[] GetDayNames()
+        {
+            if (CultureInfo.CurrentCulture.Name.StartsWith("en-"))
+            {
+                return new[] { "Monday", "Tuesday", "Wednesday", "Thursday",
+                        "Friday", "Saturday", "Sunday" };
+            }
+            return CultureInfo.CurrentCulture.DateTimeFormat.DayNames;
+        }
+
+        public static IEnumerable<DateTime> MonthsBetween(DateTime d0, DateTime d1)
+        {
+            return Enumerable.Range(0, (d1.Year - d0.Year) * 12 + (d1.Month - d0.Month + 1))
+                             .Select(m => new DateTime(d0.Year, d0.Month, 1).AddMonths(m));
+        }
+
+        public static int GetIso8601WeekOfYear(DateTime time)
+        {
+            // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
+            // be the same week# as whatever Thursday, Friday or Saturday are,
+            // and we always get those right
+            DayOfWeek day = CultureInfo.InvariantCulture.Calendar.GetDayOfWeek(time);
+            if (day >= DayOfWeek.Monday && day <= DayOfWeek.Wednesday)
+            {
+                time = time.AddDays(3);
+            }
+
+            // Return the week of our adjusted day
+            return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
+        } 
 
         private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
         {
