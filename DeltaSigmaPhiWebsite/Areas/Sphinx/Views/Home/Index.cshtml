@@ -118,10 +118,10 @@
             <div class="col-md-7">
                 
                 <!-- ALERTS -->
-                @if (Model.NeedsToSoberDrive)
+                @if (Model.NeedsToSoberDrive && (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte")))
                 {
-                    <div class="alert alert-warning delayed" style="display:none;">
-                        Shut up and sober drive!  <a href="@Url.Action("Schedule", "Sobers")">Go to Schedule</a>
+                    <div class="alert alert-warning delayed" style="display: none;">
+                        Shut up and sober drive! <a href="@Url.Action("Schedule", "Sobers")">Go to Schedule</a>
                     </div>
                 }
                 @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
