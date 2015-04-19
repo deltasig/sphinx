@@ -145,7 +145,7 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <h4>Month Totals</h4>
+                            <h4>Monthly Totals</h4>
                             <div id="month-well" class="">
                                 <canvas id="month-chart" style="padding-right: 35px"></canvas>
                             </div>
@@ -162,6 +162,7 @@
     <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
     <script>
         Chart.defaults.global.responsive = true;
+        Chart.defaults.global.scaleOverride = true;
 
         LoadStats();
         $('#loading').hide();
@@ -217,9 +218,18 @@
                 $('#month-chart').remove();
                 $('#week-well').append('<canvas id="week-chart"></canvas>');
                 $('#month-well').append('<canvas id="month-chart"></canvas>');
+
+                Chart.defaults.global.scaleSteps = 6;
+                Chart.defaults.global.scaleStepWidth = 1;
+                Chart.defaults.global.scaleStartValue = 0;
                 var weekChart = document.getElementById('week-chart').getContext('2d');
-                var monthChart = document.getElementById('month-chart').getContext('2d');
                 new Chart(weekChart).Line(weekData);
+
+
+                Chart.defaults.global.scaleSteps = 8;
+                Chart.defaults.global.scaleStepWidth = 25;
+                Chart.defaults.global.scaleStartValue = 0;
+                var monthChart = document.getElementById('month-chart').getContext('2d');
                 new Chart(monthChart).Line(monthData);
             });
         }
