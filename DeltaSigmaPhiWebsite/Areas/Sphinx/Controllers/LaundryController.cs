@@ -13,10 +13,10 @@
     using WebMatrix.WebData;
     using Newtonsoft.Json;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class LaundryController : BaseController
     {
         [HttpGet]
+        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Schedule(LaundrySignupMessage? message)
         {
             switch (message)
@@ -84,6 +84,7 @@
             return View(model);
         }
         [HttpPost]
+        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Reserve(LaundrySignup signup)
         {
             if (!ModelState.IsValid)
@@ -114,6 +115,7 @@
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveSuccess });
         }
         [HttpPost]
+        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Cancel(LaundrySignup cancel)
         {
             cancel.DateTimeShift = ConvertCstToUtc(cancel.DateTimeShift);
@@ -128,6 +130,7 @@
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
         }
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> GetStats(int? sid)
         {
             var model = new LaundryStatsModel();
@@ -182,7 +185,7 @@
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        public static string[] GetDayNames()
+        private static string[] GetDayNames()
         {
             if (CultureInfo.CurrentCulture.Name.StartsWith("en-"))
             {
@@ -192,13 +195,13 @@
             return CultureInfo.CurrentCulture.DateTimeFormat.DayNames;
         }
 
-        public static IEnumerable<DateTime> MonthsBetween(DateTime d0, DateTime d1)
+        private static IEnumerable<DateTime> MonthsBetween(DateTime d0, DateTime d1)
         {
             return Enumerable.Range(0, (d1.Year - d0.Year) * 12 + (d1.Month - d0.Month + 1))
                              .Select(m => new DateTime(d0.Year, d0.Month, 1).AddMonths(m));
         }
 
-        public static int GetIso8601WeekOfYear(DateTime time)
+        private static int GetIso8601WeekOfYear(DateTime time)
         {
             // Seriously cheat.  If its Monday, Tuesday or Wednesday, then it'll 
             // be the same week# as whatever Thursday, Friday or Saturday are,
