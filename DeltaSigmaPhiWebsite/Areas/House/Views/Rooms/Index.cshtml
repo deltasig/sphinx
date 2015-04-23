@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.Room>
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Rooms";
 }
@@ -7,46 +8,6 @@
 {
     @Html.Partial("_Title")
 }
-
-<style>
-    rect {
-        fill: lightgray;
-        stroke: darkgray;
-        stroke-width: 1;
-    }
-
-    rect.door {
-        fill: gray;
-    }
-
-    path {
-        stroke: darkgray;
-        stroke-width: 1;
-    }
-
-    path.room {
-        fill: #278955;
-    }
-
-    path.room:hover, path.room:focus {
-        fill: #2b975e;
-        cursor: pointer;
-    }
-
-    path.nonroom {
-        fill: lightgray;
-    }
-
-    path.stairs {
-        fill: gray;
-    }
-
-    text {
-        fill: white;
-        font-family: 'Open Sans';
-        font-size: 20px;
-    }
-</style>
 
 <div class="container">
     <div class="row">
@@ -62,169 +23,67 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12 col-sm-9">
-            <h3>2<sup>nd</sup> Floor
-            </h3>
-            <!-- The drawing is relatively close to scale; some adjustments were made to make the path values more friendly. -->
-            <svg width="100%" height="100%" viewBox="40 0 1310 650" preserveAspectRatio="xMaxYMin meet" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100%" height="100%"/>
+        <div class="col-sm-6">
 
-                <!-- Rooms -->
-                <path d="M 1185 0 L 1310 0 L 1310 215 L 1310 260 L 1145 260 L 1145 100 L 1185 100 z" class="room"/>
-                <rect width="3" height="25" x="1145" y="225" class="door"/>
-                <text x="1195" y="30">201</text>
+        </div>
+        <div class="col-sm-6 text-right">
+            <p>
+                <a href="@Url.Action("Map", "Rooms", new { area = "House" })" class="btn btn-sm btn-default">
+                    Map
+                </a>
+                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                {
+                    <a href="@Url.Action("Create", "Rooms", new {area = "House"})" class="btn btn-sm btn-success">
+                        Add Room
+                    </a>
+                }
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-8">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Room #</th>
+                        <th>Capacity</th>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var r in Model.OrderBy(r => r.Name))
+                {
+                    <tr>
+                        <td>@r.Name</td>
+                        <td>@r.MaxCapacity</td>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                        {
+                            <td class="text-right">
+                                @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
+                                @if (!r.Members.Any())
+                                {
+                                    @: |
+                                    @Html.ActionLink("Delete", "Delete", new { id = r.RoomId })
+                                }
+                            </td>
+                        }
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-xs-4">
 
-                <path d="M 1015 0 L 1185 0 L 1185 100 L 1145 100 L 1145 215 L 1055 215 L 1055 100 L 1015 100 z" class="room"/>
-                <rect width="25" height="3" x="1110" y="212" class="door"/>
-                <text x="1025" y="30">202</text>
-
-                <path d="M 895 0 L 1015 0 L 1015 100 L 1055 100 L 1055 215 L 895 215 z" class="room"/>
-                <rect width="25" height="3" x="1010" y="212" class="door"/>
-                <text x="905" y="30">203</text>
-
-                <path d="M 735 0 L 895 0 L 895 215 L 735 215 z" class="room"/>
-                <rect width="25" height="3" x="860" y="212" class="door"/>
-                <text x="745" y="30">204</text>
-
-                <path d="M 585 0 L 735 0 L 735 215 L 585 215 z" class="room"/>
-                <rect width="25" height="3" x="640" y="212" class="door"/>
-                <text x="595" y="30">205</text>
-
-                <path d="M 435 0 L 585 0 L 585 215 L 435 215 z" class="room"/>
-                <rect width="25" height="3" x="445" y="212" class="door"/>
-                <text x="445" y="30">206</text>
-
-                <path d="M 285 0 L 435 0 L 435 215 L 285 215 z" class="room"/>
-                <rect width="25" height="3" x="400" y="212" class="door"/>
-                <text x="295" y="30">207</text>
-
-                <path d="M 145 0 L 285 0 L 285 215 L 145 215 z" class="room"/>
-                <rect width="25" height="3" x="250" y="212" class="door"/>
-                <text x="155" y="30">208</text>
-
-                <path d="M 145 280 L 360 280 L 360 380 L 255 380 L 255 505 L 145 505 z" class="room"/>
-                <rect width="3" height="25" x="357" y="345" class="door"/>
-                <text x="155" y="310">209</text>
-
-                <path d="M 145 505 L 255 505 L 255 380 L 360 380 L 360 650 L 145 650 z" class="room"/>
-                <rect width="3" height="25" x="357" y="390" class="door"/>
-                <text x="155" y="535">210</text>
-
-                <path d="M 360 425 L 505 425 L 505 650 L 360 650 z" class="room"/>
-                <rect width="25" height="3" x="470" y="425" class="door"/>
-                <text x="370" y="455">211</text>
-
-                <path d="M 505 425 L 650 425 L 650 650 L 505 650 z" class="room"/>
-                <rect width="25" height="3" x="515" y="425" class="door"/>
-                <text x="515" y="455">212</text>
-
-                <path d="M 650 425 L 830 425 L 830 650 L 650 650 z" class="room"/>
-                <rect width="25" height="3" x="660" y="425" class="door"/>
-                <text x="660" y="455">213</text>
-
-                <path d="M 830 425 L 975 425 L 975 650 L 830 650 z" class="room"/>
-                <rect width="3" height="25" x="972" y="435" class="door"/>
-                <text x="840" y="455">214</text>
-
-                <path d="M 1050 420 L 1310 420 L 1310 650 L 1225 650 L 1225 580 L 1050 580 z" class="room"/>
-                <rect width="3" height="25" x="1050" y="445" class="door"/>
-                <text x="1060" y="450">215</text>
-
-                <path d="M 1145 260 L 1310 260 L 1310 420 L 1070 420 L 1070 280 L 1145 280 z" class="room"/>
-                <rect width="3" height="25" x="1070" y="385" class="door"/>
-                <text x="1155" y="290">216</text>
-
-                <!-- Mechanical closet -->
-                <path d="M 435 280 L 625 280 L 625 360 L 435 360 z" class="nonroom"/>
-                <rect width="25" height="3" x="550" y="280" class="door"/>
-                <!-- Bathroom -->
-                <path d="M 625 280 L 675 280 L 675 215 L 850 215 L 850 280 L 955 280 L 955 360 L 625 360 z" class="nonroom"/>
-                <rect width="25" height="3" x="640" y="280" class="door"/>
-                <rect width="25" height="3" x="920" y="280" class="door"/>
-                <!-- Mechanical closet by 216 -->
-                <path d="M 1050 280 L 1090 280 L 1090 355 L 1050 355 z" class="nonroom"/>
-                <rect width="3" height="25" x="1050" y="320" class="door"/>
-                <!-- Stairs -->
-                <path d="M 1075 580 L 1225 580 L 1225 650 L 1075 650 z" class="stairs"/>
-                <!-- Fire Escape Door -->
-                <rect width="3" height="25" x="145" y="235" class="door"/>
-            </svg>
-
-            <h3>1<sup>st</sup> Floor
-            </h3>
-
-            <svg width="100%" height="100%" viewBox="0 0 1310 650" preserveAspectRatio="xMaxYMin meet" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                <rect width="100%" height="100%"/>
-
-                <!-- Rooms -->
-                <path d="M 600 0 L 810 0 L 810 140 L 600 140 z" class="room"/>
-                <rect width="25" height="3" x="645" y="137" class="door"/>
-                <text x="610" y="30">101</text>
-
-                <path d="M 395 0 L 600 0 L 600 150 L 395 150 z" class="room"/>
-                <rect width="25" height="3" x="565" y="147" class="door"/>
-                <text x="405" y="30">102</text>
-
-                <path d="M 280 0 L 395 0 L 395 215 L 280 215 z" class="room"/>
-                <rect width="25" height="3" x="360" y="212" class="door"/>
-                <text x="290" y="30">103</text>
-
-                <path d="M 95 0 L 280 0 L 280 265 L 95 265 z" class="room"/>
-                <rect width="3" height="25" x="277" y="227" class="door"/>
-                <text x="105" y="30">104</text>
-
-                <!-- Mechanical closet -->
-                <path d="M 445 215 L 505 215 L 505 310 L 445 310 z" class="nonroom"/>
-                <rect width="3" height="25" x="445" y="275" class="door"/>
-                <!-- Residential bathroom -->
-                <path d="M 505 215 L 795 215 L 795 380 L 405 380 L 505 380 z" class="nonroom"/>
-                <rect width="3" height="25" x="505" y="332" class="door"/>
-                <!-- Commercial bathroom -->
-                <path d="M 715 140 L 810 140 L 810 215 L 715 215 z" class="nonroom"/>
-                <rect width="3" height="25" x="807" y="165" class="door"/>
-                <!-- Sink/water heater closet -->
-                <path d="M 680 140 715 140 L 715 215 L 680 215 z" class="nonroom"/>
-                <rect width="3" height="25" x="680" y="165" class="door"/>
-                <!-- Study rooms -->
-                <path d="M 810 0 L 950 0 L 950 140 L 810 140 z" class="nonroom"/>
-                <rect width="25" height="3" x="915" y="137" class="door"/>
-                <path d="M 950 0 L 1080 0 L 1080 140 L 950 140 z" class="nonroom"/>
-                <rect width="25" height="3" x="960" y="137" class="door"/>
-                <path d="M 795 215 L 905 215 L 905 380 L 795 380 z" class="nonroom"/>
-                <rect width="25" height="3" x="870" y="215" class="door"/>
-                <!-- Conference room -->
-                <path d="M 1080 0 L 1310 0 L 1310 210 L 1020 210 L 1020 235 L 1020 210 L 1080 210 z" class="nonroom"/>
-                <rect width="3" height="25" x="1077" y="150" class="door"/>
-                <rect width="3" height="25" x="1077" y="175" class="door"/>
-                <!-- ACB office -->
-                <path d="M 1020 335 L 1020 360 L 1310 360 L 1255 360 L 1255 525 L 1020 525 z" class="nonroom"/>
-                <rect width="3" height="25" x="1020" y="370" class="door"/>
-                <!-- Media room -->
-                <path d="M 480 380 L 905 380 L 1020 460 L 1020 650 L 560 650 L 560 450 L 480 450 z" class="nonroom"/>
-                <rect width="3" height="25" x="940" y="407" transform="rotate(-55.2 940 407)" class="door"/>
-                <rect width="3" height="25" x="960" y="421" transform="rotate(-55.2 960 421)" class="door"/>
-                <rect width="3" height="25" x="1020" y="542" class="door"/>
-                <rect width="3" height="25" x="480" y="402" class="door"/>
-                <rect width="3" height="25" x="402" y="402" class="door"/>
-                <!-- Work room -->
-                <path d="M 95 265 L 280 265 L 280 650 L 95 650 L 95 550 L 95 650 L 0 650 L 0 485 L 95 485 z" class="nonroom"/>
-                <rect width="3" height="25" x="277" y="400" class="door"/>
-                <!-- Cleaning closet -->
-                <path d="M 280 265 L 320 265 L 320 375 L 280 375 z" class="nonroom"/>
-                <rect width="3" height="25" x="317" y="307" class="door"/>
-                <!-- "Storage" -->
-                <path d="M 280 450 L 405 450 L 405 380 L 405 595 L 480 595 L 480 450 L 560 450 L 560 650 L 280 650 z" class="nonroom"/>
-                <rect width="25" height="3" x="507" y="450" class="door"/>
-                <!-- Stairs -->
-                <path d="M 405 450 L 480 450 L 480 595 L 405 595 z" class="stairs"/>
-                <path d="M 1020 585 L 1255 585 L 1255 650 L 1020 650 z" class="stairs"/>
-
-                <!-- Commercial Doors -->
-                <rect width="3" height="25" x="1307" y="260" class="door"/>
-                <rect width="3" height="25" x="1307" y="285" class="door"/>
-                <!-- Front Door -->
-                <rect width="3" height="25" x="1307" y="610" class="door"/>
-            </svg>
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        
+    </script>
+}
