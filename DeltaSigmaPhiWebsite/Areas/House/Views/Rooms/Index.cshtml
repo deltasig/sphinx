@@ -55,6 +55,7 @@
                 <tr>
                     <th>Room #</th>
                     <th>Capacity</th>
+                    <th>Members</th>
                     @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
                     {
                         <th></th>
@@ -67,6 +68,9 @@
                     <tr>
                         <td>@r.Name</td>
                         <td>@r.MaxCapacity</td>
+                        <td id="r-@r.RoomId" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            
+                        </td>
                         @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
                         {
                             <td class="text-right">
@@ -84,21 +88,23 @@
             </table>
         </div>
         <div class="col-xs-4">
-            <table class="table table-condensed" style="height:500px">
+            <table class="">
                 <thead>
-                    <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                    </tr>
+                <tr>
+                    <th>Member</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var m in Model.Members.OrderBy(m => m.PledgeClass.Semester.DateStart).ThenBy(m => m.LastName))
-                    {
-                        <tr>
-                            <td>@m.FirstName</td>
-                            <td>@m.LastName</td>
-                        </tr>
-                    }
+                @foreach (var m in Model.Members.OrderBy(m => m.PledgeClass.Semester.DateStart).ThenBy(m => m.LastName))
+                {
+                    <tr>
+                        <td ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div id="m-@m.UserId" draggable="true" ondragstart="drag(event)">
+                                @m.FirstName @m.LastName
+                            </div>
+                        </td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
@@ -108,6 +114,18 @@
 @section scripts
 {
     <script>
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
 
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            var data = ev.dataTransfer.getData("text");
+            ev.target.appendChild(document.getElementById(data));
+        }
     </script>
 }
