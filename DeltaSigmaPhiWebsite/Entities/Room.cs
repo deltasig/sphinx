@@ -14,6 +14,11 @@
         [StringLength(100)]
         public string Name { get; set; }
 
+        [Required]
+        [Range(1, 10)]
+        [Display(Name = "Max Capacity")]
+        public int MaxCapacity { get; set; }
+
         public virtual ICollection<RoomToMember> Members { get; set; }
     }
 }
