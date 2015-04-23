@@ -364,6 +364,8 @@
     <Compile Include="Entities\MealToItem.cs" />
     <Compile Include="Entities\MealToPeriod.cs" />
     <Compile Include="Entities\MealVote.cs" />
+    <Compile Include="Entities\RoomToMember.cs" />
+    <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\ScholarshipAnswer.cs" />
     <Compile Include="Entities\ScholarshipType.cs" />
     <Compile Include="Entities\ScholarshipAppQuestion.cs" />
@@ -444,6 +446,10 @@
     <Compile Include="Migrations\201504102337185_EmailTypeDest.cs" />
     <Compile Include="Migrations\201504102337185_EmailTypeDest.Designer.cs">
       <DependentUpon>201504102337185_EmailTypeDest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504230109432_Rooms.cs" />
+    <Compile Include="Migrations\201504230109432_Rooms.Designer.cs">
+      <DependentUpon>201504230109432_Rooms.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -1197,6 +1203,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504102337185_EmailTypeDest.resx">
       <DependentUpon>201504102337185_EmailTypeDest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504230109432_Rooms.resx">
+      <DependentUpon>201504230109432_Rooms.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

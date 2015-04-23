@@ -101,6 +101,8 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<MealLatePlate> MealLatePlates { get; set; }
 
+        public virtual ICollection<RoomToMember> Rooms { get; set; }
+
         public override string ToString()
         {
             return FirstName + " " + LastName;
