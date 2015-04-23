@@ -121,33 +121,54 @@
                 @if (Model.NeedsToSoberDrive && (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte")))
                 {
                     <div class="alert alert-warning delayed" style="display: none;">
-                        Shut up and sober drive! <a href="@Url.Action("Schedule", "Sobers")">Go to Schedule</a>
+                        Please sign up to sober drive at least once! 
+                        <a href="@Url.Action("Schedule", "Sobers")">
+                            Go to Schedule <i class="fa fa-caret-right"></i>
+                        </a>
                     </div>
                 }
                 @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
-                        Please enter your mailing address on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                        Please provide your mailing address!
+                        <a href="@Url.Action("Index", "Account", new { area = "Members" })">
+                            Go to Account <i class="fa fa-caret-right"></i>
+                        </a>!
                     </div>
                 }
                 @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
-                        Please enter your mobile phone number on your <a href="@Url.Action("Index", "Account", new { area = "Admin" })">Account page</a>!
+                        Please provide your mobile phone number!
+                        <a href="@Url.Action("Index", "Account", new { area = "Members" })">
+                            Go to Account <i class="fa fa-caret-right"></i>
+                        </a>!
                     </div>
                 }
                 @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade)))
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
-                        You have not yet reported all of your grades for last semester. 
-                        <a href="@Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName })">Go to Transcript</a>!
+                        You have not reported all of your grades for last semester!
+                        <a href="@Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName })">
+                            Go to Transcript <i class="fa fa-caret-right"></i>
+                        </a>
                     </div>
                 }
                 @if (!thisSemesterClasses.Any())
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
-                        You have not yet entered your courses for this semester. 
-                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null)!
+                        You have not entered your courses for this semester!
+                        <a href="@Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" })">
+                            Go to Class Schedule <i class="fa fa-caret-right"></i>
+                        </a>
+                    </div>
+                }
+                @if (!Model.MemberInfo.MajorsToMember.Any())
+                {
+                    <div class="alert alert-warning delayed" style="display:none;">
+                        Please report your major! <a href="@Url.Action("Index", "Account", new { area = "Members" })">
+                            Go to Account <i class="fa fa-caret-right"></i>
+                        </a>
                     </div>
                 }
                 
