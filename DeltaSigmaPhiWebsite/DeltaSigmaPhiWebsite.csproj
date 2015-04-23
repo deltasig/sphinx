@@ -290,6 +290,7 @@
     <Compile Include="Areas\Edu\Models\FileInfoModel.cs" />
     <Compile Include="Areas\House\Controllers\RoomsController.cs" />
     <Compile Include="Areas\House\HouseAreaRegistration.cs" />
+    <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
@@ -1150,7 +1151,6 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\Edu\Views\Shared\" />
-    <Folder Include="Areas\House\Models\" />
     <Folder Include="Areas\House\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
