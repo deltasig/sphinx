@@ -451,6 +451,10 @@
     <Compile Include="Migrations\201504230109432_Rooms.Designer.cs">
       <DependentUpon>201504230109432_Rooms.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201504230157487_Rooms1.cs" />
+    <Compile Include="Migrations\201504230157487_Rooms1.Designer.cs">
+      <DependentUpon>201504230157487_Rooms1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -730,7 +734,7 @@
     <Content Include="Areas\Edu\Views\Majors\Assign.cshtml" />
     <Content Include="Areas\Edu\Views\Majors\Unassign.cshtml" />
     <Content Include="Areas\House\Views\web.config" />
-    <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
+    <Content Include="Areas\House\Views\Rooms\Map.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Report.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Create.cshtml" />
@@ -738,6 +742,10 @@
     <Content Include="Areas\Sphinx\Views\SoberTypes\Edit.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Index.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Info.cshtml" />
+    <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
+    <Content Include="Areas\House\Views\Rooms\Create.cshtml" />
+    <Content Include="Areas\House\Views\Rooms\Delete.cshtml" />
+    <Content Include="Areas\House\Views\Rooms\Edit.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1206,6 +1214,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504230109432_Rooms.resx">
       <DependentUpon>201504230109432_Rooms.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504230157487_Rooms1.resx">
+      <DependentUpon>201504230157487_Rooms1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
