@@ -85,7 +85,10 @@
             var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Seargent-at-Arms"));
 
             // Don't send the email if conditions aren't right.
-            if ((!isTime || !noPreviousEmail) && !canOverride) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if ((!isTime || !noPreviousEmail) && !canOverride)
+            {
+                return Content("Time: " + isTime + ", Email: " + noPreviousEmail);
+            }
 
             // Build Body
             var data = await GetSoberSignupsNextSevenDaysAsync(now);
