@@ -57,22 +57,18 @@ namespace DeltaSigmaPhiWebsite.Entities
         public virtual DbSet<webpages_Membership> webpages_Membership { get; set; }
         public virtual DbSet<webpages_OAuthMembership> webpages_OAuthMembership { get; set; }
         public virtual DbSet<webpages_Roles> webpages_Roles { get; set; }
+        public virtual DbSet<WorkOrder> WorkOrders { get; set; }
+        public virtual DbSet<WorkOrderComment> WorkOrderComments { get; set; }
+        public virtual DbSet<WorkOrderPriority> WorkOrderPriorities { get; set; }
+        public virtual DbSet<WorkOrderPriorityChange> WorkOrderPriorityChanges { get; set; }
+        public virtual DbSet<WorkOrderStatus> WorkOrderStatuses { get; set; }
+        public virtual DbSet<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ClassFile>()
                 .HasMany(e => e.ClassFileVotes)
                 .WithRequired(v => v.ClassFile)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.ClassFileVotes)
-                .WithRequired(v => v.Member)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Member>()
-                .HasMany(e => e.ClassFileUploads)
-                .WithRequired(f => f.Uploader)
                 .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<Event>()
@@ -198,6 +194,36 @@ namespace DeltaSigmaPhiWebsite.Entities
             modelBuilder.Entity<Member>()
                 .HasMany(e => e.webpages_OAuthMembership)
                 .WithRequired(e => e.Member)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.ClassFileVotes)
+                .WithRequired(v => v.Member)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.ClassFileUploads)
+                .WithRequired(f => f.Uploader)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.WorkOrders)
+                .WithRequired(w => w.Member)
+                .WillCascadeOnDelete(false);
+            
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.WorkOrderComments)
+                .WithRequired(w => w.Member)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.WorkOrderStatusChanges)
+                .WithRequired(w => w.Member)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Member>()
+                .HasMany(e => e.WorkOrderPriorityChanges)
+                .WithRequired(w => w.Member)
                 .WillCascadeOnDelete(false);
 
             #endregion
