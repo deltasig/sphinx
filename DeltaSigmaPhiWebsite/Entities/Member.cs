@@ -103,6 +103,11 @@ namespace DeltaSigmaPhiWebsite.Entities
 
         public virtual ICollection<RoomToMember> Rooms { get; set; }
 
+        public virtual ICollection<WorkOrder> WorkOrders { get; set; }
+        public virtual ICollection<WorkOrderComment> WorkOrderComments { get; set; }
+        public virtual ICollection<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
+        public virtual ICollection<WorkOrderPriorityChange> WorkOrderPriorityChanges { get; set; }
+
         public override string ToString()
         {
             return FirstName + " " + LastName;

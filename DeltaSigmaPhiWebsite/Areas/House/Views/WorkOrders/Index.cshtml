@@ -1,0 +1,89 @@
+﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.WorkOrder>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Work Orders";
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            
+        </div>
+        <div class="col-sm-6 text-right">
+            <p>
+                <a href="@Url.Action("Create", "WorkOrders", new { area = "House" })" class="btn btn-sm btn-success">
+                    Create Work Order
+                </a>
+                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                {
+                    <a href="@Url.Action("Index", "WorkOrderPriorities", new { area = "House" })" class="btn btn-sm btn-default">
+                        Priorities
+                    </a>
+                    <a href="@Url.Action("Index", "WorkOrderStatuses", new { area = "House" })" class="btn btn-sm btn-default">
+                        Statuses
+                    </a>
+                }
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    @if (Model.Any())
+                    {
+                        <table class="table table-condensed">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Title</th>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") ||
+                                     Model.Any(w => w.UserId == WebSecurity.CurrentUserId))
+                                {
+                                    <th></th>
+                                }
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach (var w in Model)
+                            {
+                                <tr>
+                                    <td>@w.WorkOrderId</td>
+                                    <td>
+                                        @Html.ActionLink(w.Title, "View", new {id = w.WorkOrderId})
+                                    </td>
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") ||
+                                         w.UserId == WebSecurity.CurrentUserId)
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Edit", "Edit", new {id = w.WorkOrderId})
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            No work orders have been submitted yet.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+
+    </script>
+}

@@ -27,6 +27,20 @@ namespace DeltaSigmaPhiWebsite.Migrations
                 new MemberStatus { StatusName = "Affiliate" },
                 new MemberStatus { StatusName = "Released" }
             );
+            
+            context.WorkOrderStatuses.AddOrUpdate(m => m.Name,
+                new WorkOrderStatus { Name = "Unread" },
+                new WorkOrderStatus { Name = "Under Review" },
+                new WorkOrderStatus { Name = "In Progress" },
+                new WorkOrderStatus { Name = "On Hold" },
+                new WorkOrderStatus { Name = "Closed" }
+            );
+
+            context.WorkOrderPriorities.AddOrUpdate(m => m.Name,
+                new WorkOrderPriority { Name = "Low" },
+                new WorkOrderPriority { Name = "Moderate" },
+                new WorkOrderPriority { Name = "High" }
+            );
 
             #region Semesters/Pledge Classes
 
