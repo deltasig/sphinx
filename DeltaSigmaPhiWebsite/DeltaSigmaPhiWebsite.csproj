@@ -282,6 +282,9 @@
     <Compile Include="Areas\Alumni\Controllers\LeadersController.cs" />
     <Compile Include="Areas\Edu\Controllers\MajorsController.cs" />
     <Compile Include="Areas\Edu\Controllers\DepartmentsController.cs" />
+    <Compile Include="Areas\House\Controllers\WorkOrderStatusesController.cs" />
+    <Compile Include="Areas\House\Controllers\WorkOrderPrioritiesController.cs" />
+    <Compile Include="Areas\House\Controllers\WorkOrdersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\AssignMajorModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
@@ -376,6 +379,12 @@
     <Compile Include="Entities\SoberType.cs" />
     <Compile Include="Entities\StudyAssignment.cs" />
     <Compile Include="Entities\StudyPeriod.cs" />
+    <Compile Include="Entities\WorkOrder.cs" />
+    <Compile Include="Entities\WorkOrderComment.cs" />
+    <Compile Include="Entities\WorkOrderPriority.cs" />
+    <Compile Include="Entities\WorkOrderStatus.cs" />
+    <Compile Include="Entities\WorkOrderPriorityChange.cs" />
+    <Compile Include="Entities\WorkOrderStatusChange.cs" />
     <Compile Include="Migrations\201501041342053_Initial.cs" />
     <Compile Include="Migrations\201501041342053_Initial.Designer.cs">
       <DependentUpon>201501041342053_Initial.cs</DependentUpon>
@@ -455,6 +464,10 @@
     <Compile Include="Migrations\201504230157487_Rooms1.cs" />
     <Compile Include="Migrations\201504230157487_Rooms1.Designer.cs">
       <DependentUpon>201504230157487_Rooms1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201504301939125_WorkOrders.cs" />
+    <Compile Include="Migrations\201504301939125_WorkOrders.Designer.cs">
+      <DependentUpon>201504301939125_WorkOrders.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
@@ -747,6 +760,19 @@
     <Content Include="Areas\House\Views\Rooms\Create.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Delete.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Edit.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\Create.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\Delete.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\Edit.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\Index.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderPriorities\Create.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderPriorities\Delete.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderPriorities\Edit.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderPriorities\Index.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderStatuses\Create.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderStatuses\Delete.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderStatuses\Edit.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrderStatuses\Index.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\View.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -1217,6 +1243,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504230157487_Rooms1.resx">
       <DependentUpon>201504230157487_Rooms1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201504301939125_WorkOrders.resx">
+      <DependentUpon>201504301939125_WorkOrders.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
