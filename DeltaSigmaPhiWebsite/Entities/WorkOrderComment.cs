@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Entities
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
     public class WorkOrderComment
@@ -10,6 +11,8 @@
         public int UserId { get; set; }
 
         public DateTime SubmittedOn { get; set; }
+        [Required]
+        [StringLength(3000)]
         public string Text { get; set; }
 
         [ForeignKey("WorkOrderId")]

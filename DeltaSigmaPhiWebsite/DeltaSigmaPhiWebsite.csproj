@@ -469,6 +469,10 @@
     <Compile Include="Migrations\201504301939125_WorkOrders.Designer.cs">
       <DependentUpon>201504301939125_WorkOrders.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201505011249416_WorkOrderStringLengthCorrection.cs" />
+    <Compile Include="Migrations\201505011249416_WorkOrderStringLengthCorrection.Designer.cs">
+      <DependentUpon>201505011249416_WorkOrderStringLengthCorrection.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Global.asax.cs">
@@ -1246,6 +1250,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201504301939125_WorkOrders.resx">
       <DependentUpon>201504301939125_WorkOrders.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201505011249416_WorkOrderStringLengthCorrection.resx">
+      <DependentUpon>201505011249416_WorkOrderStringLengthCorrection.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
