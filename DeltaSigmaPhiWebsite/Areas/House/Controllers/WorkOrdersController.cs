@@ -58,6 +58,7 @@
 
             // Insert work item.  Doing this after we make sure we have the status and priority Ids.
             model.UserId = WebSecurity.CurrentUserId;
+            model.Title = base.ToTitleCaseString(model.Title);
             _db.WorkOrders.Add(model);
             await _db.SaveChangesAsync();
 
@@ -104,6 +105,7 @@
             if (!ModelState.IsValid) return View(model);
 
             _db.Entry(model).State = EntityState.Modified;
+            model.Title = base.ToTitleCaseString(model.Title);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
