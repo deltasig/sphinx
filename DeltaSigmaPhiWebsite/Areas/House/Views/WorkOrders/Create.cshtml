@@ -26,19 +26,19 @@
                 @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
                 <div class="form-group" data-toggle="tooltip" data-placement="left" 
-                     title="Typically you would enter what needs to be fixed.">
+                     title="What needs to be fixed/done.">
                     @Html.LabelFor(model => model.Title, new {@class = "control-label"})
                     @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control", autocomplete = "off"}})
                     @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
                 </div>
                 <div class="form-group" data-toggle="tooltip" data-placement="left" 
-                     title="A brief description of what is broken, where it is, why it was broken, etc..">
+                     title="A description containing what is broken, where it is, why it was broken, any other relevant info, etc..">
                     @Html.LabelFor(model => model.Description, new {@class = "control-label"})
                     @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control", rows = 10, autocomplete = "off"}})
                     @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
                 </div>
-                <div class="form-group" data-toggle="tooltip" data-placement="left" 
-                     title="Used to enter previously resolved problems for record-keeping purposes.">
+                <div class="form-group" data-toggle="tooltip" data-placement="left"
+                    title="Used to enter previously resolved problems for record-keeping purposes.">
                     <input id="result-field-cb" type="checkbox" value="false"/>
                     <label class="control-label" for="result-field-cb">Past Work Order</label>
                 </div>
