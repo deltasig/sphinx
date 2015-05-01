@@ -11,6 +11,6 @@
         [StringLength(100)]
         public string Name { get; set; }
 
-        public ICollection<WorkOrderPriorityChange> PriorityChanges { get; set; }
+        public virtual ICollection<WorkOrderPriorityChange> PriorityChanges { get; set; }
     }
 }

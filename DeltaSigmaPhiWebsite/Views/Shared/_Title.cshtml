@@ -36,7 +36,7 @@ else
                         <p id="failure-message" class="text-warning @(hideMessage)">@ViewBag.FailMessage</p>
                     </div>
                     <div class="col-sm-6 text-right" style="padding-top: 20px">
-                        @if (ViewContext.RouteData.DataTokens["area"] == "Sphinx")
+                        @if (ViewContext.RouteData.DataTokens["area"].ToString() == "Sphinx")
                         {
                             <a class="@(ViewBag.Title == "Sphinx" ? "active" : "") btn btn-sm btn-default hidden-lg"
                                href="@Url.Action("Index", "Home", new { area = "Sphinx" })">
@@ -51,6 +51,22 @@ else
                                 <a class="@(ViewBag.Title == "Laundry Signup" ? "active" : "") btn btn-sm btn-default"
                                    href="@Url.Action("Schedule", "Laundry", new { area = "Sphinx" })">
                                     <i class="fa fa-calendar"></i> Laundry
+                                </a>
+                            }
+                        }
+                        else if (ViewContext.RouteData.DataTokens["area"].ToString() == "House" &&
+                             ViewContext.RouteData.Values["controller"].ToString() == "workorders")
+                        {
+                            <a href="@Url.Action("Create", "WorkOrders", new { area = "House" })" class="btn btn-sm btn-success">
+                                Create Work Order
+                            </a>
+                            if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                            {
+                                <a href="@Url.Action("Index", "WorkOrderPriorities", new { area = "House" })" class="btn btn-sm btn-default">
+                                    Priorities
+                                </a>
+                                <a href="@Url.Action("Index", "WorkOrderStatuses", new { area = "House" })" class="btn btn-sm btn-default">
+                                    Statuses
                                 </a>
                             }
                         }

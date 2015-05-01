@@ -2,6 +2,7 @@
 {
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
+    using System;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;
@@ -39,9 +40,47 @@
         {
             if (!ModelState.IsValid) return View(model);
 
+            // Get initial status and priority values; add them if not in Db.
+            var initialStatus = await _db.WorkOrderStatuses.SingleOrDefaultAsync(w => w.Name == "Unread");
+            if (initialStatus == null)
+            {
+                initialStatus = new WorkOrderStatus { Name = "Unread" };
+                _db.WorkOrderStatuses.Add(initialStatus);
+                await _db.SaveChangesAsync();
+            }
+            var initialPriority = await _db.WorkOrderPriorities.SingleOrDefaultAsync(w => w.Name == "Low");
+            if (initialPriority == null)
+            {
+                initialPriority = new WorkOrderPriority { Name = "Low" };
+                _db.WorkOrderPriorities.Add(initialPriority);
+                await _db.SaveChangesAsync();
+            }
+
+            // Insert work item.  Doing this after we make sure we have the status and priority Ids.
             model.UserId = WebSecurity.CurrentUserId;
             _db.WorkOrders.Add(model);
             await _db.SaveChangesAsync();
+
+            var initialStatusChange = new WorkOrderStatusChange
+            {
+                UserId = model.UserId,
+                WorkOrderId = model.WorkOrderId,
+                ChangedOn = DateTime.UtcNow,
+                WorkOrderStatusId = initialStatus.WorkOrderStatusId
+            };
+            _db.WorkOrderStatusChanges.Add(initialStatusChange);
+
+            var initialPriorityChange = new WorkOrderPriorityChange
+            {
+                UserId = model.UserId,
+                WorkOrderId = model.WorkOrderId,
+                ChangedOn = DateTime.UtcNow,
+                WorkOrderPriorityId = initialPriority.WorkOrderPriorityId
+            };
+            _db.WorkOrderPriorityChanges.Add(initialPriorityChange);
+
+            await _db.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
 
