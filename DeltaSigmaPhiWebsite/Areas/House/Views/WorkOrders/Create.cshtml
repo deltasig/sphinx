@@ -23,28 +23,48 @@
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                
-                <div class="form-group">
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                <div class="form-group" data-toggle="tooltip" data-placement="left" 
+                     title="Typically you would enter what needs to be fixed.">
                     @Html.LabelFor(model => model.Title, new {@class = "control-label"})
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control", autocomplete = "off"}})
+                    @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-toggle="tooltip" data-placement="left" 
+                     title="A brief description of what is broken, where it is, why it was broken, etc..">
                     @Html.LabelFor(model => model.Description, new {@class = "control-label"})
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control", rows = 10, autocomplete = "off"}})
+                    @Html.ValidationMessageFor(model => model.Description, "", new {@class = "text-danger"})
                 </div>
-                <div class="form-group">
+                <div class="form-group" data-toggle="tooltip" data-placement="left" 
+                     title="Used to enter previously resolved problems for record-keeping purposes.">
+                    <input id="result-field-cb" type="checkbox" value="false"/>
+                    <label class="control-label" for="result-field-cb">Past Work Order</label>
+                </div>
+                <div class="form-group" id="result-field" style="display: none">
                     @Html.LabelFor(model => model.Result, new {@class = "control-label"})
-                    @Html.EditorFor(model => model.Result, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.Result, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Result, new {htmlAttributes = new {@class = "form-control", rows = 10, autocomplete = "off"}})
+                    @Html.ValidationMessageFor(model => model.Result, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" />
+                    <input type="submit" value="Create" class="btn btn-default"/>
                 </div>
             }
         </div>
     </div>
 </div>
+
+@section scripts
+{
+    <script>
+        
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('#result-field-cb').on("change", function() {
+            $('#result-field').toggle();
+        });
+
+    </script>
+}
