@@ -20,6 +20,7 @@
     </div>
     <div class="row">
         <div class="col-sm-8">
+            
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.Any())
@@ -28,7 +29,7 @@
                         var closed = Model.Where(w => w.StatusChanges.OrderBy(o => o.ChangedOn).Last().Status.Name == "Closed");
 
                         <h5>
-                            <i class="fa fa-exclamation-circle text-warning"></i> @open.Count() <small style="padding-right:5px">Open</small>   
+                            <i class="fa fa-exclamation-circle text-warning"></i> @open.Count() <small style="padding-right: 5px">Open</small>
                             <i class="fa fa-check-circle text-success"></i> @closed.Count() <small>Closed</small>
                         </h5>
                         <ul class="list-group">
@@ -38,11 +39,11 @@
                                 var status = @statuses.Last().Status.Name;
                                 var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
                                 var priority = priorities.Last().Priority.Name;
-                                var statusLabelColor = priority == "Medium" ? "#8a6d3b" : priority == "High" ? "#a94442" : "";
-                                var priorityLabelColor = status == "On-Hold" ? "#8a6d3b" :
-                                    status == "Under Review" || status == "In Progress" ? "#31708f" : "";
+                                var statusLabelColor = status == "On-Hold" ? "label-warning" : status == "Closed" ? "label-success" :
+                                    status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
+                                var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
                                 var commentLabelColor = w.Comments.Count > 0 ? "#31708f" : "";
-                                
+
                                 <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
 
                                     <span class="badge" style="background-color: @commentLabelColor">
@@ -51,12 +52,10 @@
                                     <h4 class="list-group-item-heading">
                                         @w.Title
                                         <small>
-                                            <span class="label label-default label-as-badge"
-                                                  style="font-weight: normal !important; margin-right: 3px; background-color: @statusLabelColor">
+                                            <span class="label @statusLabelColor" style="font-weight: normal !important;margin-right: 5px; ">
                                                 @status
                                             </span>
-                                            <span class="label label-default label-as-badge"
-                                                  style="font-weight: normal !important; background-color: @priorityLabelColor">
+                                            <span class="label @priorityLabelColor" style="font-weight: normal !important;">
                                                 @priority Priority
                                             </span>
                                         </small>
@@ -77,7 +76,7 @@
                 </div>
             </div>
             <div class="col-sm-4">
-                
+
             </div>
         </div>
     </div>
