@@ -770,7 +770,7 @@
             var words = original.Split(' ');
             for(var i = 0; i < words.Length; i++)
             {
-                if (!IsAllUpper(words[i]))
+                if (!IsAllUpper(words[i]) && !Char.IsNumber(words[i][0]))
                 {
                     words[i] = CultureInfo.InvariantCulture.TextInfo.ToTitleCase(words[i].ToLowerInvariant());
                 }
