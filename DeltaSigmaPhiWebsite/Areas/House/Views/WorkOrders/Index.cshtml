@@ -15,59 +15,58 @@
             
         </div>
         <div class="col-sm-6 text-right">
-            <p>
-                <a href="@Url.Action("Create", "WorkOrders", new { area = "House" })" class="btn btn-sm btn-success">
-                    Create Work Order
-                </a>
-                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
-                {
-                    <a href="@Url.Action("Index", "WorkOrderPriorities", new { area = "House" })" class="btn btn-sm btn-default">
-                        Priorities
-                    </a>
-                    <a href="@Url.Action("Index", "WorkOrderStatuses", new { area = "House" })" class="btn btn-sm btn-default">
-                        Statuses
-                    </a>
-                }
-            </p>
+            
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-body">
                     @if (Model.Any())
                     {
-                        <table class="table table-condensed">
-                            <thead>
-                            <tr>
-                                <th>Id</th>
-                                <th>Title</th>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") ||
-                                     Model.Any(w => w.UserId == WebSecurity.CurrentUserId))
-                                {
-                                    <th></th>
-                                }
-                            </tr>
-                            </thead>
-                            <tbody>
+                        var open = Model.Where(w => w.StatusChanges.OrderBy(o => o.ChangedOn).Last().Status.Name != "Closed");
+                        var closed = Model.Where(w => w.StatusChanges.OrderBy(o => o.ChangedOn).Last().Status.Name == "Closed");
+
+                        <h5>
+                            <i class="fa fa-exclamation-circle text-warning"></i> @open.Count() <small style="padding-right:5px">Open</small>   
+                            <i class="fa fa-check-circle text-success"></i> @closed.Count() <small>Closed</small>
+                        </h5>
+                        <ul class="list-group">
                             @foreach (var w in Model)
                             {
-                                <tr>
-                                    <td>@w.WorkOrderId</td>
-                                    <td>
-                                        @Html.ActionLink(w.Title, "View", new {id = w.WorkOrderId})
-                                    </td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") ||
-                                         w.UserId == WebSecurity.CurrentUserId)
-                                    {
-                                        <td class="text-right">
-                                            @Html.ActionLink("Edit", "Edit", new {id = w.WorkOrderId})
-                                        </td>
-                                    }
-                                </tr>
+                                var statuses = w.StatusChanges.OrderBy(o => o.ChangedOn);
+                                var status = @statuses.Last().Status.Name;
+                                var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
+                                var priority = priorities.Last().Priority.Name;
+                                var statusLabelColor = priority == "Medium" ? "#8a6d3b" : priority == "High" ? "#a94442" : "";
+                                var priorityLabelColor = status == "On-Hold" ? "#8a6d3b" :
+                                    status == "Under Review" || status == "In Progress" ? "#31708f" : "";
+                                var commentLabelColor = w.Comments.Count > 0 ? "#31708f" : "";
+                                
+                                <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
+
+                                    <span class="badge" style="background-color: @commentLabelColor">
+                                        <i class="fa fa-comment"></i>  @w.Comments.Count
+                                    </span>
+                                    <h4 class="list-group-item-heading">
+                                        @w.Title
+                                        <small>
+                                            <span class="label label-default label-as-badge"
+                                                  style="font-weight: normal !important; margin-right: 3px; background-color: @statusLabelColor">
+                                                @status
+                                            </span>
+                                            <span class="label label-default label-as-badge"
+                                                  style="font-weight: normal !important; background-color: @priorityLabelColor">
+                                                @priority Priority
+                                            </span>
+                                        </small>
+                                    </h4>
+                                    <p class="list-group-item-text">
+                                        #@w.WorkOrderId opened on @statuses.First().ChangedOn.ToShortDateString() by @w.Member
+                                    </p>
+                                </a>
                             }
-                            </tbody>
-                        </table>
+                        </ul>
                     }
                     else
                     {
@@ -76,6 +75,9 @@
                         </div>
                     }
                 </div>
+            </div>
+            <div class="col-sm-4">
+                
             </div>
         </div>
     </div>
