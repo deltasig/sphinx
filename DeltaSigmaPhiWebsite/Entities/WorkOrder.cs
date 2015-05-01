@@ -20,10 +20,10 @@
         [StringLength(3000)]
         public string Result { get; set; }
 
-        public ICollection<WorkOrderStatusChange> StatusChanges { get; set; }
-        public ICollection<WorkOrderPriorityChange> PriorityChanges { get; set; }
-        public ICollection<WorkOrderComment> Comments { get; set; }
+        public virtual ICollection<WorkOrderStatusChange> StatusChanges { get; set; }
+        public virtual ICollection<WorkOrderPriorityChange> PriorityChanges { get; set; }
+        public virtual ICollection<WorkOrderComment> Comments { get; set; }
         [ForeignKey("UserId")]
-        public Member Member { get; set; }
+        public virtual Member Member { get; set; }
     }
 }

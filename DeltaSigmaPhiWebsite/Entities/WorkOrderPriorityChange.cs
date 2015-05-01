@@ -13,10 +13,10 @@
         public DateTime ChangedOn { get; set; }
 
         [ForeignKey("WorkOrderId")]
-        public WorkOrder WorkOrder { get; set; }
+        public virtual WorkOrder WorkOrder { get; set; }
         [ForeignKey("WorkOrderPriorityId")]
-        public WorkOrderPriority Priority { get; set; }
+        public virtual WorkOrderPriority Priority { get; set; }
         [ForeignKey("UserId")]
-        public Member Member { get; set; }
+        public virtual Member Member { get; set; }
     }
 }
