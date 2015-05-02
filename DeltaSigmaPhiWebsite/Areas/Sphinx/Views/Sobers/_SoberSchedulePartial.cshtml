@@ -63,57 +63,55 @@
                                     </a>
                                 }
                             }
-                            else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                            {
-                                using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
-                                    FormMethod.Get, new { style = "display: inline" }))
-                                {
-                                    var number = @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
-                                    
-                                    <button type="submit" class="btn btn-sm btn-link"
-                                            style="padding: 0; color: #d9534f; display: inline; margin:0"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Cancel signup">
-                                        <i class="fa fa-minus-square fa-lg"></i>
-                                    </button>
-                                    <small id="@item.SignupId">
-                                        @item.Member.ToString()
-                                    </small>
-                                    <small id="@(item.SignupId)num">
-                                        <strong>
-                                            @number
-                                        </strong>
-                                    </small>
-
-                                    <button class="btn btn-link pull-right" id="@(item.SignupId)show" type="button"
-                                            style="padding: 0; display: inline; margin: 0; border: none"
-                                            data-toggle="tooltip" data-placement="top"
-                                            title="Click to copy to clipboard">
-                                        <i class="fa fa-phone-square fa-lg text-info"></i>
-                                    </button>
-                                    <script>
-                                        $('#@(item.SignupId)num').hide();
-                                        $('#@(item.SignupId)show').hover(function () {
-                                            $('#@(item.SignupId)').hide();
-                                            $('#@(item.SignupId)cell').addClass('warning');
-                                            $('#@(item.SignupId)num').show();
-                                        }, function () {
-                                            $('#@(item.SignupId)num').hide();
-                                            $('#@(item.SignupId)cell').removeClass('warning');
-                                            $('#@(item.SignupId)').show();
-                                        });
-                                        $('#@(item.SignupId)show').on("click", function () {
-                                            var number = $('#@(item.SignupId)num strong').text().trim();
-                                            window.prompt("Copy to clipboard: Ctrl+C, Enter", number);
-                                        });
-                                    </script>
-                                }
-                            }
                             else
                             {
-                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
+                                var number = item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
+
+                                if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                {
+                                    using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, 
+                                           FormMethod.Get, new { style = "display: inline" }))
+                                    {
+                                        <button type="submit" class="btn btn-sm btn-link"
+                                                style="padding: 0; color: #d9534f; display: inline; margin:0"
+                                                data-toggle="tooltip" data-placement="top"
+                                                title="Cancel signup">
+                                            <i class="fa fa-minus-square fa-lg"></i>
+                                        </button>
+                                    }
+                                }
+                                
+                                <small id="@item.SignupId">
                                     @item.Member.ToString()
-                                </a>
+                                </small>
+                                <small id="@(item.SignupId)num">
+                                    <strong>
+                                        @number
+                                    </strong>
+                                </small>
+
+                                <button class="btn btn-link pull-right" id="@(item.SignupId)show" type="button"
+                                        style="padding: 0; display: inline; margin: 0; border: none"
+                                        data-toggle="tooltip" data-placement="top"
+                                        title="Click to copy to clipboard">
+                                    <i class="fa fa-phone-square fa-lg text-info"></i>
+                                </button>
+                                <script>
+                                    $('#@(item.SignupId)num').hide();
+                                    $('#@(item.SignupId)show').hover(function () {
+                                        $('#@(item.SignupId)').hide();
+                                        $('#@(item.SignupId)cell').addClass('warning');
+                                        $('#@(item.SignupId)num').show();
+                                    }, function () {
+                                        $('#@(item.SignupId)num').hide();
+                                        $('#@(item.SignupId)cell').removeClass('warning');
+                                        $('#@(item.SignupId)').show();
+                                    });
+                                    $('#@(item.SignupId)show').on("click", function () {
+                                        var number = $('#@(item.SignupId)num strong').text().trim();
+                                        window.prompt("Copy to clipboard: Ctrl+C, Enter", number);
+                                    });
+                                </script>
                             }
                         </td>
                     </tr>
