@@ -3,18 +3,100 @@
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using WebMatrix.WebData;
 
-    [Authorize(Roles = "Pledge Neophyte, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class WorkOrdersController : BaseController
     {
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
         {
-            return View(await _db.WorkOrders.ToListAsync());
+            if (page < 1)
+            {
+                page = 1;
+            }
+
+            ViewBag.CurrentFilter = s;
+            ViewBag.Open = open;
+            ViewBag.Closed = closed;
+
+            var workOrders = await _db.WorkOrders.ToListAsync();
+            switch (sort)
+            {
+                case "newest":
+                    workOrders = workOrders.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
+                    break;
+                case "oldest":
+                    workOrders = workOrders.OrderBy(o => o.GetDateTimeCreated()).ToList();
+                    break;
+                case "most-commented":
+                    workOrders = workOrders.OrderBy(o => o.Comments.Max()).ToList();
+                    break;
+                case "least-commented":
+                    workOrders = workOrders.OrderBy(o => o.Comments.Min()).ToList();
+                    break;
+                case "recently-updated":
+                    workOrders = workOrders.OrderByDescending(o => o.GetMostRecentActivityDateTime()).ToList();
+                    break;
+                case "least-recently-updated":
+                    workOrders = workOrders.OrderBy(o => o.GetMostRecentActivityDateTime()).ToList();
+                    break;
+                default:
+                    sort = "newest";
+                    workOrders = workOrders.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
+                    break;
+            }
+            ViewBag.Sort = sort;
+            ViewBag.OpenResultCount = 0;
+            ViewBag.ClosedResultCount = 0;
+            
+            if (!String.IsNullOrEmpty(s))
+            {
+                s = s.ToLower();
+                workOrders = workOrders
+                    .Where(w => 
+                        w.WorkOrderId.ToString() == s ||
+                        w.Title.ToLower().Contains(s) ||
+                        w.Member.FirstName.ToLower().Contains(s) ||
+                        w.Member.LastName.ToLower().Contains(s) ||
+                        w.GetCurrentPriority().ToLower().Contains(s) ||
+                        w.GetCurrentStatus().ToLower().Contains(s))
+                    .ToList();
+            }
+
+            var filterResults = new List<WorkOrder>();
+            if (open)
+            {
+                var openResults = workOrders.Where(w => w.GetCurrentStatus() != "Closed").ToList();
+                ViewBag.OpenResultCount = openResults.Count();
+                filterResults.AddRange(openResults);
+            }
+            if (closed)
+            {
+                var closedResults = workOrders.Where(w => w.GetCurrentStatus() == "Closed").ToList();
+                ViewBag.OpenResultCount = closedResults.Count();
+                filterResults.AddRange(workOrders.Where(w => w.GetCurrentStatus() == "Closed"));
+            }
+
+            const int pageSize = 10; // Can make this modifiable in future.
+            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.PageSize = pageSize;
+            ViewBag.Pages = filterResults.Count / pageSize;
+            ViewBag.Page = page;
+            if (filterResults.Count % pageSize != 0)
+            {
+                ViewBag.Pages += 1;
+            }
+            if (page > ViewBag.Pages)
+            {
+                ViewBag.Page = ViewBag.Pages;
+            }
+            return View(filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList());
         }
 
         public async Task<ActionResult> View(int? id)
