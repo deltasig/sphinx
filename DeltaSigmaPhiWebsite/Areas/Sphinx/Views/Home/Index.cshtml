@@ -182,7 +182,7 @@
                             if (Model.CompletedEvents.Any())
                             {
                                 approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
-                                if (approvedHours > Model.CurrentSemester.MinimumServiceHours)
+                                if (approvedHours >= Model.CurrentSemester.MinimumServiceHours)
                                 {
                                     labelColor = "label-success";
                                 }
