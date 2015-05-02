@@ -9,6 +9,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Models;
     using WebMatrix.WebData;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
@@ -79,8 +80,8 @@
             if (closed)
             {
                 var closedResults = workOrders.Where(w => w.GetCurrentStatus() == "Closed").ToList();
-                ViewBag.OpenResultCount = closedResults.Count();
-                filterResults.AddRange(workOrders.Where(w => w.GetCurrentStatus() == "Closed"));
+                ViewBag.ClosedResultCount = closedResults.Count();
+                filterResults.AddRange(closedResults);
             }
 
             const int pageSize = 10; // Can make this modifiable in future.
@@ -158,6 +159,81 @@
                 UserId = model.UserId,
                 WorkOrderId = model.WorkOrderId,
                 ChangedOn = DateTime.UtcNow,
+                WorkOrderPriorityId = initialPriority.WorkOrderPriorityId
+            };
+            _db.WorkOrderPriorityChanges.Add(initialPriorityChange);
+
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Index");
+        }
+        public ActionResult CreateOld()
+        {
+            var model = new WorkOrderArchiveModel
+            {
+                WorkOrder = new WorkOrder(),
+                SubmittedOn = base.ConvertUtcToCst(DateTime.UtcNow).AddDays(-1),
+                ClosedOn = base.ConvertUtcToCst(DateTime.UtcNow)
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> CreateOld(WorkOrderArchiveModel model)
+        {
+            if (!ModelState.IsValid) return View(model);
+
+            // Get initial status and priority values; add them if not in Db.
+            var initialStatus = await _db.WorkOrderStatuses.SingleOrDefaultAsync(w => w.Name == "Unread");
+            if (initialStatus == null)
+            {
+                initialStatus = new WorkOrderStatus { Name = "Unread" };
+                _db.WorkOrderStatuses.Add(initialStatus);
+                await _db.SaveChangesAsync();
+            }
+            var finalStatus = await _db.WorkOrderStatuses.SingleOrDefaultAsync(w => w.Name == "Closed");
+            if (finalStatus == null)
+            {
+                finalStatus = new WorkOrderStatus { Name = "Closed" };
+                _db.WorkOrderStatuses.Add(finalStatus);
+                await _db.SaveChangesAsync();
+            }
+            var initialPriority = await _db.WorkOrderPriorities.SingleOrDefaultAsync(w => w.Name == "Low");
+            if (initialPriority == null)
+            {
+                initialPriority = new WorkOrderPriority { Name = "Low" };
+                _db.WorkOrderPriorities.Add(initialPriority);
+                await _db.SaveChangesAsync();
+            }
+
+            // Insert work item.  Doing this after we make sure we have the status and priority Ids.
+            model.WorkOrder.UserId = WebSecurity.CurrentUserId;
+            model.WorkOrder.Title = base.ToTitleCaseString(model.WorkOrder.Title);
+            _db.WorkOrders.Add(model.WorkOrder);
+            await _db.SaveChangesAsync();
+
+            var initialStatusChange = new WorkOrderStatusChange
+            {
+                UserId = model.WorkOrder.UserId,
+                WorkOrderId = model.WorkOrder.WorkOrderId,
+                ChangedOn = model.SubmittedOn,
+                WorkOrderStatusId = initialStatus.WorkOrderStatusId
+            };
+            var finalStatusChange = new WorkOrderStatusChange
+            {
+                UserId = model.WorkOrder.UserId,
+                WorkOrderId = model.WorkOrder.WorkOrderId,
+                ChangedOn = model.ClosedOn,
+                WorkOrderStatusId = finalStatus.WorkOrderStatusId
+            };
+            _db.WorkOrderStatusChanges.Add(finalStatusChange);
+
+            var initialPriorityChange = new WorkOrderPriorityChange
+            {
+                UserId = model.WorkOrder.UserId,
+                WorkOrderId = model.WorkOrder.WorkOrderId,
+                ChangedOn = model.SubmittedOn,
                 WorkOrderPriorityId = initialPriority.WorkOrderPriorityId
             };
             _db.WorkOrderPriorityChanges.Add(initialPriorityChange);
