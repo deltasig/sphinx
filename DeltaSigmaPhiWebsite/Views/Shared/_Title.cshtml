@@ -62,18 +62,48 @@ else
                         }
                         else if (area.ToString() == "House" && controller.ToString() == "workorders")
                         {
-                            <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-sm btn-success">
-                                Create Work Order
-                            </a>
-                            if (User.IsInRole("Administrator"))
-                            {
-                                <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="btn btn-sm btn-default">
-                                    Priorities
+                            <div class="row-fluid hidden-xs">
+                                <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-sm btn-success">
+                                    Create New Work Order
                                 </a>
-                                <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="btn btn-sm btn-default">
-                                    Statuses
-                                </a>
-                            }
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="btn btn-sm btn-primary">
+                                        Enter Past Work Order
+                                    </a>
+                                }
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="btn btn-sm btn-default">
+                                        Priorities
+                                    </a>
+                                    <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="btn btn-sm btn-default">
+                                        Statuses
+                                    </a>
+                                }
+                            </div>
+                            <div class="row-fluid visible-xs">
+                                <div class="btn-group" role="group" aria-label="...">
+                                    <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-sm btn-success">
+                                        <i class="fa fa-plus"></i> New
+                                    </a>
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-plus"></i> Past
+                                        </a>
+                                    }
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="btn btn-sm btn-default">
+                                            Priorities
+                                        </a>
+                                        <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="btn btn-sm btn-default">
+                                            Statuses
+                                        </a>
+                                    }
+                                </div>
+                            </div>
                         }
                     </div>
                 </div>
