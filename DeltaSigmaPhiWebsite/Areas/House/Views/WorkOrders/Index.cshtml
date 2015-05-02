@@ -141,7 +141,12 @@
                                         </small>
                                     </h4>
                                     <p class="list-group-item-text">
-                                        #@w.WorkOrderId opened on @statuses.First().ChangedOn.ToShortDateString() by @w.Member
+                                        <strong>#@w.WorkOrderId </strong>
+                                        opened on <strong>@statuses.First().ChangedOn.ToShortDateString()</strong> by <strong>@statuses.First().Member</strong>
+                                        @if (statuses.Last().Status.Name == "Closed")
+                                        {
+                                            @: and closed on <strong>@statuses.Last().ChangedOn.ToShortDateString()</strong> by <strong>@statuses.Last().Member </strong>
+                                        }
                                     </p>
                                 </a>
                             }
