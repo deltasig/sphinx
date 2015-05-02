@@ -204,6 +204,17 @@ a.social {
     background-color: rgb(252, 252, 252);
 }
 
-.table {
-    margin-bottom: 0px;
+.panel-body .pagination {
+    margin: 10px 0px 0px 0px;
+}
+
+.panel-body .list-group, 
+.panel-body .alert, 
+.panel-body .table {
+    margin-bottom: 0;
+}
+
+
+.row-space {
+    margin-bottom: 10px;
 }

@@ -294,6 +294,7 @@
     <Compile Include="Areas\House\Controllers\RoomsController.cs" />
     <Compile Include="Areas\House\HouseAreaRegistration.cs" />
     <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
+    <Compile Include="Areas\House\Models\WorkOrderIndexModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
