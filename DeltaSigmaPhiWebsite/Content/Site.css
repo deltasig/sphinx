@@ -227,10 +227,11 @@ a.social {
 }
 
 .popover-static .popover {
-  position: relative;
-  display: block;
-  margin: 5px 0 5px 5px;
-  max-width: 100%;
+    position: relative;
+    display: block;
+    margin: 5px 0 5px 5px;
+    max-width: 100%;
+    z-index: 0;
 }
 
 .popover.right > .arrow {
