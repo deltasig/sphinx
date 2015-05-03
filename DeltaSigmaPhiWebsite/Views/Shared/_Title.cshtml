@@ -29,11 +29,11 @@ else
                             <small>@ViewBag.Subtitle</small>
                         </h3>
                         @{
-                            var hideMessage = string.IsNullOrEmpty(ViewBag.SuccessMessage) || string.IsNullOrEmpty(ViewBag.FailMessage) 
-                                ? "hidden" : "";
+                            var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? "hidden" : "";
+                            var hideFailure = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
                         }
-                        <p id="success-message" class="text-success @(hideMessage)">@ViewBag.SuccessMessage</p>
-                        <p id="failure-message" class="text-warning @(hideMessage)">@ViewBag.FailMessage</p>
+                        <p id="success-message" class="text-success @(hideSuccess)">@ViewBag.SuccessMessage</p>
+                        <p id="failure-message" class="text-danger @(hideFailure)">@ViewBag.FailMessage</p>
                     </div>
                     <div class="col-sm-6 text-right" style="padding-top: 20px">
                         @{

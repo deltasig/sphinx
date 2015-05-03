@@ -1,9 +1,39 @@
-﻿@model DeltaSigmaPhiWebsite.Areas.House.Models.WorkOrderViewModel
+﻿@model WorkOrderViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Work Order";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var createdOn = TimeZoneInfo.ConvertTimeFromUtc(Model.WorkOrder.GetDateTimeCreated(), cstZone);
+    var elevatedPermissions = 
+        User.IsInRole("Administrator") || 
+        User.IsInRole("House Manager") || 
+        Model.WorkOrder.UserId == WebSecurity.CurrentUserId;
+    
+    var comments = Model.WorkOrder.Comments.OrderBy(o => o.SubmittedOn);
+    var statusChanges = Model.WorkOrder.StatusChanges.OrderBy(o => o.ChangedOn).Skip(1);
+    var priorityChanges = Model.WorkOrder.PriorityChanges.OrderBy(o => o.ChangedOn);
+    var discussion = new List<WorkOrderDiscussionEntry>();
+    discussion.AddRange(comments.Select(c => new WorkOrderDiscussionEntry
+    {
+        OccurredOn = c.SubmittedOn,
+        UserId = c.UserId, 
+        Name = c.Member.ToString(),
+        Text = c.Text
+    }));
+    discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
+    {
+        OccurredOn = s.ChangedOn,
+        UserId = s.UserId,
+        Name = s.Member.ToString(),
+        Text = "Status Changed by " + s.Member.ToString() + " to " + s.Status.Name + "."
+    }));
+    discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
+    {
+        OccurredOn = p.ChangedOn,
+        UserId = p.UserId,
+        Name = p.Member.ToString(),
+        Text = "Priority Changed by " + p.Member.ToString() + " to " + p.Priority.Name + "."
+    }));
 }
 
 @section Title
@@ -22,11 +52,7 @@
                         </a>
                     </p>
                 </div>
-                <div class="col-xs-6 text-right">
-                    <p>
-
-                    </p>
-                </div>
+                <div class="col-xs-6 text-right"><p></p></div>
             </div>
 
             @{
@@ -37,13 +63,14 @@
                 var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
                     status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
                 var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
+                var daysSinceOpen = (DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days;
             }
 
             <div class="row row-fluid">
                 <div class="col-xs-12">
                     <h3 style="margin: 0 0 5px 0">
                         @Model.WorkOrder.Title <small>#@Model.WorkOrder.WorkOrderId</small>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") || Model.WorkOrder.UserId == WebSecurity.CurrentUserId)
+                        @if (elevatedPermissions)
                         {
                             <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})" class="btn btn-sm btn-primary pull-right">
                                 <i class="fa fa-wrench"></i> Edit
@@ -58,8 +85,8 @@
                             @priority Priority
                         </span>
                         <strong>@Model.WorkOrder.Member</strong>
-                        created this work order @((DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days) days ago 
-                        · @Model.WorkOrder.Comments.Count Comments
+                        created this work order @(daysSinceOpen < 1 ? "< 1" : daysSinceOpen.ToString()) 
+                        @(daysSinceOpen <= 1 ? "day" : "days") ago · @Model.WorkOrder.Comments.Count Comments
                     </p>
                 </div>
             </div>
@@ -84,6 +111,68 @@
                     </div>
                 </div>
             </div>
+
+            @foreach (var d in discussion.OrderBy(o => o.OccurredOn))
+            {
+                <div class="row row-fluid">
+                    <div class="col-xs-12">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="img-rounded img-@d.UserId" alt="cat" height="50" width="50" id="@d.UserId">
+                            </div>
+                            <div class="media-body">
+                                <div class="popover-static">
+                                    <div class="popover right">
+                                        <div class="arrow"></div>
+                                        <h3 class="popover-title">@d.Name on @d.OccurredOn.ToString("g")</h3>
+                                        <div class="popover-content">
+                                            <p>@d.Text</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <hr/>
+            @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
+            {
+            <div class="row row-fluid">
+                    <div class="col-xs-12">
+                        <div class="media">
+                            <div class="media-left">
+                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" height="50" width="50" id="@WebSecurity.CurrentUserId">
+                            </div>
+                            <div class="media-body">
+                                <div class="popover-static">
+                                    <div class="popover right">
+                                        <div class="arrow"></div>
+                                        <div class="popover-content text-right">
+                                            @using (Html.BeginForm("Comment", "WorkOrders", FormMethod.Post))
+                                            {
+                                                <input id="workOrderId" name="workOrderId" type="hidden" value="@Model.WorkOrder.WorkOrderId">
+                                                <div class="form-group">
+                                                    <textarea class="form-control" id="comment" name="comment" placeholder="Leave a comment"
+                                                              type="text" rows="2"></textarea>
+                                                </div>
+                                                <div class="checkbox form-group pull-left @(!elevatedPermissions ? "hidden" : "")" style="display: inline">
+                                                    <label class="control-label">
+                                                        @Html.CheckBox("close")
+                                                        Close Work Order
+                                                    </label>
+                                                </div>
+                                                <input class="btn btn-success" type="submit" value="Comment"/>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
         <div class="col-md-4">
             @Html.Partial("MyWorkOrders", Model.UserWorkOrders)

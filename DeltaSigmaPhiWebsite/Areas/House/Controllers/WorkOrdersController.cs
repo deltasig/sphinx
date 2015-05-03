@@ -111,8 +111,9 @@
             return View(model);
         }
 
-        public async Task<ActionResult> View(int? id)
+        public async Task<ActionResult> View(int? id, string msg)
         {
+            ViewBag.FailMessage = msg;
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -136,6 +137,61 @@
 
             return View(model);
         }
+
+        [HttpPost]
+        public async Task<ActionResult> Comment(int? workOrderId, string comment, bool close)
+        {
+            var userId = WebSecurity.CurrentUserId;
+            if (workOrderId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (string.IsNullOrEmpty(comment))
+            {
+                return RedirectToAction("View", new { id = workOrderId, msg = "You must enter some text in the comment field." });
+            }
+            if (close && string.IsNullOrEmpty(comment))
+            {
+                return RedirectToAction("View", new { id = workOrderId, msg = "You must provide a comment when closing a work order." });
+            }
+
+            var workOrder = await _db.WorkOrders.FindAsync(workOrderId);
+            if (workOrder == null)
+            {
+                return HttpNotFound();
+            }
+            if (workOrder.GetCurrentStatus() == "Closed")
+            {
+                return RedirectToAction("View", new { id = workOrderId, msg = "Work order is already closed." });
+            }
+            var commentTime = DateTime.UtcNow;
+            if (close)
+            {
+                workOrder.Result = comment;
+                var closedStatus = await _db.WorkOrderStatuses.SingleAsync(w => w.Name == "Closed");
+                var statusChange = new WorkOrderStatusChange();
+                statusChange.WorkOrderStatusId = closedStatus.WorkOrderStatusId;
+                statusChange.ChangedOn = commentTime.AddMinutes(1);
+                statusChange.WorkOrderId = (int) workOrderId;
+                statusChange.UserId = userId;
+
+                _db.Entry(workOrder).State = EntityState.Modified;
+                _db.WorkOrderStatusChanges.Add(statusChange);
+                await _db.SaveChangesAsync();
+            }
+
+            var newComment = new WorkOrderComment();
+            newComment.WorkOrderId = (int)workOrderId;
+            newComment.SubmittedOn = commentTime;
+            newComment.UserId = userId;
+            newComment.Text = comment;
+
+            _db.WorkOrderComments.Add(newComment);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("View", new { id = workOrderId });
+        }
+
         public ActionResult Create()
         {
             return View();
