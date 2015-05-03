@@ -296,6 +296,7 @@
     <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderArchiveModel.cs" />
     <Compile Include="Areas\House\Models\MyWorkOrdersModel.cs" />
+    <Compile Include="Areas\House\Models\WorkOrderDiscussionEntry.cs" />
     <Compile Include="Areas\House\Models\WorkOrderViewModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderIndexModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderIndexFilterModel.cs" />
