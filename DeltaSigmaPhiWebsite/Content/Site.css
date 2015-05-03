@@ -100,8 +100,10 @@ dl {
     width: auto;
 }
 
-.label-as-badge {
+.label-as-badge, .badge {
     border-radius: 1em;
+    font-weight: normal;
+    font-size: 100%;
 }
 
 .borderless td {
@@ -210,11 +212,30 @@ a.social {
 
 .panel-body .list-group, 
 .panel-body .alert, 
-.panel-body .table {
+.panel-body .table,
+.panel-body p {
     margin-bottom: 0;
 }
 
-
 .row-space {
     margin-bottom: 10px;
+}
+
+.popover-static .popover {
+  position: relative;
+  display: block;
+  margin: 5px 0 5px 5px;
+  max-width: 100%;
+}
+
+.popover.right > .arrow {
+    top:22%;
+}
+
+.popover.right > .arrow:after {
+    border-right-color: #f7f7f7 !important;
+}
+
+.media-body {
+    width: 100%;
 }

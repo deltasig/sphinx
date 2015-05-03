@@ -295,7 +295,10 @@
     <Compile Include="Areas\House\HouseAreaRegistration.cs" />
     <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderArchiveModel.cs" />
+    <Compile Include="Areas\House\Models\MyWorkOrdersModel.cs" />
+    <Compile Include="Areas\House\Models\WorkOrderViewModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderIndexModel.cs" />
+    <Compile Include="Areas\House\Models\WorkOrderIndexFilterModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
@@ -780,6 +783,7 @@
     <Content Include="Areas\House\Views\WorkOrderStatuses\Index.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\View.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\CreateOld.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\MyWorkOrders.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
