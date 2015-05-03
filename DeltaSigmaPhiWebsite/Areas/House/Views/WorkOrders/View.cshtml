@@ -1,8 +1,9 @@
-﻿@model DeltaSigmaPhiWebsite.Entities.WorkOrder
+﻿@model DeltaSigmaPhiWebsite.Areas.House.Models.WorkOrderViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Work Order";
-    ViewBag.Subtitle = Model.WorkOrderId;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var createdOn = TimeZoneInfo.ConvertTimeFromUtc(Model.WorkOrder.GetDateTimeCreated(), cstZone);
 }
 
 @section Title
@@ -12,32 +13,80 @@
 
 <div class="container">
     <div class="row">
-        <div class="col-xs-6">
-            <p>
-                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Work Orders
-                </a>
-            </p>
-        </div>
-        <div class="col-sm-6 text-right">
-            <p>
-                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") ||
-                     Model.UserId == WebSecurity.CurrentUserId)
-                {
-                    <a href="@Url.Action("Edit", new { id = Model.WorkOrderId })" class="btn btn-sm btn-info">
-                        <i class="fa fa-wrench"></i> Edit
-                    </a>
-                }
-            </p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    
+        <div class="col-md-8" style="margin-bottom: 25px">
+            <div class="row row-fluid">
+                <div class="col-xs-6">
+                    <p>
+                        <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                            <i class="fa fa-caret-left"></i> Back to Work Orders
+                        </a>
+                    </p>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <p>
+
+                    </p>
                 </div>
             </div>
+
+            @{
+                var statuses = Model.WorkOrder.StatusChanges.OrderBy(o => o.ChangedOn);
+                var status = @statuses.Last().Status.Name;
+                var priorities = Model.WorkOrder.PriorityChanges.OrderBy(o => o.ChangedOn);
+                var priority = priorities.Last().Priority.Name;
+                var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
+                    status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
+                var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
+            }
+
+            <div class="row row-fluid">
+                <div class="col-xs-12">
+                    <h3 style="margin: 0 0 5px 0">
+                        @Model.WorkOrder.Title <small>#@Model.WorkOrder.WorkOrderId</small>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") || Model.WorkOrder.UserId == WebSecurity.CurrentUserId)
+                        {
+                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})" class="btn btn-sm btn-primary pull-right">
+                                <i class="fa fa-wrench"></i> Edit
+                            </a>
+                        }
+                    </h3>
+                    <p>
+                        <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
+                            @status
+                        </span>
+                        <span class="label @priorityLabelColor" style="font-weight: normal !important; margin-right: 10px">
+                            @priority Priority
+                        </span>
+                        <strong>@Model.WorkOrder.Member</strong>
+                        created this work order @((DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days) days ago 
+                        · @Model.WorkOrder.Comments.Count Comments
+                    </p>
+                </div>
+            </div>
+            <hr />
+            <div class="row row-fluid">
+                <div class="col-xs-12">
+                    <div class="media">
+                        <div class="media-left">
+                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" height="50" width="50" id="@Model.WorkOrder.UserId">
+                        </div>
+                        <div class="media-body">
+                            <div class="popover-static">
+                                <div class="popover right">
+                                    <div class="arrow"></div>
+                                    <h3 class="popover-title">@Model.WorkOrder.Member on @createdOn.ToString("g")</h3>
+                                    <div class="popover-content">
+                                        <p>@Model.WorkOrder.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
         </div>
     </div>
 </div>
@@ -45,6 +94,11 @@
 @section scripts
 {
     <script>
+        var ids = $(".img-rounded").map(function () { return this.id; }).toArray();
+
+        $.each(ids, function( key, value ) {
+            $(".img-" + value).attr("src", "http://thecatapi.com/api/images/get?format=src&type=png&" + key);
+        });
 
     </script>
 }
