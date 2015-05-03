@@ -234,7 +234,7 @@ a.social {
 }
 
 .popover.right > .arrow {
-    top:22%;
+    top:20px;
 }
 
 .popover.right > .arrow:after {
