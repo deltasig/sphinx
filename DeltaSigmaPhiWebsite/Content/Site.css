@@ -217,6 +217,11 @@ a.social {
     margin-bottom: 0;
 }
 
+.panel .list-group {
+
+    margin-top: 0;
+}
+
 .row-space {
     margin-bottom: 10px;
 }
