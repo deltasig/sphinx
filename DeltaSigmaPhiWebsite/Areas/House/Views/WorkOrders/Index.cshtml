@@ -1,9 +1,9 @@
-﻿@model IEnumerable<DeltaSigmaPhiWebsite.Entities.WorkOrder>
+﻿@model WorkOrderIndexModel
 @using DeltaSigmaPhiWebsite.Areas.House.Models;
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Work Orders";
-    var filter = new WorkOrderIndexModel
+    var filter = new WorkOrderIndexFilterModel
     {
         page = ViewBag.Page,
         open = ViewBag.Open,
@@ -11,16 +11,16 @@
         sort = ViewBag.Sort,
         s = ViewBag.CurrentFilter
     };
-    var sortNewestFilter = new WorkOrderIndexModel(filter);
-    var sortOldestFilter = new WorkOrderIndexModel(filter);
-    var sortMostCommentedFilter = new WorkOrderIndexModel(filter);
-    var sortLeastCommentedFilter = new WorkOrderIndexModel(filter);
-    var sortRecentlyUpdatedFilter = new WorkOrderIndexModel(filter);
-    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexModel(filter);
-    var pagePreviousFilter = new WorkOrderIndexModel(filter);
-    var pageNextFilter = new WorkOrderIndexModel(filter);
-    var openFilter = new WorkOrderIndexModel(filter);
-    var closedFilter = new WorkOrderIndexModel(filter);
+    var sortNewestFilter = new WorkOrderIndexFilterModel(filter);
+    var sortOldestFilter = new WorkOrderIndexFilterModel(filter);
+    var sortMostCommentedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortLeastCommentedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
+    var pagePreviousFilter = new WorkOrderIndexFilterModel(filter);
+    var pageNextFilter = new WorkOrderIndexFilterModel(filter);
+    var openFilter = new WorkOrderIndexFilterModel(filter);
+    var closedFilter = new WorkOrderIndexFilterModel(filter);
 
     const string newestSortText = "newest";
     const string oldestSortText = "oldest";
@@ -47,73 +47,105 @@
 }
 
 <div class="container">
-    <div class="row row-space">
-        <div class="col-sm-4">
-            <div class="btn-group" role="group" aria-label="...">
-                @Html.ActionLink("Open", "Index", "WorkOrders", openFilter, new
-                {
-                    @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Open ? " active" : "")
-                })
-                @Html.ActionLink("Closed", "Index", "WorkOrders", closedFilter, new
-                {
-                    @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Closed ? " active" : "")
-                })
-            </div>
-        </div>
-        <div class="col-sm-4 text-right">
-            @using (Html.BeginForm("Index", "WorkOrders", FormMethod.Get, new { @class = "form-inline" }))
-            {
-                <div class="form-group">
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                            Sort <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                            <li role="presentation" class="@(ViewBag.sort == newestSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">Newest</a>
-                            </li>
-                            <li role="presentation" class="@(ViewBag.sort == oldestSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">Oldest</a>
-                            </li>
-                            <li role="presentation" class="@(ViewBag.sort == mostCommentedSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortMostCommentedFilter)">Most Commented</a>
-                            </li>
-                            <li role="presentation" class="@(ViewBag.sort == leastCommentedSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastCommentedFilter)">Least Commented</a>
-                            </li>
-                            <li role="presentation" class="@(ViewBag.sort == recentlyUpdatedSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortRecentlyUpdatedFilter)">Recently Updated</a>
-                            </li>
-                            <li role="presentation" class="@(ViewBag.sort == leastRecentlyUpdatedSortText ? "active" : "")">
-                                <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastRecentlyUpdatedFilter)">Least Recently Updated</a>
-                            </li>
-                        </ul>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row row-space">
+                <div class="col-xs-6">
+                    <div class="btn-group" role="group" aria-label="...">
+                        @Html.ActionLink("Open", "Index", "WorkOrders", openFilter, new
+                        {
+                            @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Open ? " active" : "")
+                        })
+                                @Html.ActionLink("Closed", "Index", "WorkOrders", closedFilter, new
+                        {
+                            @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Closed ? " active" : "")
+                        })
                     </div>
                 </div>
+                <div class="col-xs-6 text-right">
+                    @using (Html.BeginForm("Index", "WorkOrders", FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        <div class="form-group">
+                            <div class="dropdown">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                    Sort <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="presentation" class="@(ViewBag.sort == newestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
+                                            <i class="fa fa-sort-amount-asc"></i> Newest
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == oldestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
+                                            @if (ViewBag.sort == oldestSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-desc"></i> Oldest
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == mostCommentedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortMostCommentedFilter)">
+                                            @if (ViewBag.sort == mostCommentedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-numeric-desc"></i> Most Commented
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == leastCommentedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastCommentedFilter)">
+                                            @if (ViewBag.sort == leastCommentedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-numeric-asc"></i> Least Commented
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == recentlyUpdatedSortText ? "active" : "")">
+                                            <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortRecentlyUpdatedFilter)">
+                                            @if (ViewBag.sort == recentlyUpdatedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-asc"></i> Recently Updated
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == leastRecentlyUpdatedSortText ? "active" : "")">
+                                            <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastRecentlyUpdatedFilter)">
+                                            @if (ViewBag.sort == leastRecentlyUpdatedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-desc"></i> Least Recently Updated
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
-                    <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
-                    <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
-                    <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
-                    <input id="sort" name="closed" type="hidden" value="@ViewBag.Sort.ToString()">
-                    <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                        <div class="input-group">
+                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
+                            <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
+                            <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
+                            <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
+                            <input id="sort" name="closed" type="hidden" value="@ViewBag.Sort.ToString()">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                        </div>
+                    }
                 </div>
-            }
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-8">
+            </div>
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @if (Model.Any())
+                    @if (Model.WorkOrders.Any())
                     {
                         <h5>
                             <i class="fa fa-exclamation-circle text-warning"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
                             <i class="fa fa-check-circle text-success"></i> @ViewBag.ClosedResultCount <small>Closed</small>
                         </h5>
                         <ul class="list-group">
-                            @foreach (var w in Model)
+                            @foreach (var w in Model.WorkOrders)
                             {
                                 var statuses = w.StatusChanges.OrderBy(o => o.ChangedOn);
                                 var status = @statuses.Last().Status.Name;
@@ -123,11 +155,13 @@
                                     status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
                                 var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
                                 var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
+                                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+                                var daysSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).Days;
 
                                 <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
 
                                     <span class="badge" style="background-color: @commentLabelColor">
-                                        <i class="fa fa-comment"></i>  @w.Comments.Count
+                                        <i class="fa fa-comment"></i> @w.Comments.Count
                                     </span>
                                     <h4 class="list-group-item-heading">
                                         @w.Title
@@ -141,11 +175,13 @@
                                         </small>
                                     </h4>
                                     <p class="list-group-item-text">
-                                        <strong>#@w.WorkOrderId </strong>
-                                        opened on <strong>@statuses.First().ChangedOn.ToShortDateString()</strong> by <strong>@statuses.First().Member</strong>
+                                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
+                                        @(daysSinceCreation <= 1 ? "day" : "days") ago by <strong>@statuses.First().Member</strong>
+
                                         @if (statuses.Last().Status.Name == "Closed")
                                         {
-                                            @: and closed on <strong>@statuses.Last().ChangedOn.ToShortDateString()</strong> by <strong>@statuses.Last().Member </strong>
+                                            @: and closed @(daysSinceClosure < 1 ? "< 1" : daysSinceClosure.ToString())
+                                            @: @(daysSinceClosure <= 1 ? "day" : "days") ago by <strong>@statuses.Last().Member </strong>
                                         }
                                     </p>
                                 </a>
@@ -172,8 +208,8 @@
                                     {
                                         var pageFilter = filter;
                                         pageFilter.page = i;
-                                        
-                                        <li class="@(ViewBag.Page == i ? "active": "")">
+
+                                        <li class="@(ViewBag.Page == i ? "active" : "")">
                                             <a href="@Url.Action("Index", pageFilter)">@i</a>
                                         </li>
                                     }
@@ -201,9 +237,9 @@
                     }
                 </div>
             </div>
-            <div class="col-sm-4">
-
-            </div>
+        </div>
+        <div class="col-md-4">
+            @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
         </div>
     </div>
 </div>

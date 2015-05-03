@@ -1,11 +1,10 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.House.Models
 {
     using Entities;
-    using System.Collections.Generic;
 
-    public class WorkOrderIndexModel
+    public class WorkOrderViewModel
     {
-        public IEnumerable<WorkOrder> WorkOrders { get; set; }
+        public WorkOrder WorkOrder { get; set; }
         public MyWorkOrdersModel UserWorkOrders { get; set; }
     }
 }

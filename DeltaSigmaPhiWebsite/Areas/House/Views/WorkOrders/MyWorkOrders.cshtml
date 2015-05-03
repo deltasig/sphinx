@@ -1,0 +1,80 @@
+﻿@model DeltaSigmaPhiWebsite.Areas.House.Models.MyWorkOrdersModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Open work orders you created
+        <span class="label label-as-badge pull-right @(Model.CreatedWorkOrders.Any() ? "label-success" : "label-default")">
+            @Model.CreatedWorkOrders.Count()
+        </span>
+    </div>
+    @if (Model.CreatedWorkOrders.Any())
+    {
+        <ul class="list-group">
+            @foreach (var w in Model.CreatedWorkOrders.OrderByDescending(w => w.GetDateTimeCreated()))
+            {
+                var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
+                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+
+                <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
+
+                    <span class="badge" style="background-color: @commentLabelColor">
+                        <i class="fa fa-comment"></i>  @w.Comments.Count
+                    </span>
+                    <h5 class="list-group-item-heading">
+                        <small>#@w.WorkOrderId</small> @w.Title
+                    </h5>
+                    <p class="list-group-item-text">
+                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString()) @(daysSinceCreation <= 1 ? "day" : "days") ago
+                    </p>
+                </a>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="panel-body">
+            <p class="text-success">
+                You don't have any open work orders.
+            </p>
+        </div>
+    }
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Open work orders you're involved in
+        <span class="label label-as-badge pull-right @(Model.InvolvedWorkOrders.Any() ? "label-success" : "label-default")">
+            @Model.InvolvedWorkOrders.Count()
+        </span>
+    </div>
+    @if (Model.InvolvedWorkOrders.Any())
+    {
+        <ul class="list-group">
+            @foreach (var w in Model.InvolvedWorkOrders.OrderByDescending(w => w.GetDateTimeCreated()))
+            {
+                var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
+                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+
+                <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
+
+                    <span class="badge" style="background-color: @commentLabelColor">
+                        <i class="fa fa-comment"></i>  @w.Comments.Count
+                    </span>
+                    <h5 class="list-group-item-heading">
+                        <small>#@w.WorkOrderId</small> @w.Title
+                    </h5>
+                    <p class="list-group-item-text">
+                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString()) @(daysSinceCreation <= 1 ? "day" : "days") ago
+                    </p>
+                </a>
+            }
+        </ul>
+    }
+    else
+    {
+        <div class="panel-body">
+            <p class="text-success">
+                You aren't participating in any open work orders.
+            </p>
+        </div>
+    }
+</div>

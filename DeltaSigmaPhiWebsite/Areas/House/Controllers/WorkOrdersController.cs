@@ -97,7 +97,18 @@
             {
                 ViewBag.Page = ViewBag.Pages;
             }
-            return View(filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList());
+
+            var model = new WorkOrderIndexModel();
+            model.WorkOrders = filterResults.Skip((page - 1)*pageSize).Take(pageSize).ToList();
+            model.UserWorkOrders = new MyWorkOrdersModel();
+            model.UserWorkOrders.CreatedWorkOrders = workOrders.Where(w => 
+                w.UserId == WebSecurity.CurrentUserId && 
+                w.GetCurrentStatus() != "Closed");
+            model.UserWorkOrders.InvolvedWorkOrders = workOrders.Where(w =>
+                w.Comments.Any(c => c.UserId == WebSecurity.CurrentUserId) && 
+                w.GetCurrentStatus() != "Closed");
+
+            return View(model);
         }
 
         public async Task<ActionResult> View(int? id)
@@ -106,11 +117,23 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = await _db.WorkOrders.FindAsync(id);
-            if (model == null)
+            var workOrder = await _db.WorkOrders.FindAsync(id);
+            if (workOrder == null)
             {
                 return HttpNotFound();
             }
+
+            var workOrders = await _db.WorkOrders.ToListAsync();
+            var model = new WorkOrderViewModel();
+            model.WorkOrder = workOrder;
+            model.UserWorkOrders = new MyWorkOrdersModel();
+            model.UserWorkOrders.CreatedWorkOrders = workOrders.Where(w =>
+                w.UserId == WebSecurity.CurrentUserId &&
+                w.GetCurrentStatus() != "Closed");
+            model.UserWorkOrders.InvolvedWorkOrders = workOrders.Where(w =>
+                w.Comments.Any(c => c.UserId == WebSecurity.CurrentUserId) &&
+                w.GetCurrentStatus() != "Closed");
+
             return View(model);
         }
         public ActionResult Create()
