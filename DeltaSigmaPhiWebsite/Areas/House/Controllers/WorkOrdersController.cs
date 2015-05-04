@@ -20,6 +20,8 @@
             var workOrders = await _db.WorkOrders.ToListAsync();
             var filterResults = new List<WorkOrder>();
             // Filter out results based on open, closed, sort, and/or search string.
+            ViewBag.OpenResultCount = 0;
+            ViewBag.ClosedResultCount = 0;
             if (open)
             {
                 var openResults = workOrders.Where(w => w.GetCurrentStatus() != "Closed").ToList();
@@ -76,8 +78,6 @@
             ViewBag.Open = open;
             ViewBag.Closed = closed;
             ViewBag.Sort = sort;
-            ViewBag.OpenResultCount = 0;
-            ViewBag.ClosedResultCount = 0;
 
             if (page < 1) page = 1;
             const int pageSize = 10; // Can make this modifiable in future.
