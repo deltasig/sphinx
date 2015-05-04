@@ -47,22 +47,26 @@ else if (User.IsInRole("Administrator"))
     <div class="footer" style="background-color: #282725; color: white;">
         <div class="container">
             <div class="row">
-                <div class="col-sm-4">
-                    <p><i class="fa fa-lg fa-clock-o"></i> <small><strong>Times</strong></small></p>
-                    <dl class="dl-horizontal">
-                        <dt><small>CST</small></dt>
-                        <dd><small>@TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToString("R")</small></dd>
-                        <dt><small>UTC</small></dt>
-                        <dd><small>@DateTime.UtcNow.ToString("R")</small></dd>
-                        <dt><small>Server</small></dt>
-                        <dd><small>@DateTime.Now.ToString("R")</small></dd>
-                    </dl>
+                <div class="col-xs-12">
+                    <i class="fa fa-lg fa-clock-o"></i> <small><strong>Times</strong></small>
                 </div>
-                <div class="col-sm-6">
-                    <h4></h4>
-                    <p>
-                        
-                    </p>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <table>
+                        <tr>
+                            <td style="padding-right: 25px"><small>CST</small></td>
+                            <td><small>@TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToString("R")</small></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 25px"><small>UTC</small></td>
+                            <td><small>@DateTime.UtcNow.ToString("R")</small></td>
+                        </tr>
+                        <tr>
+                            <td style="padding-right: 25px"><small>Server</small></td>
+                            <td><small>@DateTime.Now.ToString("R")</small></td>
+                        </tr>
+                    </table>
                 </div>
             </div>
         </div>
