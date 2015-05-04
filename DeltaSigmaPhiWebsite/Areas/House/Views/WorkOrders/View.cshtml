@@ -18,6 +18,9 @@
         OccurredOn = c.SubmittedOn,
         UserId = c.UserId, 
         Name = c.Member.ToString(),
+        Title = c.Member.ToString() + " " + 
+            ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
+            ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? "day" : "days") + " ago",
         Text = c.Text
     }));
     discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
@@ -25,14 +28,18 @@
         OccurredOn = s.ChangedOn,
         UserId = s.UserId,
         Name = s.Member.ToString(),
-        Text = "Status Changed by " + s.Member.ToString() + " to " + s.Status.Name + "."
+        Title = string.Empty,
+        Text = "<strong>Status</strong> changed by <strong>" + s.Member.ToString() + "</strong> to <strong>" + 
+            s.Status.Name + "</strong>."
     }));
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
     {
         OccurredOn = p.ChangedOn,
         UserId = p.UserId,
         Name = p.Member.ToString(),
-        Text = "Priority Changed by " + p.Member.ToString() + " to " + p.Priority.Name + "."
+        Title = string.Empty,
+        Text = "<strong>Priority</strong> changed by <strong>" + p.Member.ToString() + "</strong> to <strong>" + 
+        p.Priority.Name + "</strong>."
     }));
 }
 
@@ -57,12 +64,21 @@
 
             @{
                 var statuses = Model.WorkOrder.StatusChanges.OrderBy(o => o.ChangedOn);
-                var status = @statuses.Last().Status.Name;
+                var status = statuses.Last().Status.Name;
                 var priorities = Model.WorkOrder.PriorityChanges.OrderBy(o => o.ChangedOn);
                 var priority = priorities.Last().Priority.Name;
-                var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
-                    status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
-                var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
+                var statusLabelColor = status == "On-Hold" 
+                    ? "label-primary" 
+                    : status == "Closed" 
+                        ? "label-success" 
+                        : status == "Under Review" || status == "In Progress" 
+                            ? "label-warning" 
+                            : "label-default";
+                var priorityLabelColor = priority == "Medium" 
+                    ? "label-warning" 
+                    : priority == "High" 
+                        ? "label-danger" 
+                        : "label-default";
                 var daysSinceOpen = (DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days;
             }
 
@@ -72,7 +88,8 @@
                         @Model.WorkOrder.Title <small>#@Model.WorkOrder.WorkOrderId</small>
                         @if (elevatedPermissions)
                         {
-                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})" class="btn btn-sm btn-primary pull-right">
+                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})" 
+                               class="btn btn-sm btn-primary pull-right">
                                 <i class="fa fa-wrench"></i> Edit
                             </a>
                         }
@@ -95,13 +112,16 @@
                 <div class="col-xs-12">
                     <div class="media">
                         <div class="media-left">
-                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" height="50" width="50" id="@Model.WorkOrder.UserId">
+                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" 
+                                 height="50" width="50" id="@Model.WorkOrder.UserId">
                         </div>
                         <div class="media-body">
                             <div class="popover-static">
                                 <div class="popover right">
                                     <div class="arrow"></div>
-                                    <h3 class="popover-title">@Model.WorkOrder.Member on @createdOn.ToString("g")</h3>
+                                    <h3 class="popover-title">
+                                        Initial Description
+                                    </h3>
                                     <div class="popover-content">
                                         <p>@Model.WorkOrder.Description</p>
                                     </div>
@@ -118,15 +138,38 @@
                     <div class="col-xs-12">
                         <div class="media">
                             <div class="media-left">
-                                <img class="img-rounded img-@d.UserId" alt="cat" height="50" width="50" id="@d.UserId">
+                                @if (string.IsNullOrEmpty(d.Title))
+                                {
+                                    <img class="img-rounded img-@d.UserId" alt="cat" style="margin: 13px 0 0 23px"
+                                         height="25" width="25" id="@d.UserId">
+                                }
+                                else
+                                {
+                                    <img class="img-rounded img-@d.UserId" alt="cat"
+                                         height="50" width="50" id="@d.UserId">
+                                }
                             </div>
                             <div class="media-body">
                                 <div class="popover-static">
                                     <div class="popover right">
                                         <div class="arrow"></div>
-                                        <h3 class="popover-title">@d.Name on @d.OccurredOn.ToString("g")</h3>
+                                        @if (!string.IsNullOrEmpty(d.Title))
+                                        {
+                                            <h3 class="popover-title">
+                                                @d.Title
+                                            </h3>
+                                        }
                                         <div class="popover-content">
-                                            <p>@d.Text</p>
+                                            <p>
+                                                @if (!string.IsNullOrEmpty(d.Title))
+                                                {
+                                                    @d.Text
+                                                }
+                                                else
+                                                {
+                                                    @Html.Raw(d.Text)
+                                                }
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -139,11 +182,12 @@
             <hr/>
             @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
             {
-            <div class="row row-fluid">
+                <div class="row row-fluid">
                     <div class="col-xs-12">
                         <div class="media">
                             <div class="media-left">
-                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" height="50" width="50" id="@WebSecurity.CurrentUserId">
+                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" 
+                                     height="50" width="50" id="@WebSecurity.CurrentUserId">
                             </div>
                             <div class="media-body">
                                 <div class="popover-static">
