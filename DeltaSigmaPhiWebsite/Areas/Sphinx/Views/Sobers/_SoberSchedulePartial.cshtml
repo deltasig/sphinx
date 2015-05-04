@@ -5,14 +5,7 @@
 }
 <!-- Standard view. -->
 <div class="hidden-xs hidden-sm">
-    <table data-toggle="table" data-classes="table table-condensed"
-           data-search="false" data-pagination="false">
-        <thead>
-            <tr>
-                <th colspan="2"><small>Next 7 Days</small></th>
-                <th class="col-sm-6"></th>
-            </tr>
-        </thead>
+    <table class="table" style="margin-bottom: 0">
         <tbody>
             @if (!Model.Any())
             {
@@ -25,15 +18,15 @@
             {
                 <tr class="active">
                     <td>
-                        <strong>
+                        <small>
                             @date.DayOfWeek.ToString(), @date.ToString("MMMM dd")
-                        </strong>
+                        </small>
                     </td>
                     <td></td>
                 </tr>
                 foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
                 {
-                    <tr>
+                    <tr class="@(item.Member == null ? "" : item.Member.UserName == User.Identity.Name ? "warning" : "")">
                         <td>
                             <small>
                                 <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">

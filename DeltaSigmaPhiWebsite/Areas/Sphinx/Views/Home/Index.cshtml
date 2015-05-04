@@ -27,45 +27,11 @@
         <div class="row">
             <!-- LEFT COLUMN -->
             <div class="col-md-5">
-                <ul class="nav nav-tabs nav-justified" role="tablist">
-                    <li class="active"><a href="#soberschedule" data-toggle="pill">Sober Schedule</a></li>
-                    <li><a href="#mysignups" data-toggle="pill">My Sober Schedule</a></li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="soberschedule">
-                        @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Sober drivers <small>over the next 7 days</small>
                     </div>
-                    <div class="tab-pane" id="mysignups">
-                        @if (!Model.NeedsToSoberDrive)
-                        {
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <thead>
-                                        <tr>
-                                            <th colspan="3"><small>This Semester</small></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.MemberInfo.SoberSignups
-                                            .Where(s => s.DateOfShift >= Model.PreviousSemester.DateStart).OrderByDescending(o => o.DateOfShift))
-                                        {
-                                            <tr>
-                                                <td>@item.SoberType.Name</td>
-                                                <td>@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3)</td>
-                                                <td>@item.DateOfShift.ToShortDateString()</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="alert alert-warning">
-                                You haven't signed up to be sober!  <a href="@Url.Action("Schedule", "Sobers")">Sign up</a>
-                            </div>
-                        }
-                    </div>
+                    @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
                 </div>
 
                 <div class="panel panel-default">

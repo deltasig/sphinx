@@ -187,6 +187,10 @@ a.social {
     background-color: rgb(252, 252, 252);
 }
 
+.panel .table tr td {
+    padding: 5px 15px;
+}
+
 .panel-body .pagination {
     margin: 10px 0px 0px 0px;
 }
