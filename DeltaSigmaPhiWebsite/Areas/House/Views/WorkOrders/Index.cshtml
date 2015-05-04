@@ -131,7 +131,7 @@
                             <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
                             <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
                             <input id="sort" name="closed" type="hidden" value="@ViewBag.Sort.ToString()">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="" aria-describedby="search-addon">
                         </div>
                     }
                 </div>
@@ -140,8 +140,18 @@
                 @if (Model.WorkOrders.Any())
                 {
                     <div class="panel-heading">
-                        <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
-                        <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
+                        <div class="row row-fluid">
+                            <div class="col-xs-6">
+                                <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
+                                <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                                {
+                                    <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
+                                }
+                            </div>
+                        </div>
                     </div>
                     <ul class="list-group">
                         @foreach (var w in Model.WorkOrders)
