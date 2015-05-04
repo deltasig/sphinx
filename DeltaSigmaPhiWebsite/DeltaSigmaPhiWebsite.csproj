@@ -785,6 +785,12 @@
     <Content Include="Areas\House\Views\WorkOrders\View.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\CreateOld.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\MyWorkOrders.cshtml" />
+    <Content Include="Content\bootstrap\css\bootstrap.css.map">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
+    <Content Include="Content\bootstrap\css\bootstrap-datetimepicker-build.css.map">
+      <DependentUpon>bootstrap-datetimepicker-build.css</DependentUpon>
+    </Content>
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
