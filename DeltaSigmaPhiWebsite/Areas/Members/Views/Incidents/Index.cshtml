@@ -38,8 +38,8 @@
                             @foreach (var item in Model)
                             {
                                 <tr>
-                                    <td>@item.DateTimeSubmitted.ToString("MM/dd/yyyy hh:mm tt")</td>
-                                    <td>@item.DateTimeOfIncident.ToString("MM/dd/yyyy")</td>
+                                    <td>@item.DateTimeSubmitted.ToString("yyyy-MM-dd hh:mm tt")</td>
+                                    <td>@item.DateTimeOfIncident.ToString("yyyy-MM-dd")</td>
                                     <td>@item.PolicyBroken</td>
                                     <td class="text-right">
                                         @Html.ActionLink("Details", "Details", new { id = item.IncidentId })
