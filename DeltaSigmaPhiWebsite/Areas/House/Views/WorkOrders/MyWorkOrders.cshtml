@@ -3,7 +3,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         Open work orders you created
-        <span class="label label-as-badge pull-right @(Model.CreatedWorkOrders.Any() ? "label-success" : "label-default")">
+        <span class="label label-as-badge pull-right label-default">
             @Model.CreatedWorkOrders.Count()
         </span>
     </div>
@@ -42,7 +42,7 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         Open work orders you're involved in
-        <span class="label label-as-badge pull-right @(Model.InvolvedWorkOrders.Any() ? "label-success" : "label-default")">
+        <span class="label label-as-badge pull-right label-default">
             @Model.InvolvedWorkOrders.Count()
         </span>
     </div>
