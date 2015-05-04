@@ -5,7 +5,7 @@ html {
     min-height: 100%;
 }
 
-body {
+body, .popover {
     font-family: "Open sans";
     margin-bottom: 175px;
 }
@@ -234,6 +234,11 @@ a.social {
     z-index: 0;
 }
 
+.popover-static .popover .initial {
+    background-color: #f7f7f7;
+    border-radius: 5px;
+}
+
 .popover.right > .arrow {
     top:20px;
 }
@@ -244,4 +249,8 @@ a.social {
 
 .media-body {
     width: 100%;
+}
+
+.popover-content > p {
+    margin: 0px;
 }
