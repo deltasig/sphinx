@@ -112,7 +112,7 @@
                 <div class="col-xs-12">
                     <div class="media">
                         <div class="media-left">
-                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" 
+                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="" 
                                  height="50" width="50" id="@Model.WorkOrder.UserId">
                         </div>
                         <div class="media-body">
@@ -140,12 +140,12 @@
                             <div class="media-left">
                                 @if (string.IsNullOrEmpty(d.Title))
                                 {
-                                    <img class="img-rounded img-@d.UserId" alt="cat" style="margin: 13px 0 0 23px"
+                                    <img class="img-rounded img-@d.UserId" alt="" style="margin: 13px 0 0 23px"
                                          height="25" width="25" id="@d.UserId">
                                 }
                                 else
                                 {
-                                    <img class="img-rounded img-@d.UserId" alt="cat"
+                                    <img class="img-rounded img-@d.UserId" alt=""
                                          height="50" width="50" id="@d.UserId">
                                 }
                             </div>
@@ -186,7 +186,7 @@
                     <div class="col-xs-12">
                         <div class="media">
                             <div class="media-left">
-                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="cat" 
+                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="" 
                                      height="50" width="50" id="@WebSecurity.CurrentUserId">
                             </div>
                             <div class="media-body">
@@ -232,6 +232,5 @@
         $.each(ids, function( key, value ) {
             $(".img-" + value).attr("src", "http://thecatapi.com/api/images/get?format=src&type=png&" + key);
         });
-
     </script>
 }
