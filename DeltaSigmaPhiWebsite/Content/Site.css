@@ -103,7 +103,6 @@ dl {
 .label-as-badge, .badge {
     border-radius: 1em;
     font-weight: normal;
-    font-size: 100%;
 }
 
 .borderless td {
@@ -168,24 +167,6 @@ table.dataTable thead > tr > th {
     height: 400px;
 }
 
-a {
-    color: #278955;
-    text-decoration: none;
-}
-
-a:hover, a:focus {
-    color: #2b975e;
-    text-decoration: underline;
-}
-
-.btn-link {
-    color: #278955;
-}
-.btn-link:hover, .btn-link:focus {
-    color: #2b975e;
-    text-decoration: underline;
-}
-
 ul, ol {
     margin-top: 5px;
     margin-bottom: 5px;
@@ -218,7 +199,6 @@ a.social {
 }
 
 .panel .list-group {
-
     margin-top: 0;
 }
 
@@ -229,14 +209,9 @@ a.social {
 .popover-static .popover {
     position: relative;
     display: block;
-    margin: 5px 0 5px 5px;
+    margin: 5px 0 5px 15px;
     max-width: 100%;
     z-index: 0;
-}
-
-.popover-static .popover .initial {
-    background-color: #f7f7f7;
-    border-radius: 5px;
 }
 
 .popover.right > .arrow {

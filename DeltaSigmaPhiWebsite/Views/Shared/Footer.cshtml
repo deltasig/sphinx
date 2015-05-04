@@ -1,10 +1,8 @@
-﻿@if ((ViewContext.RouteData.Values.ContainsValue("Home") && ViewBag.Title != "Delta Sigma Phi") || ViewBag.Title == "Scholarship Submission")
-{
-    <div class="footer" style="background-color: #282725; color: white;">
+﻿    <div class="footer" style="background-color: #282725; color: white;">
         <div class="container">
             <div class="row">
-                <div class="col-sm-2 col-xs-5">
-                    <h4>Social</h4>
+                <div class="col-sm-2">
+                    <h5 class="hidden-xs">Social</h5>
                     <ul class="list-inline">
                         <li>
                             <a href="https://www.facebook.com/deltasig.de" target="_blank">
@@ -23,52 +21,50 @@
                         </li>
                     </ul>
                 </div>
-                <div class="col-sm-2 col-xs-7">
-                    <h4>Address</h4>
-                    <p>
-                        <small>215 W. 8th Street <br/> Rolla, MO 65401</small><br/>
-                    </p>
-                </div>
-                <div class="col-sm-8 hidden-xs">
-                    <h4>This is the official website of the</h4>
-                    <p>
-                        <a href="http://www.mst.edu" target="_blank">Missouri S&amp;T</a>
-                        chapter of Delta Sigma Phi Fraternity.
-                    </p>
-                </div>
+                @if (Request.IsAuthenticated)
+                {
+                    <div class="col-sm-8">
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+
+                                    <div class="row row-fluid">
+                                        <div class="col-xs-12">
+                                            <i class="fa fa-lg fa-clock-o"></i> <small><strong>Times</strong></small>
+                                        </div>
+                                    </div>
+                                    <div class="row row-fluid">
+                                        <div class="col-xs-12">
+                                            <table>
+                                                <tr>
+                                                    <td style="padding-right: 25px"><small>CST</small></td>
+                                                    <td><small>@TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToString("R")</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-right: 25px"><small>UTC</small></td>
+                                                    <td><small>@DateTime.UtcNow.ToString("R")</small></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-right: 25px"><small>Server</small></td>
+                                                    <td><small>@DateTime.Now.ToString("R")</small></td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="col-sm-8">
+                        <h5>
+                            Official Website of
+                            <a href="http://www.deltasig.org">Delta Sigma Phi</a> at
+                            <a href="http://www.mst.edu" target="_blank">Missouri S&amp;T</a>.
+                        </h5>
+                        <small>215 W. 8th Street, Rolla, MO 65401</small>
+                    </div>
+                }
             </div>
         </div>
     </div>
-}
-else if (User.IsInRole("Administrator"))
-{
-    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-    
-    <div class="footer" style="background-color: #282725; color: white;">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <i class="fa fa-lg fa-clock-o"></i> <small><strong>Times</strong></small>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-12">
-                    <table>
-                        <tr>
-                            <td style="padding-right: 25px"><small>CST</small></td>
-                            <td><small>@TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToString("R")</small></td>
-                        </tr>
-                        <tr>
-                            <td style="padding-right: 25px"><small>UTC</small></td>
-                            <td><small>@DateTime.UtcNow.ToString("R")</small></td>
-                        </tr>
-                        <tr>
-                            <td style="padding-right: 25px"><small>Server</small></td>
-                            <td><small>@DateTime.Now.ToString("R")</small></td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-}

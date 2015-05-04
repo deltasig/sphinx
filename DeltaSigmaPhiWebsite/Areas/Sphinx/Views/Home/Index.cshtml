@@ -174,7 +174,7 @@
                 
                 <!-- SERVICE HOURS -->
                 <h3>
-                    Your Service Hours 
+                    Your Service Hours
                     <small>
                         @{
                             var labelColor = "label-default";
@@ -189,11 +189,15 @@
                             }
                         }
                         @Model.CurrentSemester
-                        <span class="label @labelColor label-as-badge" style="font-weight: normal !important">
+                        <span class="label @labelColor label-as-badge">
                             @approvedHours / @Model.CurrentSemester.MinimumServiceHours
                         </span>
                     </small>
-                    <small class="pull-right">
+                    <small class="hidden-xs pull-right">
+                        @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+                        @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
+                    </small>
+                    <small class="visible-xs">
                         @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
                         @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
                     </small>
