@@ -137,105 +137,103 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-body">
-                    @if (Model.WorkOrders.Any())
-                    {
-                        <h5>
-                            <i class="fa fa-exclamation-circle text-warning"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
-                            <i class="fa fa-check-circle text-success"></i> @ViewBag.ClosedResultCount <small>Closed</small>
-                        </h5>
-                        <ul class="list-group">
-                            @foreach (var w in Model.WorkOrders)
-                            {
-                                var statuses = w.StatusChanges.OrderBy(o => o.ChangedOn);
-                                var status = @statuses.Last().Status.Name;
-                                var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
-                                var priority = priorities.Last().Priority.Name;
-                                var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
-                                    status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
-                                var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
-                                var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
-                                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
-                                var daysSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).Days;
-
-                                <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
-
-                                    <span class="badge" style="background-color: @commentLabelColor">
-                                        <i class="fa fa-comment"></i> @w.Comments.Count
-                                    </span>
-                                    <h4 class="list-group-item-heading">
-                                        @w.Title
-                                        <small>
-                                            <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
-                                                @status
-                                            </span>
-                                            <span class="label @priorityLabelColor" style="font-weight: normal !important;">
-                                                @priority Priority
-                                            </span>
-                                        </small>
-                                    </h4>
-                                    <p class="list-group-item-text">
-                                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
-                                        @(daysSinceCreation <= 1 ? "day" : "days") ago by <strong>@statuses.First().Member</strong>
-
-                                        @if (statuses.Last().Status.Name == "Closed")
-                                        {
-                                            @: and closed @(daysSinceClosure < 1 ? "< 1" : daysSinceClosure.ToString())
-                                            @: @(daysSinceClosure <= 1 ? "day" : "days") ago by <strong>@statuses.Last().Member </strong>
-                                        }
-                                    </p>
-                                </a>
-                            }
-                        </ul>
-
-                        if (ViewBag.ResultCount > ViewBag.PageSize)
+                @if (Model.WorkOrders.Any())
+                {
+                    <div class="panel-heading">
+                        <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
+                        <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
+                    </div>
+                    <ul class="list-group">
+                        @foreach (var w in Model.WorkOrders)
                         {
-                            <nav class="text-center">
-                                <ul class="pagination">
-                                    <li class="@(ViewBag.Page > 1 ? "" : "disabled")">
-                                        @if (ViewBag.Page > 1)
-                                        {
-                                            <a href="@Url.Action("Index", pagePreviousFilter)" aria-label="Previous">
-                                                <i class="fa fa-caret-left" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
-                                        }
-                                    </li>
-                                    @for (var i = 1; i <= ViewBag.Pages; i++)
-                                    {
-                                        var pageFilter = filter;
-                                        pageFilter.page = i;
+                            var statuses = w.StatusChanges.OrderBy(o => o.ChangedOn);
+                            var status = @statuses.Last().Status.Name;
+                            var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
+                            var priority = priorities.Last().Priority.Name;
+                            var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
+                                status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
+                            var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
+                            var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
+                            var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+                            var daysSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).Days;
 
-                                        <li class="@(ViewBag.Page == i ? "active" : "")">
-                                            <a href="@Url.Action("Index", pageFilter)">@i</a>
-                                        </li>
+                            <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
+
+                                <span class="badge" style="background-color: @commentLabelColor">
+                                    <i class="fa fa-comment"></i> @w.Comments.Count
+                                </span>
+                                <h4 class="list-group-item-heading">
+                                    @w.Title
+                                    <small>
+                                        <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
+                                            @status
+                                        </span>
+                                        <span class="label @priorityLabelColor" style="font-weight: normal !important;">
+                                            @priority Priority
+                                        </span>
+                                    </small>
+                                </h4>
+                                <p class="list-group-item-text">
+                                    opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
+                                    @(daysSinceCreation <= 1 ? "day" : "days") ago by <strong>@statuses.First().Member</strong>
+
+                                    @if (statuses.Last().Status.Name == "Closed")
+                                    {
+                                        @: and closed @(daysSinceClosure < 1 ? "< 1" : daysSinceClosure.ToString())
+                                        @: @(daysSinceClosure <= 1 ? "day" : "days") ago by <strong>@statuses.Last().Member </strong>
                                     }
-                                    <li class="@(ViewBag.Page < ViewBag.Pages ? "" : "disabled")">
-                                        @if (ViewBag.Page < ViewBag.Pages)
-                                        {
-                                            <a href="@Url.Action("Index", pageNextFilter)" aria-label="Next">
-                                                <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                            </a>
-                                        }
-                                        else
-                                        {
-                                            <span><i class="fa fa-caret-right" aria-hidden="true"></i></span>
-                                        }
-                                    </li>
-                                </ul>
-                            </nav>
+                                </p>
+                            </a>
                         }
-                    }
-                    else
+                    </ul>
+
+                    if (ViewBag.ResultCount > ViewBag.PageSize)
                     {
-                        <div class="alert alert-warning">
-                            No work orders have been submitted yet.
-                        </div>
+                        <nav class="text-center">
+                            <ul class="pagination">
+                                <li class="@(ViewBag.Page > 1 ? "" : "disabled")">
+                                    @if (ViewBag.Page > 1)
+                                    {
+                                        <a href="@Url.Action("Index", pagePreviousFilter)" aria-label="Previous">
+                                            <i class="fa fa-caret-left" aria-hidden="true"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
+                                    }
+                                </li>
+                                @for (var i = 1; i <= ViewBag.Pages; i++)
+                                {
+                                    var pageFilter = filter;
+                                    pageFilter.page = i;
+
+                                    <li class="@(ViewBag.Page == i ? "active" : "")">
+                                        <a href="@Url.Action("Index", pageFilter)">@i</a>
+                                    </li>
+                                }
+                                <li class="@(ViewBag.Page < ViewBag.Pages ? "" : "disabled")">
+                                    @if (ViewBag.Page < ViewBag.Pages)
+                                    {
+                                        <a href="@Url.Action("Index", pageNextFilter)" aria-label="Next">
+                                            <i class="fa fa-caret-right" aria-hidden="true"></i>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <span><i class="fa fa-caret-right" aria-hidden="true"></i></span>
+                                    }
+                                </li>
+                            </ul>
+                        </nav>
                     }
-                </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        No work orders have been submitted yet.
+                    </div>
+                }
             </div>
         </div>
         <div class="col-md-4">
