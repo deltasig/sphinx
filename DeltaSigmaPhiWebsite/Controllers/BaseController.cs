@@ -1,6 +1,7 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using Areas.Scholarships.Models;
+    using DeltaSigmaPhiWebsite.Extensions;
     using Entities;
     using System;
     using System.Collections.Generic;
@@ -447,6 +448,32 @@
                 .ToList();
             return data;
         }
+        protected virtual async Task<List<SoberSignup>> GetThisWeeksSoberSignupsAsync(DateTime now)
+        {
+            var nowUtc = now;
+            var nowCst = this.ConvertUtcToCst(nowUtc);
+
+            // This makes the week restart at 4am on Sundays so that users can check the list
+            // up until 4am in the morning before it rolls over.
+            if (nowCst.Hour < 4 && nowCst.DayOfWeek == DayOfWeek.Sunday)
+            {
+                nowCst = nowCst.AddDays(-1);
+            }
+
+            var startOfTodayCst = nowCst.Date;
+            var startOfTodayUtc = this.ConvertCstToUtc(startOfTodayCst);
+            var weekOfYear = DateTimeExtensions.GetWeekOfYear(startOfTodayUtc);
+            var startOfThisWeek = DateTimeExtensions.FirstDateOfWeek(startOfTodayUtc.Year, weekOfYear, CultureInfo.GetCultureInfo("en-US"));
+            var startOfNextWeek = startOfThisWeek.AddDays(7);
+
+            return await _db.SoberSignups
+                .Where(s =>
+                    s.DateOfShift >= startOfThisWeek &&
+                    s.DateOfShift < startOfNextWeek)
+                .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.SoberTypeId)
+                .ToListAsync();
+        }
         protected virtual async Task<SelectList> GetAllApproverIdsAsync(int userId, Semester semester)
         {
             var members = (await GetAllActiveMembersAsync()).Where(a => a.UserId != userId).OrderBy(o => o.LastName).ToList();
@@ -583,7 +610,7 @@
 
             return new SelectList(newList, "MemberStudyHourAssignmentId", "Name");
         }
-        protected virtual DateTime GetStartOfCurrentWeek()
+        public virtual DateTime GetStartOfCurrentWeek()
         {
             var now = ConvertUtcToCst(DateTime.UtcNow).Date;
             switch (now.DayOfWeek)
@@ -625,7 +652,7 @@
                     return now.AddDays(-4);
             }
         }
-        protected virtual DateTime DateTimeFloor(DateTime date, TimeSpan span)
+        public virtual DateTime DateTimeFloor(DateTime date, TimeSpan span)
         {
             //Rounds down based on the TimeSpan
             //Ex. date = DateTime.UtcNow, span = TimeSpan of one day
@@ -633,12 +660,12 @@
             var ticks = (date.Ticks / span.Ticks);
             return new DateTime(ticks * span.Ticks);
         }
-        protected virtual DateTime ConvertUtcToCst(DateTime utc)
+        public virtual DateTime ConvertUtcToCst(DateTime utc)
         {
             var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
             return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
         }
-        protected virtual DateTime ConvertCstToUtc(DateTime cst)
+        public virtual DateTime ConvertCstToUtc(DateTime cst)
         {
             var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
             return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);

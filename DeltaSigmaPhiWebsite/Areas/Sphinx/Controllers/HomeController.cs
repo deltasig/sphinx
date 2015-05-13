@@ -16,37 +16,21 @@
         [HttpGet]
         public async Task<ActionResult> Index(string message = "")
         {
+            ViewBag.FailMessage = message;
             var userId = WebSecurity.GetUserId(User.Identity.Name);
             var member = await _db.Members.FindAsync(userId);
-            var events = await GetAllCompletedEventsForUserAsync(userId);
-            var startOfTodayCst = ConvertUtcToCst(DateTime.UtcNow).Date;
-            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
-            var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
+            var events = await base.GetAllCompletedEventsForUserAsync(userId);
+            var thisSemester = await base.GetThisSemesterAsync();
 
-            if (startOfTodayCst.Hour < 6)
-            {
-                startOfTodayUtc = startOfTodayUtc.AddDays(-1);
-            }
-            
-            var thisSemester = await GetThisSemesterAsync();
-            var memberSoberSignups = await GetSoberSignupsForUserAsync(userId, thisSemester);
-
-            var soberSignups = await _db.SoberSignups
-                .Where(s => s.DateOfShift >= startOfTodayUtc &&
-                            s.DateOfShift <= thisSemester.DateEnd)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
+            var thisWeeksSoberShifts = await base.GetThisWeeksSoberSignupsAsync(DateTime.UtcNow);
+            var memberSoberSignups = await base.GetSoberSignupsForUserAsync(userId, thisSemester);
+            var remainingDriverShifts = await _db.SoberSignups
+                .Where(s => 
+                    s.UserId == null &&
+                    s.SoberType.Name == "Driver" &&
+                    s.DateOfShift >= DateTime.UtcNow &&
+                    s.DateOfShift <= thisSemester.DateEnd)
                 .ToListAsync();
-            var semesterSoberSignups = soberSignups
-                .Where(s => s.DateOfShift > DateTime.UtcNow &&
-                            s.DateOfShift <= thisSemester.DateEnd)
-                .ToList();
-            var soberSignupsNextSevenDays = soberSignups
-                .Where(s => s.DateOfShift >= startOfTodayUtc &&
-                            s.DateOfShift <= sevenDaysAheadOfToday)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
-                .ToList();
 
             var laundrySignups = await _db.LaundrySignups
                     .Where(l => l.DateTimeShift >= DateTime.UtcNow)
@@ -65,15 +49,13 @@
                 RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(userId),
                 StudyHourAssignments = await GetStudyHourAssignmentsForUserAsync(userId, thisSemester),
                 CompletedEvents = events,
-                SoberSignups = soberSignupsNextSevenDays,
+                SoberSignups = thisWeeksSoberShifts,
                 LaundrySummary = laundrySignups.Take(laundryTake),
-                NeedsToSoberDrive = !memberSoberSignups.Any() && semesterSoberSignups.Any(s => s.UserId == null),
+                NeedsToSoberDrive = !memberSoberSignups.Any() && remainingDriverShifts.Any(),
                 CurrentSemester = thisSemester,
                 PreviousSemester = await GetLastSemesterAsync(),
                 ApprovalRequests = await _db.StudyHours.Where(s => s.ApproverId == userId && s.DateTimeApproved == null).ToListAsync()
             };
-
-            ViewBag.Message = message;
 
             return View(model);
         }

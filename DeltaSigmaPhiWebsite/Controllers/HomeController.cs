@@ -65,6 +65,7 @@
         public async Task<ActionResult> EmailSoberSchedule()
         {
             var now = DateTime.UtcNow;
+
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
             if (type == null || string.IsNullOrEmpty(type.Destination)) 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -77,12 +78,12 @@
             var mostRecentEmail = emails.FirstOrDefault();
 
             // Check if it has been over 24 hours since the last email.
-            var noPreviousEmail = mostRecentEmail == null || (now - mostRecentEmail.SentOn).Hours > 24;
+            var noPreviousEmail = mostRecentEmail == null || (now - mostRecentEmail.SentOn).TotalHours > 24;
             // Check if the current time is between the arbitrary range.
             var isTime = (now.DayOfWeek == DayOfWeek.Friday &&
                           now.Hour >= 22 && now.Hour < 24);
             // If an admin or the sergeant is trying to manually send the email, just allow it.
-            var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Seargent-at-Arms"));
+            var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
 
             // Don't send the email if conditions aren't right.
             if ((!isTime || !noPreviousEmail) && !canOverride)
@@ -91,7 +92,7 @@
             }
 
             // Build Body
-            var data = await GetSoberSignupsNextSevenDaysAsync(now);
+            var data = await base.GetThisWeeksSoberSignupsAsync(now);
             var body = base.RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
             var bytes = Encoding.Default.GetBytes(body);
             body = Encoding.UTF8.GetString(bytes);
