@@ -29,13 +29,13 @@
             <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        Sober drivers <small>over the next 7 days</small>
+                        Sober Signups <small class="pull-right">this week</small>
                     </div>
                     @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Upcoming Laundry Reservations</div>
+                    <div class="panel-heading">Laundry Reservations <small class="pull-right">next five</small></div>
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
@@ -57,7 +57,7 @@
                                 else
                                 {
                                     <tr>
-                                        <td colspan="2">No reservations this week.</td>
+                                        <td colspan="2">None</td>
                                     </tr>
                                 }
                             </tbody>

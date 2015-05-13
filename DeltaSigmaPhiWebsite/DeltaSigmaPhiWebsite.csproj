@@ -391,6 +391,7 @@
     <Compile Include="Entities\WorkOrderStatus.cs" />
     <Compile Include="Entities\WorkOrderPriorityChange.cs" />
     <Compile Include="Entities\WorkOrderStatusChange.cs" />
+    <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Migrations\201501041342053_Initial.cs" />
     <Compile Include="Migrations\201501041342053_Initial.Designer.cs">
       <DependentUpon>201501041342053_Initial.cs</DependentUpon>
