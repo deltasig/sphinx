@@ -15,23 +15,20 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class WorkOrdersController : BaseController
     {
+        [HttpGet]
         public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
         {
             var workOrders = await _db.WorkOrders.ToListAsync();
             var filterResults = new List<WorkOrder>();
             // Filter out results based on open, closed, sort, and/or search string.
-            ViewBag.OpenResultCount = 0;
-            ViewBag.ClosedResultCount = 0;
             if (open)
             {
                 var openResults = workOrders.Where(w => w.GetCurrentStatus() != "Closed").ToList();
-                ViewBag.OpenResultCount = openResults.Count();
                 filterResults.AddRange(openResults);
             }
             if (closed)
             {
                 var closedResults = workOrders.Where(w => w.GetCurrentStatus() == "Closed").ToList();
-                ViewBag.ClosedResultCount = closedResults.Count();
                 filterResults.AddRange(closedResults);
             }
             switch (sort)
@@ -72,6 +69,8 @@
                         w.GetCurrentStatus().ToLower().Contains(s))
                     .ToList();
             }
+            ViewBag.OpenResultCount = filterResults.Count(w => w.GetCurrentStatus() != "Closed");
+            ViewBag.ClosedResultCount = filterResults.Count(w => w.GetCurrentStatus() == "Closed");
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
@@ -109,12 +108,20 @@
             return View(model);
         }
 
+        [HttpGet]
         public async Task<ActionResult> View(int? id, string msg)
         {
-            ViewBag.FailMessage = msg;
+            ViewBag.Message = msg;
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var workOrder = await _db.WorkOrders.FindAsync(id);
-            if (workOrder == null) return HttpNotFound(); 
+            if (workOrder == null) return HttpNotFound();
+
+            if (User.IsInRole("Administrator") && workOrder.GetCurrentStatus() == "Unread")
+            {
+                var underReviewStatus = await _db.WorkOrderStatuses.SingleAsync(s => s.Name == "Under Review");
+                await UpdateWorkOrderStatus(workOrder, underReviewStatus);
+                return RedirectToAction("View", new { id, msg });
+            }
 
             var workOrders = await _db.WorkOrders.ToListAsync();
             var model = new WorkOrderViewModel
@@ -132,6 +139,58 @@
             };
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeWorkOrderStatus(string typeName, int? id)
+        {
+            if (string.IsNullOrEmpty(typeName) || id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            
+            var status = await _db.WorkOrderStatuses
+                .SingleOrDefaultAsync(w => w.Name == typeName);
+            if (status == null) return HttpNotFound();
+
+            var workOrder = await _db.WorkOrders.FindAsync(id);
+            if (workOrder == null) return HttpNotFound();
+
+            var newStatus = new WorkOrderStatusChange
+            {
+                UserId = WebSecurity.CurrentUserId,
+                ChangedOn = DateTime.UtcNow,
+                WorkOrderId = (int) id,
+                WorkOrderStatusId = status.WorkOrderStatusId
+            };
+
+            _db.WorkOrderStatusChanges.Add(newStatus);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("View", new { id, msg = "Status updated to " + typeName + "." });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ChangeWorkOrderPriority(string typeName, int? id)
+        {
+            if (string.IsNullOrEmpty(typeName) || id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var priority = await _db.WorkOrderPriorities
+                .SingleOrDefaultAsync(w => w.Name == typeName);
+            if (priority == null) return HttpNotFound();
+
+            var workOrder = await _db.WorkOrders.FindAsync(id);
+            if (workOrder == null) return HttpNotFound();
+
+            var newPriority = new WorkOrderPriorityChange
+            {
+                UserId = WebSecurity.CurrentUserId,
+                ChangedOn = DateTime.UtcNow,
+                WorkOrderId = (int)id,
+                WorkOrderPriorityId = priority.WorkOrderPriorityId
+            };
+
+            _db.WorkOrderPriorityChanges.Add(newPriority);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("View", new { id, msg = "Status updated to " + typeName + "." });
         }
 
         [HttpPost]
@@ -163,7 +222,7 @@
                 var statusChange = new WorkOrderStatusChange
                 {
                     WorkOrderStatusId = closedStatus.WorkOrderStatusId,
-                    ChangedOn = commentTime.AddMinutes(1),
+                    ChangedOn = commentTime.AddSeconds(1),
                     WorkOrderId = (int) workOrderId,
                     UserId = userId
                 };
@@ -187,6 +246,7 @@
             return RedirectToAction("View", new { id = workOrderId });
         }
 
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -239,6 +299,8 @@
 
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
         public ActionResult CreateOld()
         {
             var model = new WorkOrderArchiveModel
@@ -315,6 +377,7 @@
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -334,6 +397,7 @@
             return RedirectToAction("Index");
         }
 
+        [HttpGet]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -349,6 +413,21 @@
             _db.WorkOrders.Remove(model);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
+        }
+        
+        private async Task UpdateWorkOrderStatus(WorkOrder workOrder, WorkOrderStatus newStatus)
+        {
+            var statusChange = new WorkOrderStatusChange
+            {
+                ChangedOn = DateTime.UtcNow,
+                UserId = WebSecurity.CurrentUserId,
+                WorkOrderId = workOrder.WorkOrderId,
+                WorkOrderStatusId = newStatus.WorkOrderStatusId
+            };
+
+            _db.Entry(workOrder).State = EntityState.Modified;
+            _db.WorkOrderStatusChanges.Add(statusChange);
+            await _db.SaveChangesAsync();
         }
     }
 }

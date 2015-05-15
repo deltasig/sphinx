@@ -131,7 +131,7 @@
                             <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
                             <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
                             <input id="sort" name="closed" type="hidden" value="@ViewBag.Sort.ToString()">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="" aria-describedby="search-addon">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
                         </div>
                     }
                 </div>
@@ -160,9 +160,20 @@
                             var status = @statuses.Last().Status.Name;
                             var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
                             var priority = priorities.Last().Priority.Name;
-                            var statusLabelColor = status == "On-Hold" ? "label-primary" : status == "Closed" ? "label-success" :
-                                status == "Under Review" || status == "In Progress" ? "label-warning" : "label-default";
-                            var priorityLabelColor = priority == "Medium" ? "label-warning" : priority == "High" ? "label-danger" : "label-default";
+                            var statusLabelColor = status == "On-Hold"
+                                ? "label-default"
+                                : status == "Closed"
+                                    ? "label-success"
+                                    : status == "Under Review"
+                                        ? "label-info"
+                                        : status == "In Progress"
+                                            ? "label-warning"
+                                            : "label-default";
+                            var priorityLabelColor = priority == "Moderate"
+                                ? "label-warning"
+                                : priority == "High"
+                                    ? "label-danger"
+                                    : "label-default";
                             var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
                             var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
                             var daysSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).Days;
