@@ -4,11 +4,11 @@
     ViewBag.Title = "Work Order";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var createdOn = TimeZoneInfo.ConvertTimeFromUtc(Model.WorkOrder.GetDateTimeCreated(), cstZone);
-    var elevatedPermissions = 
-        User.IsInRole("Administrator") || 
-        User.IsInRole("House Manager") || 
+    var elevatedPermissions =
+        User.IsInRole("Administrator") ||
+        User.IsInRole("House Manager") ||
         Model.WorkOrder.UserId == WebSecurity.CurrentUserId;
-    
+
     var comments = Model.WorkOrder.Comments.OrderBy(o => o.SubmittedOn);
     var statusChanges = Model.WorkOrder.StatusChanges.OrderBy(o => o.ChangedOn).Skip(1);
     var priorityChanges = Model.WorkOrder.PriorityChanges.OrderBy(o => o.ChangedOn);
@@ -16,11 +16,11 @@
     discussion.AddRange(comments.Select(c => new WorkOrderDiscussionEntry
     {
         OccurredOn = c.SubmittedOn,
-        UserId = c.UserId, 
+        UserId = c.UserId,
         Name = c.Member.ToString(),
-        Title = c.Member.ToString() + " " + 
+        Title = c.Member.ToString() + " " +
             ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
-            ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? "day" : "days") + " ago",
+            ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? " day" : " days") + " ago",
         Text = c.Text
     }));
     discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
@@ -29,7 +29,7 @@
         UserId = s.UserId,
         Name = s.Member.ToString(),
         Title = string.Empty,
-        Text = "<strong>Status</strong> changed by <strong>" + s.Member.ToString() + "</strong> to <strong>" + 
+        Text = "<strong>Status</strong> changed by <strong>" + s.Member.ToString() + "</strong> to <strong>" +
             s.Status.Name + "</strong>."
     }));
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
@@ -38,9 +38,15 @@
         UserId = p.UserId,
         Name = p.Member.ToString(),
         Title = string.Empty,
-        Text = "<strong>Priority</strong> changed by <strong>" + p.Member.ToString() + "</strong> to <strong>" + 
+        Text = "<strong>Priority</strong> changed by <strong>" + p.Member.ToString() + "</strong> to <strong>" +
         p.Priority.Name + "</strong>."
     }));
+
+    var inProgressPost = new { typeName = "In Progress", id = Model.WorkOrder.WorkOrderId };
+    var onHoldPost = new { typeName = "On Hold", id = Model.WorkOrder.WorkOrderId };
+    var lowPost = new { typeName = "Low", id = Model.WorkOrder.WorkOrderId };
+    var moderatePost = new { typeName = "Moderate", id = Model.WorkOrder.WorkOrderId };
+    var highPost = new { typeName = "High", id = Model.WorkOrder.WorkOrderId };
 }
 
 @section Title
@@ -67,17 +73,19 @@
                 var status = statuses.Last().Status.Name;
                 var priorities = Model.WorkOrder.PriorityChanges.OrderBy(o => o.ChangedOn);
                 var priority = priorities.Last().Priority.Name;
-                var statusLabelColor = status == "On-Hold" 
-                    ? "label-primary" 
-                    : status == "Closed" 
-                        ? "label-success" 
-                        : status == "Under Review" || status == "In Progress" 
-                            ? "label-warning" 
-                            : "label-default";
-                var priorityLabelColor = priority == "Medium" 
-                    ? "label-warning" 
-                    : priority == "High" 
-                        ? "label-danger" 
+                var statusLabelColor = status == "On-Hold"
+                    ? "label-default"
+                    : status == "Closed"
+                        ? "label-success"
+                        : status == "Under Review"
+                            ? "label-info"
+                            : status == "In Progress"
+                                ? "label-warning"
+                                : "label-default";
+                var priorityLabelColor = priority == "Moderate"
+                    ? "label-warning"
+                    : priority == "High"
+                        ? "label-danger"
                         : "label-default";
                 var daysSinceOpen = (DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days;
             }
@@ -88,7 +96,7 @@
                         @Model.WorkOrder.Title <small>#@Model.WorkOrder.WorkOrderId</small>
                         @if (elevatedPermissions)
                         {
-                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})" 
+                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})"
                                class="btn btn-sm btn-default pull-right">
                                 <i class="fa fa-wrench"></i> Edit
                             </a>
@@ -102,17 +110,69 @@
                             @priority Priority
                         </span>
                         <strong>@Model.WorkOrder.Member</strong>
-                        created this work order @(daysSinceOpen < 1 ? "< 1" : daysSinceOpen.ToString()) 
+                        created this work order @(daysSinceOpen < 1 ? "< 1" : daysSinceOpen.ToString())
                         @(daysSinceOpen <= 1 ? "day" : "days") ago · @Model.WorkOrder.Comments.Count Comments
                     </p>
                 </div>
             </div>
+            @if (elevatedPermissions)
+            {
+                <div class="row row-fluid">
+                    <div class="col-xs-12">
+                        <ul class="list-inline">
+                            <li>Change Status to</li>
+                            <li class="@(Model.WorkOrder.GetCurrentStatus() == "In Progress" ? "hidden" : "")">
+                                @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", inProgressPost, FormMethod.Post,
+                                    new {@class = "form-inline"}))
+                                {
+                                    <input value="In Progress" type="submit" class="btn btn-xs btn-warning"/>
+                                }
+                            </li>
+                            <li class="@(Model.WorkOrder.GetCurrentStatus() == "On Hold" ? "hidden" : "")">
+                                @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", onHoldPost, FormMethod.Post,
+                                    new {@class = "form-inline"}))
+                                {
+                                    <input value="On Hold" type="submit" class="btn btn-xs btn-default"/>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
+            @if (elevatedPermissions && Model.WorkOrder.GetCurrentStatus() != "Closed")
+            {
+                <div class="row row-fluid">
+                    <div class="col-xs-12">
+                        <ul class="list-inline">
+                            <li>Change Priority to</li>
+                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Low" ? "hidden" : "")">
+                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", lowPost, FormMethod.Post))
+                                {
+                                    <input value="Low" type="submit" class="btn btn-xs btn-default" />
+                                }
+                            </li>
+                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Moderate" ? "hidden" : "")">
+                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", moderatePost, FormMethod.Post))
+                                {
+                                    <input value="Moderate" type="submit" class="btn btn-xs btn-warning" />
+                                }
+                            </li>
+                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "High" ? "hidden" : "")">
+                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", highPost, FormMethod.Post))
+                                {
+                                    <input value="High" type="submit" class="btn btn-xs btn-danger" />
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            }
             <hr />
             <div class="row row-fluid">
                 <div class="col-xs-12">
                     <div class="media">
                         <div class="media-left">
-                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt="" 
+                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt=""
                                  height="50" width="50" id="@Model.WorkOrder.UserId">
                         </div>
                         <div class="media-body">
@@ -179,14 +239,14 @@
                 </div>
             }
 
-            <hr/>
+            <hr />
             @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
             {
                 <div class="row row-fluid">
                     <div class="col-xs-12">
                         <div class="media">
                             <div class="media-left">
-                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt="" 
+                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt=""
                                      height="50" width="50" id="@WebSecurity.CurrentUserId">
                             </div>
                             <div class="media-body">
@@ -207,7 +267,7 @@
                                                         Close Work Order
                                                     </label>
                                                 </div>
-                                                <input class="btn btn-success" type="submit" value="Comment"/>
+                                                <input class="btn btn-success" type="submit" value="Comment" />
                                             }
                                         </div>
                                     </div>
@@ -227,10 +287,12 @@
 @section scripts
 {
     <script>
+
         var ids = $(".img-rounded").map(function () { return this.id; }).toArray();
 
-        $.each(ids, function( key, value ) {
+        $.each(ids, function (key, value) {
             $(".img-" + value).attr("src", "http://thecatapi.com/api/images/get?format=src&type=png&" + key);
         });
+
     </script>
 }
