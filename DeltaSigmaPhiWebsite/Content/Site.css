@@ -54,27 +54,27 @@ iframe, object, embed {
     margin: 100px auto;
 }
 
-    .form-signin .form-control {
-        position: relative;
-        height: auto;
-        -webkit-box-sizing: border-box;
-        -moz-box-sizing: border-box;
-        box-sizing: border-box;
-        padding: 10px;
-        font-size: 16px;
-    }
+.form-signin .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
 
-    .form-signin input[type="text"] {
-        margin-bottom: -1px;
-        border-bottom-right-radius: 0;
-        border-bottom-left-radius: 0;
-    }
+.form-signin input[type="text"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
 
-    .form-signin input[type="password"] {
-        margin-bottom: 10px;
-        border-top-left-radius: 0;
-        border-top-right-radius: 0;
-    }
+.form-signin input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
 
 .tab-content {
     border-left: 1px solid #ddd;
@@ -178,8 +178,8 @@ hr {
 }
 
 /* Removes the underlines under fontawesome links */
-a.social { 
-   text-decoration: none;
+a.social {
+    text-decoration: none;
 }
 
 .page-header {
@@ -195,8 +195,8 @@ a.social {
     margin: 10px 0px 0px 0px;
 }
 
-.panel-body .list-group, 
-.panel-body .alert, 
+.panel-body .list-group,
+.panel-body .alert,
 .panel-body .table,
 .panel-body p {
     margin-bottom: 0;
@@ -213,13 +213,13 @@ a.social {
 .popover-static .popover {
     position: relative;
     display: block;
-    margin: 5px 0 5px 15px;
+    margin: 5px 15px 15px 15px;
     max-width: 100%;
-    z-index: 0;
+    z-index: 10;
 }
 
 .popover.right > .arrow {
-    top:20px;
+    top: 20px;
 }
 
 .popover.right > .arrow:after {
