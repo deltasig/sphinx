@@ -35,7 +35,13 @@
                 </div>
 
                 <div class="panel panel-default">
-                    <div class="panel-heading">Laundry Reservations <small class="pull-right">next five</small></div>
+                    <div class="panel-heading">
+                        Laundry Reservations
+                        @if (Model.LaundrySummary.Any())
+                        {
+                            <small class="pull-right">next @Model.LaundrySummary.Count()</small>
+                        }
+                    </div>
                     <div class="table-responsive">
                         <table class="table">
                             <tbody>
@@ -68,26 +74,26 @@
                 @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
                 {
                     <div class="alert alert-warning">
-                        <strong>New Member: </strong>You do not appear to have classes entered for last semester.  
+                        <strong>New Member: </strong>You do not appear to have classes entered for last semester.
 
                         <u>If this is your first semester in college after graduating high school, disregard this message.</u>
 
-                        Otherwise, please go fill out your classes for last semester with the 
+                        Otherwise, please go fill out your classes for last semester with the
                         @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null).
 
-                        If you transferred here from another college you attended after graduating high school, 
+                        If you transferred here from another college you attended after graduating high school,
                         you still need to enter your previous semester classes.
                     </div>
                 }
             </div>
             <!-- RIGHT COLUMN -->
             <div class="col-md-7">
-                
+
                 <!-- ALERTS -->
                 @if (Model.NeedsToSoberDrive && (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte")))
                 {
                     <div class="alert alert-warning delayed" style="display: none;">
-                        Please sign up to sober drive at least once! 
+                        Please sign up to sober drive at least once!
                         <a href="@Url.Action("Schedule", "Sobers")">
                             Go to Schedule <i class="fa fa-caret-right"></i>
                         </a>
@@ -137,22 +143,22 @@
                         </a>
                     </div>
                 }
-                
+
                 <!-- SERVICE HOURS -->
                 <h3>
                     Your Service Hours
                     <small>
                         @{
-                            var labelColor = "label-default";
-                            var approvedHours = 0.0;
-                            if (Model.CompletedEvents.Any())
-                            {
-                                approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
-                                if (approvedHours >= Model.CurrentSemester.MinimumServiceHours)
-                                {
-                                    labelColor = "label-success";
-                                }
-                            }
+                var labelColor = "label-default";
+                var approvedHours = 0.0;
+                if (Model.CompletedEvents.Any())
+                {
+                    approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
+                    if (approvedHours >= Model.CurrentSemester.MinimumServiceHours)
+                    {
+                        labelColor = "label-success";
+                    }
+                }
                         }
                         @Model.CurrentSemester
                         <span class="label @labelColor label-as-badge">
@@ -251,7 +257,7 @@
                         }
                     </table>
                 }
-                
+
                 <!-- STUDY HOUR APPROVALS -->
                 @if (Model.ApprovalRequests.Any())
                 {
@@ -264,7 +270,7 @@
                             </a>
                         </small>
                     </h3>
-                    
+
                     <table class="table table-condensed">
                         <thead>
                             <tr>
