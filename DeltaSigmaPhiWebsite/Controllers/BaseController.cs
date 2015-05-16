@@ -39,18 +39,15 @@
         }
         protected virtual async Task<List<Member>> GetRosterForSemester(Semester semester)
         {
-            var members = await _db.Members
+            return await _db.Members
                 .Where(d =>
-                    d.LastName != "Hirtz" &&
-                    (d.MemberStatus.StatusName == "Alumnus" ||
-                        d.MemberStatus.StatusName == "Active" ||
-                        d.MemberStatus.StatusName == "Pledge" ||
-                        d.MemberStatus.StatusName == "Neophyte") &&
-                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
-                    d.GraduationSemester.DateEnd >= semester.DateEnd)
+	                d.LastName != "Hirtz" &&
+	                (d.MemberStatus.StatusName == "Active" || 
+                    d.MemberStatus.StatusName == "Pledge" || 
+                    d.MemberStatus.StatusName == "Neophyte") &&
+	                d.PledgeClass.Semester.DateStart < semester.DateEnd &&
+	                d.GraduationSemester.DateEnd > semester.DateStart)
                 .ToListAsync();
-
-            return members;
         }
         protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()
         {
