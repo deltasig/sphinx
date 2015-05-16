@@ -93,6 +93,12 @@
 
             // Build Body
             var data = await base.GetThisWeeksSoberSignupsAsync(now);
+
+            if (!data.Any())
+            {
+                return Content("No sober signups found; no email sent.");
+            }
+
             var body = base.RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
             var bytes = Encoding.Default.GetBytes(body);
             body = Encoding.UTF8.GetString(bytes);
