@@ -1,18 +1,17 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
-    using System;
-    using System.IO;
     using Entities;
+    using Extensions;
+    using Microsoft.AspNet.Identity;
     using Models;
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Net.Mail;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using App_Start;
-    using Microsoft.AspNet.Identity;
-    using System.Text;
 
     [AllowAnonymous]
     public class HomeController : BaseController

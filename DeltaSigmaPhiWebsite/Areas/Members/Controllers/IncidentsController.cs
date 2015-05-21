@@ -2,14 +2,14 @@
 {
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
+    using Extensions;
+    using Microsoft.AspNet.Identity;
     using System;
     using System.Data.Entity;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using App_Start;
-    using Microsoft.AspNet.Identity;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController

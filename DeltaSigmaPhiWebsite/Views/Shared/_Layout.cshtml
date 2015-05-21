@@ -34,5 +34,17 @@
     <script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
     <script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
     @RenderSection("scripts", required: false)
+    <script>
+        $(function () {
+            // setTimeout() function will be fired after page is loaded
+            // it will wait for 5 sec. and then will fire
+            // $("#successMessage").hide() function
+            setTimeout(function () {
+                $("#success-message").hide('blind', {}, 1000);
+                $("#failure-message").hide('blind', {}, 1000);
+                $("#message").hide('blind', {}, 1000);
+            }, 5000);
+        });
+    </script>
 </body>
 </html>
