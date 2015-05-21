@@ -6,7 +6,7 @@
 }
 @section Title
 {
-	@Html.Partial("_Title")
+	@Html.Partial("_TitleExternal")
 }
 @section AdditionalMeta{
 	<meta name="description"
@@ -18,13 +18,9 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-xs-12 jumbotron" style="background: none; padding: 10px; @(currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "color:whitesmoke" : "")">
-				<h1>
-					<strong>DELTA SIGMA PHI</strong>
-				</h1>
-				<h4 style="margin: 0">DELTA EPSILON CHAPTER
-				</h4>
-				<h4 style="margin: 0">MISSOURI S&amp;T
-				</h4>
+				<h1><strong>DELTA SIGMA PHI</strong></h1>
+				<h4 style="margin: 0 0 0 3px">DELTA EPSILON CHAPTER</h4>
+				<h4 style="margin: 0 0 0 3px">MISSOURI S&amp;T</h4>
 			</div>
 		</div>
 	</div>
