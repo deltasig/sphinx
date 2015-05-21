@@ -1,8 +1,8 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Scholarships.Controllers
 {
-    using App_Start;
     using DeltaSigmaPhiWebsite.Controllers;
     using Entities;
+    using Extensions;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;

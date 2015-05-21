@@ -1,8 +1,8 @@
 ﻿namespace DeltaSigmaPhiWebsite.Controllers
 {
     using Areas.Scholarships.Models;
-    using DeltaSigmaPhiWebsite.Extensions;
     using Entities;
+    using Extensions;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -41,12 +41,12 @@
         {
             return await _db.Members
                 .Where(d =>
-	                d.LastName != "Hirtz" &&
-	                (d.MemberStatus.StatusName == "Active" || 
+                    d.LastName != "Hirtz" &&
+                    (d.MemberStatus.StatusName == "Active" || 
                     d.MemberStatus.StatusName == "Pledge" || 
                     d.MemberStatus.StatusName == "Neophyte") &&
-	                d.PledgeClass.Semester.DateStart < semester.DateEnd &&
-	                d.GraduationSemester.DateEnd > semester.DateStart)
+                    d.PledgeClass.Semester.DateStart < semester.DateEnd &&
+                    d.GraduationSemester.DateEnd > semester.DateStart)
                 .ToListAsync();
         }
         protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()

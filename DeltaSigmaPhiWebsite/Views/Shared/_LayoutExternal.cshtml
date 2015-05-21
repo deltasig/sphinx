@@ -10,15 +10,14 @@
     <link rel="stylesheet" type="text/css" href="~/Content/bootstrap/css/bootstrap.css">
     @Styles.Render("~/Content/custom-css")
     @Styles.Render("~/Content/font-awesome")
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
 </head>
 <body style="padding: 0">
     @{ Html.RenderPartial("_ExternalNav"); }
     @RenderSection("Title", required: false)
     @RenderBody()
     @{ Html.RenderPartial("Footer"); }
-
-    @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
 </body>
 </html>

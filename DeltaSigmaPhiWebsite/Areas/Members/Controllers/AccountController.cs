@@ -1,9 +1,9 @@
 ﻿namespace DeltaSigmaPhiWebsite.Areas.Members.Controllers
 {
-    using App_Start;
     using DeltaSigmaPhiWebsite.Controllers;
     using Edu.Controllers;
     using Entities;
+    using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.Web.WebPages.OAuth;
     using Models;
