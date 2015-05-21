@@ -18,9 +18,10 @@
     {
         public async Task<ActionResult> Index(ServiceHourIndexFilterModel model, ServiceHourMessageId? message)
         {
+            var thisSemester = await GetThisSemesterAsync();
             if(model.SelectedSemester == null)
             {
-                model.SelectedSemester = await GetThisSemestersIdAsync();
+                model.SelectedSemester = thisSemester.SemesterId;
             }
 
             switch (message)
@@ -47,7 +48,6 @@
 
             model.ServiceHours = new List<ServiceHourIndexModel>();
             var members = await base.GetRosterForSemester(semester);
-
             foreach (var m in members)
             {
                 var serviceHours = m.ServiceHours
@@ -77,6 +77,11 @@
                 {
                     semesters.Add(s);
                 }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
             }
 
             model.SemesterList = await GetCustomSemesterListAsync(semesters);

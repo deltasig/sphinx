@@ -67,6 +67,7 @@
             // Get semester list
             var signups = await _db.LaundrySignups.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
+            var thisSemester = await base.GetThisSemesterAsync();
             var semesters = new List<Semester>();
             foreach (var s in allSemesters)
             {
@@ -74,6 +75,11 @@
                 {
                     semesters.Add(s);
                 }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
             }
 
             var model = new LaundryIndexModel
