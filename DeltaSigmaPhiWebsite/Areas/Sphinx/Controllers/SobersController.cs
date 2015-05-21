@@ -272,10 +272,11 @@
         [HttpGet]
         public async Task<ActionResult> Report(SoberReportModel model)
         {
+            var thisSemester = await base.GetThisSemesterAsync();
             // Identify semester
             Semester semester;
             if (model.SelectedSemester == null)
-                semester = await base.GetThisSemesterAsync();
+                semester = thisSemester;
             else
                 semester = await _db.Semesters.FindAsync(model.SelectedSemester);
 
@@ -289,6 +290,11 @@
                 {
                     semesters.Add(s);
                 }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
             }
 
             // Build model for view

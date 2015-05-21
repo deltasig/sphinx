@@ -16,9 +16,10 @@
     {
         public async Task<ActionResult> Index(EventIndexFilterModel model, EventMessageId? message)
         {
+            var thisSemester = await base.GetThisSemesterAsync();
             if (model.SelectedSemester == null)
             {
-                model.SelectedSemester = await GetThisSemestersIdAsync();
+                model.SelectedSemester = thisSemester.SemesterId;
             }
             switch (message)
             {
@@ -32,17 +33,17 @@
                     break;
             }
 
-            var thisSemester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
             var previousSemester = (await _db.Semesters
-                .Where(s => s.DateEnd < thisSemester.DateStart)
+                .Where(s => s.DateEnd < semester.DateStart)
                 .OrderBy(s => s.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
-                    DateEnd = thisSemester.DateStart
+                    DateEnd = semester.DateStart
                 };
 
             model.Events = await _db.Events
-                .Where(e => e.DateTimeOccurred < thisSemester.DateEnd && 
+                .Where(e => e.DateTimeOccurred < semester.DateEnd && 
                             e.DateTimeOccurred >= previousSemester.DateEnd)
                 .ToListAsync();
 
@@ -56,6 +57,11 @@
                 {
                     semesters.Add(s);
                 }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
             }
 
             model.SemesterList = await GetCustomSemesterListAsync(semesters);
