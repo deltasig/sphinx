@@ -1,0 +1,109 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<SelectListItem>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Member Laundry Usage";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <h4>Statistics <i id="loading" class="fa fa-lg fa-spinner fa-spin"></i></h4>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownList("Semesters", Model, new { @class = "form-control", id = "semester-list" })
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dl class="dl-horizontal">
+                                <dt id="">Semester</dt>
+                                <dd id="dates"></dd>
+                                <dt id="">Total Signups</dt>
+                                <dd id="total-signups"></dd>
+                                <dt id="">Total Members</dt>
+                                <dd id="total-members"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>Member Usage</h4>
+                            <div id="usage-well" class="">
+                                <canvas id="usage-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
+    <script>
+        Chart.defaults.global.responsive = true;
+        Chart.defaults.global.scaleOverride = true;
+
+        LoadStats();
+        $('#loading').hide();
+
+        $('#semester-list').change(function() {
+            $('#loading').show();
+            LoadStats();
+            $('#loading').hide();
+        });
+
+        function LoadStats() {
+            var options = {};
+            options.sid = $('#semester-list option:selected').val();
+            $.getJSON('GetUsageStats', options).done(function (data) {
+
+                data = $.parseJSON(data);
+                var usageData = {
+                    labels: data.ChartXLabels,
+                    datasets: [
+                        {
+                            label: "Usage Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.ChartXValues
+                        }
+                    ]
+                };
+                $('#dates').text(data.Semester + " (" + data.StartDate + " - " + data.EndDate + ")");
+                $('#total-signups').text(data.TotalSignups);
+                $('#total-members').text(data.TotalMembers);
+
+                $('#usage-chart').remove();
+                $('#usage-well').append('<canvas id="usage-chart"></canvas>');
+
+                Chart.defaults.global.scaleSteps = 7;
+                Chart.defaults.global.scaleStepWidth = 5;
+                Chart.defaults.global.scaleStartValue = 0;
+                var usageChart = document.getElementById('usage-chart').getContext('2d');
+                new Chart(usageChart).Line(usageData);
+            });
+        }
+
+    </script>
+
+}

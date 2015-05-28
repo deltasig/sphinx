@@ -190,6 +190,80 @@
             var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> MemberUsage()
+        {
+            // Get semester list
+            var signups = await _db.LaundrySignups.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var thisSemester = await base.GetThisSemesterAsync();
+            var semesters = new List<Semester>();
+            foreach (var s in allSemesters)
+            {
+                if (signups.Any(i => i.DateTimeShift >= s.DateStart && i.DateTimeShift <= s.DateEnd))
+                {
+                    semesters.Add(s);
+                }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
+            }
+
+            return View(await GetCustomSemesterListAsync(semesters));
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<ActionResult> GetUsageStats(int? sid)
+        {
+            var model = new LaundryUsageStatsModel();
+
+            var semester = await _db.Semesters.FindAsync(sid) ?? await base.GetThisSemesterAsync();
+
+            var signups = await _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= semester.DateStart && l.DateTimeShift <= semester.DateEnd)
+                .OrderBy(l => l.DateTimeShift)
+                .ToListAsync();
+
+            var formattedSignups = signups.Select(l => new
+            {
+                DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
+                DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
+                l.UserId
+            }).ToList();
+
+            // Build model
+            model.TotalSignups = formattedSignups.Count();
+            model.TotalMembers = formattedSignups.Select(s => s.UserId).Distinct().Count();
+            model.Semester = semester.ToString();
+            model.StartDate = base.ConvertUtcToCst(semester.DateStart).ToShortDateString();
+            model.EndDate = base.ConvertUtcToCst(semester.DateEnd).ToShortDateString();
+
+            // Calculations
+            var values = formattedSignups
+                .GroupBy(s => s.UserId)
+                .Select(s => new { UserId = s.Key, Value = s.Count() })
+                .OrderByDescending(s => s.Value)
+                .ToList();
+            model.ChartXValues = values.Select(s => s.Value).ToList();
+            model.ChartXLabels = new List<string>();
+            for (var i = 0; i < values.Count; i++)
+            {
+                if (signups.First(s => s.UserId == values[i].UserId).Member.Room == 0)
+                {
+                    model.ChartXLabels.Add((i+1).ToString() + "*");
+                }
+                else
+                {
+                    model.ChartXLabels.Add((i+1).ToString());
+                }
+            }
+
+            var json = JsonConvert.SerializeObject(model, Formatting.Indented);
+            return Json(json, JsonRequestBehavior.AllowGet);
+        }
 
         private static string[] GetDayNames()
         {
