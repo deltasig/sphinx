@@ -153,7 +153,9 @@
                                 foreach (var s in item.ServiceHours)
                                 {
                                     <tr class="collapse @item.Member.UserId">
-                                        <td style="border: none">@s.Event.EventName</td>
+                                        <td style="border: none">
+                                            @Html.ActionLink(s.Event.EventName, "Details", "Events", new { id = s.Event.EventId }, null)
+                                        </td>
                                         <td style="border: none">
                                             @s.DurationHours
                                             @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
