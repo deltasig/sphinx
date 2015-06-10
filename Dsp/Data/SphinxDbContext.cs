@@ -1,0 +1,74 @@
+﻿namespace Dsp.Data
+{
+    using System.Data.Entity;
+    using Entities;
+    using Microsoft.AspNet.Identity.EntityFramework;
+
+    public class SphinxDbContext : IdentityDbContext
+        <Member, Position, int, SphinxUserLogin, Leader, SphinxUserClaim>
+    {
+        public SphinxDbContext() : base("DefaultConnection")
+        {
+        }
+
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<ClassFile> ClassFiles { get; set; }
+        public virtual DbSet<ClassFileVote> ClassFileVotes { get; set; }
+        public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
+        public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Email> Emails { get; set; }
+        public virtual DbSet<EmailType> EmailTypes { get; set; }
+        public virtual DbSet<Event> Events { get; set; }
+        public virtual DbSet<IncidentReport> IncidentReports { get; set; }
+        public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
+        public virtual DbSet<Leader> Leaders { get; set; }
+        public virtual DbSet<Major> Majors { get; set; }
+        public virtual DbSet<MajorToMember> MajorsToMembers { get; set; }
+        public virtual DbSet<Meal> Meals { get; set; }
+        public virtual DbSet<MealItem> MealItems { get; set; }
+        public virtual DbSet<MealItemType> MealItemTypes { get; set; }
+        public virtual DbSet<MealLatePlate> MealLatePlates { get; set; }
+        public virtual DbSet<MealPeriod> MealPeriods { get; set; }
+        public virtual DbSet<MealToItem> MealToItems { get; set; }
+        public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
+        public virtual DbSet<MealVote> MealVotes { get; set; }
+        public virtual DbSet<MemberStatus> MemberStatus { get; set; }
+        public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
+        public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
+        public virtual DbSet<Room> Rooms { get; set; }
+        public virtual DbSet<RoomToMember> RoomsToMembers { get; set; }
+        public virtual DbSet<ScholarshipAnswer> ScholarshipAnswers { get; set; }
+        public virtual DbSet<ScholarshipApp> ScholarshipApps { get; set; }
+        public virtual DbSet<ScholarshipType> ScholarshipTypes { get; set; }
+        public virtual DbSet<ScholarshipQuestion> ScholarshipQuestions { get; set; }
+        public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
+        public virtual DbSet<SemesterClass> SemesterClasses { get; set; }
+        public virtual DbSet<Semester> Semesters { get; set; }
+        public virtual DbSet<ServiceHour> ServiceHours { get; set; }
+        public virtual DbSet<SoberSignup> SoberSignups { get; set; }
+        public virtual DbSet<SoberType> SoberTypes { get; set; }
+        public virtual DbSet<WorkOrder> WorkOrders { get; set; }
+        public virtual DbSet<WorkOrderComment> WorkOrderComments { get; set; }
+        public virtual DbSet<WorkOrderPriority> WorkOrderPriorities { get; set; }
+        public virtual DbSet<WorkOrderPriorityChange> WorkOrderPriorityChanges { get; set; }
+        public virtual DbSet<WorkOrderStatus> WorkOrderStatuses { get; set; }
+        public virtual DbSet<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Member>().ToTable("Members", "dbo").Property(p => p.Id).HasColumnName("UserId");
+            modelBuilder.Entity<Position>().ToTable("Positions", "dbo").Property(p => p.Id).HasColumnName("PositionId");
+            modelBuilder.Entity<Leader>().ToTable("Leaders", "dbo").Property(p => p.RoleId).HasColumnName("LeaderId");
+            modelBuilder.Entity<SphinxUserLogin>().ToTable("MemberLogins", "dbo");
+            modelBuilder.Entity<SphinxUserClaim>().ToTable("MemberClaims", "dbo");
+        }
+
+        public static SphinxDbContext Create()
+        {
+            return new SphinxDbContext();
+        }
+    }
+}

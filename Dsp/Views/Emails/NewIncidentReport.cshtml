@@ -1,0 +1,33 @@
+﻿@model Dsp.Entities.IncidentReport
+@{
+    Layout = null;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+<html>
+<body>
+    <div style="height: 40px; width: 100%; border-bottom: 1px solid gainsboro; ">
+        <img style="float: right; " height="35" width="35"
+             src="https://www.deltasig-de.org/Images/MobileTouch-57x57.png" />
+        <h2 style="margin: 0">
+            <strong>New Incident Report Submitted</strong>
+        </h2>
+    </div>
+    <p>
+        <dl>
+            <dt><strong>@Html.DisplayNameFor(model => model.PolicyBroken)</strong></dt>
+            <dd>@Html.DisplayFor(model => model.PolicyBroken)</dd>
+            <dt><strong>@Html.DisplayNameFor(model => model.DateTimeSubmitted)</strong></dt>
+            <dd>@TimeZoneInfo.ConvertTimeFromUtc(Model.DateTimeSubmitted, cstZone)</dd>
+            <dt><strong>@Html.DisplayNameFor(model => model.DateTimeOfIncident)</strong></dt>
+            <dd>@Model.DateTimeOfIncident</dd>
+        </dl>
+    </p>
+
+    <p>
+        <a href="https://www.deltasig-de.org/members/incidents/details/@Model.IncidentId">
+            Go to incident report
+        </a>
+    </p>
+</body>
+</html>

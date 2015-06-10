@@ -1,0 +1,103 @@
+﻿@model IList<Dsp.Areas.Edu.Models.ClassTranscriptModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Transcript";
+    var semesters = Model.Select(m => m.ClassTaken).Select(c => c.Semester).Distinct();
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            @if (ViewBag != null && ViewBag.UserName.Length > 0)
+            {
+                <a href="@Url.Action("Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"})" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Schedule
+                </a>
+            } 
+            <a href="@Url.Action("Index", "Roster", new { area = "Members" })" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Roster
+            </a>
+        </div>
+        <div class="col-xs-6 text-right">
+        </div>
+        <br />
+        <br />
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @using (Html.BeginForm("Transcript", "Classes", new { area = "Edu" }, FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <table class="table table-responsive table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Semester</th>
+                                        <th>Class</th>
+                                        <th>Midterm Grade</th>
+                                        <th>Final Grade</th>
+                                        <th>Dropped</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @for (var i = 0; i < Model.Count(); i++)
+                                    {
+                                        @Html.HiddenFor(m => Model[i].Member.UserName)
+                                        @Html.HiddenFor(m => Model[i].ClassTaken.ClassId)
+                                        @Html.HiddenFor(m => Model[i].ClassTaken.SemesterId)
+                                        @Html.HiddenFor(m => Model[i].ClassTaken.UserId)
+                                        @Html.HiddenFor(m => Model[i].ClassTaken.IsSummerClass)
+                                        <tr>
+                                            <td>
+                                                @(Model[i].ClassTaken.IsSummerClass 
+                                                    ? "Summer " + Model[i].ClassTaken.Semester.DateStart.Year 
+                                                    : Model[i].ClassTaken.Semester.ToString())
+                                            </td>
+                                            <td>
+                                                @Model[i].ClassTaken.Class.CourseShorthand
+                                                <a data-toggle="tooltip" data-placement="top"
+                                                   title="@Model[i].ClassTaken.Class.CourseName">
+                                                    <i class="fa fa-info-circle"></i>
+                                                </a>
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => Model[i].ClassTaken.MidtermGrade,
+                                                    new SelectList(Model[i].Grades, "Value", "Text", Model[i].ClassTaken.MidtermGrade),
+                                                    new { @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @Html.DropDownListFor(m => Model[i].ClassTaken.FinalGrade,
+                                                    new SelectList(Model[i].Grades, "Value", "Text", Model[i].ClassTaken.FinalGrade),
+                                                    new { @class = "form-control" })
+                                            </td>
+                                            <td>
+                                                @Html.EditorFor(m => Model[i].ClassTaken.Dropped, new { htmlAttributes = new { @class = "form-control" } })
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                <button type="submit" class="btn btn-success">Update</button>
+            }
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+    </script>
+}
