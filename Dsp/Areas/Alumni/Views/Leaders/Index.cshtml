@@ -1,0 +1,60 @@
+﻿@model IEnumerable<Dsp.Entities.Leader>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Alumni Leaders";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            @if (Model.Any(l => l.Position.IsPublic))
+            {
+                <h3>
+                    @(Model.First().Semester.DateStart.Month < 6 ? "Spring" : "Fall")
+                    @Model.First().Semester.DateStart.Year
+                    <small>Semester</small>
+                </h3>
+
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>Position</th>
+                                        <th>Contact Name</th>
+                                        <th>Email</th>
+                                        <th>Mobile Phone</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var leader in Model.OrderBy(l => l.Position.DisplayOrder))
+                                    {
+                                        <tr>
+                                            <td>@leader.Position.Name</td>
+                                            <td>@leader.Member.FirstName @leader.Member.LastName</td>
+                                            <td><a href="mailto:@leader.Member.Email">@leader.Member.Email</a></td>
+                                            <td>@leader.Member.PhoneNumbers.Single(p => p.Type == "Mobile").Number</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <p>
+                        Contact information will be available as soon as appointments are made.<br />
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

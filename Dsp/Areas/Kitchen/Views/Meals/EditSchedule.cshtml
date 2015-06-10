@@ -1,0 +1,127 @@
+﻿@model Dsp.Areas.Kitchen.Models.MealScheduleModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Edit Meal Schedule";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
+            </div>
+        </div>
+        <div class="col-xs-6 text-right">
+            <a class="btn btn-sm btn-info" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week })">
+                <i class="fa fa-caret-left"></i> Back To Meal Schedule
+            </a>
+            <div class="btn-group" role="group" aria-label="...">
+                <a class="btn btn-sm btn-default" href="@Url.Action("EditSchedule", "Meals", new { week = ViewBag.week - 1 })">
+                    <i class="fa fa-caret-left"></i> Previous Week
+                </a>
+                <a class="btn btn-sm btn-default disabled" href="#">
+                    @Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()
+                </a>
+                <a class="btn btn-sm btn-default" href="@Url.Action("EditSchedule", "Meals", new { week = ViewBag.week + 1 })">
+                    Next Week <i class="fa fa-caret-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            @using (Html.BeginForm("EditSchedule", "Meals", new { area = "Kitchen", ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>Meal Schedule</strong>
+                    </div>
+                    <div class="panel-body">
+                            <table class="table table-bordered" id="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th class="active text-center">Period</th>
+                                    <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")</th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">@Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @{
+                                    var newList = new List<object> { new { MealId = -1, Text = "None" } };
+                                    foreach (var m in Model.Meals)
+                                    {
+                                        newList.Add(new
+                                        {
+                                            m.MealId,
+                                            Text = m.ToString()
+                                        });
+                                    }
+                                }
+                                @foreach (var p in Model.MealPeriods)
+                                {
+                                    <tr>
+                                        <td class="active text-center col-md-2">
+                                            <strong>@p.Name</strong>
+                                            <br />
+                                            <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
+                                        </td>
+                                        @for (var i = 0; i < 7; i++)
+                                        {
+                                            var slot = Model.MealsToPeriods
+                                                .Single(m => m.MealPeriodId == p.MealPeriodId && m.Date.Date == Model.StartOfWeek.AddDays(i).Date);
+                                            @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId)
+                                            @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealPeriodId)
+                                            @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
+                                                
+                                            <td>
+                                                @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
+                                                    new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
+                                                    new { @class = "form-control dd", data_live_search = true })
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <input type="submit" value="Save Schedule" class="btn btn-default" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $('.dd').selectpicker({
+            width: 100
+        });
+        $('[data-toggle="tooltip"]').tooltip();
+
+    </script>
+}

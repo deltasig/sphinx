@@ -1,0 +1,45 @@
+﻿@model Dsp.Entities.Event
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Event Details";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5 col-xs-12">
+            @Html.ActionLink("Back to List", "Index", new { SelectedSemester = ViewBag.Semester })
+
+            <h4>@Model.EventName</h4>
+
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.DateTimeOccurred)</dt>
+                    <dd>@Html.DisplayFor(model => model.DateTimeOccurred)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.DurationHours)</dt>
+                    <dd>@Html.DisplayFor(model => model.DurationHours)</dd>
+                    <dt>Members who Served</dt>
+                    <dd>
+                        @foreach(var s in Model.ServiceHours.OrderBy(m => m.Member.LastName))
+                        {
+                            var label = s.Member.FirstName + " " + s.Member.LastName + " (" + s.DurationHours + " hrs)";
+                            <small>@label</small>
+                                
+                            if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                            {
+                                <small class="pull-right">
+                                    @Html.ActionLink("Edit", "Edit", "Hours", new { eid = s.EventId, uid = s.UserId }, null) |
+                                    @Html.ActionLink("Delete", "Delete", "Hours", new { eid = s.EventId, uid = s.UserId }, null)
+                                </small>
+                            }
+                            <br/>
+                        }
+                        <strong>Total:</strong> @Model.ServiceHours.Count <br/>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>
