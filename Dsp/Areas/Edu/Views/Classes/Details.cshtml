@@ -1,0 +1,178 @@
+﻿@model Dsp.Areas.Edu.Models.ClassDetailsModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.Class.CourseShorthand + ": " + Model.Class.CourseName;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Classes
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(m => m.Class.Department.Name)</dt>
+                    <dd>@Html.DisplayFor(m => m.Class.Department.Name)</dd>
+                    <dt>Enrolled (all-time)</dt>
+                    <dd>@Model.Class.ClassesTaken.Count</dd>
+                    <dt>Enrolled (currently)</dt>
+                    <dd>@Model.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</dd>
+                </dl>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-folder-open"></i> <strong>Files</strong>
+                </div>
+                <div class="panel-body">
+                    @if (Model.Class.ClassFiles.Any())
+                    {
+                        <ul class="list-group">
+                            @foreach (var f in Model.Class.ClassFiles)
+                            {
+                                <li class="list-group-item">
+                                    <div class="row">
+                                        <div class="@(User.IsInRole("Administrator") || User.IsInRole("Academics") ? "col-xs-10" : "col-xs-12")">
+                                            <a href="@Url.Action("DownloadFile", new { id = f.ClassFileId })" class="btn btn-default btn-sm">
+                                                <i class="fa fa-cloud-download"></i>
+                                                @f.AwsCode.Split('/')[1]
+                                            </a>
+                                            
+                                            <i data-toggle="tooltip" data-placement="top" 
+                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)" 
+                                               class="fa fa-info-circle fa-lg text-info"></i>
+                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">
+                                                <i class="fa fa-cloud-download"></i>
+                                                @f.DownloadCount
+                                            </span>
+                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Upvotes | Downvotes">
+                                                @f.ClassFileVotes.Count(v => v.IsUpvote) | 
+                                                @f.ClassFileVotes.Count(v => !v.IsUpvote)
+                                            </span>
+                                            <a href="@Url.Action("Upvote", "Classes", new { id = f.ClassFileId })">
+                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
+                                                }
+                                            </a>
+                                            <a href="@Url.Action("Downvote", "Classes", new { id = f.ClassFileId })">
+                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && !v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                }
+                                                else
+                                                {
+                                                    <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
+                                                }
+                                            </a>
+                                        </div>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                        {
+                                            <div class="col-xs-2 text-right">
+                                                <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })">
+                                                    <i data-toggle="tooltip" data-placement="top" title="Delete"
+                                                        class="fa fa-times-circle-o fa-2x text-danger"></i>
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning">
+                            <strong>No files uploaded yet for this class.</strong>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-cloud-upload"></i> <strong>Upload a New File</strong>
+                    <i data-toggle="tooltip" data-placement="right" title=".pdf files only"
+                       class="fa fa-info-circle text-info"></i>
+                </div>
+                <div class="panel-body">
+                    @using (Html.BeginForm("UploadFile", "Classes", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        
+                        @Html.HiddenFor(m => Model.Class.ClassId)
+                        @Html.HiddenFor(m => Model.Class.CourseName)
+                        @Html.HiddenFor(m => Model.Class.CourseShorthand)
+
+                        <div class="form-group">
+                            <span class="btn btn-info btn-sm btn-file">Choose File
+                                <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
+                            </span>
+                            <label id="upload-text"></label>
+                            <div class="pull-right">
+                                <input type="submit" value="Upload" class="btn btn-sm btn-default" />
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
+                </div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        @foreach (var s in Model.Class.ClassesTaken
+                            .OrderByDescending(c => c.Semester.DateEnd)
+                            .ThenBy(c => c.Member.LastName))
+                        {
+                            if (s.SemesterId == Model.CurrentSemester.SemesterId)
+                            {
+                                <dt class="text-success"><strong>@(s.Member.FirstName + " " + s.Member.LastName)</strong></dt>
+                                <dd class="text-success"><strong>@("(" + s.Semester + ")")</strong></dd>
+                            }
+                            else
+                            {
+                                <dt><small>@(s.Member.FirstName + " " + s.Member.LastName)</small></dt>
+                                <dd><small>@("(" + s.Semester + ")")</small></dd>
+                            }
+                        }
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script>
+        $(function () {
+            $(document).on('change', '.btn-file :file', function () {
+                var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                $('#upload-text').text(label);
+                input.trigger('fileselect', [numFiles, label]);
+            });
+
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}

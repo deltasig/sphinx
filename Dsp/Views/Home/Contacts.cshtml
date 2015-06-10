@@ -1,0 +1,88 @@
+﻿@model IEnumerable<Leader>
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Contacts";
+}
+
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+@section AdditionalMeta{
+    <meta name="description" content="Get in touch with one our leaders.">
+}
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <p class="lead text-warning">Looking to get in contact with us?  Please see below and direct your inquiry at the right person.</p>
+            @if (Model.Any(l => l.Position.IsPublic))
+            {
+                <h3>
+                    @(Model.First().Semester.DateStart.Month < 6 ? "Spring" : "Fall")
+                    @Model.First().Semester.DateStart.Year
+                    <small>Semester</small>
+                </h3>
+
+                <div class="panel panel-default hidden-xs">
+                    <div class="panel-body">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Position</th>
+                                    <th>Contact Name</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var leader in Model.Where(l => l.Position.IsPublic)
+                                    .OrderBy(l => l.Position.Type)
+                                    .ThenBy(l => l.Position.DisplayOrder))
+                                {
+                                    <tr>
+                                        <td>@leader.Position.Name</td>
+                                        <td>@leader.Member.FirstName @leader.Member.LastName</td>
+                                        <td><a href="mailto:@leader.Member.Email">@leader.Member.Email</a></td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel panel-default visible-xs">
+                    <div class="panel-body">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var leader in Model.Where(l => l.Position.IsPublic)
+                                    .OrderBy(l => l.Position.Type)
+                                    .ThenBy(l => l.Position.DisplayOrder))
+                                {
+                                    <tr>
+                                        <td>
+                                            <strong>@leader.Position.Name</strong> <br/>
+                                            @leader.Member.FirstName @leader.Member.LastName <br/>
+                                            <a href="mailto:@leader.Member.Email">@leader.Member.Email</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    <p>
+                        Contact information for our leadership will be available as soon as appointments are made.
+                        We apologize for the inconvenience. <br />
+                    </p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

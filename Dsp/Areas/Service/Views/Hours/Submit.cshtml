@@ -1,0 +1,74 @@
+﻿@model Dsp.Areas.Service.Models.ServiceHourSubmissionModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Service Hour Submission";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index", "Events")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Events
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-xs-12">
+            @using (Html.BeginForm("Submit", "Hours", new { area = "Service" }, FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SelectedEventId)
+                    @Html.DropDownListFor(m => m.SelectedEventId, Model.Events,
+                                    new { @class = "form-control", autocomplete = "off", id = "events-dd" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.HoursServed)
+                    @Html.TextBoxFor(m => m.HoursServed, new { @class = "form-control", autocomplete = "off" })
+                </div>
+                
+                <button type="submit" class="btn btn-success">Submit</button>
+            }
+        </div>
+        <div class="col-sm-6 col-xs-12">
+            <div class="alert alert-warning">
+                <strong>Submitting Hours</strong>
+                <hr />
+                <p>
+                    <ol>
+                        <li>Submitting hours for an event for which you already turned in hours will update the hours for that event.</li>
+                        <li>Submitting a value of zero for an event for which you already turned in hours will delete that submission.</li>
+                        <li>You can't add hours for a previous semester, so make sure that you submit your service hours before the end of each semester.</li>
+                    </ol>
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Missing Event</strong>
+                <hr />
+                <p>
+                    If you don't see an event in the dropdown, you can add it yourself by going
+                    @Html.ActionLink("here", "Index", "Events", new { area = "Service" }, new { @class = "" }).
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            $("#events-dd").select2();
+        });
+
+    </script>
+}

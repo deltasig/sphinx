@@ -1,0 +1,63 @@
+﻿@model IEnumerable<Dsp.Entities.MemberStatus>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Member Status Index";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-6">
+            
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table data-toggle="table" data-classes="table table-condensed" 
+                               data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
+                            <thead>
+                                <tr>
+                                    <th data-sortable="true" data-field="name">Name</th>
+                                    <th class="col-sm-1" data-sortable="true" data-field="count">Count</th>
+                                    <th class="col-sm-2"></th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.StatusName</td>
+                                    <td>@item.Members.Count</td>
+                                    <td class="text-right">
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.StatusId })
+                                        @if (!item.Members.Any())
+                                        {
+                                            @:|
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.StatusId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+        
+    </script>
+}

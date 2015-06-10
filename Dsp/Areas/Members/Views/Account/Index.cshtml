@@ -1,0 +1,102 @@
+﻿@using System.Globalization
+@model Dsp.Areas.Members.Models.AccountInformationModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Account";
+}
+@section Title
+{
+    @Html.Partial("_Title")
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6">
+            @{ Html.RenderPartial("~/Areas/Members/Views/Account/_MemberInformationPartial.cshtml", Model.MemberInfo); }
+            @{ Html.RenderPartial("~/Areas/Members/Views/Addresses/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
+            @{ Html.RenderPartial("~/Areas/Members/Views/PhoneNumbers/_MyPhoneNumbersPartial.cshtml", Model.MemberInfo.PhoneNumbers); }
+        </div>
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            Classes | @Model.CurrentSemester
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" }) | 
+                            @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" })
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    @if (Model.ThisSemesterCourses.Any())
+                    {
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <th>Course</th>
+                                    <th>
+                                        Brothers 
+                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" title="Number of other brothers taking this class this semester"></i>
+                                    </th>
+                                    <th>Files</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
+                                {
+                                    var fileCount = item.Class.ClassFiles.Count;
+                                    var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
+                                    <tr>
+                                        <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
+                                        <td>
+                                            @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
+                                        </td>
+                                        <td>
+                                            @Html.ActionLink(fileCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        @: No classes added!
+                    }
+                </div>
+                <div class="panel-footer">
+                    Total Credit Hours: @Model.ThisSemesterCourses.Sum(c => c.Class.CreditHours)
+                </div>
+            </div>
+
+            @if (User.Identity.Name == Model.MemberInfo.UserName)
+            {
+                @Html.Partial("_ChangePasswordPartial", Model.ChangePasswordModel)
+            }
+            @if (User.IsInRole("Administrator"))
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Administrator Functions
+                    </div>
+                    <div class="panel-body">
+                        @Html.ActionLink("Reset Password", "ResetPassword", "Account", new { id = Model.MemberInfo.Id }, new { @class = "btn btn-sm btn-danger" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-toggle="popover"]').popover();
+        });
+
+    </script>
+}

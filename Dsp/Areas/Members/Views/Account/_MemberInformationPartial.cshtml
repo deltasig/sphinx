@@ -1,0 +1,98 @@
+﻿@using Microsoft.AspNet.Identity
+@model Dsp.Entities.Member
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Information
+        @if (User.IsInRole("Administrator") || User.IsInRole("Academics") ||
+             User.IsInRole("House Manager") || User.IsInRole("Secretary") ||
+             User.Identity.Name == Model.UserName)
+        {
+            @Html.ActionLink("Edit", "Edit", "Account", new { userName = Model.UserName }, new { @class = "pull-right" })
+        }
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed">
+            <thead>
+                <tr>
+                    <td colspan="2">
+                        <h4 class="media-heading">@Model.ToString()</h4>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th>User Name</th>
+                    <td>@Model.UserName</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>@Model.Email</td>
+                </tr>
+                <tr>
+                    <th>Major(s)
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.IsInRole("Secretary") ||
+                                User.Identity.GetUserId<int>() == Model.Id)
+                            {
+                                <a href="@Url.Action("Assign", "Majors", new { area = "Edu", id = Model.Id })">
+                                    <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
+                                        title="Add a new major"></i>
+                                </a>
+                            }
+                    </th>
+                    <td>
+                        @if (Model.MajorsToMember.Any())
+                        {
+                            foreach (var m in Model.MajorsToMember)
+                            {
+                                @m.Major.MajorName @:(@m.DegreeLevel)
+                                if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.IsInRole("Secretary") ||
+                                    User.Identity.GetUserId<int>() == Model.Id)
+                                {
+                                    <a href="@Url.Action("Unassign", "Majors", new { area = "Edu", id = m.MajorToMemberId })" 
+                                        class="pull-right">
+                                        <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
+                                            title="Remove this major"></i>
+                                    </a>
+                                }
+                                <br />
+                            }
+                        }
+                        else
+                        {
+                            @: None added 
+                        }
+                    </td>
+                </tr>
+                <tr>
+                    <th>Pin</th>
+                    <td>@Model.Pin</td>
+                </tr>
+                <tr>
+                    <th>Shirt Size</th>
+                    <td>@Model.ShirtSize</td>
+                </tr>
+                <tr>
+                    <th>Room</th>
+                    <td>@Model.RoomString()</td>
+                </tr>
+                <tr>
+                    <th>Status</th>
+                    <td>@Model.MemberStatus.StatusName</td>
+                </tr>
+                <tr>
+                    <th>Pledge Class</th>
+                    <td>@Model.PledgeClass.PledgeClassName</td>
+                </tr>
+                <tr>
+                    <th>Graduation</th>
+                    <td>@Model.GraduationSemester.ToString()</td>
+                </tr>
+                <tr>
+                    <th>Big Bro</th>
+                    <td>@(Model.BigBrother == null ? "None" : Model.BigBrother.ToString())</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

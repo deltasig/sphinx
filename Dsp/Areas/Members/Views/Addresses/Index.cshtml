@@ -1,0 +1,179 @@
+﻿@using Microsoft.AspNet.Identity
+@model Dsp.Areas.Members.Models.AddressIndexFilterModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Address Index";
+
+    var mailing = Model.Addresses.Where(m => m.Type == "Mailing");
+    var permanent = Model.Addresses.Where(m => m.Type == "Permanent");
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <a class="pull-right" href="@Url.Action("Download", "Addresses")">
+                <i class="fa fa-download fa-2x"></i>
+            </a>
+            @using (Html.BeginForm("Index", "Addresses", FormMethod.Get, new { @class = "", role = "form" }))
+            {
+                <input type="submit" value="Filter" class="btn btn-default" />
+
+                <div class="checkbox-inline" style="margin-left:10px">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Pledges)
+                        <small>Pledges</small>
+                    </label>
+                </div>
+                <div class="checkbox-inline">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Neophytes)
+                        <small>Neophytes</small>
+                    </label>
+                </div>
+                <div class="checkbox-inline">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Actives)
+                        <small>Actives</small>
+                    </label>
+                </div>
+                <div class="checkbox-inline">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Alumni)
+                        <small>Alumni</small>
+                    </label>
+                </div>
+                <div class="checkbox-inline">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Affiliates)
+                        <small>Affiliates</small>
+                    </label>
+                </div>
+                <div class="checkbox-inline">
+                    <label>
+                        @Html.CheckBoxFor(model => model.Released)
+                        <small>Released</small>
+                    </label>
+                </div>
+                <br /><br />
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="active"><a href="#mailing" data-toggle="pill">Mailing</a></li>
+                <li><a href="#permanent" data-toggle="pill">Permanent</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="mailing">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                           data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="Address">Address</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in mailing)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Address1))
+                                    {
+                                        @:missing
+                                    }
+                                    else
+                                    {
+                                        @item.Address1@:,
+                                        if (@item.Address2 != null)
+                                        {
+                                            @item.Address2@:,
+                                        }
+                                        @item.City@:, @item.State @item.PostalCode,
+                                        @item.Country
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == User.Identity.GetUserId<int>())
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="tab-pane" id="permanent">
+                    <table data-toggle="table" data-classes="table table-condensed" 
+                        data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                        <thead>
+                            <tr>
+                                <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="status">Status</th>
+                                <th data-sortable="true" data-field="Address">Address</th>
+                                <th class="col-sm-1"></th>
+                            </tr>
+                        </thead>
+
+                        @foreach (var item in permanent)
+                        {
+                            <tr>
+                                <td>@item.Member.FirstName</td>
+                                <td>@item.Member.LastName</td>
+                                <td>@item.Member.MemberStatus.StatusName</td>
+                                <td class="@(string.IsNullOrEmpty(item.Address1) ? "text-danger" : "")">
+                                    @if (string.IsNullOrEmpty(item.Address1))
+                                    {
+                                        @:missing
+                                    }
+                                    else
+                                    {
+                                        @item.Address1@:,
+                                        if (@item.Address2 != null)
+                                        {
+                                            @item.Address2@:,
+                                        }
+                                        @item.City@:, @item.State @item.PostalCode,
+                                        @item.Country
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == User.Identity.GetUserId<int>())
+                                    {
+                                        <a class="" href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })">
+                                            Edit
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts
+{
+    <script type="text/javascript">
+
+
+
+    </script>
+}

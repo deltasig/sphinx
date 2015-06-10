@@ -1,0 +1,46 @@
+﻿@model IEnumerable<Dsp.Entities.PhoneNumber>
+
+<div class="panel panel-default">
+    <div class="panel-heading">My Phone Numbers</div>
+    <div class="panel-body">
+        <div class="table-responsive">
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>Phone Number</th>
+                        <th>@Html.DisplayNameFor(model => model.Type)</th>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.First().Member.UserName)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="@(string.IsNullOrEmpty(item.Number) ? "danger" : "")">
+                            @if (string.IsNullOrEmpty(item.Number))
+                            {
+                                @:Please enter a phone number
+                            }
+                            else
+                            {
+                                <a href="tel:@item.Number">
+                                    @item.Number
+                                </a>
+                            }
+                        </td>
+                        <td>@item.Type</td>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || User.Identity.Name == Model.First().Member.UserName)
+                        {
+                            <td>
+                                @Html.ActionLink("Edit", "Edit", "PhoneNumbers", new { id = item.PhoneNumberId }, null)
+                            </td>
+                        }
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>

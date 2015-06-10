@@ -1,0 +1,239 @@
+﻿@using System.Web.Mvc.Html
+@using Dsp.Entities
+@model Dsp.Areas.Dsp.Models.LaundryIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Laundry Signup";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+@section Title
+{
+    @Html.Partial("_Title")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Important: </strong> You may only signup twice within any seven day period.  
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-bordered" style="text-align: center">
+                            @if (Model.Slots.Any())
+                            {
+                                <thead>
+                                <tr>
+                                    <th class="text-center active">Time Slot</th>
+                                    @foreach (var timeSlot in Model.Slots.First())
+                                    {
+                                        <th class="text-center">
+                                            @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
+                                        </th>
+                                    }
+                                </tr>
+                                </thead>
+                            }
+                            @foreach (var day in Model.Slots)
+                            {
+                                <tr>
+                                    <td class="active">
+                                        <p>
+                                            <strong>
+                                                @day.First().DateTimeShift.ToShortTimeString() -
+                                                @day.First().DateTimeShift.AddHours(2).ToShortTimeString()
+                                            </strong>
+                                        </p>
+                                    </td>
+
+                                    @foreach (var timeSlot in day)
+                                    {
+                                        <td>
+                                            @if (timeSlot.Member != null)
+                                            {
+                                                // Reserved by current user
+                                                if (User.Identity.Name == timeSlot.Member.UserName && timeSlot.DateTimeShift > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone))
+                                                {
+                                                    using (Html.BeginForm("Cancel", "Laundry", timeSlot))
+                                                    {
+                                                        @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
+                                                        <button type="submit" class="btn btn-sm btn-link" style="padding: 0; margin: 0; color: #d9534f;">
+                                                            <i class="fa fa-minus-square"></i>
+                                                        </button>
+                                                    }
+                                                }
+                                                // Reserved by someone else
+                                                else
+                                                {
+                                                    <div class="text-center">
+                                                        <p>
+                                                            @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
+                                                            @if (timeSlot.Member.Room == 0)
+                                                            {
+                                                                @:*
+                                                            }
+                                                        </p>
+                                                    </div>
+                                                }
+                                            }
+                                            // Unreserved, but in the past. Let's them sign up up to an hour into the timeslot.
+                                            else if (timeSlot.DateTimeShift.AddHours(1) < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone))
+                                            {
+                                                <div class="text-center"></div>
+                                            }
+                                            // Unreserved, and in the future.
+                                            else
+                                            {
+                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup {DateTimeShift = timeSlot.DateTimeShift}))
+                                                {
+                                                    <button type="submit" class="btn btn-sm btn-success">Open</button>
+                                                }
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    Current Time: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToShortTimeString() CST <br/>
+                    * Member lives Out-of-House
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-10">
+                            <h4>Statistics <i id="loading" class="fa fa-lg fa-spinner fa-spin"></i></h4>
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.DropDownList("Semesters", Model.SemesterList, new {@class = "form-control", id = "semester-list"})
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <dl class="dl-horizontal">
+                                <dt id="">Semester</dt>
+                                <dd id="dates"></dd>
+                                <dt id="">Total Signups</dt>
+                                <dd id="totals"></dd>
+                                <dt id="">Signups/Week</dt>
+                                <dd id="week-avg"></dd>
+                                <dt id="">Signups/Month</dt>
+                                <dd id="month-avg"></dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-6">
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Daily Averages</h4>
+                            <div id="week-well" class="">
+                                <canvas id="week-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Monthly Totals</h4>
+                            <div id="month-well" class="">
+                                <canvas id="month-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
+    <script>
+        Chart.defaults.global.responsive = true;
+        Chart.defaults.global.scaleOverride = true;
+
+        LoadStats();
+        $('#loading').hide();
+
+        $('#semester-list').change(function() {
+            $('#loading').show();
+            LoadStats();
+            $('#loading').hide();
+        });
+
+        function LoadStats() {
+            var options = {};
+            options.sid = $('#semester-list option:selected').val();
+            $.getJSON('GetStats', options).done(function (data) {
+
+                data = $.parseJSON(data);
+                var weekData = {
+                    labels: data.WeekChartXLabels,
+                    datasets: [
+                        {
+                            label: "Week Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.WeekChartXValues
+                        }
+                    ]
+                };
+                var monthData = {
+                    labels: data.MonthChartXLabels,
+                    datasets: [
+                        {
+                            label: "Month Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.MonthChartXValues
+                        }
+                    ]
+                };
+                $('#dates').text(data.Semester + " (" + data.StartDate + " - " + data.EndDate + ")");
+                $('#totals').text(data.TotalSignups);
+                $('#week-avg').text(data.WeekAverage);
+                $('#month-avg').text(data.MonthAverage);
+
+                $('#week-chart').remove();
+                $('#month-chart').remove();
+                $('#week-well').append('<canvas id="week-chart"></canvas>');
+                $('#month-well').append('<canvas id="month-chart"></canvas>');
+
+                Chart.defaults.global.scaleSteps = 6;
+                Chart.defaults.global.scaleStepWidth = 1;
+                Chart.defaults.global.scaleStartValue = 0;
+                var weekChart = document.getElementById('week-chart').getContext('2d');
+                new Chart(weekChart).Line(weekData);
+
+
+                Chart.defaults.global.scaleSteps = 8;
+                Chart.defaults.global.scaleStepWidth = 25;
+                Chart.defaults.global.scaleStartValue = 0;
+                var monthChart = document.getElementById('month-chart').getContext('2d');
+                new Chart(monthChart).Line(monthData);
+            });
+        }
+
+    </script>
+
+}
