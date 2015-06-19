@@ -33,6 +33,8 @@
                     ViewBag.SuccessMessage = GetManageMessage(accountMessage);
                     break;
                 case ManageMessageId.ChangePasswordFailure:
+                case ManageMessageId.ChangePasswordMismatch:
+                case ManageMessageId.ChangePasswordWrongOriginal:
                 case ManageMessageId.SetPasswordFailure:
                     ViewBag.FailMessage = GetManageMessage(accountMessage);
                     break;
@@ -52,7 +54,6 @@
             var member = await UserManager.FindByNameAsync(userName);
 
             ViewBag.StatusMessage = GetManageMessage(accountMessage);
-            //ViewBag.HasLocalPassword = OAuthWebSecurity.HasLocalAccount(User.Identity.GetUserId<int>());
             var thisSemester = await GetThisSemesterAsync();
 
             var model = new AccountInformationModel
@@ -86,8 +87,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMemberInfoModel model)
         {
             if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && !User.IsInRole("Academics") && 
@@ -129,16 +129,13 @@
             return View(model);
         }
 
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public ActionResult SignIn()
         {
             return View(new LoginModel());
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        [HttpPost, AllowAnonymous, ValidateAntiForgeryToken]
         public async Task<ActionResult> SignIn(LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -169,16 +166,14 @@
             }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public ActionResult SignOut()
         {
             AuthenticationManager.SignOut();
             return RedirectToAction("SignIn", "Account");
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
+        [HttpGet, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Registration(RegistrationMessageId? message)
         {
             switch (message)
@@ -210,9 +205,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
             RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
@@ -289,9 +282,7 @@
             return RedirectToAction("Registration", new { Message = message });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Unregister(UnregisterModel model)
         {
             RegistrationMessageId? message;
@@ -339,23 +330,21 @@
             return RedirectToAction("Registration", new { Message = message });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(LocalPasswordModel model)
         {
             ViewBag.ReturnUrl = Url.Action("Index");
-            if (!ModelState.IsValid || model.OldPassword != model.ConfirmPassword) return RedirectToAction("Index");
+
+            if (!ModelState.IsValid) return RedirectToAction("Index");
+            if (model.NewPassword != model.ConfirmPassword) 
+                return RedirectToAction("Index", new { accountMessage = ManageMessageId.ChangePasswordMismatch });
 
             var userId = User.Identity.GetUserId<int>();
             var result = await UserManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
 
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", new { accountMessage = ManageMessageId.ChangePasswordSuccess });
-            }
-
-            AddErrors(result);
-            return RedirectToAction("Index", new { accountMessage = ManageMessageId.ChangePasswordFailure });
+            return RedirectToAction("Index", result.Succeeded 
+                ? new { accountMessage = ManageMessageId.ChangePasswordSuccess } 
+                : new { accountMessage = ManageMessageId.ChangePasswordWrongOriginal });
         }
 
         [Authorize(Roles = "Administrator")]
@@ -373,8 +362,7 @@
             return View(member);
         }
         
-        [Authorize(Roles = "Administrator")]
-        [HttpPost, ValidateAntiForgeryToken, ActionName("ResetPassword")]
+        [Authorize(Roles = "Administrator"), HttpPost, ValidateAntiForgeryToken, ActionName("ResetPassword")]
         public async Task<ActionResult> ResetPasswordConfirmed(Member member)
         {
             var tempPassword = Membership.GeneratePassword(10, 0);
@@ -420,14 +408,19 @@
         }
         private static dynamic GetManageMessage(ManageMessageId? message)
         {
-            return message == ManageMessageId.ChangePasswordSuccess ? "The password for this account has been changed."
+            return message == ManageMessageId.ChangePasswordSuccess ? "The password change for this account was successful."
+            : message == ManageMessageId.ChangePasswordWrongOriginal ? "The password change failed because the wrong original password was entered."
+            : message == ManageMessageId.ChangePasswordMismatch ? "The password change failed because the new password fields did not match."
+            : message == ManageMessageId.ChangePasswordFailure ? "The password change failed for an unknown reason.  Please contact your administrator."
+
             : message == ManageMessageId.SetPasswordSuccess ? "The password for this account password has been set."
+            : message == ManageMessageId.SetPasswordFailure ? "The current password is incorrect or the new password is invalid."
+
             : message == ManageMessageId.ResetPasswordSuccess ? "The password for this account password has been reset."
+            : message == ManageMessageId.ResetPasswordFailure ? "The password for this account password has been reset."
+
             : message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
             : message == ManageMessageId.AddLoginSuccess ? "External login was added."
-            : message == ManageMessageId.SetPasswordFailure ? "The current password is incorrect or the new password is invalid."
-            : message == ManageMessageId.ChangePasswordFailure ? "Failed to change password. Your old password was probably incorrect."
-            : message == ManageMessageId.ResetPasswordFailure ? "The password for this account password has been reset."
             : "";
         }
         private static dynamic GetAccountChangeMessage(AccountChangeMessageId? message)
@@ -478,13 +471,15 @@
         public enum ManageMessageId
         {
             ChangePasswordSuccess,
+            ChangePasswordMismatch,
+            ChangePasswordWrongOriginal,
             ChangePasswordFailure,
             ResetPasswordSuccess,
             ResetPasswordFailure,
             SetPasswordSuccess,
             SetPasswordFailure,
             RemoveLoginSuccess,
-            AddLoginSuccess,
+            AddLoginSuccess
         }
         public enum RegistrationMessageId
         {
@@ -493,7 +488,6 @@
             RegistrationFailed,
             UnregisterFailed
         }
-
         public enum AccountChangeMessageId
         {
             UpdateSuccess,
