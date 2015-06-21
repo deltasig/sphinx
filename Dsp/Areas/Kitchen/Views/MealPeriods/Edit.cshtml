@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 <div class="container">
     <div class="row">
@@ -25,13 +26,23 @@
                 
                 <div class="form-group">
                     @Html.LabelFor(model => model.StartTime, new { @class = "control-label" })
-                    @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", id = "start-time" } })
+                    <div class="input-group date" id="dtp1">
+                        @Html.EditorFor(model => model.StartTime, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.StartTime, "", new { @class = "text-danger" })
                 </div>
                 
                 <div class="form-group">
                     @Html.LabelFor(model => model.EndTime, new { @class = "control-label" })
-                    @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", id = "end-time" } })
+                    <div class="input-group date" id="dtp2">
+                        @Html.EditorFor(model => model.EndTime, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.EndTime, "", new { @class = "text-danger" })
                 </div>
 
@@ -57,16 +68,15 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
 @section scripts
 {
     <script>
         $(function () {
-            $('#start-time').datetimepicker({
-
-            });
-            $('#end-time').datetimepicker({
-
-            });
+            $("#dtp1").datetimepicker();
+            $("#dtp2").datetimepicker();
         });
     </script>
 }

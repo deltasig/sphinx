@@ -7,9 +7,10 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
 <div class="container">
-    @using (Html.BeginForm("Index", "Roster", FormMethod.Get, new { @class = "", role = "form" }))
+    @using (Html.BeginForm("Index", "Roster", FormMethod.Get, new {@class = "", role = "form"}))
     {
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -17,30 +18,30 @@
             </div>
             <div class="panel-body">
                 <div class="row">
-                    <br />
+                    <br/>
                     <div class="col-sm-3">
-                        @Html.DropDownListFor(m => m.SearchModel.SelectedStatusId, Model.SearchModel.Statuses, new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.SearchModel.SelectedStatusId, Model.SearchModel.Statuses, new {@class = "form-control"})
                     </div>
                     <div class="col-sm-3">
-                        @Html.DropDownListFor(m => m.SearchModel.SelectedPledgeClassId, Model.SearchModel.PledgeClasses, new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.SearchModel.SelectedPledgeClassId, Model.SearchModel.PledgeClasses, new {@class = "form-control"})
                     </div>
                     <div class="col-sm-3">
-                        @Html.DropDownListFor(m => m.SearchModel.SelectedGraduationSemesterId, Model.SearchModel.Semesters, new { @class = "form-control" })
+                        @Html.DropDownListFor(m => m.SearchModel.SelectedGraduationSemesterId, Model.SearchModel.Semesters, new {@class = "form-control"})
                     </div>
                     <div class="col-sm-3">
-                        <div class="radio" style="margin:0">
+                        <div class="radio" style="margin: 0">
                             <label>
                                 <input type="radio" name="SearchModel.LivingType" id="SearchModel.LivingType.Both" value="Both" checked>
                                 <small>Both</small>
                             </label>
                         </div>
-                        <div class="radio" style="margin:0">
+                        <div class="radio" style="margin: 0">
                             <label>
                                 <input type="radio" name="SearchModel.LivingType" id="SearchModel.LivingType.InHouse" value="InHouse">
                                 <small>In-House</small>
                             </label>
                         </div>
-                        <div class="radio" style="margin:0">
+                        <div class="radio" style="margin: 0">
                             <label>
                                 <input type="radio" name="SearchModel.LivingType" id="SearchModel.LivingType.OutOfHouse" value="OutOfHouse">
                                 <small>Out-of-House</small>
@@ -48,7 +49,7 @@
                         </div>
                     </div>
                     <div class="col-sm-3">
-                        <input type="submit" value="Filter" class="btn btn-default text-center" />
+                        <input type="submit" value="Filter" class="btn btn-default text-center"/>
                     </div>
                 </div>
             </div>
@@ -58,10 +59,10 @@
         <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <a class="" href="@Url.Action("Download", "Roster", new { area = "Members" })">
+                    <a class="" href="@Url.Action("Download", "Roster", new {area = "Members"})">
                         <i class="fa fa-download fa-lg"></i>
                     </a>
-                    @if(User.IsInRole("Secretary") || User.IsInRole("Administrator"))
+                    @if (User.IsInRole("Secretary") || User.IsInRole("Administrator"))
                     {
                         @:|
                         @Html.ActionLink("Initiate Pledges", "InitiatePledges")
@@ -70,63 +71,63 @@
                     <table data-toggle="table" data-classes="table table-condensed" data-pagination="true" data-page-size="100"
                            data-search="true" data-sort-name="last-name" data-sort-order="asc">
                         <thead>
-                            <tr>
-                                <th data-sortable="true" data-field="first-name">First</th>
-                                <th data-sortable="true" data-field="last-name">Last</th>
-                                <th data-sortable="true" data-field="email">Email</th>
-                                <th data-sortable="true" data-field="status">Status</th>
-                                <th data-sortable="true" data-field="pledge-class">P. Class</th>
-                                <th data-sortable="true" data-field="grad">Graduating</th>
-                                <th data-sortable="true" data-field="big-bro">Big Bro</th>
-                                <th data-sortable="true" data-field="room">Room</th>
-                                <th data-sortable="true" data-field="shirt">Shirt</th>
-                                <th></th>
-                            </tr>
+                        <tr>
+                            <th data-sortable="true" data-field="first-name">First</th>
+                            <th data-sortable="true" data-field="last-name">Last</th>
+                            <th data-sortable="true" data-field="email">Email</th>
+                            <th data-sortable="true" data-field="status">Status</th>
+                            <th data-sortable="true" data-field="pledge-class">P. Class</th>
+                            <th data-sortable="true" data-field="grad">Graduating</th>
+                            <th data-sortable="true" data-field="big-bro">Big Bro</th>
+                            <th data-sortable="true" data-field="room">Room</th>
+                            <th data-sortable="true" data-field="shirt">Shirt</th>
+                            <th></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @if (Model.Members.Any())
+                        @if (Model.Members.Any())
+                        {
+                            foreach (var item in Model.Members)
                             {
-                                foreach (var item in Model.Members)
-                                {
-                                    <tr>
-                                        <td>@item.FirstName</td>
-                                        <td>@item.LastName</td>
-                                        <td><a href="mailto:@item.Email">@item.Email</a></td>
-                                        <td>@item.MemberStatus.StatusName</td>
-                                        <td>
-                                            &@(item.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : item.PledgeClass.PledgeClassName);
-                                        </td>
-                                        <td>
-                                            @item.GraduationSemester.DateStart.Year 
-                                            @(item.GraduationSemester.DateStart.Month < 6 ? "Spring " : "Fall ")
-                                        </td>
-                                        <td>
-                                            @if (item.BigBroId != null)
-                                            {
-                                                @item.BigBrother.FirstName
-                                                @: 
-                                                @item.BigBrother.LastName[0]
-                                                @:.
-                                            }
-                                            else
-                                            {
-                                                @:None
-                                            }
-                                        </td>
-                                        <td>@(item.Room == 0 ? "OOH" : "#"+item.Room.ToString())</td>
-                                        <td>@item.ShirtSize</td>
-                                        <td class="text-right">
-                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
-                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null) 
-                                            @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
-                                            {
-                                                @: |
-                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName, area = "Members" }, null) 
-                                            }
-                                        </td>
-                                    </tr>
-                                }
+                                <tr>
+                                    <td>@item.FirstName</td>
+                                    <td>@item.LastName</td>
+                                    <td><a href="mailto:@item.Email">@item.Email</a></td>
+                                    <td>@item.MemberStatus.StatusName</td>
+                                    <td>
+                                        &@(item.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : item.PledgeClass.PledgeClassName);
+                                    </td>
+                                    <td>
+                                        @item.GraduationSemester.DateStart.Year
+                                        @(item.GraduationSemester.DateStart.Month < 6 ? "Spring " : "Fall ")
+                                    </td>
+                                    <td>
+                                        @if (item.BigBroId != null)
+                                        {
+                                            @item.BigBrother.FirstName
+                                            @: 
+                                            @item.BigBrother.LastName[0]
+                                            @:.
+                                        }
+                                        else
+                                        {
+                                            @:None
+                                        }
+                                    </td>
+                                    <td>@(item.Room == 0 ? "OOH" : "#" + item.Room.ToString())</td>
+                                    <td>@item.ShirtSize</td>
+                                    <td class="text-right">
+                                        @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = item.UserName, area = "Edu"}, null) |
+                                        @Html.ActionLink("Profile", "Index", "Account", new {userName = item.UserName, area = "Members"}, null)
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Edit", "Edit", "Account", new {userName = item.UserName, area = "Members"}, null)
+                                        }
+                                    </td>
+                                </tr>
                             }
+                        }
                         </tbody>
                     </table>
                 </div>
@@ -134,11 +135,11 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-
-
 
     </script>
 }

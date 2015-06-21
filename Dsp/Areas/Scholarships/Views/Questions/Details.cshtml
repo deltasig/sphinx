@@ -17,7 +17,37 @@
                     @Html.ActionLink("Back to List", "Index")
                 </div>
                 <div class="panel-body">
-
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayNameFor(model => model.Prompt)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.Prompt)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.AnswerMinimumLength)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.AnswerMinimumLength)
+                        </dd>
+                        <dt>
+                            @Html.DisplayNameFor(model => model.AnswerMaximumLength)
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(model => model.AnswerMaximumLength)
+                        </dd>
+                        <dt>
+                            <strong>Answers</strong>
+                        </dt>
+                        <dd>
+                            @foreach (var answer in Model.Answers)
+                            {
+                                @answer.AnswerText @: (Length: @answer.AnswerText.Length)
+                                <br/>
+                                <hr/>
+                            }
+                        </dd>
+                    </dl>
                 </div>
             </div>
         </div>

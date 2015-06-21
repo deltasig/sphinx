@@ -27,10 +27,11 @@
         public BaseController()
         {
         }
-        public BaseController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
+        public BaseController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            RoleManager = roleManager;
         }
 
         public ApplicationSignInManager SignInManager

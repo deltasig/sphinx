@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 <div class="container">
     <div class="row">
@@ -68,6 +69,8 @@
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/bootstrap-datetimepicker")
 @section scripts
 {
     <script>

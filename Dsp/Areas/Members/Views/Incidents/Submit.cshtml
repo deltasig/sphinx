@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 <div class="container">
     <div class="row">
@@ -86,11 +87,13 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
 @section scripts{
     <script type="text/javascript">
 
         $(function () {
-            $('#dtp').datetimepicker();
+            $("#dtp").datetimepicker();
         });
 
 </script>

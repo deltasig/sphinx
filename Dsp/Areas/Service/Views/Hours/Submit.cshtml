@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.min.css">
 
 <div class="container">
     <div class="row">
@@ -24,17 +25,17 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)
-                
+
                 <div class="form-group">
                     @Html.LabelFor(m => m.SelectedEventId)
                     @Html.DropDownListFor(m => m.SelectedEventId, Model.Events,
-                                    new { @class = "form-control", autocomplete = "off", id = "events-dd" })
+                        new { @class = "form-control selectpicker", autocomplete = "off", id = "events-dd", data_live_search = "true" })
                 </div>
                 <div class="form-group">
                     @Html.LabelFor(m => m.HoursServed)
                     @Html.TextBoxFor(m => m.HoursServed, new { @class = "form-control", autocomplete = "off" })
                 </div>
-                
+
                 <button type="submit" class="btn btn-success">Submit</button>
             }
         </div>
@@ -62,13 +63,10 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/bootstrap-select.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-
-        $(document).ready(function() {
-            $("#events-dd").select2();
-        });
-
+        
     </script>
 }

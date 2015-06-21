@@ -1,12 +1,13 @@
 ﻿@model IEnumerable<Dsp.Entities.ScholarshipQuestion>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Question Index";
+    ViewBag.Title = "Scholarship Appplication Question Pool";
 }
 @section Title
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
 <div class="container">
     <div class="row">
@@ -29,12 +30,13 @@
                             <tr>
                                 <th data-sortable="true" data-field="prompt">Prompt</th>
                                 <th class="col-sm-1" data-sortable="true" data-field="min-length">
-                                    Min <i tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"
-                                        data-content="The minimum amount of characters that an answer to a question is allowed to have." class="fa fa-info-circle text-info"></i>
+                                    Min Length 
                                 </th>
                                 <th class="col-sm-1" data-sortable="true" data-field="max-length">
-                                    Max <i tabindex="0" role="button" data-toggle="popover" data-trigger="focus" data-placement="top"
-                                        data-content="The maximum amount of characters that an answer to a question is allowed to have." class="fa fa-info-circle text-info"></i>
+                                    Max Length
+                                </th>
+                                <th class="col-sm-1" data-sortable="true" data-field="answers">
+                                    Answers Submitted
                                 </th>
                                 <th class="col-sm-2"></th>
                             </tr>
@@ -46,10 +48,15 @@
                                     <td>@item.Prompt</td>
                                     <td>@item.AnswerMinimumLength</td>
                                     <td>@item.AnswerMaximumLength</td>
+                                    <td>@item.Answers.Count</td>
                                     <td class="text-right">
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipQuestionId }) |
-                                        @Html.ActionLink("Details", "Details", new { id = item.ScholarshipQuestionId }) |
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipQuestionId })
+                                        @Html.ActionLink("Details", "Details", new { id = item.ScholarshipQuestionId }) 
+                                        @if (!item.Answers.Any())
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipQuestionId })
+                                        }
                                     </td>
                                 </tr>
                             }
@@ -60,13 +67,11 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-        
-        $(function () {
-            $('[data-toggle="popover"]').popover();
-        })
 
     </script>
 }

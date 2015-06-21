@@ -38,11 +38,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var w in Model
-                        .OrderBy(p => p.Name == "Low")
-                        .ThenBy(p => p.Name == "Moderate")
-                        .ThenBy(p => p.Name == "High")
-                        .ThenBy(p => p.Name))
+                            @foreach (var w in Model.OrderBy(p => p.Name == "Low").ThenBy(p => p.Name == "Moderate").ThenBy(p => p.Name == "High").ThenBy(p => p.Name))
                             {
                                 <tr>
                                     <td>@w.Name</td>
@@ -66,7 +62,7 @@
 
 @section scripts
 {
-    <script>
+    <script type="text/javascript">
 
     </script>
 }
