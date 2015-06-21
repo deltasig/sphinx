@@ -123,7 +123,7 @@
                     ViewBag.UserName = member.UserName;
                     ViewBag.UserId = new SelectList(new List<object> 
                     { 
-                        new { member.Id, Name = member.FirstName + " " + member.LastName } 
+                        new { UserId = member.Id, Name = member.FirstName + " " + member.LastName } 
                     }, "UserId", "Name");
                 }
             }
@@ -138,7 +138,7 @@
                     var member = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
                     ViewBag.UserId = new SelectList(new List<object> 
                     { 
-                        new { member.Id, Name = member.FirstName + " " + member.LastName } 
+                        new { UserId = member.Id, Name = member.FirstName + " " + member.LastName } 
                     }, "UserId", "Name");
                 }
             }
