@@ -437,6 +437,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="DownPage.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="google2da471a22d508cbe.html" />
     <Content Include="Images\back_disabled.png" />
@@ -490,7 +491,6 @@
     <Content Include="Areas\Scholarships\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Scholarships\Views\Shared\_Layout.cshtml" />
     <Content Include="Areas\Scholarships\Views\Applications\Create.cshtml" />
     <Content Include="Areas\Scholarships\Views\Applications\Delete.cshtml" />
     <Content Include="Areas\Scholarships\Views\Applications\Details.cshtml" />
@@ -1033,6 +1033,7 @@
     <Folder Include="Areas\Edu\Views\Shared\" />
     <Folder Include="Areas\House\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
+    <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />
   </ItemGroup>
