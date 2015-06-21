@@ -1,13 +1,18 @@
-﻿@model WorkOrderViewModel
+﻿@using System.Web.Mvc.Html
+@using Dsp.Areas.House.Models
+@using Microsoft.AspNet.Identity
+@model WorkOrderViewModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Work Order";
+
+    var currentUserId = User.Identity.GetUserId<int>();
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var createdOn = TimeZoneInfo.ConvertTimeFromUtc(Model.WorkOrder.GetDateTimeCreated(), cstZone);
     var elevatedPermissions =
         User.IsInRole("Administrator") ||
         User.IsInRole("House Manager") ||
-        Model.WorkOrder.UserId == User.Identity.GetUserId<int>();
+        Model.WorkOrder.UserId == currentUserId;
 
     var comments = Model.WorkOrder.Comments.OrderBy(o => o.SubmittedOn);
     var statusChanges = Model.WorkOrder.StatusChanges.OrderBy(o => o.ChangedOn).Skip(1);
@@ -16,7 +21,7 @@
     discussion.AddRange(comments.Select(c => new WorkOrderDiscussionEntry
     {
         OccurredOn = c.SubmittedOn,
-        UserId = c.UserId,
+        UserId = c.UserId ?? 0,
         Name = c.Member.ToString(),
         Title = c.Member.ToString() + " " +
             ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
@@ -26,7 +31,7 @@
     discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
     {
         OccurredOn = s.ChangedOn,
-        UserId = s.UserId,
+        UserId = s.UserId ?? 0,
         Name = s.Member.ToString(),
         Title = string.Empty,
         Text = "<strong>Status</strong> changed by <strong>" + s.Member.ToString() + "</strong> to <strong>" +
@@ -35,7 +40,7 @@
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
     {
         OccurredOn = p.ChangedOn,
-        UserId = p.UserId,
+        UserId = p.UserId ?? 0,
         Name = p.Member.ToString(),
         Title = string.Empty,
         Text = "<strong>Priority</strong> changed by <strong>" + p.Member.ToString() + "</strong> to <strong>" +
@@ -247,7 +252,7 @@
                         <div class="media">
                             <div class="media-left">
                                 <img class="img-rounded img-@Model.WorkOrder.UserId" alt=""
-                                     height="50" width="50" id="@User.Identity.GetUserId<int>()">
+                                     height="50" width="50" id="@currentUserId">
                             </div>
                             <div class="media-body">
                                 <div class="popover-static">
