@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
 <div class="container">
     <div class="row">
@@ -25,8 +26,8 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="meal" data-sort-order="asc">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="meal" data-sort-order="asc">
                         <thead>
                             <tr>
                                 <th data-sortable="true" data-field="meal">Meal</th>
@@ -46,10 +47,6 @@
                                             @: |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.MealId })
                                         }
-                                        else
-                                        {
-                                            @: | Delete
-                                        }
                                     </td>
                                 </tr>
                             }
@@ -60,20 +57,11 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-        $('#apps-table').DataTable({
-            pageLength: 10,
-            lengthChange: false,
-            "oLanguage": { "sSearch": "" },
-            "order": [[0, "asc"]],
-            "columnDefs": [
-                { "width": "10%", "targets": 1 }
-            ]
-        });
 
-        $('div.dataTables_filter input').addClass('form-control');
-        $('div.dataTables_filter input').attr('placeholder', 'Search');
     </script>
 }

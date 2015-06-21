@@ -7,6 +7,8 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
+
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-xs-12">
@@ -52,12 +54,13 @@
         </div>
     </div>
 </div>
+
+@Scripts.Render("~/bundles/bootstrap-datetimepicker")
 @section scripts
 {
     <script>
         $(function() {
             $('#dtp').datetimepicker();
-            $('#DateTimeOccurred').val($('#DateTimeOccurred').val().replace(/\-/g, "/"));
         });
     </script>
 }

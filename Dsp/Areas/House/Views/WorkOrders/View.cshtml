@@ -286,13 +286,11 @@
 
 @section scripts
 {
-    <script>
-
+    <script type="text/javascript">
         var ids = $(".img-rounded").map(function () { return this.id; }).toArray();
 
         $.each(ids, function (key, value) {
             $(".img-" + value).attr("src", "http://thecatapi.com/api/images/get?format=src&type=png&" + key);
         });
-
     </script>
 }

@@ -7,8 +7,9 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
 
-<div class="container">
+<div class="container" style="margin-bottom:10px">
     <div class="row">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
@@ -33,7 +34,6 @@
         </div>
     </div>
 </div>
-<br />
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
@@ -114,6 +114,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/bootstrap-select.js"></script>
 @section scripts
 {
     <script type="text/javascript">
@@ -121,7 +122,6 @@
         $('.dd').selectpicker({
             width: 100
         });
-        $('[data-toggle="tooltip"]').tooltip();
 
     </script>
 }

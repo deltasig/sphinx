@@ -7,11 +7,11 @@
     var mobile = Model.PhoneNumbers.Where(m => m.Type == "Mobile");
     var emergency = Model.PhoneNumbers.Where(m => m.Type == "Emergency");
 }
-
 @section Title
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
 <div class="container">
     <div class="row">
@@ -161,11 +161,10 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-        
-
 
     </script>
 }

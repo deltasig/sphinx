@@ -120,9 +120,7 @@
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.ShirtSize = model.Member.ShirtSize;
 
-            _db.Users.Attach(member);
-            _db.Entry(member).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
+            UserManager.Update(member);
 
             ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
 

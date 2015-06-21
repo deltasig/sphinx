@@ -9,6 +9,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
 <div class="container">
     <div class="row">
@@ -121,13 +122,10 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-        })
 
     </script>
 }
