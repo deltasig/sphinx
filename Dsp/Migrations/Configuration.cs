@@ -19,6 +19,7 @@ namespace Dsp.Migrations
 
         protected override void Seed(SphinxDbContext context)
         {
+            /*
             #region Member Statuses
             context.MemberStatus.AddOrUpdate(m => m.StatusName,
                 new MemberStatus { StatusName = "Pledge" },
@@ -226,6 +227,7 @@ namespace Dsp.Migrations
             }
 
             #endregion
+            */
         }
     }
 }
