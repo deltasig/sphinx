@@ -8,13 +8,15 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 @{ Html.RenderPartial("~/Areas/Admin/Views/Semesters/Create.cshtml", new CreateSemesterModel()); }
 
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
-            
+
         </div>
         <div class="col-xs-6 text-right">
             <p>
@@ -27,7 +29,8 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table table-condensed">
+                        <table class="table" data-toggle="table" data-classes="table table-condensed"
+                               data-search="true" data-pagination="true" data-page-size="25">
                             <thead>
                                 <tr>
                                     <th>Semester</th>
@@ -37,7 +40,7 @@
                                     <th>
                                         @Html.DisplayNameFor(model => model.TransitionDate)
                                         <a data-toggle="tooltip" data-placement="top"
-                                           title="Controls the date on which new chairmen are granted their powers; only works for Fall semesters.">
+                                           title="Date of chairmen power transfer">
                                             <i class="fa fa-info-circle"></i>
                                         </a>
                                     </th>
@@ -81,20 +84,23 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
 @section scripts
 {
     <script type="text/javascript">
 
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip();
-            $('#datetimepicker1').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $("#dtp1").datetimepicker({
+                format: "MM/DD/YYYY"
             });
-            $('#datetimepicker2').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $("#dtp2").datetimepicker({
+                format: "MM/DD/YYYY"
             });
-            $('#datetimepicker3').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $("#dtp3").datetimepicker({
+                format: "MM/DD/YYYY"
             });
         });
 

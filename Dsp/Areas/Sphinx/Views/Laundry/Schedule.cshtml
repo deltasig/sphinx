@@ -160,14 +160,14 @@
 @section scripts{
 
     <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
-    <script>
+    <script type="text/javascript">
         Chart.defaults.global.responsive = true;
         Chart.defaults.global.scaleOverride = true;
 
         LoadStats();
         $('#loading').hide();
 
-        $('#semester-list').change(function() {
+        $('#semester-list').change(function () {
             $('#loading').show();
             LoadStats();
             $('#loading').hide();

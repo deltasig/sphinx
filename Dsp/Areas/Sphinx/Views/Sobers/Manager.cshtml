@@ -7,19 +7,20 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/datepicker.css">
 
 <div class="container">
     <div class="row">
         <div class="col-xs-6">
             <p>
-                <a href="@Url.Action("Schedule", "Sobers", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Sober Schedule
                 </a>
             </p>
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                <a href="@Url.Action("Index", "SoberTypes", new { area = "Sphinx" })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", "SoberTypes", new {area = "Sphinx"})" class="btn btn-sm btn-default">
                     Sober Types
                 </a>
             </p>
@@ -121,11 +122,10 @@
                         <div class="alert alert-danger">
                             Clicking the button below will <strong>immediately</strong> send the sober schedule email.
                             It will contain all of the sober signup information that is currently visible on the Sphinx page.
+                            <a class="btn btn-sm btn-default" href="@Url.Action("EmailSoberSchedule", "Home", new {area = ""})">
+                                Send Email
+                            </a>
                         </div>
-                        <a class="btn btn-sm btn-default"
-                           href="@Url.Action("EmailSoberSchedule", "Home", new { area = "" })">
-                            Send Email
-                        </a>
                     </div>
                 </div>
             }
@@ -137,12 +137,12 @@
                 </div>
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table class="table" style="text-align:left">
+                        <table class="table" style="text-align: left">
                             <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Date</th>
-                                </tr>
+                            <tr>
+                                <th>Type</th>
+                                <th>Date</th>
+                            </tr>
                             </thead>
                             @foreach (var item in Model.Signups)
                             {
@@ -159,6 +159,7 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
 @section scripts
 {
     <script type="text/javascript">

@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
 
 <div class="container">
     <div class="row">
@@ -27,7 +28,7 @@
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                @Html.HiddenFor(m => m.Member.UserId)
+                @Html.HiddenFor(m => m.Member.Id)
                 @Html.HiddenFor(m => m.Member.UserName)
 
                 if (User.IsInRole("Administrator"))
@@ -50,7 +51,7 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters,
-                                    new { @class = "form-control", autocomplete = "off", id = "sem-dd" })
+                                    new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
@@ -64,21 +65,21 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control dd-no-search" })
+                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control selectpicker" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses,
-                                    new { @class = "form-control", autocomplete = "off", id = "pc-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members,
-                                    new { @class = "form-control", autocomplete = "off", id = "bb-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control dd-no-search" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control selectpicker" })
                     </div>
                 }
                 else if (User.IsInRole("Secretary"))
@@ -101,7 +102,7 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters,
-                                    new { @class = "form-control", autocomplete = "off", id = "sem-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
@@ -115,21 +116,21 @@
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control dd-no-search" })
+                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control selectpicker" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses,
-                                    new { @class = "form-control", autocomplete = "off", id = "pc-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members,
-                                    new { @class = "form-control", autocomplete = "off", id = "bb-dd" })
+                                    new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control dd-no-search" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control selectpicker" })
                     </div>
                 }
                 else if (User.IsInRole("House Manager"))
@@ -154,7 +155,7 @@
                         <div class="form-group">
                             @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
                             @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters,
-                                    new { @class = "form-control", autocomplete = "off", id = "sem-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                         </div>
                     }
                     else
@@ -195,7 +196,7 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters,
-                                    new { @class = "form-control", autocomplete = "off", id = "sem-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
@@ -210,11 +211,11 @@
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members,
-                                    new { @class = "form-control", autocomplete = "off", id = "bb-dd" })
+                                     new { @class = "form-control selectpicker", autocomplete = "off", data_live_search = "true" })
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control dd-no-search" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control selectpicker" })
                     </div>
                     @Html.HiddenFor(m => m.Member.StatusId)
                     @Html.HiddenFor(m => m.Member.PledgeClassId)
@@ -226,18 +227,11 @@
         </div>
     </div>
 </div>
+
+<script type="text/javascript" src="~/Scripts/bootstrap-select.js"></script>
 @section scripts
 {
     <script type="text/javascript">
-
-        $(document).ready(function() {
-            $("#sem-dd").select2();
-            $("#bb-dd").select2();
-            $("#pc-dd").select2();
-            $(".dd-no-search").select2({
-                minimumResultsForSearch: Infinity
-            });
-        });
 
     </script>
 }

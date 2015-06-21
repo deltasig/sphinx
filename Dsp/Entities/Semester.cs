@@ -12,15 +12,12 @@ namespace Dsp.Entities
         public int SemesterId { get; set; }
 
         [Required, DataType(DataType.Date), Display(Name = "Start Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateStart { get; set; }
 
         [Required, DataType(DataType.Date), Display(Name = "End Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime DateEnd { get; set; }
         
         [Required, DataType(DataType.Date), Display(Name = "Transition Date")]
-        [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime TransitionDate { get; set; }
 
         [Required, DefaultValue(10), Display(Name = "Minimum Service Hours")]

@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 <div class="container">
     <div class="row">
@@ -29,19 +30,34 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.DateStart, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="input-group date" id="dtp1">
+                        @Html.EditorFor(model => model.DateStart, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.DateStart, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.DateEnd, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.DateEnd, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="input-group date" id="dtp2">
+                        @Html.EditorFor(model => model.DateEnd, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.DateEnd, "", new { @class = "text-danger" })
                 </div>
                 
                 <div class="form-group">
                     @Html.LabelFor(model => model.TransitionDate, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.TransitionDate, new { htmlAttributes = new { @class = "form-control" } })
+                    <div class="input-group date" id="dtp3">
+                        @Html.EditorFor(model => model.TransitionDate, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
                     @Html.ValidationMessageFor(model => model.TransitionDate, "", new { @class = "text-danger" })
                 </div>
                 
@@ -59,3 +75,23 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@section scripts
+{
+    <script type="text/javascript">
+
+        $(function () {
+            $("#dtp1").datetimepicker({
+                format: "MM/DD/YYYY"
+            });
+            $("#dtp2").datetimepicker({
+                format: "MM/DD/YYYY"
+            });
+            $("#dtp3").datetimepicker({
+                format: "MM/DD/YYYY"
+            });
+        });
+
+    </script>
+}

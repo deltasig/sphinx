@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 <div class="container">
     <div class="row">
@@ -37,7 +38,7 @@
 
                 <div class="form-group">
                     @Html.Label("Application Submission Period Begins On", htmlAttributes: new { @class = "control-label" })
-                    <div class='input-group date' id='datetimepicker1'>
+                    <div class="input-group date" id="dtp1">
                         @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -47,7 +48,7 @@
 
                 <div class="form-group">
                     @Html.Label("Application Submission Period Ends On", htmlAttributes: new { @class = "control-label" })
-                    <div class='input-group date' id='datetimepicker2'>
+                    <div class="input-group date" id="dtp2">
                         @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
                         </span>
@@ -103,16 +104,20 @@
     </div>
 </div>
 
+<script type="text/javascript" src="~/Scripts/moment.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
 @section scripts
 {
-    <script>
+    <script type="text/javascript">
+
         $(function () {
-            $('#datetimepicker1').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $("#dtp1").datetimepicker({
+                format: "MM/DD/YYYY"
             });
-            $('#datetimepicker2').datetimepicker({
-                format: 'MM/DD/YYYY'
+            $("#dtp2").datetimepicker({
+                format: "MM/DD/YYYY"
             });
         });
+
     </script>
 }

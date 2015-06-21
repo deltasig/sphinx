@@ -8,7 +8,7 @@
         {
             // Styles
             bundles.Add(new StyleBundle("~/Content/bootstrap")
-                .Include("~/Content/bootstrap/css/bootstrap.css"));
+                .Include("~/Content/bootstrap.css"));
             bundles.Add(new StyleBundle("~/Content/custom-css")
                 .Include("~/Content/Site.css"));
             bundles.Add(new StyleBundle("~/Content/font-awesome")
@@ -18,11 +18,11 @@
 
             // Scripts
             bundles.Add(new ScriptBundle("~/bundles/bootstrap")
-                .Include("~/Scripts/bootstrap.js")
+                .Include("~/Scripts/bootstrap.js"));
+            bundles.Add(new ScriptBundle("~/bundles/bootstrap-datetimepicker")
                 .Include("~/Scripts/moment.js")
                 .Include("~/Scripts/bootstrap-datetimepicker.js"));
             bundles.Add(new ScriptBundle("~/bundles/jquery")
-                .Include("~/Scripts/DataTables-1.10.4/media/js/jquery.dataTables.js")
                 .Include("~/Scripts/jquery-{version}.js")
                 .Include("~/Scripts/jquery-ui-{version}.js")
                 .Include("~/Scripts/jquery.unobtrusive*")

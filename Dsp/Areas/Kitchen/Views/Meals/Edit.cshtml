@@ -7,6 +7,7 @@
 {
     @Html.Partial("_Title")
 }
+@Styles.Render("~/Content/Multiselect")
 
 <div class="container">
     <div class="row">
@@ -14,15 +15,15 @@
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
                 @Html.HiddenFor(m => m.MealId)
 
                 <div class="form-group">
-                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new { id = "meal-item-selection", @class = "form-control" })
+                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new {id = "meal-item-selection", @class = "form-control"})
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" /> |
+                    <input type="submit" value="Save" class="btn btn-default"/> |
                     @Html.ActionLink("Back to List", "Index")
                 </div>
 
@@ -31,6 +32,7 @@
     </div>
 </div>
 
+@Scripts.Render("~/bundles/Multiselect")
 @section scripts
 {
     <script type="text/javascript">
@@ -42,11 +44,11 @@
                 var that = this,
                     $selectableSearch = that.$selectableUl.prev(),
                     $selectionSearch = that.$selectionUl.prev(),
-                    selectableSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selectable:not(.ms-selected)',
-                    selectionSearchString = '#' + that.$container.attr('id') + ' .ms-elem-selection.ms-selected';
+                    selectableSearchString = "#" + that.$container.attr("id") + " .ms-elem-selectable:not(.ms-selected)",
+                    selectionSearchString = "#" + that.$container.attr("id") + " .ms-elem-selection.ms-selected";
 
                 that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
-                    .on('keydown', function (e) {
+                    .on("keydown", function (e) {
                         if (e.which === 40) {
                             that.$selectableUl.focus();
                             return false;
@@ -54,8 +56,8 @@
                     });
 
                 that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
-                    .on('keydown', function (e) {
-                        if (e.which == 40) {
+                    .on("keydown", function (e) {
+                        if (e.which === 40) {
                             that.$selectionUl.focus();
                             return false;
                         }
@@ -64,7 +66,7 @@
             cssClass: "full-width"
         };
 
-        $('#meal-item-selection').multiSelect(settings);
+        $("#meal-item-selection").multiSelect(settings);
 
     </script>
 }

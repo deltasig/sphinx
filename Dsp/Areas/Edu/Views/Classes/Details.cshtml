@@ -1,4 +1,5 @@
-﻿@model Dsp.Areas.Edu.Models.ClassDetailsModel
+﻿@using Microsoft.AspNet.Identity
+@model Dsp.Areas.Edu.Models.ClassDetailsModel
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,6 +10,7 @@
 {
     @Html.Partial("_Title")
 }
+
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
@@ -164,15 +166,13 @@
 {
     <script>
         $(function () {
-            $(document).on('change', '.btn-file :file', function () {
+            $(document).on("change", ".btn-file :file", function () {
                 var input = $(this),
                     numFiles = input.get(0).files ? input.get(0).files.length : 1,
                     label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                $('#upload-text').text(label);
-                input.trigger('fileselect', [numFiles, label]);
+                $("#upload-text").text(label);
+                input.trigger("fileselect", [numFiles, label]);
             });
-
-            $('[data-toggle="tooltip"]').tooltip();
         });
     </script>
 }
