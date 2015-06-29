@@ -2,12 +2,12 @@
 {
     using Entities;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Web.Mvc;
 
     public class ClassScheduleModel
     {
         public string SelectedUserName { get; set; }
+        public Member Member { get; set; }
         public ClassTaken ClassTaken { get; set; }
 
         public IEnumerable<Class> AllClasses { get; set; }

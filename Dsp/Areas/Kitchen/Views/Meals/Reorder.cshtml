@@ -3,12 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Reorder Meal Items";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-5">
             @using (Html.BeginForm("Reorder", "Meals", FormMethod.Post, new { @class = "form-horizontal" }))
@@ -24,7 +20,7 @@
                         <h4>Order</h4>
                     </div>
                 </div>
-                
+
                 for (var i = 0; i < Model.Count(); i++)
                 {
                     <div class="form-group">

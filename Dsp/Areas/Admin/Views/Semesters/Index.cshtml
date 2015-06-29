@@ -4,16 +4,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Semester Index";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
+
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
 @{ Html.RenderPartial("~/Areas/Admin/Views/Semesters/Create.cshtml", new CreateSemesterModel()); }
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
 

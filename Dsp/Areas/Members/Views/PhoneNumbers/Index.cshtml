@@ -2,18 +2,14 @@
 @model Dsp.Areas.Members.Models.PhoneIndexFilterModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Phone Number Index";
+    ViewBag.Title = "Phone Numbers";
 
     var mobile = Model.PhoneNumbers.Where(m => m.Type == "Mobile");
     var emergency = Model.PhoneNumbers.Where(m => m.Type == "Emergency");
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <a class="pull-right" href="@Url.Action("Download", "PhoneNumbers")">

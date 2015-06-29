@@ -86,8 +86,8 @@
                 case ClassesMessageId.DeleteFileAwsFailure:
                     ViewBag.FailMessage = GetResultMessage(message);
                     break;
-                case ClassesMessageId.UploadFileSuccessful:
-                case ClassesMessageId.DeleteFileSuccessful:
+                case ClassesMessageId.UploadFileSuccess:
+                case ClassesMessageId.DeleteFileSuccess:
                     ViewBag.SuccessMessage = GetResultMessage(message);
                     break;
             }
@@ -246,8 +246,7 @@
             return View(@class);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
@@ -265,36 +264,45 @@
             return RedirectToAction("Index", new { message = "Course deleted." });
         }
         
-        public async Task<ActionResult> Schedule(string userName, string message)
+        public async Task<ActionResult> Schedule(string userName, ClassesMessageId? message)
         {
             ViewBag.Message = string.Empty;
 
             if (string.IsNullOrEmpty(userName))
             {
-                ViewBag.Message = "Couldn't find anyone by that user name. ";
+                ViewBag.FailMessage = "No one by the username was found!";
                 return View(new List<ClassTaken>());
             }
-            if (!string.IsNullOrEmpty(message))
+
+            switch (message)
             {
-                ViewBag.Message = message;
+                case ClassesMessageId.AddClassDuplicateFailure:
+                case ClassesMessageId.AddClassUnknownFailure:
+                case ClassesMessageId.DeleteClassTakenFailure:
+                case ClassesMessageId.EditClassTakenFailure:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case ClassesMessageId.AddClassSuccess:
+                case ClassesMessageId.DeleteClassTakenSuccess:
+                case ClassesMessageId.EditClassTakenSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
             }
 
-            var classesTaken = await _db.ClassesTaken
-                .Where(c => c.Member.UserName == userName)
-                .OrderByDescending(c => c.SemesterId)
-                .ToListAsync();
+            var member = await UserManager.FindByNameAsync(userName);
 
             var model = new ClassScheduleModel
             {
                 SelectedUserName = userName,
+                Member = member,
                 AllClasses = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync(),
                 Semesters = await GetSemesterListAsync(),
                 ClassTaken = new ClassTaken
                 {
                     SemesterId = (await GetThisSemesterAsync()).SemesterId,
-                    UserId = User.Identity.GetUserId<int>()
+                    UserId = member.Id
                 },
-                ClassesTaken = classesTaken
+                ClassesTaken = member.ClassesTaken.OrderByDescending(s => s.Semester.DateStart)
             };
 
             if(!model.ClassesTaken.Any())
@@ -305,12 +313,15 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> AddClassTaken(ClassScheduleModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "Failed to add class." });
+                return RedirectToAction("Schedule", new
+                {
+                    userName = model.SelectedUserName, 
+                    message = ClassesMessageId.AddClassUnknownFailure
+                });
 
             if (!User.IsInRole("Academics") && !User.IsInRole("Administrator") &&
                 User.Identity.GetUserName() != model.SelectedUserName)
@@ -318,20 +329,28 @@
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            var classesTaken = await _db.ClassesTaken
-                .Where(c => c.Member.UserName == model.SelectedUserName)
-                .OrderByDescending(c => c.SemesterId)
-                .ToListAsync();
+            var member = await UserManager.FindByNameAsync(model.SelectedUserName);
 
-            if (classesTaken.Any(c => c.ClassId == model.ClassTaken.ClassId && c.UserId == model.ClassTaken.UserId && c.SemesterId == model.ClassTaken.SemesterId))
+            if (member.ClassesTaken.Any(c => 
+                c.ClassId == model.ClassTaken.ClassId && 
+                c.UserId == model.ClassTaken.UserId && 
+                c.SemesterId == model.ClassTaken.SemesterId))
             {
-                return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "That semester already contains the selected class." });
+                return RedirectToAction("Schedule", new
+                {
+                    userName = model.SelectedUserName,
+                    message = ClassesMessageId.AddClassDuplicateFailure
+                });
             }
 
             _db.ClassesTaken.Add(model.ClassTaken);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { userName = model.SelectedUserName, message = "Class added successfully." });
+            return RedirectToAction("Schedule", new
+            {
+                userName = model.SelectedUserName, 
+                message = ClassesMessageId.AddClassSuccess
+            });
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -345,8 +364,7 @@
             return View(entry);
         }
 
-        [HttpPost, ActionName("DeleteFromSchedule")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("DeleteFromSchedule"), ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteConfirmed(ClassTaken model)
         {
@@ -354,13 +372,21 @@
             var member = await UserManager.FindByIdAsync(model.UserId);
             if (entry == null)
             {
-                return RedirectToAction("Schedule", new { userName = member.UserName ?? User.Identity.GetUserName(), message = "Course not found. " });
+                return RedirectToAction("Schedule", new
+                {
+                    userName = member.UserName ?? User.Identity.GetUserName(),
+                    message = ClassesMessageId.DeleteClassTakenFailure
+                });
             }
 
             _db.Entry(entry).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { userName = member.UserName ?? User.Identity.GetUserName(), message = "Course deleted from schedule. " });
+            return RedirectToAction("Schedule", new
+            {
+                userName = member.UserName ?? User.Identity.GetUserName(), 
+                message = ClassesMessageId.DeleteClassTakenSuccess
+            });
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -375,20 +401,26 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> EditClassTaken(ClassTaken classTaken)
         {
             if (!ModelState.IsValid) 
-                return RedirectToAction("Schedule", new { userName = classTaken.Member.UserName, message = "Failed to update record." });
+                return RedirectToAction("Schedule", new
+                {
+                    userName = classTaken.Member.UserName,
+                    message = ClassesMessageId.EditClassTakenFailure
+                });
 
             _db.Entry(classTaken).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
             var member = await UserManager.FindByIdAsync(classTaken.UserId);
 
-            return RedirectToAction("Schedule", new { userName = member.UserName, message = "Record updated." });
+            return RedirectToAction("Schedule", new { 
+                userName = member.UserName,
+                message = ClassesMessageId.EditClassTakenSuccess 
+            });
         }
 
         public async Task<ActionResult> Transcript(string userName, ClassesMessageId? message)
@@ -426,8 +458,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Transcript(IList<ClassTranscriptModel> model)
         {
             if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
@@ -461,8 +492,7 @@
             });
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadFile(ClassDetailsModel model)
         {
             if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0) 
@@ -517,7 +547,7 @@
             return RedirectToAction("Details", new
             {
                 id = model.Class.ClassId,
-                message = ClassesMessageId.UploadFileSuccessful
+                message = ClassesMessageId.UploadFileSuccess
             });
         }
 
@@ -593,8 +623,7 @@
             return View(file);
         }
 
-        [HttpPost, ActionName("DeleteFile")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("DeleteFile"), ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteFileConfirmed(int id, int classId)
         {
@@ -640,7 +669,7 @@
             return RedirectToAction("Details", new
             {
                 id = classId,
-                message = ClassesMessageId.DeleteFileSuccessful
+                message = ClassesMessageId.DeleteFileSuccess
             });
         }
 
@@ -650,10 +679,17 @@
                 : message == ClassesMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
                 : message == ClassesMessageId.UploadInvalidFailure ? "Could not upload file because there was nothing selected to upload."
                 : message == ClassesMessageId.UploadInvalidFileTypeFailure ? "Could not upload file because it is not a properly formatted PDF."
-                : message == ClassesMessageId.UploadFileSuccessful ? "File was uploaded successfully!"
+                : message == ClassesMessageId.UploadFileSuccess ? "File was uploaded successfully!"
                 : message == ClassesMessageId.DownloadFileAwsFailure ? "Could not download file because of a server error.  If the problem persists, please contact your administrator."
                 : message == ClassesMessageId.DeleteFileAwsFailure ? "Could not delete file because of a server error.  If the problem persists, please contact your administrator."
-                : message == ClassesMessageId.DeleteFileSuccessful ? "File was deleted successfully!"
+                : message == ClassesMessageId.DeleteFileSuccess ? "File was deleted successfully!"
+                : message == ClassesMessageId.AddClassDuplicateFailure ? "You can't add the same class twice in one semester!"
+                : message == ClassesMessageId.AddClassUnknownFailure ? "Failed to add a class for some unknown reason, contact your administrator."
+                : message == ClassesMessageId.AddClassSuccess ? "Class enrollment was successful!"
+                : message == ClassesMessageId.DeleteClassTakenFailure ? "Could not find the class to remove for this member.  Please try again or contact your administrator if the problem persists."
+                : message == ClassesMessageId.DeleteClassTakenSuccess ? "Class successfully removed."
+                : message == ClassesMessageId.EditClassTakenFailure ? "Failed to update class because "
+                : message == ClassesMessageId.EditClassTakenSuccess ? "Enrollment information for class was updated successfully."
                 : "";
         }
 
@@ -663,10 +699,17 @@
             UpdateTranscriptSuccess,
             UploadInvalidFailure,
             UploadInvalidFileTypeFailure,
-            UploadFileSuccessful,
+            UploadFileSuccess,
             DownloadFileAwsFailure,
             DeleteFileAwsFailure,
-            DeleteFileSuccessful
+            DeleteFileSuccess,
+            AddClassDuplicateFailure,
+            AddClassUnknownFailure,
+            AddClassSuccess,
+            DeleteClassTakenSuccess,
+            DeleteClassTakenFailure,
+            EditClassTakenSuccess,
+            EditClassTakenFailure
         }
     }
 }

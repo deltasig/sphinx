@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Initiate Pledges";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 @Styles.Render("~/Content/Multiselect")
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-12">
             @using (Html.BeginForm("InitiatePledges", "Roster", FormMethod.Post, new {@class = "", role = "form"}))

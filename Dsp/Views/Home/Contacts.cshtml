@@ -2,8 +2,8 @@
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Contacts";
+    ViewBag.Subtitle = (Model.First().Semester.DateStart.Month < 6 ? "Spring " : "Fall ") + Model.First().Semester.DateStart.Year;
 }
-
 @section Title
 {
     @Html.Partial("_TitleExternal")
@@ -17,61 +17,67 @@
             <p class="lead text-warning">Looking to get in contact with us?  Please see below and direct your inquiry at the right person.</p>
             @if (Model.Any(l => l.Position.IsPublic))
             {
-                <h3>
-                    @(Model.First().Semester.DateStart.Month < 6 ? "Spring" : "Fall")
-                    @Model.First().Semester.DateStart.Year
-                    <small>Semester</small>
-                </h3>
+                <table class="table table-condensed table-hover hidden-xs">
+                    <thead>
+                        <tr>
+                            <th>Position</th>
+                            <th>Contact Name</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var leader in Model.Where(l => l.Position.IsPublic)
+                        .OrderBy(l => l.Position.Type)
+                        .ThenBy(l => l.Position.DisplayOrder))
+                        {
+                            var color = (leader.Position.Name == "Chapter Advisor") ? "warning" : "";
 
-                <div class="panel panel-default hidden-xs">
-                    <div class="panel-body">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Position</th>
-                                    <th>Contact Name</th>
-                                    <th>Email</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var leader in Model.Where(l => l.Position.IsPublic)
-                                    .OrderBy(l => l.Position.Type)
-                                    .ThenBy(l => l.Position.DisplayOrder))
-                                {
-                                    <tr>
-                                        <td>@leader.Position.Name</td>
-                                        <td>@leader.Member.FirstName @leader.Member.LastName</td>
-                                        <td><a href="mailto:@leader.Member.Email">@leader.Member.Email</a></td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="panel panel-default visible-xs">
-                    <div class="panel-body">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var leader in Model.Where(l => l.Position.IsPublic)
-                                    .OrderBy(l => l.Position.Type)
-                                    .ThenBy(l => l.Position.DisplayOrder))
-                                {
-                                    <tr>
-                                        <td>
-                                            <strong>@leader.Position.Name</strong> <br/>
-                                            @leader.Member.FirstName @leader.Member.LastName <br/>
-                                            <a href="mailto:@leader.Member.Email">@leader.Member.Email</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+                            <tr class="@color">
+                                <td>
+                                    @leader.Position.Name
+                                    @if (leader.Position.Name == "Vice President Growth")
+                                    {
+                                        <span class="badge">
+                                            Scholarship Inquiries
+                                        </span>
+                                    }
+                                    else if (leader.Position.Name == "Director of Recruitment")
+                                    {
+                                        <span class="badge">
+                                            Membership Inquiries
+                                        </span>
+                                    }
+                                </td>
+                                <td>@leader.Member.FirstName @leader.Member.LastName</td>
+                                <td><a href="mailto:@leader.Member.Email">@leader.Member.Email</a></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="list-group visible-xs">
+                    @foreach (var leader in Model.Where(l => l.Position.IsPublic)
+                            .OrderBy(l => l.Position.Type)
+                            .ThenBy(l => l.Position.DisplayOrder))
+                    {
+                        <a href="mailto:@leader.Member.Email" class="list-group-item">
+                            <strong>@leader.Position.Name</strong>
+                            <i class="fa fa-envelope-o pull-right"></i> <br>
+                            @leader.Member.FirstName @leader.Member.LastName
+                            @if (leader.Position.Name == "Vice President Growth")
+                            {
+                                <span class="badge">
+                                    Scholarship
+                                </span>
+                            }
+                            else if (leader.Position.Name == "Director of Recruitment")
+                            {
+                                <span class="badge">
+                                    Membership
+                                </span>
+                            }
+
+                        </a>
+                    }
                 </div>
             }
             else

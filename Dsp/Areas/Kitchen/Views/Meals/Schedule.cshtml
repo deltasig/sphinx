@@ -22,15 +22,11 @@
 
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 @section AdditionalMeta{
     <meta http-equiv="refresh" content="60">
 }
 
-<div class="container">
+<div class="container-fluid">
     <div class="row hidden-xs" style="margin-bottom:10px">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
@@ -69,21 +65,22 @@
                 }
             </div>
         </div>
-    </div> 
+    </div>
     <div class="row visible-xs">
         <div class="col-xs-12 text-center">
             <div class="btn-group btn-group-justified" role="group" aria-label="...">
                 <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week - 1 })">
                     <i class="fa fa-caret-left"></i> Previous Week
                 </a>
-                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">Next Week <i class="fa fa-caret-right"></i>
+                <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week + 1 })">
+                    Next Week <i class="fa fa-caret-right"></i>
                 </a>
             </div>
             @Model.StartOfWeek.ToShortDateString() to @Model.StartOfWeek.AddDays(6).ToShortDateString()
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <table class="table table-bordered hidden-xs">
@@ -133,16 +130,16 @@
                                         @if (Request.IsAuthenticated && slotDateTimeUtc > DateTime.UtcNow.AddHours(-1))
                                         {
                                             <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })"
-                                                class="pull-right">
+                                               class="pull-right">
                                                 @if (Model.LatePlates.Any(l => l.UserId == User.Identity.GetUserId<int>() && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
                                                 {
                                                     <i data-toggle="tooltip" data-placement="top" title="Cancel"
-                                                        class="fa fa-lg fa-check-circle text-success"></i>
+                                                       class="fa fa-lg fa-check-circle text-success"></i>
                                                 }
                                                 else
                                                 {
                                                     <i data-toggle="tooltip" data-placement="top" title="Sign up for a late plate (Note: if you're Out-of-House, this will sign you up for a plate)"
-                                                        class="fa fa-pencil-square-o text-muted"></i>
+                                                       class="fa fa-pencil-square-o text-muted"></i>
                                                 }
                                             </a>
                                         }
@@ -207,9 +204,9 @@
                                     </small>
                                 </td>
                                 @{
-                                    var slot = Model.MealsToPeriods.SingleOrDefault(m =>
-                                        m.MealPeriodId == p.MealPeriodId &&
-                                        m.Date == Model.StartOfWeek.AddDays(i).Date);
+                            var slot = Model.MealsToPeriods.SingleOrDefault(m =>
+                                m.MealPeriodId == p.MealPeriodId &&
+                                m.Date == Model.StartOfWeek.AddDays(i).Date);
                                 }
                                 @if (slot == null)
                                 {
@@ -222,27 +219,26 @@
                                     <td>
                                         @if (Request.IsAuthenticated && slotDateTimeUtc > DateTime.UtcNow.AddHours(-1))
                                         {
-                                            <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })" 
-                                                >
+                                            <a href="@Url.Action("LatePlateSignup", "Meals", new { id = Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId, ViewBag.week })">
                                                 @if (Model.LatePlates.Any(l => l.UserId == User.Identity.GetUserId<int>() && l.MealToPeriodId == Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId))
                                                 {
                                                     <i data-toggle="tooltip" data-placement="top" title="Cancel"
-                                                        class="fa fa-lg fa-check-circle text-success"></i>
+                                                       class="fa fa-lg fa-check-circle text-success"></i>
                                                 }
                                                 else
                                                 {
                                                     <i data-toggle="tooltip" data-placement="top" title="Sign up for a late plate (Note: if you're Out-of-House, this will sign you up for a plate)"
-                                                        class="fa fa-pencil-square-o text-muted"></i>
+                                                       class="fa fa-pencil-square-o text-muted"></i>
                                                 }
                                             </a>
                                         }
                                         @{
-                                            var mealText = string.Empty;
-                                            mealText = slot.Meal.MealsToItems
-                                                .OrderBy(m => m.DisplayOrder)
-                                                .Aggregate(mealText, (current, item) => current + (item.MealItem.Name + ", "));
+                                        var mealText = string.Empty;
+                                        mealText = slot.Meal.MealsToItems
+                                            .OrderBy(m => m.DisplayOrder)
+                                            .Aggregate(mealText, (current, item) => current + (item.MealItem.Name + ", "));
                                         }
-                                        <small>@mealText.Substring(0, mealText.Length-2)</small>
+                                        <small>@mealText.Substring(0, mealText.Length - 2)</small>
                                     </td>
                                 }
                             </tr>
@@ -253,7 +249,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <strong>Late Plates</strong>
@@ -282,7 +278,7 @@
                         <tr>
                             <td class="active text-center col-md-2">
                                 <strong>@p.Name</strong>
-                                <br/>
+                                <br />
                                 <small>@p.StartTime.AddHours(-6).ToString("hh:mm tt") - @p.EndTime.AddHours(-6).ToString("hh:mm tt")</small>
                             </td>
                             @for (var i = startDay; i < endDay; i++)
@@ -300,7 +296,7 @@
                                         {
                                             @(item.Member.FirstName + " " + item.Member.LastName.Substring(0, 1) + ".")
                                             <strong>@(item.Member.Room == 0 ? "*" : "") </strong>
-                                            <br/>
+                                            <br />
                                         }
                                     </td>
                                 }
@@ -328,9 +324,9 @@
                                     </small>
                                 </td>
                                 @{
-                                    var slot = Model.MealsToPeriods.SingleOrDefault(m =>
-                                        m.MealPeriodId == p.MealPeriodId &&
-                                        m.Date == Model.StartOfWeek.AddDays(i).Date);
+                            var slot = Model.MealsToPeriods.SingleOrDefault(m =>
+                                m.MealPeriodId == p.MealPeriodId &&
+                                m.Date == Model.StartOfWeek.AddDays(i).Date);
                                 }
                                 @if (slot == null)
                                 {
@@ -344,7 +340,7 @@
                                             {
                                                 @(item.Member.FirstName + " " + item.Member.LastName.Substring(0, 1) + ".")
                                                 <strong>@(item.Member.Room == 0 ? "*" : "") </strong>
-                                                <br/>
+                                                <br />
                                             }
                                         </small>
                                     </td>

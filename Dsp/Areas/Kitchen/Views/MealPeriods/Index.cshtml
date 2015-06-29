@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meal Periods";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
@@ -18,7 +14,7 @@
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", "MealPeriods", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" }) 
+                @Html.ActionLink("Create New", "Create", "MealPeriods", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>
@@ -26,7 +22,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
+                    <table data-toggle="table" data-classes="table table-condensed"
                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
                         <thead>
                             <tr>
