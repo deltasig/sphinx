@@ -22,7 +22,7 @@
         </a>
     </div>
     <!-- Top Menu Items (Left Side) -->
-    <ul class="nav navbar-nav hidden-xs">
+    <ul class="nav navbar-nav hidden-xs hidden-sm">
         <li class="navbar-text">Schedules </li>
         <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "")">
             <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})"
@@ -45,19 +45,19 @@
     </ul>
     <!-- Top Menu Items (Right Side) -->
     <ul class="nav navbar-right top-nav">
-        <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs">
+        <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs visible-sm">
             <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})"
                data-toggle="tooltip" data-placement="bottom" title="Sobers">
                 <i class="fa fa-car"></i>
             </a>
         </li>
-        <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "") visible-xs"
+        <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "") visible-xs visible-sm"
             data-toggle="tooltip" data-placement="bottom" title="Laundry">
             <a href="@Url.Action("Schedule", "Laundry", new {area = "Sphinx"})">
                 <i class="fa fa-lg fa-tint"></i>
             </a>
         </li>
-        <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "") visible-xs"
+        <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "") visible-xs visible-sm"
             data-toggle="tooltip" data-placement="bottom" title="Meals">
             <a href="@Url.Action("Schedule", "Meals", new {area = "Kitchen"})">
                 <i class="fa fa-cutlery"></i>
