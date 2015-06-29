@@ -34,6 +34,10 @@ body {
   -webkit-filter: blur(1px);
 }
 
+.tooltip {
+    min-width: 75px;
+}
+
 /* Responsiveness */
 iframe, object, embed {
     max-width: 100%;

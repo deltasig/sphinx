@@ -21,5 +21,17 @@
 
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script>
+        $(function() {
+            setTimeout(function() {
+                $("#success-message").hide("blind", {}, 1000);
+                $("#failure-message").hide("blind", {}, 1000);
+                $("#message").hide("blind", {}, 1000);
+            }, 5000);
+
+            $("[data-toggle=\"tooltip\"]").tooltip();
+            $("[data-toggle=\"popover\"]").tooltip();
+        });
+    </script>
 </body>
 </html>
