@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Submit Incident Report";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -25,7 +21,7 @@
             {
                 @Html.AntiForgeryToken()
 
-                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
                 <div class="form-group">
                     @Html.LabelFor(m => m.DateTimeOfIncident, htmlAttributes: new { @class = "control-label" })
@@ -51,14 +47,14 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Submit" class="btn btn-default"/>
+                    <input type="submit" value="Submit" class="btn btn-default" />
                 </div>
             }
         </div>
         <div class="col-sm-6">
             <div class="alert alert-warning">
                 <strong>Policy Broken</strong>
-                <hr/>
+                <hr />
                 <p>
                     This should briefly describe at a very high level what occurred.
                     It is important to be accurate with this information because it
@@ -67,7 +63,7 @@
             </div>
             <div class="alert alert-warning">
                 <strong>Incident Description</strong>
-                <hr/>
+                <hr />
                 <p>
                     The incident description should contain an objective and clear recounting
                     of the actions unbecoming of a member. The incident description is only viewable by the

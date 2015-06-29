@@ -6,11 +6,8 @@
     var semesters = Model.Select(m => m.Leader.Semester).Distinct();
     var positionTypes = Enum.GetValues(typeof(Position.PositionType)).Cast<Position.PositionType>().ToList();
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
 

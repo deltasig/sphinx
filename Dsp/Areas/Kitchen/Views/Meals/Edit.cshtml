@@ -3,27 +3,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Meal";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 @Styles.Render("~/Content/Multiselect")
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-5">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(m => m.MealId)
 
                 <div class="form-group">
-                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new {id = "meal-item-selection", @class = "form-control"})
+                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new { id = "meal-item-selection", @class = "form-control" })
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default"/> |
+                    <input type="submit" value="Save" class="btn btn-default" /> |
                     @Html.ActionLink("Back to List", "Index")
                 </div>
 

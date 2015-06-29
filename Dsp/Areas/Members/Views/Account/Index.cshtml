@@ -1,14 +1,10 @@
-﻿@using System.Globalization
-@model Dsp.Areas.Members.Models.AccountInformationModel
+﻿@model Dsp.Areas.Members.Models.AccountInformationModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Account";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6">
             @{ Html.RenderPartial("~/Areas/Members/Views/Account/_MemberInformationPartial.cshtml", Model.MemberInfo); }
@@ -23,7 +19,7 @@
                             Classes | @Model.CurrentSemester
                         </div>
                         <div class="col-xs-6 text-right">
-                            @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" }) | 
+                            @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" }) |
                             @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" })
                         </div>
                     </div>
@@ -37,7 +33,7 @@
                                     <th>Course</th>
                                     <th>
                                         Brothers
-                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top" 
+                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
                                            title="Number of other brothers taking this class this semester"></i>
                                     </th>
                                     <th>Files</th>

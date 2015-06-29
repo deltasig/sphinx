@@ -1,183 +1,182 @@
 ﻿@{
-	Layout = "~/Views/Shared/_LayoutExternal.cshtml";
-	ViewBag.Title = "Delta Sigma Phi";
-	var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-	var currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
-}
-@section Title
-{
-	@Html.Partial("_TitleExternal")
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Delta Sigma Phi";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+    var imageClass = currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "night-img" : "day-img";
+    var textColor = currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "color: whitesmoke" : "";
 }
 @section AdditionalMeta{
-	<meta name="description"
-		  content="We are redefining the fraternity experience by showing that a quality fraternity enhances the 
-				   college experience beyond that of any other college organization." >
+    <meta name="description"
+          content="We are redefining the fraternity experience by showing that a quality fraternity enhances the
+                   college experience beyond that of any other college organization.">
 }
 
-<div class="top-section @(currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "night-img" : "day-img")">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 jumbotron" style="background: none; padding: 10px; @(currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "color:whitesmoke" : "")">
-				<h1><strong>DELTA SIGMA PHI</strong></h1>
-				<h4 style="margin: 0 0 0 3px">DELTA EPSILON CHAPTER</h4>
-				<h4 style="margin: 0 0 0 3px">MISSOURI S&amp;T</h4>
-			</div>
-		</div>
-	</div>
+<div class="top-section @imageClass">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 jumbotron" style="background: none; padding: 10px; margin-top: -25px; @textColor">
+                <h1><strong>DELTA SIGMA PHI</strong></h1>
+                <h4 style="margin: 0 0 0 3px">DELTA EPSILON CHAPTER</h4>
+                <h4 style="margin: 0 0 0 3px">MISSOURI S&amp;T</h4>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="container">
-	<div class="row">
-		<div class="col-xs-12">
-			<h1 style="margin: 75px 0;">
-				<strong><em>Delta Sig</em></strong> is redefining the fraternity experience.  We are on a mission to show
-				that a quality fraternity can enhance the college experience beyond that of any other college organization.
-			</h1>
-		</div>
-	</div>
+    <div class="row">
+        <div class="col-xs-12">
+            <h1 style="margin: 75px 0;">
+                <strong><em>Delta Sig</em></strong> is redefining the fraternity experience.  We are on a mission to show
+                that a quality fraternity can enhance the college experience beyond that of any other college organization.
+            </h1>
+        </div>
+    </div>
 </div>
 
 <div class="content-section" style="background-color: #282725; color: white;">
-	<div class="container">
-		<div class="row">
-			<div class="col-xs-12 col-sm-10 col-sm-offset-2">
-				<h1>Get In Touch</h1>
-				<hr />
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-2 hidden-xs">
-				<span class="fa-stack visible-md visible-lg" style="font-size: 5em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
-				</span>
-				<span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
-				</span>
-			</div>
-			<div class="col-sm-10">
-				<h3>
-					<span class="fa-stack visible-xs-inline-block">
-						<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-						<i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
-					</span>
-					Prospective Members
-				</h3>
-				<p>
-					Our recruitment process is <strong>values-based</strong> and we are proud of it.  For those who are right for Delta Sig, you already believe what we believe.
-					You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded individuals will accelerate the realization of that vision.
-					If Delta Sig isn't the right place for you, we will help you find a fraternity that is.
-					<br />
-					@Html.ActionLink("Learn More »", "Recruitment", "Home")
-				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-2 hidden-xs">
-				<span class="fa-stack visible-md visible-lg" style="font-size: 5em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
-				</span>
-				<span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
-				</span>
-			</div>
-			<div class="col-sm-10">
-				<h3>
-					<span class="fa-stack visible-xs-inline-block">
-						<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-						<i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
-					</span>
-					Alumni Involvement
-				</h3>
-				<p>
-					After a decade-long absence, Delta Epsilon has returned to Missouri S&amp;T and we have quickly risen to be one of the most influental student organizations 
-					on campus. Accomplishments are great, but none of it would be possible without support from our alumni.  
-					That is why Delta Epsilon is committed to reconnecting with you.
-					<br />
-					<a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni Website »</a>
-				</p>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col-sm-2 hidden-xs">
-				<span class="fa-stack visible-md visible-lg" style="font-size: 5em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-home fa-stack-1x" style="color: #282725"></i>
-				</span>
-				<span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
-					<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-					<i class="fa fa-home fa-stack-1x" style="color: #282725"></i>
-				</span>
-			</div>
-			<div class="col-sm-10">
-				<h3>
-					<span class="fa-stack visible-xs-inline-block">
-						<i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
-						<i class="fa fa-home fa-stack-1x" style="color: #282725"></i>
-					</span>
-					Community Outreach
-				</h3>
-				<p>
-					Delta Sig wants to connect with you!  We are committed to building relationships on campus and throughout the community.
-					If you have an opportunity to make Missouri S&amp;T and the community a better place, let us know and we will do our best to help you.
-					<br />
-					@Html.ActionLink("Contact Us »", "Contacts", "Home")
-				</p>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-2">
+                <h1>Get In Touch</h1>
+                <hr />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 hidden-xs">
+                <span class="fa-stack visible-md visible-lg" style="font-size: 5em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
+                </span>
+                <span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
+                </span>
+            </div>
+            <div class="col-sm-10">
+                <h3>
+                    <span class="fa-stack visible-xs-inline-block">
+                        <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                        <i class="fa fa-group fa-stack-1x" style="color: #282725"></i>
+                    </span>
+                    Prospective Members
+                </h3>
+                <p>
+                    Our recruitment process is <strong>values-based</strong> and we are proud of it.  For those who are right for Delta Sig, you already believe what we believe.
+                    You strive to make a positive impact every day in the world around you, and you realize that surrounding yourself with like-minded individuals will accelerate the realization of that vision.
+                    If Delta Sig isn't the right place for you, we will help you find a fraternity that is.
+                    <br />
+                    @Html.ActionLink("Learn More »", "Recruitment", "Home")
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 hidden-xs">
+                <span class="fa-stack visible-md visible-lg" style="font-size: 5em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
+                </span>
+                <span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
+                </span>
+            </div>
+            <div class="col-sm-10">
+                <h3>
+                    <span class="fa-stack visible-xs-inline-block">
+                        <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                        <i class="fa fa-graduation-cap fa-stack-1x" style="color: #282725"></i>
+                    </span>
+                    Alumni Involvement
+                </h3>
+                <p>
+                    After a decade-long absence, Delta Epsilon has returned to Missouri S&amp;T and we have quickly risen to be one of the most influental student organizations
+                    on campus. Accomplishments are great, but none of it would be possible without support from our alumni.
+                    That is why Delta Epsilon is committed to reconnecting with you.
+                    <br />
+                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni Website »</a>
+                </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 hidden-xs">
+                <span class="fa-stack visible-md visible-lg" style="font-size: 5em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-globe fa-stack-1x" style="color: #282725"></i>
+                </span>
+                <span class="fa-stack hidden-md hidden-lg" style="font-size: 4em">
+                    <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                    <i class="fa fa-globe fa-stack-1x" style="color: #282725"></i>
+                </span>
+            </div>
+            <div class="col-sm-10">
+                <h3>
+                    <span class="fa-stack visible-xs-inline-block">
+                        <i class="fa fa-circle fa-stack-2x" style="color: #414141"></i>
+                        <i class="fa fa-globe fa-stack-1x" style="color: #282725"></i>
+                    </span>
+                    Community Outreach
+                </h3>
+                <p>
+                    Delta Sig wants to connect with you!  We are committed to building relationships on campus and throughout the community.
+                    If you have an opportunity to make Missouri S&amp;T and the community a better place, let us know and we will do our best to help you.
+                    <br />
+                    @Html.ActionLink("Contact Us »", "Contacts", "Home")
+                </p>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="content-section">
-	<div class="container">
-		<div class="row">
-			<div id="address" class="col-md-4">
-				<h2>Our Location</h2>
-				<address>
-					<strong>Delta Sigma Phi <small>Delta Epsilon Chapter</small></strong><br>
-					215 W. 8th Street<br>
-					Rolla, MO 65401, USA<br>
-				</address>
-				<div class="alert alert-warning">
-					<strong>Looking to Get in Touch With Someone?</strong>
-					<p>
-						See our @Html.ActionLink("contact page", "Contacts", "Home") for a list of our leadership.
-					</p>
-				</div>
-			</div>
-			<div id="map-outer" class="col-md-8">
-				<div id="map-container"></div>
-			</div>
-		</div>
-	</div>
+    <div class="container">
+        <div class="row">
+            <div id="address" class="col-md-4">
+                <h2>Our Location</h2>
+                <address>
+                    <strong>Delta Sigma Phi</strong>
+                    <small>Delta Epsilon Chapter</small><br>
+                    215 W. 8th Street<br>
+                    Rolla, MO 65401, USA<br>
+                </address>
+                <div class="alert alert-warning">
+                    <strong>Looking to Get in Touch With Someone?</strong>
+                    <p>
+                        See our @Html.ActionLink("contact page", "Contacts", "Home") for a list of our leadership.
+                    </p>
+                </div>
+            </div>
+            <div id="map-outer" class="col-md-8">
+                <div id="map-container"></div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://maps.google.com/maps/api/js?sensor=false"></script>
 <script>
-	function init_map() {
-		var varLocation = new google.maps.LatLng(37.949873, -91.772352);
+    function init_map() {
+        var varLocation = new google.maps.LatLng(37.949873, -91.772352);
 
-		var varMapoptions = {
-			center: varLocation,
-			zoom: 15
-		};
+        var varMapoptions = {
+            center: varLocation,
+            zoom: 15
+        };
 
-		var varMarker = new google.maps.Marker({
-			position: varLocation,
-			map: varMap,
-			title: "Venice"
-		});
+        var varMarker = new google.maps.Marker({
+            position: varLocation,
+            map: varMap,
+            title: "Venice"
+        });
 
-		var varMap = new google.maps.Map(document.getElementById("map-container"),
-			varMapoptions);
+        var varMap = new google.maps.Map(document.getElementById("map-container"),
+            varMapoptions);
 
-		varMarker.setMap(varMap);
+        varMarker.setMap(varMap);
 
-	}
+    }
 
-	google.maps.event.addDomListener(window, 'load', init_map);
+    google.maps.event.addDomListener(window, 'load', init_map);
 
 </script>

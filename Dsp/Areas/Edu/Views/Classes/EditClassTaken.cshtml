@@ -1,14 +1,10 @@
 ﻿@model Dsp.Entities.ClassTaken
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Class Enrollment Info";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -35,36 +31,32 @@
                         <dt>Class</dt>
                         <dd>@Model.Class.CourseName</dd>
                         <dt>Semester</dt>
-                        <dd>@(Model.IsSummerClass 
-                                ? "Summer " + Model.Semester.DateStart.Year 
-                                : Model.Semester.ToString())</dd>
-                    </dl>
-                </div>
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.Instructor, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Instructor, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.Instructor, "", new { @class = "text-danger" })
-                </div>
-                
+                        <dd>
+                            @(Model.IsSummerClass
+                                ? "Summer " + Model.Semester.DateStart.Year
+                                : Model.Semester.ToString())
+                    </dd>
+                </dl>
+            </div>
+
                 <div class="form-group">
                     @Html.LabelFor(model => model.MidtermGrade, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.MidtermGrade, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                     @Html.ValidationMessageFor(model => model.MidtermGrade, "", new { @class = "text-danger" })
                 </div>
-                
+
                 <div class="form-group">
                     @Html.LabelFor(model => model.FinalGrade, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.FinalGrade, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                     @Html.ValidationMessageFor(model => model.FinalGrade, "", new { @class = "text-danger" })
                 </div>
-                
+
                 <div class="form-group">
                     @Html.LabelFor(model => model.Dropped, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Dropped, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Dropped, "", new { @class = "text-danger" })
                 </div>
-                
+
                 <div class="checkbox form-group">
                     <label class="control-label">
                         @Html.EditorFor(model => model.IsSummerClass)

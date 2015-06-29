@@ -1,8 +1,8 @@
 ﻿@if (ViewContext.RouteData.DataTokens["area"] == null || !Request.IsAuthenticated)
 {
-    @Html.Partial("_ExternalNav")
+    @Html.Partial("_NavExternal")
 }
 else
 {
-    @Html.Partial("_InternalNav")
+    @Html.Partial("_NavInternal")
 }

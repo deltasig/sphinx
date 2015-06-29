@@ -2,14 +2,11 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Class Schedule";
-}
-@section Title
-{
-    @Html.Partial("_Title")
+    ViewBag.Subtitle = Model.Member.ToString();
 }
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             @if (ViewBag != null && ViewBag.Message.Length > 0)
@@ -40,7 +37,7 @@
     <div class="row">
         @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)
         {
-            <div class="col-xs-12 col-sm-5">
+            <div class="col-sm-12 col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Add a New Class
@@ -93,7 +90,7 @@
                 </div>
             </div>
         }
-        <div class="col-xs-12 col-sm-7">
+        <div class="col-sm-12 col-md-7">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">

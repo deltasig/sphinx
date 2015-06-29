@@ -3,18 +3,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Scholarship Applications";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
     {
         <div class="row">
             <div class="col-xs-6">
-            
+
             </div>
             <div class="col-xs-6 text-right">
                 <p>
@@ -26,11 +21,9 @@
         </div>
     }
     <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="ends-on" data-sort-order="desc">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th data-sortable="true" data-field="title">Title</th>
@@ -81,13 +74,11 @@
                             }
                         </tbody>
                     </table>
-                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">

@@ -4,13 +4,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meal Items";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
@@ -27,8 +23,8 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="ups" data-sort-order="desc">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="ups" data-sort-order="desc">
                         <thead>
                             <tr>
                                 <th class="col-sm-2" data-sortable="true" data-field="type">Type</th>
@@ -82,28 +78,28 @@
                                         </ul>
                                     </td>
                                     @{
-                                        var ups = item.MealVotes.Count(v => v.IsUpvote);
-                                        var downs = item.MealVotes.Count(v => !v.IsUpvote);
-                                        var favor = 0.0;
-                                        var favorability = "0.00";
-                                        var color = string.Empty;
-                                        if (item.MealVotes.Any())
-                                        {
-                                            favor = (ups/(double) item.MealVotes.Count())*100.0;
-                                            favorability = (favor).ToString("F");
-                                        }
-                                        if (favor >= 80.0)
-                                        {
-                                            color = "success";
-                                        }
-                                        else if (favor >= 40)
-                                        {
-                                            color = "warning";
-                                        }
-                                        else if (favor > 0)
-                                        {
-                                            color = "danger";
-                                        }
+                                                    var ups = item.MealVotes.Count(v => v.IsUpvote);
+                                                    var downs = item.MealVotes.Count(v => !v.IsUpvote);
+                                                    var favor = 0.0;
+                                                    var favorability = "0.00";
+                                                    var color = string.Empty;
+                                                    if (item.MealVotes.Any())
+                                                    {
+                                                        favor = (ups / (double)item.MealVotes.Count()) * 100.0;
+                                                        favorability = (favor).ToString("F");
+                                                    }
+                                                    if (favor >= 80.0)
+                                                    {
+                                                        color = "success";
+                                                    }
+                                                    else if (favor >= 40)
+                                                    {
+                                                        color = "warning";
+                                                    }
+                                                    else if (favor > 0)
+                                                    {
+                                                        color = "danger";
+                                                    }
                                     }
                                     <td>
                                         @ups
@@ -113,7 +109,7 @@
                                     </td>
                                     <td class="@color">
                                         @favorability
-                                    </td>   
+                                    </td>
                                     <td class="text-right">
                                         @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                         {

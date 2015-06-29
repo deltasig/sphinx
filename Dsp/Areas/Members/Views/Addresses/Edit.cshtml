@@ -3,11 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Address";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
             @using (Html.BeginForm())
@@ -20,8 +16,9 @@
                     @Html.HiddenFor(model => model.UserId)
                     @Html.HiddenFor(model => model.Type)
 
-                        <p>Modifying "@Model.Type" Address for @Model.Member.FirstName @Model.Member.LastName
-                        </p>
+                    <p>
+                        Modifying "@Model.Type" Address for @Model.Member.FirstName @Model.Member.LastName
+                    </p>
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.Address1, htmlAttributes: new { @class = "sr-only" })

@@ -1018,6 +1018,7 @@
     <Content Include="Views\Emails\SoberSchedule.cshtml" />
     <Content Include="Views\Emails\NewIncidentReport.cshtml" />
     <Content Include="Views\Shared\_TitleExternal.cshtml" />
+    <Content Include="Views\Shared\_LayoutInternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

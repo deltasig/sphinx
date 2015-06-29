@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create New Event";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -20,7 +16,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-sm-6">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
@@ -29,8 +25,9 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.DateTimeOccurred, htmlAttributes: new { @class = "control-label" })
                     <div class='input-group date' id='dtp'>
-                        @Html.EditorFor(m => m.DateTimeOccurred, new { htmlAttributes = new { @class = "form-control", type = "datetime" }})
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        @Html.EditorFor(m => m.DateTimeOccurred, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                     @Html.ValidationMessageFor(model => model.DateTimeOccurred, "", new { @class = "text-danger" })
@@ -53,7 +50,7 @@
                 </div>
             }
         </div>
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-sm-6">
             <div class="alert alert-warning">
                 <strong>Event Approval</strong>
                 <hr />

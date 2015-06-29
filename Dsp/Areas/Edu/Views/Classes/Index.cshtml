@@ -3,25 +3,18 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Classes";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        <div class="col-xs-8">
-            @if (ViewBag.Message.Length > 0)
-            {
-                <div class="alert alert-warning">
-                    @ViewBag.Message
-                </div>
-            }
+        <div class="col-sm-6">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+            </div>
         </div>
-        <div class="col-xs-4 text-right">
+        <div class="col-sm-6 text-right">
             <p>
-                @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-sm btn-success" }) 
+                @Html.ActionLink("Add Class", "Create", null, new {@class = "btn btn-sm btn-success"})
             </p>
         </div>
     </div>

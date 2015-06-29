@@ -3,11 +3,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Service Hour Submission";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index", new { SelectedSemester = ViewBag.Semester })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Hours
+                </a>
+            </p>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6 col-xs-12">
             @using (Html.BeginForm())
@@ -17,7 +23,7 @@
                 @Html.HiddenFor(model => model.EventId)
                 @Html.HiddenFor(model => model.UserId)
                 @Html.HiddenFor(model => model.DateTimeSubmitted)
-                
+
                 <div class="form-group">
                     @Html.LabelFor(model => model.DurationHours, htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.DurationHours, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
@@ -25,8 +31,7 @@
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to List", "Index", new { SelectedSemester = ViewBag.Semester })
+                    <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             }
         </div>

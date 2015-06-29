@@ -4,11 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Delete Class Taken";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -43,7 +40,7 @@
                 @Html.HiddenFor(m => m.IsSummerClass)
 
                 <div>
-                    <input type="submit" value="Delete" class="btn btn-default" /> 
+                    <input type="submit" value="Delete" class="btn btn-default" />
                 </div>
             }
         </div>

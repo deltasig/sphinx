@@ -8,12 +8,12 @@
         </a>
         <ul class="dropdown-menu">
             <li>
-                <a href="@Url.Action("Index", "Account", new { area = "Members" })">
+                <a href="@Url.Action("Index", "Account", new {area = "Members"})">
                     <i class="fa fa-user"></i> Profile
                 </a>
             </li>
             <li>
-                @using (Html.BeginForm("SignOut", "Account", new { area = "Members" }, FormMethod.Post, new { id = "signoutForm" }))
+                @using (Html.BeginForm("SignOut", "Account", new {area = "Members"}, FormMethod.Post, new {id = "signoutForm"}))
                 {
                     @Html.AntiForgeryToken()
                 }

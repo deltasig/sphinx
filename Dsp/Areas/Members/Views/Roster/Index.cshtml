@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Roster";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     @using (Html.BeginForm("Index", "Roster", FormMethod.Get, new {@class = "", role = "form"}))
     {
         <div class="panel panel-default">
@@ -66,7 +62,6 @@
                     {
                         @:|
                         @Html.ActionLink("Initiate Pledges", "InitiatePledges")
-                        <i class="fa fa-bicycle"></i>
                     }
                     <table data-toggle="table" data-classes="table table-condensed" data-pagination="true" data-page-size="100"
                            data-search="true" data-sort-name="last-name" data-sort-order="asc">

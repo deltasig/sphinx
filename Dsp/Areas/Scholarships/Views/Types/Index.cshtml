@@ -3,16 +3,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Scholarship Types";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
-            @Html.ActionLink("Back to Scholarships", "Index", "Applications", new { area = "Scholarships" }, new { @class = "" })
+            <p>
+                <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Scholarships
+                </a>
+            </p>
         </div>
         <div class="col-xs-6 text-right">
             <p>
@@ -21,47 +20,41 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed"
-                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
-                        <thead>
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-7">Name</th>
+                            <th class="col-md-2">Applications</th>
+                            <th class="col-md-2">Total Submissions</th>
+                            <th class="col-md-1"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
                             <tr>
-                                <th data-sortable="true" data-field="names">Name</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="app-count">Applications</th>
-                                <th class="col-sm-2"></th>
+                                <td>@item.Name</td>
+                                <td>@item.Applications.Count</td>
+                                <td>@item.Applications.Sum(a => a.Submissions.Count)</td>
+                                <td class="text-right">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipTypeId })
+                                    @if (!item.Applications.Any())
+                                    {
+                                        @: |
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipTypeId })
+                                    }
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model) 
-                            {
-                                <tr>
-                                    <td>
-                                        @item.Name
-                                    </td>
-                                    <td>
-                                        @item.Applications.Count
-                                    </td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Edit", "Edit", new { id=item.ScholarshipTypeId }) 
-                                        @if (!item.Applications.Any())
-                                        {
-                                            @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id=item.ScholarshipTypeId })
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                        }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts
 {
     <script type="text/javascript">

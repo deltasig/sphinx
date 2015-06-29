@@ -1,17 +1,12 @@
 ﻿@using Microsoft.AspNet.Identity
 @model Dsp.Areas.Edu.Models.ClassDetailsModel
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = Model.Class.CourseShorthand + ": " + Model.Class.CourseName;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <p>
@@ -50,16 +45,16 @@
                                                 <i class="fa fa-cloud-download"></i>
                                                 @f.AwsCode.Split('/')[1]
                                             </a>
-                                            
-                                            <i data-toggle="tooltip" data-placement="top" 
-                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)" 
+
+                                            <i data-toggle="tooltip" data-placement="top"
+                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)"
                                                class="fa fa-info-circle fa-lg text-info"></i>
                                             <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">
                                                 <i class="fa fa-cloud-download"></i>
                                                 @f.DownloadCount
                                             </span>
                                             <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Upvotes | Downvotes">
-                                                @f.ClassFileVotes.Count(v => v.IsUpvote) | 
+                                                @f.ClassFileVotes.Count(v => v.IsUpvote) |
                                                 @f.ClassFileVotes.Count(v => !v.IsUpvote)
                                             </span>
                                             <a href="@Url.Action("Upvote", "Classes", new { id = f.ClassFileId })">
@@ -88,7 +83,7 @@
                                             <div class="col-xs-2 text-right">
                                                 <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })">
                                                     <i data-toggle="tooltip" data-placement="top" title="Delete"
-                                                        class="fa fa-times-circle-o fa-2x text-danger"></i>
+                                                       class="fa fa-times-circle-o fa-2x text-danger"></i>
                                                 </a>
                                             </div>
                                         }
@@ -115,13 +110,14 @@
                     @using (Html.BeginForm("UploadFile", "Classes", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
                     {
                         @Html.AntiForgeryToken()
-                        
+
                         @Html.HiddenFor(m => Model.Class.ClassId)
                         @Html.HiddenFor(m => Model.Class.CourseName)
                         @Html.HiddenFor(m => Model.Class.CourseShorthand)
 
                         <div class="form-group">
-                            <span class="btn btn-info btn-sm btn-file">Choose File
+                            <span class="btn btn-info btn-sm btn-file">
+                                Choose File
                                 <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
                             </span>
                             <label id="upload-text"></label>

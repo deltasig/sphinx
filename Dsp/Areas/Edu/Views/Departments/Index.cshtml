@@ -3,16 +3,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Departments";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6">
-
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+            </div>
         </div>
         <div class="col-sm-6 text-right">
             <p>
@@ -24,7 +22,7 @@
         <div class="col-sm-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table class="table" data-toggle="table" data-classes="table table-condensed" 
+                    <table class="table" data-toggle="table" data-classes="table table-condensed"
                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="class-number">
                         <thead>
                             <tr>

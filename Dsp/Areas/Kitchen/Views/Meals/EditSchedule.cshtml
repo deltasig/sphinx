@@ -2,14 +2,20 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Meal Schedule";
-}
-@section Title
-{
-    @Html.Partial("_Title")
+
+    var newList = new List<object> { new { MealId = -1, Text = "None" } };
+    foreach (var m in Model.Meals)
+    {
+        newList.Add(new
+        {
+            m.MealId,
+            Text = m.ToString()
+        });
+    }
 }
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
 
-<div class="container" style="margin-bottom:10px">
+<div class="container-fluid" style="margin-bottom:10px">
     <div class="row">
         <div class="col-xs-6">
             <div class="btn-group" role="group" aria-label="...">
@@ -34,7 +40,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             @using (Html.BeginForm("EditSchedule", "Meals", new { area = "Kitchen", ViewBag.week }, FormMethod.Post, new { @class = "", role = "form" }))
@@ -46,7 +52,7 @@
                         <strong>Meal Schedule</strong>
                     </div>
                     <div class="panel-body">
-                            <table class="table table-bordered" id="schedule-table">
+                        <table class="table table-bordered" id="schedule-table">
                             <thead>
                                 <tr>
                                     <th class="active text-center">Period</th>
@@ -60,17 +66,6 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @{
-                                    var newList = new List<object> { new { MealId = -1, Text = "None" } };
-                                    foreach (var m in Model.Meals)
-                                    {
-                                        newList.Add(new
-                                        {
-                                            m.MealId,
-                                            Text = m.ToString()
-                                        });
-                                    }
-                                }
                                 @foreach (var p in Model.MealPeriods)
                                 {
                                     <tr>
@@ -86,7 +81,7 @@
                                             @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId)
                                             @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealPeriodId)
                                             @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
-                                                
+
                                             <td>
                                                 @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
                                                     new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
@@ -101,7 +96,7 @@
                     <div class="panel-footer">
                         <div class="row">
                             <div class="col-xs-6">
-                                
+
                             </div>
                             <div class="col-xs-6 text-right">
                                 <input type="submit" value="Save Schedule" class="btn btn-default" />
@@ -119,7 +114,7 @@
 {
     <script type="text/javascript">
 
-        $('.dd').selectpicker({
+        $(".dd").selectpicker({
             width: 100
         });
 

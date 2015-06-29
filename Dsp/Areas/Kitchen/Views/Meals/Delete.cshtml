@@ -3,12 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Delete Meal";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6 col-xs-12">
             <div class="alert alert-danger">
@@ -25,7 +21,7 @@
                         <dd>@Model.ToString()</dd>
                     </dl>
                 </div>
-                
+
                 <input type="submit" value="Delete" class="btn btn-default" /> @:|
                 @Html.ActionLink("Back to List", "Index")
             }

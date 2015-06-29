@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Report";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-4">
             <p>
@@ -22,13 +18,13 @@
             <strong>Current Semester: </strong> @Model.Semester
         </div>
         <div class="col-sm-4 text-right">
-            @using (Html.BeginForm("Report", "Sobers", new {area = "Sphinx", sid = Model.SelectedSemester}, FormMethod.Get, new {@class = "form-inline", role = "form"}))
+            @using (Html.BeginForm("Report", "Sobers", new { area = "Sphinx", sid = Model.SelectedSemester }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
             {
                 <div class="form-group">
-                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new {@class = "form-control"})
+                    @Html.DropDownListFor(s => s.SelectedSemester, Model.SemesterList, new { @class = "form-control" })
 
-                    <input type="submit" value="Filter" class="btn btn-default"/>
-                    <br/><br/>
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                    <br /><br />
                 </div>
             }
         </div>
@@ -41,71 +37,71 @@
                            data-search="true" data-pagination="true" data-page-size="100"
                            data-sort-name="total-signups" data-sort-order="asc">
                         <thead>
-                        <tr>
-                            <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="driver-signups">Driver</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="officer-signups">Officer</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="other-signups">Other</th>
-                            <th class="col-sm-2" data-sortable="true" data-field="total-signups">Total</th>
-                        </tr>
+                            <tr>
+                                <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="last-name">Last Name</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="driver-signups">Driver</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="officer-signups">Officer</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="other-signups">Other</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="total-signups">Total</th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var m in Model.Members)
-                        {
-                            <tr>
-                                <td>@m.FirstName</td>
-                                <td>@m.LastName</td>
-                                <td>
-                                    @{
-                                        var driverSignups = m.SoberSignups.Count(s => s.SoberType.Name == "Driver" &&
-                                                                                      s.DateOfShift >= Model.Semester.DateStart &&
-                                                                                      s.DateOfShift <= Model.Semester.DateEnd);
-                                    }
-                                    @for (var i = 0; i < driverSignups; i++)
-                                    {
-                                        <i class="fa fa-beer text-success"></i>
-                                    }
-                                    (@driverSignups)
-                                </td>
-                                <td>
-                                    @{
-                                        var officerSignups = m.SoberSignups.Count(s => s.SoberType.Name == "Officer" &&
-                                                                                       s.DateOfShift >= Model.Semester.DateStart &&
-                                                                                       s.DateOfShift <= Model.Semester.DateEnd);
-                                    }
-                                    @for (var i = 0; i < officerSignups; i++)
-                                    {
-                                        <i class="fa fa-beer text-success"></i>
-                                    }
-                                    (@officerSignups)
-                                </td>
-                                <td>
-                                    @{
-                                        var otherSignups = m.SoberSignups.Count(s => s.SoberType.Name != "Driver" &&
-                                                                                     s.SoberType.Name != "Officer" &&
-                                                                                     s.DateOfShift >= Model.Semester.DateStart &&
-                                                                                     s.DateOfShift <= Model.Semester.DateEnd);
-                                    }
-                                    @for (var i = 0; i < otherSignups; i++)
-                                    {
-                                        <i class="fa fa-beer text-success"></i>
-                                    }
-                                    (@otherSignups)
-                                </td>
-                                <td>
-                                    @{
-                                        var totalSignups = m.SoberSignups.Count(s => s.DateOfShift >= Model.Semester.DateStart &&
-                                                                                     s.DateOfShift <= Model.Semester.DateEnd);
-                                    }
-                                    @for (var i = 0; i < totalSignups; i++)
-                                    {
-                                        <i class="fa fa-beer text-success"></i>
-                                    }
-                                    (@totalSignups)
-                                </td>
-                            </tr>
-                        }
+                            @foreach (var m in Model.Members)
+                            {
+                                <tr>
+                                    <td>@m.FirstName</td>
+                                    <td>@m.LastName</td>
+                                    <td>
+                                        @{
+                                var driverSignups = m.SoberSignups.Count(s => s.SoberType.Name == "Driver" &&
+                                                                              s.DateOfShift >= Model.Semester.DateStart &&
+                                                                              s.DateOfShift <= Model.Semester.DateEnd);
+                                        }
+                                        @for (var i = 0; i < driverSignups; i++)
+                                        {
+                                            <i class="fa fa-beer text-success"></i>
+                                        }
+                                        (@driverSignups)
+                                    </td>
+                                    <td>
+                                        @{
+                                var officerSignups = m.SoberSignups.Count(s => s.SoberType.Name == "Officer" &&
+                                                                               s.DateOfShift >= Model.Semester.DateStart &&
+                                                                               s.DateOfShift <= Model.Semester.DateEnd);
+                                        }
+                                        @for (var i = 0; i < officerSignups; i++)
+                                        {
+                                            <i class="fa fa-beer text-success"></i>
+                                        }
+                                        (@officerSignups)
+                                    </td>
+                                    <td>
+                                        @{
+                                var otherSignups = m.SoberSignups.Count(s => s.SoberType.Name != "Driver" &&
+                                                                             s.SoberType.Name != "Officer" &&
+                                                                             s.DateOfShift >= Model.Semester.DateStart &&
+                                                                             s.DateOfShift <= Model.Semester.DateEnd);
+                                        }
+                                        @for (var i = 0; i < otherSignups; i++)
+                                        {
+                                            <i class="fa fa-beer text-success"></i>
+                                        }
+                                        (@otherSignups)
+                                    </td>
+                                    <td>
+                                        @{
+                                var totalSignups = m.SoberSignups.Count(s => s.DateOfShift >= Model.Semester.DateStart &&
+                                                                             s.DateOfShift <= Model.Semester.DateEnd);
+                                        }
+                                        @for (var i = 0; i < totalSignups; i++)
+                                        {
+                                            <i class="fa fa-beer text-success"></i>
+                                        }
+                                        (@totalSignups)
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -113,6 +109,8 @@
         </div>
     </div>
 </div>
+
+
 
 <script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
 @section scripts

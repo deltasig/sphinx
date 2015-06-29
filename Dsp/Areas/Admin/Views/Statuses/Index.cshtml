@@ -3,16 +3,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Member Status Index";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
-            
+
         </div>
         <div class="col-xs-6 text-right">
             <p>
@@ -25,7 +21,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="table-responsive">
-                        <table data-toggle="table" data-classes="table table-condensed" 
+                        <table data-toggle="table" data-classes="table table-condensed"
                                data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
                             <thead>
                                 <tr>

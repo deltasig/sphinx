@@ -1,23 +1,28 @@
 ﻿@model Dsp.Areas.Scholarships.Models.CreateScholarshipAppModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Create Scholarship";
+    ViewBag.Title = "Create Scholarship Application";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
+
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
-        @using (Html.BeginForm())
-        {
-            @Html.AntiForgeryToken()
-            <div class="col-xs-12 col-sm-5">
-                <h3>Application Information</h3>
-
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Scholarships
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
                 <div class="form-group">
                     @Html.Label("Title", htmlAttributes: new { @class = "control-label" })
                     @Html.EditorFor(model => model.Application.Title, new { htmlAttributes = new { @class = "form-control" } })
@@ -39,8 +44,9 @@
                 <div class="form-group">
                     @Html.Label("Application Submission Period Begins On", htmlAttributes: new { @class = "control-label" })
                     <div class="input-group date" id="dtp1">
-                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                     @Html.ValidationMessageFor(model => model.Application.OpensOn, "", new { @class = "text-danger" })
@@ -49,8 +55,9 @@
                 <div class="form-group">
                     @Html.Label("Application Submission Period Ends On", htmlAttributes: new { @class = "control-label" })
                     <div class="input-group date" id="dtp2">
-                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() }})
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                     @Html.ValidationMessageFor(model => model.Application.ClosesOn, "", new { @class = "text-danger" })
@@ -62,45 +69,45 @@
                     @Html.ValidationMessageFor(model => model.Application.IsPublic, "", new { @class = "text-danger" })
                 </div>
 
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to List", "Index")
-                </div>
-            </div>
-            <div class="col-xs-12 col-sm-7">
                 <h3>Scholarship Questions</h3>
-                <table class="table table-condensed" id="apps-table">
+                <table class="table table-hover">
                     <thead>
-                        <tr>
-                            <th>Select</th>
-                            <th>Question</th>
-                            <th>Optional</th>
-                            <th>Form Order</th>
-                        </tr>
+                    <tr>
+                        <th>Select</th>
+                        <th>Question</th>
+                        <th>Optional</th>
+                        <th>Form Order</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @for (var i = 0; i < Model.Questions.Count(); i++)
-                        {
-                            @Html.HiddenFor(m => Model.Questions[i].Question.ScholarshipQuestionId)
-                            <tr>
-                                <td class="col-md-1">
-                                    @Html.EditorFor(model => Model.Questions[i].IsSelected, new { htmlAttributes = new { @class = "" } })
-                                </td>
-                                <td class="col-md-8">
-                                    @Model.Questions[i].Question.Question.Prompt
-                                </td>
-                                <td class="col-md-1">
-                                    @Html.EditorFor(model => Model.Questions[i].Question.IsOptional, new { htmlAttributes = new { @class = "" } })
-                                </td>
-                                <td class="col-md-2">
-                                    @Html.EditorFor(model => Model.Questions[i].Question.FormOrder, new { htmlAttributes = new { @class = "form-control" } })
-                                </td>
-                            </tr>
-                        }
+                    @for (var i = 0; i < Model.Questions.Count(); i++)
+                    {
+                        @Html.HiddenFor(m => Model.Questions[i].Question.ScholarshipQuestionId)
+                        <tr>
+                            <td class="col-md-1">
+                                @Html.EditorFor(model => Model.Questions[i].IsSelected, new {htmlAttributes = new {@class = ""}})
+                            </td>
+                            <td class="col-md-8">
+                                @Model.Questions[i].Question.Question.Prompt
+                            </td>
+                            <td class="col-md-1">
+                                @Html.EditorFor(model => Model.Questions[i].Question.IsOptional, new {htmlAttributes = new {@class = ""}})
+                            </td>
+                            <td class="col-md-2">
+                                @Html.EditorFor(model => Model.Questions[i].Question.FormOrder, new {htmlAttributes = new {@class = "form-control"}})
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
-            </div>
-        }
+                
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
+                        <input type="submit" value="Create" class="btn btn-lg btn-default btn-block" />
+                    </div>
+                </div>
+            }
+        </div>
     </div>
 </div>
 

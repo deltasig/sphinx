@@ -3,13 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Types";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
             <p>
@@ -20,7 +16,7 @@
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", "SoberTypes", new {area = "Sphinx"}, new {@class = "btn btn-sm btn-success"})
+                @Html.ActionLink("Create New", "Create", "SoberTypes", new { area = "Sphinx" }, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>
@@ -31,28 +27,28 @@
                     <table data-toggle="table" data-classes="table table-condensed"
                            data-search="true" data-pagination="true" data-page-size="25" data-sort-name="name" data-sort-order="asc">
                         <thead>
-                        <tr>
-                            <th class="col-sm-3" data-sortable="true" data-field="name">Name</th>
-                            <th data-sortable="true" data-field="description">Description</th>
-                            <th class="col-sm-2"></th>
-                        </tr>
+                            <tr>
+                                <th class="col-sm-3" data-sortable="true" data-field="name">Name</th>
+                                <th data-sortable="true" data-field="description">Description</th>
+                                <th class="col-sm-2"></th>
+                            </tr>
                         </thead>
                         <tbody>
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@Html.Raw(item.Description)</td>
-                                <td class="text-right">
-                                    @Html.ActionLink("Edit", "Edit", new {id = item.SoberTypeId})
-                                    @if (!item.Signups.Any())
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Delete", "Delete", new {id = item.SoberTypeId})
-                                    }
-                                </td>
-                            </tr>
-                        }
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td>@Html.Raw(item.Description)</td>
+                                    <td class="text-right">
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.SoberTypeId })
+                                        @if (!item.Signups.Any())
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.SoberTypeId })
+                                        }
+                                    </td>
+                                </tr>
+                            }
                         </tbody>
                     </table>
                 </div>
@@ -65,8 +61,6 @@
 @section scripts
 {
     <script type="text/javascript">
-        
-
 
     </script>
 }
