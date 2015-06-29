@@ -663,6 +663,7 @@
     <Content Include="Content\bootstrap.css.map">
       <DependentUpon>bootstrap.css</DependentUpon>
     </Content>
+    <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -943,14 +944,14 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Recruitment.cshtml" />
     <Content Include="Views\Home\Scholarships.cshtml" />
-    <Content Include="Views\Shared\Nav.cshtml" />
+    <Content Include="Views\Shared\_Nav.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Appointments.cshtml" />
     <Content Include="Areas\Members\Views\Account\Registration.cshtml" />
     <Content Include="Areas\Members\Views\Account\_RegisterPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\_UnregisterPartial.cshtml" />
     <Content Include="Areas\Sphinx\Views\Home\Index.cshtml" />
-    <Content Include="Views\Shared\_ExternalNav.cshtml" />
-    <Content Include="Views\Shared\_InternalNav.cshtml" />
+    <Content Include="Views\Shared\_NavExternal.cshtml" />
+    <Content Include="Views\Shared\_NavInternal.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
     <Content Include="Areas\Sphinx\Views\Laundry\Schedule.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Manager.cshtml" />
@@ -995,11 +996,6 @@
     <Content Include="Areas\Admin\Views\Positions\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Index.cshtml" />
     <Content Include="Areas\Alumni\Views\Leaders\Index.cshtml" />
-    <Content Include="Views\CRUDTemplate\Create.cshtml" />
-    <Content Include="Views\CRUDTemplate\Delete.cshtml" />
-    <Content Include="Views\CRUDTemplate\Details.cshtml" />
-    <Content Include="Views\CRUDTemplate\Edit.cshtml" />
-    <Content Include="Views\CRUDTemplate\Index.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full_compressed.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_full.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\tinymce_jquery_full.cshtml" />
@@ -1018,7 +1014,6 @@
     <Content Include="Views\Emails\SoberSchedule.cshtml" />
     <Content Include="Views\Emails\NewIncidentReport.cshtml" />
     <Content Include="Views\Shared\_TitleExternal.cshtml" />
-    <Content Include="Views\Shared\_LayoutInternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -1031,7 +1026,6 @@
     <Folder Include="Areas\Admin\Views\Shared\" />
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
-    <Folder Include="Areas\Edu\Views\Shared\" />
     <Folder Include="Areas\House\Views\Shared\" />
     <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Scholarships\Views\Shared\" />
