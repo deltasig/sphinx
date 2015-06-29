@@ -6,12 +6,8 @@
     var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
     var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 
-<div class="container">
+<div class="container-fluid">
     @if (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Administrator"))
     {
         <div class="row">

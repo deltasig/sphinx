@@ -54,12 +54,7 @@
     var highPost = new { typeName = "High", id = Model.WorkOrder.WorkOrderId };
 }
 
-@section Title
-{
-    @Html.Partial("_Title")
-}
-
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-8" style="margin-bottom: 25px">
             <div class="row row-fluid">
@@ -128,16 +123,16 @@
                             <li>Change Status to</li>
                             <li class="@(Model.WorkOrder.GetCurrentStatus() == "In Progress" ? "hidden" : "")">
                                 @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", inProgressPost, FormMethod.Post,
-                                    new {@class = "form-inline"}))
+                                    new { @class = "form-inline" }))
                                 {
-                                    <input value="In Progress" type="submit" class="btn btn-xs btn-warning"/>
+                                    <input value="In Progress" type="submit" class="btn btn-xs btn-warning" />
                                 }
                             </li>
                             <li class="@(Model.WorkOrder.GetCurrentStatus() == "On Hold" ? "hidden" : "")">
                                 @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", onHoldPost, FormMethod.Post,
-                                    new {@class = "form-inline"}))
+                                    new { @class = "form-inline" }))
                                 {
-                                    <input value="On Hold" type="submit" class="btn btn-xs btn-default"/>
+                                    <input value="On Hold" type="submit" class="btn btn-xs btn-default" />
                                 }
                             </li>
                         </ul>

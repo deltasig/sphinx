@@ -1,21 +1,15 @@
 ﻿@using Microsoft.AspNet.Identity
 @model Dsp.Areas.Members.Models.AddressIndexFilterModel
-
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Address Index";
+    ViewBag.Title = "Addresses";
 
     var mailing = Model.Addresses.Where(m => m.Type == "Mailing");
     var permanent = Model.Addresses.Where(m => m.Type == "Permanent");
 }
-
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-12">
             <a class="pull-right" href="@Url.Action("Download", "Addresses")">
@@ -73,7 +67,7 @@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="mailing">
-                    <table data-toggle="table" data-classes="table table-condensed" 
+                    <table data-toggle="table" data-classes="table table-condensed"
                            data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
                         <thead>
                             <tr>
@@ -120,8 +114,8 @@
                     </table>
                 </div>
                 <div class="tab-pane" id="permanent">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                        data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                           data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
                         <thead>
                             <tr>
                                 <th class="col-sm-2" data-sortable="true" data-field="first-name">First Name</th>

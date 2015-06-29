@@ -3,16 +3,12 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Positions Index";
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
 
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
-            
+
         </div>
         <div class="col-xs-6 text-right">
             <p>
@@ -24,8 +20,8 @@
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                            data-search="true" data-pagination="true" data-page-size="50" data-sort-name="type,order" data-sort-order="asc">
+                    <table data-toggle="table" data-classes="table table-condensed"
+                           data-search="true" data-pagination="true" data-page-size="50" data-sort-name="type,order" data-sort-order="asc">
                         <thead>
                             <tr>
                                 <th class="col-sm-1" data-sortable="true" data-field="order">Order</th>
@@ -53,8 +49,8 @@
                                     <td>@item.Leaders.Count()</td>
                                     <td class="text-right">
                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                                        @Html.ActionLink("Details", "Details", new { id = item.Id }) 
-                                        @if(!item.Leaders.Any())
+                                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                                        @if (!item.Leaders.Any())
                                         {
                                             @:|
                                             @Html.ActionLink("Delete", "Delete", new { id = item.Id })

@@ -3,16 +3,11 @@
 @model Dsp.Areas.Dsp.Models.LaundryIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Laundry Signup";
+    ViewBag.Title = "Laundry Schedule";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
 
-@section Title
-{
-    @Html.Partial("_Title")
-}
-
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-lg-12">
             <div class="panel panel-default">

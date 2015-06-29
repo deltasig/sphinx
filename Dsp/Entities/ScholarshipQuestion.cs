@@ -12,10 +12,10 @@
         [Required, StringLength(500), DataType(DataType.MultilineText)]
         public string Prompt { get; set; }
 
-        [Required, Range(1, 3000)]
+        [Required, Range(1, 3000), Display(Name = "Minimum Length (characters)")]
         public int AnswerMinimumLength { get; set; }
 
-        [Required, Range(1, 3000)]
+        [Required, Range(1, 3000), Display(Name = "Maximum Length (characters)")]
         public int AnswerMaximumLength { get; set; }
 
         [InverseProperty("Question")]

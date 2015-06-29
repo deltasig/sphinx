@@ -2,18 +2,21 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Event Details";
+    ViewBag.Subtitle = Model.EventName;
 }
-@section Title
-{
-    @Html.Partial("_Title")
-}
-<div class="container">
+
+<div class="container-fluid">
     <div class="row">
-        <div class="col-sm-5 col-xs-12">
-            @Html.ActionLink("Back to List", "Index", new { SelectedSemester = ViewBag.Semester })
-
-            <h4>@Model.EventName</h4>
-
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Index", new { SelectedSemester = ViewBag.Semester })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Events
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
             <div class="form-group">
                 <dl class="dl-horizontal">
                     <dt>@Html.DisplayNameFor(model => model.DateTimeOccurred)</dt>
@@ -22,11 +25,11 @@
                     <dd>@Html.DisplayFor(model => model.DurationHours)</dd>
                     <dt>Members who Served</dt>
                     <dd>
-                        @foreach(var s in Model.ServiceHours.OrderBy(m => m.Member.LastName))
+                        @foreach (var s in Model.ServiceHours.OrderBy(m => m.Member.LastName))
                         {
                             var label = s.Member.FirstName + " " + s.Member.LastName + " (" + s.DurationHours + " hrs)";
                             <small>@label</small>
-                                
+
                             if (User.IsInRole("Administrator") || User.IsInRole("Service"))
                             {
                                 <small class="pull-right">
@@ -34,9 +37,9 @@
                                     @Html.ActionLink("Delete", "Delete", "Hours", new { eid = s.EventId, uid = s.UserId }, null)
                                 </small>
                             }
-                            <br/>
+                            <br />
                         }
-                        <strong>Total:</strong> @Model.ServiceHours.Count <br/>
+                        <strong>Total:</strong> @Model.ServiceHours.Count <br />
                     </dd>
                 </dl>
             </div>
