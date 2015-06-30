@@ -15,7 +15,15 @@
 </head>
 <body>
     <div id="wrapper">
-        @Html.Partial("_Nav")
+        @if (ViewContext.RouteData.DataTokens["area"] == null || !Request.IsAuthenticated)
+        {
+            @Html.Partial("_NavExternal")
+        }
+        else
+        {
+            @Html.Partial("_NavInternal")
+        }
+
         @Html.Partial("_Title")
         <div id="page-wrapper" style="margin-top:125px">
             @RenderBody()
@@ -25,8 +33,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script>
-        $(function() {
-            setTimeout(function() {
+        $(function () {
+            setTimeout(function () {
                 $("#success-message").hide("blind", {}, 1000);
                 $("#failure-message").hide("blind", {}, 1000);
                 $("#message").hide("blind", {}, 1000);
