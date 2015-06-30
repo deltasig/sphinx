@@ -1,4 +1,4 @@
-﻿<div class="navbar navbar-default navbar-fixed-top" style="margin-bottom: 0">
+﻿<div class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom: 0">
     <div class="container">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -8,54 +8,53 @@
                 <span class="icon-bar"></span>
             </button>
             <a href="~/" class="navbar-brand" style="padding: 3px 10px 3px 10px;">
-                <img src="~/Images/MobileTouch-57x57.png" height="40" alt="DSP" />
+                <img src="~/Images/MobileTouch-57x57.png" height="40" alt="DSP"/>
+            </a>
+            <a href="~/"
+               class="navbar-brand visible-xs" style="padding-left: 0">
+                <strong><em>Delta Sig</em></strong>
             </a>
         </div>
-        <div class="navbar-collapse collapse">
-            <div class="hidden-lg" id="login">
-                <ul class="nav navbar-nav navbar-right">
-                    @Html.Partial("_LoginPartial")
-                </ul>
-            </div>
-            <ul class="nav navbar-nav" id="menu">
+        <ul class="nav navbar-nav navbar-right top-nav hidden-xs">
+            @Html.Partial("_LoginPartial")
+        </ul>
+        <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav visible-xs">
+                @Html.Partial("_LoginExternalPartial")
+            </ul>
+            <ul class="nav navbar-nav">
                 @if (Request.IsAuthenticated && !User.IsInRole("Released"))
                 {
                     <li>
-                        @Html.ActionLink("Sphinx", "Index", "Home", new { area = "Sphinx" }, new { title = "Sphinx" })
+                        @Html.ActionLink("Sphinx", "Index", "Home", new {area = "Sphinx"}, new {title = "Sphinx"})
                     </li>
                 }
                 <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
                 <li class="@(ViewBag.Title.Contains("Recruitment") ? "active" : "")">
-                    @Html.ActionLink("Recruitment", "Recruitment", "Home", new { area = "" }, null)
+                    @Html.ActionLink("Recruitment", "Recruitment", "Home", new {area = ""}, null)
                 </li>
                 <li class="@(ViewBag.Title.Contains("Scholarships") ? "active" : "")">
-                    @Html.ActionLink("Scholarships", "Scholarships", "Home", new { area = "" }, null)
+                    @Html.ActionLink("Scholarships", "Scholarships", "Home", new {area = ""}, null)
                 </li>
                 <li class="@(ViewBag.Title.Contains("Contacts") ? "active" : "")">
-                    @Html.ActionLink("Contacts", "Contacts", "Home", new { area = "" }, null)
+                    @Html.ActionLink("Contacts", "Contacts", "Home", new {area = ""}, null)
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <a href="https://www.facebook.com/deltasig.de" target="_blank" style="width:50px">
+                    <a href="https://www.facebook.com/deltasig.de" target="_blank" style="width: 50px">
                         <i class="fa fa-facebook-square fa-lg"></i>
                     </a>
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <a href="https://twitter.com/deltasig_de" target="_blank" style="width:50px">
+                    <a href="https://twitter.com/deltasig_de" target="_blank" style="width: 50px">
                         <i class="fa fa-twitter fa-lg"></i>
                     </a>
                 </li>
                 <li class="hidden-xs hidden-sm">
-                    <a href="https://www.youtube.com/channel/UCklKkFyVqUIG-bNE_u2vOSg" target="_blank" style="width:50px">
+                    <a href="https://www.youtube.com/channel/UCklKkFyVqUIG-bNE_u2vOSg" target="_blank" style="width: 50px">
                         <i class="fa fa-youtube-play fa-lg"></i>
                     </a>
                 </li>
             </ul>
-
-            <div class="visible-lg" id="login">
-                <ul class="nav navbar-nav navbar-right">
-                    @Html.Partial("_LoginPartial")
-                </ul>
-            </div>
         </div>
     </div>
 </div>

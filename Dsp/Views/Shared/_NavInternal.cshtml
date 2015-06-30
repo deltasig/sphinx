@@ -1,22 +1,22 @@
 ﻿<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})" 
-           class="navbar-brand blur hidden-xs" style="padding: 3px 93px 3px 93px; background-color:#fcfcfc">
-            <img src="~/Images/MobileTouch-57x57.png" height="39" alt="DSP" 
+        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
+           class="navbar-brand blur hidden-xs" style="padding: 3px 93px 3px 93px; background-color:#074532">
+            <img src="~/Images/MobileTouch-57x57.png" height="39" alt="DSP"
                  data-toggle="tooltip" data-placement="left" title="Sphinx" />
         </a>
-        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})" 
+        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
            class="navbar-brand visible-xs" style="padding: 3px 0 3px 10px;">
             <img src="~/Images/MobileTouch-57x57.png" height="39" alt="DSP" />
         </a>
-        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})" 
+        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
            class="navbar-brand visible-xs" style="">
             <strong><em>Delta Sig</em></strong>
         </a>
@@ -44,7 +44,7 @@
         </li>
     </ul>
     <!-- Top Menu Items (Right Side) -->
-    <ul class="nav navbar-right top-nav">
+    <ul class="nav navbar-nav navbar-right top-nav" style="margin: 0">
         <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs visible-sm">
             <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})"
                data-toggle="tooltip" data-placement="bottom" title="Sobers">
@@ -66,101 +66,101 @@
         @Html.Partial("_LoginPartial")
     </ul>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
-    <div class="collapse navbar-collapse navbar-ex1-collapse">
+    <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav side-nav">
             @if (Request.IsAuthenticated && !User.IsInRole("Released"))
             {
-                <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
-                        <i class="fa fa-fw fa-users"></i> Roster
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Phone Number") ? "active" : "")">
-                    <a href="@Url.Action("Index", "PhoneNumbers", new { area = "Members" })">
-                        <i class="fa fa-fw fa-phone"></i> Phone Numbers
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
-                        <i class="fa fa-fw fa-home"></i> Addresses
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Hours", new { area = "Service" })">
-                        <i class="fa fa-fw fa-globe"></i> Service
-                    </a>
-                </li>
+            <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
+                <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
+                    <i class="fa fa-fw fa-users"></i> Roster
+                </a>
+            </li>
+            <li class="@(ViewBag.Title.Contains("Phone Number") ? "active" : "")">
+                <a href="@Url.Action("Index", "PhoneNumbers", new { area = "Members" })">
+                    <i class="fa fa-fw fa-phone"></i> Phone Numbers
+                </a>
+            </li>
+            <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
+                <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
+                    <i class="fa fa-fw fa-home"></i> Addresses
+                </a>
+            </li>
+            <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
+                <a href="@Url.Action("Index", "Hours", new { area = "Service" })">
+                    <i class="fa fa-fw fa-globe"></i> Service
+                </a>
+            </li>
                 if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                 {
-                    <li class="@(ViewBag.Title.Contains("Classes") ? "active" : "")">
-                        <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
-                            <i class="fa fa-fw fa-institution"></i> Classes
-                        </a>
-                    </li>
+            <li class="@(ViewBag.Title.Contains("Classes") ? "active" : "")">
+                <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
+                    <i class="fa fa-fw fa-institution"></i> Classes
+                </a>
+            </li>
                 }
-                <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
-                    <a href="@Url.Action("Index", "WorkOrders", new { area = "House" })">
-                        <i class="fa fa-fw fa-tasks"></i> Work Orders
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })">
-                        <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Incidents") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Incidents", new { area = "Members" })">
-                        <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
-                    </a>
-                </li>
-                @*<li>@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "House" }, null)</li>*@
-                <li>
-                    <a href="javascript:;" data-toggle="collapse" data-target="#alumni">Alumni <i class="fa fa-fw fa-caret-down"></i></a>
-                    <ul id="alumni" class="collapse">
-                        <li>
-                            <a href="@Url.Action("Index", "Leaders", new { area = "Alumni" })">Leaders</a>
-                        </li>
-                    </ul>
-                </li>
+            <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
+                <a href="@Url.Action("Index", "WorkOrders", new { area = "House" })">
+                    <i class="fa fa-fw fa-tasks"></i> Work Orders
+                </a>
+            </li>
+            <li class="@(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
+                <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })">
+                    <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
+                </a>
+            </li>
+            <li class="@(ViewBag.Title.Contains("Incidents") ? "active" : "")">
+                <a href="@Url.Action("Index", "Incidents", new { area = "Members" })">
+                    <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
+                </a>
+            </li>
+            @*<li>@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "House" }, null)</li>*@
+            <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#alumni">Alumni <i class="fa fa-fw fa-caret-down"></i></a>
+                <ul id="alumni" class="collapse">
+                    <li>
+                        <a href="@Url.Action("Index", "Leaders", new { area = "Alumni" })">Leaders</a>
+                    </li>
+                </ul>
+            </li>
                 if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
                     User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
                 {
-                    <li>
-                        <a href="javascript:;" data-toggle="collapse" data-target="#admin">Admin <i class="fa fa-fw fa-caret-down"></i></a>
-                        <ul id="admin" class="collapse">
-                            @if (User.IsInRole("Administrator"))
+            <li>
+                <a href="javascript:;" data-toggle="collapse" data-target="#admin">Admin <i class="fa fa-fw fa-caret-down"></i></a>
+                <ul id="admin" class="collapse">
+                    @if (User.IsInRole("Administrator"))
                             {
-                                <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
-                                <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
                             }
                             else
                             {
                                 if (User.IsInRole("President"))
                                 {
-                                    <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                                    <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                 }
                                 if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment") ||
                                     User.IsInRole("New Member Education") || User.IsInRole("Vice President Growth"))
                                 {
-                                    <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                            <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
                                 }
                                 if (User.IsInRole("Secretary") || User.IsInRole("Academics") || User.IsInRole("Service"))
                                 {
-                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                 }
                             }
-                        </ul>
-                    </li>
+                </ul>
+            </li>
                 }
             }
             else
             {
-                <li><p class="navbar-text"></p></li>
+            <li><p class="navbar-text"></p></li>
             }
             <li>
                 <a href="~/">
