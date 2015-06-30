@@ -1,8 +1,0 @@
-﻿@if (ViewContext.RouteData.DataTokens["area"] == null || !Request.IsAuthenticated)
-{
-    @Html.Partial("_NavExternal")
-}
-else
-{
-    @Html.Partial("_NavInternal")
-}
