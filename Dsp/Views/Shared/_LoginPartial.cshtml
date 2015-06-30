@@ -3,7 +3,7 @@
     <li class="hidden-xs hidden-sm">
         <p class="navbar-text">Signed in as <strong>@User.Identity.Name</strong></p>
     </li>
-    <li class="@(ViewBag.Title.Contains("Account") ? "active" : ""))">
+    <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
         <a href="@Url.Action("Index", "Account", new {area = "Members"})"
            data-toggle="tooltip" data-placement="bottom" title="Account">
             <i class="fa fa-user"></i>
@@ -22,7 +22,7 @@
 }
 else
 {
-    <li class="@(ViewContext.RouteData.Values.ContainsValue("SignIn") ? "active" : "")">
+    <li class="@(ViewBag.Title.Contains("Sign In") ? "active" : "")">
         <a href="@Url.Action("SignIn", "Account", new { area = "Members" })"
            data-toggle="tooltip" data-placement="bottom" title="Member Sign In">
             <i class="fa fa-sign-in"></i>
