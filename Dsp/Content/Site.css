@@ -22,18 +22,6 @@ body {
     padding: 20px;
 }
 
-.blur img {
-  -webkit-transition: all 0.5s ease;
-     -moz-transition: all 0.5s ease;
-       -o-transition: all 0.5s ease;
-      -ms-transition: all 0.5s ease;
-          transition: all 0.5s ease;
-}
- 
-.blur img:hover {
-  -webkit-filter: blur(1px);
-}
-
 .tooltip {
     min-width: 75px;
 }
@@ -151,6 +139,18 @@ iframe, object, embed {
 {
     display: block;
     margin-top: 10px;
+}
+
+.blur img {
+  -webkit-transition: all 0.5s ease;
+     -moz-transition: all 0.5s ease;
+       -o-transition: all 0.5s ease;
+      -ms-transition: all 0.5s ease;
+          transition: all 0.5s ease;
+}
+ 
+.blur img:hover {
+  -webkit-filter: blur(1px);
 }
 
 .tab-content {
@@ -309,6 +309,8 @@ a.social {
 .popover-content > p {
     margin: 0;
 }
+
+/* Side Panel Styles */
 
 body {
     margin-top: 100px;

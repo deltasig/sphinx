@@ -13,7 +13,7 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 </head>
-<body style="padding: 0" class="external-body">
+<body class="external-body" style="padding: 0">
     @Html.Partial("_NavExternal")
     @RenderSection("Title", required: false)
     @RenderBody()
@@ -22,8 +22,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     <script>
-        $(function() {
-            setTimeout(function() {
+        $(function () {
+            setTimeout(function () {
                 $("#success-message").hide("blind", {}, 1000);
                 $("#failure-message").hide("blind", {}, 1000);
                 $("#message").hide("blind", {}, 1000);
