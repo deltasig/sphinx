@@ -3,8 +3,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create Scholarship Application";
 }
-
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
+<link rel="stylesheet" type="text/css" href="~/Content/wmd.css">
 
 <div class="container-fluid">
     <div class="row">
@@ -21,52 +21,56 @@
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
                 <div class="form-group">
-                    @Html.Label("Title", htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Application.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Application.Title, "", new { @class = "text-danger" })
+                    @Html.Label("Title", htmlAttributes: new {@class = "control-label"})
+                    @Html.EditorFor(model => model.Application.Title, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Application.Title, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    @Html.Label("Type", htmlAttributes: new { @class = "control-label" })
-                    @Html.DropDownListFor(model => model.Application.ScholarshipTypeId, Model.Types, new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Application.Type, "", new { @class = "text-danger" })
+                    @Html.Label("Type", htmlAttributes: new {@class = "control-label"})
+                    @Html.DropDownListFor(model => model.Application.ScholarshipTypeId, Model.Types, new {@class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.Application.Type, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    @Html.Label("Additional Text (instructions and any other details)", htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Application.AdditionalText)
+                    @Html.Label("Additional Text (instructions and any other details)", new { @class = "control-label" })
+                    <div class="wmd-panel">
+                        <div id="wmd-button-bar"></div>
+                        @Html.EditorFor(model => model.Application.AdditionalText, new { htmlAttributes = new { @class = "form-control wmd-input", rows = 10, id = "wmd-input" } })
+                    </div>
+                    <div class="wmd-panel wmd-preview well well-sm" id="wmd-preview"></div>
                     @Html.ValidationMessageFor(model => model.Application.AdditionalText, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
-                    @Html.Label("Application Submission Period Begins On", htmlAttributes: new { @class = "control-label" })
+                    @Html.Label("Application Submission Period Begins On", htmlAttributes: new {@class = "control-label"})
                     <div class="input-group date" id="dtp1">
-                        @Html.EditorFor(m => m.Application.OpensOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() } })
+                        @Html.EditorFor(m => m.Application.OpensOn, new {htmlAttributes = new {@class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString()}})
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
-                    @Html.ValidationMessageFor(model => model.Application.OpensOn, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Application.OpensOn, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    @Html.Label("Application Submission Period Ends On", htmlAttributes: new { @class = "control-label" })
+                    @Html.Label("Application Submission Period Ends On", htmlAttributes: new {@class = "control-label"})
                     <div class="input-group date" id="dtp2">
-                        @Html.EditorFor(m => m.Application.ClosesOn, new { htmlAttributes = new { @class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString() } })
+                        @Html.EditorFor(m => m.Application.ClosesOn, new {htmlAttributes = new {@class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString()}})
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
-                    @Html.ValidationMessageFor(model => model.Application.ClosesOn, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.Application.ClosesOn, "", new {@class = "text-danger"})
                 </div>
 
                 <div class="form-group">
-                    @Html.Label("Make Public", htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Application.IsPublic, new { htmlAttributes = new { @class = "" } })
-                    @Html.ValidationMessageFor(model => model.Application.IsPublic, "", new { @class = "text-danger" })
+                    @Html.Label("Make Public", htmlAttributes: new {@class = "control-label"})
+                    @Html.EditorFor(model => model.Application.IsPublic, new {htmlAttributes = new {@class = ""}})
+                    @Html.ValidationMessageFor(model => model.Application.IsPublic, "", new {@class = "text-danger"})
                 </div>
 
                 <h3>Scholarship Questions</h3>
@@ -93,17 +97,17 @@
                             <td class="col-md-1">
                                 @Html.EditorFor(model => Model.Questions[i].Question.IsOptional, new {htmlAttributes = new {@class = ""}})
                             </td>
-                            <td class="col-md-2">
+                            <td class="col-xs-2 col-md-1">
                                 @Html.EditorFor(model => Model.Questions[i].Question.FormOrder, new {htmlAttributes = new {@class = "form-control"}})
                             </td>
                         </tr>
                     }
                     </tbody>
                 </table>
-                
+
                 <div class="row">
                     <div class="col-xs-12 col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-lg-2 col-lg-offset-5">
-                        <input type="submit" value="Create" class="btn btn-lg btn-default btn-block" />
+                        <input type="submit" value="Create" class="btn btn-lg btn-default btn-block"/>
                     </div>
                 </div>
             }
@@ -113,6 +117,9 @@
 
 <script type="text/javascript" src="~/Scripts/moment.js"></script>
 <script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Converter.js"></script>
+<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Sanitizer.js"></script>
+<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Editor.js"></script>
 @section scripts
 {
     <script type="text/javascript">
@@ -124,6 +131,10 @@
             $("#dtp2").datetimepicker({
                 format: "MM/DD/YYYY"
             });
+
+            var converter = Markdown.getSanitizingConverter();
+            var editor = new Markdown.Editor(converter);
+            editor.run();
         });
 
     </script>
