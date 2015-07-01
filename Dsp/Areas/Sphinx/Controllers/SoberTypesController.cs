@@ -6,6 +6,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using MarkdownSharp;
 
     [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
     public class SoberTypesController : BaseController
@@ -13,7 +14,15 @@
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> Index()
         {
-            return View(await _db.SoberTypes.Include(m => m.Signups).ToListAsync());
+            var types = await _db.SoberTypes.Include(m => m.Signups).ToListAsync();
+
+            var markdown = new Markdown();
+            foreach (var type in types)
+            {
+                type.Description = markdown.Transform(type.Description);
+            }
+
+            return View(types);
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
@@ -95,6 +104,10 @@
             {
                 return HttpNotFound();
             }
+
+            var markdown = new Markdown();
+            soberType.Description = markdown.Transform(soberType.Description);
+
             return View(soberType);
         }
     }

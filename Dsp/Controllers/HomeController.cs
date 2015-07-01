@@ -12,6 +12,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using MarkdownSharp;
 
     [AllowAnonymous]
     public class HomeController : BaseController
@@ -52,6 +53,12 @@
                 Applications = await _db.ScholarshipApps.Where(s => s.IsPublic).ToListAsync(),
                 Types = await _db.ScholarshipTypes.ToListAsync()
             };
+
+            var markdown = new Markdown();
+            foreach (var app in model.Applications)
+            {
+                app.AdditionalText = markdown.Transform(app.AdditionalText);
+            }
 
             return View(model);
         }
