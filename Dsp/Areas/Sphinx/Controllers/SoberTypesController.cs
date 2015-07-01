@@ -80,6 +80,10 @@
             {
                 return HttpNotFound();
             }
+
+            var markdown = new Markdown();
+            soberType.Description = markdown.Transform(soberType.Description);
+
             return View(soberType);
         }
 
