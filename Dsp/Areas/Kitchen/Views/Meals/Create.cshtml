@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create Meal";
 }
+@Styles.Render("~/Content/Multiselect")
 
 <div class="container-fluid">
     <div class="row">
@@ -10,14 +11,14 @@
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
 
                 <div class="form-group">
-                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new { id = "meal-item-selection", @class = "form-control" })
+                    @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems.OrderBy(o => o.Text), new {id = "meal-item-selection", @class = "form-control"})
                 </div>
 
                 <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-default" /> |
+                    <input type="submit" value="Create" class="btn btn-default"/> |
                     @Html.ActionLink("Back to List", "Index")
                 </div>
 
@@ -26,6 +27,7 @@
     </div>
 </div>
 
+@Scripts.Render("~/bundles/Multiselect")
 @section scripts
 {
     <script type="text/javascript">
