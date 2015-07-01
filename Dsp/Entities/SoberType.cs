@@ -13,7 +13,7 @@ namespace Dsp.Entities
         [Required, StringLength(100)]
         public string Name { get; set; }
 
-        [StringLength(3000),DataType(DataType.MultilineText), AllowHtml, UIHint("tinymce_full")]
+        [StringLength(3000),DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
         [InverseProperty("SoberType")]

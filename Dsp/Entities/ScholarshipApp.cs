@@ -16,8 +16,8 @@
         [Required, StringLength(100), Display(Name = "Title")]
         public string Title { get; set; }
         
-        [Required, StringLength(3000), DataType(DataType.MultilineText), AllowHtml]
-        [Display(Name = "Description"), UIHint("tinymce_full")]
+        [Required, StringLength(3000), DataType(DataType.MultilineText)]
+        [Display(Name = "Description")]
         public string AdditionalText { get; set; }
         
         [Required, DataType(DataType.Date), Display(Name = "Open Date")]
