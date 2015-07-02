@@ -3,22 +3,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Sober Signup";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-select.css">
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-4 col-sm-offset-4">
             <div class="panel panel-default">
                 <div class="panel-body">
-                    @using (Html.BeginForm("EditSignup", "Sobers", FormMethod.Post, new { @class = "", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-
-                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-                        @Html.HiddenFor(m => m.SoberSignup.SignupId)
-
-                        <div class="form-group">
+                     @using (Html.BeginForm("EditSignup", "Sobers", FormMethod.Post, new { @class = "", role = "form" })) 
+                     { 
+                         @Html.AntiForgeryToken()   
+                         @Html.ValidationSummary(true, "", new { @class = "text-danger" })   
+                         @Html.HiddenFor(m => m.SoberSignup.SignupId)   
+                         
+                         <div class="form-group">
                             <h4>
                                 @Model.SoberSignup.SoberType.Name <br />
                                 <small>
@@ -47,12 +44,10 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-select.js"></script>
-@section scripts
-{
+@section scripts {
     <script type="text/javascript">
 
-        $(document).ready(function () {
+        $(function () {
             $("#class-dd").select2();
         });
 

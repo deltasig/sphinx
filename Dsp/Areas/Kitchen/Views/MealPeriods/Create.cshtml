@@ -3,7 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create Meal Period";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
+@section styles {
+    @Styles.Render("~/content/datetimepicker")
+}
 
 <div class="container-fluid">
     <div class="row">
@@ -64,14 +66,14 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/moment.js"></script>
-<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
-@section scripts
-{
-    <script>
+@section scripts {
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript">
+        
         $(function() {
             $("#dtp1").datetimepicker();
             $("#dtp2").datetimepicker();
         });
+
     </script>
 }

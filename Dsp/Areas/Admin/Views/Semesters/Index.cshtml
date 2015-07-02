@@ -4,9 +4,8 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Semester Index";
 }
-
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
+@Styles.Render("~/content/bootstrap-table")
+@Styles.Render("~/content/datetimepicker")
 
 @{ Html.RenderPartial("~/Areas/Admin/Views/Semesters/Create.cshtml", new CreateSemesterModel()); }
 
@@ -82,9 +81,8 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
-<script type="text/javascript" src="~/Scripts/moment.js"></script>
-<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
+@Scripts.Render("~/bundles/bootstrap-table")
+@Scripts.Render("~/bundles/datetimepicker")
 @section scripts
 {
     <script type="text/javascript">

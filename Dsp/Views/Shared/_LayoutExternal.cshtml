@@ -6,10 +6,11 @@
     @RenderSection("AdditionalMeta", false)
     <title>@ViewBag.Title</title>
     <link rel="shortcut icon" type="image/x-icon" href="~/Images/Favicon-16x16.png" />
-    <link rel="stylesheet" type="text/css" href="~/Content/OpenSans.css">
-    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.min.css">
-    @Styles.Render("~/Content/custom-css")
-    @Styles.Render("~/Content/font-awesome")
+    @Styles.Render("~/content/open-sans")  
+    @Styles.Render("~/content/bootstrap-core")
+    @Styles.Render("~/content/custom-css")
+    @Styles.Render("~/content/font-awesome")
+    @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
 </head>
@@ -19,9 +20,10 @@
     @RenderBody()
     @Html.Partial("Footer")
 
-    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/bootstrap-core")
     @RenderSection("scripts", required: false)
-    <script>
+    <script type="text/javascript">
+
         $(function () {
             setTimeout(function () {
                 $("#success-message").hide("blind", {}, 1000);
@@ -32,6 +34,7 @@
             $("[data-toggle=\"tooltip\"]").tooltip();
             $("[data-toggle=\"popover\"]").tooltip();
         });
+
     </script>
 </body>
 </html>
