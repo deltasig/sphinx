@@ -1,13 +1,13 @@
 ﻿namespace Dsp.Areas.Service.Models
 {
-    using System.Collections.Generic;
     using Entities;
+    using System.Collections.Generic;
+    using System.Web.Mvc;
 
     public class ServiceHourIndexModel
     {
-        public Member Member { get; set; }
-        public double Hours { get; set; }
         public Semester Semester { get; set; }
-        public IEnumerable<ServiceHour> ServiceHours { get; set; }
+        public IEnumerable<SelectListItem> SemesterList { get; set; }
+        public List<ServiceHourIndexMemberRowModel> ServiceHours { get; set; }
     }
 }

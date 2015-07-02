@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Event";
+    ViewBag.Subtitle = Model.EventName;
 }
 <link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
 
@@ -9,7 +10,7 @@
     <div class="row">
         <div class="col-xs-12">
             <p>
-                <a href="@Url.Action("Index", new { SelectedSemester = ViewBag.Semester })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", new { s = ViewBag.SemesterId })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Events
                 </a>
             </p>
