@@ -1,8 +1,8 @@
-﻿@using Dsp.Entities
-@model IEnumerable<SoberSignup>
+﻿@model IEnumerable<Dsp.Entities.SoberSignup>
 @{
     var dates = Model.Select(s => s.DateOfShift).Distinct();
 }
+
 <!-- Standard view. -->
 <div class="hidden-xs hidden-sm">
     <table class="table" style="margin-bottom: 0">

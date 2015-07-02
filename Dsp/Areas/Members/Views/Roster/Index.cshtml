@@ -3,7 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Roster";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
+@section styles {
+    @Styles.Render("~/content/bootstrap-table")
+}
 
 <div class="container-fluid">
     @using (Html.BeginForm("Index", "Roster", FormMethod.Get, new {@class = "", role = "form"}))
@@ -131,10 +133,6 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
-@section scripts
-{
-    <script type="text/javascript">
-
-    </script>
+@section scripts {
+    @Scripts.Render("~/bundles/bootstrap-table")
 }

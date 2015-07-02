@@ -3,8 +3,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create Scholarship Application";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
-<link rel="stylesheet" type="text/css" href="~/Content/wmd.css">
+@section styles {
+    @Styles.Render("~/content/datetimepicker")
+    @Styles.Render("~/content/markdown")
+}
 
 <div class="container-fluid">
     <div class="row">
@@ -115,13 +117,9 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/moment.js"></script>
-<script type="text/javascript" src="~/Scripts/bootstrap-datetimepicker.js"></script>
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Converter.js"></script>
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Sanitizer.js"></script>
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Editor.js"></script>
-@section scripts
-{
+@section scripts {
+    @Scripts.Render("~/bundles/datetimepicker")
+    @Scripts.Render("~/bundles/markdown")
     <script type="text/javascript">
 
         $(function () {

@@ -3,7 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Manager";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/datepicker.css">
+@section styles {
+    @Styles.Render("~/content/datepicker")
+}
 
 <div class="container-fluid">
     <div class="row">
@@ -155,17 +157,16 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-datepicker.js"></script>
-@section scripts
-{
+@section scripts {
+    @Scripts.Render("~/bundles/datepicker")
     <script type="text/javascript">
 
         $(function () {
-            $('#dp1').datepicker({
+            $("#dp1").datepicker({
                 orientation: "top left"
             });
 
-            $('#dp2').datepicker({
+            $("#dp2").datepicker({
                 orientation: "top left",
                 multidate: true
             });

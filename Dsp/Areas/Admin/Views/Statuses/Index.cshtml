@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Member Status Index";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-table.css">
+@Styles.Render("~/content/bootstrap-table")
 
 <div class="container-fluid">
     <div class="row">
@@ -53,10 +53,4 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/bootstrap-table.js"></script>
-@section scripts
-{
-    <script type="text/javascript">
-        
-    </script>
-}
+@Scripts.Render("~/bundles/bootstrap-table")
