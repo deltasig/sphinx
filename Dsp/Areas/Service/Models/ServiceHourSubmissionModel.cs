@@ -1,5 +1,6 @@
 ﻿namespace Dsp.Areas.Service.Models
 {
+    using Entities;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
@@ -18,5 +19,7 @@
         [DataType(DataType.Duration)]
         public double HoursServed { get; set; }
         public DateTime SoberDriveTime { get; set; }
+
+        public Semester Semester { get; set; }
     }
 }

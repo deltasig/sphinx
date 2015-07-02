@@ -447,6 +447,33 @@
 
             return new SelectList(newList, "EventId", "EventName");
         }
+        protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync(int semesterId)
+        {
+            var thisSemester = await _db.Semesters.FindAsync(semesterId);
+            var lastSemester = await _db.Semesters
+                .Where(s => s.DateStart < thisSemester.DateStart)
+                .OrderByDescending(s => s.DateStart)
+                .FirstAsync();
+
+            var events = await _db.Events
+                .Where(e =>
+                    e.DateTimeOccurred > lastSemester.DateEnd &&
+                    e.DateTimeOccurred <= thisSemester.DateEnd)
+                .OrderByDescending(o => o.DateTimeOccurred)
+                .ToListAsync();
+
+            var newList = new List<object>();
+            foreach (var e in events)
+            {
+                newList.Add(new
+                {
+                    e.EventId,
+                    EventName = ConvertUtcToCst(e.DateTimeOccurred) + ": " + e.EventName + " (Lasted " + e.DurationHours + "hrs)"
+                });
+            }
+
+            return new SelectList(newList, "EventId", "EventName");
+        }
         protected virtual async Task<IEnumerable<ServiceHour>> GetAllCompletedEventsForUserAsync(int userId)
         {
             var thisSemester = await GetThisSemesterAsync();

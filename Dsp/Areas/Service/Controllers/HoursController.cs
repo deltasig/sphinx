@@ -16,37 +16,42 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class HoursController : BaseController
     {
-        public async Task<ActionResult> Index(ServiceHourIndexFilterModel model, ServiceHourMessageId? message)
+        public async Task<ActionResult> Index(int? s, ServiceHourMessageId? message)
         {
             var thisSemester = await GetThisSemesterAsync();
-            if(model.SelectedSemester == null)
+            if(s == null)
             {
-                model.SelectedSemester = thisSemester.SemesterId;
+                s = thisSemester.SemesterId;
             }
 
             switch (message)
             {
                 case ServiceHourMessageId.EditFailure:
                 case ServiceHourMessageId.DeleteFailure:
+                case ServiceHourMessageId.SubmissionFailure:
                     ViewBag.FailMessage = GetResultMessage(message);
                     break;
                 case ServiceHourMessageId.EditSuccess:
                 case ServiceHourMessageId.DeleteSuccess:
+                case ServiceHourMessageId.SubmissionSuccess:
                     ViewBag.SuccessMessage = GetResultMessage(message);
                     break;
             }
 
-            var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var semester = await _db.Semesters.FindAsync(s);
             var previousSemester = (await _db.Semesters
-                .Where(s => s.DateEnd < semester.DateStart)
-                .OrderBy(s => s.DateEnd)
+                .Where(sem => sem.DateEnd < semester.DateStart)
+                .OrderBy(sem => sem.DateEnd)
                 .ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
                     DateEnd = semester.DateStart
                 };
 
-            model.ServiceHours = new List<ServiceHourIndexModel>();
+            var model = new ServiceHourIndexModel
+            {
+                ServiceHours = new List<ServiceHourIndexMemberRowModel>()
+            };
             var members = await base.GetRosterForSemester(semester);
             foreach (var m in members)
             {
@@ -54,13 +59,12 @@
                     .Where(e =>
                         e.Event.DateTimeOccurred > previousSemester.DateEnd &&
                         e.Event.DateTimeOccurred <= semester.DateEnd &&
-                        e.Event.IsApproved);
+                        e.Event.IsApproved).ToList();
 
-                var member = new ServiceHourIndexModel
+                var member = new ServiceHourIndexMemberRowModel
                 {
                     Member = m,
                     Hours = serviceHours.Sum(h => h.DurationHours),
-                    Semester = semester,
                     ServiceHours = serviceHours
                 };
 
@@ -71,32 +75,55 @@
             var events = await _db.Events.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
             var semesters = new List<Semester>();
-            foreach (var s in allSemesters)
+            foreach (var sem in allSemesters)
             {
-                if (events.Any(i => i.DateTimeOccurred >= s.DateStart && i.DateTimeOccurred <= s.DateEnd))
+                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
                 {
-                    semesters.Add(s);
+                    semesters.Add(sem);
                 }
             }
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
             {
                 semesters.Add(thisSemester);
             }
 
             model.SemesterList = await GetCustomSemesterListAsync(semesters);
             model.Semester = semester;
-            model.PreviousSemester = previousSemester;
 
             return View(model);
         }
 
-        public async Task<ActionResult> Submit()
+        public async Task<ActionResult> Submit(int? s, ServiceHourMessageId? message)
         {
-            var model = new ServiceHourSubmissionModel
+            switch (message)
             {
-                Events = await base.GetAllEventIdsAsEventNameAsync()
-            };
+                case ServiceHourMessageId.EditFailure:
+                case ServiceHourMessageId.DeleteFailure:
+                case ServiceHourMessageId.SubmissionFailure:
+                case ServiceHourMessageId.SubmissionFailureTooLow:
+                case ServiceHourMessageId.SubmissionFailureTooHigh:
+                case ServiceHourMessageId.SubmissionFailureFutureEvent:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case ServiceHourMessageId.EditSuccess:
+                case ServiceHourMessageId.DeleteSuccess:
+                case ServiceHourMessageId.SubmissionSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
+            var model = new ServiceHourSubmissionModel();
+            if (s != null)
+            {
+                model.Semester = await _db.Semesters.FindAsync(s);
+                model.Events = await base.GetAllEventIdsAsEventNameAsync((int)s);
+            }
+            else
+            {
+                model.Semester = await base.GetThisSemesterAsync();
+                model.Events = await base.GetAllEventIdsAsEventNameAsync();
+            }
             return View(model);
         }
 
@@ -104,12 +131,15 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(ServiceHourSubmissionModel model)
         {
-            string message;
+            var selectedEvent = await _db.Events.FindAsync(model.SelectedEventId);
+            var semester = await _db.Semesters
+                .Where(s => selectedEvent.DateTimeOccurred <= s.DateEnd)
+                .OrderBy(s => s.DateStart)
+                .FirstAsync();
             // Invalid value
             if (model.HoursServed < 0)
             {
-                message = "Please enter a number of hours to submit greater than 0.";
-                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.SubmissionFailureTooLow });
             }
 
             var fraction = (model.HoursServed % 1) * 10;
@@ -118,23 +148,19 @@
                 model.HoursServed = Math.Floor(model.HoursServed);
             }
 
-            var userId = User.Identity.GetUserId<int>();
-
-            var selectedEvent = await _db.Events.SingleAsync(e => e.EventId == model.SelectedEventId);
             // Check if event is in the future
             if (selectedEvent.DateTimeOccurred.AddHours(selectedEvent.DurationHours) > DateTime.UtcNow)
             {
-                message = "You cannot submit service hours for an event that has not yet occurred.";
-                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.SubmissionFailureFutureEvent });
             }
 
             // Check if hours submitted is more than held for event
             if (model.HoursServed > selectedEvent.DurationHours)
             {
-                message = "Maximum submission for " + selectedEvent.EventName + " is " + selectedEvent.DurationHours + " hours.";
-                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.SubmissionFailureTooHigh });
             }
-            
+
+            var userId = User.Identity.GetUserId<int>();
             // Check if submission has already been created
             var duplicateSubmission = await _db.ServiceHours.Where(e => (e.EventId == model.SelectedEventId && e.UserId == userId)).ToListAsync();
             if (duplicateSubmission.Any())
@@ -144,22 +170,19 @@
                 {
                     _db.ServiceHours.Remove(duplicateSubmission.Single());
                     await _db.SaveChangesAsync();
-                    message = "Your submission was deleted.";
-                    return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                    return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.DeleteSuccess });
                 }
 
                 // Update submission
                 duplicateSubmission.First().DurationHours = model.HoursServed;
                 await _db.SaveChangesAsync();
-                message = "Your hours for" + selectedEvent.EventName + " event have been updated.";
-                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.EditSuccess });
             }
 
             // No existing, invalid value
             if (model.HoursServed.Equals(0))
             {
-                message = "Please enter a number of hours to submit greater than 0.";
-                return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+                return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.SubmissionFailureTooLow });
             }
 
             // If no previous submission, create new entry and add it to database
@@ -173,8 +196,7 @@
 
             _db.ServiceHours.Add(submission);
             await _db.SaveChangesAsync();
-            message = "Service hours submitted successfully.";
-            return RedirectToAction("Index", "Home", new { message, area = "Sphinx" });
+            return RedirectToAction("Submit", new { s = semester.SemesterId, message = ServiceHourMessageId.SubmissionSuccess });
         }
 
         [Authorize(Roles = "Administrator, Service")]
@@ -195,7 +217,7 @@
                 return HttpNotFound();
             }
 
-            ViewBag.Semester = (await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred)).SemesterId;
+            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred)).SemesterId;
 
             return View(model);
         }
@@ -215,7 +237,7 @@
 
             return RedirectToAction("Index", new
             {
-                SelectedSemester = (await GetSemestersForUtcDateAsync(serviceHour.Event.DateTimeOccurred)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(serviceHour.Event.DateTimeOccurred)).SemesterId,
                 message = ServiceHourMessageId.EditSuccess
             });
         }
@@ -238,8 +260,7 @@
                 return HttpNotFound();
             }
 
-            var semester = await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred);
-            ViewBag.Semester = semester.SemesterId;
+            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred)).SemesterId;
 
             return View(model);
         }
@@ -255,7 +276,7 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", new
             {
-                SelectedSemester = (await GetSemestersForUtcDateAsync(time)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(time)).SemesterId,
                 message = ServiceHourMessageId.DeleteSuccess
             });
         }
@@ -353,8 +374,13 @@
         {
             return message == ServiceHourMessageId.EditFailure ? "Service Hour submission could not be updated for an unknown reason, please contact your administrator."
                 : message == ServiceHourMessageId.DeleteFailure ? "Service Hour submission could not be deleted for an unknown reason, please contact your administrator."
+                : message == ServiceHourMessageId.SubmissionFailure ? "Service Hour submission failed for an unknown reason, please contact your administrator."
+                : message == ServiceHourMessageId.SubmissionFailureTooLow ? "Please enter an amount of hours greater then or equal to 0 in increments of 0.5."
+                : message == ServiceHourMessageId.SubmissionFailureTooHigh ? "Please enter an amount of hours less than or equal to the duration of the event in increments of 0.5."
+                : message == ServiceHourMessageId.SubmissionFailureFutureEvent ? "You can't submit hours for an event that has not yet occurred."
                 : message == ServiceHourMessageId.EditSuccess ? "Service Hour submission was updated successfully."
                 : message == ServiceHourMessageId.DeleteSuccess ? "Service Hour submission was deleted successfully."
+                : message == ServiceHourMessageId.SubmissionSuccess ? "Service Hour submission was successful."
                 : "";
         }
 
@@ -363,7 +389,12 @@
             EditFailure,
             EditSuccess,
             DeleteFailure,
-            DeleteSuccess
+            DeleteSuccess,
+            SubmissionFailure,
+            SubmissionFailureTooLow,
+            SubmissionFailureTooHigh,
+            SubmissionFailureFutureEvent,
+            SubmissionSuccess
         }
     }
 }

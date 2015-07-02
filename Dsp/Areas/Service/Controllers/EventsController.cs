@@ -14,12 +14,12 @@
     [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
     public class EventsController : BaseController
     {
-        public async Task<ActionResult> Index(EventIndexFilterModel model, EventMessageId? message)
+        public async Task<ActionResult> Index(int? s, EventMessageId? message)
         {
             var thisSemester = await base.GetThisSemesterAsync();
-            if (model.SelectedSemester == null)
+            if (s == null)
             {
-                model.SelectedSemester = thisSemester.SemesterId;
+                s = thisSemester.SemesterId;
             }
             switch (message)
             {
@@ -33,15 +33,17 @@
                     break;
             }
 
-            var semester = await _db.Semesters.FindAsync(model.SelectedSemester);
+            var semester = await _db.Semesters.FindAsync(s);
             var previousSemester = (await _db.Semesters
-                .Where(s => s.DateEnd < semester.DateStart)
-                .OrderBy(s => s.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
+                .Where(sem => sem.DateEnd < semester.DateStart)
+                .OrderBy(sem => sem.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
                 {
                     // In case they pick the very first semester in the system.
                     DateEnd = semester.DateStart
                 };
 
+            var model = new ServiceEventIndexModel();
+            model.Semester = semester;
             model.Events = await _db.Events
                 .Where(e => e.DateTimeOccurred < semester.DateEnd && 
                             e.DateTimeOccurred >= previousSemester.DateEnd)
@@ -51,15 +53,15 @@
             var events = await _db.Events.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
             var semesters = new List<Semester>();
-            foreach (var s in allSemesters)
+            foreach (var sem in allSemesters)
             {
-                if (events.Any(i => i.DateTimeOccurred >= s.DateStart && i.DateTimeOccurred <= s.DateEnd))
+                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
                 {
-                    semesters.Add(s);
+                    semesters.Add(sem);
                 }
             }
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
             {
                 semesters.Add(thisSemester);
             }
@@ -68,9 +70,15 @@
 
             return View(model);
         }
-        
-        public ActionResult Create()
+
+        public async Task<ActionResult> Create(int? s)
         {
+            var thisSemester = await base.GetThisSemesterAsync();
+            if (s == null)
+            {
+                s = thisSemester.SemesterId;
+            }
+            ViewBag.SemesterId = s;
             return View();
         }
 
@@ -94,7 +102,7 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", new
             {
-                SelectedSemester = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
                 message = EventMessageId.CreateSuccess
             });
         }
@@ -113,7 +121,7 @@
             var semester = await GetSemestersForUtcDateAsync(@event.DateTimeOccurred);
             @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
 
-            ViewBag.Semester = semester.SemesterId;
+            ViewBag.SemesterId = semester.SemesterId;
             return View(@event);
         }
 
@@ -130,7 +138,7 @@
                 return HttpNotFound();
             }
             @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
-            ViewBag.Semester = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId;
+            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId;
             return View(@event);
         }
 
@@ -146,7 +154,7 @@
             
             return RedirectToAction("Index", new
             {
-                SelectedSemester = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
                 message = EventMessageId.EditSuccess
             });
         }
@@ -168,13 +176,13 @@
             {
                 return RedirectToAction("Index", new
                 {
-                    SelectedSemester = semester.SemesterId,
+                    s = semester.SemesterId,
                     message = EventMessageId.DeleteNotEmptyFailure
                 });
             }
             @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
 
-            ViewBag.Semester = semester.SemesterId;
+            ViewBag.SemesterId = semester.SemesterId;
             return View(@event);
         }
 
@@ -187,7 +195,7 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index", new
             {
-                SelectedSemester = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
                 message = EventMessageId.DeleteSuccess
             });
         }
