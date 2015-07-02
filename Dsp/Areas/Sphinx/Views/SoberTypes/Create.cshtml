@@ -3,7 +3,9 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create Sober Type";
 }
-<link rel="stylesheet" type="text/css" href="~/Content/wmd.css">
+@section styles {
+    @Styles.Render("~/content/markdown")
+}
 
 <div class="container-fluid">
     <div class="row">
@@ -47,11 +49,8 @@
     </div>
 </div>
 
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Converter.js"></script>
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Sanitizer.js"></script>
-<script type="text/javascript" src="~/Scripts/pagedown/Markdown.Editor.js"></script>
-@section scripts
-{
+@section scripts {
+    @Scripts.Render("~/bundles/markdown")
     <script type="text/javascript">
 
         $(function () {

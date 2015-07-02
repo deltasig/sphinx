@@ -4,7 +4,9 @@
     ViewBag.Title = "Edit Event";
     ViewBag.Subtitle = Model.EventName;
 }
-<link rel="stylesheet" type="text/css" href="~/Content/bootstrap-datetimepicker-build.css">
+@section styles {
+    @Styles.Render("~/content/datetimepicker")
+}
 
 <div class="container-fluid">
     <div class="row">
@@ -60,12 +62,13 @@
     </div>
 </div>
 
-@Scripts.Render("~/bundles/bootstrap-datetimepicker")
-@section scripts
-{
-    <script>
+@section scripts {
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript">
+        
         $(function() {
             $('#dtp').datetimepicker();
         });
+
     </script>
 }
