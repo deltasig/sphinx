@@ -141,16 +141,26 @@ iframe, object, embed {
     margin-top: 10px;
 }
 
-.blur img {
-  -webkit-transition: all 0.5s ease;
-     -moz-transition: all 0.5s ease;
-       -o-transition: all 0.5s ease;
-      -ms-transition: all 0.5s ease;
-          transition: all 0.5s ease;
+.nav-center {
+    margin:0;
+    float:none;
 }
- 
-.blur img:hover {
-  -webkit-filter: blur(1px);
+
+.navbar-inner{
+    text-align:center;
+}
+
+.navbar-brand {
+    -webkit-filter: brightness(80%);
+    -webkit-transition: all 1s ease;
+    -moz-transition: all 1s ease;
+    -o-transition: all 1s ease;
+    -ms-transition: all 1s ease;
+    transition: all 1s ease;
+}
+
+.navbar-brand:hover{
+    -webkit-filter: brightness(100%);
 }
 
 .tab-content {
@@ -458,3 +468,4 @@ ul.alert-dropdown {
 .side-nav>li>ul>li>a:hover {
     color: #fff;
 }
+

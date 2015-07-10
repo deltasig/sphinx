@@ -454,6 +454,7 @@
     <Content Include="Images\forward_disabled.png" />
     <Content Include="Images\forward_enabled.png" />
     <Content Include="Images\forward_enabled_hover.png" />
+    <Content Include="Images\letters.png" />
     <Content Include="Images\sort_asc.png" />
     <Content Include="Images\sort_asc_disabled.png" />
     <Content Include="Images\sort_both.png" />
