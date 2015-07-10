@@ -5,18 +5,34 @@
     using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Linq;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using House.Models;
+    using Models;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool unresolved = true, bool resolved = false)
         {
-            var model = await _db.IncidentReports.ToListAsync();
+            var incidents = await _db.IncidentReports.ToListAsync();
+            const int pageSize = 10;
+            var filterResults = base.GetFilteredIncidentsList(incidents, s, sort, page, unresolved, resolved, pageSize);
+
+            // Build view model with collected data.
+            var model = new IncidentsIndexModel
+            {
+                Incidents = filterResults
+                    .Skip((page - 1) * pageSize)
+                    .Take(pageSize)
+                    .ToList()
+            };
+
             return View(model);
         }
 

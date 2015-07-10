@@ -19,79 +19,14 @@
         public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
         {
             var workOrders = await _db.WorkOrders.ToListAsync();
-            var filterResults = new List<WorkOrder>();
-            // Filter out results based on open, closed, sort, and/or search string.
-            if (open)
-            {
-                var openResults = workOrders.Where(w => w.GetCurrentStatus() != "Closed").ToList();
-                filterResults.AddRange(openResults);
-            }
-            if (closed)
-            {
-                var closedResults = workOrders.Where(w => w.GetCurrentStatus() == "Closed").ToList();
-                filterResults.AddRange(closedResults);
-            }
-            switch (sort)
-            {
-                case "newest":
-                    filterResults = filterResults.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
-                    break;
-                case "oldest":
-                    filterResults = filterResults.OrderBy(o => o.GetDateTimeCreated()).ToList();
-                    break;
-                case "most-commented":
-                    filterResults = filterResults.OrderByDescending(o => o.Comments.Count).ToList();
-                    break;
-                case "least-commented":
-                    filterResults = filterResults.OrderBy(o => o.Comments.Count).ToList();
-                    break;
-                case "recently-updated":
-                    filterResults = filterResults.OrderByDescending(o => o.GetMostRecentActivityDateTime()).ToList();
-                    break;
-                case "least-recently-updated":
-                    filterResults = filterResults.OrderBy(o => o.GetMostRecentActivityDateTime()).ToList();
-                    break;
-                default:
-                    sort = "newest";
-                    filterResults = filterResults.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
-                    break;
-            }
-            if (!String.IsNullOrEmpty(s))
-            {
-                s = s.ToLower();
-                filterResults = filterResults
-                    .Where(w => 
-                        w.WorkOrderId.ToString() == s ||
-                        w.Title.ToLower().Contains(s) ||
-                        w.Member.FirstName.ToLower().Contains(s) ||
-                        w.Member.LastName.ToLower().Contains(s) ||
-                        w.GetCurrentPriority().ToLower().Contains(s) ||
-                        w.GetCurrentStatus().ToLower().Contains(s))
-                    .ToList();
-            }
-            ViewBag.OpenResultCount = filterResults.Count(w => w.GetCurrentStatus() != "Closed");
-            ViewBag.ClosedResultCount = filterResults.Count(w => w.GetCurrentStatus() == "Closed");
-
-            // Set search values so they carry over to the view.
-            ViewBag.CurrentFilter = s;
-            ViewBag.Open = open;
-            ViewBag.Closed = closed;
-            ViewBag.Sort = sort;
-
-            if (page < 1) page = 1;
-            const int pageSize = 10; // Can make this modifiable in future.
-            ViewBag.ResultCount = filterResults.Count;
-            ViewBag.PageSize = pageSize;
-            ViewBag.Pages = filterResults.Count / pageSize;
-            ViewBag.Page = page;
-            if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1; 
-            if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
+            const int pageSize = 10;
+            var filterResults = base.GetFilteredWorkOrderList(workOrders, s, sort, page, open, closed, pageSize);
 
             // Build view model with collected data.
             var model = new WorkOrderIndexModel
             {
                 WorkOrders = filterResults
-                    .Skip((page - 1)*pageSize)
+                    .Skip((page - 1) * pageSize)
                     .Take(pageSize)
                     .ToList(),
                 UserWorkOrders = new MyWorkOrdersModel
