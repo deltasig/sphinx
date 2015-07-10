@@ -31,10 +31,7 @@
                                 <th class="col-sm-2" data-sortable="true" data-field="ends-on">Ends On</th>
                                 <th class="col-sm-1" data-sortable="true" data-field="is-public">Public</th>
                                 <th class="col-sm-1" data-sortable="true" data-field="submission-count">Submissions</th>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
-                                {
-                                    <th class="col-sm-2"></th>
-                                }
+                                <th class="col-sm-2"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -56,20 +53,22 @@
                                     <td>
                                         @item.Submissions.Count
                                     </td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
-                                    {
-                                        <td class="text-right">
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.ScholarshipAppId }) |
-                                            @if (!item.Submissions.Any())
+                                    <td class="text-right">
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth")
+                                             || User.IsInRole("Director of Recruitment"))
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new {id = item.ScholarshipAppId})
+                                            @:|
+                                            if (!item.Submissions.Any())
                                             {
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipAppId })
+                                                 @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipAppId })
                                             }
-                                            else
-                                            {
-                                                @Html.ActionLink("Submissions", "Details", new { id = item.ScholarshipAppId })
-                                            }
-                                        </td>
-                                    }
+                                        }
+                                        @if (item.Submissions.Any())
+                                        {
+                                            @Html.ActionLink("Submissions", "Details", new {id = item.ScholarshipAppId})
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
