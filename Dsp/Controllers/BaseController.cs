@@ -710,7 +710,6 @@
             }
             return new SelectList(newList, "MealId", "Text");
         }
-
         protected virtual async Task<SelectList> GetSoberTypesSelectList()
         {
             var list = await _db.SoberTypes.ToListAsync();
@@ -724,6 +723,153 @@
                 });
             }
             return new SelectList(newList, "SoberTypeId", "Text");
+        }
+        protected virtual IEnumerable<WorkOrder> GetFilteredWorkOrderList(
+            IList<WorkOrder> workOrders, 
+            string s, string sort, int page, bool open, bool closed, int pageSize = 10)
+        {
+            var filterResults = new List<WorkOrder>();
+            // Filter out results based on open, closed, sort, and/or search string.
+            if (open)
+            {
+                var openResults = workOrders.Where(w => w.GetCurrentStatus() != "Closed").ToList();
+                filterResults.AddRange(openResults);
+            }
+            if (closed)
+            {
+                var closedResults = workOrders.Where(w => w.GetCurrentStatus() == "Closed").ToList();
+                filterResults.AddRange(closedResults);
+            }
+            switch (sort)
+            {
+                case "newest":
+                    filterResults = filterResults.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
+                    break;
+                case "oldest":
+                    filterResults = filterResults.OrderBy(o => o.GetDateTimeCreated()).ToList();
+                    break;
+                case "most-commented":
+                    filterResults = filterResults.OrderByDescending(o => o.Comments.Count).ToList();
+                    break;
+                case "least-commented":
+                    filterResults = filterResults.OrderBy(o => o.Comments.Count).ToList();
+                    break;
+                case "recently-updated":
+                    filterResults = filterResults.OrderByDescending(o => o.GetMostRecentActivityDateTime()).ToList();
+                    break;
+                case "least-recently-updated":
+                    filterResults = filterResults.OrderBy(o => o.GetMostRecentActivityDateTime()).ToList();
+                    break;
+                default:
+                    sort = "newest";
+                    filterResults = filterResults.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
+                    break;
+            }
+            if (!String.IsNullOrEmpty(s))
+            {
+                s = s.ToLower();
+                filterResults = filterResults
+                    .Where(w =>
+                        w.WorkOrderId.ToString() == s ||
+                        w.Title.ToLower().Contains(s) ||
+                        w.Member.FirstName.ToLower().Contains(s) ||
+                        w.Member.LastName.ToLower().Contains(s) ||
+                        w.GetCurrentPriority().ToLower().Contains(s) ||
+                        w.GetCurrentStatus().ToLower().Contains(s))
+                    .ToList();
+            }
+            ViewBag.OpenResultCount = filterResults.Count(w => w.GetCurrentStatus() != "Closed");
+            ViewBag.ClosedResultCount = filterResults.Count(w => w.GetCurrentStatus() == "Closed");
+
+            // Set search values so they carry over to the view.
+            ViewBag.CurrentFilter = s;
+            ViewBag.Open = open;
+            ViewBag.Closed = closed;
+            ViewBag.Sort = sort;
+
+            if (page < 1) page = 1;
+            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.PageSize = pageSize;
+            ViewBag.Pages = filterResults.Count / pageSize;
+            ViewBag.Page = page;
+            if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
+            if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
+
+            return filterResults;
+        }
+        protected virtual IEnumerable<IncidentReport> GetFilteredIncidentsList(
+            IList<IncidentReport> incidents,
+            string s, string sort, int page, bool unresolved, bool resolved, int pageSize = 10)
+        {
+            var filterResults = new List<IncidentReport>();
+            // Filter out results based on open, closed, sort, and/or search string.
+            if (unresolved && resolved)
+            {
+                filterResults = incidents.ToList();
+            }
+            else if (unresolved)
+            {
+                var unresolvedResults = incidents.Where(i => string.IsNullOrEmpty(i.OfficialReport)).ToList();
+                filterResults.AddRange(unresolvedResults);
+            }
+            else if (resolved)
+            {
+                var resolvedResults = incidents.Where(i => !string.IsNullOrEmpty(i.OfficialReport)).ToList();
+                filterResults.AddRange(resolvedResults);
+            }
+            switch (sort)
+            {
+                case "oldest":
+                    filterResults = filterResults.OrderBy(o => o.DateTimeSubmitted).ToList();
+                    break;
+                default:
+                    sort = "newest";
+                    filterResults = filterResults.OrderByDescending(o => o.DateTimeSubmitted).ToList();
+                    break;
+            }
+            if (!String.IsNullOrEmpty(s))
+            {
+                s = s.ToLower();
+                // Privileged search
+                if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms") ||
+                    User.IsInRole("Sergeant-at-Arms"))
+                {
+                    filterResults = filterResults
+                    .Where(i =>
+                        i.PolicyBroken.ToLower().Contains(s) ||
+                        (!string.IsNullOrEmpty(i.OfficialReport) && i.OfficialReport.ToLower().Contains(s)) ||
+                        i.Description.ToLower().Contains(s))
+                    .ToList();
+                }
+                // Normal search
+                else
+                {
+                    filterResults = filterResults
+                    .Where(i =>
+                        i.PolicyBroken.ToLower().Contains(s) ||
+                        i.OfficialReport.ToLower().Contains(s))
+                    .ToList();
+                }
+
+            }
+            ViewBag.UnresolvedResultCount = filterResults.Count(i => string.IsNullOrEmpty(i.OfficialReport));
+            ViewBag.ResolvedResultCount = filterResults.Count(i => !string.IsNullOrEmpty(i.OfficialReport));
+
+            // Set search values so they carry over to the view.
+            ViewBag.CurrentFilter = s;
+            ViewBag.Unresolved = unresolved;
+            ViewBag.Resolved = resolved;
+            ViewBag.Sort = sort;
+
+            if (page < 1) page = 1;
+            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.PageSize = pageSize;
+            ViewBag.Pages = filterResults.Count / pageSize;
+            ViewBag.Page = page;
+            if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
+            if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
+
+            return filterResults;
         }
 
         protected virtual string ToTitleCaseString(string original)

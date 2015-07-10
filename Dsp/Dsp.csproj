@@ -231,6 +231,8 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
+    <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
     <Compile Include="Data\SphinxDbContext.cs" />
     <Compile Include="Data\SphinxRoleStore.cs" />
     <Compile Include="Data\SphinxUserClaim.cs" />
