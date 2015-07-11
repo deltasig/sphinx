@@ -79,7 +79,7 @@
             </li>
             <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
                 <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
-                    <i class="fa fa-fw fa-home"></i> Addresses
+                    <i class="fa fa-fw fa-envelope"></i> Addresses
                 </a>
             </li>
             <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
@@ -112,7 +112,9 @@
             </li>
             @*<li>@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "House" }, null)</li>*@
             <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#alumni">Alumni <i class="fa fa-fw fa-caret-down"></i></a>
+                <a href="javascript:;" data-toggle="collapse" data-target="#alumni">
+                    <i class="fa fa-fw fa-anchor"></i> Alumni <i class="fa fa-fw fa-caret-down"></i>
+                </a>
                 <ul id="alumni" class="collapse">
                     <li>
                         <a href="@Url.Action("Index", "Leaders", new { area = "Alumni" })">Leaders</a>
@@ -122,42 +124,44 @@
                 if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
                     User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
                 {
-            <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#admin">Admin <i class="fa fa-fw fa-caret-down"></i></a>
-                <ul id="admin" class="collapse">
-                    @if (User.IsInRole("Administrator"))
+                    <li>
+                        <a href="javascript:;" data-toggle="collapse" data-target="#admin">
+                            <i class="fa fa-fw fa-lock"></i> Admin <i class="fa fa-fw fa-caret-down"></i>
+                        </a>
+                        <ul id="admin" class="collapse">
+                            @if (User.IsInRole("Administrator"))
                             {
-                            <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                            <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                            <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
-                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
-                            <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
+                                <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
+                                <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
+                                <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                                <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                                <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
                             }
                             else
                             {
                                 if (User.IsInRole("President"))
                                 {
-                            <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                            <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                 }
                                 if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment") ||
                                     User.IsInRole("New Member Education") || User.IsInRole("Vice President Growth"))
                                 {
-                            <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                                    <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
                                 }
                                 if (User.IsInRole("Secretary") || User.IsInRole("Academics") || User.IsInRole("Service"))
                                 {
-                            <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
                                 }
                             }
-                </ul>
-            </li>
+                        </ul>
+                    </li>
                 }
             }
             else
             {
-            <li><p class="navbar-text"></p></li>
+                <li><p class="navbar-text"></p></li>
             }
             <li>
                 <a href="~/">
