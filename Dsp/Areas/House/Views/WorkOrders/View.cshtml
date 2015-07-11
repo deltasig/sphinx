@@ -23,8 +23,7 @@
         OccurredOn = c.SubmittedOn,
         UserId = c.UserId ?? 0,
         Name = c.Member.ToString(),
-        Title = c.Member.ToString() + " " +
-            ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
+        Title = ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
             ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? " day" : " days") + " ago",
         Text = c.Text
     }));
@@ -33,18 +32,18 @@
         OccurredOn = s.ChangedOn,
         UserId = s.UserId ?? 0,
         Name = s.Member.ToString(),
-        Title = string.Empty,
-        Text = "<strong>Status</strong> changed by <strong>" + s.Member.ToString() + "</strong> to <strong>" +
-            s.Status.Name + "</strong>."
+        Title = ((DateTime.UtcNow - s.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - s.ChangedOn).Days.ToString()) +
+            ((DateTime.UtcNow - s.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
+        Text = "Changed status to <strong>" + s.Status.Name + "</strong>."
     }));
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
     {
         OccurredOn = p.ChangedOn,
         UserId = p.UserId ?? 0,
         Name = p.Member.ToString(),
-        Title = string.Empty,
-        Text = "<strong>Priority</strong> changed by <strong>" + p.Member.ToString() + "</strong> to <strong>" +
-        p.Priority.Name + "</strong>."
+        Title = ((DateTime.UtcNow - p.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - p.ChangedOn).Days.ToString()) +
+            ((DateTime.UtcNow - p.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
+        Text = "Changed priority to <strong>" + p.Priority.Name + "</strong>."
     }));
 
     var inProgressPost = new { typeName = "In Progress", id = Model.WorkOrder.WorkOrderId };
@@ -57,7 +56,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8" style="margin-bottom: 25px">
-            <div class="row row-fluid">
+            <div class="row">
                 <div class="col-xs-6">
                     <p>
                         <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
@@ -96,12 +95,60 @@
                         @Model.WorkOrder.Title <small>#@Model.WorkOrder.WorkOrderId</small>
                         @if (elevatedPermissions)
                         {
-                            <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})"
-                               class="btn btn-sm btn-default pull-right">
-                                <i class="fa fa-wrench"></i> Edit
-                            </a>
+                            <div class="btn-group pull-right" role="group" aria-label="...">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+                                            aria-haspopup="true" aria-expanded="false">
+                                        Change Status to <i class="fa fa-caret-down"></i>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li class="@(Model.WorkOrder.GetCurrentStatus() == "In Progress" ? "hidden" : "")">
+                                            @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", inProgressPost, FormMethod.Post,
+                                                    new { id = "ip-status-form" })){}
+                                            <a href="javascript:document.getElementById('ip-status-form').submit()">In Progress</a>
+                                        </li>
+                                        <li class="@(Model.WorkOrder.GetCurrentStatus() == "On Hold" ? "hidden" : "")">
+                                            @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", onHoldPost, FormMethod.Post,
+                                                    new { id = "oh-status-form" })){}
+                                            <a href="javascript:document.getElementById('oh-status-form').submit()">On Hold</a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                                @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
+                                {
+                                    <div class="btn-group" role="group">
+                                        <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
+                                                aria-haspopup="true" aria-expanded="false">
+                                            Change Priority to <i class="fa fa-caret-down"></i>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Low" ? "hidden" : "")">
+                                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", lowPost, FormMethod.Post,
+                                                        new { id = "low-priority-form" })) { }
+                                                <a href="javascript:document.getElementById('low-priority-form').submit()">Low</a>
+                                            </li>
+                                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Moderate" ? "hidden" : "")">
+                                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", moderatePost, FormMethod.Post,
+                                                        new { id = "moderate-priority-form" })) { }
+                                                <a href="javascript:document.getElementById('moderate-priority-form').submit()">Moderate</a>
+                                            </li>
+                                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "High" ? "hidden" : "")">
+                                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", highPost, FormMethod.Post,
+                                                        new { id = "high-priority-form" })) { }
+                                                <a href="javascript:document.getElementById('high-priority-form').submit()">High</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                }
+                                <a href="@Url.Action("Edit", new {id = Model.WorkOrder.WorkOrderId})"
+                                   class="btn btn-sm btn-info">
+                                    <i class="fa fa-wrench"></i> Edit
+                                </a>
+                            </div>
                         }
                     </h3>
+
                     <p>
                         <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
                             @status
@@ -115,167 +162,52 @@
                     </p>
                 </div>
             </div>
-            @if (elevatedPermissions)
-            {
-                <div class="row row-fluid">
-                    <div class="col-xs-12">
-                        <ul class="list-inline">
-                            <li>Change Status to</li>
-                            <li class="@(Model.WorkOrder.GetCurrentStatus() == "In Progress" ? "hidden" : "")">
-                                @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", inProgressPost, FormMethod.Post,
-                                    new { @class = "form-inline" }))
-                                {
-                                    <input value="In Progress" type="submit" class="btn btn-xs btn-warning" />
-                                }
-                            </li>
-                            <li class="@(Model.WorkOrder.GetCurrentStatus() == "On Hold" ? "hidden" : "")">
-                                @using (Html.BeginForm("ChangeWorkOrderStatus", "WorkOrders", onHoldPost, FormMethod.Post,
-                                    new { @class = "form-inline" }))
-                                {
-                                    <input value="On Hold" type="submit" class="btn btn-xs btn-default" />
-                                }
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            }
-            @if (elevatedPermissions && Model.WorkOrder.GetCurrentStatus() != "Closed")
-            {
-                <div class="row row-fluid">
-                    <div class="col-xs-12">
-                        <ul class="list-inline">
-                            <li>Change Priority to</li>
-                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Low" ? "hidden" : "")">
-                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", lowPost, FormMethod.Post))
-                                {
-                                    <input value="Low" type="submit" class="btn btn-xs btn-default" />
-                                }
-                            </li>
-                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "Moderate" ? "hidden" : "")">
-                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", moderatePost, FormMethod.Post))
-                                {
-                                    <input value="Moderate" type="submit" class="btn btn-xs btn-warning" />
-                                }
-                            </li>
-                            <li class="@(Model.WorkOrder.GetCurrentPriority() == "High" ? "hidden" : "")">
-                                @using (Html.BeginForm("ChangeWorkOrderPriority", "WorkOrders", highPost, FormMethod.Post))
-                                {
-                                    <input value="High" type="submit" class="btn btn-xs btn-danger" />
-                                }
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            }
             <hr />
-            <div class="row row-fluid">
-                <div class="col-xs-12">
-                    <div class="media">
-                        <div class="media-left">
-                            <img class="img-rounded img-@Model.WorkOrder.UserId" alt=""
-                                 height="50" width="50" id="@Model.WorkOrder.UserId">
-                        </div>
-                        <div class="media-body">
-                            <div class="popover-static">
-                                <div class="popover right">
-                                    <div class="arrow"></div>
-                                    <h3 class="popover-title">
-                                        Initial Description
-                                    </h3>
-                                    <div class="popover-content">
-                                        <p>@Model.WorkOrder.Description</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            @foreach (var d in discussion.OrderBy(o => o.OccurredOn))
-            {
-                <div class="row row-fluid">
-                    <div class="col-xs-12">
-                        <div class="media">
-                            <div class="media-left">
-                                @if (string.IsNullOrEmpty(d.Title))
-                                {
-                                    <img class="img-rounded img-@d.UserId" alt="" style="margin: 13px 0 0 23px"
-                                         height="25" width="25" id="@d.UserId">
-                                }
-                                else
-                                {
-                                    <img class="img-rounded img-@d.UserId" alt=""
-                                         height="50" width="50" id="@d.UserId">
-                                }
-                            </div>
-                            <div class="media-body">
-                                <div class="popover-static">
-                                    <div class="popover right">
-                                        <div class="arrow"></div>
-                                        @if (!string.IsNullOrEmpty(d.Title))
-                                        {
-                                            <h3 class="popover-title">
-                                                @d.Title
-                                            </h3>
-                                        }
-                                        <div class="popover-content">
-                                            <p>
-                                                @if (!string.IsNullOrEmpty(d.Title))
-                                                {
-                                                    @d.Text
-                                                }
-                                                else
-                                                {
-                                                    @Html.Raw(d.Text)
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            }
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th colspan="2">Discussion</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="warning">
+                        <td class="col-xs-2"><small>@Model.WorkOrder.Member</small></td>
+                        <td><small>(Description) </small> @Model.WorkOrder.Description</td>
+                    </tr>
+                    @foreach (var d in discussion.OrderBy(o => o.OccurredOn))
+                    {
+                        <tr>
+                            <td><small><strong>@d.Name</strong><br /> @d.Title</small></td>
+                            <td>@Html.Raw(d.Text)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
 
             <hr />
             @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
             {
-                <div class="row row-fluid">
-                    <div class="col-xs-12">
-                        <div class="media">
-                            <div class="media-left">
-                                <img class="img-rounded img-@Model.WorkOrder.UserId" alt=""
-                                     height="50" width="50" id="@currentUserId">
-                            </div>
-                            <div class="media-body">
-                                <div class="popover-static">
-                                    <div class="popover right">
-                                        <div class="arrow"></div>
-                                        <div class="popover-content text-right">
-                                            @using (Html.BeginForm("Comment", "WorkOrders", FormMethod.Post))
-                                            {
-                                                <input id="workOrderId" name="workOrderId" type="hidden" value="@Model.WorkOrder.WorkOrderId">
-                                                <div class="form-group">
-                                                    <textarea class="form-control" id="comment" name="comment" placeholder="Leave a comment"
-                                                              type="text" rows="2"></textarea>
-                                                </div>
-                                                <div class="checkbox form-group pull-left @(!elevatedPermissions ? "hidden" : "")" style="display: inline">
-                                                    <label class="control-label">
-                                                        @Html.CheckBox("close")
-                                                        Close Work Order
-                                                    </label>
-                                                </div>
-                                                <input class="btn btn-success" type="submit" value="Comment" />
-                                            }
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                using (Html.BeginForm("Comment", "WorkOrders", FormMethod.Post))
+                {
+                    <input id="workOrderId" name="workOrderId" type="hidden" value="@Model.WorkOrder.WorkOrderId">
+                    <div class="input-group">
+                        <input type="text" id="comment" name="comment" class="form-control" placeholder="Leave a comment">
+                        <span class="input-group-addon @(!elevatedPermissions ? "hidden" : "")">
+                            <small>Close</small>
+                            @Html.CheckBox("close", new
+                            {
+                                data_toggle = "tooltip",
+                                title = "Close Work Order",
+                                date_placement = "top",
+                                style = "margin-bottom: -5px"
+                            })
+                        </span>
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="submit">Submit</button>
+                        </span>
                     </div>
-                </div>
+                }
             }
         </div>
         <div class="col-md-4">
