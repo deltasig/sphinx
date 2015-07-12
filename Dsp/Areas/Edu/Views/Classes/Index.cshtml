@@ -45,7 +45,7 @@
                                     <td>@item.ClassesTaken.Count</td>
                                     <td>@item.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</td>
                                     <td>@item.ClassFiles.Count</td>
-                                    <td>
+                                    <td class="text-right">
                                         @Html.ActionLink("Details", "Details", new { id = item.ClassId }) | 
                                         @Html.ActionLink("Edit", "Edit", new { id = item.ClassId }) 
                                         @if(User.IsInRole("Administrator") || User.IsInRole("Academics") && !item.ClassesTaken.Any())
