@@ -1,5 +1,4 @@
-﻿@model Dsp.Entities.Class
-
+﻿@model Dsp.Areas.Edu.Models.CreateClassModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Create New Class";
@@ -17,40 +16,34 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-xs-12">
-            @if(ViewBag.Message.Length > 0)
-            {
-                <div class="alert alert-warning">
-                    @ViewBag.Message
-                </div>
-            }
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.DepartmentId, htmlAttributes: new { @class = "control-label" })
-                    @Html.DropDownList("DepartmentId", null, htmlAttributes: new { @class = "form-control selectpicker", data_live_search="true" })
-                    @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+                    @Html.Label("Department", htmlAttributes: new { @class = "control-label" })
+                    @Html.DropDownListFor(model => Model.Class.DepartmentId, Model.Departments, null, htmlAttributes: new { @class = "form-control selectpicker", data_live_search="true" })
+                    @Html.ValidationMessageFor(model => model.Class.DepartmentId, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseShorthand, htmlAttributes: new { @class = "control-label" })
+                    @Html.LabelFor(model => model.Class.CourseShorthand, htmlAttributes: new { @class = "control-label" })
                     <p class="text-success"><strong>Examples: CS 1570, Chem 1010, ME 3300</strong></p>
-                    @Html.EditorFor(model => model.CourseShorthand, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.CourseShorthand, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.Class.CourseShorthand, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Class.CourseShorthand, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CourseName, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CourseName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.CourseName, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.Class.CourseName, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Class.CourseName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Class.CourseName, "", new { @class = "text-danger" })
                 </div>
                 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.CreditHours, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.CreditHours, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
-                    @Html.ValidationMessageFor(model => model.CreditHours, "", new { @class = "text-danger" })
+                    @Html.LabelFor(model => model.Class.CreditHours, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Class.CreditHours, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Class.CreditHours, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group">
