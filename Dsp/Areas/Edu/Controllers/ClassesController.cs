@@ -19,15 +19,23 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ClassesController : BaseController
     {
-        public async Task<ActionResult> Index(string message)
+        public async Task<ActionResult> Index(ClassMessageId? message)
         {
-            ViewBag.Message = string.Empty;
-
-            if (!string.IsNullOrEmpty(message))
+            switch (message)
             {
-                ViewBag.Message = message;
+                case ClassMessageId.DeleteClassFailure:
+                case ClassMessageId.EditClassFailure:
+                    ViewBag.FailMessage = GetClassResultMessage(message);
+                    break;
+                case ClassMessageId.DeleteClassSuccess:
+                case ClassMessageId.EditClassSuccess:
+                    ViewBag.SuccessMessage = GetClassResultMessage(message);
+                    break;
             }
             var classes = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync();
+
+
+
             var model = new ClassIndexModel
             {
                 Classes = classes, 
@@ -38,35 +46,38 @@
 
         public async Task<ActionResult> Create()
         {
-            ViewBag.Message = string.Empty;
-            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
-                "DepartmentId", "Name");
-            return View();
+            var model = new CreateClassModel();
+            model.Departments = new SelectList(await 
+                _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name");
+            model.Class = new Class();
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Class @class)
+        public async Task<ActionResult> Create(CreateClassModel model)
         {
-            ViewBag.Message = string.Empty;
-            if (ModelState.IsValid)
+            var classExistsAlready = (await _db.Classes.AnyAsync(c =>
+                c.CourseShorthand == model.Class.CourseShorthand && c.DepartmentId == model.Class.DepartmentId));
+            
+            if (ModelState.IsValid && !classExistsAlready)
             {
-                if (await _db.Classes.AnyAsync(c => c.CourseShorthand == @class.CourseShorthand && c.DepartmentId == @class.DepartmentId))
-                {
-                    ViewBag.Message = "A Class in that department with that number already exists.";
-                }
-                else
-                {
-                    _db.Classes.Add(@class);
-                    await _db.SaveChangesAsync();
-                    ViewBag.Message = "Class created successfully. ";
-                }
+                _db.Classes.Add(model.Class);
+                await _db.SaveChangesAsync();
+                ViewBag.SuccessMessage = GetClassResultMessage(ClassMessageId.AddClassSuccess);
+                model.Class = new Class();
+                model.Departments = new SelectList(await 
+                    _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name");
             }
-
-            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "Name", @class.DepartmentId);
-            return View(@class);
+            else
+            {
+                ViewBag.FailMessage = GetClassResultMessage(ClassMessageId.AddClassFailure);
+                model.Departments = new SelectList(await 
+                    _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name", model.Class.DepartmentId);
+            }
+            return View(model);
         }
 
-        public async Task<ActionResult> Details(int? id, ClassesMessageId? message)
+        public async Task<ActionResult> Details(int? id, ClassFileMessageId? message)
         {
             if (id == null)
             {
@@ -80,15 +91,15 @@
 
             switch (message)
             {
-                case ClassesMessageId.UploadInvalidFailure:
-                case ClassesMessageId.UploadInvalidFileTypeFailure:
-                case ClassesMessageId.DownloadFileAwsFailure:
-                case ClassesMessageId.DeleteFileAwsFailure:
-                    ViewBag.FailMessage = GetResultMessage(message);
+                case ClassFileMessageId.UploadInvalidFailure:
+                case ClassFileMessageId.UploadInvalidFileTypeFailure:
+                case ClassFileMessageId.DownloadFileAwsFailure:
+                case ClassFileMessageId.DeleteFileAwsFailure:
+                    ViewBag.FailMessage = GetFileResultMessage(message);
                     break;
-                case ClassesMessageId.UploadFileSuccess:
-                case ClassesMessageId.DeleteFileSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
+                case ClassFileMessageId.UploadFileSuccess:
+                case ClassFileMessageId.DeleteFileSuccess:
+                    ViewBag.SuccessMessage = GetFileResultMessage(message);
                     break;
             }
 
@@ -115,17 +126,17 @@
             {
                 return HttpNotFound();
             }
-
+            var userId = User.Identity.GetUserId<int>();
             var existingVote = await _db.ClassFileVotes
                     .SingleOrDefaultAsync(v =>
-                        v.UserId == User.Identity.GetUserId<int>() &&
+                        v.UserId == userId &&
                         v.ClassFileId == file.ClassFileId);
 
             if (existingVote == null)
             {
                 _db.ClassFileVotes.Add(new ClassFileVote
                 {
-                    UserId = User.Identity.GetUserId<int>(),
+                    UserId = userId,
                     ClassFileId = file.ClassFileId,
                     IsUpvote = true
                 });
@@ -158,17 +169,17 @@
             {
                 return HttpNotFound();
             }
-
+            var userId = User.Identity.GetUserId<int>();
             var existingVote = await _db.ClassFileVotes
                     .SingleOrDefaultAsync(v =>
-                        v.UserId == User.Identity.GetUserId<int>() &&
+                        v.UserId == userId &&
                         v.ClassFileId == file.ClassFileId);
 
             if (existingVote == null)
             {
                 _db.ClassFileVotes.Add(new ClassFileVote
                 {
-                    UserId = User.Identity.GetUserId<int>(),
+                    UserId = userId,
                     ClassFileId = file.ClassFileId,
                     IsUpvote = false
                 });
@@ -196,28 +207,29 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            var @class = await _db.Classes.FindAsync(id);
-            if (@class == null)
+            var model = new CreateClassModel {Class = await _db.Classes.FindAsync(id)};
+            if (model.Class == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.DepartmentId = new SelectList(await _db.Departments.OrderBy(c => c.Name).ToListAsync(), 
-                "DepartmentId", "Name", 
-                @class.DepartmentId);
-            return View(@class);
+            model.Departments = new SelectList(await
+                _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name");
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Class @class)
+        public async Task<ActionResult> Edit(CreateClassModel model)
         {
             if (ModelState.IsValid)
             {
-                _db.Entry(@class).State = EntityState.Modified;
+                _db.Entry(model.Class).State = EntityState.Modified;
                 await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { message = ClassMessageId.EditClassSuccess });
             }
-            ViewBag.DepartmentId = new SelectList(_db.Departments, "DepartmentId", "Name", @class.DepartmentId);
-            return View(@class);
+            ViewBag.FailMessage = GetClassResultMessage(ClassMessageId.EditClassFailure);
+            model.Departments = new SelectList(await
+                    _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name", model.Class.DepartmentId);
+            return View(model);
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -238,8 +250,7 @@
             {
                 return RedirectToAction("Index", new
                 {
-                    message = "This class is currently being taken, or has been taken, " +
-                              "by one or more people, therefore it can't be deleted."
+                    message = ClassMessageId.DeleteClassFailure
                 });
             }
 
@@ -255,16 +266,18 @@
             {
                 return RedirectToAction("Index", new
                 {
-                    message = "This class is currently being taken, or has been taken, " +
-                              "by one or more people, therefore it can't be deleted."
+                    message = ClassMessageId.DeleteClassFailure
                 });
             }
             _db.Entry(@class).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", new { message = "Course deleted." });
+            return RedirectToAction("Index", new
+            {
+                message = ClassMessageId.DeleteClassSuccess
+            });
         }
         
-        public async Task<ActionResult> Schedule(string userName, ClassesMessageId? message)
+        public async Task<ActionResult> Schedule(string userName, ClassEnrollmentMessageId? message)
         {
             ViewBag.Message = string.Empty;
 
@@ -276,16 +289,16 @@
 
             switch (message)
             {
-                case ClassesMessageId.AddClassDuplicateFailure:
-                case ClassesMessageId.AddClassUnknownFailure:
-                case ClassesMessageId.DeleteClassTakenFailure:
-                case ClassesMessageId.EditClassTakenFailure:
-                    ViewBag.FailMessage = GetResultMessage(message);
+                case ClassEnrollmentMessageId.AddClassTakenDuplicateFailure:
+                case ClassEnrollmentMessageId.AddClassTakenUnknownFailure:
+                case ClassEnrollmentMessageId.DeleteClassTakenFailure:
+                case ClassEnrollmentMessageId.EditClassTakenFailure:
+                    ViewBag.FailMessage = GetEnrollmentResultMessage(message);
                     break;
-                case ClassesMessageId.AddClassSuccess:
-                case ClassesMessageId.DeleteClassTakenSuccess:
-                case ClassesMessageId.EditClassTakenSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
+                case ClassEnrollmentMessageId.AddClassTakenSuccess:
+                case ClassEnrollmentMessageId.DeleteClassTakenSuccess:
+                case ClassEnrollmentMessageId.EditClassTakenSuccess:
+                    ViewBag.SuccessMessage = GetEnrollmentResultMessage(message);
                     break;
             }
 
@@ -320,7 +333,7 @@
                 return RedirectToAction("Schedule", new
                 {
                     userName = model.SelectedUserName, 
-                    message = ClassesMessageId.AddClassUnknownFailure
+                    message = ClassEnrollmentMessageId.AddClassTakenUnknownFailure
                 });
 
             if (!User.IsInRole("Academics") && !User.IsInRole("Administrator") &&
@@ -339,7 +352,7 @@
                 return RedirectToAction("Schedule", new
                 {
                     userName = model.SelectedUserName,
-                    message = ClassesMessageId.AddClassDuplicateFailure
+                    message = ClassEnrollmentMessageId.AddClassTakenDuplicateFailure
                 });
             }
 
@@ -349,7 +362,7 @@
             return RedirectToAction("Schedule", new
             {
                 userName = model.SelectedUserName, 
-                message = ClassesMessageId.AddClassSuccess
+                message = ClassEnrollmentMessageId.AddClassTakenSuccess
             });
         }
 
@@ -375,7 +388,7 @@
                 return RedirectToAction("Schedule", new
                 {
                     userName = member.UserName ?? User.Identity.GetUserName(),
-                    message = ClassesMessageId.DeleteClassTakenFailure
+                    message = ClassEnrollmentMessageId.DeleteClassTakenFailure
                 });
             }
 
@@ -385,7 +398,7 @@
             return RedirectToAction("Schedule", new
             {
                 userName = member.UserName ?? User.Identity.GetUserName(), 
-                message = ClassesMessageId.DeleteClassTakenSuccess
+                message = ClassEnrollmentMessageId.DeleteClassTakenSuccess
             });
         }
 
@@ -409,7 +422,7 @@
                 return RedirectToAction("Schedule", new
                 {
                     userName = classTaken.Member.UserName,
-                    message = ClassesMessageId.EditClassTakenFailure
+                    message = ClassEnrollmentMessageId.EditClassTakenFailure
                 });
 
             _db.Entry(classTaken).State = EntityState.Modified;
@@ -419,11 +432,11 @@
 
             return RedirectToAction("Schedule", new { 
                 userName = member.UserName,
-                message = ClassesMessageId.EditClassTakenSuccess 
+                message = ClassEnrollmentMessageId.EditClassTakenSuccess 
             });
         }
 
-        public async Task<ActionResult> Transcript(string userName, ClassesMessageId? message)
+        public async Task<ActionResult> Transcript(string userName, ClassEnrollmentMessageId? message)
         {
             if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") && User.Identity.GetUserName() != userName)
             {
@@ -432,11 +445,11 @@
             
             switch(message)
             {
-                case ClassesMessageId.UpdateTranscriptFailure:
-                    ViewBag.FailMessage = GetResultMessage(message);
+                case ClassEnrollmentMessageId.UpdateTranscriptFailure:
+                    ViewBag.FailMessage = GetEnrollmentResultMessage(message);
                     break;
-                case ClassesMessageId.UpdateTranscriptSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
+                case ClassEnrollmentMessageId.UpdateTranscriptSuccess:
+                    ViewBag.SuccessMessage = GetEnrollmentResultMessage(message);
                     break;
             }
 
@@ -488,7 +501,7 @@
             return RedirectToAction("Transcript", new
             {
                 userName = model.First().Member.UserName, 
-                message = ClassesMessageId.UpdateTranscriptSuccess
+                message = ClassEnrollmentMessageId.UpdateTranscriptSuccess
             });
         }
 
@@ -499,13 +512,13 @@
                 return RedirectToAction("Details", new
                 {
                     id = model.Class.ClassId,
-                    message = ClassesMessageId.UploadInvalidFailure
+                    message = ClassFileMessageId.UploadInvalidFailure
                 });
             if (model.FileInfoModel.File.ContentType != "application/pdf") 
                 return RedirectToAction("Details", new
                 {
                     id = model.Class.ClassId,
-                    message = ClassesMessageId.UploadInvalidFileTypeFailure
+                    message = ClassFileMessageId.UploadInvalidFileTypeFailure
                 });
 
             var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
@@ -547,7 +560,7 @@
             return RedirectToAction("Details", new
             {
                 id = model.Class.ClassId,
-                message = ClassesMessageId.UploadFileSuccess
+                message = ClassFileMessageId.UploadFileSuccess
             });
         }
 
@@ -602,7 +615,7 @@
                 return RedirectToAction("Details", new
                 {
                     id = file.Class.ClassId,
-                    message = ClassesMessageId.DownloadFileAwsFailure
+                    message = ClassFileMessageId.DownloadFileAwsFailure
                 });
             }
         }
@@ -654,7 +667,7 @@
                 return RedirectToAction("Details", new
                 {
                     id = classId,
-                    message = ClassesMessageId.DeleteFileAwsFailure
+                    message = ClassFileMessageId.DeleteFileAwsFailure
                 });
             }
 
@@ -669,43 +682,76 @@
             return RedirectToAction("Details", new
             {
                 id = classId,
-                message = ClassesMessageId.DeleteFileSuccess
+                message = ClassFileMessageId.DeleteFileSuccess
             });
         }
-
-        public static dynamic GetResultMessage(ClassesMessageId? message)
+        
+        public static dynamic GetClassResultMessage(ClassMessageId? message)
         {
-            return message == ClassesMessageId.UpdateTranscriptFailure ? "Failed to update transcript for unknown reason, please contact your administrator."
-                : message == ClassesMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
-                : message == ClassesMessageId.UploadInvalidFailure ? "Could not upload file because there was nothing selected to upload."
-                : message == ClassesMessageId.UploadInvalidFileTypeFailure ? "Could not upload file because it is not a properly formatted PDF."
-                : message == ClassesMessageId.UploadFileSuccess ? "File was uploaded successfully!"
-                : message == ClassesMessageId.DownloadFileAwsFailure ? "Could not download file because of a server error.  If the problem persists, please contact your administrator."
-                : message == ClassesMessageId.DeleteFileAwsFailure ? "Could not delete file because of a server error.  If the problem persists, please contact your administrator."
-                : message == ClassesMessageId.DeleteFileSuccess ? "File was deleted successfully!"
-                : message == ClassesMessageId.AddClassDuplicateFailure ? "You can't add the same class twice in one semester!"
-                : message == ClassesMessageId.AddClassUnknownFailure ? "Failed to add a class for some unknown reason, contact your administrator."
-                : message == ClassesMessageId.AddClassSuccess ? "Class enrollment was successful!"
-                : message == ClassesMessageId.DeleteClassTakenFailure ? "Could not find the class to remove for this member.  Please try again or contact your administrator if the problem persists."
-                : message == ClassesMessageId.DeleteClassTakenSuccess ? "Class successfully removed."
-                : message == ClassesMessageId.EditClassTakenFailure ? "Failed to update class because "
-                : message == ClassesMessageId.EditClassTakenSuccess ? "Enrollment information for class was updated successfully."
+            return message == ClassMessageId.DeleteClassFailure 
+                    ? "This class is currently being taken, or has been taken, " +
+                      "by one or more people, therefore it can't be deleted."
+                : message == ClassMessageId.DeleteClassSuccess ? "Class deleted successfully."
+                : message == ClassMessageId.AddClassFailure ? "Class cannot be created because a probable duplicate was found."
+                : message == ClassMessageId.AddClassSuccess ? "Class created successfully."
+                : message == ClassMessageId.EditClassFailure 
+                    ? "Class could not be updated.  Check that the class number isn't a duplicated of an existing class."
+                : message == ClassMessageId.EditClassSuccess ? "Class updated successfully."
                 : "";
         }
 
-        public enum ClassesMessageId
+        public static dynamic GetEnrollmentResultMessage(ClassEnrollmentMessageId? message)
         {
-            UpdateTranscriptFailure,
-            UpdateTranscriptSuccess,
+            return message == ClassEnrollmentMessageId.UpdateTranscriptFailure ? "Failed to update transcript for unknown reason, please contact your administrator."
+                : message == ClassEnrollmentMessageId.UpdateTranscriptSuccess ? "Transcript update was successful."
+                : message == ClassEnrollmentMessageId.AddClassTakenDuplicateFailure ? "You can't add the same class twice in one semester!"
+                : message == ClassEnrollmentMessageId.AddClassTakenUnknownFailure ? "Failed to add a class for some unknown reason, contact your administrator."
+                : message == ClassEnrollmentMessageId.AddClassTakenSuccess ? "Class enrollment was successful!"
+                : message == ClassEnrollmentMessageId.DeleteClassTakenFailure ? "Could not find the class to remove for this member.  Please try again or contact your administrator if the problem persists."
+                : message == ClassEnrollmentMessageId.DeleteClassTakenSuccess ? "Class successfully removed."
+                : message == ClassEnrollmentMessageId.EditClassTakenFailure ? "Failed to update class because "
+                : message == ClassEnrollmentMessageId.EditClassTakenSuccess ? "Enrollment information for class was updated successfully."
+                : "";
+        }
+
+        public static dynamic GetFileResultMessage(ClassFileMessageId? message)
+        {
+            return message == ClassFileMessageId.UploadInvalidFailure ? "Could not upload file because there was nothing selected to upload."
+                : message == ClassFileMessageId.UploadInvalidFileTypeFailure ? "Could not upload file because it is not a properly formatted PDF."
+                : message == ClassFileMessageId.UploadFileSuccess ? "File was uploaded successfully!"
+                : message == ClassFileMessageId.DownloadFileAwsFailure ? "Could not download file because of a server error.  If the problem persists, please contact your administrator."
+                : message == ClassFileMessageId.DeleteFileAwsFailure ? "Could not delete file because of a server error.  If the problem persists, please contact your administrator."
+                : message == ClassFileMessageId.DeleteFileSuccess ? "File was deleted successfully!"
+                : "";
+        }
+
+        public enum ClassMessageId
+        {
+            DeleteClassFailure,
+            DeleteClassSuccess,
+            AddClassFailure,
+            AddClassSuccess,
+            EditClassFailure,
+            EditClassSuccess
+        }
+
+        public enum ClassFileMessageId
+        {
             UploadInvalidFailure,
             UploadInvalidFileTypeFailure,
             UploadFileSuccess,
             DownloadFileAwsFailure,
             DeleteFileAwsFailure,
             DeleteFileSuccess,
-            AddClassDuplicateFailure,
-            AddClassUnknownFailure,
-            AddClassSuccess,
+        }
+
+        public enum ClassEnrollmentMessageId
+        {
+            UpdateTranscriptFailure,
+            UpdateTranscriptSuccess,
+            AddClassTakenDuplicateFailure,
+            AddClassTakenUnknownFailure,
+            AddClassTakenSuccess,
             DeleteClassTakenSuccess,
             DeleteClassTakenFailure,
             EditClassTakenSuccess,
