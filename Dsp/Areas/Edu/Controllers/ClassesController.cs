@@ -23,7 +23,6 @@
         {
             switch (message)
             {
-                case ClassMessageId.DeleteClassFailure:
                 case ClassMessageId.EditClassFailure:
                     ViewBag.FailMessage = GetClassResultMessage(message);
                     break;
@@ -79,7 +78,7 @@
             return View(model);
         }
 
-        public async Task<ActionResult> Details(int? id, ClassFileMessageId? message)
+        public async Task<ActionResult> Details(int? id, ClassFileMessageId? message, ClassMessageId? cMessage)
         {
             if (id == null)
             {
@@ -102,6 +101,12 @@
                 case ClassFileMessageId.UploadFileSuccess:
                 case ClassFileMessageId.DeleteFileSuccess:
                     ViewBag.SuccessMessage = GetFileResultMessage(message);
+                    break;
+            }
+            switch (cMessage)
+            {
+                case ClassMessageId.DeleteClassFailure:
+                    ViewBag.FailMessage = GetClassResultMessage(cMessage);
                     break;
             }
 
@@ -250,10 +255,7 @@
 
             if (@class.ClassesTaken.Any())
             {
-                return RedirectToAction("Index", new
-                {
-                    message = ClassMessageId.DeleteClassFailure
-                });
+                return RedirectToAction("Details", new { id, cMessage = ClassMessageId.DeleteClassFailure });
             }
 
             return View(@class);

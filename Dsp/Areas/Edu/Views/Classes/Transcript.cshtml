@@ -2,23 +2,32 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Transcript";
+    ViewBag.Subtitle = ViewBag.UserName;
     var semesters = Model.Select(m => m.ClassTaken).Select(c => c.Semester).Distinct();
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-xs-6">
-            @if (ViewBag != null && ViewBag.UserName.Length > 0)
-            {
-                <a href="@Url.Action("Schedule", "Classes", new { userName = ViewBag.UserName, area = "Edu"})" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Schedule
-                </a>
-            } 
             <a href="@Url.Action("Index", "Roster", new { area = "Members" })" class="btn btn-sm btn-default">
                 <i class="fa fa-caret-left"></i> Back to Roster
             </a>
         </div>
         <div class="col-xs-6 text-right">
+            <div class="btn-group" role="group">
+                <a href="@Url.Action("Index", "Classes", new {area = "Edu"})" class="btn btn-default">Classes</a>
+                <a href="@Url.Action("Schedule", "Classes", new {userName = ViewBag.UserName, area = "Edu"})"
+                   class="btn btn-default">
+                    My Schedule
+                </a>
+                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == ViewBag.UserName)
+                {
+                    <a href="@Url.Action("Transcript", "Classes", new { userName = ViewBag.UserName, area = "Edu" })"
+                       class="btn btn-default active">
+                        My Transcript
+                    </a>
+                }
+            </div>
         </div>
         <br />
         <br />
