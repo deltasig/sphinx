@@ -25,10 +25,7 @@
             // Build view model with collected data.
             var model = new WorkOrderIndexModel
             {
-                WorkOrders = filterResults
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList(),
+                WorkOrders = filterResults,
                 UserWorkOrders = new MyWorkOrdersModel
                 {
                     CreatedWorkOrders = workOrders.Where(w =>

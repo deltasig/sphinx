@@ -15,6 +15,7 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
+    using Microsoft.AspNet.Identity;
 
     public class BaseController : Controller
     {
@@ -795,7 +796,7 @@
             if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
             if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
 
-            return filterResults;
+            return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
         protected virtual IEnumerable<IncidentReport> GetFilteredIncidentsList(
             IList<IncidentReport> incidents,
@@ -869,7 +870,108 @@
             if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
             if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
 
-            return filterResults;
+            return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        }
+        protected virtual async Task<IEnumerable<Class>> GetFilteredClassList(
+            IList<Class> classes,
+            string s, string sort, int page, string select, int pageSize = 20)
+        {
+            var filterResults = classes;
+            var thisSemester = await GetThisSemesterAsync();
+            var userId = User.Identity.GetUserId<int>();
+            switch (select)
+            {
+                case "me-all":
+                    filterResults = classes.Where(c => 
+                        c.ClassesTaken.Any(t => t.UserId == userId)).ToList();
+                    break;
+                case "me-now":
+                    filterResults = classes.Where(c => 
+                        c.ClassesTaken.Any(t => 
+                            t.UserId == userId && 
+                            t.SemesterId == thisSemester.SemesterId)).ToList();
+                    break;
+                case "being-taken":
+                    filterResults = classes.Where(c => 
+                        c.ClassesTaken.Any(t => t.SemesterId == thisSemester.SemesterId)).ToList();
+                    break;
+                case "none-taking":
+                    filterResults = classes.Where(c =>
+                        c.ClassesTaken.All(t => t.SemesterId != thisSemester.SemesterId)).ToList();
+                    break;
+                case "has-file":
+                    filterResults = classes.Where(c => c.ClassFiles.Any()).ToList();
+                    break;
+                case "no-file":
+                    filterResults = classes.Where(c => !c.ClassFiles.Any()).ToList();
+                    break;
+            }
+
+            switch (sort)
+            {
+                case "number-desc":
+                    filterResults = filterResults.OrderByDescending(o => o.CourseShorthand).ToList();
+                    break;
+                case "name-asc":
+                    filterResults = filterResults.OrderBy(o => o.CourseName).ToList();
+                    break;
+                case "name-desc":
+                    filterResults = filterResults.OrderByDescending(o => o.CourseName).ToList();
+                    break;
+                case "files-asc":
+                    filterResults = filterResults.OrderBy(o => o.ClassFiles.Count).ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                case "files-desc":
+                    filterResults = filterResults.OrderByDescending(o => o.ClassFiles.Count).ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                case "taken-asc":
+                    filterResults = filterResults.OrderBy(o => o.ClassesTaken.Count).ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                case "taken-desc":
+                    filterResults = filterResults.OrderByDescending(o => o.ClassesTaken.Count).ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                case "taking-asc":
+                    filterResults = filterResults.OrderBy(o =>
+                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.SemesterId).ToList().Count)
+                        .ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                case "taking-desc":
+                    filterResults = filterResults.OrderByDescending(o =>
+                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.SemesterId).ToList().Count)
+                        .ThenBy(o => o.CourseShorthand).ToList();
+                    break;
+                default:
+                    sort = "number-asc";
+                    filterResults = filterResults.OrderBy(o => o.CourseShorthand).ToList();
+                    break;
+            }
+            if (!String.IsNullOrEmpty(s))
+            {
+                s = s.ToLower();
+                filterResults = filterResults
+                    .Where(i =>
+                        i.CourseShorthand.ToLower().Contains(s) ||
+                        i.CourseName.ToLower().Contains(s) ||
+                        i.Department.Name.ToLower().Contains(s) ||
+                        i.ClassesTaken.Any(t => t.Member.ToString().ToLower().Contains(s)))
+                    .ToList();
+            }
+            ViewBag.Count = filterResults.Count();
+
+            // Set search values so they carry over to the view.
+            ViewBag.CurrentFilter = s;
+            ViewBag.Select = select;
+            ViewBag.Sort = sort;
+
+            if (page < 1) page = 1;
+            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.PageSize = pageSize;
+            ViewBag.Pages = filterResults.Count / pageSize;
+            ViewBag.Page = page;
+            if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
+            if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
+
+            return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
 
         protected virtual string ToTitleCaseString(string original)

@@ -2,17 +2,17 @@
 {
     @Html.ActionLink("Classes", "Index", "Classes", null, new
     {
-        @class = "btn btn-sm btn-default " + (ViewBag.Title == "Classes" ? "active" : "")
+        @class = "btn btn-default " + (ViewBag.Title == "Classes" ? "active" : "")
     })
     @Html.ActionLink("Majors", "Index", "Majors", null, new
     {
-        @class = "btn btn-sm btn-default " + (ViewBag.Title == "Majors" ? "active" : "")
+        @class = "btn btn-default " + (ViewBag.Title == "Majors" ? "active" : "")
     })
     if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
     {
         @Html.ActionLink("Departments", "Index", "Departments", null, new
         {
-            @class = "btn btn-sm btn-default " + (ViewBag.Title == "Departments" ? "active" : "")
+            @class = "btn btn-default " + (ViewBag.Title == "Departments" ? "active" : "")
         })
     }
 }

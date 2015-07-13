@@ -19,7 +19,7 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
     public class ClassesController : BaseController
     {
-        public async Task<ActionResult> Index(ClassMessageId? message)
+        public async Task<ActionResult> Index(ClassesIndexFilterModel filter, ClassMessageId? message)
         {
             switch (message)
             {
@@ -32,13 +32,15 @@
                     ViewBag.SuccessMessage = GetClassResultMessage(message);
                     break;
             }
-            var classes = await _db.Classes.OrderBy(c => c.CourseShorthand).ToListAsync();
+            var classes = await _db.Classes.ToListAsync();
 
-
+            const int pageSize = 10;
+            var filterResults = await base.GetFilteredClassList(
+                classes, filter.s, filter.sort, filter.page, filter.select, pageSize);
 
             var model = new ClassIndexModel
             {
-                Classes = classes, 
+                Classes = filterResults, 
                 CurrentSemester = await GetThisSemesterAsync()
             };
             return View(model);

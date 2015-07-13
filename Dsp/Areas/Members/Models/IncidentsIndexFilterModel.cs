@@ -10,7 +10,11 @@
 
         public IncidentsIndexFilterModel()
         {
-            
+            page = 1;
+            unresolved = true;
+            resolved = false;
+            sort = "newest";
+            s = string.Empty;
         }
         public IncidentsIndexFilterModel(IncidentsIndexFilterModel original)
         {
