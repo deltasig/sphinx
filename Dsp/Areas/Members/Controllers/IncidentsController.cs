@@ -18,19 +18,17 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
-        public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool unresolved = true, bool resolved = false)
+        public async Task<ActionResult> Index(IncidentsIndexFilterModel filter)
         {
             var incidents = await _db.IncidentReports.ToListAsync();
             const int pageSize = 10;
-            var filterResults = base.GetFilteredIncidentsList(incidents, s, sort, page, unresolved, resolved, pageSize);
+            var filterResults = base.GetFilteredIncidentsList(
+                incidents, filter.s, filter.sort, filter.page, filter.unresolved, filter.resolved, pageSize);
 
             // Build view model with collected data.
             var model = new IncidentsIndexModel
             {
                 Incidents = filterResults
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToList()
             };
 
             return View(model);
