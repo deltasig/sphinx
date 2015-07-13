@@ -19,16 +19,24 @@
     <div class="row">
         <div class="col-xs-6">
             <a href="@Url.Action("Index", "Roster", new {area = "Members"})" class="btn btn-sm btn-default">
-                <i class="fa fa-caret-left"></i> Back to Roster
+                <i class="fa fa-caret-left"></i> To Roster
             </a>
         </div>
         <div class="col-xs-6 text-right">
-            @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)
-            {
-                <a href="@Url.Action("Transcript", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})" class="btn btn-sm btn-default">
-                    Go to Transcript <i class="fa fa-caret-right"></i>
+            <div class="btn-group" role="group">
+                <a href="@Url.Action("Index", "Classes", new {area = "Edu"})" class="btn btn-default">Classes</a>
+                <a href="@Url.Action("Schedule", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
+                   class="btn btn-default active">
+                    My Schedule
                 </a>
-            }
+                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)
+                {
+                    <a href="@Url.Action("Transcript", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
+                       class="btn btn-default">
+                        My Transcript
+                    </a>
+                }
+            </div>
         </div>
         <br />
         <br />
@@ -98,50 +106,55 @@
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
-                    @if (Model.ClassesTaken.Any())
-                    {
-                        <div class="table-responsive">
-                            <table class="table table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Semester</th>
-                                        <th>Course</th>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                        {
-
-                                            <th></th>
-                                        }
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var item in Model.ClassesTaken)
+                @if (Model.ClassesTaken.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Semester</th>
+                                    <th>Course</th>
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                     {
-                                        <tr>
-                                            <td>
-                                                @(item.IsSummerClass
+
+                                        <th></th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ClassesTaken)
+                                {
+                                    <tr>
+                                        <td>
+                                            @(item.IsSummerClass
                                                   ? "Summer " + item.Semester.DateStart.Year
                                                   : item.Semester.ToString())
+                                        </td>
+                                        <td>
+                                            <small>@item.Class.CourseShorthand</small>
+                                            @item.Class.CourseName
+                                            <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                                                  title="Credit Hour(s)">@item.Class.CreditHours</span>
+                                        </td>
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                        {
+                                            <td class="text-right">
+                                                @Html.ActionLink("Edit", "EditClassTaken", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null) |
+                                                @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null)
                                             </td>
-                                            <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
-                                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                            {
-                                                <td>
-                                                    @Html.ActionLink("Edit", "EditClassTaken", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null) |
-                                                    @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null)
-                                                </td>
-                                            }
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                    }
-                    else
-                    {
-                        @: No classes added!
-                    }
-                </div>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <div class="panel-body">
+                        No classes added!
+                    </div>
+                }
                 <div class="panel-footer">
                     Total Credit Hours: @Model.ClassesTaken.Sum(c => c.Class.CreditHours)
                 </div>

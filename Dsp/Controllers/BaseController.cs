@@ -889,7 +889,8 @@
                     filterResults = classes.Where(c => 
                         c.ClassesTaken.Any(t => 
                             t.UserId == userId && 
-                            t.SemesterId == thisSemester.SemesterId)).ToList();
+                            t.SemesterId == thisSemester.SemesterId &&
+                            !t.IsSummerClass)).ToList();
                     break;
                 case "being-taken":
                     filterResults = classes.Where(c => 
