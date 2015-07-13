@@ -1,4 +1,5 @@
 ﻿@using Dsp.Areas.Edu.Models;
+@using Microsoft.AspNet.Identity
 @model ClassIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -81,7 +82,7 @@
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
                                     <li role="presentation" class="@(ViewBag.sort == sortNumberAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNumberAscFilter)">
-                                            <i class="fa fa-fw fa-sort-amount-asc"></i> Class # <small>ASC</small>
+                                            <i class="fa fa-fw fa-sort-numeric-asc"></i> Class Number <small>ASC</small>
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == sortNumberDescText ? "active" : "")">
@@ -90,7 +91,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            <i class="fa fa-fw fa-sort-amount-desc"></i> Class # <small>DESC</small>
+                                            <i class="fa fa-fw fa-sort-numeric-desc"></i> Class Number <small>DESC</small>
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == sortNameAscText ? "active" : "")">
@@ -99,7 +100,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            <i class="fa fa-fw fa-sort-amount-asc"></i> Name <small>ASC</small>
+                                            <i class="fa fa-fw fa-sort-alpha-asc"></i> Class Name <small>ASC</small>
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == sortNameDescText ? "active" : "")">
@@ -108,7 +109,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            <i class="fa fa-fw fa-sort-amount-desc"></i> Name <small>DESC</small>
+                                            <i class="fa fa-fw fa-sort-alpha-desc"></i> Class Name <small>DESC</small>
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == sortTakenAscText ? "active" : "")">
@@ -162,7 +163,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            <i class="fa fa-fw fa-sort-amount-asc"></i> Files <small>DESC</small>
+                                            <i class="fa fa-fw fa-sort-amount-desc"></i> Files <small>DESC</small>
                                         </a>
                                     </li>
                                 </ul>
@@ -187,7 +188,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            My current classes
+                                            All of my current classes
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == selectBeingTakenText ? "active" : "")">
@@ -196,7 +197,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            Classes currently being taken
+                                            Classes being taken
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == selectNoneTakingText ? "active" : "")">
@@ -205,7 +206,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            Classes no one is taking
+                                            Classes not being taken
                                         </a>
                                     </li>
                                     <li role="presentation" class="@(ViewBag.sort == selectHasFileText ? "active" : "")">
@@ -223,7 +224,7 @@
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
-                                            Classes with no file
+                                            Classes without a file
                                         </a>
                                     </li>
                                 </ul>
@@ -231,11 +232,15 @@
                         </div>
                         <hr class="visible-xs" />
                         <div class="input-group">
-                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
+                            <span class="input-group-addon" id="search-addon" data-toggle="tooltip" data-placement="top"
+                                  title="Search by class number, name, department, or member.">
+                                <i class="fa fa-search"></i>
+                            </span>
                             <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
                             <input id="sort" name="sort" type="hidden" value="@ViewBag.Sort.ToString()">
                             <input id="select" name="select" type="hidden" value="@(ViewBag.Select == null ? "" : ViewBag.Select.ToString())">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" 
+                                   value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
                         </div>
                     }
                     <hr class="visible-xs visible-sm" />
@@ -243,6 +248,7 @@
                 <div class="col-md-6 text-right">
                     <div class="btn-group" role="group" aria-label="...">
                         @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+                        @Html.ActionLink("My Classes", "Schedule", new { userName = User.Identity.GetUserName() }, new { @class = "btn btn-default" })
                         @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-success" })
                     </div>
                 </div>
