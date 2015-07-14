@@ -1,8 +1,9 @@
 ﻿namespace Dsp.Areas.Members.Models
 {
-    public class IncidentsIndexFilterModel
+    using global::Dsp.Models;
+
+    public class IncidentsIndexFilterModel : Pager
     {
-        public int page { get; set; }
         public bool unresolved { get; set; }
         public bool resolved { get; set; }
         public string sort { get; set; }

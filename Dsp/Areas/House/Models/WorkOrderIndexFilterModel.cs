@@ -1,8 +1,9 @@
 ﻿namespace Dsp.Areas.House.Models
 {
-    public class WorkOrderIndexFilterModel
+    using global::Dsp.Models;
+
+    public class WorkOrderIndexFilterModel : Pager
     {
-        public int page { get; set; }
         public bool open { get; set; }
         public bool closed { get; set; }
         public string sort { get; set; }
