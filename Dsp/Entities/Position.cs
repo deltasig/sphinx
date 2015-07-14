@@ -11,6 +11,9 @@ namespace Dsp.Entities
         [StringLength(100)]
         public string Description { get; set; }
 
+        [StringLength(50)]
+        public string Inquiries { get; set; }
+
         [Required, DefaultValue(PositionType.Active)]
         public PositionType Type { get; set; }
 
