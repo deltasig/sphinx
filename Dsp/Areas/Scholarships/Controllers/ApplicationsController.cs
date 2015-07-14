@@ -12,6 +12,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using MarkdownSharp;
 
     public class ApplicationsController : BaseController
     {
@@ -73,8 +74,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
         public async Task<ActionResult> Create(CreateScholarshipAppModel model)
         {
@@ -154,8 +154,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
         public async Task<ActionResult> Edit(CreateScholarshipAppModel model)
         {
@@ -260,8 +259,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(SubmitScholarshipAppModel model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -294,7 +292,7 @@
         }
 
         [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
-        public async Task<ActionResult> Submission(Guid? id)
+        public async Task<ActionResult> Submission(Guid? id, ApplicationsMessageId? message)
         {
             if (id == null)
             {
@@ -307,9 +305,44 @@
                 return HttpNotFound();
             }
 
-            model.SubmittedOn = base.ConvertUtcToCst(model.SubmittedOn);
+            switch (message)
+            {
+                case ApplicationsMessageId.UpdateSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+                case ApplicationsMessageId.UpdateFailure:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+            }
+
+            var markdown = new Markdown();
+            ViewBag.CommitteeResponse = markdown.Transform(model.CommitteeResponse);
 
             return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+        public async Task<ActionResult> EditSubmission(ScholarshipSubmission model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Submission", new
+                {
+                    id = model.ScholarshipSubmissionId,
+                    message = ApplicationsMessageId.UpdateFailure
+                });
+            }
+
+            model.CommitteeRespondedOn = DateTime.UtcNow;
+            _db.Entry(model).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+            
+            return RedirectToAction("Submission", new
+            {
+                id = model.ScholarshipSubmissionId,
+                message = ApplicationsMessageId.UpdateSuccess
+            });
         }
 
         private async void SendStudyHourSubmissionEmail(ScholarshipSubmission submission)
@@ -342,6 +375,8 @@
                 : message == ApplicationsMessageId.ApplicationEditSuccess ? "Application updated successfully."
                 : message == ApplicationsMessageId.ApplicationDeletedSuccess ? "Application deleted successfully."
                 : message == ApplicationsMessageId.ApplicationCreationFailure ? "Application creation failed because of an internal issue with questions. Please contact your administrator."
+                : message == ApplicationsMessageId.UpdateSuccess ? "Application updated successfully."
+                : message == ApplicationsMessageId.UpdateFailure ? "Application update failed for an unspecified reason, please contact your administrator."
                 : "";
         }
 
@@ -351,7 +386,9 @@
             ApplicationCreationSuccess,
             ApplicationEditSuccess,
             ApplicationDeletedSuccess,
-            ApplicationCreationFailure
+            ApplicationCreationFailure,
+            UpdateSuccess,
+            UpdateFailure
         }
     }
 }
