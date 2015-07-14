@@ -19,13 +19,11 @@
             {
                 case MajorsMessageId.CreateFailureModelInvalid:
                 case MajorsMessageId.UpdateFailureModelInvalid:
-                case MajorsMessageId.AssignFailureModelInvalid:
                     ViewBag.FailMessage = GetResultMessage(message);
                     break;
                 case MajorsMessageId.CreateSuccess:
                 case MajorsMessageId.UpdateSuccess:
                 case MajorsMessageId.DeleteSuccess:
-                case MajorsMessageId.AssignSuccess:
                     ViewBag.SuccessMessage = GetResultMessage(message);
                     break;
             }
@@ -113,8 +111,19 @@
             return RedirectToAction("Index", new { message = MajorsMessageId.DeleteSuccess });
         }
         
-        public async Task<ActionResult> Assign(int? id)
+        public async Task<ActionResult> Assign(int? id, MajorsMessageId? message)
         {
+            switch (message)
+            {
+                case MajorsMessageId.AssignFailureModelInvalid:
+                case MajorsMessageId.AssignFailureDuplicate:
+                    ViewBag.FailMessage = GetResultMessage(message);
+                    break;
+                case MajorsMessageId.AssignSuccess:
+                    ViewBag.SuccessMessage = GetResultMessage(message);
+                    break;
+            }
+
             if (id != null)
             {
                 var member = await UserManager.FindByIdAsync((int)id);
@@ -154,17 +163,26 @@
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.FailMessage = GetResultMessage(MajorsMessageId.AssignFailureModelInvalid);
-                return View(model);
+                return RedirectToAction("Assign", new { id = model.UserId, message = MajorsMessageId.AssignFailureModelInvalid });
             }
             if (model.UserId != User.Identity.GetUserId<int>() && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var member = await UserManager.FindByIdAsync(model.UserId);
+            if (member.MajorsToMember.Any(m => m.MajorId == model.MajorId && m.DegreeLevel == model.DegreeLevel))
+            {
+                return RedirectToAction("Assign", new { id = model.UserId, message = MajorsMessageId.AssignFailureDuplicate });
+            }
 
             _db.MajorsToMembers.Add(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", new { message = MajorsMessageId.AssignSuccess });
+            return RedirectToAction("Index", "Account", new
+            {
+                area = "Members",
+                userName = member.UserName, 
+                majorMessage = MajorsMessageId.AssignSuccess
+            });
         }
 
         public async Task<ActionResult> Unassign(int? id)
@@ -196,7 +214,12 @@
             var userName = model.Member.UserName;
             _db.MajorsToMembers.Remove(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", "Account", new { area = "Members", userName, message = MajorsMessageId.UnassignSuccess });
+            return RedirectToAction("Index", "Account", new
+            {
+                area = "Members", 
+                userName,
+                majorMessage = MajorsMessageId.UnassignSuccess
+            });
         }
 
         public static dynamic GetResultMessage(MajorsMessageId? message)
@@ -207,6 +230,7 @@
                 : message == MajorsMessageId.UpdateSuccess ? "Major update was successful."
                 : message == MajorsMessageId.DeleteSuccess ? "Major deletion was successful."
                 : message == MajorsMessageId.AssignFailureModelInvalid ? "Failed to assign member from major because the submission was invalid.  Please try again."
+                : message == MajorsMessageId.AssignFailureDuplicate ? "Failed to assign member from major because they are already in that major at that degree level."
                 : message == MajorsMessageId.AssignSuccess ? "Member was successfully assigned to major."
                 : message == MajorsMessageId.UnassignSuccess ? "Member was successfully unassigned from major."
                 : "";
@@ -220,6 +244,7 @@
             UpdateSuccess,
             DeleteSuccess,
             AssignFailureModelInvalid,
+            AssignFailureDuplicate,
             AssignSuccess,
             UnassignSuccess
         }
