@@ -1,5 +1,6 @@
 ﻿namespace Dsp.Areas.Kitchen.Controllers
 {
+    using System;
     using Entities;
     using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
@@ -26,6 +27,7 @@
             ViewBag.week = week;
             var startOfWeekCst = GetStartOfCurrentWeek().AddDays(7 * week);
             var startOfWeekUtc = ConvertCstToUtc(startOfWeekCst);
+            ViewBag.StartOfWeek = startOfWeekUtc;
             var startOfNextWeekUtc = ConvertCstToUtc(startOfWeekCst.AddDays(7));
 
             var model = new MealScheduleModel();
@@ -35,8 +37,10 @@
             model.UsersVotes = Request.IsAuthenticated 
                 ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealVotes 
                 : new List<MealVote>();
-            model.LatePlates = await _db.MealLatePlates
-                .Where(m => m.MealToPeriod.Date >= startOfWeekUtc.Date && m.MealToPeriod.Date < startOfNextWeekUtc.Date)
+            model.Plates = await _db.MealPlates
+                .Where(m => 
+                    m.PlateDateTime >= startOfWeekUtc.Date && 
+                    m.PlateDateTime < startOfNextWeekUtc.Date)
                 .ToListAsync();
 
             var existingAssignments = await _db.MealToPeriods
@@ -84,9 +88,6 @@
             model.UsersVotes = Request.IsAuthenticated
                 ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealVotes
                 : new List<MealVote>();
-            model.LatePlates = await _db.MealLatePlates
-                .Where(m => m.MealToPeriod.Date >= startOfWeekUtc.Date && m.MealToPeriod.Date < startOfNextWeekUtc.Date)
-                .ToListAsync();
 
             var existingAssignments = await _db.MealToPeriods
                 .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
@@ -250,36 +251,51 @@
             return Redirect(Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Schedule");
         }
 
-        public async Task<ActionResult> LatePlateSignup(int? id, int week = 0)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddPlate(DateTime dateTime, string type, int week = 0)
         {
-            if (id == null)
+            var plate = new MealPlate
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var mp = await _db.MealToPeriods.FindAsync(id);
-            if (mp == null)
-            {
-                return HttpNotFound();
-            }
+                PlateDateTime = dateTime,
+                SignedUpOn = DateTime.UtcNow,
+                UserId = User.Identity.GetUserId<int>()
+            };
 
-            var existingLatePlate = await _db.MealLatePlates
-                    .SingleOrDefaultAsync(v =>
-                        v.UserId == User.Identity.GetUserId<int>() &&
-                        v.MealToPeriodId == mp.MealToPeriodId);
+            var existingPlates = await _db.MealPlates
+                    .Where(v => v.UserId == plate.UserId &&
+                        v.PlateDateTime == dateTime)
+                    .ToListAsync();
 
-            if (existingLatePlate == null)
+            if (type == "Late" && existingPlates.Any(p => p.Type == "Late"))
             {
-                _db.MealLatePlates.Add(new MealLatePlate
-                {
-                    UserId = User.Identity.GetUserId<int>(),
-                    MealToPeriodId = mp.MealToPeriodId
-                });
+                plate.Type = "+1";
             }
             else
             {
-                _db.Entry(existingLatePlate).State = EntityState.Deleted;
+                plate.Type = type;
             }
 
+            _db.MealPlates.Add(plate);
+            await _db.SaveChangesAsync();
+
+            return RedirectToAction("Schedule", new { week });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemovePlate(int id, int week = 0)
+        {
+            var plate = await _db.MealPlates.FindAsync(id);
+            if (plate == null)
+            {
+                return HttpNotFound();
+            }
+            if (!User.IsInRole("Administrator") && !User.IsInRole("House Steward") &&
+                plate.UserId != User.Identity.GetUserId<int>())
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            _db.MealPlates.Remove(plate);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Schedule", new { week });
@@ -390,8 +406,7 @@
 
             return View(meal.MealsToItems.OrderBy(i => i.DisplayOrder).ToList());
         }
-
-
+        
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Reorder(IList<MealToItem> model)

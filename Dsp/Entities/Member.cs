@@ -71,7 +71,7 @@
         [InverseProperty("Member")]
         public virtual ICollection<MealVote> MealVotes { get; set; }
         [InverseProperty("Member")]
-        public virtual ICollection<MealLatePlate> MealLatePlates { get; set; }
+        public virtual ICollection<MealPlate> MealPlates { get; set; }
         [InverseProperty("BigBrother")]
         public virtual ICollection<Member> LittleBrothers { get; set; }
         [InverseProperty("Member")]

@@ -11,6 +11,6 @@
         public IEnumerable<MealPeriod> MealPeriods { get; set; }
         public IList<MealToPeriod> MealsToPeriods { get; set; }
         public IEnumerable<MealVote> UsersVotes { get; set; }
-        public IEnumerable<MealLatePlate> LatePlates { get; set; }
+        public IEnumerable<MealPlate> Plates { get; set; }
     }
 }
