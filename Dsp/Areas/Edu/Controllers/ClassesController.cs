@@ -360,6 +360,7 @@
                 });
             }
 
+            model.ClassTaken.CreatedOn = DateTime.UtcNow;
             _db.ClassesTaken.Add(model.ClassTaken);
             await _db.SaveChangesAsync();
 

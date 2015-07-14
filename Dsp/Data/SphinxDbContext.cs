@@ -1,8 +1,8 @@
 ﻿namespace Dsp.Data
 {
-    using System.Data.Entity;
     using Entities;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using System.Data.Entity;
 
     public class SphinxDbContext : IdentityDbContext
         <Member, Position, int, SphinxUserLogin, Leader, SphinxUserClaim>

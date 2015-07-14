@@ -4,6 +4,7 @@
     using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -83,26 +84,28 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Event @event)
+        public async Task<ActionResult> Create(Event model)
         {
-            if (!ModelState.IsValid) return View(@event);
+            if (!ModelState.IsValid) return View(model);
 
             if(User.IsInRole("Administrator") || User.IsInRole("Service"))
             {
-                @event.IsApproved = true;
+                model.IsApproved = true;
             }
             else
             {
-                @event.IsApproved = false;
+                model.IsApproved = false;
                 // TODO: Email service chairman.
             }
-            @event.SubmitterId = User.Identity.GetUserId<int>();
-            @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
-            _db.Events.Add(@event);
+            model.SubmitterId = User.Identity.GetUserId<int>();
+            model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
+            model.CreatedOn = DateTime.UtcNow;
+            _db.Events.Add(model);
             await _db.SaveChangesAsync();
+            
             return RedirectToAction("Index", new
             {
-                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
+                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId,
                 message = EventMessageId.CreateSuccess
             });
         }

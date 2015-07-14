@@ -1,7 +1,8 @@
 namespace Dsp.Entities
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("ClassesTaken")]
     public class ClassTaken
@@ -30,6 +31,8 @@ namespace Dsp.Entities
         public bool? Dropped { get; set; }
 
         public bool IsSummerClass { get; set; }
+
+        public DateTime CreatedOn { get; set; }
 
         [ForeignKey("UserId")]
         public virtual Member Member { get; set; }

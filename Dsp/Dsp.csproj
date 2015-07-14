@@ -237,6 +237,10 @@
     <Compile Include="Migrations\201507141459563_RemoveSemesterClassTable.Designer.cs">
       <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507141549368_AdditionalActivityTracking.cs" />
+    <Compile Include="Migrations\201507141549368_AdditionalActivityTracking.Designer.cs">
+      <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -891,6 +895,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507141459563_RemoveSemesterClassTable.resx">
       <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141549368_AdditionalActivityTracking.resx">
+      <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
