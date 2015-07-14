@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201507142049375_RenameMealPlatePK.Designer.cs">
       <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507142110467_MajorToMemberUniqueBug.cs" />
+    <Compile Include="Migrations\201507142110467_MajorToMemberUniqueBug.Designer.cs">
+      <DependentUpon>201507142110467_MajorToMemberUniqueBug.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -933,6 +937,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507142049375_RenameMealPlatePK.resx">
       <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507142110467_MajorToMemberUniqueBug.resx">
+      <DependentUpon>201507142110467_MajorToMemberUniqueBug.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

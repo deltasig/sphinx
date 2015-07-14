@@ -21,7 +21,8 @@
     public class AccountController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string userName, ManageMessageId? accountMessage, MajorsController.MajorsMessageId? majorMessage)
+        public async Task<ActionResult> Index(string userName, 
+            ManageMessageId? accountMessage, MajorsController.MajorsMessageId? majorMessage)
         {
             switch (accountMessage)
             {
@@ -40,6 +41,7 @@
             }
             switch (majorMessage)
             {
+                case MajorsController.MajorsMessageId.AssignSuccess:
                 case MajorsController.MajorsMessageId.UnassignSuccess:
                     ViewBag.SuccessMessage = MajorsController.GetResultMessage(majorMessage);
                     break;

@@ -16,7 +16,8 @@ namespace Dsp.Entities
         [Display(Name = "Member")]
         public int UserId { get; set; }
 
-        [Required, Display(Name = "Degree Level")]
+        [Required, Column(Order = 2), Index("IX_MajorToMember", 2, IsUnique = true)]
+        [Display(Name = "Degree Level")]
         public DegreeLevel DegreeLevel { get; set; }
 
         [ForeignKey("MajorId")]
