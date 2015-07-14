@@ -1,4 +1,5 @@
 ﻿@using Dsp.Areas.Members.Models
+@using Dsp.Models
 @model IncidentsIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -125,47 +126,12 @@
                             </a>
                         }
                     </ul>
-
-                    @if (ViewBag.ResultCount > ViewBag.PageSize)
+                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
                     {
-                        <nav class="text-center">
-                            <ul class="pagination">
-                                <li class="@(ViewBag.Page > 1 ? "" : "disabled")">
-                                    @if (ViewBag.Page > 1)
-                                    {
-                                        <a href="@Url.Action("Index", pagePreviousFilter)" aria-label="Previous">
-                                            <i class="fa fa-caret-left" aria-hidden="true"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
-                                    }
-                                </li>
-                                @for (var i = 1; i <= ViewBag.Pages; i++)
-                                {
-                                    var pageFilter = filter;
-                                    pageFilter.page = i;
-
-                                    <li class="@(ViewBag.Page == i ? "active" : "")">
-                                        <a href="@Url.Action("Index", pageFilter)">@i</a>
-                                    </li>
-                                }
-                                <li class="@(ViewBag.Page < ViewBag.Pages ? "" : "disabled")">
-                                    @if (ViewBag.Page < ViewBag.Pages)
-                                    {
-                                        <a href="@Url.Action("Index", pageNextFilter)" aria-label="Next">
-                                            <i class="fa fa-caret-right" aria-hidden="true"></i>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <span><i class="fa fa-caret-right" aria-hidden="true"></i></span>
-                                    }
-                                </li>
-                            </ul>
-                        </nav>
-                    }
+                        Previous = pagePreviousFilter,
+                        Incrementer = filter,
+                        Next = pageNextFilter
+                    })
                 </div>
             }
             else

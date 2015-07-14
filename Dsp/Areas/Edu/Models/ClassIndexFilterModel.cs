@@ -1,8 +1,9 @@
 ﻿namespace Dsp.Areas.Edu.Models
 {
-    public class ClassesIndexFilterModel
+    using global::Dsp.Models;
+
+    public class ClassesIndexFilterModel : Pager
     {
-        public int page { get; set; }
         public string select { get; set; }
         public string sort { get; set; }
         public string s { get; set; }
