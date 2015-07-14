@@ -22,12 +22,10 @@
         [Required, StringLength(50), Display(Name = "Last Name")]
         public string LastName { get; set; }
 
-        [Required, Display(Name = "Student Number")]
+        [Required, Display(Name = "Student Number"), StringLength(15)]
         public string StudentNumber { get; set; }
 
-        [Required, DataType(DataType.PhoneNumber), Display(Name = "Phone Number")]
-        [RegularExpression(@"^(([0-9]{3}[-]([0-9]{3})[-][0-9]{4})|([+]?[0-9]{11,15}))$",
-            ErrorMessage = "Phone number format was invalid (enter US as ###-###-#### or international as +1 followed by up to 15 digits).")]
+        [Required, DataType(DataType.PhoneNumber), Display(Name = "Phone Number"), StringLength(15)]
         public string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "An email address is required"), StringLength(50), Display(Name = "Email")]
@@ -64,6 +62,10 @@
         [Required, StringLength(100), Display(Name = "How Did You Heard About Us")]
         public string HearAboutScholarship { get; set; }
 
+        [Display(Name = "Committee Response"), DataType(DataType.MultilineText)]
+        public string CommitteeResponse { get; set; }
+
+        public DateTime? CommitteeRespondedOn { get; set; }
 
         [ForeignKey("ScholarshipAppId")]
         public virtual ScholarshipApp Application { get; set; }

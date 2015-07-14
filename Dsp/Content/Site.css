@@ -10,6 +10,10 @@ body {
     margin-bottom: 175px;
 }
 
+blockquote {
+    font-size: 14px;
+}
+
 .external-body {
     margin-top: 50px;
 }
