@@ -43,7 +43,6 @@
         public virtual DbSet<ScholarshipType> ScholarshipTypes { get; set; }
         public virtual DbSet<ScholarshipQuestion> ScholarshipQuestions { get; set; }
         public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
-        public virtual DbSet<SemesterClass> SemesterClasses { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSignups { get; set; }
