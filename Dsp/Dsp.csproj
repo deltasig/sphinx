@@ -479,6 +479,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
+    <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="google2da471a22d508cbe.html" />
