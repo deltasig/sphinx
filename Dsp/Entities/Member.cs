@@ -3,6 +3,7 @@
     using Data;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
@@ -38,6 +39,10 @@
 
         [Display(Name = "Shirt Size")]
         public string ShirtSize { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime LastUpdatedOn { get; set; }
 
         [ForeignKey("StatusId")]
         public virtual MemberStatus MemberStatus { get; set; }
@@ -87,7 +92,7 @@
         public virtual ICollection<WorkOrderPriorityChange> WorkOrderPriorityChanges { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
-
+        
         public string RoomString()
         {
             if (Room == null)
