@@ -9,7 +9,6 @@
     using Microsoft.Owin.Security;
     using Models;
     using System;
-    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Net.Mail;
@@ -119,6 +118,7 @@
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.ShirtSize = model.Member.ShirtSize;
+            member.LastUpdatedOn = DateTime.UtcNow;
 
             UserManager.Update(member);
 
@@ -213,11 +213,6 @@
             try
             {
                 var tempPassword = Membership.GeneratePassword(10, 5);
-                //WebSecurity.CreateUserAndAccount(model.UserName, tempPassword, new { 
-                //        model.FirstName, model.LastName, model.Email, 
-                //        model.Room, model.StatusId, model.PledgeClassId, 
-                //        model.ExpectedGraduationId, model.ShirtSize
-                //});
                 var user = new Member
                 {
                     UserName = model.UserName.ToLower(),
@@ -227,7 +222,8 @@
                     StatusId = int.Parse(model.StatusId),
                     PledgeClassId = int.Parse(model.PledgeClassId),
                     ExpectedGraduationId = int.Parse(model.ExpectedGraduationId),
-                    ShirtSize = model.ShirtSize
+                    ShirtSize = model.ShirtSize,
+                    CreatedOn = DateTime.UtcNow
                 };
                 var result = await UserManager.CreateAsync(user, tempPassword);
                 if (result.Succeeded)

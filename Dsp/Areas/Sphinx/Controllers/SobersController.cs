@@ -66,6 +66,7 @@
             if (!ModelState.IsValid) return RedirectToAction("Manager");
             
             model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
+            model.NewSignup.CreatedOn = DateTime.UtcNow;
 
             _db.SoberSignups.Add(model.NewSignup);
             await _db.SaveChangesAsync();
@@ -113,7 +114,8 @@
                         _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
-                            SoberTypeId = driverType.SoberTypeId
+                            SoberTypeId = driverType.SoberTypeId,
+                            CreatedOn = DateTime.UtcNow
                         });
                     }
                     for (var i = 0; i < model.MultiAddModel.OfficerAmount; i++)
@@ -121,7 +123,8 @@
                         _db.SoberSignups.Add(new SoberSignup
                         {
                             DateOfShift = date,
-                            SoberTypeId = officerType.SoberTypeId
+                            SoberTypeId = officerType.SoberTypeId,
+                            CreatedOn = DateTime.UtcNow
                         });
                     }
                 }
@@ -225,8 +228,7 @@
             });
         }
 
-        [HttpGet]
-        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+        [HttpGet, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> EditSignup(int? id)
         {
             if (id == null)
@@ -246,9 +248,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> EditSignup(EditSoberSignupModel model)
         {
             if (!ModelState.IsValid)
