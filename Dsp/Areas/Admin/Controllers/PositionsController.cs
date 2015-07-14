@@ -40,8 +40,7 @@
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Position position)
         {
             if (!ModelState.IsValid) return View(position);
@@ -65,8 +64,7 @@
             return View(position);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(Position position)
         {
             if (!ModelState.IsValid) return View(position);
@@ -109,8 +107,7 @@
             return View(position);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var position = await RoleManager.FindByIdAsync(id);
@@ -118,10 +115,8 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-
-
-        [HttpGet]
-        [Authorize(Roles = "Administrator, President")]
+        
+        [HttpGet, Authorize(Roles = "Administrator, President")]
         public async Task<ActionResult> Appointments(AppointmentMessageId? message)
         {
             switch (message)
@@ -169,9 +164,7 @@
             return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, President")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, President")]
         public async Task<ActionResult> Appointments(IList<AppointmentModel> model)
         {
             AppointmentMessageId? message;
@@ -211,8 +204,7 @@
 
             return RedirectToAction("Appointments", new { Message = message });
         }
-
-
+        
         private static dynamic GetAppointmentMessage(AppointmentMessageId? message)
         {
             return
@@ -220,6 +212,7 @@
                 : message == AppointmentMessageId.AppointmentFailure ? "Appointments failed. Please check your appointments and try again."
                 : "";
         }
+
         public enum AppointmentMessageId
         {
             AppointmentSuccess,

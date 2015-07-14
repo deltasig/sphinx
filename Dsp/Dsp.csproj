@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201507141549368_AdditionalActivityTracking.Designer.cs">
       <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507141554417_PositionInquiries.cs" />
+    <Compile Include="Migrations\201507141554417_PositionInquiries.Designer.cs">
+      <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -898,6 +902,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507141549368_AdditionalActivityTracking.resx">
       <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141554417_PositionInquiries.resx">
+      <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
