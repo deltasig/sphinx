@@ -227,6 +227,42 @@ table.dataTable thead > tr > th {
     border-right: 2px solid transparent;
 }
 
+.text-left-xs {
+    text-align: left;
+}
+
+/* Small devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .text-left-sm {
+        text-align: left;
+    }
+}
+
+@media (min-width: 768px) {
+    .text-right-sm {
+        text-align: right;
+    }
+}
+
+/* Medium devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .text-left-md {
+        text-align: left;
+    }
+}
+
+/* Large devices (large desktops, 1200px and up) */
+@media (min-width: 1200px) {
+    .text-left-lg {
+        text-align: left;
+    }
+}
+
+.btn-light {
+    margin: 0;
+    padding: 0;
+}
+
 .btn-file {
     position: relative;
     overflow: hidden;
