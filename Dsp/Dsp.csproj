@@ -233,6 +233,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
+    <Compile Include="Migrations\201507141459563_RemoveSemesterClassTable.cs" />
+    <Compile Include="Migrations\201507141459563_RemoveSemesterClassTable.Designer.cs">
+      <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -277,7 +281,6 @@
     <Compile Include="Entities\ScholarshipSubmission.cs" />
     <Compile Include="Entities\ScholarshipType.cs" />
     <Compile Include="Entities\Semester.cs" />
-    <Compile Include="Entities\SemesterClass.cs" />
     <Compile Include="Entities\ServiceHour.cs" />
     <Compile Include="Entities\SoberSignup.cs" />
     <Compile Include="Entities\SoberType.cs" />
@@ -885,6 +888,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201506082236541_Initial.resx">
       <DependentUpon>201506082236541_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141459563_RemoveSemesterClassTable.resx">
+      <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
