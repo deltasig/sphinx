@@ -233,6 +233,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
+    <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
     <Compile Include="Data\SphinxDbContext.cs" />
@@ -388,6 +389,7 @@
     <Compile Include="Areas\Service\Models\ServiceHourSubmissionModel.cs" />
     <Compile Include="Areas\Sphinx\Models\SphinxHomeIndexModel.cs" />
     <Compile Include="Models\ExternalScholarshipModel.cs" />
+    <Compile Include="Models\PagerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Areas\Service\Controllers\EventsController.cs" />
     <Compile Include="Startup.cs" />
@@ -861,6 +863,7 @@
     <Content Include="Views\Emails\NewIncidentReport.cshtml" />
     <Content Include="Views\Shared\_TitleExternal.cshtml" />
     <Content Include="Views\Shared\_LoginExternalPartial.cshtml" />
+    <Content Include="Views\Shared\_PagerPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
