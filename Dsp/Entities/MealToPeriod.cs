@@ -21,7 +21,5 @@
         public virtual MealPeriod MealPeriod { get; set; }
         [ForeignKey("MealId")]
         public virtual Meal Meal { get; set; }
-        [InverseProperty("MealToPeriod")]
-        public virtual ICollection<MealLatePlate> MealLatePlates { get; set; }
     }
 }

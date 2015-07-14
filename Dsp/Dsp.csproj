@@ -253,6 +253,14 @@
     <Compile Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.Designer.cs">
       <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507141816195_LatePlateLiberation.cs" />
+    <Compile Include="Migrations\201507141816195_LatePlateLiberation.Designer.cs">
+      <DependentUpon>201507141816195_LatePlateLiberation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507142049375_RenameMealPlatePK.cs" />
+    <Compile Include="Migrations\201507142049375_RenameMealPlatePK.Designer.cs">
+      <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -278,7 +286,7 @@
     <Compile Include="Entities\Meal.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealItemType.cs" />
-    <Compile Include="Entities\MealLatePlate.cs" />
+    <Compile Include="Entities\MealPlate.cs" />
     <Compile Include="Entities\MealPeriod.cs" />
     <Compile Include="Entities\MealToItem.cs" />
     <Compile Include="Entities\MealToPeriod.cs" />
@@ -919,6 +927,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.resx">
       <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141816195_LatePlateLiberation.resx">
+      <DependentUpon>201507141816195_LatePlateLiberation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507142049375_RenameMealPlatePK.resx">
+      <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
