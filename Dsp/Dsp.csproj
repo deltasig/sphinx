@@ -245,6 +245,14 @@
     <Compile Include="Migrations\201507141554417_PositionInquiries.Designer.cs">
       <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507141615220_ScholarshipCommitteeResponse.cs" />
+    <Compile Include="Migrations\201507141615220_ScholarshipCommitteeResponse.Designer.cs">
+      <DependentUpon>201507141615220_ScholarshipCommitteeResponse.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.cs" />
+    <Compile Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.Designer.cs">
+      <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -905,6 +913,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507141554417_PositionInquiries.resx">
       <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141615220_ScholarshipCommitteeResponse.resx">
+      <DependentUpon>201507141615220_ScholarshipCommitteeResponse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.resx">
+      <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
