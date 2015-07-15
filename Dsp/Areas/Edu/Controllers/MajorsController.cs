@@ -229,8 +229,8 @@
                 : message == MajorsMessageId.UpdateFailureModelInvalid ? "Failed to update major because the submission was invalid.  Please try again."
                 : message == MajorsMessageId.UpdateSuccess ? "Major update was successful."
                 : message == MajorsMessageId.DeleteSuccess ? "Major deletion was successful."
-                : message == MajorsMessageId.AssignFailureModelInvalid ? "Failed to assign member from major because the submission was invalid.  Please try again."
-                : message == MajorsMessageId.AssignFailureDuplicate ? "Failed to assign member from major because they are already in that major at that degree level."
+                : message == MajorsMessageId.AssignFailureModelInvalid ? "Failed to assign member to major because the submission was invalid.  Please try again."
+                : message == MajorsMessageId.AssignFailureDuplicate ? "Failed to assign member to major because they are already in that major at that degree level."
                 : message == MajorsMessageId.AssignSuccess ? "Member was successfully assigned to major."
                 : message == MajorsMessageId.UnassignSuccess ? "Member was successfully unassigned from major."
                 : "";
