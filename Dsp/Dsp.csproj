@@ -233,37 +233,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
-    <Compile Include="Migrations\201507141459563_RemoveSemesterClassTable.cs" />
-    <Compile Include="Migrations\201507141459563_RemoveSemesterClassTable.Designer.cs">
-      <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507141549368_AdditionalActivityTracking.cs" />
-    <Compile Include="Migrations\201507141549368_AdditionalActivityTracking.Designer.cs">
-      <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507141554417_PositionInquiries.cs" />
-    <Compile Include="Migrations\201507141554417_PositionInquiries.Designer.cs">
-      <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507141615220_ScholarshipCommitteeResponse.cs" />
-    <Compile Include="Migrations\201507141615220_ScholarshipCommitteeResponse.Designer.cs">
-      <DependentUpon>201507141615220_ScholarshipCommitteeResponse.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.cs" />
-    <Compile Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.Designer.cs">
-      <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507141816195_LatePlateLiberation.cs" />
-    <Compile Include="Migrations\201507141816195_LatePlateLiberation.Designer.cs">
-      <DependentUpon>201507141816195_LatePlateLiberation.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507142049375_RenameMealPlatePK.cs" />
-    <Compile Include="Migrations\201507142049375_RenameMealPlatePK.Designer.cs">
-      <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507142110467_MajorToMemberUniqueBug.cs" />
-    <Compile Include="Migrations\201507142110467_MajorToMemberUniqueBug.Designer.cs">
-      <DependentUpon>201507142110467_MajorToMemberUniqueBug.cs</DependentUpon>
+    <Compile Include="Migrations\201507142355194_Initial.cs" />
+    <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
+      <DependentUpon>201507142355194_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -405,10 +377,6 @@
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="Data\DspRoleProvider.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Migrations\201506082236541_Initial.cs" />
-    <Compile Include="Migrations\201506082236541_Initial.Designer.cs">
-      <DependentUpon>201506082236541_Initial.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -915,32 +883,8 @@
     <Folder Include="Areas\Sphinx\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201506082236541_Initial.resx">
-      <DependentUpon>201506082236541_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141459563_RemoveSemesterClassTable.resx">
-      <DependentUpon>201507141459563_RemoveSemesterClassTable.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141549368_AdditionalActivityTracking.resx">
-      <DependentUpon>201507141549368_AdditionalActivityTracking.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141554417_PositionInquiries.resx">
-      <DependentUpon>201507141554417_PositionInquiries.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141615220_ScholarshipCommitteeResponse.resx">
-      <DependentUpon>201507141615220_ScholarshipCommitteeResponse.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141622156_UpdateScholarshipSubmissionFields.resx">
-      <DependentUpon>201507141622156_UpdateScholarshipSubmissionFields.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507141816195_LatePlateLiberation.resx">
-      <DependentUpon>201507141816195_LatePlateLiberation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507142049375_RenameMealPlatePK.resx">
-      <DependentUpon>201507142049375_RenameMealPlatePK.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507142110467_MajorToMemberUniqueBug.resx">
-      <DependentUpon>201507142110467_MajorToMemberUniqueBug.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201507142355194_Initial.resx">
+      <DependentUpon>201507142355194_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -32,7 +32,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
         public bool IsSummerClass { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
         [ForeignKey("UserId")]
         public virtual Member Member { get; set; }

@@ -39,6 +39,8 @@ namespace Dsp.Migrations
                         ExpectedGraduationId = c.Int(),
                         BigBroId = c.Int(),
                         ShirtSize = c.String(),
+                        CreatedOn = c.DateTime(),
+                        LastUpdatedOn = c.DateTime(),
                         Email = c.String(maxLength: 256),
                         EmailConfirmed = c.Boolean(nullable: false),
                         PasswordHash = c.String(),
@@ -87,6 +89,7 @@ namespace Dsp.Migrations
                         FinalGrade = c.String(maxLength: 1),
                         Dropped = c.Boolean(),
                         IsSummerClass = c.Boolean(nullable: false),
+                        CreatedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.ClassTakenId)
                 .ForeignKey("dbo.Classes", t => t.ClassId, cascadeDelete: true)
@@ -167,13 +170,13 @@ namespace Dsp.Migrations
                     {
                         MajorId = c.Int(nullable: false),
                         UserId = c.Int(nullable: false),
-                        MajorToMemberId = c.Int(nullable: false, identity: true),
                         DegreeLevel = c.Int(nullable: false),
+                        MajorToMemberId = c.Int(nullable: false, identity: true),
                     })
                 .PrimaryKey(t => t.MajorToMemberId)
                 .ForeignKey("dbo.Majors", t => t.MajorId, cascadeDelete: true)
                 .ForeignKey("dbo.Members", t => t.UserId, cascadeDelete: true)
-                .Index(t => new { t.MajorId, t.UserId }, unique: true, name: "IX_MajorToMember");
+                .Index(t => new { t.MajorId, t.UserId, t.DegreeLevel }, unique: true, name: "IX_MajorToMember");
             
             CreateTable(
                 "dbo.Semesters",
@@ -210,6 +213,7 @@ namespace Dsp.Migrations
                     {
                         PositionId = c.Int(nullable: false, identity: true),
                         Description = c.String(maxLength: 100),
+                        Inquiries = c.String(maxLength: 50),
                         Type = c.Int(nullable: false),
                         IsExecutive = c.Boolean(nullable: false),
                         IsElected = c.Boolean(nullable: false),
@@ -277,54 +281,32 @@ namespace Dsp.Migrations
                 .Index(t => t.UserId);
             
             CreateTable(
-                "dbo.MealLatePlates",
+                "dbo.MealPlates",
+                c => new
+                    {
+                        MealPlateId = c.Int(nullable: false, identity: true),
+                        UserId = c.Int(nullable: false),
+                        PlateDateTime = c.DateTime(nullable: false),
+                        SignedUpOn = c.DateTime(nullable: false),
+                        Type = c.String(maxLength: 25),
+                    })
+                .PrimaryKey(t => t.MealPlateId)
+                .ForeignKey("dbo.Members", t => t.UserId, cascadeDelete: true)
+                .Index(t => t.UserId);
+            
+            CreateTable(
+                "dbo.MealVotes",
                 c => new
                     {
                         UserId = c.Int(nullable: false),
-                        MealToPeriodId = c.Int(nullable: false),
-                        MealLatePlateId = c.Int(nullable: false, identity: true),
-                    })
-                .PrimaryKey(t => t.MealLatePlateId)
-                .ForeignKey("dbo.MealToPeriods", t => t.MealToPeriodId, cascadeDelete: true)
-                .ForeignKey("dbo.Members", t => t.UserId, cascadeDelete: true)
-                .Index(t => new { t.UserId, t.MealToPeriodId }, unique: true, name: "IX_MealLatePlate");
-            
-            CreateTable(
-                "dbo.MealToPeriods",
-                c => new
-                    {
-                        MealToPeriodId = c.Int(nullable: false, identity: true),
-                        MealPeriodId = c.Int(nullable: false),
-                        MealId = c.Int(nullable: false),
-                        Date = c.DateTime(nullable: false, storeType: "date"),
-                    })
-                .PrimaryKey(t => t.MealToPeriodId)
-                .ForeignKey("dbo.Meals", t => t.MealId, cascadeDelete: true)
-                .ForeignKey("dbo.MealPeriods", t => t.MealPeriodId, cascadeDelete: true)
-                .Index(t => t.MealPeriodId)
-                .Index(t => t.MealId);
-            
-            CreateTable(
-                "dbo.Meals",
-                c => new
-                    {
-                        MealId = c.Int(nullable: false, identity: true),
-                    })
-                .PrimaryKey(t => t.MealId);
-            
-            CreateTable(
-                "dbo.MealToItems",
-                c => new
-                    {
-                        MealId = c.Int(nullable: false),
                         MealItemId = c.Int(nullable: false),
-                        MealToItemId = c.Int(nullable: false, identity: true),
-                        DisplayOrder = c.Int(nullable: false),
+                        MealVoteId = c.Int(nullable: false, identity: true),
+                        IsUpvote = c.Boolean(nullable: false),
                     })
-                .PrimaryKey(t => t.MealToItemId)
+                .PrimaryKey(t => t.MealVoteId)
                 .ForeignKey("dbo.MealItems", t => t.MealItemId, cascadeDelete: true)
-                .ForeignKey("dbo.Meals", t => t.MealId, cascadeDelete: true)
-                .Index(t => new { t.MealId, t.MealItemId }, unique: true, name: "IX_MealToItem");
+                .ForeignKey("dbo.Members", t => t.UserId, cascadeDelete: true)
+                .Index(t => new { t.UserId, t.MealItemId }, unique: true, name: "IX_MealVote");
             
             CreateTable(
                 "dbo.MealItems",
@@ -349,18 +331,41 @@ namespace Dsp.Migrations
                 .PrimaryKey(t => t.MealItemTypeId);
             
             CreateTable(
-                "dbo.MealVotes",
+                "dbo.MealToItems",
                 c => new
                     {
-                        UserId = c.Int(nullable: false),
+                        MealId = c.Int(nullable: false),
                         MealItemId = c.Int(nullable: false),
-                        MealVoteId = c.Int(nullable: false, identity: true),
-                        IsUpvote = c.Boolean(nullable: false),
+                        MealToItemId = c.Int(nullable: false, identity: true),
+                        DisplayOrder = c.Int(nullable: false),
                     })
-                .PrimaryKey(t => t.MealVoteId)
+                .PrimaryKey(t => t.MealToItemId)
+                .ForeignKey("dbo.Meals", t => t.MealId, cascadeDelete: true)
                 .ForeignKey("dbo.MealItems", t => t.MealItemId, cascadeDelete: true)
-                .ForeignKey("dbo.Members", t => t.UserId, cascadeDelete: true)
-                .Index(t => new { t.UserId, t.MealItemId }, unique: true, name: "IX_MealVote");
+                .Index(t => new { t.MealId, t.MealItemId }, unique: true, name: "IX_MealToItem");
+            
+            CreateTable(
+                "dbo.Meals",
+                c => new
+                    {
+                        MealId = c.Int(nullable: false, identity: true),
+                    })
+                .PrimaryKey(t => t.MealId);
+            
+            CreateTable(
+                "dbo.MealToPeriods",
+                c => new
+                    {
+                        MealToPeriodId = c.Int(nullable: false, identity: true),
+                        MealPeriodId = c.Int(nullable: false),
+                        MealId = c.Int(nullable: false),
+                        Date = c.DateTime(nullable: false, storeType: "date"),
+                    })
+                .PrimaryKey(t => t.MealToPeriodId)
+                .ForeignKey("dbo.MealPeriods", t => t.MealPeriodId, cascadeDelete: true)
+                .ForeignKey("dbo.Meals", t => t.MealId, cascadeDelete: true)
+                .Index(t => t.MealPeriodId)
+                .Index(t => t.MealId);
             
             CreateTable(
                 "dbo.MealPeriods",
@@ -446,6 +451,7 @@ namespace Dsp.Migrations
                         DateTimeOccurred = c.DateTime(nullable: false),
                         EventName = c.String(nullable: false, maxLength: 50),
                         DurationHours = c.Double(nullable: false),
+                        CreatedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.EventId)
                 .ForeignKey("dbo.Members", t => t.SubmitterId)
@@ -461,6 +467,7 @@ namespace Dsp.Migrations
                         Description = c.String(maxLength: 100),
                         DateOfShift = c.DateTime(nullable: false),
                         DateTimeSignedUp = c.DateTime(),
+                        CreatedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.SignupId)
                 .ForeignKey("dbo.SoberTypes", t => t.SoberTypeId, cascadeDelete: true)
@@ -654,8 +661,8 @@ namespace Dsp.Migrations
                         SubmittedOn = c.DateTime(nullable: false),
                         FirstName = c.String(nullable: false, maxLength: 50),
                         LastName = c.String(nullable: false, maxLength: 50),
-                        StudentNumber = c.String(nullable: false),
-                        PhoneNumber = c.String(nullable: false),
+                        StudentNumber = c.String(nullable: false, maxLength: 15),
+                        PhoneNumber = c.String(nullable: false, maxLength: 15),
                         Email = c.String(nullable: false, maxLength: 50),
                         Address1 = c.String(nullable: false, maxLength: 100),
                         Address2 = c.String(maxLength: 100),
@@ -667,6 +674,8 @@ namespace Dsp.Migrations
                         ActSatScore = c.Int(nullable: false),
                         Gpa = c.Double(nullable: false),
                         HearAboutScholarship = c.String(nullable: false, maxLength: 100),
+                        CommitteeResponse = c.String(),
+                        CommitteeRespondedOn = c.DateTime(),
                     })
                 .PrimaryKey(t => t.ScholarshipSubmissionId)
                 .ForeignKey("dbo.ScholarshipApps", t => t.ScholarshipAppId, cascadeDelete: true)
@@ -681,25 +690,10 @@ namespace Dsp.Migrations
                     })
                 .PrimaryKey(t => t.ScholarshipTypeId);
             
-            CreateTable(
-                "dbo.SemesterClasses",
-                c => new
-                    {
-                        ClassId = c.Int(nullable: false),
-                        SemesterId = c.Int(nullable: false),
-                        SemesterClassId = c.Int(nullable: false, identity: true),
-                    })
-                .PrimaryKey(t => t.SemesterClassId)
-                .ForeignKey("dbo.Classes", t => t.ClassId, cascadeDelete: true)
-                .ForeignKey("dbo.Semesters", t => t.SemesterId, cascadeDelete: true)
-                .Index(t => new { t.ClassId, t.SemesterId }, unique: true, name: "IX_SemesterClass");
-            
         }
         
         public override void Down()
         {
-            DropForeignKey("dbo.SemesterClasses", "SemesterId", "dbo.Semesters");
-            DropForeignKey("dbo.SemesterClasses", "ClassId", "dbo.Classes");
             DropForeignKey("dbo.ScholarshipAppQuestions", "ScholarshipQuestionId", "dbo.ScholarshipQuestions");
             DropForeignKey("dbo.ScholarshipApps", "ScholarshipTypeId", "dbo.ScholarshipTypes");
             DropForeignKey("dbo.ScholarshipSubmissions", "ScholarshipAppId", "dbo.ScholarshipApps");
@@ -726,14 +720,13 @@ namespace Dsp.Migrations
             DropForeignKey("dbo.PhoneNumbers", "UserId", "dbo.Members");
             DropForeignKey("dbo.Members", "StatusId", "dbo.MemberStatuses");
             DropForeignKey("dbo.MealVotes", "UserId", "dbo.Members");
-            DropForeignKey("dbo.MealLatePlates", "UserId", "dbo.Members");
-            DropForeignKey("dbo.MealToPeriods", "MealPeriodId", "dbo.MealPeriods");
-            DropForeignKey("dbo.MealLatePlates", "MealToPeriodId", "dbo.MealToPeriods");
-            DropForeignKey("dbo.MealToPeriods", "MealId", "dbo.Meals");
-            DropForeignKey("dbo.MealToItems", "MealId", "dbo.Meals");
             DropForeignKey("dbo.MealVotes", "MealItemId", "dbo.MealItems");
             DropForeignKey("dbo.MealToItems", "MealItemId", "dbo.MealItems");
+            DropForeignKey("dbo.MealToPeriods", "MealId", "dbo.Meals");
+            DropForeignKey("dbo.MealToPeriods", "MealPeriodId", "dbo.MealPeriods");
+            DropForeignKey("dbo.MealToItems", "MealId", "dbo.Meals");
             DropForeignKey("dbo.MealItems", "MealItemTypeId", "dbo.MealItemTypes");
+            DropForeignKey("dbo.MealPlates", "UserId", "dbo.Members");
             DropForeignKey("dbo.MajorToMembers", "UserId", "dbo.Members");
             DropForeignKey("dbo.MemberLogins", "UserId", "dbo.Members");
             DropForeignKey("dbo.Members", "BigBroId", "dbo.Members");
@@ -757,7 +750,6 @@ namespace Dsp.Migrations
             DropForeignKey("dbo.ClassesTaken", "ClassId", "dbo.Classes");
             DropForeignKey("dbo.MemberClaims", "UserId", "dbo.Members");
             DropForeignKey("dbo.Addresses", "UserId", "dbo.Members");
-            DropIndex("dbo.SemesterClasses", "IX_SemesterClass");
             DropIndex("dbo.ScholarshipSubmissions", new[] { "ScholarshipAppId" });
             DropIndex("dbo.ScholarshipApps", new[] { "ScholarshipTypeId" });
             DropIndex("dbo.ScholarshipAppQuestions", new[] { "ScholarshipQuestionId" });
@@ -782,12 +774,12 @@ namespace Dsp.Migrations
             DropIndex("dbo.RoomToMembers", new[] { "UserId" });
             DropIndex("dbo.RoomToMembers", new[] { "RoomId" });
             DropIndex("dbo.PhoneNumbers", new[] { "UserId" });
-            DropIndex("dbo.MealVotes", "IX_MealVote");
-            DropIndex("dbo.MealItems", new[] { "MealItemTypeId" });
-            DropIndex("dbo.MealToItems", "IX_MealToItem");
             DropIndex("dbo.MealToPeriods", new[] { "MealId" });
             DropIndex("dbo.MealToPeriods", new[] { "MealPeriodId" });
-            DropIndex("dbo.MealLatePlates", "IX_MealLatePlate");
+            DropIndex("dbo.MealToItems", "IX_MealToItem");
+            DropIndex("dbo.MealItems", new[] { "MealItemTypeId" });
+            DropIndex("dbo.MealVotes", "IX_MealVote");
+            DropIndex("dbo.MealPlates", new[] { "UserId" });
             DropIndex("dbo.MemberLogins", new[] { "UserId" });
             DropIndex("dbo.LaundrySignups", new[] { "UserId" });
             DropIndex("dbo.IncidentReports", new[] { "ReportedBy" });
@@ -810,7 +802,6 @@ namespace Dsp.Migrations
             DropIndex("dbo.Members", new[] { "PledgeClassId" });
             DropIndex("dbo.Members", new[] { "StatusId" });
             DropIndex("dbo.Addresses", new[] { "UserId" });
-            DropTable("dbo.SemesterClasses");
             DropTable("dbo.ScholarshipTypes");
             DropTable("dbo.ScholarshipSubmissions");
             DropTable("dbo.ScholarshipApps");
@@ -834,13 +825,13 @@ namespace Dsp.Migrations
             DropTable("dbo.PhoneNumbers");
             DropTable("dbo.MemberStatuses");
             DropTable("dbo.MealPeriods");
-            DropTable("dbo.MealVotes");
+            DropTable("dbo.MealToPeriods");
+            DropTable("dbo.Meals");
+            DropTable("dbo.MealToItems");
             DropTable("dbo.MealItemTypes");
             DropTable("dbo.MealItems");
-            DropTable("dbo.MealToItems");
-            DropTable("dbo.Meals");
-            DropTable("dbo.MealToPeriods");
-            DropTable("dbo.MealLatePlates");
+            DropTable("dbo.MealVotes");
+            DropTable("dbo.MealPlates");
             DropTable("dbo.MemberLogins");
             DropTable("dbo.LaundrySignups");
             DropTable("dbo.IncidentReports");
