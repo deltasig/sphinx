@@ -12,7 +12,7 @@ namespace Dsp.Entities
         [Required, Display(Name = "Department")]
         public int DepartmentId { get; set; }
 
-        [Required, MinLength(1), StringLength(15), DataType(DataType.Text), Display(Name = "Number")]
+        [Required, MinLength(1), StringLength(50), DataType(DataType.Text), Display(Name = "Number")]
         public string CourseShorthand { get; set; }
 
         [Required, MinLength(1), StringLength(100), Display(Name = "Name")]

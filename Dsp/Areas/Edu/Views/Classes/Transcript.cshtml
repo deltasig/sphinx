@@ -40,15 +40,16 @@
                 @Html.ValidationSummary(true)
 
                     <div class="panel panel-default">
-                        <div class="panel-body">
-                            <table class="table table-responsive table-condensed">
+                        <div class="table-responsive ">
+                            <table class="table table-condensed table-hover">
                                 <thead>
-                                    <tr>
-                                        <th>Semester</th>
-                                        <th>Class</th>
-                                        <th>Midterm Grade</th>
-                                        <th>Final Grade</th>
-                                        <th>Dropped</th>
+                                    <tr class="active">
+                                        <th class="col-sm-1">Semester</th>
+                                        <th class="col-sm-2">Number</th>
+                                        <th>Name</th>
+                                        <th class="col-sm-1">Midterm</th>
+                                        <th class="col-sm-1">Final</th>
+                                        <th class="col-sm-1">Dropped</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -61,35 +62,33 @@
                                         @Html.HiddenFor(m => Model[i].ClassTaken.IsSummerClass)
                                         <tr>
                                             <td>
-                                                @(Model[i].ClassTaken.IsSummerClass 
-                                                    ? "Summer " + Model[i].ClassTaken.Semester.DateStart.Year 
+                                                @(Model[i].ClassTaken.IsSummerClass
+                                                    ? "Summer " + Model[i].ClassTaken.Semester.DateStart.Year
                                                     : Model[i].ClassTaken.Semester.ToString())
                                             </td>
-                                            <td>
-                                                @Model[i].ClassTaken.Class.CourseShorthand
-                                                <a data-toggle="tooltip" data-placement="top"
-                                                   title="@Model[i].ClassTaken.Class.CourseName">
-                                                    <i class="fa fa-info-circle"></i>
-                                                </a>
-                                            </td>
+                                            <td>@Model[i].ClassTaken.Class.CourseShorthand</td>
+                                            <td>@Model[i].ClassTaken.Class.CourseName</td>
                                             <td>
                                                 @Html.DropDownListFor(m => Model[i].ClassTaken.MidtermGrade,
                                                     new SelectList(Model[i].Grades, "Value", "Text", Model[i].ClassTaken.MidtermGrade),
-                                                    new { @class = "form-control" })
+                                                    new { @class = "form-control", style = "width:auto" })
                                             </td>
                                             <td>
                                                 @Html.DropDownListFor(m => Model[i].ClassTaken.FinalGrade,
                                                     new SelectList(Model[i].Grades, "Value", "Text", Model[i].ClassTaken.FinalGrade),
-                                                    new { @class = "form-control" })
+                                                 new { @class = "form-control", style = "width:auto" })
                                             </td>
                                             <td>
-                                                @Html.EditorFor(m => Model[i].ClassTaken.Dropped, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.EditorFor(m => Model[i].ClassTaken.Dropped,
+                                             new { htmlAttributes = new { @class = "form-control", style = "width:auto" } })
                                             </td>
+
                                         </tr>
                                     }
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 <button type="submit" class="btn btn-success">Update</button>
             }

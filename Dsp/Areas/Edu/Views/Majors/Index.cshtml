@@ -1,68 +1,63 @@
-﻿@model IEnumerable<Dsp.Entities.Major>
+﻿@using Microsoft.AspNet.Identity
+@model IEnumerable<Dsp.Entities.Major>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Majors";
 }
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
-}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
+    <div class="row row-space">
+        <div class="col-md-6">
+            
+        </div>
+        <div class="col-md-6 text-right">
             <div class="btn-group" role="group" aria-label="...">
                 @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
-            </div>
-        </div>
-        <div class="col-sm-6 text-right">
-            <p>
+                @Html.ActionLink("My Classes", "Schedule", new { userName = User.Identity.GetUserName() }, new { @class = "btn btn-default" })
                 @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                 {
-                    @Html.ActionLink("Add Major", "Create", null, new {@class = "btn btn-sm btn-success"})
+                    @Html.ActionLink("Add Major", "Create", null, new { @class = "btn btn-success" })
                 }
-                @Html.ActionLink("Assign Major", "Assign", null, new {@class = "btn btn-sm btn-success"})
-            </p>
+
+                @Html.ActionLink("Assign Major", "Assign", null, new { @class = "btn btn-success" })
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <table class="table" data-toggle="table" data-classes="table table-condensed"
-                           data-search="true" data-pagination="true" data-page-size="50" data-sort-name="class-number">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Department</th>
-                                <th>Members</th>
-                                <th></th>
-                            </tr>
+                        <tr class="active">
+                            <th class="col-sm-3">Name</th>
+                            <th>Department</th>
+                            <th class="col-sm-2">Members</th>
+                            <th class="col-sm-2"></th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.MajorName</td>
-                                    <td>@item.Department.Name</td>
-                                    <td>@item.MajorToMembers.Count</td>
-                                    <td class="text-right">
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.MajorId })
-                                        @if ((User.IsInRole("Administrator") || User.IsInRole("Academics")) && !item.MajorToMembers.Any())
-                                        {
-                                            @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.MajorId })
-                                        }
-                                    </td>
-                                </tr>
-                            }
+                        @foreach (var item in Model.OrderBy(o => o.MajorName))
+                        {
+                            <tr>
+                                <td>@item.MajorName</td>
+                                <td>@item.Department.Name</td>
+                                <td>@item.MajorToMembers.Count</td>
+                                <td class="text-right">
+                                    @Html.ActionLink("Edit", "Edit", new {id = item.MajorId})
+                                    @if ((User.IsInRole("Administrator") || User.IsInRole("Academics")) && !item.MajorToMembers.Any())
+                                    {
+                                        @: |
+                                        @Html.ActionLink("Delete", "Delete", new {id = item.MajorId})
+                                    }
+                                </td>
+                            </tr>
+                        }
                         </tbody>
                     </table>
                 </div>
+                <div class="panel-footer">Count: @Model.Count()</div>
             </div>
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}

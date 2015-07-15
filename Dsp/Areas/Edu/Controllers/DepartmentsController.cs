@@ -15,6 +15,20 @@
             return View(await _db.Departments.ToListAsync());
         }
 
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var model = await _db.Departments.FindAsync(id);
+            if (model == null)
+            {
+                return HttpNotFound();
+            }
+            return View(model);
+        }
+
         public ActionResult Create()
         {
             return View();

@@ -1,4 +1,5 @@
-﻿@model Dsp.Areas.Edu.Models.ClassScheduleModel
+﻿@using Microsoft.AspNet.Identity
+@model Dsp.Areas.Edu.Models.ClassScheduleModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Class Schedule";
@@ -24,16 +25,16 @@
         </div>
         <div class="col-xs-6 text-right">
             <div class="btn-group" role="group">
-                <a href="@Url.Action("Index", "Classes", new {area = "Edu"})" class="btn btn-default">Classes</a>
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
                 <a href="@Url.Action("Schedule", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
                    class="btn btn-default active">
-                    My Schedule
+                    Schedule
                 </a>
                 @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)
                 {
                     <a href="@Url.Action("Transcript", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
                        class="btn btn-default">
-                        My Transcript
+                        Transcript
                     </a>
                 }
             </div>
@@ -118,7 +119,7 @@
                     <div class="table-responsive">
                         <table class="table table-condensed table-hover">
                             <thead>
-                                <tr>
+                                <tr class="active">
                                     <th>Semester</th>
                                     <th>Course</th>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))

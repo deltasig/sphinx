@@ -62,7 +62,11 @@
             <div class="form-group">
                 <dl class="dl-horizontal">
                     <dt>Department</dt>
-                    <dd>@Html.DisplayFor(m => m.Class.Department.Name)</dd>
+                    <dd>
+                        <a href="@Url.Action("Details", "Departments", new { id = Model.Class.Department.DepartmentId })">
+                            @Model.Class.Department.Name
+                        </a>
+                    </dd>
                     <dt>Enrolled (all-time)</dt>
                     <dd>@Model.Class.ClassesTaken.Count</dd>
                     <dt>Enrolled (currently)</dt>
