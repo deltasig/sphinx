@@ -22,7 +22,7 @@ namespace Dsp.Entities
 
         public DateTime? DateTimeSignedUp { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
         [ForeignKey("SoberTypeId")]
         public virtual SoberType SoberType { get; set; }

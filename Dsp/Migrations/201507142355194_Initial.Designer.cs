@@ -13,7 +13,7 @@ namespace Dsp.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201506082236541_Initial"; }
+            get { return "201507142355194_Initial"; }
         }
         
         string IMigrationMetadata.Source

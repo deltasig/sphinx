@@ -40,9 +40,9 @@
         [Display(Name = "Shirt Size")]
         public string ShirtSize { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
 
-        public DateTime LastUpdatedOn { get; set; }
+        public DateTime? LastUpdatedOn { get; set; }
 
         [ForeignKey("StatusId")]
         public virtual MemberStatus MemberStatus { get; set; }
