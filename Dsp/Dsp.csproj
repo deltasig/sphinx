@@ -241,6 +241,10 @@
     <Compile Include="Migrations\201507150136182_IncreasedClassShorthand.Designer.cs">
       <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507152053564_LeaderPKRefactoring.cs" />
+    <Compile Include="Migrations\201507152053564_LeaderPKRefactoring.Designer.cs">
+      <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -893,6 +897,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507150136182_IncreasedClassShorthand.resx">
       <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507152053564_LeaderPKRefactoring.resx">
+      <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
