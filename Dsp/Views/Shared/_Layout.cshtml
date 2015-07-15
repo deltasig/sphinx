@@ -15,36 +15,37 @@
     @Scripts.Render("~/bundles/jquery")
 </head>
 <body>
-    <div id="wrapper">
-        @if (ViewContext.RouteData.DataTokens["area"] == null || !Request.IsAuthenticated)
-        {
-            @Html.Partial("_NavExternal")
-        }
-        else
-        {
-            @Html.Partial("_NavInternal")
-        }
-        @Html.Partial("_Title")
-        <div id="page-wrapper">
-            @RenderBody()
-        </div>
+<div id="wrapper">
+    @if ((ViewContext.RouteData.DataTokens["area"] == null && ViewContext.RouteData.Values["action"].ToString() != "logs")
+         || !Request.IsAuthenticated)
+    {
+        @Html.Partial("_NavExternal")
+    }
+    else
+    {
+        @Html.Partial("_NavInternal")
+    }
+    @Html.Partial("_Title")
+    <div id="page-wrapper">
+        @RenderBody()
     </div>
+</div>
 
-    @Scripts.Render("~/bundles/bootstrap-core")
-    @RenderSection("scripts", required: false)
-    <script type="text/javascript">
+@Scripts.Render("~/bundles/bootstrap-core")
+@RenderSection("scripts", required: false)
+<script type="text/javascript">
 
-        $(function () {
-            setTimeout(function () {
-                $("#success-message").alert('close');
-                $("#failure-message").alert('close');
-                $("#message").alert('close');
-            }, 10000);
+    $(function() {
+        setTimeout(function() {
+            $("#success-message").alert('close');
+            $("#failure-message").alert('close');
+            $("#message").alert('close');
+        }, 10000);
 
-            $("[data-toggle=\"tooltip\"]").tooltip();
-            $("[data-toggle=\"popover\"]").tooltip();
-        });
+        $("[data-toggle=\"tooltip\"]").tooltip();
+        $("[data-toggle=\"popover\"]").tooltip();
+    });
 
-    </script>
+</script>
 </body>
 </html>
