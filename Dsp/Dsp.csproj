@@ -237,6 +237,10 @@
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
       <DependentUpon>201507142355194_Initial.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507150136182_IncreasedClassShorthand.cs" />
+    <Compile Include="Migrations\201507150136182_IncreasedClassShorthand.Designer.cs">
+      <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -676,6 +680,7 @@
       <DependentUpon>bootstrap.css</DependentUpon>
     </Content>
     <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Details.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -885,6 +890,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201507142355194_Initial.resx">
       <DependentUpon>201507142355194_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507150136182_IncreasedClassShorthand.resx">
+      <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
