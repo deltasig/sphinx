@@ -27,7 +27,7 @@ namespace Dsp.Entities
         [Range(0.5, 1000, ErrorMessage = "Please enter a number from 0-1000")]
         public double DurationHours { get; set; }
 
-        public DateTime CreatedOn { get; set; }
+        public DateTime? CreatedOn { get; set; }
         
         [ForeignKey("SubmitterId")]
         public virtual Member Submitter { get; set; }
