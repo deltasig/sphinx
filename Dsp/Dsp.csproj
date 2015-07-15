@@ -233,6 +233,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
+    <Compile Include="Data\ElmahDbContext.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
       <DependentUpon>201507142355194_Initial.cs</DependentUpon>
@@ -797,9 +798,11 @@
     </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -873,6 +876,7 @@
     <Content Include="Views\Shared\_TitleExternal.cshtml" />
     <Content Include="Views\Shared\_LoginExternalPartial.cshtml" />
     <Content Include="Views\Shared\_PagerPartial.cshtml" />
+    <Content Include="Views\Error\Logs.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
