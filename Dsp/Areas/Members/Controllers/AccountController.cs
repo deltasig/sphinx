@@ -153,8 +153,8 @@
             {
                 case SignInStatus.Success:
                     if (string.IsNullOrEmpty(model.ReturnUrl))
-                    return RedirectToAction("Index", "Home", new { area = "Sphinx" });
-                return Redirect(model.ReturnUrl);
+                        return RedirectToAction("Index", "Home", new { area = "Sphinx" });
+                    return Redirect(model.ReturnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:

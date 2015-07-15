@@ -4,9 +4,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Schedule";
 }
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
-}
 
 <div class="container-fluid">
     <div class="row">
@@ -40,74 +37,84 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed table-hover"
-                           data-search="true" data-pagination="true" data-page-size="25">
-                        <thead>
+                <div class="panel-heading">Future Sober Signups</div>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                    <tr class="active">
+                        <th class="col-sm-2"><small>Date</small></th>
+                        <th class="col-sm-3"><small>Type</small></th>
+                        <th><small>Description</small></th>
+                        <th class="col-sm-2"><small>Volunteer</small></th>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                        {
+                            <th class="col-sm-2"></th>
+                        }
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model.OrderBy(s => s.DateOfShift).ThenBy(s => s.SoberTypeId).ThenBy(s => s.Description))
+                        {
                             <tr>
-                                <th class="col-sm-2" data-sortable="true" data-field="date">Date</th>
-                                <th class="col-sm-3" data-sortable="true" data-field="request-type">Type</th>
-                                <th data-sortable="true" data-field="description">Description</th>
-                                <th class="col-sm-2" data-sortable="true" data-field="volunteer">Volunteer</th>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                {
-                                    <th class="col-sm-2"></th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.OrderBy(s => s.DateOfShift).ThenBy(s => s.SoberTypeId).ThenBy(s => s.Description))
-                            {
-                                <tr>
-                                    <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
-                                    <td>
-                                        <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">
-                                            <i data-toggle="tooltip" data-placement="top" class="fa fa-info-circle text-info"
-                                               title="Click to learn about this job."></i>
-                                        </a>
-                                        @item.SoberType.Name
-                                    </td>
-                                    <td>@item.Description</td>
-                                    <td>
-                                        @if (item.UserId == null)
+                                <td>@item.DateOfShift.ToString("MM-dd-yyyy")</td>
+                                <td>
+                                    <a href="@Url.Action("Info", "SoberTypes", new {id = item.SoberTypeId})">
+                                        <i data-toggle="tooltip" data-placement="top" class="fa fa-info-circle text-info"
+                                           title="Click to learn about this job."></i>
+                                    </a>
+                                    @item.SoberType.Name
+                                </td>
+                                <td>@item.Description</td>
+                                <td>
+                                    @if (item.UserId == null)
+                                    {
+                                        if (!User.IsInRole("Pledge") || item.SoberType.Name == "Officer")
                                         {
-                                            if (!User.IsInRole("Pledge") || item.SoberType.Name == "Officer")
-                                            {
-                                                @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null)
-                                            }
+                                            @Html.ActionLink("Sign up", "Signup", "Sobers", new {id = item.SignupId, area = "Sphinx"}, null)
                                         }
-                                        else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                    }
+                                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                    {
+                                        using (Html.BeginForm("CancelSignup", "Sobers", new {id = item.SignupId, area = "Sphinx"},
+                                            FormMethod.Get, new {style = "display: inline"}))
                                         {
-                                            using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
-                                                FormMethod.Get, new { style = "display: inline" }))
-                                            {
-                                                <button type="submit" class="btn btn-sm btn-link" style="padding:0;  color:#d9534f; display:inline">
-                                                    <i class="fa fa-minus-square"></i>
-                                                </button>
-                                                @item.Member.ToString()
-                                            }
-                                        }
-                                        else
-                                        {
+                                            <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
+                                                <i class="fa fa-minus-square"></i>
+                                            </button>
                                             @item.Member.ToString()
                                         }
-                                    </td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                    {
-                                        <td class="text-right">
-                                            <a class="" href="@Url.Action("EditSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" })">
-                                                Edit
-                                            </a> |
-                                            <a class="" href="@Url.Action("DeleteSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" })">
-                                                Delete
-                                            </a>
-                                        </td>
                                     }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+                                    else
+                                    {
+                                        @item.Member.ToString()
+                                    }
+                                </td>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                                {
+                                    <td class="text-right">
+                                        <a class="" href="@Url.Action("EditSignup", "Sobers", new {id = item.SignupId, area = "Sphinx"})">
+                                            Edit
+                                        </a> |
+                                        <a class="" href="@Url.Action("DeleteSignup", "Sobers", new {id = item.SignupId, area = "Sphinx"})">
+                                            Delete
+                                        </a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="warning">
+                            <td colspan="@(User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms") ? "5" : "4")">
+                                No sober signups have been posted.
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div class="panel-footer">Count: @Model.Count()</div>
             </div>
         </div>
     </div>
@@ -118,7 +125,3 @@
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}

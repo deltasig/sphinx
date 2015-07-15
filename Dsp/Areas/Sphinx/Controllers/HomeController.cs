@@ -14,7 +14,8 @@
         [HttpGet]
         public async Task<ActionResult> Index(string message = "")
         {
-            ViewBag.FailMessage = message;
+            ViewBag.Message = message;
+
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
             var member = await UserManager.FindByIdAsync(user.Id);
             var events = await GetAllCompletedEventsForUserAsync(user.Id);

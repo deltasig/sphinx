@@ -5,6 +5,7 @@
     using Extensions;
     using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -17,14 +18,9 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class SobersController : BaseController
     {
-        public async Task<ActionResult> Schedule(string message)
+        public async Task<ActionResult> Schedule(SoberMessage? message)
         {
-            ViewBag.Message = string.Empty;
-
-            if (!string.IsNullOrEmpty(message))
-            {
-                ViewBag.Message = message;
-            }
+            SetSoberMessage(message);
 
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date).AddDays(-1).AddHours(3);
 
@@ -36,8 +32,10 @@
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public async Task<ActionResult> Manager()
+        public async Task<ActionResult> Manager(SoberMessage? message)
         {
+            SetSoberMessage(message);
+
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
             var vacantSignups = await _db.SoberSignups
                 .Where(s => s.DateOfShift >= startOfTodayUtc &&
@@ -63,7 +61,7 @@
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
         public async Task<ActionResult> AddSignup(SoberManagerModel model)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Manager");
+            if (!ModelState.IsValid) return RedirectToAction("Manager", new { message = SoberMessage.AddSignupFailure });
             
             model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
             model.NewSignup.CreatedOn = DateTime.UtcNow;
@@ -71,7 +69,7 @@
             _db.SoberSignups.Add(model.NewSignup);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Manager");
+            return RedirectToAction("Manager", new { message = SoberMessage.AddSignupSuccess });
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
@@ -79,7 +77,7 @@
         {
             if ((model.MultiAddModel.DriverAmount == 0 && model.MultiAddModel.OfficerAmount == 0) ||
                 string.IsNullOrEmpty(model.MultiAddModel.DateString))
-                return RedirectToAction("Manager");
+                return RedirectToAction("Manager", new { message = SoberMessage.MultiAddSignupFailure });
 
             var dateStrings = model.MultiAddModel.DateString.Split(',');
             var driverType = await _db.SoberTypes.SingleOrDefaultAsync(t => t.Name == "Driver");
@@ -87,14 +85,7 @@
 
             if (driverType == null || officerType == null)
             {
-                return RedirectToAction("Index", "Home", new
-                {
-                    area = "Sphinx",
-                    message = "There was an error with the multi-add tool.  " +
-                              "This is most likely because the sober types Driver and Officer do not both exist.  " +
-                              "If Driver and Officer types exist exactly as they are spelled here and you still " +
-                              "get this message, contact Ty Morrow."
-                });
+                return RedirectToAction("Manager", new { message = SoberMessage.MultiAddSignupMissingTypesFailure });
             }
 
             if (dateStrings.Any())
@@ -132,11 +123,11 @@
 
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Manager");
+            return RedirectToAction("Manager", new { message = SoberMessage.MultiAddSignupSuccess });
         }
 
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public async Task<ActionResult> DeleteSignup(int? id)
+        public async Task<ActionResult> DeleteSignup(int? id, string returnUrl)
         {
             if (id == null)
             {
@@ -147,10 +138,12 @@
             _db.SoberSignups.Remove(signupToCancel);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule");
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Schedule", new { message = SoberMessage.DeleteSignupSuccess });
+            return Redirect(returnUrl);
         }
 
-        public async Task<ActionResult> Signup(int? id)
+        public async Task<ActionResult> Signup(int? id, string returnUrl)
         {
             if (id == null)
             {
@@ -160,9 +153,17 @@
             var signup = await _db.SoberSignups.FindAsync(id);
 
             if (signup.UserId != null)
-                return RedirectToAction("Schedule");
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                    return RedirectToAction("Schedule", new { message = SoberMessage.SignupFailure });
+                return Redirect(returnUrl);
+            }
             if (User.IsInRole("Pledge") && signup.SoberType.Name == "Officer")
-                return RedirectToAction("Schedule");
+            {
+                if (string.IsNullOrEmpty(returnUrl))
+                    return RedirectToAction("Schedule", new { message = SoberMessage.SignupPledgeOfficerFailure });
+                return Redirect(returnUrl);
+            }
 
             signup.UserId = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;
             signup.DateTimeSignedUp = DateTime.UtcNow;
@@ -170,10 +171,12 @@
             _db.Entry(signup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index", "Home", new { area = "Sphinx", message = "You have successfully signed up to be sober!" });
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Schedule", new { message = SoberMessage.SignupSuccess });
+            return Redirect(returnUrl);
         }
 
-        public async Task<ActionResult> CancelSignup(int? id)
+        public async Task<ActionResult> CancelSignup(int? id, string returnUrl)
         {
             if (id == null)
             {
@@ -196,36 +199,34 @@
             _db.Entry(signup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            if (User.Identity.GetUserId<int>() != oldUserId)
-                return RedirectToAction("Schedule", "Sobers");
-
-            var member = await UserManager.FindByIdAsync((int)oldUserId);
-            var currentSemesterId = await GetThisSemestersIdAsync();
-            var position = await _db.Roles.SingleAsync(p => p.Name == "Sergeant-at-Arms");
-            var saa = await _db.Leaders.SingleAsync(l => l.SemesterId == currentSemesterId && l.RoleId == position.Id);
-
-            var message = new IdentityMessage
+            if (User.Identity.GetUserId<int>() == oldUserId)
             {
-                Subject = "Sphinx - Sober Signup Cancellation: " + member,
-                Body = member + " has cancelled his signup for " + signup.DateOfShift.ToShortDateString() + ".",
-                Destination = saa.Member.Email
-            };
+                var member = await UserManager.FindByIdAsync((int)oldUserId);
+                var currentSemesterId = await GetThisSemestersIdAsync();
+                var position = await _db.Roles.SingleAsync(p => p.Name == "Sergeant-at-Arms");
+                var saa = await _db.Leaders.SingleAsync(l => l.SemesterId == currentSemesterId && l.RoleId == position.Id);
 
-            try
-            {
-                var emailService = new EmailService();
-                await emailService.SendAsync(message);
+                var message = new IdentityMessage
+                {
+                    Subject = "Sphinx - Sober Signup Cancellation: " + member,
+                    Body = member + " has cancelled his signup for " + signup.DateOfShift.ToShortDateString() + ".",
+                    Destination = saa.Member.Email
+                };
+
+                try
+                {
+                    var emailService = new EmailService();
+                    await emailService.SendAsync(message);
+                }
+                catch (SmtpException e)
+                {
+
+                }
             }
-            catch (SmtpException e)
-            {
 
-            }
-
-            return RedirectToAction("Index", "Home", new
-            {
-                area = "Sphinx", 
-                message = "You have successfully unsigned up to be sober!"
-            });
+            if (string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Schedule", new { message = SoberMessage.CancelSignupSuccess });
+            return Redirect(returnUrl);
         }
 
         [HttpGet, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
@@ -252,7 +253,7 @@
         public async Task<ActionResult> EditSignup(EditSoberSignupModel model)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Schedule", new { message = "Failed to update sober signup." });
+                return RedirectToAction("Schedule", new { message = SoberMessage.EditSignupFailure });
 
             var existingSignup = await _db.SoberSignups.FindAsync(model.SoberSignup.SignupId);
 
@@ -265,7 +266,7 @@
             _db.Entry(existingSignup).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { message = "Successfully updated sober signup." });
+            return RedirectToAction("Schedule", new { message = SoberMessage.EditSignupSuccess });
         }
 
         [HttpGet]

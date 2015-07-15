@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Dsp.Entities.SoberSignup>
 @{
     var dates = Model.Select(s => s.DateOfShift).Distinct();
+    var returnUrl = Request.RawUrl.Split('?')[0];
 }
 
 <!-- Standard view. -->
@@ -17,17 +18,16 @@
             @foreach (var date in dates)
             {
                 <tr class="active">
-                    <td>
+                    <td colspan="2">
                         <small>
                             @date.DayOfWeek.ToString(), @date.ToString("MMMM dd")
                         </small>
                     </td>
-                    <td></td>
                 </tr>
                 foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
                 {
                     <tr class="@(item.Member == null ? "" : item.Member.UserName == User.Identity.Name ? "warning" : "")">
-                        <td>
+                        <td class="col-xs-5">
                             <small>
                                 <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">
                                     <i data-toggle="tooltip" data-placement="top" class="fa fa-lg fa-info-circle text-info"
@@ -48,7 +48,7 @@
                                     <small>
                                         None
                                     </small>
-                                    <a href="@Url.Action("Signup", "Sobers", new {id = item.SignupId, area = "Sphinx"})"
+                                    <a href="@Url.Action("Signup", "Sobers", new { id = item.SignupId, returnUrl })"
                                         class="social pull-right"
                                         data-toggle="tooltip" data-placement="left"
                                         title="Sign up">
@@ -62,16 +62,12 @@
 
                                 if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                                 {
-                                    using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, 
-                                           FormMethod.Get, new { style = "display: inline" }))
-                                    {
-                                        <button type="submit" class="btn btn-sm btn-link"
-                                                style="padding: 0; color: #d9534f; display: inline; margin:0"
-                                                data-toggle="tooltip" data-placement="top"
-                                                title="Cancel signup">
-                                            <i class="fa fa-minus-square fa-lg"></i>
-                                        </button>
-                                    }
+                                    <a href="@Url.Action("CancelSignup", "Sobers", new { id = item.SignupId, returnUrl })"
+                                       class="social"
+                                       data-toggle="tooltip" data-placement="top"
+                                       title="Cancel signup">
+                                        <i class="fa fa-minus-square fa-lg text-danger"></i>
+                                    </a>
                                 }
                                 
                                 <small id="@item.SignupId">
@@ -85,20 +81,20 @@
 
                                 <button class="btn btn-link pull-right" id="@(item.SignupId)show" type="button"
                                         style="padding: 0; display: inline; margin: 0; border: none"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Click to copy to clipboard">
+                                        data-toggle="tooltip" data-placement="left"
+                                        title="Copy to clipboard">
                                     <i class="fa fa-phone-square fa-lg text-info"></i>
                                 </button>
                                 <script>
-                                    $('#@(item.SignupId)num').hide();
+                                    $('#@(item.SignupId)num').addClass('hidden');
                                     $('#@(item.SignupId)show').hover(function () {
-                                        $('#@(item.SignupId)').hide();
+                                        $('#@(item.SignupId)').addClass('hidden');
                                         $('#@(item.SignupId)cell').addClass('warning');
-                                        $('#@(item.SignupId)num').show();
+                                        $('#@(item.SignupId)num').removeClass('hidden');
                                     }, function () {
-                                        $('#@(item.SignupId)num').hide();
+                                        $('#@(item.SignupId)num').addClass('hidden');
                                         $('#@(item.SignupId)cell').removeClass('warning');
-                                        $('#@(item.SignupId)').show();
+                                        $('#@(item.SignupId)').removeClass('hidden');
                                     });
                                     $('#@(item.SignupId)show').on("click", function () {
                                         var number = $('#@(item.SignupId)num strong').text().trim();
@@ -150,14 +146,14 @@
                                     @item.DateOfShift.ToString("MM-dd")
                                     (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
                                 </small>
-                                @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, area = "Sphinx" }, null) 
+                                @Html.ActionLink("Sign up", "Signup", "Sobers", new { id = item.SignupId, returnUrl }, null) 
                                 <small>@item.SoberType.Name</small>
                             </td>
                         }
                     }
                     else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
                     {
-                        using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, area = "Sphinx" },
+                        using (Html.BeginForm("CancelSignup", "Sobers", new { id = item.SignupId, returnUrl },
                             FormMethod.Get, new { style = "display: inline" }))
                         {
                             <td>
