@@ -1,7 +1,7 @@
 ﻿@using Dsp.Areas.Edu.Models
 @using Dsp.Entities
 @using Microsoft.AspNet.Identity
-@model Dsp.Areas.Edu.Models.ClassDetailsModel
+@model ClassDetailsModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = Model.Class.CourseShorthand + ": " + Model.Class.CourseName;
@@ -148,8 +148,6 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-cloud-upload"></i> <strong>Upload a New File</strong>
-                    <i data-toggle="tooltip" data-placement="right" title=".pdf files only"
-                       class="fa fa-info-circle text-info"></i>
                 </div>
                 <div class="panel-body">
                     @using (Html.BeginForm("UploadFile", "Classes", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
@@ -161,15 +159,10 @@
                         @Html.HiddenFor(m => Model.Class.CourseShorthand)
 
                         <div class="form-group">
-                            <span class="btn btn-info btn-sm btn-file">
-                                Choose File
-                                <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
-                            </span>
-                            <label id="upload-text"></label>
-                            <div class="pull-right">
-                                <input type="submit" value="Upload" class="btn btn-sm btn-default" />
-                            </div>
+                            <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
+                            <p class="help-block">PDF files only!</p>
                         </div>
+                        <input type="submit" value="Upload" class="btn btn-sm btn-default" />
                     }
                 </div>
             </div>
@@ -202,18 +195,3 @@
         </div>
     </div>
 </div>
-
-@section scripts
-{
-    <script>
-        $(function () {
-            $(document).on("change", ".btn-file :file", function () {
-                var input = $(this),
-                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                $("#upload-text").text(label);
-                input.trigger("fileselect", [numFiles, label]);
-            });
-        });
-    </script>
-}
