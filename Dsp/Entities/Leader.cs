@@ -7,7 +7,7 @@ namespace Dsp.Entities
 
     public class Leader : IdentityUserRole<int>
     {
-        [Key, Required]
+        [Required]
         public int SemesterId { get; set; }
 
         public DateTime AppointedOn { get; set; }
