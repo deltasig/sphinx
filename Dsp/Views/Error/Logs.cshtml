@@ -1,0 +1,65 @@
+﻿@model List<Dsp.Data.ElmahErrorLog>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Error Logs";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-md-6"></div>
+        <div class="col-md-6"></div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading"></div>
+                <ul class="list-group">
+                    @if (Model.Any())
+                    {
+                        foreach (var e in Model.OrderByDescending(o => o.TimeUtc))
+                        {
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <button class="btn btn-xs btn-default pull-right"
+                                                type="button" data-toggle="collapse" data-target="#@e.ErrorId"
+                                                aria-expanded="false" aria-controls="@e.ErrorId">
+                                            Details
+                                        </button>
+                                        <span class="label label-warning">@e.StatusCode</span>
+                                        <small>
+                                            @TimeZoneInfo.ConvertTimeFromUtc(e.TimeUtc, cstZone)
+
+                                        </small>
+                                        @if (!string.IsNullOrEmpty(e.User))
+                                        {
+                                            <span class="label label-default">@e.User</span>
+                                        }
+                                        <br/>
+                                        <small class="hidden-xs">
+                                            @e.Type
+                                        </small>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="collapse" id="@e.ErrorId">
+                                <div class="list-group-item list-group-item-warning">
+                                    <small><strong>@e.Source</strong></small><br/>
+                                    <small>@e.Message</small>
+                                </div>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li class="list-group-item">
+                            No errors have been logged.
+                        </li>
+                    }
+                </ul>
+                <div class="panel-footer"><small>Count: @Model.Count</small></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,8 +7,6 @@
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
-            routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.IgnoreRoute("elmah.axd");
             routes.IgnoreRoute("robots.txt");
             routes.IgnoreRoute("sitemap.xml");
             routes.LowercaseUrls = true;
