@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sober Manager";
+    var returnUrl = Request.RawUrl.Split('?')[0];
 }
 @section styles {
     @Styles.Render("~/content/datepicker")
@@ -25,7 +26,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
             <ul class="nav nav-tabs nav-justified" role="tablist">
                 <li class="active"><a href="#single-add" data-toggle="pill">Single-Add Tool</a></li>
                 <li><a href="#multi-add" data-toggle="pill">Multi-Add Tool</a></li>
@@ -131,27 +132,48 @@
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Volunteers are still needed on the following dates:
+                    Volunteers still needed on the following dates:
                 </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table" style="text-align: left">
-                            <thead>
-                            <tr>
-                                <th>Type</th>
-                                <th>Date</th>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-5"><small>Type</small></th>
+                                <th class="col-xs-4"><small>Date</small></th>
+                                <th class="col-xs-3"></th>
                             </tr>
-                            </thead>
-                            @foreach (var item in Model.Signups)
+                        </thead>
+                        <tbody>
+                            @if (Model.Signups.Any())
                             {
-                                <tr>
-                                    <td>@item.SoberType.Name</td>
-                                    <td>@item.DateOfShift.ToShortDateString()</td>
+                                foreach (var item in Model.Signups)
+                                {
+                                    <tr>
+                                        <td>@item.SoberType.Name</td>
+                                        <td>@item.DateOfShift.ToShortDateString()</td>
+                                        <td class="text-right">
+                                            <small>
+                                                <a class="" href="@Url.Action("EditSignup", "Sobers", new { id = item.SignupId })">
+                                                    Edit
+                                                </a> |
+                                                <a class="" href="@Url.Action("DeleteSignup", "Sobers", new { id = item.SignupId, returnUrl })">
+                                                    Delete
+                                                </a>
+                                            </small>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="warning">
+                                    <td colspan="3">No empty sober signups posted.</td>
                                 </tr>
                             }
-                        </table>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+
             </div>
         </div>
     </div>
