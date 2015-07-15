@@ -61,6 +61,7 @@
             modelBuilder.Entity<Member>().ToTable("Members", "dbo").Property(p => p.Id).HasColumnName("UserId");
             modelBuilder.Entity<Position>().ToTable("Positions", "dbo").Property(p => p.Id).HasColumnName("PositionId");
             modelBuilder.Entity<Leader>().ToTable("Leaders", "dbo").Property(p => p.RoleId).HasColumnName("LeaderId");
+            modelBuilder.Entity<Leader>().HasKey(u => new { u.UserId, u.RoleId, u.SemesterId });
             modelBuilder.Entity<SphinxUserLogin>().ToTable("MemberLogins", "dbo");
             modelBuilder.Entity<SphinxUserClaim>().ToTable("MemberClaims", "dbo");
         }
