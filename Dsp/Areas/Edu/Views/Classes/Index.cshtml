@@ -249,7 +249,7 @@
                 <div class="col-md-6 text-right">
                     <div class="btn-group" role="group" aria-label="...">
                         @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
-                        @Html.ActionLink("My Classes", "Schedule", new { userName = User.Identity.GetUserName() }, new { @class = "btn btn-default" })
+                        @Html.ActionLink("My Classes", "Schedule", "Classes", new { userName = User.Identity.GetUserName() }, new { @class = "btn btn-default" })
                         @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-success" })
                     </div>
                 </div>

@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-5">
             @if ((User.IsInRole("Administrator") || User.IsInRole("Academics")) && ViewBag.UserId.Items.Count <= 1)
             {
                 @Html.ActionLink("All Current Members", "Assign", "Majors", new { area = "Edu", id = "" }, new { @class = "pull-right" })
