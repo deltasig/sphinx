@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Scholarships";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var typeCount = Model.Applications.Select(a => a.Type).Distinct().Count();
 }
 @section Title
 {
@@ -12,87 +13,166 @@
     <meta name="description" content="See what scholarships we are currently offering.">
 }
 <div class="container">
-    @if (!string.IsNullOrEmpty(ViewBag.Message))
-    {
-        <div class="row">
-            <div class="col-xs-12">
-                <div class="alert alert-warning">
-                    <p>
-                        @ViewBag.Message
-                    </p>
-                </div>
-            </div>
-        </div>
-    }
     <div class="row">
         @if (Model.Applications.Any())
         {
-            <div class="col-sm-3">
-                <ul class="nav nav-pills nav-stacked">
-                    @foreach (var t in Model.Types)
+            if (typeCount <= 1)
+            {
+                <div class="col-xs-12">
+                    @foreach (var a in Model.Applications.OrderByDescending(a => a.OpensOn).Take(2))
                     {
-                        if (!t.Applications.Any()) { continue; }
-                        
-                        <li class="@(Model.Types.First() == t ? "active" : "")">
-                            <a href="#@t.ScholarshipTypeId" data-toggle="tab">@t.Name</a>
-                        </li>
-                    }
-                </ul>
-
-            </div>
-            <div class="col-sm-9">
-                <div class="tab-content" style="border: 0">
-                    @foreach (var t in Model.Types)
-                    {
-                        if (!t.Applications.Any()) { continue; }
-                        
-                        <div class="tab-pane @(Model.Types.First() == t ? "active" : "")" id="@t.ScholarshipTypeId">
-                            @foreach (var a in Model.Applications.Where(a => a.ScholarshipTypeId == t.ScholarshipTypeId).Take(2))
-                            {
-                                <h2 class="hidden-xs" style="margin-top: 0">@a.Title</h2>
-                                <h4 class="visible-xs" style="margin-top: 0">@a.Title</h4>
-                                if (a.ClosesOn >= DateTime.UtcNow.AddDays(-1) && a.OpensOn <= DateTime.UtcNow)
-                                {
-                                    <div class="alert alert-success">
-                                        <p>
-                                            Applications are now being accepted until 
-                                            <strong>11:59 PM on @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy")</strong>. 
-                                            @Html.ActionLink("Apply Now!", "Submit", "Applications", new
-                                            {
-                                                area = "Scholarships", id = a.ScholarshipAppId
-                                            }, new
-                                            {
-                                                @class = "btn btn-sm btn-default"
-                                            })
-                                        </p>
-                                    </div>
-                                }
-                                else if (a.OpensOn >= DateTime.UtcNow.AddDays(-1))
-                                {
-                                    <div class="alert alert-success">
-                                        <p>
-                                            Applications are not being accepted <strong>yet</strong>.
-                                            The application period will begin on @TimeZoneInfo.ConvertTimeFromUtc(a.OpensOn, cstZone) <br />
-                                        </p>
-                                    </div>
-                                }
-                                else
-                                {
-                                    <div class="alert alert-warning">
-                                        <p>
-                                            Applications are no longer being accepted for this scholarship. <br />
-                                        </p>
-                                    </div>
-                                }
+                        if (a.ClosesOn >= DateTime.UtcNow.AddDays(-1) && a.OpensOn <= DateTime.UtcNow)
+                        {
+                            <div class="row row-space">
+                                <div class="col-md-10">
+                                    <h2 style="margin-top: 0">@a.Title</h2>
+                                </div>
+                                <div class="col-md-2 hidden-xs hidden-sm text-right">
+                                    <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
+                                       class="btn btn-primary btn-block">
+                                        <i class="fa fa-pencil-square-o"></i> Apply Now!
+                                    </a>
+                                </div>
+                                <div class="col-md-6 visible-xs visible-sm">
+                                    <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
+                                       class="btn btn-primary btn-block">
+                                        <i class="fa fa-pencil-square-o"></i> Apply Now!
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="alert alert-success">
+                                <i class="fa fa-lg fa-exclamation-triangle"></i>
+                                Applications are now being accepted until
+                                <strong>
+                                    11:59 PM on
+                                    @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy").
+                                    <span class="badge">
+                                        <i class="fa fa-clock-o"></i>
+                                        @{ var r = (a.ClosesOn - DateTime.UtcNow); }
+                                        @((int)r.TotalDays == 0 ? "" : (int)r.TotalDays + "d,")
+                                        @(r.Hours == 0 ? "" : r.Hours + "h,")
+                                        @(r.Minutes == 0 ? "" : r.Minutes + "m")
+                                        remaining
+                                    </span>
+                                </strong>
+                            </div>
+                        }
+                        else if (a.OpensOn >= DateTime.UtcNow.AddDays(-1))
+                        {
+                            <h2 style="margin-top: 0">@a.Title</h2>
+                            <div class="alert alert-success">
                                 <p>
-                                    @Html.Raw(a.AdditionalText)
+                                    Applications are not being accepted <strong>yet</strong>.
+                                    The application period will begin on @TimeZoneInfo.ConvertTimeFromUtc(a.OpensOn, cstZone) <br />
                                 </p>
-                                <hr />
-                            }
-                        </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <h2 style="margin-top: 0">@a.Title</h2>
+                            <div class="alert alert-warning">
+                                <p>
+                                    Applications are no longer being accepted for this scholarship. <br />
+                                </p>
+                            </div>
+                        }
+                        <p>
+                            @Html.Raw(a.AdditionalText)
+                        </p>
+                        <hr />
                     }
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="col-sm-3">
+                    <ul class="nav nav-pills nav-stacked">
+                        @foreach (var t in Model.Types)
+                        {
+                            if (!t.Applications.Any())
+                            {
+                                continue;
+                            }
+
+                            <li class="@(Model.Types.First() == t ? "active" : "")">
+                                <a href="#@t.ScholarshipTypeId" data-toggle="tab">@t.Name</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div class="col-sm-9">
+                    <div class="tab-content" style="border: 0">
+                        @foreach (var t in Model.Types)
+                        {
+                            if (!t.Applications.Any()) { continue; }
+
+                            <div class="tab-pane @(Model.Types.First() == t ? "active" : "")" id="@t.ScholarshipTypeId">
+                                @foreach (var a in Model.Applications.Where(a => a.ScholarshipTypeId == t.ScholarshipTypeId).Take(2))
+                                {
+                                    if (a.ClosesOn >= DateTime.UtcNow.AddDays(-1) && a.OpensOn <= DateTime.UtcNow)
+                                    {
+                                        <div class="row row-space">
+                                            <div class="col-md-10">
+                                                <h2 style="margin-top: 0">@a.Title</h2>
+                                            </div>
+                                            <div class="col-md-2 hidden-xs hidden-sm text-right">
+                                                <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
+                                                   class="btn btn-primary btn-block">
+                                                    <i class="fa fa-pencil-square-o"></i> Apply Now!
+                                                </a>
+                                            </div>
+                                            <div class="col-md-6 visible-xs visible-sm">
+                                                <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
+                                                   class="btn btn-primary btn-block">
+                                                    <i class="fa fa-pencil-square-o"></i> Apply Now!
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="alert alert-success">
+                                            <i class="fa fa-lg fa-exclamation-triangle"></i>
+                                            Applications are now being accepted until
+
+                                            <strong>
+                                                11:59 PM on
+                                                @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy").
+                                                <span class="badge">
+                                                    <i class="fa fa-clock-o"></i>
+                                                    @{ var r = (a.ClosesOn - DateTime.UtcNow); }
+                                                    @((int)r.TotalDays == 0 ? "" : (int)r.TotalDays + "d,")
+                                                    @(r.Hours == 0 ? "" : r.Hours + "h,")
+                                                    @(r.Minutes == 0 ? "" : r.Minutes + "m")
+                                                    remaining
+                                                </span>
+                                            </strong>
+                                        </div>
+                                    }
+                                    else if (a.OpensOn >= DateTime.UtcNow.AddDays(-1))
+                                    {
+                                        <div class="alert alert-success">
+                                            <p>
+                                                Applications are not being accepted <strong>yet</strong>.
+                                                The application period will begin on @TimeZoneInfo.ConvertTimeFromUtc(a.OpensOn, cstZone) <br />
+                                            </p>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning">
+                                            <p>
+                                                Applications are no longer being accepted for this scholarship. <br />
+                                            </p>
+                                        </div>
+                                    }
+                                    <p>
+                                        @Html.Raw(a.AdditionalText)
+                                    </p>
+                                    <hr />
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
         }
         else
         {

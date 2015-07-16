@@ -238,14 +238,16 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-
+            
             var model = new SubmitScholarshipAppModel();
             model.Submission = new ScholarshipSubmission();
             model.App = await _db.ScholarshipApps.FindAsync(id);
+
             if (model.App == null)
             {
                 return HttpNotFound();
             }
+
             model.Submission.ScholarshipAppId = (int)id;
             model.Answers = new List<ScholarshipAnswer>();
             foreach (var q in model.App.Questions.OrderBy(q => q.FormOrder))
@@ -262,7 +264,11 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(SubmitScholarshipAppModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+            {
+                ViewBag.FailMessage = GetResultMessage(ApplicationsMessageId.SubmissionFailure);
+                return View(model);
+            }
 
             model.Submission.SubmittedOn = DateTime.UtcNow;
             _db.ScholarshipSubmissions.Add(model.Submission);
@@ -287,7 +293,7 @@
             return RedirectToAction("Scholarships", "Home", new
             {
                 Area = "",
-                message = "Your scholarship was submited successfully.  You should receive a confirmation email shortly."
+                message = ApplicationsMessageId.SubmissionSuccess
             });
         }
 
@@ -377,6 +383,13 @@
                 : message == ApplicationsMessageId.ApplicationCreationFailure ? "Application creation failed because of an internal issue with questions. Please contact your administrator."
                 : message == ApplicationsMessageId.UpdateSuccess ? "Application updated successfully."
                 : message == ApplicationsMessageId.UpdateFailure ? "Application update failed for an unspecified reason, please contact your administrator."
+                : message == ApplicationsMessageId.SubmissionSuccess ? "Your application was submitted successfully. You should receive a confirmation email shortly."
+                : message == ApplicationsMessageId.SubmissionFailureUnknown ? "Your application could not be submitted because of some system error.  " +
+                                                                       "We are very sorry for the inconvenience. " +
+                                                                       "Please contact the person overseeing the scholarship and let them know you " +
+                                                                       "received this error."
+                : message == ApplicationsMessageId.SubmissionFailure ? "Your application could not be submitted.  Please check the information you provided and try again.  " +
+                                                                       "If you continue to receive this error, please contact the person in charge of the scholarship."
                 : "";
         }
 
@@ -388,7 +401,10 @@
             ApplicationDeletedSuccess,
             ApplicationCreationFailure,
             UpdateSuccess,
-            UpdateFailure
+            UpdateFailure,
+            SubmissionSuccess,
+            SubmissionFailure,
+            SubmissionFailureUnknown
         }
     }
 }
