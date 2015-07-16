@@ -2,35 +2,16 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Transcript";
-    ViewBag.Subtitle = ViewBag.UserName;
-    var semesters = Model.Select(m => m.ClassTaken).Select(c => c.Semester).Distinct();
+    ViewBag.Subtitle = ViewBag.Name;
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-6">
-            <a href="@Url.Action("Index", "Roster", new { area = "Members" })" class="btn btn-sm btn-default">
-                <i class="fa fa-caret-left"></i> Back to Roster
-            </a>
-        </div>
-        <div class="col-xs-6 text-right">
-            <div class="btn-group" role="group">
-                <a href="@Url.Action("Index", "Classes", new {area = "Edu"})" class="btn btn-default">Classes</a>
-                <a href="@Url.Action("Schedule", "Classes", new {userName = ViewBag.UserName, area = "Edu"})"
-                   class="btn btn-default">
-                    My Schedule
-                </a>
-                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == ViewBag.UserName)
-                {
-                    <a href="@Url.Action("Transcript", "Classes", new { userName = ViewBag.UserName, area = "Edu" })"
-                       class="btn btn-default active">
-                        My Transcript
-                    </a>
-                }
+    <div class="row row-space">
+        <div class="col-xs-12 text-right">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
             </div>
         </div>
-        <br />
-        <br />
     </div>
     <div class="row">
         <div class="col-xs-12">
@@ -44,7 +25,7 @@
                             <table class="table table-condensed table-hover">
                                 <thead>
                                     <tr class="active">
-                                        <th class="col-sm-1">Semester</th>
+                                        <th class="col-sm-2">Semester</th>
                                         <th class="col-sm-2">Number</th>
                                         <th>Name</th>
                                         <th class="col-sm-1">Midterm</th>
@@ -76,7 +57,7 @@
                                             <td>
                                                 @Html.DropDownListFor(m => Model[i].ClassTaken.FinalGrade,
                                                     new SelectList(Model[i].Grades, "Value", "Text", Model[i].ClassTaken.FinalGrade),
-                                                 new { @class = "form-control", style = "width:auto" })
+                                                 new { @class = "form-control", style = "width:auto;" })
                                             </td>
                                             <td>
                                                 @Html.EditorFor(m => Model[i].ClassTaken.Dropped,
