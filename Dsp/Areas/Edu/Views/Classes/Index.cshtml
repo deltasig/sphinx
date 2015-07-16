@@ -1,6 +1,5 @@
 ﻿@using Dsp.Models;
 @using Dsp.Areas.Edu.Models;
-@using Microsoft.AspNet.Identity
 @model ClassIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -249,8 +248,6 @@
                 <div class="col-md-6 text-right">
                     <div class="btn-group" role="group" aria-label="...">
                         @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
-                        @Html.ActionLink("My Classes", "Schedule", "Classes", new { userName = User.Identity.GetUserName() }, new { @class = "btn btn-default" })
-                        @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-success" })
                     </div>
                 </div>
             </div>
@@ -296,6 +293,7 @@
                                 {
                                     <small>| Searched for: <em>@ViewBag.CurrentFilter</em></small>
                                 }
+                                @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-xs btn-success pull-right" })
                             </div>
                         </div>
                     </div>

@@ -1,18 +1,33 @@
-﻿@if (Request.IsAuthenticated)
+﻿@using Microsoft.AspNet.Identity
+@if (Request.IsAuthenticated)
 {
     @Html.ActionLink("Classes", "Index", "Classes", null, new
     {
-        @class = "btn btn-default " + (ViewBag.Title == "Classes" ? "active" : "")
+        @class = "btn btn-default " + (ViewBag.Title.Contains("Class") ? "active" : "")
     })
     @Html.ActionLink("Majors", "Index", "Majors", null, new
     {
-        @class = "btn btn-default " + (ViewBag.Title == "Majors" ? "active" : "")
+        @class = "btn btn-default " + (ViewBag.Title.Contains("Major") ? "active" : "")
     })
     if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
     {
         @Html.ActionLink("Departments", "Index", "Departments", null, new
         {
-            @class = "btn btn-default " + (ViewBag.Title == "Departments" ? "active" : "")
+            @class = "btn btn-default " + (ViewBag.Title.Contains("Department") ? "active" : "")
         })
+    }
+    @Html.ActionLink("Schedule", "Schedule", "Classes", new
+    {
+        userName = ViewBag.UserName ?? User.Identity.GetUserName()
+    }, new
+    {
+        @class = "btn btn-default " + (ViewBag.Title.Contains("Schedule") ? "active" : "")
+    })
+    if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == ViewBag.UserName ?? string.Empty)
+    {
+        <a href="@Url.Action("Transcript", "Classes", new { userName = ViewBag.UserName ?? User.Identity.GetUserName(), area = "Edu" })"
+           class="btn btn-default @(ViewBag.Title.Contains("Transcript") ? "active" : "")">
+            <i class="fa fa-lock"></i> Transcript
+        </a>
     }
 }
