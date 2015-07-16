@@ -172,25 +172,40 @@
                 <div class="panel-heading">
                     <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
                 </div>
-                <div class="panel-body">
-                    <dl class="dl-horizontal">
-                        @foreach (var s in Model.Class.ClassesTaken
-                            .OrderByDescending(c => c.Semester.DateEnd)
-                            .ThenBy(c => c.Member.LastName))
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                        <tr class="active">
+                            <th class="col-xs-6"><small>Member</small></th>
+                            <th><small>Semester</small></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @if (Model.Class.ClassesTaken.Any())
                         {
-                            if (s.SemesterId == Model.CurrentSemester.SemesterId)
+                            foreach (var s in Model.Class.ClassesTaken
+                                .OrderByDescending(c => c.Semester.DateEnd).ThenBy(c => c.Member.LastName))
                             {
-                                <dt class="text-success"><strong>@(s.Member.FirstName + " " + s.Member.LastName)</strong></dt>
-                                <dd class="text-success"><strong>@("(" + s.Semester + ")")</strong></dd>
-                            }
-                            else
-                            {
-                                <dt><small>@(s.Member.FirstName + " " + s.Member.LastName)</small></dt>
-                                <dd><small>@("(" + s.Semester + ")")</small></dd>
+                                <tr class="@(s.SemesterId == Model.CurrentSemester.SemesterId ? "success" : "")">
+                                    <td>
+                                        <a href="@Url.Action("Schedule", new {userName = s.Member.UserName})">
+                                            @(s.Member.FirstName + " " + s.Member.LastName)
+                                        </a>
+                                    </td>
+                                    <td>@("(" + s.Semester + ")")</td>
+                                </tr>
                             }
                         }
-                    </dl>
+                        else
+                        {
+                            <tr class="warning">
+                                <td colspan="2">No one has taken this class yet</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
                 </div>
+                <div class="panel-footer">Count: @Model.Class.ClassesTaken.Count</div>
             </div>
         </div>
     </div>

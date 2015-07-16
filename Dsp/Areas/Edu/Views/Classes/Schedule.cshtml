@@ -1,5 +1,4 @@
-﻿
-@model Dsp.Areas.Edu.Models.ClassScheduleModel
+﻿@model Dsp.Areas.Edu.Models.ClassScheduleModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Scheduler";
@@ -33,7 +32,7 @@
                         Add a New Class
                     </div>
                     <div class="panel-body">
-                        @using (Html.BeginForm("AddClassTaken", "Classes", FormMethod.Post, new {@class = "", role = "form"}))
+                        @using (Html.BeginForm("AddClassTaken", "Classes", FormMethod.Post, new { @class = "", role = "form" }))
                         {
                             @Html.AntiForgeryToken()
                             @Html.ValidationSummary(true)
@@ -41,7 +40,7 @@
                             @Html.HiddenFor(m => Model.SelectedUserName)
 
                             <div class="form-group">
-                                @Html.Label("Semester", new {@class = "control-label"})
+                                @Html.Label("Semester", new { @class = "control-label" })
                                 @Html.DropDownListFor(m => Model.ClassTaken.SemesterId, Model.Semesters,
                                     new
                                     {
@@ -53,10 +52,10 @@
                             </div>
                             <div class="form-group">
                                 @{
-                                    var list = Model.AllClasses.Select(c => new {c.ClassId, Text = c.CourseShorthand + ": " + c.CourseName});
+                            var list = Model.AllClasses.Select(c => new { c.ClassId, Text = c.CourseShorthand + ": " + c.CourseName });
                                 }
 
-                                @Html.Label("Class", new {@class = "control-label"})
+                                @Html.Label("Class", new { @class = "control-label" })
                                 @Html.DropDownListFor(m => Model.ClassTaken.ClassId, new SelectList(list, "ClassId", "Text"),
                                     new
                                     {
@@ -102,12 +101,14 @@
                         <table class="table table-condensed table-hover">
                             <thead>
                                 <tr class="active">
-                                    <th>Semester</th>
-                                    <th>Course</th>
+                                    <th class="col-md-2"><small>Semester</small></th>
+                                    <th><small>Number</small></th>
+                                    <th class="hidden-xs hidden-sm"><small>Name</small></th>
+                                    <th class="col-md-1"><small>Credits</small></th>
                                     @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                     {
 
-                                        <th></th>
+                                        <th class="col-md-2"></th>
                                     }
                                 </tr>
                             </thead>
@@ -116,24 +117,34 @@
                                 {
                                     <tr>
                                         <td>
-                                            @(item.IsSummerClass
-                                                  ? "Summer " + item.Semester.DateStart.Year
+                                            <small>
+                                                @(item.IsSummerClass ? "Summer " + item.Semester.DateStart.Year
                                                   : item.Semester.ToString())
+                                            </small>
                                         </td>
                                         <td>
-                                            <small>@item.Class.CourseShorthand</small>
-                                            @item.Class.CourseName
-                                            <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
-                                                  title="Credit Hour(s)">@item.Class.CreditHours</span>
+                                            <a href="@Url.Action("Details", new {id = item.ClassId})">
+                                                <small>@item.Class.CourseShorthand</small>
+                                            </a>
                                         </td>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                        {
-                                            <td class="text-right">
-                                                @Html.ActionLink("Edit", "EditClassTaken", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null) |
-                                                @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes", new { id = item.UserId, sid = item.SemesterId, cid = item.ClassId }, null)
-                                            </td>
-                                        }
-                                    </tr>
+                                        <td class="hidden-sm hidden-xs"><small>@item.Class.CourseName</small></td>
+                                        <td><span class="badge"><small>@item.Class.CreditHours</small></span></td>
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                            {
+                                                <td class="text-right">
+                                                    <small>
+                                                        @Html.ActionLink("Edit", "EditClassTaken", "Classes", new
+                                                        {
+                                                            id = item.UserId, sid = item.SemesterId, cid = item.ClassId
+                                                        }, null) |
+                                                        @Html.ActionLink("Delete", "DeleteFromSchedule", "Classes", new
+                                                        {
+                                                            id = item.UserId, sid = item.SemesterId, cid = item.ClassId
+                                                        }, null)
+                                                    </small>
+                                                </td>
+                                            }
+                                        </tr>
                                 }
                             </tbody>
                         </table>
@@ -146,7 +157,8 @@
                     </div>
                 }
                 <div class="panel-footer">
-                    Total Credit Hours: @Model.ClassesTaken.Sum(c => c.Class.CreditHours)
+                    @Model.ClassesTaken.Count() @(Model.ClassesTaken.Count() == 1 ? "class" : "classes"),
+                    @Model.ClassesTaken.Sum(c => c.Class.CreditHours) credit hours
                 </div>
             </div>
         </div>
