@@ -327,6 +327,7 @@
                 ViewBag.Message += "No classes found for " + userName + ". ";
             }
 
+            ViewBag.UserName = userName;
             return View(model);
         }
 
@@ -473,6 +474,7 @@
             }
 
             ViewBag.UserName = userName;
+            ViewBag.Name = member.ToString();
             return View(model);
         }
 

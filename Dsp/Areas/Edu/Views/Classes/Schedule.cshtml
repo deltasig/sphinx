@@ -1,8 +1,8 @@
-﻿@using Microsoft.AspNet.Identity
+﻿
 @model Dsp.Areas.Edu.Models.ClassScheduleModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Class Schedule";
+    ViewBag.Title = "Scheduler";
     ViewBag.Subtitle = Model.Member.ToString();
 }
 
@@ -17,30 +17,12 @@
             }
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-6">
-            <a href="@Url.Action("Index", "Roster", new {area = "Members"})" class="btn btn-sm btn-default">
-                <i class="fa fa-caret-left"></i> To Roster
-            </a>
-        </div>
-        <div class="col-xs-6 text-right">
-            <div class="btn-group" role="group">
+    <div class="row row-space">
+        <div class="col-xs-12 text-right">
+            <div class="btn-group" role="group" aria-label="...">
                 @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
-                <a href="@Url.Action("Schedule", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
-                   class="btn btn-default active">
-                    Schedule
-                </a>
-                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)
-                {
-                    <a href="@Url.Action("Transcript", "Classes", new {userName = Model.SelectedUserName, area = "Edu"})"
-                       class="btn btn-default">
-                        Transcript
-                    </a>
-                }
             </div>
         </div>
-        <br />
-        <br />
     </div>
     <div class="row">
         @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == Model.SelectedUserName)

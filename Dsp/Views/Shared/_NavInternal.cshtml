@@ -89,7 +89,7 @@
             </li>
                 if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                 {
-            <li class="@(ViewBag.Title.Contains("Classes") ? "active" : "")">
+            <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
                 <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
                     <i class="fa fa-fw fa-institution"></i> Classes
                 </a>
