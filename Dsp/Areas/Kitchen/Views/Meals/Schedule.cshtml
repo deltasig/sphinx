@@ -100,7 +100,7 @@
                         {
                             var start = TimeZoneInfo.ConvertTimeFromUtc(p.StartTime, cstZone);
                             var end = TimeZoneInfo.ConvertTimeFromUtc(p.EndTime, cstZone);
-                            
+
                             <tr>
                                 <td class="active text-center col-md-2">
                                     <strong>@p.Name</strong>
@@ -179,7 +179,7 @@
                                         {
                                             if (Request.IsAuthenticated)
                                             {
-                                                <br class="visible-xs" />
+                                                <br class="visible-xs"/>
                                             }
                                             foreach (var item in slot.Meal.MealsToItems.OrderBy(m => m.DisplayOrder))
                                             {
@@ -227,104 +227,119 @@
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Plate Signups</div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="active text-center">Period</th>
-                                @if (!hideSunday)
-                                {
-                                    <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
-                                        @Model.StartOfWeek.ToString("ddd (MM-dd)")
-                                    </th>
-                                }
-                                <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")
-                                </th>
-                                <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")
-                                </th>
-                                <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")
-                                </th>
-                                <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")
-                                </th>
-                                <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")
-                                </th>
-                                @if (!hideSaturday)
-                                {
-                                    <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
-                                        @Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")
-                                    </th>
-                                }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var p in Model.MealPeriods)
-                            {
-                                var start = TimeZoneInfo.ConvertTimeFromUtc(p.StartTime, cstZone);
-                                var end = TimeZoneInfo.ConvertTimeFromUtc(p.EndTime, cstZone);
-
+    <!-- Visible if user is signed in OR if they're viewing the current week only while being signed out. -->
+    @if (Request.IsAuthenticated || (!Request.IsAuthenticated && ViewBag.week == 0))
+    {
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Plate Signups</div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered">
+                            <thead>
                                 <tr>
-                                    <td class="active text-center col-md-2">
-                                        <strong>@p.Name</strong>
-                                        <br />
-                                        <small>@start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")</small>
-                                    </td>
-                                    @for (var i = startDay; i < endDay; i++)
+                                    <th class="active text-center">Period</th>
+                                    @if (!hideSunday)
                                     {
-                                        var date = startOfWeek.AddDays(i).Date;
-                                        var dateTime = new DateTime(
-                                            date.Year, date.Month, date.Day,
-                                            start.Hour, start.Minute, 0);
-                                        var plates = Model.Plates.Where(mp => mp.PlateDateTime == dateTime).ToList();
-
-                                        <td>
-                                            @if (plates.Any())
-                                            {
-                                                foreach (var plate in plates)
-                                                {
-                                                    <div class="row">
-                                                        <div class="col-sm-9">
-                                                            <small>@plate.Member <em>(@plate.Type)</em></small>
-                                                        </div>
-                                                        <div class="col-sm-3 text-right-sm text-left-xs">
-                                                            @if (plate.UserId == User.Identity.GetUserId<int>() ||
-                                                                User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-                                                            {
-                                                                using (Html.BeginForm("RemovePlate", "Meals", new { id = plate.MealPlateId, ViewBag.week },
-                                                                    FormMethod.Post, new { @class = "" }))
-                                                                {
-                                                                    @Html.AntiForgeryToken()
-                                                                    <button class="btn btn-link btn-light" type="submit"
-                                                                            data-toggle="tooltip" data-placement="left" title="Cancel">
-                                                                        <i class="fa fa-times-circle text-danger"></i>
-                                                                    </button>
-                                                                }
-                                                            }
-                                                        </div>
-                                                    </div>
-                                                }
-                                            }
-                                        </td>
+                                        <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
+                                            @Model.StartOfWeek.ToString("ddd (MM-dd)")
+                                        </th>
+                                    }
+                                    <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                        @Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")
+                                    </th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                        @Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")
+                                    </th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                        @Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")
+                                    </th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                        @Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")
+                                    </th>
+                                    <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                        @Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")
+                                    </th>
+                                    @if (!hideSaturday)
+                                    {
+                                        <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
+                                            @Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")
+                                        </th>
                                     }
                                 </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">
-                    <small>
-                        <em>Late</em> = late plate (only 1 allowed) | <em>+1</em> = extra plate | <em>Guest</em> = guest plate
-                    </small>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model.MealPeriods)
+                                {
+                                    var start = TimeZoneInfo.ConvertTimeFromUtc(p.StartTime, cstZone);
+                                    var end = TimeZoneInfo.ConvertTimeFromUtc(p.EndTime, cstZone);
+
+                                    <tr>
+                                        <td class="active text-center col-md-2">
+                                            <strong>@p.Name</strong>
+                                            <br />
+                                            <small>@start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")</small>
+                                        </td>
+                                        @for (var i = startDay; i < endDay; i++)
+                                        {
+                                            var date = startOfWeek.AddDays(i).Date;
+                                            var dateTime = new DateTime(
+                                                date.Year, date.Month, date.Day,
+                                                start.Hour, start.Minute, 0);
+                                            var plates = Model.Plates.Where(mp => mp.PlateDateTime == dateTime).ToList();
+
+                                            <td>
+                                                @if (plates.Any())
+                                                {
+                                                    foreach (var plate in plates)
+                                                    {
+                                                        string name;
+                                                        // Hide last names for unauthenticated viewing.
+                                                        if (!Request.IsAuthenticated)
+                                                        {
+                                                            name = plate.Member.FirstName + " " + plate.Member.LastName[0] + ".";
+                                                        }
+                                                        else
+                                                        {
+                                                            name = plate.Member.ToString();
+                                                        }
+
+                                                        <div class="row">
+                                                            <div class="col-sm-9">
+                                                                <small>@name <em>(@plate.Type)</em></small>
+                                                            </div>
+                                                            <div class="col-sm-3 text-right-sm text-left-xs">
+                                                                @if (plate.UserId == User.Identity.GetUserId<int>() ||
+                                                                User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                                                                {
+                                                                    using (Html.BeginForm("RemovePlate", "Meals", new { id = plate.MealPlateId, ViewBag.week },
+                                                                        FormMethod.Post, new { @class = "" }))
+                                                                    {
+                                                                        @Html.AntiForgeryToken()
+                                                                        <button class="btn btn-link btn-light" type="submit"
+                                                                                data-toggle="tooltip" data-placement="left" title="Cancel">
+                                                                            <i class="fa fa-times-circle text-danger"></i>
+                                                                        </button>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    }
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <small>
+                            <em>Late</em> = late plate (only 1 allowed) | <em>+1</em> = extra plate | <em>Guest</em> = guest plate
+                        </small>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
 </div>
