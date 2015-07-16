@@ -33,7 +33,11 @@
                         @foreach (var d in Model.Classes.OrderBy(o => o.CourseShorthand))
                         {
                             <tr>
-                                <td>@d.CourseShorthand</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Classes", new {id = d.ClassId})">
+                                        @d.CourseShorthand
+                                    </a>
+                                </td>
                                 <td>@d.CourseName</td>
                                 <td class="text-right">
                                     <a href="@Url.Action("Edit", "Classes", new {id = d.ClassId})">Edit</a>
