@@ -12,6 +12,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Areas.Scholarships.Controllers;
     using MarkdownSharp;
 
     [AllowAnonymous]
@@ -41,11 +42,16 @@
                 .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
 
-        public async Task<ActionResult> Scholarships(string message)
+        public async Task<ActionResult> Scholarships(ApplicationsController.ApplicationsMessageId? message)
         {
-            if (!string.IsNullOrEmpty(message))
+            switch (message)
             {
-                ViewBag.Message = message;
+                case ApplicationsController.ApplicationsMessageId.SubmissionSuccess:
+                    ViewBag.SuccessMessage = ApplicationsController.GetResultMessage(message);
+                    break;
+                case ApplicationsController.ApplicationsMessageId.SubmissionFailureUnknown:
+                    ViewBag.FailMessage = ApplicationsController.GetResultMessage(message);
+                    break;
             }
 
             var model = new ExternalScholarshipModel
