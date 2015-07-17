@@ -121,7 +121,7 @@
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="table-responsive">
-                    <table class="table table-condensed table-hover">
+                    <table class="table table-condensed table-hover table-bordered">
                         <thead>
                             <tr class="active">
                                 <th class="">Name</th>
@@ -143,7 +143,7 @@
                                     </td>
                                     <td>
                                         <div class="progress" style="margin: 0">
-                                            <div class="progress-bar  progress-bar-striped progress-bar-@barColor" role="progressbar"
+                                            <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
                                                  aria-valuenow="@(item.Hours)" aria-valuemin="0"
                                                  aria-valuemax="@(goal)" style="width: @(percentage > 100 ? 100 : percentage)%;">
                                                 @percentage%
@@ -159,11 +159,25 @@
                                 {
                                     foreach (var s in item.ServiceHours)
                                     {
+                                        var eventPercentage = (int)((s.DurationHours / s.Event.DurationHours) * 100.0);
+                                        
                                         <tr class="collapse @item.Member.Id active">
-                                            <td style="border: none" colspan="2">
-                                                @Html.ActionLink(s.Event.EventName, "Details", "Events", new { id = s.Event.EventId }, null)
+                                            <td>
+                                                @Html.ActionLink(s.Event.EventName, "Details", "Events", new {id = s.Event.EventId}, null)
+                                                <span class="badge"><small>@s.Event.DurationHours h</small></span>
                                             </td>
-                                            <td style="border: none">
+                                            <td>
+                                                <div class="progress" style="margin: 0" data-toggle="tooltip"
+                                                     data-placement="left" title="Present for ###% of event">
+                                                    <div class="progress-bar progress-bar-info" role="progressbar"
+                                                         aria-valuenow="@(s.DurationHours)" aria-valuemin="0"
+                                                         aria-valuemax="@(s.Event.DurationHours)" 
+                                                         style="width: @(eventPercentage > 100 ? 100 : eventPercentage)%;">
+                                                        @eventPercentage%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
                                                 @s.DurationHours
                                                 @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
                                                 {
