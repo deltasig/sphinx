@@ -4,8 +4,10 @@
 @model ClassDetailsModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = Model.Class.CourseShorthand + ": " + Model.Class.CourseName;
+    ViewBag.Title = Model.Class.CourseName;
+    ViewBag.Subtitle = Model.Class.CourseShorthand;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+
     var enrollModel = new ClassScheduleModel
     {
         SelectedUserName = User.Identity.GetUserName(),
@@ -20,15 +22,14 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-sm-6">
-            <p>
-                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Classes
-                </a>
-            </p>
+    <div class="row row-space">
+        <div class="col-lg-6">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Classes
+            </a>
+            <hr class="hidden-lg"/>
         </div>
-        <div class="col-sm-6 text-right">
+        <div class="col-lg-6 text-right">
             @using (Html.BeginForm("AddClassTaken", "Classes"))
             {
                 if (!Model.Class.ClassesTaken.Any(c =>
@@ -41,6 +42,9 @@
                     <input id="ClassTaken_SemesterId" name="ClassTaken.SemesterId" type="hidden" value="@enrollModel.ClassTaken.SemesterId">
                     <input type="submit" class="btn btn-default btn-sm" value="Add to my @Model.CurrentSemester schedule" />
                 }
+
+                <a href="@Url.Action("Details", "Departments", new {id = Model.Class.Department.DepartmentId})"
+                   class="btn btn-sm btn-info"><i class="fa fa-link"></i> @Model.Class.Department.Name</a>
 
                 if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                 {
@@ -55,24 +59,52 @@
                     }
                 }
             }
+            <hr class="hidden-lg"/>
         </div>
     </div>
     <div class="row">
         <div class="col-sm-6">
-            <div class="form-group">
-                <dl class="dl-horizontal">
-                    <dt>Department</dt>
-                    <dd>
-                        <a href="@Url.Action("Details", "Departments", new { id = Model.Class.Department.DepartmentId })">
-                            @Model.Class.Department.Name
-                        </a>
-                    </dd>
-                    <dt>Enrolled (all-time)</dt>
-                    <dd>@Model.Class.ClassesTaken.Count</dd>
-                    <dt>Enrolled (currently)</dt>
-                    <dd>@Model.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId)</dd>
-                </dl>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-6"><small>Member</small></th>
+                                <th><small>Semester</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Class.ClassesTaken.Any())
+                            {
+                                foreach (var s in Model.Class.ClassesTaken
+                                    .OrderByDescending(c => c.Semester.DateEnd).ThenBy(c => c.Member.LastName))
+                                {
+                                    <tr class="@(s.SemesterId == Model.CurrentSemester.SemesterId ? "success" : "")">
+                                        <td>
+                                            <a href="@Url.Action("Schedule", new {userName = s.Member.UserName})">
+                                                @(s.Member.FirstName + " " + s.Member.LastName)
+                                            </a>
+                                        </td>
+                                        <td>@("(" + s.Semester + ")")</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="warning">
+                                    <td colspan="2">No one has taken this class yet</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">Count: @Model.Class.ClassesTaken.Count</div>
             </div>
+        </div>
+        <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-folder-open"></i> <strong>Files</strong>
@@ -159,53 +191,13 @@
                         @Html.HiddenFor(m => Model.Class.CourseShorthand)
 
                         <div class="form-group">
-                            <input type="file" name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
+                            <input type="file" 
+                                   name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
                             <p class="help-block">PDF files only!</p>
                         </div>
                         <input type="submit" value="Upload" class="btn btn-sm btn-default" />
                     }
                 </div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-condensed table-hover">
-                        <thead>
-                        <tr class="active">
-                            <th class="col-xs-6"><small>Member</small></th>
-                            <th><small>Semester</small></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @if (Model.Class.ClassesTaken.Any())
-                        {
-                            foreach (var s in Model.Class.ClassesTaken
-                                .OrderByDescending(c => c.Semester.DateEnd).ThenBy(c => c.Member.LastName))
-                            {
-                                <tr class="@(s.SemesterId == Model.CurrentSemester.SemesterId ? "success" : "")">
-                                    <td>
-                                        <a href="@Url.Action("Schedule", new {userName = s.Member.UserName})">
-                                            @(s.Member.FirstName + " " + s.Member.LastName)
-                                        </a>
-                                    </td>
-                                    <td>@("(" + s.Semester + ")")</td>
-                                </tr>
-                            }
-                        }
-                        else
-                        {
-                            <tr class="warning">
-                                <td colspan="2">No one has taken this class yet</td>
-                            </tr>
-                        }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer">Count: @Model.Class.ClassesTaken.Count</div>
             </div>
         </div>
     </div>
