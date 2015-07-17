@@ -111,8 +111,7 @@
                     </tbody>
                 </table>
                 <div class="panel-footer">
-                    <strong>Note: </strong> These numbers are pulled from all current actives, pledges, and neophytes.
-                    Sober driving is not counted towards community service hours.
+                    <strong>Reminder: </strong> Sober driving is not counted towards community service hours.
                 </div>
             </div>
 
@@ -120,23 +119,39 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="table-responsive">
-                <table class="table table-condensed table-hover">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Hours</th>
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                        <tr class="active">
+                            <th class="">Name</th>
+                            <th class="col-md-2">Progress</th>
+                            <th class="col-md-3">Hours</th>
                         </tr>
-                    </thead>
-                    <tbody>
+                        </thead>
+                        <tbody>
                         @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
                         {
+                            var goal = (double) Model.Semester.MinimumServiceHours;
+                            var percentage = (item.Hours/goal)*100.0;
+                            var barColor = percentage < 25 ? "danger" : percentage >= 100 ? "success" : "warning";
+
+
                             <tr type="button" data-toggle="collapse" data-target=".@item.Member.Id"
                                 aria-expanded="false" aria-controls="@item.Member.Id">
                                 <td>
                                     @item.Member.LastName, @item.Member.FirstName
                                 </td>
-                                <td class="col-md-3">
+                                <td>
+                                    <div class="progress" style="margin: 0">
+                                        <div class="progress-bar  progress-bar-striped progress-bar-@barColor" role="progressbar"
+                                             aria-valuenow="@(item.Hours)" aria-valuemin="0"
+                                             aria-valuemax="@(goal)" style="width: @(percentage > 100 ? 100 : percentage)%;">
+                                            @percentage%
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
                                     @item.Hours
                                     <button class="btn btn-xs pull-right" type="button">Details</button>
                                 </td>
@@ -144,24 +159,26 @@
                             foreach (var s in item.ServiceHours)
                             {
                                 <tr class="collapse @item.Member.Id active">
-                                    <td style="border: none">
-                                        @Html.ActionLink(s.Event.EventName, "Details", "Events", new { id = s.Event.EventId }, null)
+                                    <td style="border: none" colspan="2">
+                                        @Html.ActionLink(s.Event.EventName, "Details", "Events", new {id = s.Event.EventId}, null)
                                     </td>
                                     <td style="border: none">
                                         @s.DurationHours
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Service"))
                                         {
                                             <div class="pull-right text-right">
-                                                @Html.ActionLink("Edit", "Edit", new { eid = s.EventId, uid = s.UserId }) |
-                                                @Html.ActionLink("Delete", "Delete", new { eid = s.EventId, uid = s.UserId })
+                                                @Html.ActionLink("Edit", "Edit", new {eid = s.EventId, uid = s.UserId}) |
+                                                @Html.ActionLink("Delete", "Delete", new {eid = s.EventId, uid = s.UserId})
                                             </div>
                                         }
                                     </td>
                                 </tr>
                             }
                         }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                    <div class="panel-footer">Member Count: @Model.ServiceHours.Count</div>
+                </div>
             </div>
         </div>
     </div>
