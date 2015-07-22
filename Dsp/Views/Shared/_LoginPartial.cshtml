@@ -1,17 +1,11 @@
 ﻿@if (Request.IsAuthenticated)
 {
-    <li class="hidden-xs hidden-sm profile-pic-alt" style="display: none;">
+    <li class="hidden-xs hidden-sm">
         <p class="navbar-text">
             Signed in as <strong>@User.Identity.Name</strong>
         </p>
     </li>
-    <li class="@(ViewBag.Title.Contains("Account") ? "active" : "") profile-pic-wrapper" style="display: none;">
-        <a href="@Url.Action("Index", "Account", new {area = "Members"})"
-            data-toggle="tooltip" data-placement="bottom" title="Account" style="height: 50px; padding: 0">
-            <img class="profile-pic img-circle" src="" style="width: 40px; margin:5px 10px" />
-        </a>
-    </li>
-    <li class="@(ViewBag.Title.Contains("Account") ? "active" : "") profile-pic-alt" style="display: none;">
+    <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
         <a href="@Url.Action("Index", "Account", new {area = "Members"})"
             data-toggle="tooltip" data-placement="bottom" title="Account">
             <i class="fa fa-user"></i>

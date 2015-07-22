@@ -1,5 +1,4 @@
-﻿@using System.Web.Configuration
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -37,19 +36,5 @@
         });
 
     </script>
-    @if (Request.IsAuthenticated)
-    {
-        <script type="text/javascript" src="~/Scripts/CustomGoogleApi.js"></script>
-        <script type="text/javascript">
-
-            $(function() {
-
-                var gApi = new CustomGoogleApi("@WebConfigurationManager.AppSettings["google-public-api-key"]");
-                gApi.SetAvatars();
-
-            });
-
-        </script>
-    }
 </body>
 </html>
