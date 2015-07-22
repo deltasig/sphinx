@@ -51,15 +51,6 @@
             if (string.IsNullOrEmpty(userName)) userName = User.Identity.GetUserName();
 
             var member = await UserManager.FindByNameAsync(userName);
-            if (userName == User.Identity.GetUserName())
-            {
-                var googleLogin = member.Logins.FirstOrDefault(l => l.LoginProvider == "Google");
-                if (googleLogin != null)
-                {
-                    ViewBag.GoogleId = googleLogin.ProviderKey;
-                }
-            }
-
             var thisSemester = await GetThisSemesterAsync();
             var model = new AccountInformationModel
             {

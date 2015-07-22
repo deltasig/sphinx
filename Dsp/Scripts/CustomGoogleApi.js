@@ -8,9 +8,14 @@ CustomGoogleApi.prototype.SetAvatars = function () {
 
     var handleResponse = function (status, response) {
         var obj = JSON.parse(response);
-        $(".profile-pic-wrapper").show();
-        $(".profile-pic-alt").hide();
-        $(".profile-pic").attr("src", obj.image.url.replace('sz=50', 'sz=150'));
+        try {
+            $(".profile-pic-wrapper").show();
+            $(".profile-pic-alt").hide();
+            $(".profile-pic").attr("src", obj.image.url.replace('sz=50', 'sz=150'));
+        } catch (e) {
+            $(".profile-pic-wrapper").hide();
+            $(".profile-pic-alt").show();
+        }
     }
 
     var xmlHttp = new XMLHttpRequest();
@@ -30,7 +35,7 @@ CustomGoogleApi.prototype.SetAvatars = function () {
 
     xmlHttp.onreadystatechange = handleStateChange;
 
-    if (this.uid !== "") {
+    if (this.uid !== "" && this.uid != null) {
         var url = "https://www.googleapis.com/plus/v1/people/" + this.uid + "?fields=image&key=" + this.apiKey;
         xmlHttp.open("GET", url, true);
         xmlHttp.send(null);
