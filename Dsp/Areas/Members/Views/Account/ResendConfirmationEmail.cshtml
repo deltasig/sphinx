@@ -1,7 +1,7 @@
 ﻿@model Dsp.Entities.Member
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Reset Password";
+    ViewBag.Title = "Resend Confirmation Email";
     ViewBag.Subtitle = Model.ToString();
 }
 
@@ -21,16 +21,17 @@
             <div class="form-group">
                 <div class="alert alert-danger">
                     <i class="fa fa-exclamation-triangle"></i>
-                    This will reset @Model.FirstName's password.
+                    This will resend @Model.FirstName's confirmation email create a new, temporary password.
                 </div>
             </div>
 
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => Model.Id)
                 @Html.HiddenFor(m => Model.UserName)
 
-                <input type="submit" value="Do it!" class="btn btn-danger" />
+                <input type="submit" value="Do it!" class="btn btn-danger"/>
             }
         </div>
     </div>

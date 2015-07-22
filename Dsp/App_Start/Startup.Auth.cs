@@ -8,6 +8,7 @@
     using Microsoft.Owin.Security.Cookies;
     using Owin;
     using System;
+    using System.Web.Configuration;
 
     public partial class Startup
     {
@@ -52,11 +53,9 @@
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(
+                clientId: WebConfigurationManager.AppSettings["google-auth-client-id"],
+                clientSecret: WebConfigurationManager.AppSettings["google-auth-client-secret"]);
         }
     }
 }

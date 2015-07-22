@@ -26,6 +26,7 @@
     <SccProvider>SAK</SccProvider>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>4193ea30</NuGetPackageImportStamp>
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -233,6 +234,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
+    <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
+    <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
+    <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
+    <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
@@ -346,7 +351,6 @@
     <Compile Include="Areas\Members\Models\AccountInformationModel.cs" />
     <Compile Include="Areas\Members\Models\AddressIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\InitiatePledgesModel.cs" />
-    <Compile Include="Areas\Members\Models\LocalPasswordModel.cs" />
     <Compile Include="Areas\Members\Models\LoginModel.cs" />
     <Compile Include="Areas\Members\Models\MemberStatusFilter.cs" />
     <Compile Include="Areas\Members\Models\RegisterModel.cs" />
@@ -456,6 +460,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
+    <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />
     <Content Include="fonts\fontawesome-webfont.svg" />
@@ -686,6 +691,13 @@
     </Content>
     <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Details.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Areas\Members\Views\Account\Manage.cshtml" />
+    <Content Include="Areas\Members\Views\Shared\_AccountNavPartial.cshtml" />
+    <Content Include="Areas\Members\Views\Account\Lockout.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -806,7 +818,6 @@
     </Content>
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Members\Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\SignIn.cshtml" />
     <Content Include="Areas\Members\Views\Account\Index.cshtml" />
@@ -838,11 +849,8 @@
     <Content Include="Views\Shared\_Title.cshtml" />
     <Content Include="Areas\Members\Views\Addresses\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Addresses\Index.cshtml" />
-    <Content Include="Areas\Members\Views\Addresses\_MyAddressesPartial.cshtml" />
     <Content Include="Areas\Members\Views\PhoneNumbers\Edit.cshtml" />
-    <Content Include="Areas\Members\Views\PhoneNumbers\_MyPhoneNumbersPartial.cshtml" />
     <Content Include="Areas\Members\Views\PhoneNumbers\Index.cshtml" />
-    <Content Include="Areas\Members\Views\Account\_MemberInformationPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Roster\Index.cshtml" />
     <Content Include="Areas\Service\Views\Events\Create.cshtml" />
@@ -877,6 +885,7 @@
     <Content Include="Views\Shared\_LoginExternalPartial.cshtml" />
     <Content Include="Views\Shared\_PagerPartial.cshtml" />
     <Content Include="Views\Error\Logs.cshtml" />
+    <Content Include="Views\Emails\RegistrationConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -890,7 +899,6 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\House\Views\Shared\" />
-    <Folder Include="Areas\Members\Views\Shared\" />
     <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />
