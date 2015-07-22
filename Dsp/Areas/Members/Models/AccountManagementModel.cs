@@ -1,9 +1,17 @@
 ﻿namespace Dsp.Areas.Members.Models
 {
+    using Entities;
+    using Microsoft.AspNet.Identity;
+    using Microsoft.Owin.Security;
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
-    public class LocalPasswordModel
+    public class AccountManagementModel
     {
+        public Member Member { get; set; }
+        public IList<UserLoginInfo> CurrentLogins { get; set; }
+        public IList<AuthenticationDescription> OtherLogins { get; set; }
+
         [Required]
         [DataType(DataType.Password)]
         [Display(Name = "Current Password")]
@@ -17,7 +25,7 @@
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm New Password")]
-        [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
 }

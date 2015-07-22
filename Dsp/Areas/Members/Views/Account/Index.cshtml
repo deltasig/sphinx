@@ -1,49 +1,227 @@
-﻿@model Dsp.Areas.Members.Models.AccountInformationModel
+﻿@using Microsoft.AspNet.Identity
+@model Dsp.Areas.Members.Models.AccountInformationModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Account";
+    ViewBag.Title = "Account Profile";
+    ViewBag.Subtitle = Model.Member.ToString();
+
+    // Permissions
+    var isAdmin = User.IsInRole("Administrator");
+    var isSecretary = User.IsInRole("Secretary");
+    var isAcademic = User.IsInRole("Academics");
+    var isHousing = User.IsInRole("House Manager");
+    var isCurrentUser = User.Identity.GetUserId<int>() == Model.Member.Id;
 }
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-6">
-            @{ Html.RenderPartial("~/Areas/Members/Views/Account/_MemberInformationPartial.cshtml", Model.MemberInfo); }
-            @{ Html.RenderPartial("~/Areas/Members/Views/Addresses/_MyAddressesPartial.cshtml", Model.MemberInfo.Addresses); }
-            @{ Html.RenderPartial("~/Areas/Members/Views/PhoneNumbers/_MyPhoneNumbersPartial.cshtml", Model.MemberInfo.PhoneNumbers); }
+        <div class="col-md-4 col-lg-2">
+            @Html.Partial("~/Areas/Members/Views/Shared/_AccountNavPartial.cshtml")
+            @if (!string.IsNullOrEmpty(ViewBag.GoogleId))
+            {
+                <div class="thumbnail">
+                    <img class="profile-pic" src="" style="width:100%" />
+                    <div class="caption">
+                        <h3>@Model.Member.ToString()</h3>
+                        <p>@Model.Member.MemberStatus.StatusName</p>
+                    </div>
+                </div>
+            }
         </div>
-        <div class="col-sm-6">
+        <div class="col-md-8 col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-info-circle"></i> Information
+                    @if (isAdmin || isSecretary || isAcademic || isHousing || isCurrentUser)
+                    {
+                        <a href="@Url.Action("Edit", "Account", new { userName = Model.Member.UserName })"
+                           class="btn btn-xs btn-default pull-right"
+                           data-toggle="tooltip" data-placement="left"
+                           title="Edit Profile">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    }
+                </div>
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td class="col-xs-3 active">User Name</td>
+                            <td>@Model.Member.UserName</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Email</td>
+                            <td>@Model.Member.Email</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Status</td>
+                            <td>@Model.Member.MemberStatus.StatusName</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Pledge Class</td>
+                            <td>
+                                &@(Model.Member.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : Model.Member.PledgeClass.PledgeClassName);
+                                <i data-toggle="tooltip" data-placement="left"
+                                   title="@Model.Member.PledgeClass.PledgeClassName"
+                                   class="fa fa-question-circle pull-right">
+                                </i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="active">Graduation</td>
+                            <td>@Model.Member.GraduationSemester.ToString()</td>
+                        </tr>
+                        <tr>
+                            <td class="active">
+                                @(Model.Member.MajorsToMember.Count <= 1 ? "Major" : "Majors")
+                                @if (isAdmin || isAcademic || isSecretary || isCurrentUser)
+                                {
+                                    <a href="@Url.Action("Assign", "Majors", new {area = "Edu", id = Model.Member})" class="pull-right">
+                                        <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
+                                           title="Add a new major"></i>
+                                    </a>
+                                }
+                            </td>
+                            <td class="@(Model.Member.MajorsToMember.Any() ? "" : "warning")">
+                                @if (Model.Member.MajorsToMember.Any())
+                                {
+                                    foreach (var m in Model.Member.MajorsToMember)
+                                    {
+                                        @m.Major.MajorName
+                                        @:(@m.DegreeLevel)
+                                        if (isAdmin || isAcademic || isSecretary || isCurrentUser)
+                                        {
+                                            <a href="@Url.Action("Unassign", "Majors", new {area = "Edu", id = m.MajorToMemberId})"
+                                               class="pull-right">
+                                                <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
+                                                   title="Remove this major"></i>
+                                            </a>
+                                        }
+                                        <br />
+                                    }
+                                }
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="active">Room</td>
+                            <td>@Model.Member.RoomString()</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Big Bro</td>
+                            <td>@(Model.Member.BigBrother == null ? "None" : Model.Member.BigBrother.ToString())</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Shirt Size</td>
+                            <td>@Model.Member.ShirtSize</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Pin</td>
+                            <td class="@(Model.Member.Pin != null ? "" : "warning")">@Model.Member.Pin</td>
+                        </tr>
+                        <tr class="active">
+                            <td colspan="2">
+                                <small><i class="fa fa-phone-square"></i> Phone Numbers</small>
+                            </td>
+                        </tr>
+                        @foreach (var item in Model.Member.PhoneNumbers)
+                        {
+                            <tr>
+                                <td class="active">@item.Type</td>
+                                <td class="@(string.IsNullOrEmpty(item.Number) ? "warning" : "")">
+                                    @if (!string.IsNullOrEmpty(item.Number))
+                                    {
+                                        <a href="tel:@item.Number">
+                                            @item.Number
+                                        </a>
+                                    }
+                                    @if (isAdmin || isSecretary || isCurrentUser)
+                                    {
+                                        <a href="@Url.Action("Edit", "PhoneNumbers", new {id = item.PhoneNumberId})"
+                                           class="btn btn-xs btn-default pull-right"
+                                           data-toggle="tooltip" data-placement="left"
+                                           title="Edit">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                        <tr class="active">
+                            <td colspan="2">
+                                <small><i class="fa fa-envelope"></i> Addresses</small>
+                            </td>
+                        </tr>
+                        @foreach (var item in Model.Member.Addresses)
+                        {
+                            <tr>
+                                <td class="active">@item.Type</td>
+                                <td class="@(!item.IsFilledOut() ? "warning" : "")">
+                                    @if (item.IsFilledOut())
+                                    {
+                                        <small>
+                                            @item.Address1,
+                                            @if (@item.Address2 != null)
+                                            {
+                                                @item.Address2@:,
+                                            }
+                                            @item.City, @item.State @item.PostalCode, @item.Country
+                                        </small>
+                                    }
+                                    @if (isAdmin || isSecretary || isCurrentUser)
+                                    {
+                                        <a href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })"
+                                           class="btn btn-xs btn-default pull-right"
+                                           data-toggle="tooltip" data-placement="left"
+                                           title="Edit">
+                                            <i class="fa fa-pencil"></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-8 col-md-offset-4 col-lg-5 col-lg-offset-0">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-6">
-                            Classes | @Model.CurrentSemester
+                            <i class="fa fa-graduation-cap"></i> <small>Schedule - @Model.CurrentSemester</small>
                         </div>
                         <div class="col-xs-6 text-right">
-                            @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" }) |
-                            @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, new { @class = "" })
+                            <small>
+                                @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || Model.Member.UserName == User.Identity.GetUserName())
+                                {
+                                    @: |
+                                    @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
+                                }
+                            </small>
                         </div>
                     </div>
                 </div>
-                <div class="panel-body">
-                    @if (Model.ThisSemesterCourses.Any())
-                    {
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr>
-                                    <th>Course</th>
-                                    <th>
-                                        Brothers
-                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
-                                           title="Number of other brothers taking this class this semester"></i>
-                                    </th>
-                                    <th>Files</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr class="active @(Model.ThisSemesterCourses.Any() ? "" : "hidden")">
+                                <td>Course</td>
+                                <td>
+                                    Brothers
+                                    <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                                       title="Number of other brothers taking this class this semester"></i>
+                                </td>
+                                <td>Files</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ThisSemesterCourses.Any())
+                            {
+                                foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
                                 {
                                     var fileCount = item.Class.ClassFiles.Count;
                                     var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
+
                                     <tr>
                                         <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
                                         <td>
@@ -54,34 +232,33 @@
                                         </td>
                                     </tr>
                                 }
-                            </tbody>
-                        </table>
-                    }
-                    else
-                    {
-                        @: No classes added!
-                    }
+                            }
+                            else
+                            {
+                                <tr class="warning">
+                                    <td colspan="3">No classes added!</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <div class="panel-footer">
-                    Total Credit Hours: @Model.ThisSemesterCourses.Sum(c => c.Class.CreditHours)
+                <div class="panel-footer @(Model.ThisSemesterCourses.Any() ? "" : "hidden")">
+                    <small>Credit Hours: @Model.ThisSemesterCourses.Sum(c => c.Class.CreditHours)</small>
                 </div>
             </div>
-
-            @if (User.Identity.Name == Model.MemberInfo.UserName)
-            {
-                @Html.Partial("_ChangePasswordPartial", Model.ChangePasswordModel)
-            }
-            @if (User.IsInRole("Administrator"))
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        Administrator Functions
-                    </div>
-                    <div class="panel-body">
-                        @Html.ActionLink("Reset Password", "ResetPassword", "Account", new { id = Model.MemberInfo.Id }, new { @class = "btn btn-sm btn-danger" })
-                    </div>
-                </div>
-            }
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script type="text/javascript">
+
+        $(function () {
+
+            // Adds the users google id to local storage for use around the site.
+            localStorage.setItem("gid", "@ViewBag.GoogleId");
+
+        });
+
+    </script>
+}

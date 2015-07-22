@@ -1,0 +1,13 @@
+﻿<div class="panel panel-default">
+    <div class="panel-heading">Settings</div>
+    <div class="list-group">
+        <a href="@Url.Action("Index", new { userName = ViewBag.UserName })" 
+           class="list-group-item @(ViewBag.Title == "Account Profile" ? "active" : "")">
+            <small>Profile</small>
+        </a>
+        <a href="@Url.Action("Manage", new { userName = ViewBag.UserName })" 
+           class="list-group-item @(ViewBag.Title == "Account Management" ? "active" : "")">
+            <small>Authentication</small>
+        </a>
+    </div>
+</div>
