@@ -119,7 +119,7 @@ iframe, object, embed {
 }
 .login-title
 {
-    margin-top: 100px;
+    margin-top: 40px;
     color: #555;
     font-size: 18px;
     font-weight: 400;
@@ -302,6 +302,26 @@ ul, ol {
 hr {
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.list-group-item.active,
+.list-group-item.active:hover,
+.list-group-item.active:focus {
+  z-index: 2;
+  color: #000;
+  background-color: transparent;
+  border: 0;
+    font-weight: bold;
+}
+
+a.list-group-item.active:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 2px;
+  content: "";
+  background-color: #247d4e;
 }
 
 /* Removes the underlines under fontawesome links */

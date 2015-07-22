@@ -15,7 +15,7 @@
     using Areas.Scholarships.Controllers;
     using MarkdownSharp;
 
-    [AllowAnonymous]
+    [AllowAnonymous, RequireHttps]
     public class HomeController : BaseController
     {
         public ActionResult Index()

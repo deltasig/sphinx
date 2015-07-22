@@ -6,6 +6,10 @@
 *.user
 *.sln.docstates
 App_Data/
+Web.Debug.config
+Web.Release.config
+# Visual Studio 2015 cache/options directory
+.vs
 
 # Build results
 [Dd]ebug/
