@@ -11,12 +11,10 @@
     using System;
     using System.Linq;
     using System.Net;
-    using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
-    using Data;
 
     [Authorize, RequireHttps]
     public class AccountController : BaseController
@@ -106,6 +104,14 @@
         [HttpGet]
         public async Task<ActionResult> Edit(string userName, AccountChangeMessageId? message)
         {
+            if (string.IsNullOrEmpty(userName))
+            {
+                userName = User.Identity.GetUserName();
+            }
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != userName)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            }
             var member = string.IsNullOrEmpty(userName)
                 ? await UserManager.FindByNameAsync(User.Identity.Name)
                 : await UserManager.FindByNameAsync(userName);
@@ -125,10 +131,9 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMemberInfoModel model)
         {
-            if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && 
-               !User.IsInRole("House Manager") && User.Identity.Name != model.Member.UserName)
+            if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != model.Member.UserName)
             {
-                RedirectToAction("Index");
+                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
             model.Semesters = await GetAllSemesterListAsync();
@@ -148,7 +153,6 @@
             member.LastName = model.Member.LastName;
             member.Email = model.Member.Email;
             member.Pin = model.Member.Pin;
-            member.Room = model.Member.Room;
             member.StatusId = model.Member.StatusId;
             member.PledgeClassId = model.Member.PledgeClassId;
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;

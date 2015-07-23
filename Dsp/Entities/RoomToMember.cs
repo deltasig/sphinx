@@ -17,7 +17,7 @@
 
         public DateTime MovedIn { get; set; }
 
-        public DateTime? MovedOut { get; set; }
+        public DateTime MovedOut { get; set; }
 
         [ForeignKey("RoomId")]
         public virtual Room Room { get; set; }
