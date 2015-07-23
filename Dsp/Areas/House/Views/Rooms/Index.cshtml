@@ -1,123 +1,213 @@
-﻿@model Dsp.Areas.House.Models.RoomIndexModel
+﻿@using Dsp.Entities
+@model Dsp.Areas.House.Models.RoomIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Rooms";
     ViewBag.Subtitle = Model.Semester.ToString();
+    var isAdmin = User.IsInRole("Administrator");
+    var isHousing = User.IsInRole("House Manager");
+
+    var room101 = Model.Rooms.SingleOrDefault(r => r.Name == "101");
+    var room102 = Model.Rooms.SingleOrDefault(r => r.Name == "102");
+    var room103 = Model.Rooms.SingleOrDefault(r => r.Name == "103");
+    var room104 = Model.Rooms.SingleOrDefault(r => r.Name == "104");
+    var room105 = Model.Rooms.SingleOrDefault(r => r.Name == "105");
+    var room201 = Model.Rooms.SingleOrDefault(r => r.Name == "201");
+    var room202 = Model.Rooms.SingleOrDefault(r => r.Name == "202");
+    var room203 = Model.Rooms.SingleOrDefault(r => r.Name == "203");
+    var room204 = Model.Rooms.SingleOrDefault(r => r.Name == "204");
+    var room205 = Model.Rooms.SingleOrDefault(r => r.Name == "205");
+    var room206 = Model.Rooms.SingleOrDefault(r => r.Name == "206");
+    var room207 = Model.Rooms.SingleOrDefault(r => r.Name == "207");
+    var room208 = Model.Rooms.SingleOrDefault(r => r.Name == "208");
+    var room209 = Model.Rooms.SingleOrDefault(r => r.Name == "209");
+    var room210 = Model.Rooms.SingleOrDefault(r => r.Name == "210");
+    var room211 = Model.Rooms.SingleOrDefault(r => r.Name == "211");
+    var room212 = Model.Rooms.SingleOrDefault(r => r.Name == "212");
+    var room213 = Model.Rooms.SingleOrDefault(r => r.Name == "213");
+    var room214 = Model.Rooms.SingleOrDefault(r => r.Name == "214");
+    var room215 = Model.Rooms.SingleOrDefault(r => r.Name == "215");
+    var room216 = Model.Rooms.SingleOrDefault(r => r.Name == "216");
+
+    // Get all out of house locations to generate buttons for them.
+    var nonHouseLocations = new List<Room>();
+    var houseRooms = new List<Room>();
+    var remainingMembers = Model.Members.Count(m => !m.HasLivingAssignment(Model.sid));
+    var membersLivingInHouse = Model.Members.Count(m => m.WasLivingInHouse(Model.sid));
+    foreach (var room in Model.Rooms)
+    {
+        int value;
+        if (!int.TryParse(room.Name, out value))
+        {
+            nonHouseLocations.Add(room);
+        }
+        else
+        {
+            houseRooms.Add(room);
+        }
+    }
+
 }
 
-<style>
-    rect {
-        fill: lightgray;
-        stroke: darkgray;
-        stroke-width: 1;
-    }
-
-    rect.door {
-        fill: gray;
-    }
-
-    path {
-        stroke: darkgray;
-        stroke-width: 1;
-    }
-
-    path.room {
-        fill: #278955;
-    }
-
-    path.room:hover, 
-    path.room:focus {
-        fill: #2b975e;
-        cursor: pointer;
-    }
-
-    path.nonroom {
-        fill: lightgray;
-    }
-
-    path.stairs {
-        fill: gray;
-    }
-
-    text {
-        fill: white;
-        font-family: 'Open Sans';
-        font-size: 40px;
-    }
-
-    .member:hover {
-        font-weight: bold;
-        cursor: move;
-    }
-</style>
+@section styles{
+    <link rel="stylesheet" type="text/css" href="~/Content/HouseDiagram.css">
+    @Styles.Render("~/content/datetimepicker")
+}
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="alert alert-warning">
-                <p>
-                    <i class="fa fa-exclamation-triangle"></i>
-                    <strong>Notice:</strong> What you're seeing is an experimental portion of the website that is not yet intended to be fully functional.
-                    The reason it's accessible now is because it may still serve some useful purpose in the meantime, or because it's just neat as hell.
-                    So enjoy the view, and please hold off on reporting things that don't work on this page until this message is removed.
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-6">
+    <div class="row row-space">
+        <div class="col-sm-6">
             @using (Html.BeginForm("Index", "Rooms", new { area = "House" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
             {
                 <div class="form-group">
-                    @Html.DropDownList("sid", Model.SemesterList, new { @class = "form-control" })
-
+                    @Html.DropDownListFor(m => m.sid, Model.SemesterList,
+                    new
+                    {
+                        @class = "selectpicker",
+                        autocomplete = "off",
+                        id = "semester-dd",
+                        data_live_search = "true"
+                    })
                     <input type="submit" value="Filter" class="btn btn-default" />
                 </div>
             }
         </div>
         <div class="col-sm-6 text-right">
-            <p>
-                <a href="@Url.Action("Map", "Rooms", new { area = "House" })" class="btn btn-sm btn-default">
-                    Big Map
+            @if (isAdmin || isHousing)
+            {
+                <a href="@Url.Action("Create", "Rooms", new {area = "House", sid = Model.sid})" class="btn btn-sm btn-success">
+                    Add Room
                 </a>
-                @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+
+                if (!Model.Rooms.Any())
                 {
-                    <a href="@Url.Action("Create", "Rooms", new {area = "House"})" class="btn btn-sm btn-success">
-                        Add Room
-                    </a>
+                    <input type="button" class="btn btn-sm btn-danger" value="Generate Rooms" id="generation-button"
+                           data-toggle="tooltip" data-placement="bottom"
+                           title="This will generate all of the rooms based on the previous semester.  
+                           If the previous semester doesn't contain any rooms, the website will generate some default ones for you." />
                 }
-            </p>
+                using (Html.BeginForm("GenerateRooms", "Rooms", new { area = "House" },
+                    FormMethod.Post, new { @class = "form-inline", role = "form", id = "generation-form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.Hidden("sid", Model.sid)
+                }
+            }
+        </div>
+    </div>
+    <div class="@(isAdmin || isHousing ? "row" : "hidden")">
+        <div class="col-sm-12">
+            <div class="progress">
+                <div class="progress-bar progress-bar-danger" style="width: 33%" id="step-one">
+                    <span>Step 1: Select a Member</span>
+                </div>
+                <div class="progress-bar progress-bar-danger progress-bar-striped" style="width: 33%" id="step-two">
+                    <span>Step 2: Set Move In/Out <small>(optional)</small></span>
+                </div>
+                <div class="progress-bar progress-bar-danger" style="width: 34%" id="step-three">
+                    <span>Step 3: Select a Location</span>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-10">
+        <div class="@(isAdmin || isHousing ? "col-sm-4 col-md-3" : "hidden")">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Members
+                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                          title="Remaining | Total">
+                        @remainingMembers|@Model.Members.Count()
+                    </span>
+                    <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                       title="Blue members below represent that the member already has an 
+                       assignment for thi semester but you may assign them to another location if their living situation changed."></i>
+                </div>
+                <ul class="list-group" style="max-height: 600px; overflow-y:scroll">
+                    @foreach (var m in Model.Members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
+                    {
+                        var isAssigned = m.Rooms.Any(r => r.Room.SemesterId == Model.Semester.SemesterId);
+                        var color = isAssigned ? "list-group-item-info" : "";
+
+                        <li class="list-group-item @color" id="m-@m.Id" onclick="selectMember(@m.Id, '@m.ToString()')" style="cursor: pointer">
+                            @m.FirstName @m.LastName <span class="badge"><small>@m.PledgeClass.PledgeClassName</small></span>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="@(isAdmin || isHousing ? "col-sm-8 col-md-9" : "col-xs-12")">
+            <div class="@(isAdmin || isHousing ? "row" : "hidden")">
+                <form id="assign-form">
+                    <div class="form-group col-xs-4 col-md-4">
+                        <label class="control-label">
+                            Move In Date
+                            <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                               title="These default to the start date of the selected semester."></i>
+                        </label>
+                        <div class="input-group date" id="assign-mi">
+                            <input type="datetime" class="form-control" name="moveIn" value="@Model.Semester.DateStart" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-4 col-md-4">
+                        <label class="control-label">
+                            Move Out Date
+                            <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                               title="These default to the end date of the selected semester."></i>
+                        </label>
+                        <div class="input-group date" id="assign-mo">
+                            <input type="datetime" class="form-control" name="moveOut" value="@Model.Semester.DateEnd" />
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="form-group col-xs-4 col-md-4">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="sid" id="assign-sid" value="@Model.sid"/>
+                        <input type="hidden" name="mid" id="assign-mid"/>
+                        <input type="hidden" name="rid" id="assign-rid"/>
+                    </div>
+                </form>
+            </div>
             <div class="row">
                 <div class="col-sm-6">
-                    <h4>1<sup>st</sup> Floor <small id="1stFloorRoom" class="pull-right"></small></h4>
-
+                    <label class="control-label" style="width:100%">1<sup>st</sup> Floor <small id="1stFloorRoom" class="pull-right"></small></label>
                     <svg width="100%" height="100%" viewBox="0 0 1310 650" preserveAspectRatio="xMaxYMin meet" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <rect width="100%" height="100%" />
 
                         <!-- Rooms -->
                         <path d="M 600 0 L 810 0 L 810 140 L 600 140 z" class="room"
+                              onclick="assign(@(room101 == null ? -1 : room101.RoomId))"
                               onmouseover="show1stFloorRoomNumber(101)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="645" y="137" class="door" />
 
                         <path d="M 395 0 L 600 0 L 600 150 L 395 150 z" class="room"
+                              onclick="assign(@(room102 == null ? -1 : room102.RoomId))"
                               onmouseover="show1stFloorRoomNumber(102)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="565" y="147" class="door" />
 
                         <path d="M 280 0 L 395 0 L 395 215 L 280 215 z" class="room"
+                              onclick="assign(@(room103 == null ? -1 : room103.RoomId))"
                               onmouseover="show1stFloorRoomNumber(103)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="360" y="212" class="door" />
 
                         <path d="M 95 0 L 280 0 L 280 265 L 95 265 z" class="room"
+                              onclick="assign(@(room104 == null ? -1 : room104.RoomId))"
                               onmouseover="show1stFloorRoomNumber(104)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="277" y="227" class="door" />
+                        <path d="M 95 265 L 280 265 L 280 650 L 95 650 L 95 550 L 95 650 L 0 650 L 0 485 L 95 485 z" class="room"
+                              onclick="assign(@(room105 == null ? -1 : room105.RoomId))"
+                              onmouseover="show1stFloorRoomNumber(105)"
+                              onmouseout="clearRoomNumbers()" />
+                        <rect width="3" height="25" x="277" y="400" class="door" />
 
                         <!-- Mechanical closet -->
                         <path d="M 445 215 L 505 215 L 505 310 L 445 310 z" class="nonroom" />
@@ -152,9 +242,6 @@
                         <rect width="3" height="25" x="1020" y="542" class="door" />
                         <rect width="3" height="25" x="480" y="402" class="door" />
                         <rect width="3" height="25" x="402" y="402" class="door" />
-                        <!-- Work room -->
-                        <path d="M 95 265 L 280 265 L 280 650 L 95 650 L 95 550 L 95 650 L 0 650 L 0 485 L 95 485 z" class="nonroom" />
-                        <rect width="3" height="25" x="277" y="400" class="door" />
                         <!-- Cleaning closet -->
                         <path d="M 280 265 L 320 265 L 320 375 L 280 375 z" class="nonroom" />
                         <rect width="3" height="25" x="317" y="307" class="door" />
@@ -173,88 +260,103 @@
                     </svg>
                 </div>
                 <div class="col-sm-6">
-                    <h4>2<sup>nd</sup> Floor <small id="2ndFloorRoom" class="pull-right"></small></h4>
-
+                    <label class="control-label" style="width:100%">2<sup>nd</sup> Floor <small id="2ndFloorRoom" class="pull-right"></small></label>
                     <svg width="100%" height="100%" viewBox="0 0 1310 650" preserveAspectRatio="xMaxYMin meet" version="1.1" xmlns="http://www.w3.org/2000/svg">
                         <rect width="100%" height="100%" />
 
                         <!-- Rooms -->
                         <path d="M 1185 0 L 1310 0 L 1310 215 L 1310 260 L 1145 260 L 1145 100 L 1185 100 z" class="room"
+                              onclick="assign(@(room201 == null ? -1 : room201.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(201)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="1145" y="225" class="door" />
 
                         <path d="M 1015 0 L 1185 0 L 1185 100 L 1145 100 L 1145 215 L 1055 215 L 1055 100 L 1015 100 z" class="room"
+                              onclick="assign(@(room202 == null ? -1 : room202.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(202)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="1110" y="212" class="door" />
 
                         <path d="M 895 0 L 1015 0 L 1015 100 L 1055 100 L 1055 215 L 895 215 z" class="room"
+                              onclick="assign(@(room203 == null ? -1 : room203.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(203)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="1010" y="212" class="door" />
 
                         <path d="M 735 0 L 895 0 L 895 215 L 735 215 z" class="room"
+                              onclick="assign(@(room204 == null ? -1 : room204.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(204)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="860" y="212" class="door" />
 
                         <path d="M 585 0 L 735 0 L 735 215 L 585 215 z" class="room"
+                              onclick="assign(@(room205 == null ? -1 : room205.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(205)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="640" y="212" class="door" />
 
                         <path d="M 435 0 L 585 0 L 585 215 L 435 215 z" class="room"
+                              onclick="assign(@(room206 == null ? -1 : room206.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(206)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="445" y="212" class="door" />
 
                         <path d="M 285 0 L 435 0 L 435 215 L 285 215 z" class="room"
+                              onclick="assign(@(room207 == null ? -1 : room207.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(207)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="400" y="212" class="door" />
 
                         <path d="M 145 0 L 285 0 L 285 215 L 145 215 z" class="room"
+                              onclick="assign(@(room208 == null ? -1 : room208.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(208)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="250" y="212" class="door" />
 
                         <path d="M 145 280 L 360 280 L 360 380 L 255 380 L 255 505 L 145 505 z" class="room"
+                              onclick="assign(@(room209 == null ? -1 : room209.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(209)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="357" y="345" class="door" />
 
                         <path d="M 145 505 L 255 505 L 255 380 L 360 380 L 360 650 L 145 650 z" class="room"
+                              onclick="assign(@(room210 == null ? -1 : room210.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(210)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="357" y="390" class="door" />
 
                         <path d="M 360 425 L 505 425 L 505 650 L 360 650 z" class="room"
+                              onclick="assign(@(room211 == null ? -1 : room211.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(211)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="470" y="425" class="door" />
 
                         <path d="M 505 425 L 650 425 L 650 650 L 505 650 z" class="room"
+                              onclick="assign(@(room212 == null ? -1 : room212.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(212)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="515" y="425" class="door" />
 
                         <path d="M 650 425 L 830 425 L 830 650 L 650 650 z" class="room"
+                              onclick="assign(@(room213 == null ? -1 : room213.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(213)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="25" height="3" x="660" y="425" class="door" />
 
                         <path d="M 830 425 L 975 425 L 975 650 L 830 650 z" class="room"
+                              onclick="assign(@(room214 == null ? -1 : room214.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(214)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="972" y="435" class="door" />
 
                         <path d="M 1050 420 L 1310 420 L 1310 650 L 1225 650 L 1225 580 L 1050 580 z" class="room"
+                              onclick="assign(@(room215 == null ? -1 : room215.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(215)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="1050" y="445" class="door" />
 
                         <path d="M 1145 260 L 1310 260 L 1310 420 L 1070 420 L 1070 280 L 1145 280 z" class="room"
+                              onclick="assign(@(room216 == null ? -1 : room216.RoomId))"
                               onmouseover="show2ndFloorRoomNumber(216)"
                               onmouseout="clearRoomNumbers()" />
                         <rect width="3" height="25" x="1070" y="385" class="door" />
@@ -276,85 +378,241 @@
                     </svg>
                 </div>
             </div>
-            <h4>Room Information</h4>
-            <table class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th>Room #</th>
-                        <th>Capacity</th>
-                        <th>Members</th>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+            <div class="row row-space">
+                <div class="col-xs-12 ooh-button hide">
+                    <label class="control-label" style="width:100%">Other Locations</label>
+                    <div class="btn-group" role="group" aria-label="...">
+                        @foreach (var room in nonHouseLocations)
                         {
-                            <th></th>
+                            <button type="button" class="btn btn-success"
+                                    onclick="assign(@(room == null ? -1 : room.RoomId))">
+                                @room.Name
+                            </button>
                         }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var r in Model.Rooms.OrderBy(r => r.Name))
-                    {
-                        <tr id="@r.Name" class="room-row">
-                            <td>@r.Name</td>
-                            <td>@r.MaxCapacity</td>
-                            <td id="r-@r.RoomId" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
-                            @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
-                            {
-                                <td class="text-right">
-                                    @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
-                                    @if (!r.Members.Any())
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Delete", "Delete", new { id = r.RoomId })
-                                    }
-                                </td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="col-xs-2">
-            <h4>Members</h4>
-            @foreach (var m in Model.Members.OrderBy(m => m.PledgeClass.Semester.DateStart).ThenBy(m => m.LastName))
-            {
-                <div class="member">
-                    <div id="m-@m.Id" draggable="true" ondragstart="drag(event)">
-                        @m.FirstName @m.LastName
                     </div>
                 </div>
-            }
+            </div>
+            <hr />
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Current Room Assignments
+                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                          title="Remaining house spots">
+                        @(houseRooms.Sum(r => r.MaxCapacity) - membersLivingInHouse)
+                    </span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th class="col-xs-2">Location</th>
+                                <th class="col-xs-2">Capacity</th>
+                                <th>Members</th>
+                                @if (isAdmin || isHousing)
+                                {
+                                    <th class="col-xs-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.Rooms.OrderBy(r => r.Name))
+                            {
+                                var rowColor = r.Members.Count >= r.MaxCapacity ? "success" : "";
+                                var overCapacity = r.Members.Count - r.MaxCapacity;
+                                rowColor = r.MaxCapacity == 0 ? "" : rowColor;
+
+                                <tr id="@r.Name" class="@(rowColor)">
+                                    <td>@r.Name</td>
+                                    <td>
+                                        @if (r.MaxCapacity <= 0)
+                                        {
+                                            <span class="label label-default">n/a</span>
+                                        }
+                                        else
+                                        {
+                                            @r.MaxCapacity
+                                            if (overCapacity > 0)
+                                            {
+                                                <span class="badge" data-toggle="tooltip" data-placement="top"
+                                                      title="Over Capacity">+@overCapacity</span>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
+                                        @foreach (var m in r.Members.OrderBy(m => m.Member.LastName))
+                                        {
+                                            var allSemester = (m.MovedIn == Model.Semester.DateStart && m.MovedOut == Model.Semester.DateEnd);
+
+                                            <div style="margin-bottom: 3px">
+                                                @m.Member.ToString()
+                                                <span class="badge">
+                                                    <small>
+                                                        @if (allSemester)
+                                                        {
+                                                            @: All semester
+                                                        }
+                                                        else
+                                                        {
+                                                            @m.MovedIn.ToShortDateString() @: to
+                                                            @(m.MovedOut == null ? "" : m.MovedOut.ToShortDateString())
+                                                        }
+                                                    </small>
+                                                </span>
+                                                @if (isAdmin || isHousing)
+                                                {
+                                                    using (Html.BeginForm("Unassign", "Rooms", new {aid = m.RoomToMemberId, sid = m.Room.SemesterId},
+                                                        FormMethod.Post, new {@class = "pull-right"}))
+                                                    {
+                                                        @Html.AntiForgeryToken()
+
+                                                        <button type="submit" class="btn btn-link pull-right" style="padding: 0">
+                                                            <i class="fa fa-minus-circle text-danger" data-toggle="tooltip"
+                                                               data-placement="left" title="Delete"></i>
+                                                        </button>
+                                                    }
+                                                }
+                                            </div>
+                                        }
+                                        @if (r.MaxCapacity > 0)
+                                        {
+                                            for (var i = 0; i < r.MaxCapacity - r.Members.Count; i++)
+                                            {
+                                                <div style="margin-bottom: 3px">
+                                                    <small><span class="label label-danger">Vacancy</span></small>
+                                                </div>
+                                            }
+                                        }
+                                    </td>
+                                    @if (isAdmin || isHousing)
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
+                                            @if (!r.Members.Any())
+                                            {
+                                                @: |
+                                                @Html.ActionLink("Delete", "Delete", new { id = r.RoomId })
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
 @section scripts
 {
-    <script>
-        function allowDrop(ev) {
-            ev.preventDefault();
-        }
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript">
 
-        function drag(ev) {
-            ev.dataTransfer.setData("text", ev.target.id);
-        }
-
-        function drop(ev) {
-            ev.preventDefault();
-            var data = ev.dataTransfer.getData("text");
-            ev.target.appendChild(document.getElementById(data));
-        }
+        $("#assign-mi").datetimepicker({
+            format: "MM/DD/YYYY"
+        });
+        $("#assign-mo").datetimepicker({
+            format: "MM/DD/YYYY"
+        });
 
         function show1stFloorRoomNumber(num) {
             $('#1stFloorRoom').text("Room " + num);
-            $('#' + num).addClass('active');
         }
+
         function show2ndFloorRoomNumber(num) {
             $('#2ndFloorRoom').text("Room " + num);
-            $('#' + num).addClass('active');
         }
+
         function clearRoomNumbers() {
             $('#1stFloorRoom').text("");
             $('#2ndFloorRoom').text("");
-            $('.room-row').removeClass('active');
         }
+
+        function selectMember(id, name) {
+            if ($("#m-" + id).hasClass("list-group-item-success")) {
+                // Change display
+                $("#m-" + id).removeClass("list-group-item-success");
+                $(".room").css({ fill: "#f9f7bf" });
+                $(".room").hover(function() {
+                    $(this).css({ fill: "#fffdc2" });
+                }, function() {
+                    $(this).css({ fill: "#f9f7bf" });
+                });
+                $(".ooh-button").addClass("hide");
+                $("#step-one").removeClass("progress-bar-success");
+                $("#step-one").addClass("progress-bar-danger");
+                $("#step-one span").text("Step 1: Select a Member");
+                $("#step-two").removeClass("progress-bar-success");
+                $("#step-two").addClass("progress-bar-danger");
+                // Remove Value
+                $("#assign-mid").val("");
+            } else {
+                // Change display
+                $(".list-group-item").removeClass("list-group-item-success");
+                $("#m-" + id).addClass("list-group-item-success");
+                $(".room").css({ fill: "#278955" });
+                $(".room").hover(function() {
+                    $(this).css({ fill: "#2a935c" });
+                }, function() {
+                    $(this).css({ fill: "#278955" });
+                });
+                $(".ooh-button").removeClass("hide");
+                $("#step-one").removeClass("progress-bar-danger");
+                $("#step-one").addClass("progress-bar-success");
+                $("#step-one span").text("Step 1: " + name);
+                $("#step-two").removeClass("progress-bar-danger");
+                $("#step-two").addClass("progress-bar-success");
+                // Set Value
+                $("#assign-mid").val(id);
+            }
+        }
+
+        function assign(id) {
+            if ($("#assign-mid").val() == null || $("#assign-mid").val() === "")
+                return false;
+
+            $("#assign-rid").val(id);
+
+            $.ajax({
+                type: "POST",
+                url: "/house/rooms/assign",
+                data: $("#assign-form").serialize(),
+                beforeSend: function() {
+                    $("#step-three").removeClass("progress-bar-danger");
+                    $("#step-three").addClass("progress-bar-success");
+                    // Loading animation?
+                },
+                complete: function() {
+                    
+                },
+                success: function() {
+                    console.log("Success: Rooms generated successfully.");
+                    location.reload(true);
+                },
+                error: function(response) {
+                    alert("Error: " + response.statusText);
+                }
+            });
+            return false;
+        }
+
+        $("#generation-button").click(function(e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "/house/rooms/generaterooms",
+                data: $("#generation-form").serialize(),
+                success: function(response) {
+                    alert("Success: Rooms generated successfully.");
+                    location.reload(true);
+                },
+                error: function(response) {
+                    console.log("Error: " + response.statusText);
+                }
+            });
+            return false;
+        });
+
     </script>
 }

@@ -15,72 +15,24 @@
     public class RosterController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(RosterIndexModel model)
+        public async Task<ActionResult> Index(int? sid)
         {
-            if (model.SearchModel != null)
+            Semester semester;
+            if (sid == null)
             {
-                if (model.SearchModel.CustomSearchRequested())
-                {
-                    IEnumerable<Member> guidedSearchResults = await UserManager.Users
-                        .OrderBy(o => o.LastName)
-                        .ToListAsync();
-                    if (model.SearchModel.SelectedStatusId != -1)
-                    {
-                        guidedSearchResults = guidedSearchResults.Where(m => m.StatusId == model.SearchModel.SelectedStatusId);
-                    }
-                    if (model.SearchModel.SelectedPledgeClassId != -1)
-                    {
-                        guidedSearchResults = guidedSearchResults.Where(m => m.PledgeClassId == model.SearchModel.SelectedPledgeClassId);
-                    }
-                    if (model.SearchModel.SelectedGraduationSemesterId != -1)
-                    {
-                        guidedSearchResults = guidedSearchResults.Where(m => m.ExpectedGraduationId == model.SearchModel.SelectedGraduationSemesterId);
-                    }
-                    switch (model.SearchModel.LivingType)
-                    {
-                        case "InHouse":
-                            guidedSearchResults = guidedSearchResults.Where(m => m.Room != 0);
-                            break;
-                        case "OutOfHouse":
-                            guidedSearchResults = guidedSearchResults.Where(m => m.Room == 0);
-                            break;
-                    }
-
-                    model.Members = guidedSearchResults.ToList();
-                }
-                else
-                {
-                    model.Members = await UserManager.Users
-                        .Where(m => 
-                            m.MemberStatus.StatusName == "Pledge" ||
-                            m.MemberStatus.StatusName == "Neophyte" ||
-                            m.MemberStatus.StatusName == "Active")
-                        .OrderBy(o => o.PledgeClassId)
-                        .ThenBy(o => o.LastName)
-                        .ToListAsync();
-                }
+                semester = await base.GetThisSemesterAsync();
             }
             else
             {
-                model = new RosterIndexModel
-                {
-                    Members = await UserManager.Users
-                        .Where(m =>
-                            m.MemberStatus.StatusName == "Pledge" ||
-                            m.MemberStatus.StatusName == "Neophyte" ||
-                            m.MemberStatus.StatusName == "Active")
-                        .OrderBy(o => o.PledgeClassId)
-                        .ThenBy(o => o.LastName)
-                        .ToListAsync()
-                };
+                semester = await _db.Semesters.FindAsync(sid);
             }
 
-            model.SearchModel = new RosterIndexSearchModel
+            var model = new RosterIndexModel
             {
-                Statuses = await GetStatusListWithNoneAsync(),
-                PledgeClasses = await GetPledgeClassListWithNoneAsync(),
-                Semesters = await GetSemesterListWithNoneAsync(),
-                LivingType = "Both"
+                SelectedSemester = semester.SemesterId,
+                Semester = semester,
+                Semesters = await base.GetSemesterListAsync(),
+                Members = await base.GetRosterForSemester(semester)
             };
 
             return View(model);
@@ -142,7 +94,7 @@
                     m.PledgeClass.PledgeClassName,
                     m.Pin,
                     m.GraduationSemester.ToString(),
-                    m.Room.ToString(),
+                    m.RoomString(),
                     m.BigBrother == null ? "None" : m.BigBrother.FirstName + " " + m.BigBrother.LastName,
                     m.ShirtSize);
                 sb.AppendLine(line);

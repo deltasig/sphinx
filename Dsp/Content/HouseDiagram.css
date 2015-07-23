@@ -1,0 +1,43 @@
+﻿rect {
+    fill: lightgray;
+    stroke: darkgray;
+    stroke-width: 1;
+}
+
+rect.door {
+    fill: gray;
+}
+
+path {
+    stroke: darkgray;
+    stroke-width: 1;
+}
+
+path.room {
+    fill: #f9f7bf;
+}
+
+path.room:hover,
+path.room:focus {
+    fill: #fffdc2;
+    cursor: pointer;
+}
+
+path.nonroom {
+    fill: lightgray;
+}
+
+path.stairs {
+    fill: gray;
+}
+
+text {
+    fill: white;
+    font-family: 'Open Sans';
+    font-size: 40px;
+}
+
+.member:hover {
+    font-weight: bold;
+    cursor: move;
+}
