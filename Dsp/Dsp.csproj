@@ -251,6 +251,18 @@
     <Compile Include="Migrations\201507152053564_LeaderPKRefactoring.Designer.cs">
       <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201507230024165_AddRoomSemester.cs" />
+    <Compile Include="Migrations\201507230024165_AddRoomSemester.Designer.cs">
+      <DependentUpon>201507230024165_AddRoomSemester.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507231924452_RemoveRoomField.cs" />
+    <Compile Include="Migrations\201507231924452_RemoveRoomField.Designer.cs">
+      <DependentUpon>201507231924452_RemoveRoomField.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.cs" />
+    <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.Designer.cs">
+      <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -356,7 +368,6 @@
     <Compile Include="Areas\Members\Models\RegisterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationModel.cs" />
     <Compile Include="Areas\Members\Models\RosterIndexModel.cs" />
-    <Compile Include="Areas\Members\Models\RosterIndexSearchModel.cs" />
     <Compile Include="Areas\Members\Models\UnregisterModel.cs" />
     <Compile Include="Areas\Scholarships\Controllers\ApplicationsController.cs" />
     <Compile Include="Areas\Scholarships\Controllers\QuestionsController.cs" />
@@ -424,6 +435,7 @@
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\HouseDiagram.css" />
     <Content Include="Content\multi-select.css" />
     <Content Include="Content\OpenSans.css" />
     <Content Include="Content\themes\base\accordion.css" />
@@ -575,7 +587,6 @@
     <Content Include="Areas\House\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\House\Views\Rooms\Map.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Report.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Create.cshtml" />
@@ -912,6 +923,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507152053564_LeaderPKRefactoring.resx">
       <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507230024165_AddRoomSemester.resx">
+      <DependentUpon>201507230024165_AddRoomSemester.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507231924452_RemoveRoomField.resx">
+      <DependentUpon>201507231924452_RemoveRoomField.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201507232040482_ChangedMoveOutFieldType.resx">
+      <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

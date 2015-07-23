@@ -251,7 +251,7 @@
             model.ChartXLabels = new List<string>();
             for (var i = 0; i < values.Count; i++)
             {
-                if (signups.First(s => s.UserId == values[i].UserId).Member.Room == 0)
+                if (signups.First(s => s.UserId == values[i].UserId).Member.WasLivingInHouse(semester.DateEnd))
                 {
                     model.ChartXLabels.Add((i+1).ToString() + "*");
                 }

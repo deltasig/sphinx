@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Edit Room";
+    ViewBag.Subtitle = Model.Semester;
 }
 
 <div class="container-fluid">
@@ -21,6 +22,7 @@
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(model => model.RoomId)
+                @Html.HiddenFor(model => model.SemesterId)
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Name, new { @class = "control-label" })

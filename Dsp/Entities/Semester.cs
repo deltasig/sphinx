@@ -31,6 +31,8 @@ namespace Dsp.Entities
         public virtual ICollection<Member> GraduatingMembers { get; set; }
         [InverseProperty("Semester")]
         public virtual ICollection<PledgeClass> PledgeClasses { get; set; }
+        [InverseProperty("Semester")]
+        public virtual ICollection<Room> Rooms { get; set; }
 
         public override string ToString()
         {

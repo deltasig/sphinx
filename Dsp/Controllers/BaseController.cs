@@ -94,9 +94,24 @@
             return await _db.Users
                 .Where(d =>
                     d.LastName != "Hirtz" &&
-                    (d.MemberStatus.StatusName == "Active" || 
+                    (d.MemberStatus.StatusName == "Alumnus" ||
+                    d.MemberStatus.StatusName == "Active" || 
                     d.MemberStatus.StatusName == "Pledge" || 
                     d.MemberStatus.StatusName == "Neophyte") &&
+                    d.PledgeClass.Semester.DateStart < semester.DateEnd &&
+                    d.GraduationSemester.DateEnd > semester.DateStart)
+                .ToListAsync();
+        }
+        protected virtual async Task<List<Member>> GetRosterForSemesterPlusReleased(Semester semester)
+        {
+            return await _db.Users
+                .Where(d =>
+                    d.LastName != "Hirtz" &&
+                    (d.MemberStatus.StatusName == "Alumnus" ||
+                    d.MemberStatus.StatusName == "Active" ||
+                    d.MemberStatus.StatusName == "Pledge" ||
+                    d.MemberStatus.StatusName == "Neophyte" ||
+                    d.MemberStatus.StatusName == "Released") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                     d.GraduationSemester.DateEnd > semester.DateStart)
                 .ToListAsync();

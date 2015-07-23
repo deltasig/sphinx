@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
+    using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
 
@@ -20,11 +21,7 @@
 
         [Range(0, 999999999, ErrorMessage = "Pin number is too long."), DataType(DataType.Text)]
         public int? Pin { get; set; }
-
-        [Range(0, 999, ErrorMessage = "Room number is too long."), DataType(DataType.Text)]
-        [Display(Name = "Room (Enter 0 for Out-of-House)")]
-        public int? Room { get; set; }
-
+        
         [Required, Display(Name = "Member Status")]
         public int StatusId { get; set; }
 
@@ -93,13 +90,62 @@
         [InverseProperty("Member")]
         public virtual ICollection<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
         
+        public RoomToMember GetMostRecentRoomAssignment()
+        {
+            return Rooms.OrderByDescending(r => r.MovedOut).FirstOrDefault();
+        }
+
         public string RoomString()
         {
-            if (Room == null)
-                return "Unassigned";
-            return Room == 0 ? "OOH" : Room.ToString();
+            if (!Rooms.Any()) return "No Rooms Found";
+
+            var mostRecentAssignment = GetMostRecentRoomAssignment();
+            if (mostRecentAssignment.MovedOut >= DateTime.UtcNow)
+            {
+                return mostRecentAssignment.Room.Name + " (up-to-date)";
+            }
+            return mostRecentAssignment.Room.Name + " (out-of-date)";
         }
-        
+
+        public bool HasLivingAssignment(int sid)
+        {
+            return Rooms.Any(r => r.Room.SemesterId == sid);
+        }
+
+        public bool IsLivingInHouse()
+        {
+            var mostRecentAssignment = GetMostRecentRoomAssignment();
+            if (mostRecentAssignment == null) return false;
+
+            int value;
+            return int.TryParse(mostRecentAssignment.Room.Name, out value);
+        }
+
+        public bool WasLivingInHouse(DateTime dateTime)
+        {
+            var livingSituationOnGivenDate = Rooms
+                .SingleOrDefault(r => r.MovedIn <= dateTime && dateTime <= r.MovedOut);
+            if (livingSituationOnGivenDate == null) return false;
+
+            int value;
+            return int.TryParse(livingSituationOnGivenDate.Room.Name, out value);
+        }
+
+        public bool WasLivingInHouse(int sid)
+        {
+            var assignmentsDuringSemester = Rooms.Where(r => r.Room.SemesterId == sid).ToList();
+            if (!assignmentsDuringSemester.Any()) return false;
+
+            foreach (var a in assignmentsDuringSemester)
+            {
+                int value;
+                if (int.TryParse(a.Room.Name, out value))
+                    return true;
+            }
+
+            return false;
+        }
+
         public override string ToString()
         {
             return FirstName + " " + LastName;

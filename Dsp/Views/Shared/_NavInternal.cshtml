@@ -106,11 +106,16 @@
                 </a>
             </li>
             <li class="@(ViewBag.Title.Contains("Incident") ? "active" : "")">
-                <a href="@Url.Action("Index", "Incidents", new { area = "Members" })">
+                <a href="@Url.Action("Index", "Incidents", new {area = "Members"})">
                     <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
                 </a>
             </li>
-            @*<li>@Html.ActionLink("Rooms", "Index", "Rooms", new { area = "House" }, null)</li>*@
+            <li class="@(ViewBag.Title.Contains("Room") ? "active" : "")">
+                <a href="@Url.Action("Index", "Rooms", new { area = "House" })">
+                    <i class="fa fa-fw fa-home"></i> Housing
+                    <span class="label label-warning pull-right">New!</span>
+                </a>
+            </li>
             <li>
                 <a href="javascript:;" data-toggle="collapse" data-target="#alumni">
                     <i class="fa fa-fw fa-anchor"></i> Alumni <i class="fa fa-fw fa-caret-down"></i>
