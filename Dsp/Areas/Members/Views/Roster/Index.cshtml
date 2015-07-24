@@ -11,7 +11,7 @@
 <div class="container-fluid">
     <div class="row row-space">
         <div class="col-xs-12">
-            @using (Html.BeginForm("Index", "Roster", new { area = "Members" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
+            @using (Html.BeginForm("Index", "Roster", new { area = "Members" }, FormMethod.Get, new { @class = "form-inline hidden-xs hidden-sm", role = "form" }))
             {
                 <div class="form-group">
                     @Html.DropDownList("sid", Model.Semesters,
@@ -21,6 +21,17 @@
                         autocomplete = "off",
                         id = "semester-dd",
                         data_live_search = "true"
+                    })
+                    <input type="submit" value="Filter" class="btn btn-default" />
+                </div>
+            }
+            @using (Html.BeginForm("Index", "Roster", new { area = "Members" }, FormMethod.Get, new { @class = "form-inline visible-xs visible-sm", role = "form" }))
+            {
+                <div class="form-group">
+                    @Html.DropDownList("sid", Model.Semesters,
+                    new
+                    {
+                        @class = "form-control"
                     })
                     <input type="submit" value="Filter" class="btn btn-default" />
                 </div>
@@ -55,66 +66,84 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-condensed table-hover">
-                    <thead>
-                    <tr>
-                        <th class="">First</th>
-                        <th class="">Last</th>
-                        <th class="">Email</th>
-                        <th class="">Current Status</th>
-                        <th class="">P. Class</th>
-                        <th class="">Graduating</th>
-                        <th class="">Big Bro</th>
-                        <th class="">Room</th>
-                        <th class="">Shirt</th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @if (Model.Members.Any())
-                    {
-                        foreach (var item in Model.Members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
-                        {
-                            <tr class="@(item.MemberStatus.StatusName == "Released" ? "danger" : "")">
-                                <td>@item.FirstName</td>
-                                <td>@item.LastName</td>
-                                <td><a href="mailto:@item.Email">@item.Email</a></td>
-                                <td>@item.MemberStatus.StatusName</td>
-                                <td>
-                                    &@(item.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : item.PledgeClass.PledgeClassName);
-                                </td>
-                                <td>
-                                    @item.GraduationSemester.DateStart.Year
-                                    @(item.GraduationSemester.DateStart.Month < 6 ? "Spring " : "Fall ")
-                                </td>
-                                <td>
-                                    @if (item.BigBroId != null)
-                                    {
-                                        @item.BigBrother.FirstName@:
-                                        @item.BigBrother.LastName[0]
-                                        @:.
-                                    }
-                                    else
-                                    {
-                                        @:None
-                                    }
-                                </td>
-                                <td>@(item.RoomString())</td>
-                                <td>@item.ShirtSize</td>
-                                <td class="text-right">
-                                    @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = item.UserName, area = "Edu"}, null) |
-                                    @Html.ActionLink("Profile", "Index", "Account", new {userName = item.UserName, area = "Members"}, null)
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Edit", "Edit", "Account", new {userName = item.UserName, area = "Members"}, null)
-                                    }
-                                </td>
+                <div class="table-responsive hidden-xs hidden-sm">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th class="">First</th>
+                                <th class="">Last</th>
+                                <th class="">Current Status</th>
+                                <th class="">Pledge Class</th>
+                                <th class="">Graduating</th>
+                                <th class="">Big Bro</th>
+                                <th class="">Room</th>
+                                <th></th>
                             </tr>
-                        }
+                        </thead>
+                        <tbody>
+                            @if (Model.Members.Any())
+                            {
+                                foreach (var item in Model.Members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
+                                {
+                                    <tr class="@(item.MemberStatus.StatusName == "Released" ? "danger" : "")">
+                                        <td>@item.FirstName</td>
+                                        <td>@item.LastName</td>
+                                        <td>@item.MemberStatus.StatusName</td>
+                                        <td>
+                                            &@(item.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : item.PledgeClass.PledgeClassName);
+                                        </td>
+                                        <td>
+                                            @item.GraduationSemester.DateStart.Year
+                                            @(item.GraduationSemester.DateStart.Month < 6 ? "Spring " : "Fall ")
+                                        </td>
+                                        <td>
+                                            @if (item.BigBroId != null)
+                                            {
+                                                @item.BigBrother.FirstName@:
+                                                @item.BigBrother.LastName[0]
+                                                @:.
+                                    }
+                                            else
+                                            {
+                                                @:None
+                                    }
+                                        </td>
+                                        <td>@(item.RoomString())</td>
+                                        <td class="text-right">
+                                            @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
+                                            @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null)
+                                            @if (User.IsInRole("Administrator") || User.IsInRole("Secretary"))
+                                            {
+                                                @: |
+                                                @Html.ActionLink("Edit", "Edit", "Account", new { userName = item.UserName, area = "Members" }, null)
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="list-group visible-xs visible-sm">
+                    @foreach (var m in Model.Members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
+                    {
+                        var phone = m.PhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Entities.PhoneNumber();
+
+                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" class="list-group-item">
+                            <h4 class="list-group-item-heading">
+                                @m.ToString()
+                                <small><span class="label label-success">@m.MemberStatus.StatusName</span></small>
+                                <small><span class="label label-default">@m.PledgeClass.PledgeClassName</span></small>
+                            </h4>
+                            <p class="list-group-item-text">
+                                <small>
+                                    Email: @m.Email, Mobile: @phone.Number <br class="visible-xs" />
+                                    Location: @m.RoomString()
+                                </small>
+                            </p>
+                        </a>
                     }
-                    </tbody>
-                </table>
+                </div>
             </div>
         </div>
     </div>
