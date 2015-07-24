@@ -97,14 +97,14 @@
 
         public string RoomString()
         {
-            if (!Rooms.Any()) return "No Rooms Found";
+            if (!Rooms.Any()) return "No rooms found";
 
             var mostRecentAssignment = GetMostRecentRoomAssignment();
             if (mostRecentAssignment.MovedOut >= DateTime.UtcNow)
             {
-                return mostRecentAssignment.Room.Name + " (up-to-date)";
+                return mostRecentAssignment.Room.Name;
             }
-            return mostRecentAssignment.Room.Name + " (out-of-date)";
+            return mostRecentAssignment.Room.Name + " (OOD)";
         }
 
         public bool HasLivingAssignment(int sid)
