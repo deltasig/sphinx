@@ -86,7 +86,7 @@
             if (string.IsNullOrEmpty(userName)) userName = User.Identity.GetUserName();
 
             var user = await UserManager.FindByNameAsync(userName);
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId<int>());
+            var userLogins = await UserManager.GetLoginsAsync(user.Id);
             var otherLogins = AuthenticationManager.GetExternalAuthenticationTypes()
                 .Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider))
                 .ToList();
