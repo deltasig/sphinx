@@ -129,7 +129,7 @@
                         var isAssigned = m.Rooms.Any(r => r.Room.SemesterId == Model.Semester.SemesterId);
                         var color = isAssigned ? "list-group-item-info" : "";
 
-                        <li class="list-group-item @color" id="m-@m.Id" onclick="selectMember(@m.Id, '@m.ToString()')" style="cursor: pointer">
+                        <li class="list-group-item @color" id="m-@m.Id" onclick="selectMember(@m.Id, &quot;@m.ToString()&quot;)" style="cursor: pointer">
                             @m.FirstName @m.LastName <span class="badge"><small>@m.PledgeClass.PledgeClassName</small></span>
                         </li>
                     }
