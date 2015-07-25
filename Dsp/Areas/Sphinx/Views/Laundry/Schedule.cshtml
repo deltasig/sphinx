@@ -62,10 +62,12 @@
                                                 // Reserved by someone else
                                                 else
                                                 {
+                                                    int value;
+
                                                     <div class="text-center">
                                                         <p>
                                                             @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
-                                                            @if (timeSlot.Member.Room == 0)
+                                                            @if (int.TryParse(timeSlot.Member.RoomString(), out value))
                                                             {
                                                                 @:*
                                                             }
