@@ -4,6 +4,10 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Classes";
+
+    var isAdmin = User.IsInRole("Administrator");
+    var isAcademics = User.IsInRole("Academics");
+
     var filter = new ClassesIndexFilterModel
     {
         page = ViewBag.Page,
@@ -293,7 +297,13 @@
                                 {
                                     <small>| Searched for: <em>@ViewBag.CurrentFilter</em></small>
                                 }
-                                @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-xs btn-success pull-right" })
+                                <div class="btn-group pull-right" role="group" aria-label="...">
+                                    @if (isAdmin || isAcademics)
+                                    {
+                                        @Html.ActionLink("Duplicates", "Duplicates", null, new { @class = "btn btn-xs btn-default" })
+                                    }
+                                    @Html.ActionLink("Add Class", "Create", null, new { @class = "btn btn-xs btn-success" })
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -301,23 +311,36 @@
                         @foreach (var c in Model.Classes)
                         {
                             <a href="@Url.Action("Details", new {id = c.ClassId})" class="list-group-item">
-                                <h4 class="list-group-item-heading">
-                                    <small>@c.CourseShorthand</small>
-                                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top" title="Enrolled (currently)">
-                                        <i class="fa fa-fw fa-user"></i> 
-                                        @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId)
-                                    </span>
-                                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top" title="Enrolled (all-time)">
-                                        <i class="fa fa-fw fa-users"></i>
-                                        @c.ClassesTaken.Count
-                                    </span>
-                                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top" title="File Count">
-                                        <i class="fa fa-fw fa-book"></i>
-                                        @c.ClassFiles.Count
-                                    </span>
-                                    <br class="visible-xs" />
-                                    @c.CourseName
-                                </h4>
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        <small>@c.CourseShorthand</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small>@c.CourseName</small>
+                                    </div>
+                                    <div class="col-md-4 visible-md visible-lg text-right">
+                                        <small style="margin-right:15px"
+                                               data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
+                                            <i class="fa fa-fw fa-users"></i>
+                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
+                                        </small>
+                                        <small data-toggle="tooltip" data-placement="top" title="Files">
+                                            <i class="fa fa-fw fa-folder-open-o"></i>
+                                            @c.ClassFiles.Count
+                                        </small>
+                                    </div>
+                                    <div class="col-md-4 visible-xs visible-sm">
+                                        <small style="margin-right:15px"
+                                               data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
+                                            <i class="fa fa-fw fa-users"></i>
+                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
+                                        </small>
+                                        <small data-toggle="tooltip" data-placement="top" title="Files">
+                                            <i class="fa fa-fw fa-folder-open-o"></i>
+                                            @c.ClassFiles.Count
+                                        </small>
+                                    </div>
+                                </div>
                             </a>
                         }
                     </ul>

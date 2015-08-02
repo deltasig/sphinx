@@ -44,7 +44,11 @@
                 }
 
                 <a href="@Url.Action("Details", "Departments", new {id = Model.Class.Department.DepartmentId})"
-                   class="btn btn-sm btn-info"><i class="fa fa-link"></i> @Model.Class.Department.Name</a>
+                   class="btn btn-sm btn-info"
+                   data-toggle="tooltip" data-placement="top"
+                   title="Department for this class">
+                    <i class="fa fa-link"></i> @Model.Class.Department.Name
+                </a>
 
                 if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                 {
