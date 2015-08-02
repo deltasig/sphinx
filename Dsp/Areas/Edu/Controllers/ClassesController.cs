@@ -39,7 +39,7 @@
 
             var model = new ClassIndexModel
             {
-                Classes = filterResults, 
+                Classes = filterResults,
                 CurrentSemester = await GetThisSemesterAsync()
             };
             return View(model);
@@ -48,7 +48,7 @@
         public async Task<ActionResult> Create()
         {
             var model = new CreateClassModel();
-            model.Departments = new SelectList(await 
+            model.Departments = new SelectList(await
                 _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name");
             model.Class = new Class();
             return View(model);
@@ -59,20 +59,20 @@
         {
             var classExistsAlready = (await _db.Classes.AnyAsync(c =>
                 c.CourseShorthand == model.Class.CourseShorthand && c.DepartmentId == model.Class.DepartmentId));
-            
+
             if (ModelState.IsValid && !classExistsAlready)
             {
                 _db.Classes.Add(model.Class);
                 await _db.SaveChangesAsync();
                 ViewBag.SuccessMessage = GetClassResultMessage(ClassMessageId.AddClassSuccess);
                 model.Class = new Class();
-                model.Departments = new SelectList(await 
+                model.Departments = new SelectList(await
                     _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name");
             }
             else
             {
                 ViewBag.FailMessage = GetClassResultMessage(ClassMessageId.AddClassFailure);
-                model.Departments = new SelectList(await 
+                model.Departments = new SelectList(await
                     _db.Departments.OrderBy(c => c.Name).ToListAsync(), "DepartmentId", "Name", model.Class.DepartmentId);
             }
             return View(model);
@@ -214,7 +214,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            var model = new CreateClassModel {Class = await _db.Classes.FindAsync(id)};
+            var model = new CreateClassModel { Class = await _db.Classes.FindAsync(id) };
             if (model.Class == null)
             {
                 return HttpNotFound();
@@ -280,16 +280,88 @@
                 message = ClassMessageId.DeleteClassSuccess
             });
         }
-        
+
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> Duplicates(ClassMessageId? message)
+        {
+            switch (message)
+            {
+                case ClassMessageId.DuplicateMergeSuccess:
+                    ViewBag.SuccessMessage = "The duplicate merge was successful!";
+                    break;
+                case ClassMessageId.DuplicateMergeNothingSelectedFailure:
+                    ViewBag.FailMessage = "Nothing was merged because no primary class was selected.";
+                    break;
+            }
+
+            var shorthandGroups = await (from c in _db.Classes
+                                         group c by c.CourseShorthand.ToLower() into g
+                                         select new DuplicateGroup
+                                         {
+                                             Shorthand = g.Key,
+                                             Classes = g.Select(n => new DuplicateClass
+                                             {
+                                                 Class = n,
+                                                 IsPrimary = false
+                                             }).ToList()
+                                         }).ToListAsync();
+
+            var model = shorthandGroups.Where(g => g.Classes.Count > 1).ToList();
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> Duplicates(List<DuplicateGroup> model)
+        {
+            // If no primary was selected, return an error message.
+            if (!model.SelectMany(g => g.Classes).Any(c => c.IsPrimary))
+            {
+                return RedirectToAction("Duplicates", new { message = ClassMessageId.DuplicateMergeNothingSelectedFailure });
+            }
+            
+            foreach (var group in model)
+            {
+                // Skip if they did not check only one box.
+                if (group.Classes.Count(c => c.IsPrimary) != 1) continue;
+
+                // Start the merging procedure.
+                var primaryId = group.Classes.Single(c => c.IsPrimary).Class.ClassId;
+                // Remove the primary group from the model list so that it doesn't get include in following loop.
+                group.Classes.Remove(group.Classes.Single(c => c.IsPrimary));
+
+                foreach (var cid in group.Classes.Select(cl => cl.Class.ClassId))
+                {
+                    // Set any classTakens (enrollments) to use the primary class.
+                    var enrollmentsToMove = await _db.ClassesTaken.Where(c => c.ClassId == cid).ToListAsync();
+                    foreach (var e in enrollmentsToMove)
+                    {
+                        var classTaken = await _db.ClassesTaken.FindAsync(e.ClassTakenId);
+                        classTaken.ClassId = primaryId;
+                        _db.Entry(classTaken).State = EntityState.Modified;
+                    }
+                    // Set any files to use the primary class.
+                    var filesToMove = await _db.ClassFiles.Where(c => c.ClassId == cid).ToListAsync();
+                    foreach (var f in filesToMove)
+                    {
+                        var classFile = await _db.ClassesTaken.FindAsync(f.ClassFileId);
+                        classFile.ClassId = primaryId;
+                        _db.Entry(classFile).State = EntityState.Modified;
+                    }
+                    // Now with everything moved over to the primary, remove the duplicated class.
+                    var classToRemove = await _db.Classes.FindAsync(cid);
+                    _db.Classes.Remove(classToRemove);
+                    await _db.SaveChangesAsync();
+                }
+            }
+
+            return RedirectToAction("Duplicates", new { message = ClassMessageId.DuplicateMergeSuccess });
+        }
+
         public async Task<ActionResult> Schedule(string userName, ClassEnrollmentMessageId? message)
         {
             ViewBag.Message = string.Empty;
-
-            if (string.IsNullOrEmpty(userName))
-            {
-                ViewBag.FailMessage = "No one by the username was found!";
-                return View(new List<ClassTaken>());
-            }
 
             switch (message)
             {
@@ -307,6 +379,12 @@
             }
 
             var member = await UserManager.FindByNameAsync(userName);
+            if (string.IsNullOrEmpty(userName) || member == null)
+            {
+                ViewBag.FailMessage = "No one by that username was found!";
+                userName = User.Identity.GetUserName();
+            }
+            member = await UserManager.FindByNameAsync(userName);
 
             var model = new ClassScheduleModel
             {
@@ -322,7 +400,7 @@
                 ClassesTaken = member.ClassesTaken.OrderByDescending(s => s.Semester.DateStart)
             };
 
-            if(!model.ClassesTaken.Any())
+            if (!model.ClassesTaken.Any())
             {
                 ViewBag.Message += "No classes found for " + userName + ". ";
             }
@@ -337,7 +415,7 @@
             if (!ModelState.IsValid)
                 return RedirectToAction("Schedule", new
                 {
-                    userName = model.SelectedUserName, 
+                    userName = model.SelectedUserName,
                     message = ClassEnrollmentMessageId.AddClassTakenUnknownFailure
                 });
 
@@ -349,9 +427,9 @@
 
             var member = await UserManager.FindByNameAsync(model.SelectedUserName);
 
-            if (member.ClassesTaken.Any(c => 
-                c.ClassId == model.ClassTaken.ClassId && 
-                c.UserId == model.ClassTaken.UserId && 
+            if (member.ClassesTaken.Any(c =>
+                c.ClassId == model.ClassTaken.ClassId &&
+                c.UserId == model.ClassTaken.UserId &&
                 c.SemesterId == model.ClassTaken.SemesterId))
             {
                 return RedirectToAction("Schedule", new
@@ -367,7 +445,7 @@
 
             return RedirectToAction("Schedule", new
             {
-                userName = model.SelectedUserName, 
+                userName = model.SelectedUserName,
                 message = ClassEnrollmentMessageId.AddClassTakenSuccess
             });
         }
@@ -403,7 +481,7 @@
 
             return RedirectToAction("Schedule", new
             {
-                userName = member.UserName ?? User.Identity.GetUserName(), 
+                userName = member.UserName ?? User.Identity.GetUserName(),
                 message = ClassEnrollmentMessageId.DeleteClassTakenSuccess
             });
         }
@@ -424,7 +502,7 @@
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> EditClassTaken(ClassTaken classTaken)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return RedirectToAction("Schedule", new
                 {
                     userName = classTaken.Member.UserName,
@@ -436,9 +514,10 @@
 
             var member = await UserManager.FindByIdAsync(classTaken.UserId);
 
-            return RedirectToAction("Schedule", new { 
+            return RedirectToAction("Schedule", new
+            {
                 userName = member.UserName,
-                message = ClassEnrollmentMessageId.EditClassTakenSuccess 
+                message = ClassEnrollmentMessageId.EditClassTakenSuccess
             });
         }
 
@@ -448,8 +527,8 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            
-            switch(message)
+
+            switch (message)
             {
                 case ClassEnrollmentMessageId.UpdateTranscriptFailure:
                     ViewBag.FailMessage = GetEnrollmentResultMessage(message);
@@ -487,11 +566,11 @@
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
 
-            foreach(var c in model)
+            foreach (var c in model)
             {
                 var c1 = c;
                 var classTaken = await _db.ClassesTaken
-                    .SingleAsync(t => 
+                    .SingleAsync(t =>
                         t.ClassId == c1.ClassTaken.ClassId &&
                         t.SemesterId == c1.ClassTaken.SemesterId &&
                         t.UserId == c1.ClassTaken.UserId);
@@ -507,7 +586,7 @@
 
             return RedirectToAction("Transcript", new
             {
-                userName = model.First().Member.UserName, 
+                userName = model.First().Member.UserName,
                 message = ClassEnrollmentMessageId.UpdateTranscriptSuccess
             });
         }
@@ -515,13 +594,13 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> UploadFile(ClassDetailsModel model)
         {
-            if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0) 
+            if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0)
                 return RedirectToAction("Details", new
                 {
                     id = model.Class.ClassId,
                     message = ClassFileMessageId.UploadInvalidFailure
                 });
-            if (model.FileInfoModel.File.ContentType != "application/pdf") 
+            if (model.FileInfoModel.File.ContentType != "application/pdf")
                 return RedirectToAction("Details", new
                 {
                     id = model.Class.ClassId,
@@ -553,7 +632,7 @@
                 {
                     ClassId = model.Class.ClassId,
                     UserId = User.Identity.GetUserId<int>(),
-                    AwsCode = key, 
+                    AwsCode = key,
                     UploadedOn = DateTime.UtcNow,
                 };
                 _db.ClassFiles.Add(file);
@@ -593,13 +672,13 @@
                 {
                     var request = new GetObjectRequest
                     {
-                        BucketName = awsBucket, 
+                        BucketName = awsBucket,
                         Key = file.AwsCode
                     };
                     // Make AWS Request for file.
                     var response = client.GetObject(request);
 
-                    using(var memoryStream = new MemoryStream())
+                    using (var memoryStream = new MemoryStream())
                     {
                         // Convert response to a readable format.
                         response.ResponseStream.CopyTo(memoryStream);
@@ -692,16 +771,16 @@
                 message = ClassFileMessageId.DeleteFileSuccess
             });
         }
-        
+
         public static dynamic GetClassResultMessage(ClassMessageId? message)
         {
-            return message == ClassMessageId.DeleteClassFailure 
+            return message == ClassMessageId.DeleteClassFailure
                     ? "This class is currently being taken, or has been taken, " +
                       "by one or more people, therefore it can't be deleted."
                 : message == ClassMessageId.DeleteClassSuccess ? "Class deleted successfully."
                 : message == ClassMessageId.AddClassFailure ? "Class cannot be created because a probable duplicate was found."
                 : message == ClassMessageId.AddClassSuccess ? "Class created successfully."
-                : message == ClassMessageId.EditClassFailure 
+                : message == ClassMessageId.EditClassFailure
                     ? "Class could not be updated.  Check that the class number isn't a duplicated of an existing class."
                 : message == ClassMessageId.EditClassSuccess ? "Class updated successfully."
                 : "";
@@ -739,7 +818,9 @@
             AddClassFailure,
             AddClassSuccess,
             EditClassFailure,
-            EditClassSuccess
+            EditClassSuccess,
+            DuplicateMergeSuccess,
+            DuplicateMergeNothingSelectedFailure
         }
 
         public enum ClassFileMessageId

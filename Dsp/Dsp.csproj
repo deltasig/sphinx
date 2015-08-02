@@ -232,6 +232,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Edu\Models\DuplicateGroup.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
@@ -709,6 +710,7 @@
     <Content Include="Areas\Members\Views\Account\Lockout.cshtml" />
     <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\Duplicates.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
