@@ -102,13 +102,13 @@
                                                 @item.BigBrother.FirstName@:
                                                 @item.BigBrother.LastName[0]
                                                 @:.
-                                    }
+                                            }
                                             else
                                             {
                                                 @:None
-                                    }
+                                            }
                                         </td>
-                                        <td>@(item.RoomString())</td>
+                                        <td>@(item.LivingAssignmentForSemester(Model.SelectedSemester))</td>
                                         <td class="text-right">
                                             @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = item.UserName, area = "Edu" }, null) |
                                             @Html.ActionLink("Profile", "Index", "Account", new { userName = item.UserName, area = "Members" }, null)
