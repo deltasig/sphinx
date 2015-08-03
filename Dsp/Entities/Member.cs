@@ -157,5 +157,17 @@
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             return userIdentity;
         }
+
+        public string LivingAssignmentForSemester(int sid)
+        {
+            if (!HasLivingAssignment(sid))
+            {
+                return "Unknown";
+            }
+
+            var assignments = Rooms.Where(r => r.Room.SemesterId == sid).OrderByDescending(r => r.MovedOut);
+            
+            return assignments.First().Room.Name;
+        }
     }
 }
