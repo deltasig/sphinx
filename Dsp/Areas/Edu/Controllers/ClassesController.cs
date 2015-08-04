@@ -282,17 +282,10 @@
         }
 
         [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Duplicates(ClassMessageId? message)
+        public async Task<ActionResult> Duplicates()
         {
-            switch (message)
-            {
-                case ClassMessageId.DuplicateMergeSuccess:
-                    ViewBag.SuccessMessage = "The duplicate merge was successful!";
-                    break;
-                case ClassMessageId.DuplicateMergeNothingSelectedFailure:
-                    ViewBag.FailMessage = "Nothing was merged because no primary class was selected.";
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailMessage = TempData["FailureMessage"];
 
             var shorthandGroups = await (from c in _db.Classes
                                          group c by c.CourseShorthand.ToLower() into g
@@ -318,7 +311,8 @@
             // If no primary was selected, return an error message.
             if (!model.SelectMany(g => g.Classes).Any(c => c.IsPrimary))
             {
-                return RedirectToAction("Duplicates", new { message = ClassMessageId.DuplicateMergeNothingSelectedFailure });
+                TempData["FailureMessage"] = "Nothing was merged because no primary class was selected.";
+                return RedirectToAction("Duplicates");
             }
             
             foreach (var group in model)
@@ -356,7 +350,8 @@
                 }
             }
 
-            return RedirectToAction("Duplicates", new { message = ClassMessageId.DuplicateMergeSuccess });
+            TempData["SuccessMessage"] = "The duplicate merge was successful!";
+            return RedirectToAction("Duplicates");
         }
 
         public async Task<ActionResult> Schedule(string userName, ClassEnrollmentMessageId? message)
