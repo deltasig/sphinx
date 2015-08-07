@@ -169,16 +169,17 @@
                 return HttpNotFound();
             }
 
+            var userId = User.Identity.GetUserId<int>();
             var existingVote = await _db.MealVotes
                     .SingleOrDefaultAsync(v => 
-                        v.UserId == User.Identity.GetUserId<int>() && 
+                        v.UserId == userId && 
                         v.MealItemId == mealItem.MealItemId);
 
             if (existingVote == null)
             {
                 _db.MealVotes.Add(new MealVote
                 {
-                    UserId = User.Identity.GetUserId<int>(),
+                    UserId = userId,
                     MealItemId = mealItem.MealItemId,
                     IsUpvote = true
                 });
@@ -216,16 +217,17 @@
                 return HttpNotFound();
             }
 
+            var userId = User.Identity.GetUserId<int>();
             var existingVote = await _db.MealVotes
                     .SingleOrDefaultAsync(v =>
-                        v.UserId == User.Identity.GetUserId<int>() &&
+                        v.UserId == userId &&
                         v.MealItemId == mealItem.MealItemId);
 
             if (existingVote == null)
             {
                 _db.MealVotes.Add(new MealVote
                 {
-                    UserId = User.Identity.GetUserId<int>(),
+                    UserId = userId,
                     MealItemId = mealItem.MealItemId,
                     IsUpvote = false
                 });
