@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Areas.Alumni.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;

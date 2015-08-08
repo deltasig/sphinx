@@ -150,6 +150,10 @@
         {
             return FirstName + " " + LastName;
         }
+        public string ToShortLastNameString()
+        {
+            return FirstName + " " + LastName.Substring(0, 1) + ".";
+        }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Member, int> manager)
         {

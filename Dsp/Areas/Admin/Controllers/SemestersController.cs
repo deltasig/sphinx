@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Areas.Admin.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Models;
     using System.Data.Entity;
     using System.Linq;

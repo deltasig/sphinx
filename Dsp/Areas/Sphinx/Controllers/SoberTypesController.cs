@@ -1,12 +1,12 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
+    using MarkdownSharp;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using MarkdownSharp;
 
     [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
     public class SoberTypesController : BaseController

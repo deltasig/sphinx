@@ -1,4 +1,4 @@
-﻿@model Dsp.Areas.Dsp.Models.SphinxHomeIndexModel
+﻿@model Dsp.Areas.Sphinx.Models.SphinxHomeIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sphinx";
@@ -72,7 +72,10 @@
                     <div class="alert alert-warning">
                         <strong>New Member: </strong>You do not appear to have classes entered for last semester.
 
-                        <u>If this is your first semester in college after graduating high school, disregard this message.</u>
+                        <small>
+                            <i class="fa fa-exclamation-triangle"></i> 
+                            If this is your first semester in college after graduating high school, disregard this message.
+                        </small>
 
                         Otherwise, please go fill out your classes for last semester with the
                         @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null).

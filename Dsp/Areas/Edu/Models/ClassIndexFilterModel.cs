@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Areas.Edu.Models
 {
-    using global::Dsp.Models;
+    using Dsp.Models;
 
     public class ClassesIndexFilterModel : Pager
     {

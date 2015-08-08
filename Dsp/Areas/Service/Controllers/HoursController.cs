@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Areas.Service.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;

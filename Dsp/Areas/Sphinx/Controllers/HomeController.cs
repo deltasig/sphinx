@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
-    using Dsp.Models;
-    using global::Dsp.Controllers;
+    using Dsp.Controllers;
+    using Models;
     using System;
     using System.Data.Entity;
     using System.Linq;

@@ -1,9 +1,9 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
-    using Dsp.Models;
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
+    using Models;
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
@@ -15,8 +15,7 @@
 
     public class LaundryController : BaseController
     {
-        [HttpGet]
-        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Schedule(LaundrySignupMessage? message)
         {
             switch (message)
@@ -31,38 +30,11 @@
                     ViewBag.FailMessage = GetLaundrySignupMessage(message);
                     break;
             }
-            var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
-            const int hoursInDay = 24;
-            const int slotSize = 2;
 
-            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= startOfTodayUtc).ToListAsync();
-            var slots = new List<List<LaundrySignup>>();
-
-            for (var y = 0; y < 12; y++) // Hours in day
-            {
-                var timeSlotSchedule = new List<LaundrySignup>();
-                for (var x = 0; x < 7; x++) // Days of week
-                {
-                    var timeSlot = startOfTodayUtc.AddHours(y * slotSize + x * hoursInDay);
-                    if (existingSignups.Any(s => s.DateTimeShift == timeSlot))
-                    {
-                        var existing = existingSignups.Single(s => s.DateTimeShift == timeSlot);
-                        var reservation = new LaundrySignup
-                        {
-                            DateTimeSignedUp = existing.DateTimeSignedUp,
-                            DateTimeShift = ConvertUtcToCst(timeSlot),
-                            Member = existing.Member,
-                            UserId = existing.UserId
-                        };
-                        timeSlotSchedule.Add(reservation);
-                    }
-                    else
-                    {
-                        timeSlotSchedule.Add(new LaundrySignup { DateTimeShift = ConvertUtcToCst(timeSlot) });
-                    }
-                }
-                slots.Add(timeSlotSchedule);
-            }
+            // Build Laundry Schedule
+            var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
+            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= nowCst.Date).ToListAsync();
+            var schedule = new LaundrySchedule(nowCst, 7, 2, existingSignups);
 
             // Get semester list
             var signups = await _db.LaundrySignups.ToListAsync();
@@ -84,22 +56,21 @@
 
             var model = new LaundryIndexModel
             {
-                Slots = slots,
+                Schedule = schedule,
                 SemesterList = await GetCustomSemesterListAsync(semesters)
             };
             return View(model);
         }
-        [HttpPost]
-        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Reserve(LaundrySignup signup)
         {
             if (!ModelState.IsValid)
                 return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveFailed });
 
-            var startOfToday = DateTime.UtcNow.Date;
+            var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
             var currentUserId = User.Identity.GetUserId<int>();
             var existingSignups = await _db.LaundrySignups
-                .Where(l => l.DateTimeShift >= startOfToday &&
+                .Where(l => l.DateTimeShift >= nowCst.Date &&
                             l.UserId == currentUserId)
                 .ToListAsync();
 
@@ -112,20 +83,18 @@
             }
 
             signup.UserId = currentUserId;
-            signup.DateTimeSignedUp = DateTime.UtcNow;
-            signup.DateTimeShift = ConvertCstToUtc(signup.DateTimeShift);
+            signup.DateTimeSignedUp = nowCst;
+            signup.DateTimeShift = signup.DateTimeShift;
 
             _db.LaundrySignups.Add(signup);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveSuccess });
         }
-        [HttpPost]
-        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Cancel(LaundrySignup cancel)
         {
-            cancel.DateTimeShift = ConvertCstToUtc(cancel.DateTimeShift);
-            var shift = await _db.LaundrySignups.SingleAsync(s => s.DateTimeShift == cancel.DateTimeShift);
+            var shift = await _db.LaundrySignups.SingleOrDefaultAsync(s => s.DateTimeShift == cancel.DateTimeShift);
 
             if (shift == null)
                 return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
@@ -135,8 +104,7 @@
 
             return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
         }
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<ActionResult> GetStats(int? sid)
         {
             var model = new LaundryStatsModel();
@@ -190,8 +158,7 @@
             var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return Json(json, JsonRequestBehavior.AllowGet);
         }
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<ActionResult> MemberUsage()
         {
             // Get semester list
@@ -214,8 +181,7 @@
 
             return View(await GetCustomSemesterListAsync(semesters));
         }
-        [HttpGet]
-        [AllowAnonymous]
+        [HttpGet, AllowAnonymous]
         public async Task<ActionResult> GetUsageStats(int? sid)
         {
             var model = new LaundryUsageStatsModel();

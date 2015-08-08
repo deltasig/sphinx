@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Areas.Edu.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;

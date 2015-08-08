@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Areas.House.Models
 {
-    using global::Dsp.Models;
+    using Dsp.Models;
 
     public class WorkOrderIndexFilterModel : Pager
     {

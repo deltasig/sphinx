@@ -1,19 +1,16 @@
 ﻿namespace Dsp.Areas.Members.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
     using Extensions;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
+    using Models;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
-    using System.Linq;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using House.Models;
-    using Models;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController

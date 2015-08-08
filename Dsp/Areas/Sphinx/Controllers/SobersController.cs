@@ -1,9 +1,8 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
-    using Dsp.Models;
+    using Dsp.Controllers;
     using Entities;
     using Extensions;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
