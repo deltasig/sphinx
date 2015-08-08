@@ -27,11 +27,11 @@
                     </small> 
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-condensed table-bordered table-striped table-hover" style="text-align: center">
+                    <table class="table table-condensed table-bordered" style="text-align: center">
                         @if (Model.Schedule.Rows.Any())
                         {
                             <thead>
-                                <tr class="warning">
+                                <tr class="active">
                                     <th class="text-center col-xs-2"><small>Time Slot</small></th>
                                     @foreach (var timeSlot in Model.Schedule.Rows.First().Signups)
                                     {
@@ -45,7 +45,7 @@
                         @foreach (var row in Model.Schedule.Rows)
                         {
                             <tr>
-                                <td class="warning">
+                                <td class="active">
                                     <small>@row.Label</small>
                                 </td>
 
