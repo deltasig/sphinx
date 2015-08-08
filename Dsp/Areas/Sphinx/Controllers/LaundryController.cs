@@ -16,38 +16,26 @@
     public class LaundryController : BaseController
     {
         [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
-        public async Task<ActionResult> Schedule(LaundrySignupMessage? message)
+        public async Task<ActionResult> Schedule()
         {
-            switch (message)
-            {
-                case LaundrySignupMessage.ReserveSuccess:
-                case LaundrySignupMessage.CancelReservationSuccess:
-                    ViewBag.SuccessMessage = GetLaundrySignupMessage(message);
-                    break;
-                case LaundrySignupMessage.ReserveFailed:
-                case LaundrySignupMessage.ReserveFailedTooMany:
-                case LaundrySignupMessage.CancelReservationFailed:
-                    ViewBag.FailMessage = GetLaundrySignupMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailMessage = TempData["FailureMessage"];
 
             // Build Laundry Schedule
             var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
             var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= nowCst.Date).ToListAsync();
             var schedule = new LaundrySchedule(nowCst, 7, 2, existingSignups);
 
-            // Get semester list
+            // Get semester list for stats.
             var signups = await _db.LaundrySignups.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
-            var thisSemester = await base.GetThisSemesterAsync();
-            var semesters = new List<Semester>();
-            foreach (var s in allSemesters)
-            {
-                if (signups.Any(i => i.DateTimeShift >= s.DateStart && i.DateTimeShift <= s.DateEnd))
-                {
-                    semesters.Add(s);
-                }
-            }
+            var thisSemester = await GetThisSemesterAsync();
+            var semesters = allSemesters
+                .Where(s => 
+                    signups.Any(i => 
+                        i.DateTimeShift >= s.DateStart && 
+                        i.DateTimeShift <= s.DateEnd))
+                .ToList();
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
             if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
             {
@@ -61,27 +49,42 @@
             };
             return View(model);
         }
+
         [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Reserve(LaundrySignup signup)
         {
             if (!ModelState.IsValid)
-                return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveFailed });
+            {
+                TempData["FailureMessage"] = "There was an unknown error with your reservation.  " +
+                                             "Contact your administrator if the problem persists.";
+                return RedirectToAction("Schedule");
+            }
 
             var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
             var currentUserId = User.Identity.GetUserId<int>();
-            var existingSignups = await _db.LaundrySignups
-                .Where(l => l.DateTimeShift >= nowCst.Date &&
-                            l.UserId == currentUserId)
-                .ToListAsync();
 
+            // Check if they've already signed up too many times within the current window.
+            var existingSignups = await _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= nowCst.Date && l.UserId == currentUserId).ToListAsync();
             var maxSignups = 2;
             if (User.IsInRole("House Steward")) maxSignups = 4;
-
             if (existingSignups.Count() >= maxSignups)
             {
-                return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveFailedTooMany });
+                TempData["FailureMessage"] = "You have signed up too many times within the current window.  " +
+                                             "Your maximum allowed is: " + maxSignups;
+                return RedirectToAction("Schedule");
             }
 
+            // Check if a signup already exists
+            var shift = await _db.LaundrySignups.SingleOrDefaultAsync(s => s.DateTimeShift == signup.DateTimeShift);
+            if (shift != null)
+            {
+                TempData["FailureMessage"] = "Sorry, " + shift.Member + " signed up for that slot after you loaded page " +
+                                             "but before you tried to sign up.  You will have to pick a new slot.";
+                return RedirectToAction("Schedule");
+            }
+
+            // All good, add their reservation.
             signup.UserId = currentUserId;
             signup.DateTimeSignedUp = nowCst;
             signup.DateTimeShift = signup.DateTimeShift;
@@ -89,30 +92,38 @@
             _db.LaundrySignups.Add(signup);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.ReserveSuccess });
+            TempData["SuccessMessage"] = "You have reserved the laundry room for the following time: " + signup.DateTimeShift;
+            return RedirectToAction("Schedule");
         }
+
         [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Cancel(LaundrySignup cancel)
         {
             var shift = await _db.LaundrySignups.SingleOrDefaultAsync(s => s.DateTimeShift == cancel.DateTimeShift);
 
             if (shift == null)
-                return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
+            {
+                TempData["FailureMessage"] = "Could not cancel reservation because no existing reservation was found.";
+                return RedirectToAction("Schedule");
+            }
+            if (shift.UserId != User.Identity.GetUserId<int>())
+            {
+                TempData["FailureMessage"] = "You cannot cancel someone else's shift!";
+                return RedirectToAction("Schedule");
+            }
 
             _db.LaundrySignups.Remove(shift);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Schedule", new { Message = LaundrySignupMessage.CancelReservationSuccess });
+            TempData["SuccessMessage"] = "You cancelled your reservation for: " + shift.DateTimeShift;
+            return RedirectToAction("Schedule");
         }
+
         [HttpGet, AllowAnonymous]
         public async Task<ActionResult> GetStats(int? sid)
         {
             var model = new LaundryStatsModel();
-
-            var semester = await _db.Semesters.FindAsync(sid);
-            if (semester == null)
-                semester = await base.GetThisSemesterAsync();
-
+            var semester = await _db.Semesters.FindAsync(sid) ?? await GetThisSemesterAsync();
             var signups = await _db.LaundrySignups
                 .Where(l => l.DateTimeShift >= semester.DateStart && l.DateTimeShift <= semester.DateEnd)
                 .OrderBy(l => l.DateTimeShift)
@@ -120,16 +131,16 @@
 
             var formattedSignups = signups.Select(l => new
             {
-                DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
-                DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
+                DateTimeShift = ConvertUtcToCst(l.DateTimeShift),
+                DateTimeSignedUp = ConvertUtcToCst(l.DateTimeSignedUp),
                 l.UserId
             }).ToList();
 
             // Build model
             model.TotalSignups = formattedSignups.Count();
             model.Semester = semester.ToString();
-            model.StartDate = base.ConvertUtcToCst(semester.DateStart).ToShortDateString();
-            model.EndDate = base.ConvertUtcToCst(semester.DateEnd).ToShortDateString();
+            model.StartDate = ConvertUtcToCst(semester.DateStart).ToShortDateString();
+            model.EndDate = ConvertUtcToCst(semester.DateEnd).ToShortDateString();
 
             // Month Calculations
             var months = MonthsBetween(semester.DateStart, semester.DateEnd).OrderBy(m => m.Month).ToList();
@@ -158,21 +169,20 @@
             var json = JsonConvert.SerializeObject(model, Formatting.Indented);
             return Json(json, JsonRequestBehavior.AllowGet);
         }
+
         [HttpGet, AllowAnonymous]
         public async Task<ActionResult> MemberUsage()
         {
             // Get semester list
             var signups = await _db.LaundrySignups.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
-            var thisSemester = await base.GetThisSemesterAsync();
-            var semesters = new List<Semester>();
-            foreach (var s in allSemesters)
-            {
-                if (signups.Any(i => i.DateTimeShift >= s.DateStart && i.DateTimeShift <= s.DateEnd))
-                {
-                    semesters.Add(s);
-                }
-            }
+            var thisSemester = await GetThisSemesterAsync();
+            var semesters = allSemesters
+                .Where(s => 
+                    signups.Any(i => 
+                        i.DateTimeShift >= s.DateStart && 
+                        i.DateTimeShift <= s.DateEnd))
+                .ToList();
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
             if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
             {
@@ -181,12 +191,13 @@
 
             return View(await GetCustomSemesterListAsync(semesters));
         }
+
         [HttpGet, AllowAnonymous]
         public async Task<ActionResult> GetUsageStats(int? sid)
         {
             var model = new LaundryUsageStatsModel();
 
-            var semester = await _db.Semesters.FindAsync(sid) ?? await base.GetThisSemesterAsync();
+            var semester = await _db.Semesters.FindAsync(sid) ?? await GetThisSemesterAsync();
 
             var signups = await _db.LaundrySignups
                 .Where(l => l.DateTimeShift >= semester.DateStart && l.DateTimeShift <= semester.DateEnd)
@@ -195,8 +206,8 @@
 
             var formattedSignups = signups.Select(l => new
             {
-                DateTimeShift = base.ConvertUtcToCst(l.DateTimeShift),
-                DateTimeSignedUp = base.ConvertUtcToCst(l.DateTimeSignedUp),
+                DateTimeShift = ConvertUtcToCst(l.DateTimeShift),
+                DateTimeSignedUp = ConvertUtcToCst(l.DateTimeSignedUp),
                 l.UserId
             }).ToList();
 
@@ -204,8 +215,8 @@
             model.TotalSignups = formattedSignups.Count();
             model.TotalMembers = formattedSignups.Select(s => s.UserId).Distinct().Count();
             model.Semester = semester.ToString();
-            model.StartDate = base.ConvertUtcToCst(semester.DateStart).ToShortDateString();
-            model.EndDate = base.ConvertUtcToCst(semester.DateEnd).ToShortDateString();
+            model.StartDate = ConvertUtcToCst(semester.DateStart).ToShortDateString();
+            model.EndDate = ConvertUtcToCst(semester.DateEnd).ToShortDateString();
 
             // Calculations
             var values = formattedSignups
@@ -219,7 +230,7 @@
             {
                 if (signups.First(s => s.UserId == values[i].UserId).Member.WasLivingInHouse(semester.DateEnd))
                 {
-                    model.ChartXLabels.Add((i+1).ToString() + "*");
+                    model.ChartXLabels.Add((i+1) + "*");
                 }
                 else
                 {
@@ -231,12 +242,11 @@
             return Json(json, JsonRequestBehavior.AllowGet);
         }
 
-        private static string[] GetDayNames()
+        private static IEnumerable<string> GetDayNames()
         {
             if (CultureInfo.CurrentCulture.Name.StartsWith("en-"))
             {
-                return new[] { "Monday", "Tuesday", "Wednesday", "Thursday",
-                        "Friday", "Saturday", "Sunday" };
+                return new[] { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
             }
             return CultureInfo.CurrentCulture.DateTimeFormat.DayNames;
         }
@@ -261,24 +271,5 @@
             // Return the week of our adjusted day
             return CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(time, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
         } 
-
-        private static dynamic GetLaundrySignupMessage(LaundrySignupMessage? message)
-        {
-            return message == LaundrySignupMessage.ReserveSuccess ? "Reservation succeeded."
-                : message == LaundrySignupMessage.ReserveFailed ? "Reservation failed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.CancelReservationSuccess ? "Reservation cancellation succeeded."
-                : message == LaundrySignupMessage.CancelReservationFailed ? "Reservation cancellation failed.  Please try again or contact the system administrator."
-                : message == LaundrySignupMessage.ReserveFailedTooMany ? "Reservation failed. You have reached the maximum number of allowable reservations for this time period."
-                : "";
-        }
-
-        public enum LaundrySignupMessage
-        {
-            ReserveSuccess,
-            CancelReservationSuccess,
-            ReserveFailed,
-            ReserveFailedTooMany,
-            CancelReservationFailed
-        }
     }
 }

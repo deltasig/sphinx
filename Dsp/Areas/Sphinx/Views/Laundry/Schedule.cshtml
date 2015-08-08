@@ -11,69 +11,63 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-md-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>Important: </strong> You may only signup twice within any seven day period.  
+                    <i class="fa fa-calendar"
+                       data-toggle="tooltip" data-placement="top" title="Current window"></i>
+                    <small>
+                        @Model.Schedule.StartOfToday.ToShortDateString() to
+                        @Model.Schedule.StartOfToday.AddDays(Model.Schedule.WindowSize).ToShortDateString()
+                    </small> | 
+                    <i class="fa fa-clock-o"
+                       data-toggle="tooltip" data-placement="top" title="Current time"></i>
+                    <small>
+                        @Model.Schedule.Now.ToShortTimeString() CST 
+                    </small> 
                 </div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-condensed table-bordered" style="text-align: center">
-                            @if (Model.Schedule.Rows.Any())
-                            {
-                                <thead>
-                                <tr>
-                                    <th class="text-center active">Time Slot</th>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered table-striped table-hover" style="text-align: center">
+                        @if (Model.Schedule.Rows.Any())
+                        {
+                            <thead>
+                                <tr class="warning">
+                                    <th class="text-center col-xs-2"><small>Time Slot</small></th>
                                     @foreach (var timeSlot in Model.Schedule.Rows.First().Signups)
                                     {
                                         <th class="text-center">
-                                            @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
+                                            <small>@timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)</small>
                                         </th>
                                     }
                                 </tr>
-                                </thead>
-                            }
-                            @foreach (var row in Model.Schedule.Rows)
-                            {
-                                <tr>
-                                    <td class="active">
-                                        <p>
-                                            <strong>
-                                                @row.Label
-                                            </strong>
-                                        </p>
-                                    </td>
+                            </thead>
+                        }
+                        @foreach (var row in Model.Schedule.Rows)
+                        {
+                            <tr>
+                                <td class="warning">
+                                    <small>@row.Label</small>
+                                </td>
 
-                                    @foreach (var slot in row.Signups)
-                                    {
-                                        var isDstChange = slot.DstChangeOccursDuringSlot(Model.Schedule.SlotSize);
-                                        var dstMessage = "Due to DST changes, this slot is actually " + 
-                                            slot.GetSlotSizeActualSize(Model.Schedule.SlotSize) + " hour(s) long.";
+                                @foreach (var slot in row.Signups)
+                                {
+                                    var isDstChange = slot.DstChangeOccursDuringSlot(Model.Schedule.SlotSize);
+                                    var dstMessage = "Due to DST changes, this slot is actually " +
+                                        slot.GetSlotSizeActualSize(Model.Schedule.SlotSize) + " hour(s) long.";
 
-                                        <td class="text-center">
-                                            @if (slot.Member != null)
+                                    <td class="text-center">
+                                        @if (slot.Member != null)
+                                        {
+                                            // Reserved by current user
+                                            if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now).TotalHours >= 0)
                                             {
-                                                // Reserved by current user
-                                                if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now.AddMinutes(0)).TotalHours >= 0)
-                                                {
-                                                    using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { @class = "form-inline" }))
-                                                    {
-                                                        @slot.Member.ToShortLastNameString()
-                                                        <button class="btn btn-link btn-light social" type="submit"
-                                                                data-toggle="tooltip" data-placement="top" title="Click to cancel your reservation.">
-                                                            <i class="fa fa-minus-circle text-danger"></i>
-                                                        </button>
-                                                        if (isDstChange)
-                                                        {
-                                                            <i class="fa fa-exclamation-circle text-warning" 
-                                                               data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
-                                                        }
-                                                    }
-                                                }
-                                                // Reserved by someone else
-                                                else
+                                                using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { @class = "form-inline" }))
                                                 {
                                                     @slot.Member.ToShortLastNameString()
+                                                    <button class="btn btn-link btn-light social" type="submit"
+                                                            data-toggle="tooltip" data-placement="top" title="Click to cancel your reservation.">
+                                                        <i class="fa fa-minus-circle text-danger"></i>
+                                                    </button>
                                                     if (isDstChange)
                                                     {
                                                         <i class="fa fa-exclamation-circle text-warning"
@@ -81,30 +75,45 @@
                                                     }
                                                 }
                                             }
-                                            // Unreserved; allows sign ups up to an hour into the slot.
-                                            else if ((slot.DateTimeShift - Model.Schedule.Now).TotalHours > -1)
+                                            // Reserved by someone else
+                                            else
                                             {
-                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = slot.DateTimeShift }, FormMethod.Post, new { @class = "form-inline" }))
+                                                @slot.Member.ToShortLastNameString()
+                                                if (isDstChange)
                                                 {
-                                                    <button type="submit" class="btn btn-sm btn-success"
-                                                            data-toggle="tooltip" data-placement="top" title="@(isDstChange ? dstMessage : "")">
-                                                        Open
-                                                        @if (isDstChange)
-                                                        {
-                                                            <i class="fa fa-exclamation-circle"></i>
-                                                        }
-                                                    </button>
+                                                    <i class="fa fa-exclamation-circle text-warning"
+                                                       data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
                                                 }
                                             }
-                                        </td>
-                                    }
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                                        }
+                                        // Unreserved; allows sign ups up to an hour into the slot.
+                                        else if ((slot.DateTimeShift - Model.Schedule.Now).TotalHours > -1)
+                                        {
+                                            using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = slot.DateTimeShift }, FormMethod.Post, new { @class = "form-inline" }))
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                        data-toggle="tooltip" data-placement="top" title="@(isDstChange ? dstMessage : "")">
+                                                    Open
+                                                    @if (isDstChange)
+                                                    {
+                                                        <i class="fa fa-exclamation-circle"></i>
+                                                    }
+                                                </button>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
                 </div>
                 <div class="panel-footer">
-                    Current Time: @Model.Schedule.Now.ToShortTimeString() CST <br/>
+                    You cannot:
+                    <ul>
+                        <li>Sign up more than <strong>2</strong> times within the current window;</li>
+                        <li>Cancel a slot after that slot has started; &amp;</li>
+                        <li>Sign up for a slot that has less than an hour left.</li>
+                    </ul>
                 </div>
             </div>
         </div>
