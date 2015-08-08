@@ -62,35 +62,35 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Posted Meals</div>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-condensed table-bordered">
                         <thead>
-                        <tr>
-                            <th class="active text-center">Period</th>
+                        <tr class="active">
+                            <th class="text-center"><small>Period</small></th>
                             @if (!hideSunday)
                             {
                                 <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                    @Model.StartOfWeek.ToString("ddd (MM-dd)")
+                                    <small>@Model.StartOfWeek.ToString("ddd")</small>
                                 </th>
                             }
                             <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                @Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")
+                                <small>@Model.StartOfWeek.AddDays(1).ToString("ddd")</small>
                             </th>
                             <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                @Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")
+                                <small>@Model.StartOfWeek.AddDays(2).ToString("ddd")</small>
                             </th>
                             <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                @Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")
+                                <small>@Model.StartOfWeek.AddDays(3).ToString("ddd")</small>
                             </th>
                             <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                @Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")
+                                <small>@Model.StartOfWeek.AddDays(4).ToString("ddd")</small>
                             </th>
                             <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                @Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")
+                                <small>@Model.StartOfWeek.AddDays(5).ToString("ddd")</small>
                             </th>
                             @if (!hideSaturday)
                             {
                                 <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
-                                    @Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")
+                                    <small>@Model.StartOfWeek.AddDays(6).ToString("ddd")</small>
                                 </th>
                             }
                         </tr>
@@ -103,9 +103,11 @@
 
                             <tr>
                                 <td class="active text-center col-md-2">
-                                    <strong>@p.Name</strong>
-                                    <br/>
-                                    <small>@start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")</small>
+                                    <small>
+                                        <strong>@p.Name</strong>
+                                        <br />
+                                        @start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")
+                                    </small>
                                 </td>
                                 @for (var i = startDay; i < endDay; i++)
                                 {
@@ -237,33 +239,33 @@
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead>
-                                <tr>
-                                    <th class="active text-center">Period</th>
+                                <tr class="active">
+                                    <th class="text-center"><small>Period</small></th>
                                     @if (!hideSunday)
                                     {
-                                        <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
-                                            @Model.StartOfWeek.ToString("ddd (MM-dd)")
+                                        <th class="@(@Model.StartOfWeek.Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
+                                            <small>@Model.StartOfWeek.ToString("ddd")</small>
                                         </th>
                                     }
                                     <th class="@(@Model.StartOfWeek.AddDays(1).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                        @Model.StartOfWeek.AddDays(1).ToString("ddd (MM-dd)")
+                                        <small>@Model.StartOfWeek.AddDays(1).ToString("ddd")</small>
                                     </th>
                                     <th class="@(@Model.StartOfWeek.AddDays(2).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                        @Model.StartOfWeek.AddDays(2).ToString("ddd (MM-dd)")
+                                        <small>@Model.StartOfWeek.AddDays(2).ToString("ddd")</small>
                                     </th>
                                     <th class="@(@Model.StartOfWeek.AddDays(3).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                        @Model.StartOfWeek.AddDays(3).ToString("ddd (MM-dd)")
+                                        <small>@Model.StartOfWeek.AddDays(3).ToString("ddd")</small>
                                     </th>
                                     <th class="@(@Model.StartOfWeek.AddDays(4).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                        @Model.StartOfWeek.AddDays(4).ToString("ddd (MM-dd)")
+                                        <small>@Model.StartOfWeek.AddDays(4).ToString("ddd")</small>
                                     </th>
                                     <th class="@(@Model.StartOfWeek.AddDays(5).Date == DateTime.UtcNow.Date ? "warning" : "") text-center col-sm-2">
-                                        @Model.StartOfWeek.AddDays(5).ToString("ddd (MM-dd)")
+                                        <small>@Model.StartOfWeek.AddDays(5).ToString("ddd")</small>
                                     </th>
                                     @if (!hideSaturday)
                                     {
                                         <th class="@(@Model.StartOfWeek.AddDays(6).Date == DateTime.UtcNow.Date ? "warning" : "") text-center">
-                                            @Model.StartOfWeek.AddDays(6).ToString("ddd (MM-dd)")
+                                            <small>@Model.StartOfWeek.AddDays(6).ToString("ddd")</small>
                                         </th>
                                     }
                                 </tr>
@@ -276,9 +278,11 @@
 
                                     <tr>
                                         <td class="active text-center col-md-2">
-                                            <strong>@p.Name</strong>
-                                            <br />
-                                            <small>@start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")</small>
+                                            <small>
+                                                <strong>@p.Name</strong>
+                                                <br />
+                                                @start.ToString("hh:mm tt") - @end.ToString("hh:mm tt")
+                                            </small>
                                         </td>
                                         @for (var i = startDay; i < endDay; i++)
                                         {
