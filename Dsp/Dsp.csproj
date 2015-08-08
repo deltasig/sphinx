@@ -239,6 +239,7 @@
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">

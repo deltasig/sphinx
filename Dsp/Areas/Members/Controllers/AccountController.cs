@@ -1,9 +1,9 @@
 ﻿namespace Dsp.Areas.Members.Controllers
 {
+    using Dsp.Controllers;
     using Edu.Controllers;
     using Entities;
     using Extensions;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;

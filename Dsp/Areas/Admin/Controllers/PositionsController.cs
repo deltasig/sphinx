@@ -1,8 +1,8 @@
 ﻿namespace Dsp.Areas.Admin.Controllers
 {
     using Data;
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Models;
     using System;
     using System.Collections.Generic;

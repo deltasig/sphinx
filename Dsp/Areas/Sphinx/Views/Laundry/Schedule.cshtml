@@ -1,10 +1,12 @@
-﻿@using System.Web.Mvc.Html
-@using Dsp.Entities
-@model Dsp.Areas.Dsp.Models.LaundryIndexModel
+﻿@using Dsp.Entities
+@using Dsp.Areas.Sphinx.Models
+@using Microsoft.AspNet.Identity
+@using System.Web.Mvc.Html
+@model LaundryIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Laundry Schedule";
-    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var currentUserId = User.Identity.GetUserId<int>();
 }
 
 <div class="container-fluid">
@@ -17,12 +19,12 @@
                 <div class="panel-body">
                     <div class="table-responsive">
                         <table class="table table-condensed table-bordered" style="text-align: center">
-                            @if (Model.Slots.Any())
+                            @if (Model.Schedule.Rows.Any())
                             {
                                 <thead>
                                 <tr>
                                     <th class="text-center active">Time Slot</th>
-                                    @foreach (var timeSlot in Model.Slots.First())
+                                    @foreach (var timeSlot in Model.Schedule.Rows.First().Signups)
                                     {
                                         <th class="text-center">
                                             @timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)
@@ -31,61 +33,67 @@
                                 </tr>
                                 </thead>
                             }
-                            @foreach (var day in Model.Slots)
+                            @foreach (var row in Model.Schedule.Rows)
                             {
                                 <tr>
                                     <td class="active">
                                         <p>
                                             <strong>
-                                                @day.First().DateTimeShift.ToShortTimeString() -
-                                                @day.First().DateTimeShift.AddHours(2).ToShortTimeString()
+                                                @row.Label
                                             </strong>
                                         </p>
                                     </td>
 
-                                    @foreach (var timeSlot in day)
+                                    @foreach (var slot in row.Signups)
                                     {
-                                        <td>
-                                            @if (timeSlot.Member != null)
+                                        var isDstChange = slot.DstChangeOccursDuringSlot(Model.Schedule.SlotSize);
+                                        var dstMessage = "Due to DST changes, this slot is actually " + 
+                                            slot.GetSlotSizeActualSize(Model.Schedule.SlotSize) + " hour(s) long.";
+
+                                        <td class="text-center">
+                                            @if (slot.Member != null)
                                             {
                                                 // Reserved by current user
-                                                if (User.Identity.Name == timeSlot.Member.UserName && timeSlot.DateTimeShift > TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone))
+                                                if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now.AddMinutes(0)).TotalHours >= 0)
                                                 {
-                                                    using (Html.BeginForm("Cancel", "Laundry", timeSlot))
+                                                    using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { @class = "form-inline" }))
                                                     {
-                                                        @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
-                                                        <button type="submit" class="btn btn-sm btn-link" style="padding: 0; margin: 0; color: #d9534f;">
-                                                            <i class="fa fa-minus-square"></i>
+                                                        @slot.Member.ToShortLastNameString()
+                                                        <button class="btn btn-link btn-light social" type="submit"
+                                                                data-toggle="tooltip" data-placement="top" title="Click to cancel your reservation.">
+                                                            <i class="fa fa-minus-circle text-danger"></i>
                                                         </button>
+                                                        if (isDstChange)
+                                                        {
+                                                            <i class="fa fa-exclamation-circle text-warning" 
+                                                               data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
+                                                        }
                                                     }
                                                 }
                                                 // Reserved by someone else
                                                 else
                                                 {
-                                                    int value;
-
-                                                    <div class="text-center">
-                                                        <p>
-                                                            @(timeSlot.Member.FirstName + " " + timeSlot.Member.LastName.Substring(0, 1) + ".")
-                                                            @if (int.TryParse(timeSlot.Member.RoomString(), out value))
-                                                            {
-                                                                @:*
-                                                            }
-                                                        </p>
-                                                    </div>
+                                                    @slot.Member.ToShortLastNameString()
+                                                    if (isDstChange)
+                                                    {
+                                                        <i class="fa fa-exclamation-circle text-warning"
+                                                           data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
+                                                    }
                                                 }
                                             }
-                                            // Unreserved, but in the past. Let's them sign up up to an hour into the timeslot.
-                                            else if (timeSlot.DateTimeShift.AddHours(1) < TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone))
+                                            // Unreserved; allows sign ups up to an hour into the slot.
+                                            else if ((slot.DateTimeShift - Model.Schedule.Now).TotalHours > -1)
                                             {
-                                                <div class="text-center"></div>
-                                            }
-                                            // Unreserved, and in the future.
-                                            else
-                                            {
-                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup {DateTimeShift = timeSlot.DateTimeShift}))
+                                                using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = slot.DateTimeShift }, FormMethod.Post, new { @class = "form-inline" }))
                                                 {
-                                                    <button type="submit" class="btn btn-sm btn-success">Open</button>
+                                                    <button type="submit" class="btn btn-sm btn-success"
+                                                            data-toggle="tooltip" data-placement="top" title="@(isDstChange ? dstMessage : "")">
+                                                        Open
+                                                        @if (isDstChange)
+                                                        {
+                                                            <i class="fa fa-exclamation-circle"></i>
+                                                        }
+                                                    </button>
                                                 }
                                             }
                                         </td>
@@ -96,8 +104,7 @@
                     </div>
                 </div>
                 <div class="panel-footer">
-                    Current Time: @TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone).ToShortTimeString() CST <br/>
-                    * Member lives Out-of-House
+                    Current Time: @Model.Schedule.Now.ToShortTimeString() CST <br/>
                 </div>
             </div>
         </div>
