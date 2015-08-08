@@ -90,11 +90,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row row-fluid">
-                            <div class="col-xs-6">
+                            <div class="col-md-6">
                                 <i class="fa fa-exclamation-circle"></i> @ViewBag.UnresolvedResultCount <small style="padding-right: 5px">Unresolved</small>
                                 <i class="fa fa-check-circle"></i> @ViewBag.ResolvedResultCount <small>Resolved</small>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col-md-6 text-right">
                                 @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
                                 {
                                     <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
@@ -118,11 +118,11 @@
                                             @status
                                         </span>
                                     </small>
-                                    <small class="pull-right">
-                                        submitted @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
-                                        @(daysSinceCreation <= 1 ? "day" : "days") ago
-                                    </small>
                                 </h4>
+                                <p class="list-group-item-text">
+                                    submitted @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
+                                    @(daysSinceCreation <= 1 ? "day" : "days") ago
+                                </p>
                             </a>
                         }
                     </ul>
