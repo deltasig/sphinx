@@ -1,8 +1,9 @@
 ﻿namespace Dsp.Areas.Scholarships.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
     using Extensions;
-    using global::Dsp.Controllers;
+    using MarkdownSharp;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -12,7 +13,6 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using MarkdownSharp;
 
     public class ApplicationsController : BaseController
     {

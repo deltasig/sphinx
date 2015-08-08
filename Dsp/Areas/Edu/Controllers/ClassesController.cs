@@ -2,8 +2,8 @@
 {
     using Amazon.S3;
     using Amazon.S3.Model;
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;

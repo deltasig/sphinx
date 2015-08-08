@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Areas.Members.Models
 {
-    using global::Dsp.Models;
+    using Dsp.Models;
 
     public class IncidentsIndexFilterModel : Pager
     {

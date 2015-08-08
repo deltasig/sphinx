@@ -1,4 +1,4 @@
-﻿namespace Dsp.Areas.Dsp.Models
+﻿namespace Dsp.Areas.Sphinx.Models
 {
     using Entities;
     using System.Collections.Generic;

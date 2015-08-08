@@ -1,10 +1,9 @@
 ﻿namespace Dsp.Areas.Members.Controllers
 {
+    using Dsp.Controllers;
     using Entities;
-    using global::Dsp.Controllers;
     using Models;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
