@@ -170,11 +170,11 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <div class="row row-fluid">
-                            <div class="col-xs-6">
+                            <div class="col-md-6">
                                 <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
                                 <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
                             </div>
-                            <div class="col-xs-6 text-right">
+                            <div class="col-md-6 text-right">
                                 @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
                                 {
                                     <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
