@@ -2,24 +2,40 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sphinx";
+    ViewBag.Subtitle = Model.CurrentSemester.ToString();
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+
+    // Permissions
+    var isAdmin = User.IsInRole("Administrator");
+    var isAlumnus = User.IsInRole("Alumnus");
+    var isActive = User.IsInRole("Active");
+    var isPledge = User.IsInRole("Pledge");
+    var isNeophyte = User.IsInRole("Neophyte");
+    var isAffiliate = User.IsInRole("Affiliate");
+
+    // Class-related
     var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
     var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
+
+    // Service-related
+    var approvedHours = 0.0;
+    var unapprovedHours = 0.0;
+    if (Model.CompletedEvents.Any())
+    {
+        approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
+        unapprovedHours = Model.CompletedEvents.Where(e => !e.Event.IsApproved).Sum(h => h.DurationHours);
+    }
+    var goal = (double)Model.CurrentSemester.MinimumServiceHours;
+    var approvedPercentage = (approvedHours / goal) * 100.0;
+    var unapprovedPercentage = (unapprovedHours / goal) * 100.0;
+    var barColor = approvedPercentage < 25 ? "danger" : approvedPercentage >= 100 ? "success" : "warning";
+    var approvedWidth = approvedPercentage > 100 ? 100 : approvedPercentage;
+    var unapprovedWidth = unapprovedPercentage + approvedPercentage > 100 ? 100 - approvedPercentage : unapprovedPercentage;
 }
 
 <div class="container-fluid">
-    @if (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Administrator"))
+    @if (isActive || isPledge || isNeophyte || isAdmin)
     {
-        <div class="row">
-            <div class="col-xs-12">
-                @if (!string.IsNullOrEmpty(ViewBag.Message))
-                {
-                    <div class="alert alert-warning">
-                        @ViewBag.Message
-                    </div>
-                }
-            </div>
-        </div>
         <div class="row">
             <!-- LEFT COLUMN -->
             <div class="col-md-5">
@@ -78,7 +94,7 @@
                         </small>
 
                         Otherwise, please go fill out your classes for last semester with the
-                        @Html.ActionLink("Classes", "Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }, null).
+                        @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
 
                         If you transferred here from another college you attended after graduating high school,
                         you still need to enter your previous semester classes.
@@ -87,9 +103,8 @@
             </div>
             <!-- RIGHT COLUMN -->
             <div class="col-md-7">
-
                 <!-- ALERTS -->
-                @if (Model.NeedsToSoberDrive && (User.IsInRole("Active") || User.IsInRole("Pledge") || User.IsInRole("Neophyte")))
+                @if (Model.NeedsToSoberDrive && (isActive || isPledge || isNeophyte))
                 {
                     <div class="alert alert-warning delayed" style="display: none;">
                         Please sign up to sober drive at least once!
@@ -144,74 +159,118 @@
                 }
 
                 <!-- SERVICE HOURS -->
-                <h3>
-                    Your Service Hours
-                    <small>
-                        @{
-                var labelColor = "label-default";
-                var approvedHours = 0.0;
-                if (Model.CompletedEvents.Any())
-                {
-                    approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
-                    if (approvedHours >= Model.CurrentSemester.MinimumServiceHours)
-                    {
-                        labelColor = "label-success";
-                    }
-                }
-                        }
-                        @Model.CurrentSemester
-                        <span class="label @labelColor label-as-badge">
-                            @approvedHours / @Model.CurrentSemester.MinimumServiceHours
-                        </span>
-                    </small>
-                    <small class="hidden-xs pull-right">
-                        @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
-                        @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
-                    </small>
-                    <small class="visible-xs">
-                        @Html.ActionLink("Submit Hours", "Submit", "Hours", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
-                        @Html.ActionLink("Events", "Index", "Events", new { area = "Service" }, new { @class = "btn btn-sm btn-success" })
-                    </small>
-                </h3>
-                @if (!Model.CompletedEvents.Any())
-                {
-                    <p class="text-danger">No service hours submitted</p>
-                }
-                else
-                {
-                    <table class="table table-condensed table-striped table-responsive">
-                        <thead>
-                            <tr>
-                                <th>Event</th>
-                                <th>Date</th>
-                                <th>Hours</th>
-                                <th>
-                                    Approved
-                                    <a data-toggle="tooltip" data-placement="top"
-                                       title="Hours submitted for events not yet approved by the Service Chairman don't count towards your semester requirement.">
-                                        <i class="fa fa-info-circle"></i>
-                                    </a>
-                                </th>
-                            </tr>
-                        </thead>
-                        @foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
-                        {
-                            <tr>
-                                <td>@item.Event.EventName</td>
-                                <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
-                                <td>@item.DurationHours</td>
-                                <td>@Html.DisplayFor(modelItem => item.Event.IsApproved)</td>
-                            </tr>
-                        }
-                    </table>
-                }
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Service Progress
+                        <small class="pull-right">
+                            <a href="@Url.Action("Submit", "Hours", new {area = "Service"})"
+                               class="">
+                                <i class="fa fa-lg fa-plus-circle" data-toggle="tooltip" data-placement="top"
+                                   title="Submit Hours"></i>
+                            </a> | 
+                            <a href="@Url.Action("Index", "Events", new {area = "Service"})"
+                               class="">
+                                <i class="fa fa-lg fa-list" data-toggle="tooltip" data-placement="top"
+                                   title="Event List"></i>
+                            </a>
+                        </small>
+                    </div>
+                    <div class="panel-body">
+                        <div class="progress" style="margin: 0">
+                            <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
+                                 aria-valuenow="@(approvedHours)" aria-valuemin="0"
+                                 aria-valuemax="@(goal)" style="width: @(approvedWidth)%;">
+                                @approvedPercentage%
+                            </div>
+                            @if (approvedHours < goal && unapprovedHours > 0)
+                            {
+                                <div class="progress-bar progress-bar-striped progress-bar-info" role="progressbar"
+                                     aria-valuenow="@(unapprovedHours)" aria-valuemin="0"
+                                     aria-valuemax="@(goal)" style="width: @(unapprovedWidth)%;">
+                                    @unapprovedPercentage%
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-condensed table-bordered table-hover">
+                            <thead>
+                                <tr class="active">
+                                    <th><small>Event</small></th>
+                                    <th class="col-sm-2"><small>Date</small></th>
+                                    <th class="col-sm-1">
+                                        <i class="fa fa-check-circle" data-toggle="tooltip" data-placement="top"
+                                           title="Approved: hours submitted for events not yet approved by the Service Chairman do not count
+                                                  towards the semester minimum requirement."></i>
+                                    </th>
+                                    <th class="col-sm-1"><small>Hours</small></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (!Model.CompletedEvents.Any())
+                                {
+                                    <tr>
+                                        <td colspan="4" class="text-danger text-center">No service hours submitted yet.</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    foreach (var item in Model.CompletedEvents.OrderBy(e => e.Event.DateTimeOccurred))
+                                    {
+                                        var attendedPercentage = (int)((item.DurationHours / item.Event.DurationHours) * 100.0);
+
+                                        <tr type="button" data-toggle="collapse" data-target=".@item.EventId"
+                                            aria-expanded="false" aria-controls="@item.EventId">
+                                            <td>@item.Event.EventName</td>
+                                            <td>@item.Event.DateTimeOccurred.ToShortDateString()</td>
+                                            <td>@Html.DisplayFor(modelItem => item.Event.IsApproved)</td>
+                                            <td>@item.DurationHours</td>
+                                        </tr>
+                                        <tr class="collapse @item.EventId">
+                                            <td colspan="3">
+                                                <div class="progress" style="margin: 0"
+                                                    data-toggle="tooltip" data-placement="left"
+                                                    title="Attended event for @item.DurationHours of the possible @item.Event.DurationHours hour(s)">
+                                                    <div class="progress-bar progress-bar-info" role="progressbar" aria-valuemin="0" 
+                                                         aria-valuenow="@(item.DurationHours)" aria-valuemax="@(item.Event.DurationHours)"
+                                                         style="width: @(attendedPercentage > 100 ? 100 : attendedPercentage)%;">
+                                                        @attendedPercentage%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                
+                                            </td>
+                                        </tr>
+                                    }
+                                    <tr>
+                                        <td class="text-right" colspan="3"><small>Total:</small></td>
+                                        <td>
+                                            @(approvedHours + unapprovedHours) 
+                                            @if (unapprovedHours > 0)
+                                            {
+                                                <small>
+                                                    <i class="fa fa-exclamation-triangle text-warning" data-toggle="tooltip" data-placement="top"
+                                                            title="You have @unapprovedHours hours included in this amount."></i>
+                                                </small>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer">
+                        <small>Minimum Service Hour Requirement: <strong>@Model.CurrentSemester.MinimumServiceHours hours</strong></small>
+                    </div>
+                </div>
             </div>
         </div>
     }
-    else if (User.IsInRole("Alumnus"))
+    else if (isAlumnus)
     {
         <div class="row">
-            <div class="col-sm-5">
+            <div class="col-md-5">
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Sober Signups <small class="pull-right">this week</small>
@@ -219,7 +278,7 @@
                     @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
                 </div>
             </div>
-            <div class="col-sm-7">
+            <div class="col-md-7">
                 @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
                 {
                     <div class="alert alert-warning">
@@ -236,7 +295,7 @@
             </div>
         </div>
     }
-    else if (User.IsInRole("Affiliate"))
+    else if (isAffiliate)
     {
         <p>Affiliate content is forthcoming.</p>
     }
