@@ -1,4 +1,5 @@
-﻿@if (Request.IsAuthenticated)
+﻿@using Dsp.Extensions
+@if (Request.IsAuthenticated)
 {
     <li class="hidden-xs hidden-sm">
         <p class="navbar-text">
@@ -6,9 +7,10 @@
         </p>
     </li>
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        <a href="@Url.Action("Index", "Account", new {area = "Members"})"
-            data-toggle="tooltip" data-placement="bottom" title="Account">
-            <i class="fa fa-user"></i>
+        <a class="navbar-brand" rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:9px"
+           data-toggle="tooltip" data-placement="bottom" title="Account">
+            <img src="~/Images/Avatars/@(User.Identity.GetAvatar())" height="35" width="35" class="img-circle" id="avatar"
+                 onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';"/>
         </a>
     </li>
     <li>
