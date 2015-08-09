@@ -9,13 +9,13 @@
     using Microsoft.Owin.Security;
     using Models;
     using System;
-    using System.Data.Entity;
     using System.Drawing;
     using System.Drawing.Drawing2D;
     using System.Drawing.Imaging;
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -820,7 +820,7 @@
             {
                 var imageResult = new ImageResult { Success = true, ErrorMessage = null };
                 var fileExtension = Path.GetExtension(file.FileName);
-                var finalFileName = userName + fileExtension;
+                var finalFileName = Regex.Replace(userName, @"\s+", "") + fileExtension;
                 var folderPath = System.Web.HttpContext.Current.Server.MapPath(UploadPath);
                 var imagePath = System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, finalFileName));
 
