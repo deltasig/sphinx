@@ -241,6 +241,7 @@
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
+    <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
       <DependentUpon>201507142355194_Initial.cs</DependentUpon>
@@ -264,6 +265,10 @@
     <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.cs" />
     <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.Designer.cs">
       <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508082327224_AddMemberAvatarField.cs" />
+    <Compile Include="Migrations\201508082327224_AddMemberAvatarField.Designer.cs">
+      <DependentUpon>201508082327224_AddMemberAvatarField.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -474,6 +479,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
+    <Content Include="Images\NoAvatar.jpg" />
     <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />
@@ -935,6 +941,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201507232040482_ChangedMoveOutFieldType.resx">
       <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508082327224_AddMemberAvatarField.resx">
+      <DependentUpon>201508082327224_AddMemberAvatarField.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

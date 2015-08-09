@@ -25,7 +25,8 @@
         Name = c.Member.ToString(),
         Title = ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
             ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? " day" : " days") + " ago",
-        Text = c.Text
+        Text = c.Text,
+        AvatarPath = c.Member.AvatarPath
     }));
     discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
     {
@@ -34,7 +35,8 @@
         Name = s.Member.ToString(),
         Title = ((DateTime.UtcNow - s.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - s.ChangedOn).Days.ToString()) +
             ((DateTime.UtcNow - s.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
-        Text = "Changed status to <strong>" + s.Status.Name + "</strong>."
+        Text = "Changed status to <strong>" + s.Status.Name + "</strong>.",
+        AvatarPath = s.Member.AvatarPath
     }));
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
     {
@@ -43,7 +45,8 @@
         Name = p.Member.ToString(),
         Title = ((DateTime.UtcNow - p.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - p.ChangedOn).Days.ToString()) +
             ((DateTime.UtcNow - p.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
-        Text = "Changed priority to <strong>" + p.Priority.Name + "</strong>."
+        Text = "Changed priority to <strong>" + p.Priority.Name + "</strong>.",
+        AvatarPath = p.Member.AvatarPath
     }));
 
     var inProgressPost = new { typeName = "In Progress", id = Model.WorkOrder.WorkOrderId };
@@ -162,28 +165,33 @@
                     </p>
                 </div>
             </div>
-            <hr />
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th colspan="2">Discussion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="warning">
-                        <td class="col-xs-2"><small>@Model.WorkOrder.Member</small></td>
-                        <td><small>(Description) </small> @Model.WorkOrder.Description</td>
-                    </tr>
-                    @foreach (var d in discussion.OrderBy(o => o.OccurredOn))
-                    {
-                        <tr>
-                            <td><small><strong>@d.Name</strong><br /> @d.Title</small></td>
-                            <td>@Html.Raw(d.Text)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <hr/>
+            <h4>Original Post</h4>
+            <div class="media">
+                <div class="media-left">
+                    <img src="~/Images/Avatars/@Model.WorkOrder.Member.AvatarPath" height="25" width="25" class="img-circle"
+                         data-toggle="tooltip" data-placement="top" title="@Model.WorkOrder.Member"
+                         onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                </div>
+                <div class="media-body">
+                    <small>@Html.Raw(Model.WorkOrder.Description)</small>
+                </div>
+            </div>
+            <h4>Discussion</h4>
+            @foreach (var d in discussion.OrderBy(o => o.OccurredOn))
+            {
+                <div class="media">
+                    <div class="media-left">
+                        <img src="~/Images/Avatars/@d.AvatarPath" height="25" width="25" class="img-circle"
+                             data-toggle="tooltip" data-placement="top" title="@d.Name"
+                             onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                    </div>
+                    <div class="media-body">
+                        <p style="margin-bottom:0"><small>@Html.Raw(d.Text)</small></p>
+                        <small class="text-info">@d.Title</small>
+                    </div>
+                </div>
+            }
 
             <hr />
             @if (Model.WorkOrder.GetCurrentStatus() != "Closed")

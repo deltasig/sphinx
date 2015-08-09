@@ -9,6 +9,11 @@
     using Microsoft.Owin.Security;
     using Models;
     using System;
+    using System.Data.Entity;
+    using System.Drawing;
+    using System.Drawing.Drawing2D;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
@@ -104,6 +109,9 @@
         [HttpGet]
         public async Task<ActionResult> Edit(string userName, AccountChangeMessageId? message)
         {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailMessage = TempData["FailureMessage"];
+
             if (string.IsNullOrEmpty(userName))
             {
                 userName = User.Identity.GetUserName();
@@ -165,6 +173,39 @@
             ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
 
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> Avatar(FormCollection formCollection)
+        {
+            var userId = int.Parse(formCollection["Member.Id"]);
+            var member = await UserManager.FindByIdAsync(userId);
+            var file = Request.Files[0];
+            if (file == null || file.ContentLength <= 0)
+            {
+                TempData["FailureMessage"] = "Upload failure (no file received).";
+                return RedirectToAction("Edit", new { userName = member.UserName });
+            }
+            if (file.ContentLength > 1000000)
+            {
+                TempData["FailureMessage"] = "Upload failure (file too large; max upload size is 1mb).";
+                return RedirectToAction("Edit", new { userName = member.UserName });
+            }
+
+            var imageUpload = new ImageUpload { Width = 300, Height = 300 };
+            var imageResult = imageUpload.RenameUploadFile(file, member.UserName);
+            if (imageResult.Success)
+            {
+                member.AvatarPath = imageResult.ImageName;
+                UserManager.Update(member);
+                TempData["SuccessMessage"] = "Successfully uploaded new image.";
+            }
+            else
+            {
+                TempData["FailureMessage"] = imageResult.ErrorMessage;
+            }
+
+            return RedirectToAction("Edit", new { userName = member.UserName });
         }
 
         [HttpGet, AllowAnonymous]
@@ -759,6 +800,138 @@
                     properties.Dictionary[XsrfKey] = UserId;
                 }
                 context.HttpContext.GetOwinContext().Authentication.Challenge(properties, LoginProvider);
+            }
+        }
+
+        public class ImageResult
+        {
+            public bool Success { get; set; }
+            public string ImageName { get; set; }
+            public string ErrorMessage { get; set; }
+        }
+
+        public class ImageUpload
+        {
+            public int Width { get; set; }
+            public int Height { get; set; }
+            private const string UploadPath = "~/Images/Avatars/";
+
+            public ImageResult RenameUploadFile(HttpPostedFileBase file, string userName)
+            {
+                var imageResult = new ImageResult { Success = true, ErrorMessage = null };
+                var fileExtension = Path.GetExtension(file.FileName);
+                var finalFileName = userName + fileExtension;
+                var folderPath = System.Web.HttpContext.Current.Server.MapPath(UploadPath);
+                var imagePath = System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, finalFileName));
+
+                // Create image directory if it does not exist.
+                var directoryExists = Directory.Exists(folderPath);
+                if (!directoryExists)
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+                // Validate extension.
+                if (!ValidateExtension(fileExtension))
+                {
+                    imageResult.Success = false;
+                    imageResult.ErrorMessage = "Invalid Extension.";
+                    return imageResult;
+                }
+                // Delete old file if one exists.
+                var fileExists = System.IO.File.Exists(imagePath);
+                if (fileExists)
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+
+                return UploadFile(file, finalFileName, imageResult);
+            }
+
+            private ImageResult UploadFile(HttpPostedFileBase file, string fileName, ImageResult imageResult)
+            {
+                var path = System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, fileName));
+
+                try
+                {
+                    file.SaveAs(path);
+                    var imgOriginal = Image.FromFile(path);
+                    var imgActual = Scale(imgOriginal);
+                    imgOriginal.Dispose();
+                    imgActual.Save(path);
+                    imgActual.Dispose();
+
+                    imageResult.ImageName = fileName;
+                    return imageResult;
+                }
+                catch (Exception ex)
+                {
+                    // you might NOT want to show the exception error for the user
+                    // this is generally logging or testing
+                    imageResult.Success = false;
+                    imageResult.ErrorMessage = ex.Message;
+                    return imageResult;
+                }
+            }
+
+            private bool ValidateExtension(string extension)
+            {
+                extension = extension.ToLower();
+                switch (extension)
+                {
+                    case ".jpg":
+                        return true;
+                    case ".png":
+                        return true;
+                    case ".jpeg":
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+
+            private Image Scale(Image imgPhoto)
+            {
+                float sourceWidth = imgPhoto.Width;
+                float sourceHeight = imgPhoto.Height;
+                float destHeight = 0;
+                float destWidth = 0;
+                var sourceX = 0;
+                var sourceY = 0;
+                var destX = 0;
+                var destY = 0;
+
+                // For resize, possible distortion
+                if (Width != 0 && Height != 0)
+                {
+                    destWidth = Width;
+                    destHeight = Height;
+                }
+                // Change size proportionally
+                else if (Height != 0)
+                {
+                    destWidth = (float)(Height * sourceWidth) / sourceHeight;
+                    destHeight = Height;
+                }
+                else
+                {
+                    destWidth = Width;
+                    destHeight = (float)(sourceHeight * Width / sourceWidth);
+                }
+
+                var bmPhoto = new Bitmap((int)destWidth, (int)destHeight, PixelFormat.Format32bppPArgb);
+                bmPhoto.SetResolution(imgPhoto.HorizontalResolution, imgPhoto.VerticalResolution);
+
+                var grPhoto = Graphics.FromImage(bmPhoto);
+                grPhoto.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+                grPhoto.DrawImage(imgPhoto,
+                    new Rectangle(destX, destY, (int)destWidth, (int)destHeight),
+                    new Rectangle(sourceX, sourceY, (int)sourceWidth, (int)sourceHeight),
+                    GraphicsUnit.Pixel);
+
+                grPhoto.Dispose();
+
+                return bmPhoto;
             }
         }
     }

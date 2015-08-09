@@ -41,6 +41,8 @@
 
         public DateTime? LastUpdatedOn { get; set; }
 
+        public string AvatarPath { get; set; }
+
         [ForeignKey("StatusId")]
         public virtual MemberStatus MemberStatus { get; set; }
         [ForeignKey("PledgeClassId")]

@@ -62,32 +62,24 @@
                                     <td class="text-center @cellColor">
                                         @if (slot.Member != null)
                                         {
+                                            <img src="~/Images/Avatars/@slot.Member.AvatarPath" height="25" width="25" class="img-circle"
+                                                 data-toggle="tooltip" data-placement="top" title="@slot.Member.ToString()"
+                                                 onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
                                             // Reserved by current user
                                             if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now).TotalHours >= 0)
                                             {
-                                                using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { @class = "form-inline" }))
+                                                using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { style="display:inline" }))
                                                 {
-                                                    @slot.Member.ToShortLastNameString()
                                                     <button class="btn btn-link btn-light social" type="submit"
                                                             data-toggle="tooltip" data-placement="top" title="Click to cancel your reservation.">
                                                         <i class="fa fa-minus-circle text-danger"></i>
                                                     </button>
-                                                    if (isDstChange)
-                                                    {
-                                                        <i class="fa fa-exclamation-circle text-warning"
-                                                           data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
-                                                    }
                                                 }
                                             }
-                                            // Reserved by someone else
-                                            else
+                                            if (isDstChange)
                                             {
-                                                @slot.Member.ToShortLastNameString()
-                                                if (isDstChange)
-                                                {
-                                                    <i class="fa fa-exclamation-circle text-warning"
-                                                       data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
-                                                }
+                                                <i class="fa fa-exclamation-circle text-warning"
+                                                   data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
                                             }
                                         }
                                         // Unreserved; allows sign ups up to an hour into the slot.
