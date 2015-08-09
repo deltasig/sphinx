@@ -26,7 +26,7 @@
         <div class="col-sm-6">
             <div class="media">
                 <div class="media-left">
-                    <img src="~/Images/Avatars/@(User.Identity.GetAvatar())" height="90" width="90" 
+                    <img src="~/Images/Avatars/@(Model.Member.AvatarPath)" height="90" width="90" 
                          onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
                 </div>
                 <div class="media-body">
