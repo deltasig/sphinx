@@ -131,7 +131,7 @@
                         </a>!
                     </div>
                 }
-                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade)))
+                @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true))
                 {
                     <div class="alert alert-warning delayed" style="display:none;">
                         You have not reported all of your grades for last semester!
