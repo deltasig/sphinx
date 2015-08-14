@@ -259,19 +259,11 @@
         }
 
         [HttpGet, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
-        public async Task<ActionResult> Registration(RegistrationMessageId? message)
+        public async Task<ActionResult> Registration()
         {
-            switch (message)
-            {
-                case RegistrationMessageId.RegistrationSuccess:
-                case RegistrationMessageId.UnregisterSuccess:
-                    ViewBag.SuccessMessage = GetRegistrationMessage(message);
-                    break;
-                case RegistrationMessageId.RegistrationFailed:
-                case RegistrationMessageId.UnregisterFailed:
-                    ViewBag.FailMessage = GetRegistrationMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailMessage = TempData["FailureMessage"];
+
             var model = new RegistrationModel
             {
                 RegisterModel = new RegisterModel
@@ -293,9 +285,11 @@
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            RegistrationMessageId? message = RegistrationMessageId.RegistrationFailed;
-
-            if (!ModelState.IsValid) return RedirectToAction("Registration", new { Message = message });
+            if (!ModelState.IsValid)
+            {
+                TempData["FailureMessage"] = "Registration failed because the format of some of the provided data was invalid.";
+                return RedirectToAction("Registration");
+            }
             // Attempt to register the user
             try
             {
@@ -323,8 +317,6 @@
                     _db.PhoneNumbers.Add(new PhoneNumber { UserId = user.Id, Type = "Emergency" });
                     await _db.SaveChangesAsync();
 
-                    message = RegistrationMessageId.RegistrationSuccess;
-
                     // Send confirmation email.
                     var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new
@@ -343,7 +335,8 @@
                     var body = RenderRazorViewToString("~/Views/Emails/RegistrationConfirmation.cshtml", confirmationModel);
                     await UserManager.SendEmailAsync(user.Id, "Account Registration Successful!", body);
 
-                    return RedirectToAction("Index", "Home");
+                    TempData["SuccessMessage"] = user + " was successfully registered and emailed for confirmation.";
+                    return RedirectToAction("Registration");
                 }
                 AddErrors(result);
             }
@@ -355,7 +348,7 @@
             {
                 ModelState.AddModelError("", "Something went wrong.  Sorry for the inconvenience.");
             }
-            return RedirectToAction("Registration", new { Message = message });
+            return RedirectToAction("Registration");
         }
 
         [AllowAnonymous]
@@ -372,8 +365,6 @@
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator")]
         public async Task<ActionResult> Unregister(UnregisterModel model)
         {
-            RegistrationMessageId? message;
-
             if (ModelState.IsValid)
             {
                 // Attempt to remove the user from the system
@@ -394,14 +385,14 @@
                        member.ServiceHours.Any() ||
                        member.WorkOrders.Any())
                     {
-                        message = RegistrationMessageId.UnregisterFailed;
-                        return RedirectToAction("Registration", new { Message = message });
+                        TempData["FailureMessage"] = "Could not remove user because they have pertinent data that can't be removed.";
+                        return RedirectToAction("Registration");
                     }
 
                     await UserManager.DeleteAsync(member);
-
-                    message = RegistrationMessageId.UnregisterSuccess;
-                    return RedirectToAction("Registration", new { Message = message });
+                    
+                    TempData["SuccessMessage"] = "Successfully removed the user.";
+                    return RedirectToAction("Registration");
                 }
                 catch (MembershipCreateUserException e)
                 {
@@ -412,8 +403,8 @@
                     ModelState.AddModelError("", "Invalid Submission.");
                 }
             }
-            message = RegistrationMessageId.UnregisterFailed;
-            return RedirectToAction("Registration", new { Message = message });
+            TempData["FailureMessage"] = "Failed to remove the user for an unknown reason.  Please contact your administrator.";
+            return RedirectToAction("Registration");
         }
         
         [HttpPost, ValidateAntiForgeryToken]
