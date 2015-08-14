@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize(Roles = "Neophyte, Pledge, Active, Alumnus, Administrator")]
     public class DepartmentsController : BaseController
     {
         public async Task<ActionResult> Index()
@@ -29,12 +29,14 @@
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Create(Department model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -44,6 +46,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -59,6 +62,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Edit(Department model)
         {
             if (!ModelState.IsValid) return View(model);
@@ -68,6 +72,7 @@
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null)
@@ -83,6 +88,7 @@
         }
 
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var model = await _db.Departments.FindAsync(id);

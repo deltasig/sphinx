@@ -3,7 +3,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Department";
     ViewBag.Subtitle = Model.Name;
-
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }
 
 <div class="container-fluid">
@@ -26,7 +26,10 @@
                         <tr class="active">
                             <th class="col-sm-3">Number</th>
                             <th>Name</th>
-                            <th class="col-sm-2"></th>
+                            @if (hasElevatedPermissions)
+                            {
+                                <th class="col-sm-2"></th>
+                            }
                         </tr>
                         </thead>
                         <tbody>
@@ -39,9 +42,12 @@
                                     </a>
                                 </td>
                                 <td>@d.CourseName</td>
-                                <td class="text-right">
-                                    <a href="@Url.Action("Edit", "Classes", new {id = d.ClassId})">Edit</a>
-                                </td>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <td class="text-right">
+                                        <a href="@Url.Action("Edit", "Classes", new {id = d.ClassId})">Edit</a>
+                                    </td>
+                                }
                             </tr>
                         }
                         </tbody>
@@ -59,7 +65,7 @@
                             <tr class="active">
                                 <th>Name</th>
                                 <th class="col-sm-2">Enrolled</th>
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                @if (hasElevatedPermissions)
                                 {
                                     <th class="col-sm-2"></th>
                                 }
@@ -71,7 +77,7 @@
                                 <tr>
                                     <td>@m.MajorName</td>
                                     <td>@m.MajorToMembers.Count</td>
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                                    @if (hasElevatedPermissions)
                                     {
                                         <td class="text-right">
                                             <a href="@Url.Action("Edit", "Majors", new {id = m.MajorId})">Edit</a>
