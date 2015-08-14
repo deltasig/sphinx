@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Majors";
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }
 
 <div class="container-fluid">
@@ -18,7 +19,7 @@
                 <div class="panel-heading">
                     <div class="row">
                         <div class="col-xs-12 text-right">
-                            @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                            @if (hasElevatedPermissions)
                             {
                                 @Html.ActionLink("Add Major", "Create", null, new { @class = "btn btn-xs btn-success" })
                             }
@@ -33,7 +34,10 @@
                             <th class="col-sm-3">Name</th>
                             <th>Department</th>
                             <th class="col-sm-2">Members</th>
-                            <th class="col-sm-2"></th>
+                            @if (hasElevatedPermissions)
+                            {
+                                <th class="col-sm-2"></th>
+                            }
                         </tr>
                         </thead>
                         <tbody>
@@ -47,14 +51,17 @@
                                     </a>
                                 </td>
                                 <td>@item.MajorToMembers.Count</td>
-                                <td class="text-right">
-                                    @Html.ActionLink("Edit", "Edit", new {id = item.MajorId})
-                                    @if ((User.IsInRole("Administrator") || User.IsInRole("Academics")) && !item.MajorToMembers.Any())
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Delete", "Delete", new {id = item.MajorId})
-                                    }
-                                </td>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <td class="text-right">
+                                        @if (!item.MajorToMembers.Any())
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.MajorId })
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.MajorId })
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
                         </tbody>

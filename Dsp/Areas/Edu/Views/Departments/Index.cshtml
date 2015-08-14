@@ -2,6 +2,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Departments";
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }
 
 <div class="container-fluid">
@@ -29,25 +30,35 @@
                             <th>Name</th>
                             <th class="col-sm-2">Classes</th>
                             <th class="col-sm-2">Majors</th>
-                            <th class="col-sm-2"></th>
+                            @if (hasElevatedPermissions)
+                            {
+                                <th class="col-sm-2"></th>
+                            }
                         </tr>
                         </thead>
                         <tbody>
                         @foreach (var item in Model.OrderBy(o => o.Name))
                         {
                             <tr>
-                                <td>@item.Name</td>
+                                <td>
+                                    <a href="@Url.Action("Details", new {id = item.DepartmentId})">
+                                        @item.Name
+                                    </a>
+                                </td>
                                 <td>@item.Classes.Count</td>
                                 <td>@item.Majors.Count</td>
-                                <td class="text-right">
-                                    @Html.ActionLink("Details", "Details", new {id = item.DepartmentId}) |
-                                    @Html.ActionLink("Edit", "Edit", new {id = item.DepartmentId})
-                                    @if (!item.Majors.Any() && !item.Classes.Any())
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Delete", "Delete", new {id = item.DepartmentId})
-                                    }
-                                </td>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <td class="text-right">
+                                        @if (!item.Majors.Any() && !item.Classes.Any())
+                                        {
+                                            @: |
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId })
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentId })
+                                        }
+                                    </td>
+                                }
                             </tr>
                         }
                         </tbody>
