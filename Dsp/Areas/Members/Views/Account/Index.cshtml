@@ -65,7 +65,7 @@
                                 @(Model.Member.MajorsToMember.Count <= 1 ? "Major" : "Majors")
                                 @if (isAdmin || isAcademic || isSecretary || isCurrentUser)
                                 {
-                                    <a href="@Url.Action("Assign", "Majors", new {area = "Edu", id = Model.Member})" class="pull-right">
+                                    <a href="@Url.Action("Assign", "Majors", new {area = "Edu", id = Model.Member.Id})" class="pull-right">
                                         <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
                                            title="Add a new major"></i>
                                     </a>
