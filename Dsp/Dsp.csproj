@@ -479,6 +479,9 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
+    <Content Include="Images\coa-simple-lg.png" />
+    <Content Include="Images\coa-simple-md.png" />
+    <Content Include="Images\coa-simple-sm.png" />
     <Content Include="Images\NoAvatar.jpg" />
     <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="TestPage.html" />
