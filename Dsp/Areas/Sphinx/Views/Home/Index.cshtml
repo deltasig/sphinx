@@ -278,12 +278,15 @@
                         <i class="fa fa-fw fa-newspaper-o"></i>
                         Feed <small class="pull-right">past 30 days</small>
                     </div>
-                    <ul class="list-group" id="feed-list" style="height:auto; max-height: 600px; overflow-y:scroll">
+                    <ul class="list-group" style="max-height: 650px; overflow-y:scroll">
                         <li class="list-group-item" id="feed-loading">
                             <i class="fa fa-spinner fa-spin"></i>
                         </li>
-                        <li class="list-group-item text-center" id="feed-load" onclick="loadMoreFeedItems()">
-                            <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">Load More</button>
+                        <li class="list-group-item text-center">
+                            <button type="button" class="btn btn-xs btn-link" id="feed-load-btn"
+                                    onclick="loadMoreFeedItems()">
+                                Load More
+                            </button>
                             <p class="subtext"><small id="feed-pages"></small></p>
                         </li>
                     </ul>
@@ -330,10 +333,12 @@
     <script type="text/javascript">
 
         window.page = 0;
+        
+        function loadMoreFeedItems() {
+            $("#feed-loading").show();
 
-        function loadFeed(page) {
             var options = {};
-            options.page = page;
+            options.page = window.page;
             $.ajax({
                 url: "home/feed",
                 data: options,
@@ -346,25 +351,21 @@
                     window.page++;
                     $("#feed-pages").text("retrieved " + window.page + " page(s)");
 
-                    if (page >= 10) {
+                    if (window.page >= 10) {
                         $(".no-feed-results").remove();
                         $("#feed-load-btn").hide();
                         $("#feed-pages").text("Maximum feed length reached.");
                     }
                 }
             });
+
+            $("#feed-loading").hide();
         }
 
-        function loadMoreFeedItems() {
-            $("#feed-loading").show();
-            loadFeed(window.page);
-            $("#feed-loading").hide();
-        };
-
-        $(function () {
+        (function () {
             $(".delayed").delay(1000).show(500);
             loadMoreFeedItems();
-        });
+        })();
 
     </script>
 }
