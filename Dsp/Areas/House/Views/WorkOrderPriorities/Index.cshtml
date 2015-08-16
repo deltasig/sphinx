@@ -5,29 +5,25 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row row-space">
         <div class="col-xs-6">
-            <p>
-                <a href="@Url.Action("Index", "WorkOrders")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Work Orders
-                </a>
-            </p>
+            <a href="@Url.Action("Index", "WorkOrders")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Work Orders
+            </a>
         </div>
         <div class="col-sm-6 text-right">
-            <p>
-                <a href="@Url.Action("Create", "WorkOrderPriorities", new { area = "House" })" class="btn btn-sm btn-success">
-                    Create Priority
-                </a>
-            </p>
+            <a href="@Url.Action("Create", "WorkOrderPriorities", new { area = "House" })" class="btn btn-sm btn-success">
+                Create Priority
+            </a>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-body">
+                <div class="table-responsive">
                     <table class="table table-condensed">
                         <thead>
-                            <tr>
+                            <tr class="active">
                                 <th>Name</th>
                                 <th></th>
                             </tr>
