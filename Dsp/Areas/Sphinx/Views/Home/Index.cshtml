@@ -283,8 +283,7 @@
                             <i class="fa fa-spinner fa-spin"></i>
                         </li>
                         <li class="list-group-item text-center">
-                            <button type="button" class="btn btn-xs btn-link" id="feed-load-btn"
-                                    onclick="loadMoreFeedItems()">
+                            <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">
                                 Load More
                             </button>
                             <p class="subtext"><small id="feed-pages"></small></p>
@@ -331,40 +330,36 @@
 @section scripts
 {
     <script type="text/javascript">
-
-        window.page = 0;
         
-        function loadMoreFeedItems() {
+        var loadMoreFeedItems = function () {
+            this.page = (typeof this.page !== "undefined") ? this.page : 0;
+            var parent = this;
             $("#feed-loading").show();
-
-            var options = {};
-            options.page = window.page;
             $.ajax({
                 url: "home/feed",
-                data: options,
+                data: { page: this.page },
                 dataType: "html",
                 success: function (data) {
                     $(".no-feed-results").remove();
-
                     $("#feed-loading").before(data);
-
-                    window.page++;
-                    $("#feed-pages").text("retrieved " + window.page + " page(s)");
-
-                    if (window.page >= 10) {
+                    parent.page++;
+                    if (parent.page >= 10) {
                         $(".no-feed-results").remove();
                         $("#feed-load-btn").hide();
                         $("#feed-pages").text("Maximum feed length reached.");
+                    } else {
+                        $("#feed-pages").text("retrieved " + parent.page + " page(s)");
                     }
                 }
             });
 
             $("#feed-loading").hide();
-        }
+        };
 
         (function () {
             $(".delayed").delay(1000).show(500);
-            loadMoreFeedItems();
+            $("#feed-load-btn").click(loadMoreFeedItems);
+            $("#feed-load-btn").click();
         })();
 
     </script>
