@@ -809,6 +809,10 @@
 
             public static string GetUploadPath(string fileName)
             {
+                if (fileName == null)
+                {
+                    fileName = string.Empty;
+                }
                 return System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, fileName));
             }
 
