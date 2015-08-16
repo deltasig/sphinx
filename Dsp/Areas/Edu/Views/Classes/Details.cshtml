@@ -7,6 +7,7 @@
     ViewBag.Title = Model.Class.CourseName;
     ViewBag.Subtitle = Model.Class.CourseShorthand;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 
     var enrollModel = new ClassScheduleModel
     {
@@ -50,7 +51,7 @@
                     <i class="fa fa-link"></i> @Model.Class.Department.Name
                 </a>
 
-                if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                if (hasElevatedPermissions)
                 {
                     <a href="@Url.Action("Edit", new {id = Model.Class.ClassId})" class="btn btn-sm btn-info">
                         <i class="fa fa-cog"></i> Edit
@@ -113,49 +114,44 @@
                 <div class="panel-heading">
                     <i class="fa fa-folder-open"></i> <strong>Files</strong>
                 </div>
-                <div class="panel-body">
-                    @if (Model.Class.ClassFiles.Any())
-                    {
-                        <ul class="list-group">
-                            @foreach (var f in Model.Class.ClassFiles)
-                            {
-                                <li class="list-group-item">
-                                    <div class="row">
-                                        <div class="@(User.IsInRole("Administrator") || User.IsInRole("Academics") ? "col-xs-10" : "col-xs-12")">
-                                            <a href="@Url.Action("DownloadFile", new { id = f.ClassFileId })" class="btn btn-default btn-sm">
-                                                <i class="fa fa-cloud-download"></i>
-                                                @f.AwsCode.Split('/')[1]
-                                            </a>
-
+                @if (Model.Class.ClassFiles.Any())
+                {
+                    <ul class="list-group">
+                        @foreach (var f in Model.Class.ClassFiles)
+                        {
+                            <li class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-12">
+                                        <small>
+                                            @f.AwsCode.Split('/')[1]
                                             <i data-toggle="tooltip" data-placement="top"
-                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone)"
+                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone).  Downloaded @f.DownloadCount time(s)."
                                                class="fa fa-info-circle fa-lg text-info"></i>
-                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Downloads">
-                                                <i class="fa fa-cloud-download"></i>
-                                                @f.DownloadCount
-                                            </span>
-                                        </div>
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
-                                        {
-                                            <div class="col-xs-2 text-right">
-                                                <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })">
-                                                    <i data-toggle="tooltip" data-placement="top" title="Delete"
-                                                       class="fa fa-times-circle-o fa-2x text-danger"></i>
+                                        </small>
+                                        <small class="pull-right">
+                                            <a href="@Url.Action("DownloadFile", new {id = f.ClassFileId})" class="btn btn-xs btn-default">
+                                                Download
+                                            </a>
+                                            @if (hasElevatedPermissions)
+                                            {
+                                                @:
+                                                <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })" class="btn btn-xs btn-danger">
+                                                    Delete
                                                 </a>
-                                            </div>
-                                        }
+                                            }
+                                        </small>
                                     </div>
-                                </li>
-                            }
-                        </ul>
-                    }
-                    else
-                    {
-                        <div class="alert alert-warning">
-                            <strong>No files uploaded yet for this class.</strong>
-                        </div>
-                    }
-                </div>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        <strong>No files uploaded yet for this class.</strong>
+                    </div>
+                }
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">
