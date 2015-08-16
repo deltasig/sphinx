@@ -5,13 +5,11 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row row-space">
         <div class="col-xs-12">
-            <p>
-                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Work Orders
-                </a>
-            </p>
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Work Orders
+            </a>
         </div>
     </div>
     <div class="row">
@@ -24,7 +22,7 @@
                     <dt>@Html.DisplayNameFor(model => model.WorkOrderId)</dt>
                     <dd>@Html.DisplayFor(model => model.WorkOrderId)</dd>
                     <dt>@Html.DisplayNameFor(model => model.UserId)</dt>
-                    <dd>@Html.DisplayFor(model => model.Member)</dd>
+                    <dd>@Model.Member.ToString()</dd>
                     <dt>@Html.DisplayNameFor(model => model.Title)</dt>
                     <dd>@Html.DisplayFor(model => model.Title)</dd>
                     <dt>@Html.DisplayNameFor(model => model.Description)</dt>
