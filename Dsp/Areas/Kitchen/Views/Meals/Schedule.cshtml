@@ -207,7 +207,7 @@
                                                             <a href="@Url.Action("Downvote", "Meals", new {id = item.MealItemId, ViewBag.week, returnUrl = ViewBag.ReturnUrl})">
                                                                 @if (Model.UsersVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote))
                                                                 {
-                                                                    <i data-toggle="tooltip" data-placement="top" title="CancelDownvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
+                                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
                                                                 }
                                                                 else
                                                                 {
