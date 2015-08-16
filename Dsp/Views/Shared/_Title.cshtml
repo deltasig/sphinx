@@ -17,7 +17,8 @@
         <div class="col-xs-12">
             @{
                 var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? "hidden" : "";
-                var hideFailure = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
+                var hideFail = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
+                var hideFailure = string.IsNullOrEmpty(ViewBag.FailureMessage) ? "hidden" : "";
                 var hideMessage = string.IsNullOrEmpty(ViewBag.Message) ? "hidden" : "";
             }
             <div class="alert alert-success alert-dismissible fade in @(hideSuccess)" role="alert" id="success-message">
@@ -26,11 +27,17 @@
                 </button>
                 @ViewBag.SuccessMessage
             </div>
-            <div class="alert alert-danger alert-dismissible fade in @(hideFailure)" role="alert" id="failure-message">
+            <div class="alert alert-danger alert-dismissible fade in @(hideFail)" role="alert" id="fail-message">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
                 @ViewBag.FailMessage
+            </div>
+            <div class="alert alert-danger alert-dismissible fade in @(hideFailure)" role="alert" id="failure-message">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @ViewBag.FailureMessage
             </div>
             <div class="alert alert-warning alert-dismissible fade in @(hideMessage)" role="alert" id="message">
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close">
