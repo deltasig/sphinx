@@ -2,10 +2,7 @@
 
 <div class="panel panel-default">
     <div class="panel-heading">
-        Open work orders you created
-        <span class="label label-as-badge pull-right label-default">
-            @Model.CreatedWorkOrders.Count()
-        </span>
+        Your open work orders
     </div>
     @if (Model.CreatedWorkOrders.Any())
     {
@@ -42,9 +39,6 @@
 <div class="panel panel-default">
     <div class="panel-heading">
         Open work orders you're involved in
-        <span class="label label-as-badge pull-right label-default">
-            @Model.InvolvedWorkOrders.Count()
-        </span>
     </div>
     @if (Model.InvolvedWorkOrders.Any())
     {

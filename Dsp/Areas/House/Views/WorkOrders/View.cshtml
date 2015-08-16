@@ -82,14 +82,12 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-md-8" style="margin-bottom: 25px">
-            <div class="row">
+        <div class="col-md-8">
+            <div class="row row-space">
                 <div class="col-md-4">
-                    <p>
-                        <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                            <i class="fa fa-caret-left"></i> Back to Work Orders
-                        </a>
-                    </p>
+                    <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                        <i class="fa fa-caret-left"></i> Back to Work Orders
+                    </a>
                 </div>
                 <div class="col-md-8 text-right">
                     @if (elevatedPermissions)
@@ -99,7 +97,7 @@
                             <div class="btn-group" role="group">
                                 <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
                                         aria-haspopup="true" aria-expanded="false">
-                                    Change Status to <i class="fa fa-caret-down"></i>
+                                    Status <i class="fa fa-caret-down"></i>
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li class="@(Model.WorkOrder.GetCurrentStatus() == "In Progress" ? "hidden" : "")">
@@ -113,14 +111,13 @@
                                         <a href="javascript:document.getElementById('oh-status-form').submit()">On Hold</a>
                                     </li>
                                 </ul>
-
                             </div>
                             @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
                             {
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown"
                                             aria-haspopup="true" aria-expanded="false">
-                                        Change Priority to <i class="fa fa-caret-down"></i>
+                                        Priority <i class="fa fa-caret-down"></i>
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li class="@(Model.WorkOrder.GetCurrentPriority() == "Low" ? "hidden" : "")">
@@ -148,10 +145,10 @@
                     }
                 </div>
             </div>
-            <div class="row row-fluid">
+            <hr class="visible-xs visible-sm" />
+            <div class="row">
                 <div class="col-xs-12">
-                    <hr class="visible-xs visible-sm" />
-                    <h3>
+                    <h3 style="margin-top:5px">
                         @Model.WorkOrder.Title
                         <br class="visible-xs visible-sm"/>
                         <small>
@@ -165,7 +162,6 @@
                     </h3>
                 </div>
             </div>
-            <hr/>
             <h4><i class="fa fa-chain-broken"></i> Description</h4>
             <div class="well">
                 <div class="media">
