@@ -27,7 +27,5 @@
         public virtual Class Class { get; set; }
         [ForeignKey("UserId")]
         public virtual Member Uploader { get; set; }
-        [InverseProperty("ClassFile")]
-        public virtual ICollection<ClassFileVote> ClassFileVotes { get; set; }
     }
 }

@@ -14,7 +14,6 @@
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<ClassFile> ClassFiles { get; set; }
-        public virtual DbSet<ClassFileVote> ClassFileVotes { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Email> Emails { get; set; }

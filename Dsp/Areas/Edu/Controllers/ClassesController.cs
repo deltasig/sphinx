@@ -121,93 +121,7 @@
             };
             return View(model);
         }
-
-        public async Task<ActionResult> Upvote(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var file = await _db.ClassFiles.FindAsync(id);
-            if (file == null)
-            {
-                return HttpNotFound();
-            }
-            var userId = User.Identity.GetUserId<int>();
-            var existingVote = await _db.ClassFileVotes
-                    .SingleOrDefaultAsync(v =>
-                        v.UserId == userId &&
-                        v.ClassFileId == file.ClassFileId);
-
-            if (existingVote == null)
-            {
-                _db.ClassFileVotes.Add(new ClassFileVote
-                {
-                    UserId = userId,
-                    ClassFileId = file.ClassFileId,
-                    IsUpvote = true
-                });
-            }
-            else
-            {
-                if (existingVote.IsUpvote)
-                {
-                    _db.Entry(existingVote).State = EntityState.Deleted;
-                }
-                else
-                {
-                    existingVote.IsUpvote = true;
-                    _db.Entry(existingVote).State = EntityState.Modified;
-                }
-            }
-
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = file.ClassId });
-        }
-
-        public async Task<ActionResult> Downvote(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var file = await _db.ClassFiles.FindAsync(id);
-            if (file == null)
-            {
-                return HttpNotFound();
-            }
-            var userId = User.Identity.GetUserId<int>();
-            var existingVote = await _db.ClassFileVotes
-                    .SingleOrDefaultAsync(v =>
-                        v.UserId == userId &&
-                        v.ClassFileId == file.ClassFileId);
-
-            if (existingVote == null)
-            {
-                _db.ClassFileVotes.Add(new ClassFileVote
-                {
-                    UserId = userId,
-                    ClassFileId = file.ClassFileId,
-                    IsUpvote = false
-                });
-            }
-            else
-            {
-                if (!existingVote.IsUpvote)
-                {
-                    _db.Entry(existingVote).State = EntityState.Deleted;
-                }
-                else
-                {
-                    existingVote.IsUpvote = false;
-                    _db.Entry(existingVote).State = EntityState.Modified;
-                }
-            }
-
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Details", new { id = file.ClassId });
-        }
-
+        
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -751,12 +665,7 @@
                     message = ClassFileMessageId.DeleteFileAwsFailure
                 });
             }
-
-            foreach (var v in file.ClassFileVotes.ToList())
-            {
-                _db.Entry(v).State = EntityState.Deleted;
-            }
-
+            
             _db.Entry(file).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
 
