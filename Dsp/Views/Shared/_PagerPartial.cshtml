@@ -2,12 +2,14 @@
 
 @if (ViewBag.Count > ViewBag.PageSize)
 {
+    var action = ViewContext.RouteData.Values["action"].ToString();
+
     <nav class="text-center">
         <ul class="pagination">
             <li class="@(ViewBag.Page > 1 ? "" : "disabled")">
                 @if (ViewBag.Page > 1)
                 {
-                    <a href="@Url.Action("Index", Model.Previous)" aria-label="Previous">
+                    <a href="@Url.Action(action, Model.Previous)" aria-label="Previous">
                         <i class="fa fa-caret-left" aria-hidden="true"></i>
                     </a>
                 }
@@ -23,7 +25,7 @@
                     var pageFilter = Model.Incrementer;
                     pageFilter.page = i;
                     <li class="@(ViewBag.Page == i ? "active" : "")">
-                        <a href="@Url.Action("Index", pageFilter)">@i</a>
+                        <a href="@Url.Action(action, pageFilter)">@i</a>
                     </li>
                 }
                 else if (i == ViewBag.Page - 3 && i > 1)
@@ -31,7 +33,7 @@
                     var pageFilter = Model.Incrementer;
                     pageFilter.page = (i + 1) / 2;
                     <li class="">
-                        <a href="@Url.Action("Index", pageFilter)" class="disabled">...</a>
+                        <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
                     </li>
                 }
                 else if (i == ViewBag.Page + 3 && i < ViewBag.Pages)
@@ -39,14 +41,14 @@
                     var pageFilter = Model.Incrementer;
                     pageFilter.page = i + (ViewBag.Pages - i - 1) / 2;
                     <li class="">
-                        <a href="@Url.Action("Index", pageFilter)" class="disabled">...</a>
+                        <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
                     </li>
                 }
             }
             <li class="@(ViewBag.Page < ViewBag.Pages ? "" : "disabled")">
                 @if (ViewBag.Page < ViewBag.Pages)
                 {
-                    <a href="@Url.Action("Index", Model.Next)" aria-label="Next">
+                    <a href="@Url.Action(action, Model.Next)" aria-label="Next">
                         <i class="fa fa-caret-right" aria-hidden="true"></i>
                     </a>
                 }
