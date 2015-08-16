@@ -1,0 +1,39 @@
+﻿@model List<Dsp.Areas.Sphinx.Models.FeedItem>
+
+@if (Model.Any())
+{
+    foreach (var i in Model.OrderByDescending(f => f.OccurredOn))
+    {
+        var dayString = i.DaysSince < 1 ? "less than a day ago" : i.DaysSince + (i.DaysSince == 1 ? " day ago" : " days ago");
+
+        <li class="list-group-item">
+            <div class="media">
+                <div class="media-left">
+                    <img src="~/Images/Avatars/@i.ImageName" height="25" width="25" class="img-circle" alt="@i.UserName" />
+                </div>
+                <div class="media-body">
+                    <small>
+                        <i class="fa fa-fw @i.Symbol text-muted"></i>
+                        @i.DisplayText
+                        <a href="@i.Link"><i class="fa fa-link"></i></a>
+                    </small>
+                    <p class="subtext">
+                        <a href="@Url.Action("Index", "Account", new { area = "Members", userName = i.UserName })">@i.Name</a>
+                        @dayString
+                    </p>
+                </div>
+            </div>
+        </li>
+    }
+    <script type="text/javascript">
+        $(function () {
+            $("[data-toggle=\"tooltip\"]").tooltip();
+        });
+    </script>
+}
+else
+{
+    <li class="list-group-item no-feed-results">
+        Nothing found.
+    </li>
+}

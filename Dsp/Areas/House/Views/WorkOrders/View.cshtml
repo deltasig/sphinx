@@ -27,7 +27,7 @@
         Title = ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
             ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? " day" : " days") + " ago",
         Text = c.Text,
-        AvatarPath = c.Member.AvatarPath,
+        AvatarPath = c.Member.GetAvatarString(),
         UserName = c.Member.UserName
     }));
     discussion.AddRange(statusChanges.Select(s => new WorkOrderDiscussionEntry
@@ -38,7 +38,7 @@
         Title = ((DateTime.UtcNow - s.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - s.ChangedOn).Days.ToString()) +
             ((DateTime.UtcNow - s.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
         Text = "Changed status to <strong>" + s.Status.Name + "</strong>.",
-        AvatarPath = s.Member.AvatarPath,
+        AvatarPath = s.Member.GetAvatarString(),
         UserName = s.Member.UserName
     }));
     discussion.AddRange(priorityChanges.Select(p => new WorkOrderDiscussionEntry
@@ -49,7 +49,7 @@
         Title = ((DateTime.UtcNow - p.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - p.ChangedOn).Days.ToString()) +
             ((DateTime.UtcNow - p.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
         Text = "Changed priority to <strong>" + p.Priority.Name + "</strong>.",
-        AvatarPath = p.Member.AvatarPath,
+        AvatarPath = p.Member.GetAvatarString(),
         UserName = p.Member.UserName
     }));
 
@@ -170,9 +170,8 @@
             <div class="well">
                 <div class="media">
                     <div class="media-left">
-                        <img src="~/Images/Avatars/@Model.WorkOrder.Member.AvatarPath" height="25" width="25" class="img-circle"
-                             data-toggle="tooltip" data-placement="top" title="@Model.WorkOrder.Member"
-                             onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" alt="No Picture" />
+                        <img src="~/Images/Avatars/@Model.WorkOrder.Member.GetAvatarString()" height="25" width="25" class="img-circle"
+                             data-toggle="tooltip" data-placement="top" title="@Model.WorkOrder.Member" />
                     </div>
                     <div class="media-body">
                         <p style="margin-bottom:0">
@@ -197,8 +196,7 @@
                         <div class="media">
                             <div class="media-left">
                                 <img src="~/Images/Avatars/@User.Identity.GetAvatar()" height="25" width="25" class="img-circle"
-                                     data-toggle="tooltip" data-placement="top" title="@User.Identity.Name" alt="No Picture"
-                                     onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                                     data-toggle="tooltip" data-placement="top" title="@User.Identity.Name" />
                             </div>
                             <div class="media-body">
                                 @using (Html.BeginForm("Comment", "WorkOrders", FormMethod.Post))
@@ -223,8 +221,7 @@
                         <div class="media">
                             <div class="media-left">
                                 <img src="~/Images/Avatars/@d.AvatarPath" height="25" width="25" class="img-circle"
-                                     data-toggle="tooltip" data-placement="top" title="@d.Name" alt="No Picture"
-                                     onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';"/>
+                                     data-toggle="tooltip" data-placement="top" title="@d.Name" />
                             </div>
                             <div class="media-body">
                                 <p style="margin-bottom: 0">

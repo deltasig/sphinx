@@ -239,6 +239,7 @@
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
@@ -425,6 +426,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Areas\Sphinx\Views\Home\Feed.cshtml" />
     <Content Include="Content\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap-datetimepicker-build.css" />
     <Content Include="Content\bootstrap-datetimepicker-build.min.css">
@@ -482,7 +484,7 @@
     <Content Include="Images\coa-simple-lg.png" />
     <Content Include="Images\coa-simple-md.png" />
     <Content Include="Images\coa-simple-sm.png" />
-    <Content Include="Images\NoAvatar.jpg" />
+    <Content Include="Images\Avatars\NoAvatar.jpg" />
     <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />

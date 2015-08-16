@@ -10,6 +10,7 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Areas.Members.Controllers;
 
     public class Member : IdentityUser<int, SphinxUserLogin, Leader, SphinxUserClaim>
     {
@@ -148,15 +149,6 @@
             return false;
         }
 
-        public override string ToString()
-        {
-            return FirstName + " " + LastName;
-        }
-        public string ToShortLastNameString()
-        {
-            return FirstName + " " + LastName.Substring(0, 1) + ".";
-        }
-
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<Member, int> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
@@ -174,6 +166,23 @@
             var assignments = Rooms.Where(r => r.Room.SemesterId == sid).OrderByDescending(r => r.MovedOut);
             
             return assignments.First().Room.Name;
+        }
+
+        public string GetAvatarString()
+        {
+            var filePath = AccountController.ImageUpload.GetUploadPath(AvatarPath ?? string.Empty);
+            var fileExists = System.IO.File.Exists(filePath);
+            return fileExists ? AvatarPath : "NoAvatar.jpg";
+        }
+
+        public string ToShortLastNameString()
+        {
+            return FirstName + " " + LastName.Substring(0, 1) + ".";
+        }
+
+        public override string ToString()
+        {
+            return FirstName + " " + LastName;
         }
     }
 }

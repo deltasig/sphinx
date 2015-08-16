@@ -807,13 +807,18 @@
             public int Height { get; set; }
             private const string UploadPath = "~/Images/Avatars/";
 
+            public static string GetUploadPath(string fileName)
+            {
+                return System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, fileName));
+            }
+
             public ImageResult RenameUploadFile(HttpPostedFileBase file, string userName)
             {
                 var imageResult = new ImageResult { Success = true, ErrorMessage = null };
                 var fileExtension = Path.GetExtension(file.FileName);
                 var finalFileName = Regex.Replace(userName, @"\s+", "") + fileExtension;
                 var folderPath = System.Web.HttpContext.Current.Server.MapPath(UploadPath);
-                var imagePath = System.Web.HttpContext.Current.Server.MapPath(Path.Combine(UploadPath, finalFileName));
+                var imagePath = GetUploadPath(finalFileName);
 
                 // Create image directory if it does not exist.
                 var directoryExists = Directory.Exists(folderPath);
