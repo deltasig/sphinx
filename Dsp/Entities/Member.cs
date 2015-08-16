@@ -57,8 +57,6 @@
         [InverseProperty("Uploader")]
         public virtual ICollection<ClassFile> ClassFileUploads { get; set; }
         [InverseProperty("Member")]
-        public virtual ICollection<ClassFileVote> ClassFileVotes { get; set; }
-        [InverseProperty("Member")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<IncidentReport> IncidentReports { get; set; }

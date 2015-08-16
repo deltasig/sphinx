@@ -134,30 +134,6 @@
                                                 <i class="fa fa-cloud-download"></i>
                                                 @f.DownloadCount
                                             </span>
-                                            <span class="badge" data-toggle="tooltip" data-placement="top" title="Total Upvotes | Downvotes">
-                                                @f.ClassFileVotes.Count(v => v.IsUpvote) |
-                                                @f.ClassFileVotes.Count(v => !v.IsUpvote)
-                                            </span>
-                                            <a href="@Url.Action("Upvote", "Classes", new { id = f.ClassFileId })">
-                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
-                                                {
-                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
-                                                }
-                                            </a>
-                                            <a href="@Url.Action("Downvote", "Classes", new { id = f.ClassFileId })">
-                                                @if (f.ClassFileVotes.Any(v => v.ClassFileId == f.ClassFileId && !v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
-                                                {
-                                                    <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
-                                                }
-                                                else
-                                                {
-                                                    <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
-                                                }
-                                            </a>
                                         </div>
                                         @if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
                                         {

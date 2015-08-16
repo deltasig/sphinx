@@ -96,17 +96,41 @@
             {
                 Member = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())
             }).Member;
-            model.AddRange(soberSlotsAdded.Where(s => s.CreatedOn != null).Select(s => new FeedItem
+            var soberSlotGroups = soberSlotsAdded
+                .Where(s => s.CreatedOn != null)
+                .GroupBy(s => ((DateTime)s.CreatedOn).Date);
+            foreach (var g in soberSlotGroups)
             {
-                UserName = saa.UserName,
-                Name = saa.ToString(),
-                ImageName = saa.GetAvatarString(),
-                DaysSince = (nowUtc - (DateTime)s.CreatedOn).Days,
-                OccurredOn = (DateTime)s.CreatedOn,
-                DisplayText = "Sober shift created for " + ConvertUtcToCst(s.DateOfShift).ToString("D"),
-                Link = Url.Action("Schedule", "Sobers"),
-                Symbol = "fa-car"
-            }));
+                var count = g.Count();
+                if (count < 4)
+                {
+                    model.AddRange(g.Where(s => s.CreatedOn != null).Select(s => new FeedItem
+                    {
+                        UserName = saa.UserName,
+                        Name = saa.ToString(),
+                        ImageName = saa.GetAvatarString(),
+                        DaysSince = (nowUtc - (DateTime) s.CreatedOn).Days,
+                        OccurredOn = (DateTime) s.CreatedOn,
+                        DisplayText = "Sober shift added for " + ConvertUtcToCst(s.DateOfShift).ToString("D"),
+                        Link = Url.Action("Schedule", "Sobers"),
+                        Symbol = "fa-car"
+                    }));
+                }
+                else
+                {
+                    model.Add(new FeedItem
+                    {
+                        UserName = saa.UserName,
+                        Name = saa.ToString(),
+                        ImageName = saa.GetAvatarString(),
+                        DaysSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).Days,
+                        OccurredOn = (g.First().CreatedOn ?? nowUtc),
+                        DisplayText = count + " sober shifts added",
+                        Link = Url.Action("Schedule", "Sobers"),
+                        Symbol = "fa-car"
+                    });
+                }
+            }
 
             // Sober shifts filled
             var soberSignups = await _db.SoberSignups
@@ -186,7 +210,7 @@
                 ImageName = s.Uploader.GetAvatarString(),
                 DaysSince = (nowUtc - s.UploadedOn).Days,
                 OccurredOn = s.UploadedOn,
-                DisplayText = "New file uploaded for " + s.Class.CourseShorthand + " on " + ConvertUtcToCst(s.UploadedOn).ToString("D"),
+                DisplayText = "New file uploaded for " + s.Class.CourseShorthand,
                 Link = Url.Action("Details", "Classes", new { area = "Edu", id = s.ClassId }),
                 Symbol = "fa-folder"
             }));
