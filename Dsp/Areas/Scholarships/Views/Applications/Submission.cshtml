@@ -4,8 +4,9 @@
     ViewBag.Title = "Scholarship Submission";
     ViewBag.Subtitle = Model.Application.Title;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment");
 }
-@if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
+@if (hasElevatedPermissions)
 {
     @section styles {
         @Styles.Render("~/content/markdown")
@@ -34,8 +35,11 @@
                     <div class="col-xs-12">
                         <strong></strong>
                         <dl class="dl-horizontal">
-                            <dt>Student Number</dt>
-                            <dd>@Model.StudentNumber</dd>
+                            @if (hasElevatedPermissions)
+                            {
+                                <dt>Student Number</dt>
+                                <dd>@Model.StudentNumber</dd>
+                            }
                             <dt>Email</dt>
                             <dd>@Model.Email</dd>
                             <dt>Phone</dt>
@@ -51,7 +55,15 @@
                             </dd>
                             <dt>High School</dt>
                             <dd>
-                                @Model.HighSchool (GPA: @Model.Gpa, ACT/SAT: @Model.ActSatScore)
+                                @Model.HighSchool
+                                @if (hasElevatedPermissions)
+                                {
+                                    @: (GPA: @Model.Gpa, ACT / SAT: @Model.ActSatScore)
+                                }
+                                else
+                                {
+                                    <small>(Academic performance info hidden)</small>
+                                }
                             </dd>
                             <dt>How They Heard</dt>
                             <dd>
@@ -93,7 +105,7 @@
                     </small>
                 }
             </h2>
-            @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
+            @if (hasElevatedPermissions)
             {
                 using (Html.BeginForm("EditSubmission", "Applications", FormMethod.Post))
                 {
@@ -139,7 +151,6 @@
             }
             else
             {
-                @Html.LabelFor(model => model.CommitteeResponse, new { @class = "control-label" })
                 <div class="well">
                     @Html.Raw(ViewBag.CommitteeResponse)
                 </div>
@@ -147,7 +158,7 @@
         </div>
     </div>
 </div>
-@if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
+@if (hasElevatedPermissions)
 {
     @section scripts {
         @Scripts.Render("~/bundles/markdown")
