@@ -12,6 +12,9 @@
     {
         public async Task<ActionResult> Index()
         {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
             return View(await _db.WorkOrderStatuses.Include(w => w.StatusChanges).ToListAsync());
         }
 
@@ -27,20 +30,16 @@
 
             _db.WorkOrderStatuses.Add(model);
             await _db.SaveChangesAsync();
+            
+            TempData["SuccessMessage"] = model.Name + " created successfully.";
             return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var model = await _db.WorkOrderStatuses.FindAsync(id);
-            if (model == null)
-            {
-                return HttpNotFound();
-            }
+            if (model == null) return HttpNotFound(); 
             return View(model);
         }
 
@@ -51,20 +50,16 @@
 
             _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = model.Name + " updated successfully.";
             return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest); 
             var model = await _db.WorkOrderStatuses.FindAsync(id);
-            if (model == null)
-            {
-                return HttpNotFound();
-            }
+            if (model == null) return HttpNotFound();
             return View(model);
         }
 
@@ -74,6 +69,8 @@
             var model = await _db.WorkOrderStatuses.FindAsync(id);
             _db.WorkOrderStatuses.Remove(model);
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = model.Name + " deleted successfully.";
             return RedirectToAction("Index");
         }
     }

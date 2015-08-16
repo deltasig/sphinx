@@ -15,18 +15,13 @@
     public class WorkOrdersController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(WorkOrderMessageId? message,
-            string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
+        public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
         {
-            switch (message)
-            {
-                case WorkOrderMessageId.DeleteSuccess:
-                    ViewBag.SuccessMessage = GetWorkOrderResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
             var workOrders = await _db.WorkOrders.ToListAsync();
-            const int pageSize = 10;
-            var filterResults = base.GetFilteredWorkOrderList(workOrders, s, sort, page, open, closed, pageSize);
+            var filterResults = GetFilteredWorkOrderList(workOrders, s, sort, page, open, closed);
 
             // Build view model with collected data.
             var model = new WorkOrderIndexModel
@@ -47,25 +42,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> View(int? id, WorkOrderMessageId? message)
+        public async Task<ActionResult> View(int? id)
         {
-            switch (message)
-            {
-                case WorkOrderMessageId.CreateSuccess:
-                case WorkOrderMessageId.UpdateSuccess:
-                case WorkOrderMessageId.NowUnderReview:
-                case WorkOrderMessageId.CommentAdded:
-                case WorkOrderMessageId.PriorityChangeSuccess:
-                case WorkOrderMessageId.StatusChangeSuccess:
-                case WorkOrderMessageId.ClosedSuccess:
-                    ViewBag.SuccessMessage = GetWorkOrderResultMessage(message);
-                    break;
-                case WorkOrderMessageId.CommentTextRequired:
-                case WorkOrderMessageId.CommentTextRequiredWhenClosing:
-                case WorkOrderMessageId.AlreadyClosed:
-                    ViewBag.FailMessage = GetWorkOrderResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var workOrder = await _db.WorkOrders.FindAsync(id);
             if (workOrder == null) return HttpNotFound();
@@ -74,7 +55,8 @@
             {
                 var underReviewStatus = await _db.WorkOrderStatuses.SingleAsync(s => s.Name == "Under Review");
                 await UpdateWorkOrderStatus(workOrder, underReviewStatus);
-                return RedirectToAction("View", new { id, message = WorkOrderMessageId.NowUnderReview });
+                TempData["SuccessMessage"] = "Work order has been placed under review.";
+                return RedirectToAction("View", new { id });
             }
 
             var workOrders = await _db.WorkOrders.ToListAsync();
@@ -98,14 +80,16 @@
         [HttpPost]
         public async Task<ActionResult> ChangeWorkOrderStatus(string typeName, int? id)
         {
-            if (string.IsNullOrEmpty(typeName) || id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            
-            var status = await _db.WorkOrderStatuses
-                .SingleOrDefaultAsync(w => w.Name == typeName);
-            if (status == null) return HttpNotFound();
+            if (string.IsNullOrEmpty(typeName) || id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var status = await _db.WorkOrderStatuses.SingleOrDefaultAsync(w => w.Name == typeName);
+            if (status == null)
+                return HttpNotFound();
 
             var workOrder = await _db.WorkOrders.FindAsync(id);
-            if (workOrder == null) return HttpNotFound();
+            if (workOrder == null)
+                return HttpNotFound();
 
             var newStatus = new WorkOrderStatusChange
             {
@@ -118,20 +102,23 @@
             _db.WorkOrderStatusChanges.Add(newStatus);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("View", new { id, message = WorkOrderMessageId.StatusChangeSuccess  });
+            TempData["SuccessMessage"] = "Work order status successfully changed to " + status.Name + ".";
+            return RedirectToAction("View", new { id });
         }
 
         [HttpPost]
         public async Task<ActionResult> ChangeWorkOrderPriority(string typeName, int? id)
         {
-            if (string.IsNullOrEmpty(typeName) || id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (string.IsNullOrEmpty(typeName) || id == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
 
-            var priority = await _db.WorkOrderPriorities
-                .SingleOrDefaultAsync(w => w.Name == typeName);
-            if (priority == null) return HttpNotFound();
+            var priority = await _db.WorkOrderPriorities.SingleOrDefaultAsync(w => w.Name == typeName);
+            if (priority == null)
+                return HttpNotFound();
 
             var workOrder = await _db.WorkOrders.FindAsync(id);
-            if (workOrder == null) return HttpNotFound();
+            if (workOrder == null)
+                return HttpNotFound();
 
             var newPriority = new WorkOrderPriorityChange
             {
@@ -144,7 +131,8 @@
             _db.WorkOrderPriorityChanges.Add(newPriority);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("View", new { id, message = WorkOrderMessageId.PriorityChangeSuccess });
+            TempData["SuccessMessage"] = "Work order priority successfully changed to " + priority.Name + ".";
+            return RedirectToAction("View", new { id });
         }
 
         [HttpPost]
@@ -155,33 +143,23 @@
             if (workOrderId == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             if (close && string.IsNullOrEmpty(comment))
             {
-                return RedirectToAction("View", new
-                {
-                    id = workOrderId, 
-                    message = WorkOrderMessageId.CommentTextRequiredWhenClosing
-                });
+                TempData["FailureMessage"] = "A comment is required when closing a work order.";
+                return RedirectToAction("View", new { id = workOrderId });
             }
             if (string.IsNullOrEmpty(comment))
             {
-                return RedirectToAction("View", new
-                {
-                    id = workOrderId, 
-                    message = WorkOrderMessageId.CommentTextRequired
-                });
+                TempData["FailureMessage"] = "Empty comments are not allowed.";
+                return RedirectToAction("View", new { id = workOrderId });
             }
             var workOrder = await _db.WorkOrders.FindAsync(workOrderId);
             if (workOrder == null) return HttpNotFound();
             if (workOrder.GetCurrentStatus() == "Closed")
             {
-                return RedirectToAction("View", new
-                {
-                    id = workOrderId, 
-                    message = WorkOrderMessageId.AlreadyClosed
-                });
+                TempData["FailureMessage"] = "This work order is already closed.";
+                return RedirectToAction("View", new { id = workOrderId });
             }
 
             var commentTime = DateTime.UtcNow;
-            var message = WorkOrderMessageId.CommentAdded;
             if (close)
             {
                 workOrder.Result = comment;
@@ -197,7 +175,6 @@
                 _db.Entry(workOrder).State = EntityState.Modified;
                 _db.WorkOrderStatusChanges.Add(statusChange);
                 await _db.SaveChangesAsync();
-                message = WorkOrderMessageId.ClosedSuccess;
             }
 
             var newComment = new WorkOrderComment
@@ -211,7 +188,10 @@
             _db.WorkOrderComments.Add(newComment);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("View", new { id = workOrderId, message = message });
+            TempData["SuccessMessage"] = close 
+                ? "Work order closed successfully." 
+                : "Comment posted successfully.";
+            return RedirectToAction("View", new { id = workOrderId });
         }
 
         [HttpGet]
@@ -265,11 +245,8 @@
             _db.WorkOrderPriorityChanges.Add(initialPriorityChange);
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("View", new
-            {
-                id = model.WorkOrderId, 
-                message = WorkOrderMessageId.CreateSuccess
-            });
+            TempData["SuccessMessage"] = "Work order created successfully.";
+            return RedirectToAction("View", new { id = model.WorkOrderId });
         }
 
         [HttpGet]
@@ -346,11 +323,8 @@
 
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("View", new
-            {
-                id = model.WorkOrder.WorkOrderId,
-                message = WorkOrderMessageId.CreateSuccess
-            });
+            TempData["SuccessMessage"] = "Past work order created and archived successfuly.";
+            return RedirectToAction("View", new { id = model.WorkOrder.WorkOrderId });
         }
 
         [HttpGet]
@@ -370,11 +344,9 @@
             _db.Entry(model).State = EntityState.Modified;
             model.Title = ToTitleCaseString(model.Title);
             await _db.SaveChangesAsync();
-            return RedirectToAction("View", new
-            {
-                id = model.WorkOrderId,
-                message = WorkOrderMessageId.UpdateSuccess
-            });
+
+            TempData["SuccessMessage"] = "Work order updated successfully.";
+            return RedirectToAction("View", new { id = model.WorkOrderId });
         }
 
         [HttpGet]
@@ -392,7 +364,9 @@
             var model = await _db.WorkOrders.FindAsync(id);
             _db.WorkOrders.Remove(model);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", new { message = WorkOrderMessageId.DeleteSuccess });
+
+            TempData["SuccessMessage"] = "Work order deleted successfully.";
+            return RedirectToAction("Index");
         }
         
         private async Task UpdateWorkOrderStatus(WorkOrder workOrder, WorkOrderStatus newStatus)
@@ -408,37 +382,6 @@
             _db.Entry(workOrder).State = EntityState.Modified;
             _db.WorkOrderStatusChanges.Add(statusChange);
             await _db.SaveChangesAsync();
-        }
-
-        public static dynamic GetWorkOrderResultMessage(WorkOrderMessageId? message)
-        {
-            return message == WorkOrderMessageId.UpdateSuccess ? "Work Order updated successfully."
-                : message == WorkOrderMessageId.CreateSuccess ? "Work Order created successfully."
-                : message == WorkOrderMessageId.DeleteSuccess ? "Work Order deleted successfully."
-                : message == WorkOrderMessageId.NowUnderReview ? "Work Order is now automatically under review!"
-                : message == WorkOrderMessageId.CommentTextRequired ? "You must enter some text in the comment field."
-                : message == WorkOrderMessageId.CommentTextRequiredWhenClosing ? "You must provide a comment when closing a Work Order."
-                : message == WorkOrderMessageId.AlreadyClosed ? "Work Order is already closed."
-                : message == WorkOrderMessageId.CommentAdded ? "Comment submitted for Work Order."
-                : message == WorkOrderMessageId.PriorityChangeSuccess ? "Work Order priority changed successfully."
-                : message == WorkOrderMessageId.StatusChangeSuccess ? "Work Order status changed successfully."
-                : message == WorkOrderMessageId.ClosedSuccess ? "Work Order has been closed!"
-                : "";
-        }
-
-        public enum WorkOrderMessageId
-        {
-            UpdateSuccess,
-            CreateSuccess,
-            DeleteSuccess,
-            NowUnderReview,
-            CommentTextRequired,
-            CommentTextRequiredWhenClosing,
-            AlreadyClosed,
-            CommentAdded,
-            PriorityChangeSuccess,
-            StatusChangeSuccess,
-            ClosedSuccess
         }
     }
 }
