@@ -13,40 +13,67 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading"></div>
+
                 <ul class="list-group">
                     @if (Model.Any())
                     {
+                        <li class="list-group-item hidden-xs">
+                            <div class="row">
+                                <div class="col-sm-1">
+                                    <small><strong>Code</strong></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small><strong>Date/Time</strong></small>
+                                </div>
+                                <div class="col-sm-5 col-md-5">
+                                    <small><strong>Type</strong></small>
+                                </div>
+                                <div class="col-sm-2">
+                                    <small><strong>Source</strong></small>
+                                </div>
+                                <div class="col-sm-2 col-md-2">
+                                    <small><strong>User</strong></small>
+                                </div>
+                            </div>
+                        </li>
+
                         foreach (var e in Model.OrderByDescending(o => o.TimeUtc))
                         {
                             <li class="list-group-item">
                                 <div class="row">
-                                    <div class="col-xs-12">
-                                        <button class="btn btn-xs btn-default pull-right"
-                                                type="button" data-toggle="collapse" data-target="#@e.ErrorId"
-                                                aria-expanded="false" aria-controls="@e.ErrorId">
+                                    <div class="col-sm-1">
+                                        <small>@e.StatusCode</small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <small>@TimeZoneInfo.ConvertTimeFromUtc(e.TimeUtc, cstZone).ToString("MM/dd/yyyy HH:mm tt")</small>
+                                    </div>
+                                    <div class="col-sm-5 col-md-5">
+                                        <small>@e.Type</small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <small>@e.Source</small>
+                                    </div>
+                                    <div class="col-sm-2 col-md-2">
+                                        <small>@e.User</small>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <small class="text-warning">
+                                            <strong>Message: </strong>@e.Message
+                                        </small>
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <button class="btn btn-xs btn-default pull-right" type="button" onclick="getLogDetails('@e.ErrorId')"
+                                                data-toggle="collapse" data-target="#@e.ErrorId-collapse" aria-expanded="false" aria-controls="@e.ErrorId-collapse">
                                             Details
                                         </button>
-                                        <span class="label label-warning">@e.StatusCode</span>
-                                        <small>
-                                            @TimeZoneInfo.ConvertTimeFromUtc(e.TimeUtc, cstZone)
-
-                                        </small>
-                                        @if (!string.IsNullOrEmpty(e.User))
-                                        {
-                                            <span class="label label-default">@e.User</span>
-                                        }
-                                        <br/>
-                                        <small class="hidden-xs">
-                                            @e.Type
-                                        </small>
                                     </div>
                                 </div>
                             </li>
-                            <li class="collapse" id="@e.ErrorId">
+                            <li class="collapse" id="@e.ErrorId-collapse">
                                 <div class="list-group-item list-group-item-warning">
-                                    <small><strong>@e.Source</strong></small><br/>
-                                    <small>@e.Message</small>
+                                    <small id="@e.ErrorId"></small>
                                 </div>
                             </li>
                         }
@@ -58,8 +85,50 @@
                         </li>
                     }
                 </ul>
-                <div class="panel-footer"><small>Count: @Model.Count</small></div>
+
+                @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
+                {
+                    Previous = new Pager {page = ViewBag.Page--},
+                    Incrementer = new Pager {page = ViewBag.Page},
+                    Next = new Pager {page = ViewBag.Page++}
+                })
+                <div class="panel-footer"><small>Count: @Model.Count</small>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+@section scripts {
+
+    <script type="text/javascript">
+
+        function getLogDetails(id) {
+
+            if ($("#" + id).html().length > 0) {
+                console.log("Already loaded details; not doing it again.");
+                return;
+            }
+
+            var options = { id: id };
+            $.ajax({
+                url: "GetLogDetails",
+                data: options,
+                dataType: "text",
+                success: function (data) {
+
+                    var jsonObj = JSON.parse(data);
+                    var formattedResult = jsonObj
+                        .replace(/\t/g, '    ')
+                        .replace(/  /g, '&nbsp; ')
+                        .replace(/  /g, ' &nbsp;')
+                        .replace(/\r\n|\n|\r/g, '<br />');
+                    $("#" + id).html(formattedResult);
+
+                }
+            });
+        }
+
+    </script>
+
+}
