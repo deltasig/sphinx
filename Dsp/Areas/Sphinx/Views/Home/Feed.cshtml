@@ -17,10 +17,23 @@
                         @i.DisplayText
                         <a href="@i.Link"><i class="fa fa-link"></i></a>
                     </small>
-                    <p class="subtext">
-                        <a href="@Url.Action("Index", "Account", new { area = "Members", userName = i.UserName })">@i.Name</a>
-                        @dayString
-                    </p>
+                    @if (string.IsNullOrEmpty(i.UserName))
+                    {
+                        <p class="subtext">
+                            @if (!string.IsNullOrEmpty(i.Name))
+                            {
+                                @i.Name
+                            }
+                            @dayString
+                        </p>
+                    }
+                    else
+                    {
+                        <p class="subtext">
+                            <a href="@Url.Action("Index", "Account", new { area = "Members", userName = i.UserName })">@i.Name</a>
+                            @dayString
+                        </p>
+                    }
                 </div>
             </div>
         </li>
