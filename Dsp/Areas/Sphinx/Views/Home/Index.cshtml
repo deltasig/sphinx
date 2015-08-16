@@ -34,6 +34,10 @@
 }
 
 <div class="container-fluid">
+    @if (User.Identity.Name == "aaronenz" || User.Identity.Name == "davidlecko")
+    {
+        <p><small>Hi buddy, I love you. -Ty</small></p>
+    }
     @if (isActive || isPledge || isNeophyte || isAdmin)
     {
         <div class="row">
