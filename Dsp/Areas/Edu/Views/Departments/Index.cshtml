@@ -50,10 +50,9 @@
                                 @if (hasElevatedPermissions)
                                 {
                                     <td class="text-right">
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId })
                                         @if (!item.Majors.Any() && !item.Classes.Any())
                                         {
-                                            @: |
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.DepartmentId })
                                             @: |
                                             @Html.ActionLink("Delete", "Delete", new { id = item.DepartmentId })
                                         }

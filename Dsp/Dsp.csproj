@@ -235,6 +235,7 @@
     <Compile Include="Areas\Edu\Models\DuplicateGroup.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
+    <Compile Include="Areas\Edu\Models\EditEnrollmentModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
@@ -346,7 +347,6 @@
     <Compile Include="Areas\House\Controllers\WorkOrderPrioritiesController.cs" />
     <Compile Include="Areas\House\Controllers\WorkOrdersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
-    <Compile Include="Areas\Edu\Models\AssignMajorModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassDetailsModel.cs" />
@@ -562,7 +562,7 @@
     <Content Include="Areas\Scholarships\Views\Types\Edit.cshtml" />
     <Content Include="Areas\Scholarships\Views\Types\Index.cshtml" />
     <Content Include="Content\bootstrap\variables.less" />
-    <Content Include="Areas\Edu\Views\Classes\DeleteFromSchedule.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\Disenroll.cshtml" />
     <Content Include="Areas\Kitchen\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -895,7 +895,7 @@
     <Content Include="Areas\Members\Views\Incidents\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Schedule.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\EditClassTaken.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\EditEnrollment.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Index.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Submit.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\EditSignup.cshtml" />
