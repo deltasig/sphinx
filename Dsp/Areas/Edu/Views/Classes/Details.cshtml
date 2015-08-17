@@ -31,7 +31,7 @@
             <hr class="hidden-lg"/>
         </div>
         <div class="col-lg-6 text-right">
-            @using (Html.BeginForm("AddClassTaken", "Classes"))
+            @using (Html.BeginForm("Enroll", "Classes"))
             {
                 if (!Model.Class.ClassesTaken.Any(c =>
                     c.UserId == User.Identity.GetUserId<int>() && c.SemesterId == Model.CurrentSemester.SemesterId))
@@ -41,14 +41,13 @@
                     <input id="ClassTaken_UserId" name="ClassTaken.UserId" type="hidden" value="@enrollModel.ClassTaken.UserId">
                     <input id="ClassTaken_ClassId" name="ClassTaken.ClassId" type="hidden" value="@enrollModel.ClassTaken.ClassId">
                     <input id="ClassTaken_SemesterId" name="ClassTaken.SemesterId" type="hidden" value="@enrollModel.ClassTaken.SemesterId">
-                    <input type="submit" class="btn btn-default btn-sm" value="Add to my @Model.CurrentSemester schedule" />
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <i class="fa fa-plus"></i> Add to my @Model.CurrentSemester schedule
+                    </button>
                 }
 
-                <a href="@Url.Action("Details", "Departments", new {id = Model.Class.Department.DepartmentId})"
-                   class="btn btn-sm btn-info"
-                   data-toggle="tooltip" data-placement="top"
-                   title="Department for this class">
-                    <i class="fa fa-link"></i> @Model.Class.Department.Name
+                <a href="@Url.Action("Details", "Departments", new {id = Model.Class.Department.DepartmentId})" class="btn btn-sm btn-default">
+                    @Model.Class.Department.Name Department
                 </a>
 
                 if (hasElevatedPermissions)
@@ -71,7 +70,8 @@
         <div class="col-sm-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>Current Members that are taking, or have taken, @Model.Class.CourseShorthand </strong>
+                    <i class="fa fa-users"></i>
+                    Members who are or were enrolled in @Model.Class.CourseShorthand
                 </div>
                 <div class="table-responsive">
                     <table class="table table-condensed table-hover">
@@ -79,6 +79,10 @@
                             <tr class="active">
                                 <th class="col-xs-6"><small>Member</small></th>
                                 <th><small>Semester</small></th>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <th class="col-xs-2"></th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
@@ -94,13 +98,25 @@
                                             </a>
                                         </td>
                                         <td>@s.Semester</td>
+                                        @if (hasElevatedPermissions)
+                                        {
+                                            var enrollmentInfo = new { uid = s.UserId, cid = s.ClassId, sid = s.SemesterId };
+                                            <td class="text-right">
+                                                <small>
+                                                    <a href="@Url.Action("EditEnrollment", enrollmentInfo)">Edit</a> |
+                                                    <a href="@Url.Action("Disenroll", enrollmentInfo)">Delete</a>
+                                                </small>
+                                            </td>
+                                        }
                                     </tr>
                                 }
                             }
                             else
                             {
+                                var columns = hasElevatedPermissions ? 3 : 2;
+
                                 <tr class="warning">
-                                    <td colspan="2">No one has taken this class yet</td>
+                                    <td colspan="@(columns)">No one has taken this class yet</td>
                                 </tr>
                             }
                         </tbody>
@@ -114,10 +130,10 @@
                 <div class="panel-heading">
                     <i class="fa fa-folder-open"></i> <strong>Files</strong>
                 </div>
-                @if (Model.Class.ClassFiles.Any())
-                {
-                    <ul class="list-group">
-                        @foreach (var f in Model.Class.ClassFiles)
+                <ul class="list-group">
+                    @if (Model.Class.ClassFiles.Any())
+                    {
+                        foreach (var f in Model.Class.ClassFiles)
                         {
                             <li class="list-group-item">
                                 <div class="row">
@@ -144,14 +160,14 @@
                                 </div>
                             </li>
                         }
-                    </ul>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        <strong>No files uploaded yet for this class.</strong>
-                    </div>
-                }
+                    }
+                    else
+                    {
+                        <li class="list-group-item list-group-item-warning">
+                            No files uploaded yet for this class.
+                        </li>
+                    }
+                </ul>
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading">

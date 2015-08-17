@@ -2,23 +2,21 @@
 
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Delete Class Taken";
+    ViewBag.Title = "Disenroll from Class";
 }
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row row-space">
         <div class="col-xs-12">
-            <p>
-                <a href="@Url.Action("Schedule", new { userName = Model.Member.UserName })" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Classes
-                </a>
-            </p>
+            <a href="@Url.Action("Schedule", new { userName = Model.Member.UserName })" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to @Model.Member.FirstName's Schedule
+            </a>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6 col-xs-12">
+        <div class="col-md-6">
             <div class="alert alert-danger">
-                <p>Are you sure you want to delete this <strong>class</strong>?</p>
+                <p>Are you sure you want to delete this enrollment record?</p>
             </div>
             <div class="form-group">
                 <dl class="dl-horizontal">
@@ -38,8 +36,12 @@
                 @Html.HiddenFor(m => m.SemesterId)
                 @Html.HiddenFor(m => m.ClassId)
                 @Html.HiddenFor(m => m.IsSummerClass)
+                @Html.HiddenFor(m => m.Class.CourseShorthand)
+                @Html.HiddenFor(m => m.Semester.SemesterId)
+                @Html.HiddenFor(m => m.Semester.DateStart)
+                @Html.HiddenFor(m => m.Semester.DateEnd)
 
-                <div>
+                <div class="form-group">
                     <input type="submit" value="Delete" class="btn btn-default" />
                 </div>
             }

@@ -5,28 +5,27 @@
 }
 
 <div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.Member.UserName})" 
+               class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to @Model.Member.FirstName's Profile
+            </a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-5">
             <div class="alert alert-danger">
-                <p>Are you sure you want to delete this?</p>
-            </div>
-            <div class="form-group">
-                <dl class="dl-horizontal">
-                    <dt>Member</dt>
-                    <dd>@Model.Member.ToString()</dd>
-                    <dt>Major</dt>
-                    <dd>@Html.DisplayFor(m => m.Major.MajorName)</dd>
-                    <dt>Degree Level</dt>
-                    <dd>@Html.DisplayFor(m => m.DegreeLevel)</dd>
-                </dl>
+                <p>Are you sure you want to take @Model.Member.FirstName out of the @Model.Major.MajorName (@Model.DegreeLevel) major?</p>
             </div>
 
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
 
-                <input type="submit" value="Delete" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to Profile", "Index", "Account", new { area = "Members", userName = Model.Member.UserName }, null)
+                <div class="form-group">
+                    <input type="submit" value="Unassign" class="btn btn-default" /> 
+                </div>
             }
         </div>
     </div>

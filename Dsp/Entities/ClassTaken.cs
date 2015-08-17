@@ -20,7 +20,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
         [Required, Column(Order = 2), DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Index("IX_ClassTaken", 2, IsUnique = true), Display(Name = "Semesters")]
-        public int? SemesterId { get; set; }
+        public int SemesterId { get; set; }
 
         [StringLength(1)]
         public string MidtermGrade { get; set; }
