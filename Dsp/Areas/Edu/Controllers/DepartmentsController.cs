@@ -12,6 +12,9 @@
     {
         public async Task<ActionResult> Index()
         {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
             return View(await _db.Departments.ToListAsync());
         }
 
@@ -43,6 +46,8 @@
 
             _db.Departments.Add(model);
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = model.Name + " department was added successfully.";
             return RedirectToAction("Index");
         }
 
@@ -69,6 +74,8 @@
 
             _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = model.Name + " department was updated successfully.";
             return RedirectToAction("Index");
         }
 
@@ -94,6 +101,8 @@
             var model = await _db.Departments.FindAsync(id);
             _db.Departments.Remove(model);
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = model.Name + " department was deleted successfully.";
             return RedirectToAction("Index");
         }
     }

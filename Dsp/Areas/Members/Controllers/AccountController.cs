@@ -25,8 +25,7 @@
     public class AccountController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string userName, 
-            ManageMessageId? accountMessage, MajorsController.MajorsMessageId? majorMessage)
+        public async Task<ActionResult> Index(string userName, ManageMessageId? accountMessage)
         {
             switch (accountMessage)
             {
@@ -43,13 +42,8 @@
                     ViewBag.FailMessage = GetManageMessage(accountMessage);
                     break;
             }
-            switch (majorMessage)
-            {
-                case MajorsController.MajorsMessageId.AssignSuccess:
-                case MajorsController.MajorsMessageId.UnassignSuccess:
-                    ViewBag.SuccessMessage = MajorsController.GetResultMessage(majorMessage);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
 
             if (string.IsNullOrEmpty(userName)) userName = User.Identity.GetUserName();
 
