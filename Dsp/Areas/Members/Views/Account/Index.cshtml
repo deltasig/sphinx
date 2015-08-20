@@ -232,8 +232,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-footer @(Model.ThisSemesterCourses.Any() ? "" : "hidden")">
-                    <small>Credit Hours: @Model.ThisSemesterCourses.Sum(c => c.Class.CreditHours)</small>
+                <div class="panel-footer @(Model.ThisSemesterCourses.Any(c => !c.IsSummerClass) ? "" : "hidden")">
+                    <small>Credit Hours: @Model.ThisSemesterCourses.Where(c => !c.IsSummerClass).Sum(c => c.Class.CreditHours)</small>
                 </div>
             </div>
         </div>

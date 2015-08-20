@@ -45,12 +45,6 @@
         [Display(Name = "Pledge Class")]
         public string PledgeClassId { get; set; }
         public IEnumerable<SelectListItem> PledgeClassList { get; set; }
-
-        [Required]
-        [DataType(DataType.Text)]
-        [StringLength(3, ErrorMessage = "Room number is too long.")]
-        [Display(Name = "Room (Enter 0 for Out-of-House)")]
-        public string Room { get; set; }
         
         [Required]
         [DataType(DataType.Text)]

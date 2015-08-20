@@ -252,11 +252,6 @@
                 ClassesTaken = member.ClassesTaken.OrderByDescending(s => s.Semester.DateStart)
             };
 
-            if (!model.ClassesTaken.Any())
-            {
-                ViewBag.FailureMessage += "No classes found for " + userName + ". ";
-            }
-
             ViewBag.UserName = userName;
             return View(model);
         }

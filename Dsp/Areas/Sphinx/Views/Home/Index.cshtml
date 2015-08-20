@@ -88,7 +88,7 @@
                         @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
                         {
                             <div class="alert alert-warning">
-                                <strong>New Member: </strong>You do not appear to have classes entered for last semester.
+                                <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().
 
                                 <small>
                                     <i class="fa fa-exclamation-triangle"></i> 
