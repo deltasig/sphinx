@@ -29,11 +29,6 @@
                 @Html.ValidationMessageFor(m => m.LastName)
             </div>
             <div class="form-group">
-                @Html.LabelFor(m => m.Room, new { @class = "control-label" })
-                @Html.TextBoxFor(m => m.Room, new { @class = "form-control", placeholder = "Room #", autocomplete = "off" })
-                @Html.ValidationMessageFor(m => m.LastName)
-            </div>
-            <div class="form-group">
                 @Html.LabelFor(m => m.StatusId, new { @class = "control-label" })
                 @Html.DropDownListFor(m => m.StatusId, Model.StatusList, new { @class = "form-control" })
             </div>
