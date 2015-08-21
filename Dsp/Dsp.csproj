@@ -726,6 +726,7 @@
     <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Duplicates.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\_ClassInstructions.cshtml" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
