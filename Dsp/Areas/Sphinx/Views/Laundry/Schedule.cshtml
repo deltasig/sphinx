@@ -8,6 +8,9 @@
     ViewBag.Title = "Laundry Schedule";
     var currentUserId = User.Identity.GetUserId<int>();
 }
+@section AdditionalMeta{
+    <meta http-equiv="refresh" content="60">
+}
 
 <div class="container-fluid">
     <div class="row">
