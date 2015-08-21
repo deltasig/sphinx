@@ -50,11 +50,11 @@
                     @Model.Class.Department.Name Department
                 </a>
 
+                <a href="@Url.Action("Edit", new {id = Model.Class.ClassId})" class="btn btn-sm btn-info">
+                    <i class="fa fa-cog"></i> Edit
+                </a>
                 if (hasElevatedPermissions)
                 {
-                    <a href="@Url.Action("Edit", new {id = Model.Class.ClassId})" class="btn btn-sm btn-info">
-                        <i class="fa fa-cog"></i> Edit
-                    </a>
                     if (!Model.Class.ClassesTaken.Any())
                     {
                         <a href="@Url.Action("Delete", new {id = Model.Class.ClassId})" class="btn btn-sm btn-danger">

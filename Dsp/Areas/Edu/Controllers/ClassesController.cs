@@ -249,7 +249,7 @@
                     SemesterId = (await GetThisSemesterAsync()).SemesterId,
                     UserId = member.Id
                 },
-                ClassesTaken = member.ClassesTaken.OrderByDescending(s => s.Semester.DateStart)
+                ClassesTaken = member.ClassesTaken
             };
 
             ViewBag.UserName = userName;
@@ -381,6 +381,7 @@
             var member = await UserManager.Users.SingleAsync(m => m.UserName == userName);
             var model = member.ClassesTaken
                 .OrderByDescending(c => c.Semester.DateStart)
+                .ThenByDescending(c => !c.IsSummerClass)
                 .ThenBy(c => c.Class.CourseShorthand)
                 .Select(c => new ClassTranscriptModel
                 {
