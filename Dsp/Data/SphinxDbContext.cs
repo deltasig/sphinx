@@ -46,6 +46,11 @@
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSignups { get; set; }
         public virtual DbSet<SoberType> SoberTypes { get; set; }
+        public virtual DbSet<StudyPeriod> StudyPeriods { get; set; }
+        public virtual DbSet<StudySession> StudySessions { get; set; }
+        public virtual DbSet<StudyAssignment> StudyAssignments { get; set; }
+        public virtual DbSet<StudyHour> StudyHours { get; set; }
+        public virtual DbSet<StudyProctor> StudyProctors { get; set; }
         public virtual DbSet<WorkOrder> WorkOrders { get; set; }
         public virtual DbSet<WorkOrderComment> WorkOrderComments { get; set; }
         public virtual DbSet<WorkOrderPriority> WorkOrderPriorities { get; set; }

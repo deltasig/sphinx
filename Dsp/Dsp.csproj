@@ -232,10 +232,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Edu\Controllers\StudyController.cs" />
     <Compile Include="Areas\Edu\Models\DuplicateGroup.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
     <Compile Include="Areas\Edu\Models\EditEnrollmentModel.cs" />
+    <Compile Include="Areas\Edu\Models\StudyIndexModel.cs" />
+    <Compile Include="Areas\Edu\Models\StudySessionModel.cs" />
+    <Compile Include="Areas\Edu\Models\StudyPeriodModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
@@ -243,6 +247,7 @@
     <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
+    <Compile Include="Entities\StudyEntities.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
@@ -275,6 +280,10 @@
     <Compile Include="Migrations\201508160431007_RemoveClassFileVotes.cs" />
     <Compile Include="Migrations\201508160431007_RemoveClassFileVotes.Designer.cs">
       <DependentUpon>201508160431007_RemoveClassFileVotes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201508222223219_StudyHours.cs" />
+    <Compile Include="Migrations\201508222223219_StudyHours.Designer.cs">
+      <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -438,14 +447,19 @@
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\bootstrap-table.css" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css">
       <DependentUpon>bootstrap.css</DependentUpon>
     </Content>
+    <Content Include="Content\bootstrap\variables.css">
+      <DependentUpon>variables.less</DependentUpon>
+    </Content>
     <Content Include="Content\datepicker.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\HouseDiagram.css" />
     <Content Include="Content\multi-select.css" />
@@ -488,10 +502,11 @@
     <Content Include="Images\coa-simple-md.png" />
     <Content Include="Images\coa-simple-sm.png" />
     <Content Include="Images\Avatars\NoAvatar.jpg" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />
-    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="google2da471a22d508cbe.html" />
     <Content Include="Images\back_disabled.png" />
     <Content Include="Images\back_enabled.png" />
@@ -512,10 +527,6 @@
     <Content Include="Images\HouseFrontDay70s.jpg" />
     <Content Include="Images\HouseFrontNight70s.jpg" />
     <Content Include="Images\MobileTouch-57x57.png" />
-    <Content Include="fonts\fontawesome-webfont.woff" />
-    <Content Include="fonts\fontawesome-webfont.ttf" />
-    <Content Include="fonts\fontawesome-webfont.eot" />
-    <Content Include="fonts\FontAwesome.otf" />
     <Content Include="Areas\Service\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -585,7 +596,6 @@
     <Content Include="Areas\Kitchen\Views\MealPeriods\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Index.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\EditSchedule.cshtml" />
-    <Content Include="fonts\OpenSans-Regular.ttf" />
     <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
     <Content Include="Areas\Service\Views\Events\Details.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
@@ -630,9 +640,40 @@
     <Content Include="Areas\House\Views\WorkOrders\CreateOld.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\MyWorkOrders.cshtml" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Areas\Sphinx\Views\Laundry\MemberUsage.cshtml" />
+    <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
+    <Content Include="Content\bootstrap\_bootstrap-datetimepicker.less" />
+    <Content Include="Content\bootstrap-datetimepicker-build.css.map">
+      <DependentUpon>bootstrap-datetimepicker-build.css</DependentUpon>
+    </Content>
+    <Content Include="Content\bootstrap.css.map">
+      <DependentUpon>bootstrap.css</DependentUpon>
+    </Content>
+    <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
+    <Content Include="Areas\Edu\Views\Departments\Details.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Areas\Members\Views\Account\Manage.cshtml" />
+    <Content Include="Areas\Members\Views\Shared\_AccountNavPartial.cshtml" />
+    <Content Include="Areas\Members\Views\Account\Lockout.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\Duplicates.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\_ClassInstructions.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\Index.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\Period.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\CreatePeriod.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\DeletePeriod.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\EditPeriod.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\CreateSession.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\DeleteSession.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\EditSession.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\Sessions.cshtml" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap\wells.less" />
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\type.less" />
@@ -661,6 +702,7 @@
     <Content Include="Content\bootstrap\mixins\size.less" />
     <Content Include="Content\bootstrap\mixins\responsive-visibility.less" />
     <Content Include="Content\bootstrap\mixins\resize.less" />
+    <Content Include="Content\bootstrap\mixins\reset-text.less" />
     <Content Include="Content\bootstrap\mixins\reset-filter.less" />
     <Content Include="Content\bootstrap\mixins\progress-bar.less" />
     <Content Include="Content\bootstrap\mixins\panels.less" />
@@ -672,8 +714,8 @@
     <Content Include="Content\bootstrap\mixins\labels.less" />
     <Content Include="Content\bootstrap\mixins\image.less" />
     <Content Include="Content\bootstrap\mixins\hide-text.less" />
-    <Content Include="Content\bootstrap\mixins\grid-framework.less" />
     <Content Include="Content\bootstrap\mixins\grid.less" />
+    <Content Include="Content\bootstrap\mixins\grid-framework.less" />
     <Content Include="Content\bootstrap\mixins\gradients.less" />
     <Content Include="Content\bootstrap\mixins\forms.less" />
     <Content Include="Content\bootstrap\mixins\clearfix.less" />
@@ -702,31 +744,15 @@
     <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
-    <Content Include="Areas\Sphinx\Views\Laundry\MemberUsage.cshtml" />
-    <Content Include="Content\bootstrap-select.css.map" />
-    <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
-    <Content Include="Content\bootstrap\_bootstrap-datetimepicker.less" />
-    <Content Include="Content\bootstrap-datetimepicker-build.css.map">
-      <DependentUpon>bootstrap-datetimepicker-build.css</DependentUpon>
-    </Content>
-    <Content Include="Content\bootstrap.css.map">
-      <DependentUpon>bootstrap.css</DependentUpon>
-    </Content>
-    <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
-    <Content Include="Areas\Edu\Views\Departments\Details.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Areas\Members\Views\Account\Manage.cshtml" />
-    <Content Include="Areas\Members\Views\Shared\_AccountNavPartial.cshtml" />
-    <Content Include="Areas\Members\Views\Account\Lockout.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\Duplicates.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\_ClassInstructions.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\SessionSignIn.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\DeleteSignIn.cshtml" />
+    <None Include="compilerconfig.json" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
+    <Content Include="Content\fonts\OpenSans-Regular.ttf" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
@@ -744,8 +770,6 @@
     <Content Include="Scripts\bootstrap-table-extensions\filter\bootstrap-table-filter.js" />
     <Content Include="Scripts\bootstrap-table-extensions\flatJSON\bootstrap-table-flatJSON.js" />
     <Content Include="Scripts\bootstrap-table.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <Content Include="Scripts\bootstrap-table-extensions\editable\README.md" />
     <Content Include="Scripts\bootstrap-table-extensions\export\README.md" />
@@ -757,6 +781,7 @@
       <DependentUpon>Chart.js</DependentUpon>
     </Content>
     <Content Include="Scripts\bootstrap-select.js.map" />
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.min.js" />
@@ -827,7 +852,6 @@
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\npm.js" />
     <Content Include="Scripts\pagedown\Markdown.Converter.js" />
     <Content Include="Scripts\pagedown\Markdown.Editor.js" />
     <Content Include="Scripts\pagedown\Markdown.Sanitizer.js" />
@@ -956,6 +980,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508160431007_RemoveClassFileVotes.resx">
       <DependentUpon>201508160431007_RemoveClassFileVotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201508222223219_StudyHours.resx">
+      <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

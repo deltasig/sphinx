@@ -67,64 +67,69 @@
         <ul class="nav navbar-nav side-nav">
             @if (Request.IsAuthenticated && !User.IsInRole("Released"))
             {
-            <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
-                <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
-                    <i class="fa fa-fw fa-users"></i> Roster
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Phone Number") ? "active" : "")">
-                <a href="@Url.Action("Index", "PhoneNumbers", new { area = "Members" })">
-                    <i class="fa fa-fw fa-phone"></i> Phone Numbers
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
-                <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
-                    <i class="fa fa-fw fa-envelope"></i> Addresses
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
-                <a href="@Url.Action("Index", "Hours", new { area = "Service" })">
-                    <i class="fa fa-fw fa-globe"></i> Service
-                </a>
-            </li>
+                <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
+                        <i class="fa fa-fw fa-users"></i> Roster
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Phone Number") ? "active" : "")">
+                    <a href="@Url.Action("Index", "PhoneNumbers", new { area = "Members" })">
+                        <i class="fa fa-fw fa-phone"></i> Phone Numbers
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
+                        <i class="fa fa-fw fa-envelope"></i> Addresses
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Hours", new { area = "Service" })">
+                        <i class="fa fa-fw fa-globe"></i> Service
+                    </a>
+                </li>
                 if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
                 {
-            <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
-                <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
-                    <i class="fa fa-fw fa-institution"></i> Classes
-                </a>
-            </li>
-                }
-            <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
-                <a href="@Url.Action("Index", "WorkOrders", new { area = "House" })">
-                    <i class="fa fa-fw fa-wrench"></i> Work Orders
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
-                <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })">
-                    <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Incident") ? "active" : "")">
-                <a href="@Url.Action("Index", "Incidents", new {area = "Members"})">
-                    <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
-                </a>
-            </li>
-            <li class="@(ViewBag.Title.Contains("Room") ? "active" : "")">
-                <a href="@Url.Action("Index", "Rooms", new { area = "House" })">
-                    <i class="fa fa-fw fa-home"></i> Housing
-                </a>
-            </li>
-            <li>
-                <a href="javascript:;" data-toggle="collapse" data-target="#alumni">
-                    <i class="fa fa-fw fa-anchor"></i> Alumni <i class="fa fa-fw fa-caret-down"></i>
-                </a>
-                <ul id="alumni" class="collapse">
-                    <li>
-                        <a href="@Url.Action("Index", "Leaders", new { area = "Alumni" })">Leaders</a>
+                    <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
+                        <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
+                            <i class="fa fa-fw fa-institution"></i> Classes
+                        </a>
                     </li>
-                </ul>
-            </li>
+                    <li class="@(ViewBag.Title.Contains("Study") ? "active" : "")">
+                        <a href="@Url.Action("Index", "Study", new { area = "Edu" })">
+                            <i class="fa fa-fw fa-book"></i> Study
+                        </a>
+                    </li>
+                }
+                <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
+                    <a href="@Url.Action("Index", "WorkOrders", new { area = "House" })">
+                        <i class="fa fa-fw fa-wrench"></i> Work Orders
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })">
+                        <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Incident") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Incidents", new {area = "Members"})">
+                        <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Room") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Rooms", new { area = "House" })">
+                        <i class="fa fa-fw fa-home"></i> Housing
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;" data-toggle="collapse" data-target="#alumni">
+                        <i class="fa fa-fw fa-anchor"></i> Alumni <i class="fa fa-fw fa-caret-down"></i>
+                    </a>
+                    <ul id="alumni" class="collapse">
+                        <li>
+                            <a href="@Url.Action("Index", "Leaders", new { area = "Alumni" })">Leaders</a>
+                        </li>
+                    </ul>
+                </li>
                 if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
                     User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
                 {
