@@ -1,0 +1,72 @@
+﻿@model Dsp.Entities.StudyPeriod
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Edit Study Period";
+}
+@section styles {
+    @Styles.Render("~/content/datetimepicker")
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Period", new { id = Model.Id })" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Study Period
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => Model.Id)
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.BeginsOn, new { @class = "control-label" })
+                    <div class="input-group date" id="dtp1">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        @Html.EditorFor(m => m.BeginsOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.BeginsOn, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.EndsOn, new { @class = "control-label" })
+                    <div class="input-group date" id="dtp2">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        @Html.EditorFor(m => m.EndsOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.EndsOn, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FineAmount, new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-usd"></span>
+                        </span>
+                        @Html.EditorFor(m => m.FineAmount, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(m => m.FineAmount, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript">
+        $(function () {
+            $("#dtp1").datetimepicker();
+            $("#dtp2").datetimepicker();
+        });
+    </script>
+}

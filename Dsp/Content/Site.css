@@ -315,8 +315,8 @@ hr {
   z-index: 2;
   color: #000;
   background-color: transparent;
-  border: 0;
-    font-weight: bold;
+  border-color: #ddd;
+  font-weight: bold;
 }
 
 a.list-group-item.active:before {

@@ -1,5 +1,6 @@
 ﻿namespace Dsp.Entities
 {
+    using Areas.Members.Controllers;
     using Data;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -10,7 +11,6 @@
     using System.Linq;
     using System.Security.Claims;
     using System.Threading.Tasks;
-    using Areas.Members.Controllers;
 
     public class Member : IdentityUser<int, SphinxUserLogin, Leader, SphinxUserClaim>
     {
@@ -82,6 +82,12 @@
         public virtual ICollection<Event> SubmittedEvents { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<SoberSignup> SoberSignups { get; set; }
+        [InverseProperty("Member")]
+        public virtual ICollection<StudyAssignment> StudyAssignments { get; set; }
+        [InverseProperty("Member")]
+        public virtual ICollection<StudyHour> StudyHours { get; set; }
+        [InverseProperty("Member")]
+        public virtual ICollection<StudyProctor> StudyProctorShifts { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
         [InverseProperty("Member")]
