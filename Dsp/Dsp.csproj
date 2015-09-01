@@ -285,6 +285,10 @@
     <Compile Include="Migrations\201508222223219_StudyHours.Designer.cs">
       <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201509010452337_StudyHours1.cs" />
+    <Compile Include="Migrations\201509010452337_StudyHours1.Designer.cs">
+      <DependentUpon>201509010452337_StudyHours1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -983,6 +987,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201508222223219_StudyHours.resx">
       <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201509010452337_StudyHours1.resx">
+      <DependentUpon>201509010452337_StudyHours1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
