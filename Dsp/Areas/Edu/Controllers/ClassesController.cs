@@ -16,7 +16,7 @@
     using System.Web.Configuration;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class ClassesController : BaseController
     {
         public async Task<ActionResult> Index(ClassesIndexFilterModel filter)

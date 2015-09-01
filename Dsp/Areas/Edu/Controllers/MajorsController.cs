@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Administrator")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class MajorsController : BaseController
     {
         public async Task<ActionResult> Index()

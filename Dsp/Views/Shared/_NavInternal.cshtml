@@ -87,19 +87,16 @@
                         <i class="fa fa-fw fa-globe"></i> Service
                     </a>
                 </li>
-                if (User.IsInRole("Administrator") || User.IsInRole("Pledge") || User.IsInRole("Neophyte") || User.IsInRole("Active"))
-                {
-                    <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
-                        <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
-                            <i class="fa fa-fw fa-institution"></i> Classes
-                        </a>
-                    </li>
-                    <li class="@(ViewBag.Title.Contains("Study") ? "active" : "")">
-                        <a href="@Url.Action("Index", "Study", new { area = "Edu" })">
-                            <i class="fa fa-fw fa-book"></i> Study
-                        </a>
-                    </li>
-                }
+                <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
+                        <i class="fa fa-fw fa-institution"></i> Classes
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Study") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Study", new { area = "Edu" })">
+                        <i class="fa fa-fw fa-book"></i> Study
+                    </a>
+                </li>
                 <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
                     <a href="@Url.Action("Index", "WorkOrders", new { area = "House" })">
                         <i class="fa fa-fw fa-wrench"></i> Work Orders
