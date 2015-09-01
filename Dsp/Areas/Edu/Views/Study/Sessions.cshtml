@@ -103,8 +103,7 @@
                 <div class="alert alert-warning">
                     <strong>This session has ended</strong>
                     <hr/>
-                    If information recorded here needs to be changed, the proctors can no longer do anything.
-                    You will need to contact the Academic Chairman to make changes.
+                    
                 </div>
             }
             <div class="panel panel-default">
@@ -112,6 +111,32 @@
                     <i class="fa fa-fw fa-users"></i> Members with a study hour assignment
                 </div>
                 <table class="table table-condensed">
+                    <thead>
+                    @if (isPastTime)
+                    {
+                        <tr class="warning">
+                            <td colspan="3">
+                                <small>
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    <strong>The session has ended.</strong> 
+                                    If information recorded here needs to be changed, the proctors can no longer do anything.
+                                    You will need to contact the Academic Chairman to make changes.
+                                </small>
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        <tr class="info">
+                            <td colspan="3">
+                                <small>
+                                    <i class="fa fa-info-circle"></i>
+                                    The academic chairman and proctors can begin signing people in up to 15 minutes before the sessions starts.
+                                </small>
+                            </td>
+                        </tr>
+                    }
+                    </thead>
                     <tbody>
                     @if (Model.StudyPeriod.Assignments.Any())
                     {
@@ -163,13 +188,6 @@
                     </tbody>
                 </table>
             </div>
-            @if (!isPastTime)
-            {
-                <div class="alert alert-info">
-                    <i class="fa fa-lg fa-info-circle"></i>
-                    The academic chairman and proctors can begin signing people in up to 15 minutes before the sessions starts.
-                </div>
-            }
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">
