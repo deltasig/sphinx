@@ -9,6 +9,8 @@
     var membersOnAssignment = Model.StudyPeriod.Assignments.Select(m => m.MemberId).ToList();
     var proctors = Model.StudySession.Proctors.Select(m => m.MemberId).ToList();
     var isProctor = hasElevatedPermissions || proctors.Contains(User.Identity.GetUserId<int>());
+    var canSignIn = nowCst > Model.StudySession.BeginsOn.AddMinutes(-15);
+    var isPastTime = nowCst > Model.StudySession.EndsOn.AddMinutes(15);
 }
 
 <div class="container-fluid">
@@ -96,6 +98,15 @@
             </div>
         </div>
         <div class="col-md-6">
+            @if (isPastTime)
+            {
+                <div class="alert alert-warning">
+                    <strong>This session has ended</strong>
+                    <hr/>
+                    If information recorded here needs to be changed, the proctors can no longer do anything.
+                    You will need to contact the Academic Chairman to make changes.
+                </div>
+            }
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-fw fa-users"></i> Members with a study hour assignment
@@ -122,19 +133,22 @@
                                     }
                                 </td>
                                 <td class="col-xs-2 text-right">
-                                    @if (signIn == null && isProctor)
+                                    @if (!isPastTime && canSignIn)
                                     {
-                                        <a href="@Url.Action("SessionSignIn", new {aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId})"
-                                           class="btn btn-xs btn-success">
-                                            <i class="fa fa-sign-in"></i> Sign In
-                                        </a>
-                                    }
-                                    else if (signIn != null && isProctor)
-                                    {
-                                        <a href="@Url.Action("DeleteSignIn", new {id = signIn.Id})"
-                                           class="btn btn-xs btn-danger">
-                                            <i class="fa fa-sign-out"></i> Delete
-                                        </a>
+                                        if (signIn == null && isProctor)
+                                        {
+                                            <a href="@Url.Action("SessionSignIn", new {aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId})"
+                                               class="btn btn-xs btn-success">
+                                                <i class="fa fa-sign-in"></i> Sign In
+                                            </a>
+                                        }
+                                        else if (signIn != null && isProctor)
+                                        {
+                                            <a href="@Url.Action("DeleteSignIn", new {id = signIn.Id})"
+                                               class="btn btn-xs btn-danger">
+                                                <i class="fa fa-sign-out"></i> Delete
+                                            </a>
+                                        }
                                     }
                                 </td>
                             </tr>
@@ -149,6 +163,13 @@
                     </tbody>
                 </table>
             </div>
+            @if (!isPastTime)
+            {
+                <div class="alert alert-info">
+                    <i class="fa fa-lg fa-info-circle"></i>
+                    The academic chairman and proctors can begin signing people in up to 15 minutes before the sessions starts.
+                </div>
+            }
         </div>
         <div class="col-md-3">
             <div class="panel panel-default">

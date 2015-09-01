@@ -12,7 +12,7 @@
     using System.Web.Mvc;
     using Microsoft.AspNet.Identity;
 
-    [Authorize(Roles = "Neophyte, Pledge, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class StudyController : BaseController
     {
         public async Task<ActionResult> Index()
