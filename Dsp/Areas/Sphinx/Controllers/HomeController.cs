@@ -14,18 +14,22 @@
     public class HomeController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string message = "")
+        public async Task<ActionResult> Index(string userName, string message = "")
         {
             ViewBag.Message = message;
+            
+            if (!User.IsInRole("Administrator") || string.IsNullOrEmpty(userName))
+            {
+                userName = User.Identity.Name;
+            }
 
             var nowCst = ConvertUtcToCst(DateTime.UtcNow);
-            var user = await UserManager.FindByNameAsync(User.Identity.Name);
-            var member = await UserManager.FindByIdAsync(user.Id);
-            var events = await GetAllCompletedEventsForUserAsync(user.Id);
+            var member = await UserManager.FindByNameAsync(userName);
+            var events = await GetAllCompletedEventsForUserAsync(member.Id);
             var thisSemester = await GetThisSemesterAsync();
 
             var thisWeeksSoberShifts = await GetThisWeeksSoberSignupsAsync(DateTime.UtcNow);
-            var memberSoberSignups = await GetSoberSignupsForUserAsync(user.Id, thisSemester);
+            var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
             var remainingDriverShifts = await _db.SoberSignups
                 .Where(s => 
                     s.UserId == null &&
@@ -44,7 +48,7 @@
             {
                 MemberInfo = member,
                 Roles = await UserManager.GetRolesAsync(member.Id),
-                RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(user.Id),
+                RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(member.Id),
                 CompletedEvents = events,
                 SoberSignups = thisWeeksSoberShifts,
                 LaundrySummary = laundrySignups.Take(laundryTake),
