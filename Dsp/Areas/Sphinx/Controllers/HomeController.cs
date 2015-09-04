@@ -23,7 +23,7 @@
                 userName = User.Identity.Name;
             }
 
-            var nowCst = ConvertUtcToCst(DateTime.UtcNow);
+            var twoHoursAgoCst = ConvertUtcToCst(DateTime.UtcNow).AddHours(-2);
             var member = await UserManager.FindByNameAsync(userName);
             var events = await GetAllCompletedEventsForUserAsync(member.Id);
             var thisSemester = await GetThisSemesterAsync();
@@ -39,7 +39,7 @@
                 .ToListAsync();
 
             var laundrySignups = await _db.LaundrySignups
-                .Where(l => l.DateTimeShift >= nowCst)
+                .Where(l => l.DateTimeShift >= twoHoursAgoCst)
                 .OrderBy(l => l.DateTimeShift)
                 .ToListAsync();
             var laundryTake = laundrySignups.Count > 5 ? 5 : laundrySignups.Count;
