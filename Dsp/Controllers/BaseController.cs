@@ -1018,6 +1018,17 @@
             return true;
         }
 
+        protected virtual async Task<Leader> GetCurrentLeader(string positionName)
+        {
+            var thisSemester = await GetThisSemesterAsync();
+            var leader = await _db.Leaders
+                .Where(l => l.SemesterId == thisSemester.SemesterId && l.Position.Name == positionName)
+                .OrderByDescending(l => l.AppointedOn)
+                .FirstOrDefaultAsync();
+
+            return leader;
+        }
+
         public string RenderRazorViewToString(string viewName, object model)
         {
             ViewData.Model = model;

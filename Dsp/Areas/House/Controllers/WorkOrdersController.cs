@@ -8,8 +8,11 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
+    using System.Net.Mail;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using Extensions;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class WorkOrdersController : BaseController
@@ -51,7 +54,7 @@
             var workOrder = await _db.WorkOrders.FindAsync(id);
             if (workOrder == null) return HttpNotFound();
 
-            if (User.IsInRole("Administrator") && workOrder.GetCurrentStatus() == "Unread")
+            if (User.IsInRole("House Manager") && workOrder.GetCurrentStatus() == "Unread")
             {
                 var underReviewStatus = await _db.WorkOrderStatuses.SingleAsync(s => s.Name == "Under Review");
                 await UpdateWorkOrderStatus(workOrder, underReviewStatus);
@@ -222,7 +225,8 @@
             }
 
             // Insert work item.  Doing this after we make sure we have the status and priority Ids.
-            model.UserId = User.Identity.GetUserId<int>();
+            var member = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>());
+            model.UserId = member.Id;
             model.Title = ToTitleCaseString(model.Title);
             _db.WorkOrders.Add(model);
             await _db.SaveChangesAsync();
@@ -244,6 +248,30 @@
             _db.WorkOrderStatusChanges.Add(initialStatusChange);
             _db.WorkOrderPriorityChanges.Add(initialPriorityChange);
             await _db.SaveChangesAsync();
+
+            // Send email to house manager.
+            var houseMan = await GetCurrentLeader("House Manager");
+            model.Member = member;
+            var body = RenderRazorViewToString("~/Views/Emails/NewWorkOrder.cshtml", model);
+            var bytes = Encoding.Default.GetBytes(body);
+            body = Encoding.UTF8.GetString(bytes);
+
+            var message = new IdentityMessage
+            {
+                Subject = "New Work Order - " + model.Title,
+                Body = body,
+                Destination = houseMan.Member.Email
+            };
+
+            try
+            {
+                var emailService = new EmailService();
+                await emailService.SendTemplatedAsync(message);
+            }
+            catch (SmtpException e)
+            {
+
+            }
 
             TempData["SuccessMessage"] = "Work order created successfully.";
             return RedirectToAction("View", new { id = model.WorkOrderId });

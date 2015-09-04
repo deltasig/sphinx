@@ -943,6 +943,7 @@
     <Content Include="Views\Shared\_PagerPartial.cshtml" />
     <Content Include="Views\Error\Logs.cshtml" />
     <Content Include="Views\Emails\RegistrationConfirmation.cshtml" />
+    <Content Include="Views\Emails\NewWorkOrder.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
