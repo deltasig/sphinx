@@ -34,6 +34,12 @@
 }
 
 <div class="container-fluid">
+    @if (isAdmin && Model.MemberInfo.UserName != User.Identity.Name)
+    {
+        <div class="alert alert-warning">
+            <small><i class="fa fa-eye"></i> You are viewing this page as <strong>@Model.MemberInfo.ToString()</strong></small>
+        </div>
+    }
     @if (isActive || isPledge || isNeophyte || isAdmin)
     {
         <div class="row">
