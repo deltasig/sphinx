@@ -4,6 +4,7 @@
     ViewBag.Title = "Sphinx";
     ViewBag.Subtitle = Model.CurrentSemester.ToString();
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
 
     // Permissions
     var isAdmin = User.IsInRole("Administrator");
@@ -13,8 +14,11 @@
     var isNeophyte = User.IsInRole("Neophyte");
     var isAffiliate = User.IsInRole("Affiliate");
 
+    // Laundry-related
+    var laundry = Model.LaundrySummary.OrderBy(o => o.DateTimeShift);
+
     // Class-related
-    var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
+            var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
     var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
 
     // Service-related
@@ -56,38 +60,51 @@
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <i class="fa fa-fw fa-tint"></i>
-                                Laundry Reservations
-                                @if (Model.LaundrySummary.Any())
-                                {
-                                    <small class="pull-right">next @Model.LaundrySummary.Count()</small>
-                                }
+                                Laundry Status
                             </div>
-                            <div class="table-responsive">
-                                <table class="table">
-                                    <tbody>
-                                        @if (Model.LaundrySummary.Any())
-                                        {
+                            <div class="list-group">
+                                @if (laundry.Any())
+                                {
+                                    var minutesTil = (int)(laundry.First().DateTimeShift - nowCst).TotalMinutes;
+                                    var hoursTil = (int)minutesTil * 60;
 
-                                            foreach (var signup in Model.LaundrySummary)
-                                            {
-                                                <tr>
-                                                    <td>
-                                                        @signup.DateTimeShift.ToShortDateString():
-                                                        @signup.DateTimeShift.ToShortTimeString() -
-                                                        @signup.DateTimeShift.AddHours(2).ToShortTimeString()
-                                                    </td>
-                                                    <td>@signup.Member.ToString()</td>
-                                                </tr>
-                                            }
-                                        }
-                                        else
-                                        {
-                                            <tr>
-                                                <td colspan="2">None</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                    if (minutesTil <= 0)
+                                    {
+                                        <div class="list-group-item list-group-item-danger">
+                                            <small>
+                                                <i class="fa fa-ban"></i> 
+                                                Laundry room is currently reserved.
+                                            </small>
+                                        </div>
+                                    }
+                                    else if (minutesTil < 120)
+                                    {
+                                        <div class="list-group-item list-group-item-warning">
+                                            <small>
+                                                <i class="fa fa-ban"></i> 
+                                                Someone will be using the room in @minutesTil minutes.
+                                            </small>
+                                        </div>
+                                    }
+                                    else if (minutesTil >= 120)
+                                    {
+                                        <div class="list-group-item list-group-item-success">
+                                            <small>
+                                                <i class="fa fa-exclamation-circle"></i> 
+                                                Laundry room is available for the next @hoursTil hours.
+                                            </small>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="list-group-item list-group-item-success">
+                                        <small>
+                                            <i class="fa fa-exclamation-circle"></i> 
+                                            Laundry room is completely available.
+                                        </small>
+                                    </div>
+                                }
                             </div>
                         </div>
 

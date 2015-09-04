@@ -9,31 +9,30 @@
         <li class="list-group-item">
             <div class="media">
                 <div class="media-left">
-                    <img src="~/Images/Avatars/@i.ImageName" height="25" width="25" class="img-circle" alt="@i.UserName" />
+                    <a href="@i.Link">
+                        <img src="~/Images/Avatars/@i.ImageName" height="25" width="25" class="img-circle" alt="@i.UserName" />
+                    </a>
                 </div>
                 <div class="media-body">
-                    <small>
-                        <i class="fa fa-fw @i.Symbol text-muted"></i>
-                        @i.DisplayText
-                        <a href="@i.Link"><i class="fa fa-link"></i></a>
-                    </small>
-                    @if (string.IsNullOrEmpty(i.UserName))
-                    {
-                        <p class="subtext">
-                            @if (!string.IsNullOrEmpty(i.Name))
+                    <p class="subtext">
+                        <a href="@i.Link"><i class="fa fa-fw @i.Symbol"></i></a>
+                        @if (string.IsNullOrEmpty(i.UserName))
+                        {
+                            if (!string.IsNullOrEmpty(i.Name))
                             {
                                 @i.Name
                             }
-                            @dayString
-                        </p>
-                    }
-                    else
-                    {
-                        <p class="subtext">
-                            <a href="@Url.Action("Index", "Account", new { area = "Members", userName = i.UserName })">@i.Name</a>
-                            @dayString
-                        </p>
-                    }
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = i.UserName})">@i.Name</a>
+                        }
+                        @dayString
+                    </p>
+                    
+                    <small>
+                        @i.DisplayText
+                    </small>
                 </div>
             </div>
         </li>
