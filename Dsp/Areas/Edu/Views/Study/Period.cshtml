@@ -133,7 +133,7 @@
                         {
                             var progressPercentage = Math.Round((a.StudyHours.Sum(s => s.DurationMinutes) / (a.AmountOfHours * 60)) * 100, 2);
                             var progressPercentageAdjusted = progressPercentage > 100 ? 100 : progressPercentage;
-                            var barColor = progressPercentage > 100 ? "progress-bar-success" : "progress-bar-warning";
+                            var barColor = progressPercentage >= 100 ? "progress-bar-success" : "progress-bar-warning";
 
                             <div class="list-group-item">
                                 <h5 class="list-group-item-heading">

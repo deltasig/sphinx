@@ -294,6 +294,17 @@
                     _db.StudySessions.Add(newSession);
                     await _db.SaveChangesAsync();
                     sessionsAdded++;
+
+                    foreach (var p in s.Proctors)
+                    {
+                        var newProctor = new StudyProctor
+                        {
+                            MemberId = p.MemberId,
+                            SessionId = newSession.Id
+                        };
+                        _db.StudyProctors.Add(newProctor);
+                        await _db.SaveChangesAsync();
+                    }
                 }
             }
 
@@ -515,7 +526,7 @@
             TempData["SuccessMessage"] = "Member is signed in.";
             return RedirectToAction("Sessions", new { id = model.SessionId });
         }
-        
+
         public async Task<ActionResult> DeleteSignIn(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
