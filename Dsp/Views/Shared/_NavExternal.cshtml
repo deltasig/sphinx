@@ -29,7 +29,9 @@
                         @Html.ActionLink("Sphinx", "Index", "Home", new {area = "Sphinx"}, new {title = "Sphinx"})
                     </li>
                 }
-                <li><a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni</a></li>
+                <li>
+                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni <i class="fa fa-external-link" style="font-size:11px"></i></a>
+                </li>
                 <li class="@(ViewBag.Title.Contains("Recruitment") ? "active" : "")">
                     @Html.ActionLink("Recruitment", "Recruitment", "Home", new {area = ""}, null)
                 </li>
@@ -38,21 +40,6 @@
                 </li>
                 <li class="@(ViewBag.Title.Contains("Contacts") ? "active" : "")">
                     @Html.ActionLink("Contacts", "Contacts", "Home", new {area = ""}, null)
-                </li>
-                <li class="hidden-xs hidden-sm">
-                    <a href="https://www.facebook.com/deltasig.de" target="_blank" style="width: 50px">
-                        <i class="fa fa-facebook-square fa-lg"></i>
-                    </a>
-                </li>
-                <li class="hidden-xs hidden-sm">
-                    <a href="https://twitter.com/deltasig_de" target="_blank" style="width: 50px">
-                        <i class="fa fa-twitter fa-lg"></i>
-                    </a>
-                </li>
-                <li class="hidden-xs hidden-sm">
-                    <a href="https://www.youtube.com/channel/UCklKkFyVqUIG-bNE_u2vOSg" target="_blank" style="width: 50px">
-                        <i class="fa fa-youtube-play fa-lg"></i>
-                    </a>
                 </li>
             </ul>
         </div>
