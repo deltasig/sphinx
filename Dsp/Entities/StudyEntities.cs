@@ -107,9 +107,9 @@
         public DateTime SignedInOn { get; set; }
 
         [Display(Name = "Sign Out")]
-        public DateTime SignedOutOn { get; set; }
+        public DateTime? SignedOutOn { get; set; }
 
-        public double DurationMinutes { get; set; }
+        public double? DurationMinutes { get; set; }
 
         [ForeignKey("AssignmentId")]
         public virtual StudyAssignment Assignment { get; set; }

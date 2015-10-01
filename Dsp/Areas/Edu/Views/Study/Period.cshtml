@@ -131,7 +131,8 @@
                     {
                         foreach (var a in Model.StudyPeriod.Assignments.OrderBy(m => m.Member.LastName))
                         {
-                            var progressPercentage = Math.Round((a.StudyHours.Sum(s => s.DurationMinutes) / (a.AmountOfHours * 60)) * 100, 2);
+                            var progressPercentage = Math.Round(
+                                (a.StudyHours.Sum(s => s.DurationMinutes ?? 0) / (a.AmountOfHours * 60)) * 100, 2);
                             var progressPercentageAdjusted = progressPercentage > 100 ? 100 : progressPercentage;
                             var barColor = progressPercentage >= 100 ? "progress-bar-success" : "progress-bar-warning";
 
