@@ -142,7 +142,14 @@
                                 <td>
                                     @if (signIn != null)
                                     {
-                                        <small>Studied for @signIn.DurationMinutes minutes(s)</small>
+                                        if (signIn.SignedOutOn != null)
+                                        {
+                                            <small>Studied for @(signIn.DurationMinutes) minutes(s)</small>
+                                        }
+                                        else
+                                        {
+                                            <small>Studied for @(Math.Round((nowCst - signIn.SignedInOn).TotalMinutes, 0)) minutes(s) so far</small>
+                                        }
                                     }
                                     else
                                     {
@@ -154,16 +161,34 @@
                                     {
                                         if (signIn == null && isProctor)
                                         {
-                                            <a href="@Url.Action("SessionSignIn", new {aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId})"
-                                               class="btn btn-xs btn-success">
-                                                <i class="fa fa-sign-in"></i> Sign In
-                                            </a>
+                                            using (Html.BeginForm("SessionSignIn", "Study",
+                                                new { aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-xs btn-success">
+                                                    <i class="fa fa-sign-in"></i> Sign In
+                                                </button>
+                                            }
                                         }
-                                        else if (signIn != null && isProctor)
+                                        else if (signIn != null && signIn.SignedOutOn == null && isProctor)
                                         {
+                                            using (Html.BeginForm("SessionSignOut", "Study", new { shid = signIn.Id }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-xs btn-danger">
+                                                    <i class="fa fa-sign-out"></i> Sign Out
+                                                </button>
+                                            }
+                                        }
+                                        else if (signIn != null && signIn.SignedOutOn != null && isProctor)
+                                        {
+                                            <a href="@Url.Action("EditSignIn", new {id = signIn.Id})"
+                                               class="btn btn-xs btn-info">
+                                                <i class="fa fa-cog"></i>
+                                            </a>
                                             <a href="@Url.Action("DeleteSignIn", new {id = signIn.Id})"
                                                class="btn btn-xs btn-danger">
-                                                <i class="fa fa-sign-out"></i> Delete
+                                                <i class="fa fa-times"></i>
                                             </a>
                                         }
                                     }
@@ -176,11 +201,11 @@
                                                 <i class="fa fa-sign-in"></i> Sign In
                                             </a>
                                         }
-                                        else if (signIn != null)
+                                        else
                                         {
                                             <a href="@Url.Action("DeleteSignIn", new {id = signIn.Id})"
                                                class="btn btn-xs btn-danger">
-                                                <i class="fa fa-sign-out"></i> Delete
+                                                <i class="fa fa-sign-out"></i> 
                                             </a>
                                         }
                                     }

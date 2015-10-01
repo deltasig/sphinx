@@ -7,13 +7,13 @@ namespace Dsp.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class StudyHours1 : IMigrationMetadata
+    public sealed partial class StudyHoursUpdate : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(StudyHours1));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(StudyHoursUpdate));
         
         string IMigrationMetadata.Id
         {
-            get { return "201509010452337_StudyHours1"; }
+            get { return "201510010058282_StudyHoursUpdate"; }
         }
         
         string IMigrationMetadata.Source
