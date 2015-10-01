@@ -396,10 +396,23 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Current Room Assignments
-                    <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
-                          title="Remaining house spots">
-                        @(houseRooms.Sum(r => r.MaxCapacity) - membersLivingInHouse)
-                    </span>
+                    @{
+                        var remainingSpots = (houseRooms.Sum(r => r.MaxCapacity) - membersLivingInHouse);
+                    }
+                    @if (remainingSpots >= 0)
+                    {
+                        <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                              title="Remaining house spots">
+                            @remainingSpots
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                              title="Over capacity">
+                            +@(remainingSpots*-1)
+                        </span>
+                    }
                 </div>
                 <div class="table-responsive">
                     <table class="table table-condensed">
