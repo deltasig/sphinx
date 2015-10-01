@@ -285,9 +285,9 @@
     <Compile Include="Migrations\201508222223219_StudyHours.Designer.cs">
       <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201509010452337_StudyHours1.cs" />
-    <Compile Include="Migrations\201509010452337_StudyHours1.Designer.cs">
-      <DependentUpon>201509010452337_StudyHours1.cs</DependentUpon>
+    <Compile Include="Migrations\201510010058282_StudyHoursUpdate.cs" />
+    <Compile Include="Migrations\201510010058282_StudyHoursUpdate.Designer.cs">
+      <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -748,8 +748,8 @@
     <Content Include="Content\bootstrap\bootstrap.less" />
     <Content Include="Content\bootstrap\badges.less" />
     <Content Include="Content\bootstrap\alerts.less" />
-    <Content Include="Areas\Edu\Views\Study\SessionSignIn.cshtml" />
     <Content Include="Areas\Edu\Views\Study\DeleteSignIn.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\EditSignIn.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -989,8 +989,8 @@
     <EmbeddedResource Include="Migrations\201508222223219_StudyHours.resx">
       <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201509010452337_StudyHours1.resx">
-      <DependentUpon>201509010452337_StudyHours1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201510010058282_StudyHoursUpdate.resx">
+      <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

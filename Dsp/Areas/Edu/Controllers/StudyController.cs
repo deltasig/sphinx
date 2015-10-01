@@ -440,14 +440,14 @@
             return RedirectToAction("Period", new {id = period.Id});
         }
 
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> SessionSignIn(int aid, int sid, int mid)
         {
             var assignment = await _db.StudyAssignments.FindAsync(aid);
             var session = await _db.StudySessions.FindAsync(sid);
             var member = await UserManager.FindByIdAsync(mid);
-
             if (assignment == null || session == null || member == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return HttpNotFound();
             if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
                 !session.Proctors.Select(p => p.MemberId).Contains(User.Identity.GetUserId<int>()))
             {
@@ -456,39 +456,81 @@
 
             var model = new StudyHour
             {
-                Assignment = assignment,
-                Session = session,
-                Member = member,
                 MemberId = mid,
                 SessionId = sid,
                 AssignmentId = aid,
-                SignedInOn = ConvertUtcToCst(DateTime.UtcNow),
-                SignedOutOn = session.EndsOn
+                SignedInOn = ConvertUtcToCst(DateTime.UtcNow)
             };
-            model.DurationMinutes = (session.EndsOn - model.SignedInOn).TotalMinutes;
 
+            _db.StudyHours.Add(model);
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Member was signed in.";
+            return RedirectToAction("Sessions", new { id = model.SessionId });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> SessionSignOut(int shid)
+        {
+            var studyHour = await _db.StudyHours.FindAsync(shid);
+            if (studyHour == null)
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
+                !studyHour.Session.Proctors.Select(p => p.MemberId).Contains(User.Identity.GetUserId<int>()))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (studyHour.SignedOutOn != null || studyHour.DurationMinutes != null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            var nowCst = ConvertUtcToCst(DateTime.UtcNow);
+            if (nowCst > studyHour.Session.EndsOn.AddMinutes(15))
+            {
+                studyHour.SignedOutOn = studyHour.Session.EndsOn.AddMinutes(15);
+            }
+            else
+            {
+                studyHour.SignedOutOn = nowCst;
+            }
+            studyHour.DurationMinutes = Math.Round(((DateTime)studyHour.SignedOutOn - studyHour.SignedInOn).TotalMinutes, 0);
+
+            _db.Entry(studyHour).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Member is signed out.";
+            return RedirectToAction("Sessions", new { id = studyHour.SessionId });
+        }
+        
+        public async Task<ActionResult> EditSignIn(int? id)
+        {
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _db.StudyHours.FindAsync(id);
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
+                !model.Session.Proctors.Select(p => p.MemberId).Contains(User.Identity.GetUserId<int>()))
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            if (model == null) return HttpNotFound();
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> SessionSignIn(StudyHour model)
+        public async Task<ActionResult> EditSignIn(StudyHour model)
         {
             if (!ModelState.IsValid) return View(model);
             var assignment = await _db.StudyAssignments.FindAsync(model.AssignmentId);
             var session = await _db.StudySessions.FindAsync(model.SessionId);
             var member = await UserManager.FindByIdAsync(model.MemberId);
-            if (assignment == null || session == null || member == null)
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            if (assignment == null || session == null || member == null || model.SignedOutOn == null)
+                return HttpNotFound();
             if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
                 !session.Proctors.Select(p => p.MemberId).Contains(User.Identity.GetUserId<int>()))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            model.Assignment = assignment;
-            model.Session = session;
-            model.Member = member;
-            
             if (model.SignedInOn < session.BeginsOn.AddMinutes(-15))
             {
                 ViewBag.FailureMessage = "The sign in time cannot exceed 15 minutes before the session ends.  " +
@@ -507,24 +549,13 @@
                                          "Please correct the sign out time and try again";
                 return View(model);
             }
+            model.DurationMinutes = Math.Round(((DateTime)model.SignedOutOn - model.SignedInOn).TotalMinutes, 0);
 
-            model.DurationMinutes = (model.SignedOutOn - model.SignedInOn).TotalMinutes;
-
-            var newSubmission = new StudyHour
-            {
-                AssignmentId = model.AssignmentId,
-                SessionId = model.SessionId,
-                MemberId = model.MemberId,
-                DurationMinutes = model.DurationMinutes,
-                SignedInOn = model.SignedInOn,
-                SignedOutOn = model.SignedOutOn
-            };
-
-            _db.StudyHours.Add(newSubmission);
+            _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Member is signed in.";
-            return RedirectToAction("Sessions", new { id = model.SessionId });
+            TempData["SuccessMessage"] = "Study hours were updated successfully.";
+            return RedirectToAction("Sessions", new { id = session.Id });
         }
 
         public async Task<ActionResult> DeleteSignIn(int? id)
