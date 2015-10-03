@@ -157,7 +157,7 @@
                                     }
                                 </td>
                                 <td class="col-xs-2 text-right">
-                                    @if (!isPastTime && canSignIn)
+                                    @if ((!isPastTime && canSignIn) || hasElevatedPermissions)
                                     {
                                         if (signIn == null && isProctor)
                                         {
@@ -196,16 +196,34 @@
                                     {
                                         if (signIn == null)
                                         {
-                                            <a href="@Url.Action("SessionSignIn", new {aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId})"
-                                               class="btn btn-xs btn-success">
-                                                <i class="fa fa-sign-in"></i> Sign In
-                                            </a>
+                                            using (Html.BeginForm("SessionSignIn", "Study",
+                                                new { aid = a.Id, sid = Model.StudySession.Id, mid = a.MemberId }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-xs btn-success">
+                                                    <i class="fa fa-sign-in"></i> Sign In
+                                                </button>
+                                            }
                                         }
-                                        else
+                                        else if (signIn != null && signIn.SignedOutOn == null)
                                         {
+                                            using (Html.BeginForm("SessionSignOut", "Study", new { shid = signIn.Id }, FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="btn btn-xs btn-danger">
+                                                    <i class="fa fa-sign-out"></i> Sign Out
+                                                </button>
+                                            }
+                                        }
+                                        else if (signIn != null && signIn.SignedOutOn != null)
+                                        {
+                                            <a href="@Url.Action("EditSignIn", new {id = signIn.Id})"
+                                               class="btn btn-xs btn-info">
+                                                <i class="fa fa-cog"></i>
+                                            </a>
                                             <a href="@Url.Action("DeleteSignIn", new {id = signIn.Id})"
                                                class="btn btn-xs btn-danger">
-                                                <i class="fa fa-sign-out"></i> 
+                                                <i class="fa fa-times"></i>
                                             </a>
                                         }
                                     }
