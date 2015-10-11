@@ -76,7 +76,8 @@
 
         public async Task<ActionResult> EmailSoberSchedule()
         {
-            var now = DateTime.UtcNow;
+            var nowUtc = DateTime.UtcNow;
+            var nowCst = ConvertUtcToCst(nowUtc);
 
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
             if (type == null || string.IsNullOrEmpty(type.Destination)) 
@@ -90,10 +91,10 @@
             var mostRecentEmail = emails.FirstOrDefault();
 
             // Check if it has been over 24 hours since the last email.
-            var noPreviousEmail = mostRecentEmail == null || (now - mostRecentEmail.SentOn).TotalHours > 24;
+            var noPreviousEmail = mostRecentEmail == null || (nowUtc - mostRecentEmail.SentOn).TotalHours > 24;
             // Check if the current time is between the arbitrary range.
-            var isTime = (now.DayOfWeek == DayOfWeek.Friday &&
-                          now.Hour >= 22 && now.Hour < 24);
+            var isTime = (nowCst.DayOfWeek == DayOfWeek.Friday &&
+                          nowCst.Hour >= 17 && nowCst.Hour < 21);
             // If an admin or the sergeant is trying to manually send the email, just allow it.
             var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
 
@@ -104,7 +105,7 @@
             }
 
             // Build Body
-            var data = await base.GetThisWeeksSoberSignupsAsync(now);
+            var data = await base.GetThisWeeksSoberSignupsAsync(nowUtc);
 
             if (!data.Any())
             {
@@ -118,7 +119,7 @@
             var message = new IdentityMessage
             {
                 Subject = "Sober Schedule " + (emails.Count + 1) + ": " + 
-                base.ConvertUtcToCst(now).ToShortDateString() + " - " + base.ConvertUtcToCst(now.AddDays(7)).ToShortDateString(),
+                nowCst.ToShortDateString() + " - " + nowCst.AddDays(7).ToShortDateString(),
                 Body = body,
                 Destination = type.Destination
             };
@@ -135,7 +136,7 @@
 
             var email = new Email
             {
-                SentOn = now, 
+                SentOn = nowUtc, 
                 EmailTypeId = type.EmailTypeId, 
                 Destination = type.Destination, 
                 Body = body
