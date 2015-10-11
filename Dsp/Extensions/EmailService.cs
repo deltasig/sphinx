@@ -1,28 +1,32 @@
 ﻿namespace Dsp.Extensions
 {
     using Microsoft.AspNet.Identity;
+    using System.Configuration;
     using System.Net;
     using System.Net.Mail;
     using System.Threading.Tasks;
 
     public class EmailService : IIdentityMessageService
     {
+        public string EmailServer = ConfigurationManager.AppSettings["EmailServer"];
+        public string EmailPort = ConfigurationManager.AppSettings["EmailPort"];
+        public string EmailAddress = ConfigurationManager.AppSettings["EmailAddress"];
+        public string EmailKey = ConfigurationManager.AppSettings["EmailKey"];
+
         public Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("***REMOVED***", "Sphinx Bot"),
+                From = new MailAddress(EmailAddress, "Sphinx Bot"),
                 Subject = "[Sphinx] " + message.Subject,
                 Body = "<html><body>" + message.Body + "</body></html>"
             };
             mailMessage.To.Add(message.Destination);
             mailMessage.IsBodyHtml = true;
 
-            var smtpClient = new SmtpClient("mail.deltasig-de.org")
+            var smtpClient = new SmtpClient(EmailServer, int.Parse(EmailPort))
             {
-                Port = 26,
-                Credentials = new NetworkCredential("***REMOVED***", "***REMOVED***")
+                Credentials = new NetworkCredential(EmailAddress, EmailKey)
             };
 
             try
@@ -39,22 +43,20 @@
         }
         public Task SendTemplatedAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
             var mailMessage = new MailMessage
             {
-                From = new MailAddress("***REMOVED***", "Sphinx Bot"),
+                From = new MailAddress(EmailAddress, "Sphinx Bot"),
                 Subject = "[Sphinx] " + message.Subject,
-                Body = message.Body
+                Body = message.Body,
+                BodyEncoding = System.Text.Encoding.UTF8,
+                SubjectEncoding = System.Text.Encoding.UTF8
             };
-            mailMessage.BodyEncoding = System.Text.Encoding.UTF8;
-            mailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
             mailMessage.To.Add(message.Destination);
             mailMessage.IsBodyHtml = true;
 
-            var smtpClient = new SmtpClient("mail.deltasig-de.org")
+            var smtpClient = new SmtpClient(EmailServer, int.Parse(EmailPort))
             {
-                Port = 26,
-                Credentials = new NetworkCredential("***REMOVED***", "***REMOVED***")
+                Credentials = new NetworkCredential(EmailAddress, EmailKey)
             };
 
             try
@@ -67,15 +69,6 @@
 
             }
 
-            return Task.FromResult(0);
-        }
-    }
-
-    public class SmsService : IIdentityMessageService
-    {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your sms service here to send a text message.
             return Task.FromResult(0);
         }
     }

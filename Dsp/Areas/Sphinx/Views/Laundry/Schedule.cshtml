@@ -27,7 +27,7 @@
                        data-toggle="tooltip" data-placement="top" title="Current time"></i>
                     <small>
                         @Model.Schedule.Now.ToShortTimeString() CST 
-                    </small> 
+                    </small>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-condensed table-bordered" style="text-align: center">
@@ -65,7 +65,7 @@
                                     <td class="text-center @cellColor">
                                         @if (slot.Member != null)
                                         {
-                                            <img src="~/Images/Avatars/@slot.Member.AvatarPath" height="30" width="30" class="img-circle"
+                                            <img src="~/Images/Avatars/@slot.Member.GetAvatarString()" height="30" width="30" class="img-circle"
                                                  data-toggle="tooltip" data-placement="top" title="@slot.Member.ToString()"
                                                  onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
                                             // Reserved by current user
