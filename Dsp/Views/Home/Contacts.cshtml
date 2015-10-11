@@ -17,7 +17,6 @@
             @if (Model.Any(l => l.Position.IsPublic))
             {
                 <div class="panel panel-default hidden-xs">
-                    <div class="panel-heading"></div>
                     <div class="list-group">
                         @foreach (var leader in Model.Where(l => l.Position.IsPublic)
                             .OrderBy(l => l.Position.Type)
