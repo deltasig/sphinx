@@ -68,12 +68,7 @@
 
             return View(model);
         }
-
-        public async Task<ActionResult> Check()
-        {
-            return Content("OK");
-        }
-
+        
         public async Task<ActionResult> EmailSoberSchedule()
         {
             var nowUtc = DateTime.UtcNow;
@@ -94,7 +89,7 @@
             var noPreviousEmail = mostRecentEmail == null || (nowUtc - mostRecentEmail.SentOn).TotalHours > 24;
             // Check if the current time is between the arbitrary range.
             var isTime = (nowCst.DayOfWeek == DayOfWeek.Friday &&
-                          nowCst.Hour >= 17 && nowCst.Hour < 21);
+                          nowCst.Hour >= 16 && nowCst.Hour < 19);
             // If an admin or the sergeant is trying to manually send the email, just allow it.
             var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
 
