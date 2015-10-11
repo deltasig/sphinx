@@ -23,14 +23,10 @@
                 @Html.Partial("_LoginExternalPartial")
             </ul>
             <ul class="nav navbar-nav">
-                @if (Request.IsAuthenticated && !User.IsInRole("Released"))
-                {
-                    <li>
-                        @Html.ActionLink("Sphinx", "Index", "Home", new {area = "Sphinx"}, new {title = "Sphinx"})
-                    </li>
-                }
                 <li>
-                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">Alumni <i class="fa fa-external-link" style="font-size:11px"></i></a>
+                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">
+                        Alumni <i class="fa fa-external-link" style="font-size: 11px"></i>
+                    </a>
                 </li>
                 <li class="@(ViewBag.Title.Contains("Recruitment") ? "active" : "")">
                     @Html.ActionLink("Recruitment", "Recruitment", "Home", new {area = ""}, null)
