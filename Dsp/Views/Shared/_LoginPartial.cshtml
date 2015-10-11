@@ -1,16 +1,33 @@
 ﻿@using Dsp.Extensions
 @if (Request.IsAuthenticated)
 {
-    <li class="hidden-xs hidden-sm">
-        <p class="navbar-text">
-            Signed in as <strong>@User.Identity.Name</strong>
-        </p>
-    </li>
+    var avatar = User.Identity.GetAvatar();
+
+    if (!User.IsInRole("Released"))
+    {
+        <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
+            <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
+               data-toggle="tooltip" data-placement="bottom" title="Sphinx">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+    }
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        <a class="navbar-brand" rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:9px"
-           data-toggle="tooltip" data-placement="bottom" title="Account">
-            <img src="~/Images/Avatars/@(User.Identity.GetAvatar())" height="35" width="35" class="img-circle" id="avatar"/>
-        </a>
+        @if (!string.IsNullOrEmpty(avatar))
+        {
+            <a href="@Url.Action("Index", "Account", new {area = "Members"})"
+               data-toggle="tooltip" data-placement="bottom" title="Account">
+                <i class="fa fa-user"></i>
+            </a>
+        }
+        else
+        {
+            <a class="navbar-brand" rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:9px"
+               data-toggle="tooltip" data-placement="bottom" title="Account">
+                <img src="~/Images/Avatars/@(avatar)" height="35" width="35" class="img-circle" id="avatar" />
+            </a>
+        }
+        
     </li>
     <li>
         @using (Html.BeginForm("SignOut", "Account", new {area = "Members"}, FormMethod.Post, new {id = "signoutForm"}))
