@@ -12,6 +12,9 @@
     var canSignIn = nowCst > Model.StudySession.BeginsOn.AddMinutes(-15);
     var isPastTime = nowCst > Model.StudySession.EndsOn.AddMinutes(15);
 }
+@section AdditionalMeta{
+    <meta http-equiv="refresh" content="60">
+}
 
 <div class="container-fluid">
     <div class="row row-space">
