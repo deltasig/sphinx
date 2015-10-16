@@ -453,6 +453,13 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var studyHour = await _db.StudyHours
+                .SingleOrDefaultAsync(s => s.AssignmentId == aid && s.SessionId == sid && s.MemberId == mid);
+            if (studyHour != null)
+            {
+                TempData["FailureMessage"] = "Member has already been signed in.";
+                return RedirectToAction("Sessions", new { id = sid });
+            }
 
             var model = new StudyHour
             {
@@ -466,7 +473,7 @@
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Member was signed in.";
-            return RedirectToAction("Sessions", new { id = model.SessionId });
+            return RedirectToAction("Sessions", new { id = sid });
         }
 
         [HttpPost, ValidateAntiForgeryToken]
