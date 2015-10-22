@@ -15,24 +15,15 @@
     [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
     public class EventsController : BaseController
     {
-        public async Task<ActionResult> Index(int? s, EventMessageId? message)
+        public async Task<ActionResult> Index(int? s)
         {
-            var thisSemester = await base.GetThisSemesterAsync();
+            var thisSemester = await GetThisSemesterAsync();
             if (s == null)
             {
                 s = thisSemester.SemesterId;
             }
-            switch (message)
-            {
-                case EventMessageId.DeleteNotEmptyFailure:
-                    ViewBag.FailMessage = GetResultMessage(message);
-                    break;
-                case EventMessageId.CreateSuccess:
-                case EventMessageId.EditSuccess:
-                case EventMessageId.DeleteSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
 
             var semester = await _db.Semesters.FindAsync(s);
             var previousSemester = (await _db.Semesters
@@ -43,12 +34,14 @@
                     DateEnd = semester.DateStart
                 };
 
-            var model = new ServiceEventIndexModel();
-            model.Semester = semester;
-            model.Events = await _db.Events
-                .Where(e => e.DateTimeOccurred < semester.DateEnd && 
-                            e.DateTimeOccurred >= previousSemester.DateEnd)
-                .ToListAsync();
+            var model = new ServiceEventIndexModel
+            {
+                Semester = semester,
+                Events = await _db.Events
+                    .Where(e => e.DateTimeOccurred < semester.DateEnd &&
+                                e.DateTimeOccurred >= previousSemester.DateEnd)
+                    .ToListAsync()
+            };
 
             // Identify valid semesters for dropdown
             var events = await _db.Events.ToListAsync();
@@ -74,7 +67,7 @@
 
         public async Task<ActionResult> Create(int? s)
         {
-            var thisSemester = await base.GetThisSemesterAsync();
+            var thisSemester = await GetThisSemesterAsync();
             if (s == null)
             {
                 s = thisSemester.SemesterId;
@@ -102,122 +95,88 @@
             model.CreatedOn = DateTime.UtcNow;
             _db.Events.Add(model);
             await _db.SaveChangesAsync();
-            
+
+            TempData["SuccessMessage"] = "Service event created successfully.";
             return RedirectToAction("Index", new
             {
-                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId,
-                message = EventMessageId.CreateSuccess
+                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
             });
         }
 
         public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var @event = await _db.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            var semester = await GetSemestersForUtcDateAsync(@event.DateTimeOccurred);
-            @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _db.Events.FindAsync(id);
+            if (model == null) return HttpNotFound();
+
+            var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
+            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
 
             ViewBag.SemesterId = semester.SemesterId;
-            return View(@event);
+            return View(model);
         }
 
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var @event = await _db.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
-            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId;
-            return View(@event);
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _db.Events.FindAsync(id);
+            if (model == null) return HttpNotFound();
+
+            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
+            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Edit(Event @event)
+        public async Task<ActionResult> Edit(Event model)
         {
-            if (!ModelState.IsValid) return View(@event);
+            if (!ModelState.IsValid) return View(model);
 
-            @event.DateTimeOccurred = ConvertCstToUtc(@event.DateTimeOccurred);
-            _db.Entry(@event).State = EntityState.Modified;
-            await _db.SaveChangesAsync(); 
-            
+            model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
+            _db.Entry(model).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service event modified successfully.";
             return RedirectToAction("Index", new
             {
-                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
-                message = EventMessageId.EditSuccess
+                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
             });
         }
         
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _db.Events.FindAsync(id);
+            if (model == null) return HttpNotFound();
+
+            var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
+            if (model.ServiceHours.Any())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData["FailureMessage"] = "Failed to delete event because someone has already turned in hours for it.";
+                return RedirectToAction("Index", new { s = semester.SemesterId });
             }
-            var @event = await _db.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            var semester = await GetSemestersForUtcDateAsync(@event.DateTimeOccurred);
-            if (@event.ServiceHours.Any())
-            {
-                return RedirectToAction("Index", new
-                {
-                    s = semester.SemesterId,
-                    message = EventMessageId.DeleteNotEmptyFailure
-                });
-            }
-            @event.DateTimeOccurred = base.ConvertUtcToCst(@event.DateTimeOccurred);
+            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
 
             ViewBag.SemesterId = semester.SemesterId;
-            return View(@event);
+            return View(model);
         }
 
         [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var @event = await _db.Events.FindAsync(id);
-            _db.Events.Remove(@event);
+            var model = await _db.Events.FindAsync(id);
+            _db.Events.Remove(model);
             await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service event deleted successfully.";
             return RedirectToAction("Index", new
             {
-                s = (await GetSemestersForUtcDateAsync(@event.DateTimeOccurred)).SemesterId,
-                message = EventMessageId.DeleteSuccess
+                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
             });
-        }
-
-        public static dynamic GetResultMessage(EventMessageId? message)
-        {
-            return message == EventMessageId.DeleteNotEmptyFailure ? "Failed to delete event because someone has already turned in hours for it."
-                : message == EventMessageId.CreateSuccess ? "Event was created successfully."
-                : message == EventMessageId.EditSuccess ? "Event was updated successfully."
-                : message == EventMessageId.DeleteSuccess ? "Event was deleted successfully."
-                : "";
-        }
-
-        public enum EventMessageId
-        {
-            DeleteNotEmptyFailure,
-            CreateSuccess,
-            EditSuccess,
-            DeleteSuccess
         }
     }
 }
