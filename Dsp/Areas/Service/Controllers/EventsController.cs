@@ -37,14 +37,14 @@
             var model = new ServiceEventIndexModel
             {
                 Semester = semester,
-                Events = await _db.Events
+                Events = await _db.ServiceEvents
                     .Where(e => e.DateTimeOccurred < semester.DateEnd &&
                                 e.DateTimeOccurred >= previousSemester.DateEnd)
                     .ToListAsync()
             };
 
             // Identify valid semesters for dropdown
-            var events = await _db.Events.ToListAsync();
+            var events = await _db.ServiceEvents.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
             var semesters = new List<Semester>();
             foreach (var sem in allSemesters)
@@ -77,7 +77,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Event model)
+        public async Task<ActionResult> Create(ServiceEvent model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -93,7 +93,7 @@
             model.SubmitterId = User.Identity.GetUserId<int>();
             model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
             model.CreatedOn = DateTime.UtcNow;
-            _db.Events.Add(model);
+            _db.ServiceEvents.Add(model);
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service event created successfully.";
@@ -106,7 +106,7 @@
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.Events.FindAsync(id);
+            var model = await _db.ServiceEvents.FindAsync(id);
             if (model == null) return HttpNotFound();
 
             var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
@@ -120,7 +120,7 @@
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.Events.FindAsync(id);
+            var model = await _db.ServiceEvents.FindAsync(id);
             if (model == null) return HttpNotFound();
 
             model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
@@ -130,7 +130,7 @@
 
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Edit(Event model)
+        public async Task<ActionResult> Edit(ServiceEvent model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -149,7 +149,7 @@
         public async Task<ActionResult> Delete(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.Events.FindAsync(id);
+            var model = await _db.ServiceEvents.FindAsync(id);
             if (model == null) return HttpNotFound();
 
             var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
@@ -168,8 +168,8 @@
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var model = await _db.Events.FindAsync(id);
-            _db.Events.Remove(model);
+            var model = await _db.ServiceEvents.FindAsync(id);
+            _db.ServiceEvents.Remove(model);
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service event deleted successfully.";

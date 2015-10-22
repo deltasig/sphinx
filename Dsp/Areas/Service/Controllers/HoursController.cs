@@ -61,7 +61,7 @@
             }
 
             // Identify valid semesters for dropdown
-            var events = await _db.Events.ToListAsync();
+            var events = await _db.ServiceEvents.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
             var semesters = new List<Semester>();
             foreach (var sem in allSemesters)
@@ -105,7 +105,7 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(ServiceHourSubmissionModel model)
         {
-            var selectedEvent = await _db.Events.FindAsync(model.SelectedEventId);
+            var selectedEvent = await _db.ServiceEvents.FindAsync(model.SelectedEventId);
             var semester = await _db.Semesters
                 .Where(s => selectedEvent.DateTimeOccurred <= s.DateEnd)
                 .OrderBy(s => s.DateStart)

@@ -18,7 +18,6 @@
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
         public virtual DbSet<EmailType> EmailTypes { get; set; }
-        public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
         public virtual DbSet<Leader> Leaders { get; set; }
@@ -43,6 +42,7 @@
         public virtual DbSet<ScholarshipQuestion> ScholarshipQuestions { get; set; }
         public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
+        public virtual DbSet<ServiceEvent> ServiceEvents { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSignups { get; set; }
         public virtual DbSet<SoberType> SoberTypes { get; set; }

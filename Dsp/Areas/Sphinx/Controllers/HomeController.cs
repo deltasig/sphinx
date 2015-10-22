@@ -172,7 +172,7 @@
             }
 
             // Service
-            var serviceEvents = await _db.Events
+            var serviceEvents = await _db.ServiceEvents
                 .Where(e => e.CreatedOn > startOfFeedUtc && e.CreatedOn <= nowUtc)
                 .ToListAsync();
             model.AddRange(serviceEvents.Where(s => s.CreatedOn != null).Select(s => new FeedItem
