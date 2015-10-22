@@ -60,24 +60,7 @@
                 model.ServiceHours.Add(member);
             }
 
-            // Identify valid semesters for dropdown
-            var events = await _db.ServiceEvents.ToListAsync();
-            var allSemesters = await _db.Semesters.ToListAsync();
-            var semesters = new List<Semester>();
-            foreach (var sem in allSemesters)
-            {
-                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
-                {
-                    semesters.Add(sem);
-                }
-            }
-            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
-            {
-                semesters.Add(thisSemester);
-            }
-
-            model.SemesterList = await GetCustomSemesterListAsync(semesters);
+            model.SemesterList = await GetSemesterList(thisSemester);
             model.Semester = semester;
 
             return View(model);
@@ -235,6 +218,122 @@
                 s = (await GetSemestersForUtcDateAsync(time)).SemesterId
             });
         }
+
+        [Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> Amendments(int? s)
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
+            var thisSemester = await GetThisSemesterAsync();
+            if (s == null)
+            {
+                s = thisSemester.SemesterId;
+            }
+            var semester = await _db.Semesters.FindAsync(s);
+
+            var model = new ServiceAmendmentModel
+            {
+                Semester = semester,
+                SemesterList = await GetSemesterList(thisSemester),
+                ServiceAmendments = await _db.ServiceAmendments.Where(a => a.SemesterId == s).ToListAsync(),
+            };
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> AddAmendment(int? s)
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
+            var thisSemester = await GetThisSemesterAsync();
+            if (s == null) s = thisSemester.SemesterId;
+            var semester = await _db.Semesters.FindAsync(s);
+            var model = new ServiceAddAmendmentModel
+            {
+                Amendment = new ServiceAmendment
+                {
+                    SemesterId = semester.SemesterId
+                },
+                Semester = semester
+            };
+            var members = await GetRosterForSemester(semester);
+            var memberList = new List<object>();
+            foreach (Member member in members.OrderBy(m => m.LastName))
+            {
+                memberList.Add(new
+                {
+                    UserId = member.Id,
+                    Name = member.FirstName + " " + member.LastName + 
+                        " (" + member.LivingAssignmentForSemester(semester.SemesterId) + ")"
+                });
+            }
+            model.Members = new SelectList(memberList, "UserId", "Name");
+            
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> AddAmendment(ServiceAddAmendmentModel model)
+        {
+            if (model.Amendment.AmountHours.Equals(0) || 
+                model.Amendment.AmountHours < -50 ||
+                model.Amendment.AmountHours > 50)
+            {
+                TempData["FailureMessage"] = "Please enter hours within the range -50 and 50 (excluding 0) in increments of 0.5.";
+                return RedirectToAction("AddAmendment", new { s = model.Amendment.SemesterId });
+            }
+            // Adjust hours to nearest half hour.
+            var fraction = (model.Amendment.AmountHours % 1) * 10;
+            if (!fraction.Equals(5))
+            {
+                model.Amendment.AmountHours = Math.Floor(model.Amendment.AmountHours);
+            }
+
+            _db.ServiceAmendments.Add(model.Amendment);
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service amendment added successfully.";
+            return RedirectToAction("AddAmendment", new { s = model.Amendment.SemesterId });
+        }
+        
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> DeleteAmendment(int? aid)
+        {
+            if (aid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var amendment = await _db.ServiceAmendments.FindAsync(aid);
+            var semesterId = amendment.SemesterId;
+
+            _db.ServiceAmendments.Remove(amendment);
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service amendment deleted successfully.";
+            return RedirectToAction("Amendments", new { s = semesterId });
+        }
+
+        private async Task<SelectList> GetSemesterList(Semester thisSemester)
+        {
+            // Identify valid semesters for dropdown
+            var events = await _db.ServiceEvents.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var semesters = new List<Semester>();
+            foreach (var sem in allSemesters)
+            {
+                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
+                {
+                    semesters.Add(sem);
+                }
+            }
+            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
+            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
+            {
+                semesters.Add(thisSemester);
+            }
+
+            return await GetCustomSemesterListAsync(semesters);
+        } 
 
         public async Task<ActionResult> Download(int? id)
         {
