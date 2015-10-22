@@ -18,7 +18,7 @@
     var laundry = Model.LaundrySummary.OrderBy(o => o.DateTimeShift);
 
     // Class-related
-            var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
+    var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
     var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
 
     // Service-related
@@ -29,9 +29,19 @@
         approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
         unapprovedHours = Model.CompletedEvents.Where(e => !e.Event.IsApproved).Sum(h => h.DurationHours);
     }
-    var goal = (double)Model.CurrentSemester.MinimumServiceHours;
-    var approvedPercentage = (approvedHours / goal) * 100.0;
-    var unapprovedPercentage = (unapprovedHours / goal) * 100.0;
+    var amendments = Model.MemberInfo.ServiceAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
+    var totalAmendment = amendments.Sum(a => a.AmountHours);
+    var goal = Model.CurrentSemester.MinimumServiceHours + totalAmendment;
+    var approvedPercentage = (approvedHours) * 100.0;
+    if (!goal.Equals(0))
+    {
+        approvedPercentage /= goal;
+    }
+    var unapprovedPercentage = (unapprovedHours) * 100.0;
+    if (!goal.Equals(0))
+    {
+        unapprovedPercentage /= goal;
+    }
     var barColor = approvedPercentage < 25 ? "danger" : approvedPercentage >= 100 ? "success" : "warning";
     var approvedWidth = approvedPercentage > 100 ? 100 : approvedPercentage;
     var unapprovedWidth = unapprovedPercentage + approvedPercentage > 100 ? 100 - approvedPercentage : unapprovedPercentage;
@@ -199,26 +209,39 @@
                                     </a>
                                 </small>
                             </div>
-                            <div class="panel-body">
-                                <div class="progress" style="margin: 0">
-                                    <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
-                                         aria-valuenow="@(approvedHours)" aria-valuemin="0"
-                                         aria-valuemax="@(goal)" style="width: @(approvedWidth)%;">
-                                        @approvedPercentage%
-                                    </div>
-                                    @if (approvedHours < goal && unapprovedHours > 0)
-                                    {
-                                        <div class="progress-bar progress-bar-striped progress-bar-info" role="progressbar"
-                                             aria-valuenow="@(unapprovedHours)" aria-valuemin="0"
-                                             aria-valuemax="@(goal)" style="width: @(unapprovedWidth)%;">
-                                            @unapprovedPercentage%
+                            @if (goal > 0)
+                            {
+                                <div class="panel-body">
+                                    <div class="progress" style="margin: 0">
+                                        <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
+                                             aria-valuenow="@(approvedHours)" aria-valuemin="0"
+                                             aria-valuemax="@(goal)" style="width: @(approvedWidth)%;">
+                                            @Math.Round(approvedPercentage, 2)%
                                         </div>
-                                    }
+                                        @if (approvedHours < goal && unapprovedHours > 0)
+                                        {
+                                            <div class="progress-bar progress-bar-striped progress-bar-info" role="progressbar"
+                                                 aria-valuenow="@(unapprovedHours)" aria-valuemin="0"
+                                                 aria-valuemax="@(goal)" style="width: @(unapprovedWidth)%;">
+                                                @Math.Round(unapprovedPercentage, 2)%
+                                            </div>
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            }
                             <div class="table-responsive">
                                 <table class="table table-condensed table-bordered table-hover">
                                     <thead>
+                                    @if (goal <= 0)
+                                    {
+                                        <tr class="info">
+                                            <th colspan="4">
+                                                <small>
+                                                    <i class="fa fa-info-circle"></i> You have been exempted from service hours this semester.
+                                                </small>
+                                            </th>
+                                        </tr>
+                                    }
                                     <tr class="active">
                                         <th><small>Event</small></th>
                                         <th class="col-sm-2"><small>Date</small></th>
@@ -285,7 +308,7 @@
                                 </table>
                             </div>
                             <div class="panel-footer">
-                                <small>Minimum Service Hour Requirement: <strong>@Model.CurrentSemester.MinimumServiceHours hours</strong></small>
+                                <small>Minimum Service Hour Requirement: <strong>@goal hours</strong></small>
                             </div>
                         </div>
                     </div>

@@ -244,9 +244,12 @@
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Service\Models\ServiceAddAmendmentModel.cs" />
+    <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
     <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
+    <Compile Include="Entities\ServiceAmendment.cs" />
     <Compile Include="Entities\StudyEntities.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
@@ -292,6 +295,10 @@
     <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.cs" />
     <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.Designer.cs">
       <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201510220032149_ServiceAmendments.cs" />
+    <Compile Include="Migrations\201510220032149_ServiceAmendments.Designer.cs">
+      <DependentUpon>201510220032149_ServiceAmendments.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -753,6 +760,8 @@
     <Content Include="Content\bootstrap\alerts.less" />
     <Content Include="Areas\Edu\Views\Study\DeleteSignIn.cshtml" />
     <Content Include="Areas\Edu\Views\Study\EditSignIn.cshtml" />
+    <Content Include="Areas\Service\Views\Hours\Amendments.cshtml" />
+    <Content Include="Areas\Service\Views\Hours\AddAmendment.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -997,6 +1006,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510220016341_UpdateServiceHourTables.resx">
       <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510220032149_ServiceAmendments.resx">
+      <DependentUpon>201510220032149_ServiceAmendments.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -77,6 +77,8 @@
         [InverseProperty("Member")]
         public virtual ICollection<RoomToMember> Rooms { get; set; }
         [InverseProperty("Member")]
+        public virtual ICollection<ServiceAmendment> ServiceAmendments { get; set; }
+        [InverseProperty("Member")]
         public virtual ICollection<ServiceHour> ServiceHours { get; set; }
         [InverseProperty("Submitter")]
         public virtual ICollection<ServiceEvent> SubmittedEvents { get; set; }
