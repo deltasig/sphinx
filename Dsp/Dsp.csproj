@@ -289,6 +289,10 @@
     <Compile Include="Migrations\201510010058282_StudyHoursUpdate.Designer.cs">
       <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.cs" />
+    <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.Designer.cs">
+      <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -304,7 +308,7 @@
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\EmailType.cs" />
-    <Compile Include="Entities\Event.cs" />
+    <Compile Include="Entities\ServiceEvent.cs" />
     <Compile Include="Entities\IncidentReport.cs" />
     <Compile Include="Entities\LaundrySignup.cs" />
     <Compile Include="Entities\Leader.cs" />
@@ -990,6 +994,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510010058282_StudyHoursUpdate.resx">
       <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201510220016341_UpdateServiceHourTables.resx">
+      <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

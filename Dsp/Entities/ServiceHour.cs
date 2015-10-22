@@ -19,6 +19,6 @@ namespace Dsp.Entities
         [ForeignKey("UserId")]
         public virtual Member Member { get; set; }
         [ForeignKey("EventId")]
-        public virtual Event Event { get; set; }
+        public virtual ServiceEvent Event { get; set; }
     }
 }
