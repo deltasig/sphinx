@@ -79,7 +79,7 @@
         [InverseProperty("Member")]
         public virtual ICollection<ServiceHour> ServiceHours { get; set; }
         [InverseProperty("Submitter")]
-        public virtual ICollection<Event> SubmittedEvents { get; set; }
+        public virtual ICollection<ServiceEvent> SubmittedEvents { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<SoberSignup> SoberSignups { get; set; }
         [InverseProperty("Member")]

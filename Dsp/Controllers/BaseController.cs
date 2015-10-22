@@ -444,7 +444,7 @@
             var lastSemester = await GetLastSemesterAsync();
             var thisSemester = await GetThisSemesterAsync();
 
-            var events = await _db.Events
+            var events = await _db.ServiceEvents
                 .Where(e => 
                     e.DateTimeOccurred > lastSemester.DateEnd && 
                     e.DateTimeOccurred <= thisSemester.DateEnd)
@@ -471,7 +471,7 @@
                 .OrderByDescending(s => s.DateStart)
                 .FirstAsync();
 
-            var events = await _db.Events
+            var events = await _db.ServiceEvents
                 .Where(e =>
                     e.DateTimeOccurred > lastSemester.DateEnd &&
                     e.DateTimeOccurred <= thisSemester.DateEnd)
