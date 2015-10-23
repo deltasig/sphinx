@@ -188,7 +188,7 @@
                                     aria-expanded="false" aria-controls="@item.Member.Id">
                                     <td>
                                         @item.Member.LastName, @item.Member.FirstName
-                                        @if (amendments.Any())
+                                        @if (hasElevatedPermissions && amendments.Any())
                                         {
                                             <small class="pull-right">
                                                 Amendment@(amendments.Count != 1 ? "s" : ""): 
