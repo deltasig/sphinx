@@ -3,7 +3,7 @@ namespace Dsp.Entities
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class ServiceAmendment
+    public class ServiceEventAmendment
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -15,8 +15,8 @@ namespace Dsp.Entities
         public int SemesterId { get; set; }
 
         [Required, Range(-50,50)]
-        [Display(Name = "Amount of Hours")]
-        public double AmountHours { get; set; }
+        [Display(Name = "Number of Events")]
+        public int NumberEvents { get; set; }
 
         [Required, StringLength(100)]
         [Display(Name = "Reason for Amendment")]
