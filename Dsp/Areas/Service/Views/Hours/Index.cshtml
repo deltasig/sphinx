@@ -7,7 +7,11 @@
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
 
     var exemptMembers = Model.ServiceHours
-        .Where(m => (m.Member.ServiceAmendments.Sum(a => a.AmountHours) + Model.Semester.MinimumServiceHours).Equals(0))
+        .Where(m => 
+            (m.Member.ServiceAmendments
+                .Where(a => a.SemesterId == Model.Semester.SemesterId)
+                .Sum(a => a.AmountHours) + Model.Semester.MinimumServiceHours)
+            .Equals(0))
         .OrderBy(m => m.Member.LastName)
         .ToList();
     var allNonExemptMembers = Model.ServiceHours
