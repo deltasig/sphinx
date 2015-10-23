@@ -39,9 +39,10 @@
     var totalMemberHours = Model.ServiceHours.Sum(m => m.Hours);
     var averageMemberHours = (totalMemberHours / nonExemptMemberCount).ToString("F1");
     var averageMemberAttendance = nonExemptMembers.Count(m =>
+        m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
             .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + m.ServiceHours.Count() >= Model.Semester.MinimumServiceEvents);
+            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
     var averageMemberAttendancePercentage = (int)(100 * (averageMemberAttendance / (double)(nonExemptMembers.Count == 0 ? 1 : nonExemptMembers.Count)));
 
     var activesServed = nonExemptActives.Count(m => m.Hours > 0);
@@ -53,9 +54,10 @@
     var totalActiveHours = actives.Sum(m => m.Hours);
     var averageActiveHours = (totalActiveHours / (nonExemptActives.Count == 0 ? 1 : nonExemptActives.Count)).ToString("F1");
     var averageActiveAttendance = nonExemptActives.Count(m =>
+        m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
             .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + m.ServiceHours.Count() >= Model.Semester.MinimumServiceEvents);
+            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
     var averageActiveAttendancePercentage = (int)(100 * (averageActiveAttendance / (double)(nonExemptActives.Count == 0 ? 1 : nonExemptActives.Count)));
 
     var pledgesServed = nonExemptPledges.Count(m => m.Hours > 0);
@@ -67,9 +69,10 @@
     var totalPledgeHours = pledges.Sum(m => m.Hours);
     var averagePledgeHours = (totalPledgeHours / (nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)).ToString("F1");
     var averagePledgeAttendance = nonExemptPledges.Count(m =>
+        m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
             .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + m.ServiceHours.Count() >= Model.Semester.MinimumServiceEvents);
+            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
     var averagePledgeAttendancePercentage = (int)(100 * (averagePledgeAttendance / (double)(nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)));
 }
 
@@ -172,11 +175,11 @@
                         {
                             if (i < exemptMembers.Count - 1)
                             {
-                                @exemptMembers[i].Member.ToShortLastNameString()@:,
+                                @exemptMembers[i].Member.ToString()@:,
                             }
                             else
                             {
-                                @exemptMembers[i].Member.ToShortLastNameString()
+                                @exemptMembers[i].Member.ToString()
                             }
                         }
                     }
@@ -222,7 +225,6 @@
                                             <small class="pull-right">
                                                 @if (hourAmendments.Any())
                                                 {
-                                                    @: Amendment@(hourAmendments.Count != 1 ? "s" : ""):
                                                     for (var i = 0; i < hourAmendments.Count; i++)
                                                     {
                                                         @hourAmendments[i].Reason
@@ -239,7 +241,7 @@
                                                     for (var i = 0; i < eventAmendments.Count; i++)
                                                     {
                                                         @eventAmendments[i].Reason
-                                                        @:(+@eventAmendments[i].NumberEvents event@(!eventAmendments[i].NumberEvents.Equals(1) ? "s" : ""))
+                                                        @:(@eventAmendments[i].NumberEvents event@(!eventAmendments[i].NumberEvents.Equals(1) ? "s" : ""))
                                                         if (i < eventAmendments.Count - 1)
                                                         {
                                                             @:,
