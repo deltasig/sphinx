@@ -42,7 +42,8 @@
         public virtual DbSet<ScholarshipQuestion> ScholarshipQuestions { get; set; }
         public virtual DbSet<ScholarshipSubmission> ScholarshipSubmissions { get; set; }
         public virtual DbSet<Semester> Semesters { get; set; }
-        public virtual DbSet<ServiceAmendment> ServiceAmendments { get; set; }
+        public virtual DbSet<ServiceHourAmendment> ServiceHourAmendments { get; set; }
+        public virtual DbSet<ServiceEventAmendment> ServiceEventAmendments { get; set; }
         public virtual DbSet<ServiceEvent> ServiceEvents { get; set; }
         public virtual DbSet<ServiceHour> ServiceHours { get; set; }
         public virtual DbSet<SoberSignup> SoberSignups { get; set; }

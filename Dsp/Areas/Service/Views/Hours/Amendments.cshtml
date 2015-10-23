@@ -29,7 +29,6 @@
                 <a href="@Url.Action("Index", "Events", new {s = Model.Semester.SemesterId})" class="btn btn-sm btn-default">
                     Service Events
                 </a>
-                @Html.ActionLink("Add Amendment", "AddAmendment", new { s = Model.Semester.SemesterId },  new {@class = "btn btn-sm btn-success"})
             </p>
         </div>
     </div>
@@ -37,28 +36,75 @@
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    Semester Amendments
+                    Hour Amendments
+                    <a href="@Url.Action("AddHourAmendment", "Hours", new {s = Model.Semester.SemesterId})" class="btn btn-xs btn-success pull-right">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </div>
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th class="col-xs-3">Member</th>
+                        <th class="col-xs-3">Reason</th>
+                        <th class="col-xs-3">Amount (hrs)</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (Model.ServiceHourAmendments.Any())
+                    {
+                        foreach (var a in Model.ServiceHourAmendments.OrderBy(m => m.Member.LastName))
+                        {
+                            <tr>
+                                <td>@a.Member.ToString()</td>
+                                <td>@a.Reason</td>
+                                <td>@a.AmountHours</td>
+                                <td class="text-right">
+                                    @using (Html.BeginForm("DeleteHourAmendment", "Hours", new {aid = a.Id}, FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-xs btn-danger">Delete</button>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="warning">
+                            <td colspan="4">No amendments found.</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Event Amendments
+                    <a href="@Url.Action("AddEventAmendment", "Hours", new {s = Model.Semester.SemesterId})" class="btn btn-xs btn-success pull-right">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
                 </div>
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>Member</th>
-                            <th>Reason</th>
-                            <th>Amount (hrs)</th>
+                            <th class="col-xs-3">Member</th>
+                            <th class="col-xs-3">Reason</th>
+                            <th class="col-xs-3">Number of Events</th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        @if (Model.ServiceAmendments.Any())
+                        @if (Model.ServiceEventAmendments.Any())
                         {
-                            foreach (var a in Model.ServiceAmendments.OrderBy(m => m.Member.LastName))
+                            foreach (var a in Model.ServiceEventAmendments.OrderBy(m => m.Member.LastName))
                             {
                                 <tr>
                                     <td>@a.Member.ToString()</td>
                                     <td>@a.Reason</td>
-                                    <td>@a.AmountHours</td>
+                                    <td>@a.NumberEvents</td>
                                     <td class="text-right">
-                                        @using (Html.BeginForm("DeleteAmendment", "Hours", new {aid = a.Id}, FormMethod.Post))
+                                        @using (Html.BeginForm("DeleteEventAmendment", "Hours", new { aid = a.Id }, FormMethod.Post))
                                         {
                                             @Html.AntiForgeryToken()
                                             <button type="submit" class="btn btn-xs btn-danger">Delete</button>

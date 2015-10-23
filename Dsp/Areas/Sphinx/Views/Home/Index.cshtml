@@ -29,18 +29,21 @@
         approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
         unapprovedHours = Model.CompletedEvents.Where(e => !e.Event.IsApproved).Sum(h => h.DurationHours);
     }
-    var amendments = Model.MemberInfo.ServiceAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
-    var totalAmendment = amendments.Sum(a => a.AmountHours);
-    var goal = Model.CurrentSemester.MinimumServiceHours + totalAmendment;
+    var hourAmendments = Model.MemberInfo.ServiceHourAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
+    var eventAmendments = Model.MemberInfo.ServiceEventAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
+    var totalHourAmendment = hourAmendments.Sum(a => a.AmountHours);
+    var totalEventAmendment = eventAmendments.Sum(a => a.NumberEvents);
+    var hoursGoal = Model.CurrentSemester.MinimumServiceHours + totalHourAmendment;
+    var eventGoal = Model.CurrentSemester.MinimumServiceEvents + totalEventAmendment;
     var approvedPercentage = (approvedHours) * 100.0;
-    if (!goal.Equals(0))
+    if (!hoursGoal.Equals(0))
     {
-        approvedPercentage /= goal;
+        approvedPercentage /= hoursGoal;
     }
     var unapprovedPercentage = (unapprovedHours) * 100.0;
-    if (!goal.Equals(0))
+    if (!hoursGoal.Equals(0))
     {
-        unapprovedPercentage /= goal;
+        unapprovedPercentage /= hoursGoal;
     }
     var barColor = approvedPercentage < 25 ? "danger" : approvedPercentage >= 100 ? "success" : "warning";
     var approvedWidth = approvedPercentage > 100 ? 100 : approvedPercentage;
@@ -209,20 +212,20 @@
                                     </a>
                                 </small>
                             </div>
-                            @if (goal > 0)
+                            @if (hoursGoal > 0)
                             {
                                 <div class="panel-body">
                                     <div class="progress" style="margin: 0">
                                         <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
                                              aria-valuenow="@(approvedHours)" aria-valuemin="0"
-                                             aria-valuemax="@(goal)" style="width: @(approvedWidth)%;">
+                                             aria-valuemax="@(hoursGoal)" style="width: @(approvedWidth)%;">
                                             @Math.Round(approvedPercentage, 2)%
                                         </div>
-                                        @if (approvedHours < goal && unapprovedHours > 0)
+                                        @if (approvedHours < hoursGoal && unapprovedHours > 0)
                                         {
                                             <div class="progress-bar progress-bar-striped progress-bar-info" role="progressbar"
                                                  aria-valuenow="@(unapprovedHours)" aria-valuemin="0"
-                                                 aria-valuemax="@(goal)" style="width: @(unapprovedWidth)%;">
+                                                 aria-valuemax="@(hoursGoal)" style="width: @(unapprovedWidth)%;">
                                                 @Math.Round(unapprovedPercentage, 2)%
                                             </div>
                                         }
@@ -232,7 +235,7 @@
                             <div class="table-responsive">
                                 <table class="table table-condensed table-bordered table-hover">
                                     <thead>
-                                    @if (goal <= 0)
+                                    @if (hoursGoal <= 0)
                                     {
                                         <tr class="info">
                                             <th colspan="4">
@@ -308,7 +311,8 @@
                                 </table>
                             </div>
                             <div class="panel-footer">
-                                <small>Minimum Service Hour Requirement: <strong>@goal hours</strong></small>
+                                <small>Minimum Hours Required: <strong>@hoursGoal hours</strong></small><br/>
+                                <small>Event Attendance: <strong>@Model.CompletedEvents.Count()/@eventGoal events</strong></small>
                             </div>
                         </div>
                     </div>
