@@ -41,6 +41,7 @@
                                         </a>
                                     </th>
                                     <th>@Html.DisplayNameFor(model => model.MinimumServiceHours)</th>
+                                    <th>@Html.DisplayNameFor(model => model.MinimumServiceEvents)</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -63,6 +64,7 @@
                                     <td>@item.DateEnd.ToShortDateString()</td>
                                     <td>@item.TransitionDate.ToShortDateString()</td>
                                     <td>@item.MinimumServiceHours</td>
+                                    <td>@item.MinimumServiceEvents</td>
                                     <td>
                                         @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
                                         @if (User.IsInRole("Administrator"))

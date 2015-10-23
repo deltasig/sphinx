@@ -23,6 +23,9 @@ namespace Dsp.Entities
         [Required, DefaultValue(10), Display(Name = "Minimum Service Hours")]
         public int MinimumServiceHours { get; set; }
 
+        [Required, DefaultValue(4), Display(Name = "Minimum Service Events")]
+        public int MinimumServiceEvents { get; set; }
+
         [InverseProperty("Semester")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
         [InverseProperty("Semester")]
@@ -34,7 +37,9 @@ namespace Dsp.Entities
         [InverseProperty("Semester")]
         public virtual ICollection<Room> Rooms { get; set; }
         [InverseProperty("Semester")]
-        public virtual ICollection<ServiceAmendment> ServiceAmendments { get; set; }
+        public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; }
+        [InverseProperty("Semester")]
+        public virtual ICollection<ServiceEventAmendment> ServiceEventAmendments { get; set; }
 
         public override string ToString()
         {

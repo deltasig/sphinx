@@ -236,14 +236,15 @@
             {
                 Semester = semester,
                 SemesterList = await GetSemesterList(thisSemester),
-                ServiceAmendments = await _db.ServiceAmendments.Where(a => a.SemesterId == s).ToListAsync(),
+                ServiceHourAmendments = await _db.ServiceHourAmendments.Where(a => a.SemesterId == s).ToListAsync(),
+                ServiceEventAmendments = await _db.ServiceEventAmendments.Where(a => a.SemesterId == s).ToListAsync()
             };
 
             return View(model);
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> AddAmendment(int? s)
+        public async Task<ActionResult> AddHourAmendment(int? s)
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];
@@ -251,9 +252,9 @@
             var thisSemester = await GetThisSemesterAsync();
             if (s == null) s = thisSemester.SemesterId;
             var semester = await _db.Semesters.FindAsync(s);
-            var model = new ServiceAddAmendmentModel
+            var model = new ServiceAddHourAmendmentModel
             {
-                Amendment = new ServiceAmendment
+                Amendment = new ServiceHourAmendment
                 {
                     SemesterId = semester.SemesterId
                 },
@@ -276,14 +277,14 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> AddAmendment(ServiceAddAmendmentModel model)
+        public async Task<ActionResult> AddHourAmendment(ServiceAddHourAmendmentModel model)
         {
             if (model.Amendment.AmountHours.Equals(0) || 
                 model.Amendment.AmountHours < -50 ||
                 model.Amendment.AmountHours > 50)
             {
                 TempData["FailureMessage"] = "Please enter hours within the range -50 and 50 (excluding 0) in increments of 0.5.";
-                return RedirectToAction("AddAmendment", new { s = model.Amendment.SemesterId });
+                return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
             }
             // Adjust hours to nearest half hour.
             var fraction = (model.Amendment.AmountHours % 1) * 10;
@@ -292,21 +293,86 @@
                 model.Amendment.AmountHours = Math.Floor(model.Amendment.AmountHours);
             }
 
-            _db.ServiceAmendments.Add(model.Amendment);
+            _db.ServiceHourAmendments.Add(model.Amendment);
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service amendment added successfully.";
-            return RedirectToAction("AddAmendment", new { s = model.Amendment.SemesterId });
+            return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
         }
         
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> DeleteAmendment(int? aid)
+        public async Task<ActionResult> DeleteHourAmendment(int? aid)
         {
             if (aid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var amendment = await _db.ServiceAmendments.FindAsync(aid);
+            var amendment = await _db.ServiceHourAmendments.FindAsync(aid);
             var semesterId = amendment.SemesterId;
 
-            _db.ServiceAmendments.Remove(amendment);
+            _db.ServiceHourAmendments.Remove(amendment);
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service amendment deleted successfully.";
+            return RedirectToAction("Amendments", new { s = semesterId });
+        }
+
+        [Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> AddEventAmendment(int? s)
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
+            var thisSemester = await GetThisSemesterAsync();
+            if (s == null) s = thisSemester.SemesterId;
+            var semester = await _db.Semesters.FindAsync(s);
+            var model = new ServiceAddEventAmendmentModel
+            {
+                Amendment = new ServiceEventAmendment
+                {
+                    SemesterId = semester.SemesterId
+                },
+                Semester = semester
+            };
+            var members = await GetRosterForSemester(semester);
+            var memberList = new List<object>();
+            foreach (var member in members.OrderBy(m => m.LastName))
+            {
+                memberList.Add(new
+                {
+                    UserId = member.Id,
+                    Name = member.FirstName + " " + member.LastName +
+                        " (" + member.LivingAssignmentForSemester(semester.SemesterId) + ")"
+                });
+            }
+            model.Members = new SelectList(memberList, "UserId", "Name");
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> AddEventAmendment(ServiceAddEventAmendmentModel model)
+        {
+            if (model.Amendment.NumberEvents.Equals(0) ||
+                model.Amendment.NumberEvents < -50 ||
+                model.Amendment.NumberEvents > 50)
+            {
+                TempData["FailureMessage"] = "Please enter a number of events within the range -50 and 50 (excluding 0) in increments of 0.5.";
+                return RedirectToAction("AddEventAmendment", new { s = model.Amendment.SemesterId });
+            }
+
+            _db.ServiceEventAmendments.Add(model.Amendment);
+            await _db.SaveChangesAsync();
+
+            TempData["SuccessMessage"] = "Service amendment added successfully.";
+            return RedirectToAction("AddEventAmendment", new { s = model.Amendment.SemesterId });
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+        public async Task<ActionResult> DeleteEventAmendment(int? aid)
+        {
+            if (aid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var amendment = await _db.ServiceEventAmendments.FindAsync(aid);
+            var semesterId = amendment.SemesterId;
+
+            _db.ServiceEventAmendments.Remove(amendment);
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service amendment deleted successfully.";
