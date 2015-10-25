@@ -332,6 +332,28 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
+        protected virtual async Task<SelectList> GetGraduatingActiveUserIdListAsFullNameAsync()
+        {
+            var thisAndPreviousSemesters = await _db.Semesters
+                .Where(s => s.DateEnd <= DateTime.UtcNow)
+                .ToListAsync();
+            var semesterIds = thisAndPreviousSemesters.Select(s => (int?)s.SemesterId);
+            var members = UserManager.Users
+                .Where(m => 
+                    (m.ExpectedGraduationId == null || semesterIds.Contains(m.ExpectedGraduationId))
+                    && m.MemberStatus.StatusName == "Active")
+                .OrderBy(m => m.LastName);
+            var newList = new List<object>();
+            foreach (var member in members)
+            {
+                newList.Add(new
+                {
+                    UserId = member.Id,
+                    Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return new SelectList(newList, "UserId", "Name");
+        }
         protected virtual async Task<SelectList> GetUserIdListAsFullNameWithNoneAsync()
         {
             return new SelectList(await GetUserIdListAsFullNameWithNoneNonSelectListAsync(), "UserId", "Name");

@@ -1,7 +1,7 @@
-﻿@model Dsp.Areas.Members.Models.InitiatePledgesModel
+﻿@model Dsp.Areas.Members.Models.GraduateActivesModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Initiate Pledges";
+    ViewBag.Title = "Graduate Actives";
 }
 @section styles {
     @Styles.Render("~/content/multi-select")
@@ -17,17 +17,17 @@
     </div>
     <div class="row">
         <div class="col-sm-12">
-            @using (Html.BeginForm("InitiatePledges", "Roster", FormMethod.Post, new {@class = "", role = "form"}))
+            @using (Html.BeginForm("GraduateActives", "Roster", FormMethod.Post, new {@class = "", role = "form"}))
             {
                 @Html.AntiForgeryToken()
 
                 <h4>
-                    <strong>Select the pledges to move to active status</strong>
+                    <strong>Select the actives to move to alumnus status</strong>
                 </h4>
 
                 <div class="row">
                     <div class="form-group col-xs-12 col-sm-9">
-                        @Html.ListBoxFor(model => model.SelectedMemberIds, Model.Pledges, new {id = "pledge-selection", @class = "form-control"})
+                        @Html.ListBoxFor(model => model.SelectedMemberIds, Model.Actives, new {id = "active-selection", @class = "form-control"})
                     </div>
                 </div>
                 <div class="row">
@@ -74,7 +74,7 @@
                 cssClass: "full-width"
             };
 
-            $("#pledge-selection").multiSelect(settings);
+            $("#active-selection").multiSelect(settings);
         });
 
     </script>
