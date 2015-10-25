@@ -243,6 +243,7 @@
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
+    <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
@@ -769,6 +770,7 @@
     <Content Include="Areas\Service\Views\Hours\Amendments.cshtml" />
     <Content Include="Areas\Service\Views\Hours\AddHourAmendment.cshtml" />
     <Content Include="Areas\Service\Views\Hours\AddEventAmendment.cshtml" />
+    <Content Include="Areas\Members\Views\Roster\GraduateActives.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

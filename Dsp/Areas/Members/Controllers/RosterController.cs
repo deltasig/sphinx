@@ -36,12 +36,11 @@
 
             return View(model);
         }
-
-
+        
         [HttpGet, Authorize(Roles = "Administrator, Secretary")]
         public async Task<ActionResult> InitiatePledges(string message)
         {
-            ViewBag.SuccessMessage = message;
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
 
             var model = new InitiatePledgesModel
             {
@@ -54,7 +53,7 @@
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
         public async Task<ActionResult> InitiatePledges(InitiatePledgesModel model)
         {
-            var pledges = await UserManager.Users
+            var pledges = await _db.Users
                 .Where(m => 
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
@@ -67,10 +66,43 @@
             }
 
             await _db.SaveChangesAsync();
-
-            return RedirectToAction("InitiatePledges", new { message = "Pledges successfully moved to active status." });
+            TempData["SuccessMessage"] = "Pledges successfully moved to active status.";
+            return RedirectToAction("InitiatePledges");
         }
         
+        [HttpGet, Authorize(Roles = "Administrator, Secretary")]
+        public async Task<ActionResult> GraduateActives(string message)
+        {
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+
+            var model = new GraduateActivesModel
+            {
+                Actives = await GetGraduatingActiveUserIdListAsFullNameAsync()
+            };
+
+            return View(model);
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
+        public async Task<ActionResult> GraduateActives(GraduateActivesModel model)
+        {
+            var actives = await _db.Users
+                .Where(m =>
+                    model.SelectedMemberIds.Contains(m.Id))
+                .ToListAsync();
+            var alumnusId = (await _db.MemberStatus.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
+
+            foreach (var p in actives)
+            {
+                p.StatusId = alumnusId;
+                _db.Entry(p).State = EntityState.Modified;
+            }
+
+            await _db.SaveChangesAsync();
+            TempData["SuccessMessage"] = "Actives successfully moved to alumni status.";
+            return RedirectToAction("GraduateActives");
+        }
+
         [HttpGet]
         public async Task<FileContentResult> Download()
         {

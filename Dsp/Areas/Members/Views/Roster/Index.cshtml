@@ -55,13 +55,17 @@
                                  title="Pledges">@pledgeCount</div>
                         </div>
                         <div class="col-xs-6 text-right">
-                            <a class="" href="@Url.Action("Download", "Roster", new {area = "Members"})">
-                                <i class="fa fa-download fa-lg"></i>
+                            <a class="btn btn-xs btn-default" href="@Url.Action("Download", "Roster", new {area = "Members"})">
+                                <i class="fa fa-download fa-lg"></i> Download Roster
                             </a>
                             @if (User.IsInRole("Secretary") || User.IsInRole("Administrator"))
                             {
-                                @:|
-                                @Html.ActionLink("Initiate Pledges", "InitiatePledges")
+                                <a class="btn btn-xs btn-default" href="@Url.Action("InitiatePledges", "Roster", new {area = "Members"})">
+                                    Initiate Pledges
+                                </a>
+                                <a class="btn btn-xs btn-default" href="@Url.Action("GraduateActives", "Roster", new {area = "Members"})">
+                                    Graduate Actives
+                                </a>
                             }
                         </div>
                     </div>
