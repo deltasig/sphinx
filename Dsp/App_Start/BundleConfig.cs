@@ -37,8 +37,6 @@
                 .Include("~/Scripts/jquery-ui-{version}.js")
                 .Include("~/Scripts/jquery.unobtrusive*")
                 .Include("~/Scripts/jquery.validate*"));
-            bundles.Add(new ScriptBundle("~/bundles/modernizr")
-                .Include("~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-table")
                 .Include("~/Scripts/bootstrap-table.js"));
