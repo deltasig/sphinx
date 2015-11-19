@@ -60,7 +60,17 @@
 
             return View(model);
         }
+
+        public ActionResult Alumni()
+        {
+           return View();
+        }
         
+        public ActionResult History()
+        {
+            return View();
+        }
+
         public async Task<ActionResult> EmailSoberSchedule()
         {
             var nowUtc = DateTime.UtcNow;
