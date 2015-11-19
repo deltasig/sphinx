@@ -17,17 +17,10 @@
     public class ApplicationsController : BaseController
     {
         [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
-        public async Task<ActionResult> Index(ApplicationsMessageId? message)
+        public async Task<ActionResult> Index()
         {
-            switch (message)
-            {
-                case ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess:
-                case ApplicationsMessageId.ApplicationCreationSuccess:
-                case ApplicationsMessageId.ApplicationEditSuccess:
-                case ApplicationsMessageId.ApplicationDeletedSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
             var apps = await _db.ScholarshipApps.ToListAsync();
 
@@ -43,15 +36,10 @@
         [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
         public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var scholarshipApp = await _db.ScholarshipApps.FindAsync(id);
-            if (scholarshipApp == null)
-            {
-                return HttpNotFound();
-            }
+            if (scholarshipApp == null) return HttpNotFound();
+
             scholarshipApp.OpensOn = base.ConvertUtcToCst(scholarshipApp.OpensOn);
             scholarshipApp.ClosesOn = base.ConvertUtcToCst(scholarshipApp.ClosesOn);
 
@@ -91,10 +79,9 @@
             _db.ScholarshipApps.Add(model.Application);
             if (model.Questions == null || !model.Questions.Any())
             {
-                return RedirectToAction("Index", new
-                {
-                    message = ApplicationsMessageId.ApplicationCreationFailure
-                });
+                TempData[FailureMessageKey] = 
+                    "Application creation failed because of an internal issue with questions. Please contact your administrator.";
+                return RedirectToAction("Index");
             }
             var selections = model.Questions.Where(q => q.IsSelected);
             foreach (var s in selections)
@@ -102,26 +89,19 @@
                 model.Application.Questions.Add(s.Question);
             }
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", new
-            {
-                message = ApplicationsMessageId.ApplicationCreationSuccess
-            });
+
+            TempData[SuccessMessageKey] = "Application created successfully";
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var scholarshipApp = await _db.ScholarshipApps.FindAsync(id);
-            if (scholarshipApp == null)
-            {
-                return HttpNotFound();
-            }
-            var currentQuestions = scholarshipApp.Questions.Select(q => q.Question).ToList();
+            if (scholarshipApp == null) return HttpNotFound();
 
+            var currentQuestions = scholarshipApp.Questions.Select(q => q.Question).ToList();
             var model = new CreateScholarshipAppModel();
             model.Application = scholarshipApp;
             model.Application.OpensOn = base.ConvertUtcToCst(model.Application.OpensOn);
@@ -177,10 +157,9 @@
 
             if (scholarshipApp.Submissions.Any())
             {
-                return RedirectToAction("Index", new
-                {
-                    message = ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess
-                });
+                TempData[SuccessMessageKey] =
+                    "Application information was updated but any changes to the question selection were not because submissions have already been made.";
+                return RedirectToAction("Index");
             }
 
             foreach (var s in scholarshipApp.Questions.ToList())
@@ -196,57 +175,42 @@
             }
             await _db.SaveChangesAsync();
 
-            return RedirectToAction("Index", new
-            {
-                message = ApplicationsMessageId.ApplicationEditSuccess
-            });
+            TempData[SuccessMessageKey] = "Application updated successfully.";
+            return RedirectToAction("Index");
         }
 
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var scholarshipApp = await _db.ScholarshipApps.FindAsync(id);
-            if (scholarshipApp == null)
-            {
-                return HttpNotFound();
-            }
+            if (scholarshipApp == null) return HttpNotFound();
+
             return View(scholarshipApp);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var scholarshipApp = await _db.ScholarshipApps.FindAsync(id);
             _db.ScholarshipApps.Remove(scholarshipApp);
             await _db.SaveChangesAsync();
-            return RedirectToAction("Index", new
-            {
-                message = ApplicationsMessageId.ApplicationDeletedSuccess
-            });
+
+            TempData[SuccessMessageKey] = "Application deleted successfully.";
+            return RedirectToAction("Index");
         }
         
         [AllowAnonymous]
         public async Task<ActionResult> Submit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                        
             var model = new SubmitScholarshipAppModel();
             model.Submission = new ScholarshipSubmission();
             model.App = await _db.ScholarshipApps.FindAsync(id);
 
-            if (model.App == null)
-            {
-                return HttpNotFound();
-            }
+            if (model.App == null) return HttpNotFound();
 
             model.Submission.ScholarshipAppId = (int)id;
             model.Answers = new List<ScholarshipAnswer>();
@@ -266,7 +230,9 @@
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.FailMessage = GetResultMessage(ApplicationsMessageId.SubmissionFailure);
+                ViewBag.FailMessage = 
+                    "Your application could not be submitted.  Please check the information you provided and try again.  " +
+                    "If you continue to receive this error, please contact the person in charge of the scholarship.";
                 return View(model);
             }
 
@@ -289,37 +255,19 @@
             await _db.SaveChangesAsync();
 
             SendStudyHourSubmissionEmail(submission);
-
-            return RedirectToAction("Scholarships", "Home", new
-            {
-                Area = "",
-                message = ApplicationsMessageId.SubmissionSuccess
-            });
+            TempData[SuccessMessageKey] = "Your application was submitted successfully. You should receive a confirmation email shortly.";
+            return RedirectToAction("Scholarships", "Home", new { Area = "" });
         }
 
         [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
-        public async Task<ActionResult> Submission(Guid? id, ApplicationsMessageId? message)
+        public async Task<ActionResult> Submission(Guid? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var model = await _db.ScholarshipSubmissions.FindAsync(id);
-            if (model == null)
-            {
-                return HttpNotFound();
-            }
+            if (model == null) return HttpNotFound();
 
-            switch (message)
-            {
-                case ApplicationsMessageId.UpdateSuccess:
-                    ViewBag.SuccessMessage = GetResultMessage(message);
-                    break;
-                case ApplicationsMessageId.UpdateFailure:
-                    ViewBag.FailMessage = GetResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
             var markdown = new Markdown();
             ViewBag.CommitteeResponse = markdown.Transform(model.CommitteeResponse);
@@ -333,30 +281,24 @@
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("Submission", new
-                {
-                    id = model.ScholarshipSubmissionId,
-                    message = ApplicationsMessageId.UpdateFailure
-                });
+                TempData[FailureMessageKey] = "Application update failed for an unspecified reason, please contact your administrator.";
+                return RedirectToAction("Submission", new { id = model.ScholarshipSubmissionId });
             }
 
             model.CommitteeRespondedOn = DateTime.UtcNow;
             _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
-            
-            return RedirectToAction("Submission", new
-            {
-                id = model.ScholarshipSubmissionId,
-                message = ApplicationsMessageId.UpdateSuccess
-            });
+
+            TempData[SuccessMessageKey] = "Application updated successfully.";
+            return RedirectToAction("Submission", new { id = model.ScholarshipSubmissionId });
         }
 
         private async void SendStudyHourSubmissionEmail(ScholarshipSubmission submission)
         {
             var subject = "Scholarship Application Submitted with Delta Sigma Phi!";
             var body = "Dear " + submission.FirstName + ", <br/><br/>" +
-                "Thank you for submitting your application for one of our scholarships: " + submission.Application.Title + ". <br/>" +
-                "This email has been sent to confirm that we have successfully received your application.  " +
+                "This email has been sent to confirm that we have successfully received your application for the " + 
+                submission.Application.Title + ".  <br />" +
                 "Please refer to ";
             body += @"<a href=""https://www.deltasig-de.org/scholarships/" + @""">our scholarship page</a> ";
             body += "for details on when you should expect to hear back. <br/><br/>" +
@@ -372,39 +314,6 @@
 
             var emailService = new EmailService();
             await emailService.SendAsync(emailMessage);
-        }
-
-        public static dynamic GetResultMessage(ApplicationsMessageId? message)
-        {
-            return message == ApplicationsMessageId.ApplicationSubmissionExistPartialSuccess ? "Application information was updated but any changes to the question selection were not because submissions have already been made."
-                : message == ApplicationsMessageId.ApplicationCreationSuccess ? "Application created successfully."
-                : message == ApplicationsMessageId.ApplicationEditSuccess ? "Application updated successfully."
-                : message == ApplicationsMessageId.ApplicationDeletedSuccess ? "Application deleted successfully."
-                : message == ApplicationsMessageId.ApplicationCreationFailure ? "Application creation failed because of an internal issue with questions. Please contact your administrator."
-                : message == ApplicationsMessageId.UpdateSuccess ? "Application updated successfully."
-                : message == ApplicationsMessageId.UpdateFailure ? "Application update failed for an unspecified reason, please contact your administrator."
-                : message == ApplicationsMessageId.SubmissionSuccess ? "Your application was submitted successfully. You should receive a confirmation email shortly."
-                : message == ApplicationsMessageId.SubmissionFailureUnknown ? "Your application could not be submitted because of some system error.  " +
-                                                                       "We are very sorry for the inconvenience. " +
-                                                                       "Please contact the person overseeing the scholarship and let them know you " +
-                                                                       "received this error."
-                : message == ApplicationsMessageId.SubmissionFailure ? "Your application could not be submitted.  Please check the information you provided and try again.  " +
-                                                                       "If you continue to receive this error, please contact the person in charge of the scholarship."
-                : "";
-        }
-
-        public enum ApplicationsMessageId
-        {
-            ApplicationSubmissionExistPartialSuccess,
-            ApplicationCreationSuccess,
-            ApplicationEditSuccess,
-            ApplicationDeletedSuccess,
-            ApplicationCreationFailure,
-            UpdateSuccess,
-            UpdateFailure,
-            SubmissionSuccess,
-            SubmissionFailure,
-            SubmissionFailureUnknown
         }
     }
 }

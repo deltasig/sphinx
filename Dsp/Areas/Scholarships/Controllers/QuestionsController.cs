@@ -3,6 +3,7 @@
     using Dsp.Controllers;
     using Entities;
     using System.Data.Entity;
+    using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -12,20 +13,17 @@
     {
         public async Task<ActionResult> Index()
         {
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
             return View(await _db.ScholarshipQuestions.ToListAsync());
         }
 
         public async Task<ActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var scholarshipQuestion = await _db.ScholarshipQuestions.FindAsync(id);
-            if (scholarshipQuestion == null)
-            {
-                return HttpNotFound();
-            }
+            if (scholarshipQuestion == null) return HttpNotFound();
+
             return View(scholarshipQuestion);
         }
 
@@ -34,63 +32,62 @@
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ScholarshipQuestion scholarshipQuestion)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(ScholarshipQuestion model)
         {
-            if (!ModelState.IsValid) return View(scholarshipQuestion);
+            if (!ModelState.IsValid) return View(model);
 
-            _db.ScholarshipQuestions.Add(scholarshipQuestion);
+            _db.ScholarshipQuestions.Add(model);
             await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Question successfully added to pool.";
             return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var scholarshipQuestion = await _db.ScholarshipQuestions.FindAsync(id);
-            if (scholarshipQuestion == null)
-            {
-                return HttpNotFound();
-            }
-            return View(scholarshipQuestion);
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _db.ScholarshipQuestions.FindAsync(id);
+            if (model == null) return HttpNotFound();
+
+            return View(model);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ScholarshipQuestion scholarshipQuestion)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(ScholarshipQuestion model)
         {
-            if (!ModelState.IsValid) return View(scholarshipQuestion);
+            if (!ModelState.IsValid) return View(model);
 
-            _db.Entry(scholarshipQuestion).State = EntityState.Modified;
+            _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Question successfully modified.";
             return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var scholarshipQuestion = await _db.ScholarshipQuestions.FindAsync(id);
-            if (scholarshipQuestion == null)
-            {
-                return HttpNotFound();
-            }
+            if (scholarshipQuestion == null) return HttpNotFound(); 
+
             return View(scholarshipQuestion);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var scholarshipQuestion = await _db.ScholarshipQuestions.FindAsync(id);
+            if (scholarshipQuestion.Answers.Any())
+            {
+                TempData[FailureMessageKey] = 
+                    "Scholarship Question could not be deleted because it has existing answers associated with it.";
+                return RedirectToAction("Index");
+            }
             _db.ScholarshipQuestions.Remove(scholarshipQuestion);
             await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Question successfully deleted.";
             return RedirectToAction("Index");
         }
     }
