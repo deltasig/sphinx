@@ -2,6 +2,7 @@
 {
     using Entities;
     using Extensions;
+    using MarkdownSharp;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -12,8 +13,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Areas.Scholarships.Controllers;
-    using MarkdownSharp;
 
     [AllowAnonymous, RequireHttps]
     public class HomeController : BaseController
@@ -42,21 +41,14 @@
                 .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
 
-        public async Task<ActionResult> Scholarships(ApplicationsController.ApplicationsMessageId? message)
+        public async Task<ActionResult> Scholarships()
         {
-            switch (message)
-            {
-                case ApplicationsController.ApplicationsMessageId.SubmissionSuccess:
-                    ViewBag.SuccessMessage = ApplicationsController.GetResultMessage(message);
-                    break;
-                case ApplicationsController.ApplicationsMessageId.SubmissionFailureUnknown:
-                    ViewBag.FailMessage = ApplicationsController.GetResultMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
             var model = new ExternalScholarshipModel
             {
-                Applications = await _db.ScholarshipApps.Where(s => s.IsPublic).ToListAsync(),
+                Applications = await _db.ScholarshipApps.ToListAsync(),
                 Types = await _db.ScholarshipTypes.ToListAsync()
             };
 

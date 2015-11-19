@@ -13,6 +13,8 @@
     {
         public async Task<ActionResult> Index()
         {
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
             return View(await _db.ScholarshipTypes.ToListAsync());
         }
         
@@ -21,14 +23,15 @@
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(ScholarshipType scholarshiptype)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create(ScholarshipType model)
         {
-            if (!ModelState.IsValid) return View(scholarshiptype);
+            if (!ModelState.IsValid) return View(model);
 
-            _db.ScholarshipTypes.Add(scholarshiptype);
+            _db.ScholarshipTypes.Add(model);
             await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Scholarship Type created successfully.";
             return RedirectToAction("Index");
         }
 
@@ -46,17 +49,16 @@
             return View(scholarshiptype);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(ScholarshipType scholarshiptype)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(ScholarshipType model)
         {
-            if (ModelState.IsValid)
-            {
-                _db.Entry(scholarshiptype).State = EntityState.Modified;
-                await _db.SaveChangesAsync();
-                return RedirectToAction("Index");
-            }
-            return View(scholarshiptype);
+            if (!ModelState.IsValid) return View(model);
+
+            _db.Entry(model).State = EntityState.Modified;
+            await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Scholarship Type updated successfully.";
+            return RedirectToAction("Index");
         }
 
         public async Task<ActionResult> Delete(int? id)
@@ -73,18 +75,21 @@
             return View(scholarshiptype);
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var scholarshiptype = await _db.ScholarshipTypes.FindAsync(id);
-            if (scholarshiptype.Applications.Any())
+            var scholarshipType = await _db.ScholarshipTypes.FindAsync(id);
+            if (scholarshipType.Applications.Any())
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                TempData[FailureMessageKey] = "The " + scholarshipType.Name +
+                    " Scholarship Type could not be deleted because it has existing applications associated with it.";
+                return RedirectToAction("Index");
             }
 
-            _db.ScholarshipTypes.Remove(scholarshiptype);
+            _db.ScholarshipTypes.Remove(scholarshipType);
             await _db.SaveChangesAsync();
+
+            TempData[SuccessMessageKey] = "Scholarship Type deleted successfully.";
             return RedirectToAction("Index");
         }
 

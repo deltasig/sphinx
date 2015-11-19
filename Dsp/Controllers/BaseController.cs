@@ -19,6 +19,8 @@
 
     public class BaseController : Controller
     {
+        protected const string SuccessMessageKey = "SuccessMessage";
+        protected const string FailureMessageKey = "FailureMessage";
 
         protected ApplicationSignInManager _signInManager;
         protected ApplicationUserManager _userManager;
