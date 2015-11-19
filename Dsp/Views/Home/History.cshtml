@@ -1,0 +1,27 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Chapter History";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+}
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+@section AdditionalMeta{
+    <meta name="description" content="">
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="@Url.Action("Index")">Home</a></li>
+                <li class="active">Chapter History</li>
+            </ol>
+        </div>
+    </div>
+    <div class="row">
+        
+    </div>
+</div>

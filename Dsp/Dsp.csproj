@@ -232,6 +232,9 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="Areas\Alumni\Controllers\ConnectController.cs" />
+    <Compile Include="Areas\Alumni\Controllers\AcbController.cs" />
+    <Compile Include="Areas\Alumni\Controllers\HomeController.cs" />
     <Compile Include="Areas\Edu\Controllers\StudyController.cs" />
     <Compile Include="Areas\Edu\Models\DuplicateGroup.cs" />
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
@@ -771,6 +774,8 @@
     <Content Include="Areas\Service\Views\Hours\AddHourAmendment.cshtml" />
     <Content Include="Areas\Service\Views\Hours\AddEventAmendment.cshtml" />
     <Content Include="Areas\Members\Views\Roster\GraduateActives.cshtml" />
+    <Content Include="Areas\Alumni\Views\Acb\Index.cshtml" />
+    <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -964,6 +969,8 @@
     <Content Include="Views\Error\Logs.cshtml" />
     <Content Include="Views\Emails\RegistrationConfirmation.cshtml" />
     <Content Include="Views\Emails\NewWorkOrder.cshtml" />
+    <Content Include="Areas\Alumni\Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
