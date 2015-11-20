@@ -569,3 +569,9 @@ ul.alert-dropdown {
 .table-hover tbody tr:hover > td.info {
   background-color: #c4e3f3 !important;
 }
+
+/*  */
+.fa-big {
+    font-size: 8em !important;
+    margin: 15px 0;
+}
