@@ -63,7 +63,7 @@
 
         public ActionResult Alumni()
         {
-           return View();
+           return RedirectToAction("Index", "Home", new { area = "Alumni" });
         }
         
         public ActionResult History()
