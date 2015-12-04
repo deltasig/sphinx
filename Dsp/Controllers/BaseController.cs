@@ -820,6 +820,7 @@
             }
             ViewBag.OpenResultCount = filterResults.Count(w => w.GetCurrentStatus() != "Closed");
             ViewBag.ClosedResultCount = filterResults.Count(w => w.GetCurrentStatus() == "Closed");
+            ViewBag.Count = filterResults.Count;
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
@@ -894,6 +895,7 @@
             }
             ViewBag.UnresolvedResultCount = filterResults.Count(i => string.IsNullOrEmpty(i.OfficialReport));
             ViewBag.ResolvedResultCount = filterResults.Count(i => !string.IsNullOrEmpty(i.OfficialReport));
+            ViewBag.Count = filterResults.Count;
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
