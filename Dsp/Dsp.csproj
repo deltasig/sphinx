@@ -786,6 +786,7 @@
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\deltasig-de.org - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy %282%29.pubxml" />
     <Content Include="Images\switch.png" />
     <Content Include="robots.txt" />
