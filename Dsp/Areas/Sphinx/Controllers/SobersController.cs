@@ -11,6 +11,7 @@
     using System.Linq;
     using System.Net;
     using System.Net.Mail;
+    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -304,6 +305,36 @@
             model.Members = await base.GetRosterForSemester(semester);;
 
             return View(model);
+        }
+        
+        public async Task<ActionResult> Download(int? sid)
+        {
+            if (sid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var semester = await _db.Semesters.FindAsync(sid);
+            var soberSlots = await _db.SoberSignups
+                .Where(s => s.DateOfShift >= semester.DateStart && s.DateOfShift <= semester.DateEnd)
+                .ToListAsync();            
+
+            var header = "Shift Date, Day of Week, Type, First Name, Last Name";
+            var sb = new StringBuilder();
+            sb.AppendLine(header);
+            foreach (var s in soberSlots.OrderBy(s => s.DateOfShift))
+            {
+                var line = s.DateOfShift.ToString("MM/dd/yyyy, ddd,") + 
+                    s.SoberType.Name.Replace(",", "") + ",";
+                if(s.UserId != null)
+                {
+                    line += s.Member.FirstName.Replace(",", "") + "," + s.Member.LastName.Replace(",", "");
+                }
+                else
+                {
+                    line += ",";
+                }
+                sb.AppendLine(line);
+            }
+
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "DSP Sober Signups - " + semester + ".csv");
         }
     }
 }
