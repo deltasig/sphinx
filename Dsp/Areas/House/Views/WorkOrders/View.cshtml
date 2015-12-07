@@ -24,8 +24,7 @@
         OccurredOn = c.SubmittedOn,
         UserId = c.UserId ?? 0,
         Name = c.Member.ToString(),
-        Title = ((DateTime.UtcNow - c.SubmittedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - c.SubmittedOn).Days.ToString()) +
-            ((DateTime.UtcNow - c.SubmittedOn).Days <= 1 ? " day" : " days") + " ago",
+        Title = (DateTime.UtcNow - c.SubmittedOn).ToUserFriendlyString(),
         Text = c.Text,
         AvatarPath = c.Member.GetAvatarString(),
         UserName = c.Member.UserName
@@ -35,8 +34,7 @@
         OccurredOn = s.ChangedOn,
         UserId = s.UserId ?? 0,
         Name = s.Member.ToString(),
-        Title = ((DateTime.UtcNow - s.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - s.ChangedOn).Days.ToString()) +
-            ((DateTime.UtcNow - s.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
+        Title = (DateTime.UtcNow - s.ChangedOn).ToUserFriendlyString(),
         Text = "Changed status to <strong>" + s.Status.Name + "</strong>.",
         AvatarPath = s.Member.GetAvatarString(),
         UserName = s.Member.UserName
@@ -46,8 +44,7 @@
         OccurredOn = p.ChangedOn,
         UserId = p.UserId ?? 0,
         Name = p.Member.ToString(),
-        Title = ((DateTime.UtcNow - p.ChangedOn).Days < 1 ? "< 1" : (DateTime.UtcNow - p.ChangedOn).Days.ToString()) +
-            ((DateTime.UtcNow - p.ChangedOn).Days <= 1 ? " day" : " days") + " ago",
+        Title = (DateTime.UtcNow - p.ChangedOn).ToUserFriendlyString(),
         Text = "Changed priority to <strong>" + p.Priority.Name + "</strong>.",
         AvatarPath = p.Member.GetAvatarString(),
         UserName = p.Member.UserName
@@ -77,7 +74,7 @@
         : priority == "High"
             ? "label-danger"
             : "label-default";
-    var daysSinceOpen = (DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).Days;
+    var timeSinceCreation = (DateTime.UtcNow - Model.WorkOrder.GetDateTimeCreated()).ToUserFriendlyString();
 }
 
 <div class="container-fluid">
@@ -174,8 +171,7 @@
                             <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.WorkOrder.Member.UserName})">
                                 @Model.WorkOrder.Member.ToString()
                             </a>
-                            <small>created this work order @(daysSinceOpen < 1 ? "< 1" : daysSinceOpen.ToString())</small>
-                            @(daysSinceOpen <= 1 ? "day" : "days") ago
+                            <small>created this work order @timeSinceCreation</small>
                         </p>
                         <p style="margin-bottom:0"><small>@Html.Raw(Model.WorkOrder.Description)</small></p>
                     </div>
@@ -185,7 +181,7 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <p>
-                        <small>@discussion.Count Comments/Changes</small>
+                        <small>@discussion.Count comments and changes</small>
                     </p>
                     @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
                     {

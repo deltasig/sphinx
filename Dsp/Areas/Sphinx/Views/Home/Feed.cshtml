@@ -4,8 +4,6 @@
 {
     foreach (var i in Model.OrderByDescending(f => f.OccurredOn))
     {
-        var dayString = i.DaysSince < 1 ? "less than a day ago" : i.DaysSince + (i.DaysSince == 1 ? " day ago" : " days ago");
-
         <li class="list-group-item">
             <div class="media">
                 <div class="media-left">
@@ -27,7 +25,7 @@
                         {
                             <a href="@Url.Action("Index", "Account", new {area = "Members", userName = i.UserName})">@i.Name</a>
                         }
-                        @dayString
+                        @i.TimeSince
                     </p>
                     
                     <small>

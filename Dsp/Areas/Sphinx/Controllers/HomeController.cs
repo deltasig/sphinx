@@ -1,6 +1,8 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
     using Dsp.Controllers;
+    using Extensions;
+    using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -8,7 +10,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Microsoft.AspNet.Identity;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class HomeController : BaseController
@@ -83,8 +84,8 @@
                 UserName = l.Member.UserName,
                 Name = l.Member.ToString(),
                 ImageName = l.Member.GetAvatarString(),
-                DaysSince = (nowCst - l.DateTimeSignedUp).Days,
-                OccurredOn = l.DateTimeSignedUp,
+                TimeSince = (nowCst - l.DateTimeSignedUp).ToUserFriendlyString(),
+                OccurredOn = ConvertCstToUtc(l.DateTimeSignedUp),
                 DisplayText = "Laundry reservation added for " + l.DateTimeShift.ToString("f"),
                 Link = Url.Action("Schedule", "Laundry"),
                 Symbol = "fa-tint"
@@ -113,7 +114,7 @@
                         UserName = saa.UserName,
                         Name = saa.ToString(),
                         ImageName = saa.GetAvatarString(),
-                        DaysSince = (nowUtc - (DateTime) s.CreatedOn).Days,
+                        TimeSince = (nowUtc - (DateTime) s.CreatedOn).ToUserFriendlyString(),
                         OccurredOn = (DateTime) s.CreatedOn,
                         DisplayText = "Sober shift added for " + ConvertUtcToCst(s.DateOfShift).ToString("D"),
                         Link = Url.Action("Schedule", "Sobers"),
@@ -127,7 +128,7 @@
                         UserName = saa.UserName,
                         Name = saa.ToString(),
                         ImageName = saa.GetAvatarString(),
-                        DaysSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).Days,
+                        TimeSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).ToUserFriendlyString(),
                         OccurredOn = (g.First().CreatedOn ?? nowUtc),
                         DisplayText = count + " sober shifts added",
                         Link = Url.Action("Schedule", "Sobers"),
@@ -145,7 +146,7 @@
                 UserName = s.Member.UserName,
                 Name = s.Member.ToString(),
                 ImageName = s.Member.GetAvatarString(),
-                DaysSince = (nowUtc - (DateTime)s.DateTimeSignedUp).Days,
+                TimeSince = (nowUtc - (DateTime)s.DateTimeSignedUp).ToUserFriendlyString(),
                 OccurredOn = (DateTime)s.DateTimeSignedUp,
                 DisplayText = "New volunteer for Sober " + s.SoberType.Name + " on " + ConvertUtcToCst(s.DateOfShift).ToString("D"),
                 Link = Url.Action("Schedule", "Sobers"),
@@ -163,7 +164,7 @@
                     UserName = s.Member.UserName,
                     Name = s.Member.ToString(),
                     ImageName = s.Member.GetAvatarString(),
-                    DaysSince = (nowUtc - s.SignedUpOn).Days,
+                    TimeSince = (nowUtc - s.SignedUpOn).ToUserFriendlyString(),
                     OccurredOn = s.SignedUpOn,
                     DisplayText = s.Type + " plate signup added",
                     Link = Url.Action("Schedule", "Meals", new { area = "Kitchen" }),
@@ -180,7 +181,7 @@
                 UserName = s.Submitter.UserName,
                 Name = s.Submitter.ToString(),
                 ImageName = s.Submitter.GetAvatarString(),
-                DaysSince = (nowUtc - (DateTime)s.CreatedOn).Days,
+                TimeSince = (nowUtc - (DateTime)s.CreatedOn).ToUserFriendlyString(),
                 OccurredOn = (DateTime)s.CreatedOn,
                 DisplayText = s.EventName + " service event was added",
                 Link = Url.Action("Details", "Events", new { area = "Service", id = s.EventId }),
@@ -196,7 +197,7 @@
                 UserName = string.Empty,
                 Name = s.FirstName + " " + s.LastName,
                 ImageName = "NoAvatar.jpg",
-                DaysSince = (nowUtc - s.SubmittedOn).Days,
+                TimeSince = (nowUtc - s.SubmittedOn).ToUserFriendlyString(),
                 OccurredOn = s.SubmittedOn,
                 DisplayText = "New scholarship application was submitted",
                 Link = Url.Action("Submission", "Applications", new { area = "Scholarships", id = s.ScholarshipSubmissionId }),
@@ -212,7 +213,7 @@
                 UserName = s.Uploader.UserName,
                 Name = s.Uploader.ToString(),
                 ImageName = s.Uploader.GetAvatarString(),
-                DaysSince = (nowUtc - s.UploadedOn).Days,
+                TimeSince = (nowUtc - s.UploadedOn).ToUserFriendlyString(),
                 OccurredOn = s.UploadedOn,
                 DisplayText = "New file uploaded for " + s.Class.CourseShorthand,
                 Link = Url.Action("Details", "Classes", new { area = "Edu", id = s.ClassId }),
@@ -228,7 +229,7 @@
                 UserName = string.Empty,
                 Name = string.Empty,
                 ImageName = "NoAvatar.jpg",
-                DaysSince = (nowUtc - s.DateTimeSubmitted).Days,
+                TimeSince = (nowUtc - s.DateTimeSubmitted).ToUserFriendlyString(),
                 OccurredOn = s.DateTimeSubmitted,
                 DisplayText = "New incident report submitted",
                 Link = Url.Action("Details", "Incidents", new { area = "Members", id = s.IncidentId }),
@@ -244,7 +245,7 @@
                 UserName = s.WorkOrder.Member.UserName,
                 Name = s.WorkOrder.Member.ToString(),
                 ImageName = s.WorkOrder.Member.GetAvatarString(),
-                DaysSince = (nowUtc - s.ChangedOn).Days,
+                TimeSince = (nowUtc - s.ChangedOn).ToUserFriendlyString(),
                 OccurredOn = s.ChangedOn,
                 DisplayText = s.WorkOrder.Title + " work order submitted",
                 Link = Url.Action("View", "WorkOrders", new { area = "House", id = s.WorkOrderId }),

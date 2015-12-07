@@ -1,4 +1,5 @@
-﻿@model Dsp.Areas.House.Models.MyWorkOrdersModel
+﻿@using Dsp.Extensions
+@model Dsp.Areas.House.Models.MyWorkOrdersModel
 
 <div class="panel panel-default">
     <div class="panel-heading">
@@ -10,7 +11,7 @@
             @foreach (var w in Model.CreatedWorkOrders.OrderByDescending(w => w.GetDateTimeCreated()))
             {
                 var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
-                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+                var timeSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).ToUserFriendlyString();
 
                 <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
 
@@ -21,7 +22,7 @@
                         <small>#@w.WorkOrderId</small> @w.Title
                     </h5>
                     <p class="list-group-item-text">
-                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString()) @(daysSinceCreation <= 1 ? "day" : "days") ago
+                        opened @timeSinceCreation
                     </p>
                 </a>
             }
@@ -46,7 +47,7 @@
             @foreach (var w in Model.InvolvedWorkOrders.OrderByDescending(w => w.GetDateTimeCreated()))
             {
                 var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
-                var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
+                var timeSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).ToUserFriendlyString();
 
                 <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
 
@@ -57,7 +58,7 @@
                         <small>#@w.WorkOrderId</small> @w.Title
                     </h5>
                     <p class="list-group-item-text">
-                        opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString()) @(daysSinceCreation <= 1 ? "day" : "days") ago
+                        opened @timeSinceCreation
                     </p>
                 </a>
             }
