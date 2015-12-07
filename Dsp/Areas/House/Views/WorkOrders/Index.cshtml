@@ -1,6 +1,7 @@
 ﻿@model WorkOrderIndexModel
 @using System.Web.Mvc.Html
 @using Dsp.Areas.House.Models;
+@using Dsp.Extensions;
 @using Dsp.Models
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -204,35 +205,58 @@
                                     ? "label-danger"
                                     : "label-default";
                             var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
-                            var daysSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).Days;
-                            var daysSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).Days;
+                            var timeSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).ToUserFriendlyString();
+                            var timeSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).ToUserFriendlyString();
 
                             <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
-
-                                <span class="badge" style="background-color: @commentLabelColor">
-                                    <i class="fa fa-comment"></i> @w.Comments.Count
-                                </span>
                                 <h4 class="list-group-item-heading">
-                                    @w.Title
-                                    <small>
-                                        <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
-                                            @status
-                                        </span>
-                                        <span class="label @priorityLabelColor" style="font-weight: normal !important;">
-                                            @priority Priority
-                                        </span>
-                                    </small>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            @w.Title
+                                        </div>
+                                        <div class="col-md-4 visible-md visible-lg text-right">
+                                            <small>
+                                                <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Status">
+                                                    @status
+                                                </span>
+                                                <span class="label @priorityLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Priority">
+                                                    @priority
+                                                </span>
+                                                <span class="badge" style="background-color: @commentLabelColor"
+                                                      data-toggle="tooltip" data-placement="top" title="Comments">
+                                                    <i class="fa fa-comment"></i> @w.Comments.Count
+                                                </span>
+                                            </small>
+                                        </div>
+                                        <div class="col-md-4 visible-xs visible-sm">
+                                            <small>
+                                                <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Status">
+                                                    @status
+                                                </span>
+                                                <span class="label @priorityLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Priority">
+                                                    @priority
+                                                </span>
+                                                <span class="badge" style="background-color: @commentLabelColor"
+                                                      data-toggle="tooltip" data-placement="top" title="Comments">
+                                                    <i class="fa fa-comment"></i> @w.Comments.Count
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </div>
                                 </h4>
                                 <p class="list-group-item-text">
-                                    opened @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
-                                    @(daysSinceCreation <= 1 ? "day" : "days") ago by <strong>@statuses.First().Member</strong>
-
-                                    @if (statuses.Last().Status.Name == "Closed")
-                                    {
-                                        @: and closed @(daysSinceClosure < 1 ? "< 1" : daysSinceClosure.ToString())
-                                        @: @(daysSinceClosure <= 1 ? "day" : "days") ago by <strong>@statuses.Last().Member </strong>
-                                    }
+                                    opened @timeSinceCreation by <strong>@statuses.First().Member</strong>
                                 </p>
+                                @if (statuses.Last().Status.Name == "Closed")
+                                {
+                                    <p class="list-group-item-text">
+                                        closed @timeSinceClosure by <strong>@statuses.Last().Member</strong>
+                                    </p>
+                                }                                
                             </a>
                         }
                     </ul>

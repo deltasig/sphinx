@@ -1,4 +1,5 @@
 ﻿@using Dsp.Areas.Members.Models
+@using Dsp.Extensions
 @using Dsp.Models
 @model IncidentsIndexModel
 @{
@@ -108,7 +109,7 @@
                         {
                             var status = string.IsNullOrEmpty(i.OfficialReport) ? "unresolved" : "resolved";
                             var labelColor = string.IsNullOrEmpty(i.OfficialReport) ? "label-warning" : "label-success";
-                            var daysSinceCreation = (DateTime.UtcNow - i.DateTimeSubmitted).Days;
+                            var timeSince = (DateTime.UtcNow - i.DateTimeSubmitted).ToUserFriendlyString();
 
                             <a href="@Url.Action("Details", new {id = i.IncidentId})" class="list-group-item">
                                 <h4 class="list-group-item-heading">
@@ -120,8 +121,7 @@
                                     </small>
                                 </h4>
                                 <p class="list-group-item-text">
-                                    submitted @(daysSinceCreation < 1 ? "< 1" : daysSinceCreation.ToString())
-                                    @(daysSinceCreation <= 1 ? "day" : "days") ago
+                                    submitted @timeSince
                                 </p>
                             </a>
                         }

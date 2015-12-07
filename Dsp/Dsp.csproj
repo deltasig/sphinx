@@ -257,6 +257,7 @@
     <Compile Include="Entities\ServiceEventAmendment.cs" />
     <Compile Include="Entities\ServiceHourAmendment.cs" />
     <Compile Include="Entities\StudyEntities.cs" />
+    <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
     <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
