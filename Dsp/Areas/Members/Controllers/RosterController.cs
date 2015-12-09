@@ -14,24 +14,31 @@
     public class RosterController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(int? sid)
+        public async Task<ActionResult> Index(RosterFilterModel filter)
         {
             Semester semester;
-            if (sid == null)
+            if (filter.sem == null)
             {
                 semester = await base.GetThisSemesterAsync();
+                filter.sem = semester.SemesterId;
             }
             else
             {
-                semester = await _db.Semesters.FindAsync(sid);
+                semester = await _db.Semesters.FindAsync(filter.sem);
             }
 
+            var members = await base.GetRosterForSemester(semester);
+            ViewBag.Sort = filter.sort;
+            ViewBag.Order = filter.order;
+            ViewBag.SearchTerm = filter.s;
+            var filteredResults = await base.GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
+            
             var model = new RosterIndexModel
             {
-                SelectedSemester = semester.SemesterId,
-                Semester = semester,
-                Semesters = await base.GetSemesterListAsync(),
-                Members = await base.GetRosterForSemester(semester)
+                 SelectedSemester = semester.SemesterId,
+                 Semester = semester,
+                 Semesters = await base.GetSemesterListAsync(),
+                 Members = filteredResults
             };
 
             return View(model);

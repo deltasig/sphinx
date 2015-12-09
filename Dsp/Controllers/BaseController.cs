@@ -805,7 +805,7 @@
                     filterResults = filterResults.OrderByDescending(o => o.GetDateTimeCreated()).ToList();
                     break;
             }
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
                 s = s.ToLower();
                 filterResults = filterResults
@@ -868,7 +868,7 @@
                     filterResults = filterResults.OrderByDescending(o => o.DateTimeSubmitted).ToList();
                     break;
             }
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
                 s = s.ToLower();
                 // Privileged search
@@ -987,7 +987,7 @@
                     filterResults = filterResults.OrderBy(o => o.CourseShorthand).ToList();
                     break;
             }
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
                 s = s.ToLower();
                 filterResults = filterResults
@@ -1014,6 +1014,59 @@
             if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
 
             return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        }
+
+        protected virtual async Task<IEnumerable<Member>> GetFilteredMembersList(
+            IList<Member> members, string s, string sort, string order)
+        {
+            IEnumerable<Member> filteredResults;
+            
+            if(!string.IsNullOrEmpty(s))
+            {
+                var lcs = s.ToLower();
+                filteredResults = members
+                    .Where(m =>
+                        m.FirstName.ToLower().Contains(lcs) ||
+                        m.LastName.ToLower().Contains(lcs) ||
+                        m.PledgeClass.PledgeClassName.ToLower().Contains(lcs) ||
+                        m.GraduationSemester.ToString().ToLower() == lcs ||
+                        m.RoomString().ToLower() == lcs);
+            }
+            else
+            {
+                filteredResults = members;
+            }
+
+            switch (sort)
+            {
+                case "first-name":
+                    filteredResults = order == "desc"
+                        ? filteredResults.OrderByDescending(m => m.FirstName)
+                        : filteredResults.OrderBy(m => m.FirstName);
+                    break;
+                case "pledge-class":
+                    filteredResults = order == "desc"
+                        ? filteredResults.OrderByDescending(m => m.PledgeClass.Semester.DateStart)
+                        : filteredResults.OrderBy(m => m.PledgeClass.Semester.DateStart);
+                    break;
+                case "final-semester":
+                    filteredResults = order == "desc"
+                        ? filteredResults.OrderByDescending(m => m.GraduationSemester.DateStart)
+                        : filteredResults.OrderBy(m => m.GraduationSemester.DateStart);
+                    break;
+                case "location":
+                    filteredResults = order == "desc"
+                        ? filteredResults.OrderByDescending(m => m.RoomString())
+                        : filteredResults.OrderBy(m => m.RoomString());
+                    break;
+                default: // "last-name"
+                    filteredResults = order == "desc"
+                        ? filteredResults.OrderByDescending(m => m.LastName)
+                        : filteredResults.OrderBy(m => m.LastName);
+                    break;
+            }
+
+            return filteredResults;
         }
 
         protected virtual string ToTitleCaseString(string original)
