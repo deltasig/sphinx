@@ -19,8 +19,8 @@ blockquote {
 }
 
 .subtext {
-    font-size:10px;
-    margin:0;
+    font-size: 10px;
+    margin: 0;
 }
 
 .footer {
@@ -33,6 +33,25 @@ blockquote {
 
 .tooltip {
     min-width: 75px;
+}
+
+/* Big icons (featured on home page) */
+.fa-big {
+    font-size: 8em !important;
+    margin: 15px 0;
+}
+
+/* Removes the underlines under fontawesome links */
+a.social {
+    text-decoration: none;
+}
+
+.page-header {
+    margin-top: 20px;
+}
+
+.row-space {
+    margin-bottom: 10px;
 }
 
 /* Responsiveness */
@@ -73,22 +92,21 @@ iframe, object, embed {
 }
 
 /* Login form styles */
-.form-signin
-{
+.form-signin {
     max-width: 330px;
     padding: 15px;
     margin: 0 auto;
 }
-.form-signin .form-signin-heading, .form-signin .checkbox
-{
+
+.form-signin .form-signin-heading, .form-signin .checkbox {
     margin-bottom: 10px;
 }
-.form-signin .checkbox
-{
+
+.form-signin .checkbox {
     font-weight: normal;
 }
-.form-signin .form-control
-{
+
+.form-signin .form-control {
     position: relative;
     font-size: 16px;
     height: auto;
@@ -97,24 +115,24 @@ iframe, object, embed {
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 }
-.form-signin .form-control:focus
-{
+
+.form-signin .form-control:focus {
     z-index: 2;
 }
-.form-signin input[type="text"]
-{
+
+.form-signin input[type="text"] {
     margin-bottom: -1px;
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
-.form-signin input[type="password"]
-{
+
+.form-signin input[type="password"] {
     margin-bottom: 10px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
 }
-.account-wall
-{
+
+.account-wall {
     margin-top: 20px;
     padding: 40px 0px 20px 0px;
     background-color: #f7f7f7;
@@ -122,16 +140,16 @@ iframe, object, embed {
     -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
 }
-.login-title
-{
+
+.login-title {
     margin-top: 40px;
     color: #555;
     font-size: 18px;
     font-weight: 400;
     display: block;
 }
-.profile-img
-{
+
+.profile-img {
     width: 57px;
     height: 57px;
     margin: 0 auto 10px;
@@ -140,23 +158,23 @@ iframe, object, embed {
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
-.need-help
-{
+
+.need-help {
     margin-top: 10px;
 }
-.new-account
-{
+
+.new-account {
     display: block;
     margin-top: 10px;
 }
 
 .nav-center {
-    margin:0;
-    float:none;
+    margin: 0;
+    float: none;
 }
 
-.navbar-inner{
-    text-align:center;
+.navbar-inner {
+    text-align: center;
 }
 
 .navbar-brand {
@@ -168,7 +186,7 @@ iframe, object, embed {
     transition: all 1s ease;
 }
 
-.navbar-brand:hover{
+.navbar-brand:hover {
     -webkit-filter: brightness(100%);
 }
 
@@ -232,37 +250,6 @@ table.dataTable thead > tr > th {
     border-right: 2px solid transparent;
 }
 
-.text-left-xs {
-    text-align: left;
-}
-
-/* Small devices (tablets, 768px and up) */
-@media (min-width: 768px) {
-    .text-left-sm {
-        text-align: left;
-    }
-}
-
-@media (min-width: 768px) {
-    .text-right-sm {
-        text-align: right;
-    }
-}
-
-/* Medium devices (desktops, 992px and up) */
-@media (min-width: 992px) {
-    .text-left-md {
-        text-align: left;
-    }
-}
-
-/* Large devices (large desktops, 1200px and up) */
-@media (min-width: 1200px) {
-    .text-left-lg {
-        text-align: left;
-    }
-}
-
 .btn-light {
     margin: 0;
     padding: 0;
@@ -309,38 +296,33 @@ hr {
     margin-bottom: 5px;
 }
 
+/* Custom active class for list-group */
+
 .list-group-item.active,
 .list-group-item.active:hover,
 .list-group-item.active:focus {
-  z-index: 2;
-  color: #000;
-  background-color: transparent;
-  border-color: #ddd;
-  font-weight: bold;
+    z-index: 2;
+    color: #000;
+    background-color: transparent;
+    border-color: #ddd;
+    font-weight: bold;
 }
 
 a.list-group-item.active:before {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 2px;
-  content: "";
-  background-color: #247d4e;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 2px;
+    content: "";
+    background-color: #247d4e;
 }
 
-/* Removes the underlines under fontawesome links */
-a.social {
-    text-decoration: none;
-}
-
-.page-header {
-    margin-top: 20px
-}
-
+/* Modifying bootstrap panel appearance */
 .panel .table tr td {
     padding: 5px 15px;
 }
+
 .panel .table tr th {
     padding: 5px 15px;
 }
@@ -360,10 +342,7 @@ a.social {
     margin-top: 0;
 }
 
-.row-space {
-    margin-bottom: 10px;
-}
-
+/* Popover Styles */
 .popover-static .popover {
     position: relative;
     display: block;
@@ -431,28 +410,28 @@ body {
     padding: 0 15px;
 }
 
-.top-nav>li {
+.top-nav > li {
     display: inline-block;
     float: left;
 }
 
-.top-nav>li>a {
+.top-nav > li > a {
     padding-top: 15px;
     padding-bottom: 15px;
     line-height: 20px;
     color: #999;
 }
 
-.top-nav>li>a:hover,
-.top-nav>li>a:focus,
-.top-nav>.open>a,
-.top-nav>.open>a:hover,
-.top-nav>.open>a:focus {
+.top-nav > li > a:hover,
+.top-nav > li > a:focus,
+.top-nav > .open > a,
+.top-nav > .open > a:hover,
+.top-nav > .open > a:focus {
     color: #fff;
     background-color: #000;
 }
 
-.top-nav>.open>.dropdown-menu {
+.top-nav > .open > .dropdown-menu {
     float: left;
     position: absolute;
     margin-top: 0;
@@ -464,7 +443,7 @@ body {
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }
 
-.top-nav>.open>.dropdown-menu>li>a {
+.top-nav > .open > .dropdown-menu > li > a {
     white-space: normal;
 }
 
@@ -480,7 +459,7 @@ li.message-preview {
     border-bottom: 1px solid rgba(0,0,0,.15);
 }
 
-li.message-preview>a {
+li.message-preview > a {
     padding-top: 15px;
     padding-bottom: 15px;
 }
@@ -511,7 +490,7 @@ ul.alert-dropdown {
         padding-bottom: 40px;
     }
 
-    .side-nav>li>a {
+    .side-nav > li > a {
         width: 225px;
     }
 
@@ -522,56 +501,121 @@ ul.alert-dropdown {
     }
 }
 
-.side-nav>li>ul {
+.side-nav > li > ul {
     padding: 0;
 }
 
-.side-nav>li>ul>li>a {
+.side-nav > li > ul > li > a {
     display: block;
     padding: 10px 15px 10px 38px;
     text-decoration: none;
     color: #999;
 }
 
-.side-nav>li>ul>li>a:hover {
+.side-nav > li > ul > li > a:hover {
     color: #fff;
 }
 
 /* Bootstrap td tag colors */
 .table tbody tr > td.success {
-  background-color: #dff0d8 !important;
+    background-color: #dff0d8 !important;
 }
 
 .table tbody tr > td.error {
-  background-color: #f2dede !important;
+    background-color: #f2dede !important;
 }
 
 .table tbody tr > td.warning {
-  background-color: #fcf8e3 !important;
+    background-color: #fcf8e3 !important;
 }
 
 .table tbody tr > td.info {
-  background-color: #d9edf7 !important;
+    background-color: #d9edf7 !important;
 }
 
 .table-hover tbody tr:hover > td.success {
-  background-color: #d0e9c6 !important;
+    background-color: #d0e9c6 !important;
 }
 
 .table-hover tbody tr:hover > td.error {
-  background-color: #ebcccc !important;
+    background-color: #ebcccc !important;
 }
 
 .table-hover tbody tr:hover > td.warning {
-  background-color: #faf2cc !important;
+    background-color: #faf2cc !important;
 }
 
 .table-hover tbody tr:hover > td.info {
-  background-color: #c4e3f3 !important;
+    background-color: #c4e3f3 !important;
 }
 
-/*  */
-.fa-big {
-    font-size: 8em !important;
-    margin: 15px 0;
+/* RESPONSIVE TEXT ALIGNMENT */
+.text-xs-left {
+    text-align: left;
+}
+
+.text-xs-right {
+    text-align: right;
+}
+
+.text-xs-center {
+    text-align: center;
+}
+
+.text-xs-justify {
+    text-align: justify;
+}
+
+@media (min-width: 768px) {
+    .text-sm-left {
+        text-align: left;
+    }
+
+    .text-sm-right {
+        text-align: right;
+    }
+
+    .text-sm-center {
+        text-align: center;
+    }
+
+    .text-sm-justify {
+        text-align: justify;
+    }
+}
+
+@media (min-width: 992px) {
+    .text-md-left {
+        text-align: left;
+    }
+
+    .text-md-right {
+        text-align: right;
+    }
+
+    .text-md-center {
+        text-align: center;
+    }
+
+    .text-md-justify {
+        text-align: justify;
+    }
+}
+
+@media (min-width: 1200px) {
+    .text-lg-left {
+        text-align: left;
+    }
+
+    .text-lg-right {
+        text-align: right;
+    }
+
+    .text-lg-center {
+        text-align: center;
+    }
+
+    .text-lg-justify {
+        text-align: justify;
+    }
 }
