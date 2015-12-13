@@ -92,7 +92,11 @@
                     Incrementer = new Pager {page = ViewBag.Page},
                     Next = new Pager {page = ViewBag.Page++}
                 })
-                <div class="panel-footer"><small>Count: @Model.Count</small>
+                <div class="panel-footer">
+                    <small>
+                        Showing @(ViewBag.PageSize > ViewBag.Count ? ViewBag.Count : ViewBag.PageSize) 
+                        out of @ViewBag.Count total errors
+                    </small>
                 </div>
             </div>
         </div>
