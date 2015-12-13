@@ -820,7 +820,6 @@
             }
             ViewBag.OpenResultCount = filterResults.Count(w => w.GetCurrentStatus() != "Closed");
             ViewBag.ClosedResultCount = filterResults.Count(w => w.GetCurrentStatus() == "Closed");
-            ViewBag.Count = filterResults.Count;
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
@@ -829,7 +828,7 @@
             ViewBag.Sort = sort;
 
             if (page < 1) page = 1;
-            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.Count = filterResults.Count;
             ViewBag.PageSize = pageSize;
             ViewBag.Pages = filterResults.Count / pageSize;
             ViewBag.Page = page;
@@ -895,7 +894,6 @@
             }
             ViewBag.UnresolvedResultCount = filterResults.Count(i => string.IsNullOrEmpty(i.OfficialReport));
             ViewBag.ResolvedResultCount = filterResults.Count(i => !string.IsNullOrEmpty(i.OfficialReport));
-            ViewBag.Count = filterResults.Count;
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
@@ -904,7 +902,7 @@
             ViewBag.Sort = sort;
 
             if (page < 1) page = 1;
-            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.Count = filterResults.Count;
             ViewBag.PageSize = pageSize;
             ViewBag.Pages = filterResults.Count / pageSize;
             ViewBag.Page = page;
@@ -998,7 +996,6 @@
                         i.ClassesTaken.Any(t => t.Member.ToString().ToLower().Contains(s)))
                     .ToList();
             }
-            ViewBag.Count = filterResults.Count();
 
             // Set search values so they carry over to the view.
             ViewBag.CurrentFilter = s;
@@ -1006,7 +1003,7 @@
             ViewBag.Sort = sort;
 
             if (page < 1) page = 1;
-            ViewBag.ResultCount = filterResults.Count;
+            ViewBag.Count = filterResults.Count();
             ViewBag.PageSize = pageSize;
             ViewBag.Pages = filterResults.Count / pageSize;
             ViewBag.Page = page;
