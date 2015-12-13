@@ -1,8 +1,13 @@
-﻿@model IEnumerable<Leader>
+﻿@model Semester
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Chapter Contacts";
-    ViewBag.Subtitle = (Model.First().Semester.DateStart.Month < 6 ? "Spring " : "Fall ") + Model.First().Semester.DateStart.Year;
+    ViewBag.Subtitle = Model.ToString();
+    var leaders = Model.Leaders ?? new List<Leader>();
+    var list = leaders
+        .Where(l => l.Position.IsPublic)
+        .OrderBy(l => l.Position.Type)
+        .ThenBy(l => l.Position.DisplayOrder);
 }
 @section Title
 {
@@ -14,13 +19,11 @@
 <div class="container">
     <div class="row">
         <div class="col-xs-12">
-            @if (Model.Any(l => l.Position.IsPublic))
+            @if (leaders.Any(l => l.Position.IsPublic))
             {
                 <div class="panel panel-default hidden-xs">
                     <div class="list-group">
-                        @foreach (var leader in Model.Where(l => l.Position.IsPublic)
-                            .OrderBy(l => l.Position.Type)
-                            .ThenBy(l => l.Position.DisplayOrder))
+                        @foreach (var leader in list)
                         {
                             <div class="list-group-item">
                                 <div class="media">
@@ -69,9 +72,7 @@
                     </div>
                 </div>
                 <div class="list-group visible-xs">
-                    @foreach (var leader in Model.Where(l => l.Position.IsPublic)
-                            .OrderBy(l => l.Position.Type)
-                            .ThenBy(l => l.Position.DisplayOrder))
+                    @foreach (var leader in list)
                     {
                         <a href="mailto:@leader.Member.Email" class="list-group-item">
                             <strong>@leader.Position.Name</strong>

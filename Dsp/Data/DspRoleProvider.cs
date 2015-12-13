@@ -228,42 +228,20 @@
             {
                 try
                 {
-                    var now = ConvertUtcToCst(DateTime.UtcNow);
-                    var thisAndFutureSemesters = db.Semesters
-                            .Where(s => s.DateEnd >= now)
+                    var now = DateTime.UtcNow;
+                    var term = db.Semesters
+                            .Where(s => s.TransitionDate > now)
                             .OrderBy(s => s.DateStart)
-                            .ToList();
-                    var thisSemester = thisAndFutureSemesters[0];
+                            .First();
+                    var member = db.Users.Single(m => m.UserName == userName);
+                    var positions = member.Leaders
+                        .Where(l => 
+                            l.SemesterId == term.SemesterId || 
+                            l.Position.Name == "Administrator")
+                        .Select(l => l.Position.Name);
 
-                    if (thisSemester.DateEnd.Month > 10)
-                    {
-                        var nextSemester = thisAndFutureSemesters[1];
-
-                        if (now >= thisSemester.TransitionDate)
-                        {
-                            roles.AddRange(
-                                (from l in db.Leaders
-                                 where l.Member.UserName == userName &&
-                                       l.SemesterId == nextSemester.SemesterId
-                                 select l.Position.Name).ToList());
-                        }
-                    }
-
-                    var positionsHeld = (from l in db.Leaders
-                                         where l.Member.UserName == userName &&
-                                               l.SemesterId == thisSemester.SemesterId
-                                         select l.Position.Name).ToList();
-
-                    var member = (from m in db.Users
-                                    where m.UserName == userName
-                                    select m).Single();
-
-                    roles.AddRange(positionsHeld);
+                    roles.AddRange(positions);
                     roles.Add(member.MemberStatus.StatusName);
-                    if (IsUserInRole(member.UserName, "Administrator"))
-                    {
-                        roles.Add("Administrator");
-                    }
                 }
                 catch
                 {
@@ -306,57 +284,36 @@
             {
                 try
                 {
+                    // Member status check
                     if (db.MemberStatus.Select(s => s.StatusName).Contains(roleName))
                     {
-                        return db.Users.Single(m => m.UserName == userName).MemberStatus.StatusName == roleName;
+                        isValid = db.Users.Single(m => m.UserName == userName).MemberStatus.StatusName == roleName;
                     }
-
-                    var positionsHeld = new List<Leader>();
-                    if (roleName == "Administrator")
+                    // Administrator check
+                    else if (roleName == "Administrator")
                     {
-                        var adminAppointments = from l in db.Leaders
-                                                where l.Position.Name == roleName &&
-                                                      l.Member.UserName == userName
-                                                select l;
-                        if (adminAppointments.Any())
-                        {
-                            isValid = true;
-                        }
+                        var adminAppointments = db.Leaders
+                            .Where(l => l.Position.Name == roleName && l.Member.UserName == userName);
+                        isValid = adminAppointments.Any();
                     }
+                    // Position check
                     else
                     {
-                        var now = ConvertUtcToCst(DateTime.UtcNow);
-                        var thisAndFutureSemesters = db.Semesters
-                                .Where(s => s.DateEnd >= now)
-                                .OrderBy(s => s.DateStart)
-                                .ToList();
-                        var thisSemester = thisAndFutureSemesters[0];
-                        
-                        if(thisSemester.DateEnd.Month > 10)
-                        {
-                            var nextSemester = thisAndFutureSemesters[1];
+                        var now = DateTime.UtcNow;
+                        var semesters = db.Semesters.ToList();
+                        // "term" represents the semester with appointments that are currently in power.
+                        // Note: the previous term is obtained with the opposite where clause.
+                        var term = semesters
+                            .Where(s => s.TransitionDate > now)
+                            .OrderBy(s => s.DateStart)
+                            .First();
 
-                            if (now >= thisSemester.TransitionDate)
-                            {
-                                positionsHeld.AddRange(db.Leaders.Where(l =>
-                                                l.SemesterId == nextSemester.SemesterId &&
-                                                l.Member.UserName == userName &&
-                                                l.Position.Name == roleName)
-                                                .ToList());
-                            }
-                        }
-
-                        positionsHeld.AddRange(db.Leaders.Where(l =>
-                                            l.SemesterId == thisSemester.SemesterId &&
-                                            l.Member.UserName == userName &&
-                                            l.Position.Name == roleName)
-                                            .ToList());
-                    }
-
-                    if (positionsHeld.Any())
-                    {
-                        isValid = true;
-                    }
+                        isValid = term.Leaders
+                            .Where(l =>
+                                l.Member.UserName == userName &&
+                                l.Position.Name == roleName)
+                            .Any();
+                    }                    
                 }
                 catch
                 {
