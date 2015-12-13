@@ -1,10 +1,7 @@
 ﻿@model IEnumerable<Dsp.Entities.Position>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Positions Index";
-}
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
+    ViewBag.Title = "Positions";
 }
 
 <div class="container-fluid">
@@ -21,19 +18,18 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed"
-                           data-search="true" data-pagination="true" data-page-size="50" data-sort-name="type,order" data-sort-order="asc">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
                         <thead>
-                            <tr>
-                                <th class="col-sm-1" data-sortable="true" data-field="order">Order</th>
-                                <th data-sortable="true" data-field="name">Name</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="type">Type</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="is-exec">Exec</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="is-elected">Elected</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="is-disabled">Disabled</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="is-public">Public</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="appointments-count">Appointments</th>
+                            <tr class="active">
+                                <th class="col-sm-1">Order</th>
+                                <th>Name</th>
+                                <th class="col-sm-1">Type</th>
+                                <th class="col-sm-1">Exec</th>
+                                <th class="col-sm-1">Elected</th>
+                                <th class="col-sm-1">Disabled</th>
+                                <th class="col-sm-1">Public</th>
+                                <th class="col-sm-1">Appointments</th>
                                 <th class="col-sm-2"></th>
                             </tr>
                         </thead>
@@ -63,11 +59,8 @@
                         </tbody>
                     </table>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}

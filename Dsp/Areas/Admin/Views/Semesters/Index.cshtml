@@ -2,9 +2,8 @@
 @model IEnumerable<Dsp.Entities.Semester>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Semester Index";
+    ViewBag.Title = "Semesters";
 }
-@Styles.Render("~/content/bootstrap-table")
 @Styles.Render("~/content/datetimepicker")
 
 @{ Html.RenderPartial("~/Areas/Admin/Views/Semesters/Create.cshtml", new CreateSemesterModel()); }
@@ -23,67 +22,64 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table" data-toggle="table" data-classes="table table-condensed"
-                               data-search="true" data-pagination="true" data-page-size="25">
-                            <thead>
-                                <tr>
-                                    <th>Semester</th>
-                                    <th>Pledge Class(es)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateStart)</th>
-                                    <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
-                                    <th>
-                                        @Html.DisplayNameFor(model => model.TransitionDate)
-                                        <a data-toggle="tooltip" data-placement="top"
-                                           title="Date of chairmen power transfer">
-                                            <i class="fa fa-info-circle"></i>
-                                        </a>
-                                    </th>
-                                    <th>@Html.DisplayNameFor(model => model.MinimumServiceHours)</th>
-                                    <th>@Html.DisplayNameFor(model => model.MinimumServiceEvents)</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.ToString()</td>
-                                    <td>
-                                        @foreach (var pledgeClass in item.PledgeClasses)
-                                        {
-                                            if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
-                                            {
-                                                @:|
-                                            }
-
-                                            @pledgeClass.PledgeClassName
-                                        }
-                                    </td>
-                                    <td>@item.DateStart.ToShortDateString()</td>
-                                    <td>@item.DateEnd.ToShortDateString()</td>
-                                    <td>@item.TransitionDate.ToShortDateString()</td>
-                                    <td>@item.MinimumServiceHours</td>
-                                    <td>@item.MinimumServiceEvents</td>
-                                    <td>
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
-                                        @if (User.IsInRole("Administrator"))
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th>Semester</th>
+                                <th>Pledge Class(es)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateStart)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TransitionDate)
+                                    <a data-toggle="tooltip" data-placement="top"
+                                       title="Date of chairmen power transfer">
+                                        <i class="fa fa-info-circle"></i>
+                                    </a>
+                                </th>
+                                <th>@Html.DisplayNameFor(model => model.MinimumServiceHours)</th>
+                                <th>@Html.DisplayNameFor(model => model.MinimumServiceEvents)</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ToString()</td>
+                                <td>
+                                    @foreach (var pledgeClass in item.PledgeClasses)
+                                    {
+                                        if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
                                         {
                                             @:|
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </table>
-                    </div>
+                                            }
+
+                                        @pledgeClass.PledgeClassName
+                                    }
+                                </td>
+                                <td>@item.DateStart.ToString("MM/dd/yyyy")</td>
+                                <td>@item.DateEnd.ToString("MM/dd/yyyy")</td>
+                                <td>@item.TransitionDate.ToString("MM/dd/yyyy")</td>
+                                <td>@item.MinimumServiceHours</td>
+                                <td>@item.MinimumServiceEvents</td>
+                                <td class="text-right">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        @:|
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
                 </div>
+
             </div>
         </div>
     </div>
 </div>
 
-@Scripts.Render("~/bundles/bootstrap-table")
 @Scripts.Render("~/bundles/datetimepicker")
 @section scripts
 {

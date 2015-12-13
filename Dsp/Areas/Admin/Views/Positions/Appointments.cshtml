@@ -9,8 +9,7 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12">
-
+        <div class="col-md-8">
             @using (Html.BeginForm("Appointments", "Positions", new { area = "Admin"}, FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
@@ -21,58 +20,65 @@
                     <div class="panel panel-default">
                         <!-- Default panel contents -->
                         <div class="panel-heading">
-                            @semester
+                            <strong>@semester</strong>
                         </div>
 
-                        <div class="panel-body">
-                            <table class="table table-responsive table-condensed">
-                                <thead>
-                                    <tr>
-                                        <th>Type</th>
-                                        <th>Position</th>
-                                        <th>Appointed Member</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @for(var i = 0; i < Model.Count(); i++)
-                                    {
-                                        if (Model[i].Leader.SemesterId != semester.SemesterId)
-                                        {
-                                            continue;
-                                        }
-                                        <tr class="@(Model[i].Leader.Position.Type == Position.PositionType.Alumni ? "" : "")">
-                                            <td>
-                                                @Html.DisplayFor(m => Model[i].Leader.Position.Type)
-                                            </td>
-                                            <td>
-                                                @Html.HiddenFor(m => Model[i].Leader.SemesterId)
-                                                @Html.HiddenFor(m => Model[i].Leader.RoleId)
+                        <ul class="list-group">
+                            @for (var i = 0; i < Model.Count(); i++)
+                            {
+                                if (Model[i].Leader.SemesterId != semester.SemesterId)
+                                {
+                                    continue;
+                                }
+                                <li class="list-group-item">
+                                    @Html.HiddenFor(m => Model[i].Leader.SemesterId)
+                                    @Html.HiddenFor(m => Model[i].Leader.RoleId)
+                                    
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4>
                                                 @Html.DisplayFor(m => Model[i].Leader.Position.Name)
-                                            </td>
-                                            <td>
-                                                @if(Model[i].Leader.Position.Type == Position.PositionType.Alumni)
-                                                {
-                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
-                                                    new SelectList(Model[i].Alumni, "UserId", "Name", Model[i].Leader.UserId), 
-                                                    new { @class = "form-control"})
-                                                }
-                                                else
-                                                {
-                                                    @Html.DropDownListFor(m => Model[i].Leader.UserId,
-                                                    new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId), 
-                                                    new { @class = "form-control"})
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-                        
+                                                <small>
+                                                    @Html.DisplayFor(m => Model[i].Leader.Position.Type)
+                                                </small>
+                                            </h4>   
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Model[i].Leader.Position.Type == Position.PositionType.Alumni)
+                                            {
+                                                @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Alumni, "UserId", "Name", Model[i].Leader.UserId),
+                                                    new
+                                                    {
+                                                        @class = "form-control selectpicker",
+                                                        autocomplete = "off",
+                                                        data_live_search = "true",
+                                                        data_size = "10"
+                                                    })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId),
+                                                    new
+                                                    {
+                                                        @class = "form-control selectpicker",
+                                                        autocomplete = "off",
+                                                        data_live_search = "true",
+                                                        data_size = "10"
+                                                    })
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
                         <div class="panel-footer">
                             <button type="submit" class="btn btn-success">Update</button>
                         </div>
                     </div>
+                    
                 }
             }
         </div>
