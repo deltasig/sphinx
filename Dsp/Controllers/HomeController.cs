@@ -115,7 +115,7 @@
 
             var message = new IdentityMessage
             {
-                Subject = "Sober Schedule " + (emails.Count + 1) + ": " + 
+                Subject = "Sober Schedule: " + 
                 nowCst.ToShortDateString() + " - " + nowCst.AddDays(7).ToShortDateString(),
                 Body = body,
                 Destination = type.Destination
