@@ -24,15 +24,8 @@
 
         public async Task<ActionResult> Contacts()
         {
-            var thisSemester = await GetThisSemesterAsync();
-
-            if (thisSemester == null) return View();
-
-            var model = await _db.Leaders
-                .Where(l => l.SemesterId == thisSemester.SemesterId)
-                .ToListAsync();
-
-            return View(model);
+            var term = await GetCurrentTerm();
+            return View(term);
         }
 
         public async Task<ActionResult> Recruitment()
