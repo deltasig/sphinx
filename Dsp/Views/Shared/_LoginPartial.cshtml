@@ -13,7 +13,7 @@
         </li>
     }
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        @if (string.IsNullOrEmpty(avatar))
+        @if (string.IsNullOrEmpty(avatar) || avatar == "NoAvatar.jpg")
         {
             <a href="@Url.Action("Index", "Account", new {area = "Members"})"
                data-toggle="tooltip" data-placement="bottom" title="Account">
@@ -22,7 +22,7 @@
         }
         else
         {
-            <a class="navbar-brand" rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:9px"
+            <a rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:7px"
                data-toggle="tooltip" data-placement="bottom" title="Account">
                 <img src="~/Images/Avatars/@(avatar)" height="35" width="35" class="img-circle" id="avatar" />
             </a>
