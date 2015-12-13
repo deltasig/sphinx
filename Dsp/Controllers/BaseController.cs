@@ -1099,13 +1099,18 @@
 
         protected virtual async Task<Leader> GetCurrentLeader(string positionName)
         {
-            var thisSemester = await GetThisSemesterAsync();
-            var leader = await _db.Leaders
-                .Where(l => l.SemesterId == thisSemester.SemesterId && l.Position.Name == positionName)
+            var term = await GetCurrentTerm();
+            return term.Leaders
+                .Where(l => l.Position.Name == positionName)
                 .OrderByDescending(l => l.AppointedOn)
-                .FirstOrDefaultAsync();
-
-            return leader;
+                .FirstOrDefault();
+        }
+        protected virtual async Task<Semester> GetCurrentTerm()
+        {
+            return await _db.Semesters
+                .Where(s => s.TransitionDate > DateTime.UtcNow)
+                .OrderBy(s => s.DateStart)
+                .FirstOrDefaultAsync() ?? new Semester();
         }
 
         public string RenderRazorViewToString(string viewName, object model)
