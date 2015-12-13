@@ -13,7 +13,7 @@
         </li>
     }
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        @if (!string.IsNullOrEmpty(avatar))
+        @if (string.IsNullOrEmpty(avatar))
         {
             <a href="@Url.Action("Index", "Account", new {area = "Members"})"
                data-toggle="tooltip" data-placement="bottom" title="Account">
