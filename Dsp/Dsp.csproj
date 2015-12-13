@@ -529,6 +529,7 @@
     <Content Include="Images\coa-simple-md.png" />
     <Content Include="Images\coa-simple-sm.png" />
     <Content Include="Images\Avatars\NoAvatar.jpg" />
+    <Content Include="Images\dsp-directions.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomGoogleApi.js" />
