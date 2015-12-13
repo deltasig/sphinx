@@ -973,7 +973,7 @@
     <Content Include="Views\Emails\RegistrationConfirmation.cshtml" />
     <Content Include="Views\Emails\NewWorkOrder.cshtml" />
     <Content Include="Areas\Alumni\Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\History.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

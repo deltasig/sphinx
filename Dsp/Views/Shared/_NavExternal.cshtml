@@ -23,22 +23,20 @@
                 @Html.Partial("_LoginExternalPartial")
             </ul>
             <ul class="nav navbar-nav">
-                @*@{ 
+                @{ 
                     var area = ViewContext.RouteData.DataTokens["area"];
                 }
                 <li class="@(area != null && area.Equals("Alumni") || ViewBag.Title.Contains("Alumni") ? "active" : "")">
                     @Html.ActionLink("Alumni", "Index", "Home", new { area = "Alumni" }, null)
-                </li>*@
-                <li>
-                    <a href="http://www.deltasigrollaalumni.com/" target="_blank">
-                        Alumni <i class="fa fa-external-link" style="font-size: 11px"></i>
-                    </a>
                 </li>
                 <li class="@(ViewBag.Title.Contains("Recruitment") ? "active" : "")">
-                    @Html.ActionLink("Recruitment", "Recruitment", "Home", new {area = ""}, null)
+                    @Html.ActionLink("Recruitment", "Recruitment", "Home", new { area = "" }, null)
                 </li>
                 <li class="@(ViewBag.Title.Contains("Scholarships") ? "active" : "")">
                     @Html.ActionLink("Scholarships", "Scholarships", "Home", new {area = ""}, null)
+                </li>
+                <li class="@(ViewBag.Title.Contains("About") ? "active" : "")">
+                    @Html.ActionLink("About", "About", "Home", new { area = "" }, null)
                 </li>
                 <li class="@(ViewBag.Title.Contains("Contacts") ? "active" : "")">
                     @Html.ActionLink("Contacts", "Contacts", "Home", new {area = ""}, null)
