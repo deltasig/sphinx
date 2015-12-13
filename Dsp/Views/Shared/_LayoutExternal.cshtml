@@ -13,11 +13,16 @@
     @RenderSection("styles", required: false)
     @Scripts.Render("~/bundles/jquery")
 </head>
-<body class="external-body" style="padding: 0">
-    @Html.Partial("_NavExternal")
-    @RenderSection("Title", required: false)
-    @RenderBody()
-    @Html.Partial("Footer")
+<body class="external-body">
+    <div class="page-row page-row-expanded">
+        @Html.Partial("_NavExternal")
+        @RenderSection("Title", required: false)
+        @RenderBody()
+    </div>
+
+    <div class="page-row">
+        @Html.Partial("Footer")
+    </div>
 
     @Scripts.Render("~/bundles/bootstrap-core")
     @RenderSection("scripts", required: false)
