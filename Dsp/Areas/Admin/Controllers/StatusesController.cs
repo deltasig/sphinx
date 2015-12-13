@@ -14,7 +14,7 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
-            return View(await _db.MemberStatus.OrderBy(s => s.StatusId).ToListAsync());
+            return View(await _db.MemberStatuses.OrderBy(s => s.StatusId).ToListAsync());
         }
 
         [HttpGet]
@@ -29,7 +29,7 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            _db.MemberStatus.Add(model);
+            _db.MemberStatuses.Add(model);
             await _db.SaveChangesAsync();
 
             return RedirectToAction("Index");
@@ -42,7 +42,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var status = await _db.MemberStatus.FindAsync(id);
+            var status = await _db.MemberStatuses.FindAsync(id);
             if (status == null)
             {
                 return HttpNotFound();
@@ -68,7 +68,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var model = await _db.MemberStatus.FindAsync(id);
+            var model = await _db.MemberStatuses.FindAsync(id);
             if (model == null)
             {
                 return HttpNotFound();
@@ -81,8 +81,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var status = await _db.MemberStatus.FindAsync(id);
-            _db.MemberStatus.Remove(status);
+            var status = await _db.MemberStatuses.FindAsync(id);
+            _db.MemberStatuses.Remove(status);
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

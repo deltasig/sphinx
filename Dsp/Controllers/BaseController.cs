@@ -366,7 +366,7 @@
         }
         protected virtual async Task<SelectList> GetStatusListAsync()
         {
-            var statusList = await _db.MemberStatus.ToListAsync();
+            var statusList = await _db.MemberStatuses.ToListAsync();
             var newList = new List<object>();
             foreach (var status in statusList)
             {
@@ -380,7 +380,7 @@
         }
         protected virtual async Task<SelectList> GetStatusListWithNoneAsync()
         {
-            var statusList = await _db.MemberStatus.ToListAsync();
+            var statusList = await _db.MemberStatuses.ToListAsync();
             var newList = new List<object> { new { StatusId = -1, StatusName = "--Status (optional)--" } };
             foreach (var status in statusList)
             {

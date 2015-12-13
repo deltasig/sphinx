@@ -234,7 +234,7 @@
                             .OrderBy(s => s.DateStart)
                             .First();
                     var member = db.Users.Single(m => m.UserName == userName);
-                    var positions = member.Leaders
+                    var positions = member.PositionsHeld
                         .Where(l => 
                             l.SemesterId == term.SemesterId || 
                             l.Position.Name == "Administrator")
@@ -285,7 +285,7 @@
                 try
                 {
                     // Member status check
-                    if (db.MemberStatus.Select(s => s.StatusName).Contains(roleName))
+                    if (db.MemberStatuses.Select(s => s.StatusName).Contains(roleName))
                     {
                         isValid = db.Users.Single(m => m.UserName == userName).MemberStatus.StatusName == roleName;
                     }
