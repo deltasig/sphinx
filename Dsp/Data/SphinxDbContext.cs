@@ -31,7 +31,7 @@
         public virtual DbSet<MealToItem> MealToItems { get; set; }
         public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
         public virtual DbSet<MealVote> MealVotes { get; set; }
-        public virtual DbSet<MemberStatus> MemberStatus { get; set; }
+        public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
