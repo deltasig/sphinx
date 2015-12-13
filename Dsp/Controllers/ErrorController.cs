@@ -43,15 +43,14 @@
             {
                 const int pageSize = 10;
                 var logsCount = await db.Errors.CountAsync();
-                var pageCount = logsCount / pageSize;
-                // Make sure no improper page values were entered
-                page = page < 1 ? 1 : page;
-                page = page > pageCount && pageCount > 0 ? pageCount : page;
                 // Set ViewBag properties for paging (required for pager to function properly)
-                ViewBag.Page = page;
-                ViewBag.PageSize = pageSize;
+                if (page < 1) page = 1;
                 ViewBag.Count = logsCount;
-                ViewBag.Pages = pageCount;
+                ViewBag.PageSize = pageSize;
+                ViewBag.Pages = logsCount / pageSize;
+                ViewBag.Page = page;
+                if (logsCount % pageSize != 0) ViewBag.Pages += 1;
+                if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
 
                 // Load logs excluding details because the details are big XML blobs
                 logs = (await db.Errors
