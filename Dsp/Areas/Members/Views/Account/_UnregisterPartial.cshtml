@@ -3,23 +3,28 @@
 <div class="panel panel-default">
     <div class="panel-heading">Unregister</div>
     <div class="panel-body">
-        <div class="alert alert-warning">
-            <strong>Warning!</strong>  This will only remove user accounts that have not interacted with the system.
-        </div>
-        @using (Html.BeginForm("Unregister", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        @using (Html.BeginForm("Unregister", "Account", FormMethod.Post, new { @class = "", role = "form" }))
         {
             @Html.AntiForgeryToken()
             @Html.ValidationSummary(true)
+
             <div class="form-group">
-                @Html.LabelFor(m => m.SelectedUserId, new { @class = "col-sm-2 control-label" })
-                <div class="col-sm-6">
-                    @Html.DropDownListFor(m => m.SelectedUserId, Model.Users, new { @class = "form-control" })
+                <div class="alert alert-warning">
+                    <strong>Warning!</strong>  This will only remove user accounts that have not interacted with the system.
                 </div>
             </div>
             <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <button type="submit" class="btn btn-success">Unregister</button>
-                </div>
+                @Html.Label("Choose a member", new { @class = "control-label" })
+                @Html.DropDownListFor(m => m.SelectedUserId, Model.Users, new
+                {
+                    @class = "form-control selectpicker",
+                    autocomplete = "off",
+                    data_live_search = "true",
+                    data_size = "10"
+                })
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-success">Unregister</button>
             </div>
         }
     </div>

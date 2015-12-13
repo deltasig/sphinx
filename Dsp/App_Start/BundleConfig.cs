@@ -16,9 +16,7 @@
                 .Include("~/Content/Site.css"));
             bundles.Add(new StyleBundle("~/content/font-awesome")
                 .Include("~/Content/font-awesome.css"));
-
-            bundles.Add(new StyleBundle("~/content/bootstrap-table")
-                .Include("~/Content/bootstrap-table.css"));
+            
             bundles.Add(new StyleBundle("~/content/datepicker")
                 .Include("~/Content/datepicker.css"));
             bundles.Add(new StyleBundle("~/content/datetimepicker")
@@ -37,9 +35,7 @@
                 .Include("~/Scripts/jquery-ui-{version}.js")
                 .Include("~/Scripts/jquery.unobtrusive*")
                 .Include("~/Scripts/jquery.validate*"));
-
-            bundles.Add(new ScriptBundle("~/bundles/bootstrap-table")
-                .Include("~/Scripts/bootstrap-table.js"));
+            
             bundles.Add(new ScriptBundle("~/bundles/datepicker")
                 .Include("~/Scripts/bootstrap-datepicker.js"));
             bundles.Add(new ScriptBundle("~/bundles/datetimepicker")
