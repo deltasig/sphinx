@@ -124,47 +124,44 @@
     </div>
 </div>
 
-<div class="content-section">
+<div class="content-section" style="margin-top:50px">
     <div class="container">
         <div class="row">
-            <div id="address" class="col-md-4">
-                <h2><i class="fa fa-map-marker"></i> Our Location</h2>
-                <address>
-                    <strong>Delta Sigma Phi</strong>
-                    <small>Delta Epsilon Chapter</small><br>
-                    215 W. 8th Street<br>
-                    Rolla, MO 65401, USA<br>
-                </address>
-                <a href="https://www.google.com/maps/dir//37.949841,-91.772336/"
-                   target="_blank" class="btn btn-default">
-                    <i class="fa fa-map-o"></i> Google Maps Directions
-                </a>
+            <div class="col-md-4">
+                <div class="row row-space">
+                    <div class="col-sm-6 col-md-12">
+                        <h2 style="margin-top:0">
+                            <i class="fa fa-fw fa-map-marker"></i> Our Location
+                        </h2>
+                        <p>
+                            <a href="https://www.google.com/maps/dir//37.949841,-91.772336/"
+                               target="_blank" class="btn btn-default">
+                                <i class="fa fa-map-o"></i> Google Maps Directions
+                            </a>
+                        </p>
+                        <address>
+                            <strong>Delta Sigma Phi</strong>
+                            <small>Delta Epsilon Chapter</small><br>
+                            215 W. 8th Street<br>
+                            Rolla, MO 65401, USA<br>
+                        </address>
+                    </div>
+                    <div class="col-sm-6 col-md-12">
+                        <h2><i class="fa fa-fw fa-calendar"></i> Schedule a Visit</h2>
+                        <p>
+                            <a href="@Url.Action("Contacts", "Home")"
+                               class="btn btn-sm btn-default">
+                                <i class="fa fa-fw fa-envelope"></i> Go to Contacts page
+                            </a>
+                        </p>
+                        <p>Send an email to our Vice President of Growth</p>
+                    </div>
+                </div>
             </div>
             <div class="col-md-8">
-                <h2><i class="fa fa-calendar"></i> Want to schedule a visit?</h2>
-                <p>Send an email to our Vice President of Growth</p>
-                <p>
-                    <a href="@Url.Action("Contacts", "Home")"
-                       class="btn btn-sm btn-default">
-                        <i class="fa fa-fw fa-envelope"></i> Go to Contacts page
-                    </a>     
-                </p>
-            </div>
-        </div>        
-    </div>
-    
-</div>
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12">
-            <style>
-                .map {
-                    background: url(http://maps.googleapis.com/maps/api/staticmap?center=37.9535,-91.772336&zoom=15&scale=2&size=2048x450&maptype=roadmap&format=png&markers=color:yellow%7Cshadow:true%7C37.949841,-91.772336&key=***REMOVED***) center no-repeat;
-                    height: 450px;
-                }
-            </style>
-            <div class="map">
-
+                <a href="~/images/dsp-directions.png">
+                    <img class="img-responsive" src="~/Images/dsp-directions.png" />
+                </a>
             </div>
         </div>
     </div>
