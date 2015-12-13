@@ -64,7 +64,7 @@
                 .Where(m => 
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
-            var activeId = (await _db.MemberStatus.SingleAsync(s => s.StatusName == "Active")).StatusId;
+            var activeId = (await _db.MemberStatuses.SingleAsync(s => s.StatusName == "Active")).StatusId;
 
             foreach(var p in pledges)
             {
@@ -97,7 +97,7 @@
                 .Where(m =>
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
-            var alumnusId = (await _db.MemberStatus.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
+            var alumnusId = (await _db.MemberStatuses.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
 
             foreach (var p in actives)
             {

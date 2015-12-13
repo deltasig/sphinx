@@ -63,7 +63,7 @@
         [InverseProperty("Member")]
         public virtual ICollection<LaundrySignup> LaundrySignups { get; set; }
         [InverseProperty("Member")]
-        public virtual ICollection<Leader> Leaders { get; set; }
+        public virtual ICollection<Leader> PositionsHeld { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<MajorToMember> MajorsToMember { get; set; }
         [InverseProperty("Member")]

@@ -372,7 +372,7 @@
                        member.LaundrySignups.Any() || 
                        member.LittleBrothers.Any() || 
                        member.MajorsToMember.Any() || 
-                       member.Leaders.Any() ||
+                       member.PositionsHeld.Any() ||
                        member.ClassFileUploads.Any() ||
                        member.Rooms.Any() ||
                        member.SoberSignups.Any() ||
