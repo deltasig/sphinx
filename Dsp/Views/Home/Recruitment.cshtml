@@ -8,38 +8,17 @@
     <meta name="description" content="Learn about how you can join Delta Sig's mission to change the fraternity experience." >
 }
 
-<div class="container-fluid" style="background-color: black; padding: 5px 0 0 0; margin-top: 50px; margin-bottom: 0">
-    <div class="row" style="margin-right:0; padding-right:0">
-        <div class="visible-xs col-xs-12">
-            <iframe width="100%" height="250" frameborder="0"
-                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
-        </div>
-        <div class="visible-sm col-sm-8 col-sm-offset-2">
-            <iframe width="100%" height="350" frameborder="0"
-                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
-        </div>
-        <div class="visible-md visible-lg col-md-6 col-md-offset-3">
-            <iframe width="100%" height="450" frameborder="0"
-                    src="https://www.youtube.com/embed/A4dlXvg4Ra8?rel=0&showinfo=0&autohide=1" allowfullscreen></iframe>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">
+            <h2>
+                @ViewBag.Title
+                <small>@ViewBag.Subtitle</small>
+            </h2>
+            <hr />
         </div>
     </div>
 </div>
-
-<div class="container-fluid" style="padding: 0">
-    <div class="page-header" style="margin-top: 0; background-color: #fcfcfc">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h2>
-                        @ViewBag.Title
-                    </h2>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
 
 <div class="container">
     @if (Model.Any())
@@ -59,7 +38,7 @@
         }
     }
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 well">
             <h3>
                 <i class="fa fa-lightbulb-o"></i>
                 Introduction
@@ -72,26 +51,11 @@
             </p>
             <p class="text-justify">
                 Each fraternity has a different culture and offers different experiences and friendships.
-                That is why we encourage all potential new members to not only get to know us first, but to also get to know other fraternities.
+                That is why we encourage all potential new members to get to know both us <strong>and</strong> other fraternities.
                 In other words, if Delta Sig isn't the right place for you, we will help you find a fraternity that is.
                 We believe in the value of Greek Life that much, while also acknowledging that Greek Life isn't for everyone.
             </p>
-            <h3>
-                <i class="fa fa-envelope-o"></i>
-                Getting in Touch
-            </h3>
-            <p class="text-justify">
-                Many of our members were originally met within our classes, involvements, or existing social circles.
-                However, potential new members have sought us out themselves, and we encourage you to do that if you do not know someone in Delta Sig.
-            </p>
-            <p class="text-justify">
-                If you want to start getting to know us, introduce yourself by 
-                <a href="@Url.Action("Contacts")">sending an email to our Director of Recruitment</a>. 
-                Once we know you're out there, we can get you involved in Delta Sig however you want,
-                whether it's answering your questions, touring the house, hanging out, or attending events.
-            </p>
-        </div>
-        <div class="col-sm-6">
+            <hr />
             <h3>
                 <i class="fa fa-book"></i>
                 Recruitment Book
@@ -125,6 +89,21 @@
                 and our fraternity policies.
                 If you look through it and still have questions, feel free to @Html.ActionLink("contact", "Contacts", "Home") 
                 our Director of Recruitment directly via email.
+            </p>
+            <hr />
+            <h3>
+                <i class="fa fa-envelope-o"></i>
+                Getting in Touch
+            </h3>
+            <p class="text-justify">
+                Many of our members were originally met within our classes, involvements, or existing social circles.
+                However, potential new members have sought us out themselves, and we encourage you to do that if you do not know someone in Delta Sig.
+            </p>
+            <p class="text-justify">
+                If you want to start getting to know us, introduce yourself by
+                <a href="@Url.Action("Contacts")">sending an email to our Director of Recruitment</a>.
+                Once we know you're out there, we can get you involved in Delta Sig however you want,
+                whether it's answering your questions, touring the house, hanging out, or attending events.
             </p>
         </div>
     </div>
