@@ -5,12 +5,9 @@
     ViewBag.Subtitle = Model.Semester;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
 }
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
-}
 
 <div class="container-fluid">
-    <div class="row">
+    <div class="row row-space">
         <div class="col-xs-6">
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="semester-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -38,19 +35,18 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed"
-                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="served-on" data-sort-order="desc">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
                         <thead>
-                            <tr>
-                                <th class="col-sm-2" data-sortable="true" data-field="served-on">Date/Time</th>
-                                <th data-sortable="true" data-field="event">Event Name</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="duration">
+                            <tr class="active">
+                                <th class="col-sm-2">Date/Time</th>
+                                <th>Event Name</th>
+                                <th class="col-sm-1">
                                     Duration
                                     <i data-toggle="tooltip" data-placement="top" title="Displayed in Hours" class="fa fa-info-circle text-info"></i>
                                 </th>
-                                <th class="col-sm-1" data-sortable="true" data-field="member-count">Members</th>
-                                <th class="col-sm-1" data-sortable="true" data-field="is-approved">Approved</th>
+                                <th class="col-sm-1">Members</th>
+                                <th class="col-sm-1">Approved</th>
                                 @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
                                 {
                                     <th class="col-sm-2"></th>
@@ -58,7 +54,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model.Events)
+                            @foreach (var item in Model.Events.OrderByDescending(e => e.DateTimeOccurred))
                             {
                                 <tr>
                                     <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeOccurred, cstZone).ToString("MM-dd@hh:mm tt (ddd)")</td>
@@ -87,7 +83,3 @@
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}
