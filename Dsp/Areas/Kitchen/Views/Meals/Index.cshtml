@@ -3,33 +3,29 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Meals";
 }
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
-}
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-6">
+        <div class="col-sm-4">
             <div class="btn-group" role="group" aria-label="...">
                 @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
             </div>
         </div>
-        <div class="col-xs-6 text-right">
+        <div class="col-sm-4 text-sm-right">
             <p>
                 @Html.ActionLink("Create New", "Create", "Meals", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" }) 
             </p>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-12">
+        <div class="col-sm-8">
             <div class="panel panel-default">
-                <div class="panel-body">
-                    <table data-toggle="table" data-classes="table table-condensed"
-                           data-search="true" data-pagination="true" data-page-size="25" data-sort-name="meal" data-sort-order="asc">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
                         <thead>
-                            <tr>
-                                <th data-sortable="true" data-field="meal">Meal</th>
-                                <th class="col-sm-3"></th>
+                            <tr class="active">
+                                <th>Meal</th>
+                                <th class="col-sm-4"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -55,7 +51,3 @@
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}
