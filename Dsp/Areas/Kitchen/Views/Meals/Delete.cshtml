@@ -5,6 +5,13 @@
 }
 
 <div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Meals
+            </a>
+        </div>
+    </div>
     <div class="row">
         <div class="col-sm-6 col-xs-12">
             <div class="alert alert-danger">
@@ -22,8 +29,7 @@
                     </dl>
                 </div>
 
-                <input type="submit" value="Delete" class="btn btn-default" /> @:|
-                @Html.ActionLink("Back to List", "Index")
+                <input type="submit" value="Delete" class="btn btn-default" />
             }
         </div>
     </div>
