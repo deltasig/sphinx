@@ -41,7 +41,7 @@
 
 <div class="container-fluid">
     <div class="row row-space">
-        <div class="col-md-8">
+        <div class="col-md-10 col-lg-8">
             @using (Html.BeginForm("Index", "Roster", new { area = "Members" }, FormMethod.Get, new { @class = "form-inline", style="display:inline" }))
             {
                 <div class="form-group">
@@ -119,16 +119,16 @@
             <br class="visible-sm visible-xs" />
             <a class="btn btn-info pull-right" href="@Url.Action("Index", "PhoneNumbers")"
                data-toggle="tooltip" data-placement="top" title="Phone Numbers">
-                <i class="fa fa-phone"></i>
+                <i class="fa fa-fw fa-phone"></i>
             </a>
             <a class="btn btn-info pull-right" href="@Url.Action("Index", "Addresses")"
                data-toggle="tooltip" data-placement="top" title="Addresses" style="margin-right:5px;">
-                <i class="fa fa-home"></i>
+                <i class="fa fa-fw fa-envelope"></i>
             </a>
         </div>
     </div>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-10 col-lg-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row">
