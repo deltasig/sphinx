@@ -3,8 +3,6 @@
     using Dsp.Controllers;
     using Entities;
     using Microsoft.AspNet.Identity;
-    using Models;
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -16,58 +14,33 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class PhoneNumbersController : BaseController
     {
-        public async Task<ActionResult> Index(PhoneIndexFilterModel model)
+        public async Task<ActionResult> Index(string s)
         {
-            if (model.IsBlank())
+            var model = new List<Member>();
+
+            if (!string.IsNullOrEmpty(s))
             {
-                model = new PhoneIndexFilterModel
+                if(s == ":all")
                 {
-                    Pledges = true,
-                    Neophytes = true,
-                    Actives = true
-                };
-                return RedirectToAction("Index", model);
+                    model = await _db.Users
+                        .OrderBy(m => m.LastName)
+                        .ThenBy(m => m.FirstName)
+                        .ToListAsync();
+                    ViewBag.SearchTerm = "everyone";
+                }
+                else
+                {
+                    model = await _db.Users
+                        .Where(m =>
+                            m.FirstName.Contains(s) ||
+                            m.LastName.Contains(s) ||
+                            m.PhoneNumbers.Any(p => p.Number.Contains(s)))
+                        .ToListAsync();
+                    ViewBag.SearchTerm = s;
+                }
             }
-
-            model.PhoneNumbers = await FilterPhoneNumbersAsync(model);
+            
             return View(model);
-        }
-
-        public async Task<List<PhoneNumber>> FilterPhoneNumbersAsync(PhoneIndexFilterModel model)
-        {
-            var phoneNumbers = await _db.PhoneNumbers
-                .OrderBy(s => s.Member.StatusId)
-                .ThenBy(m => m.Member.LastName)
-                .ThenBy(a => a.Type).ToListAsync();
-
-            if (!model.Pledges)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Pledge").ToList();
-            }
-            if (!model.Neophytes)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Neophyte").ToList();
-            }
-            if (!model.Actives)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Active").ToList();
-            }
-            if (!model.Alumni)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Alumnus").ToList();
-
-            }
-            if (!model.Affiliates)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Affiliate").ToList();
-
-            }
-            if (!model.Released)
-            {
-                phoneNumbers = phoneNumbers.Where(a => a.Member.MemberStatus.StatusName != "Released").ToList();
-            }
-
-            return phoneNumbers;
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -111,7 +84,7 @@
             sb.AppendLine(header);
             foreach (var n in numbers)
             {
-                var line = String.Format("{0},{1},{2},{3},{4}",
+                var line = string.Format("{0},{1},{2},{3},{4}",
                     n.Member.FirstName,
                     n.Member.LastName,
                     n.Member.MemberStatus.StatusName,

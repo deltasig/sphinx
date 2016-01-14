@@ -71,16 +71,6 @@
                         <i class="fa fa-fw fa-users"></i> Roster
                     </a>
                 </li>
-                <li class="@(ViewBag.Title.Contains("Phone Number") ? "active" : "")">
-                    <a href="@Url.Action("Index", "PhoneNumbers", new { area = "Members" })">
-                        <i class="fa fa-fw fa-phone"></i> Phone Numbers
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Address") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Addresses", new { area = "Members" })">
-                        <i class="fa fa-fw fa-envelope"></i> Addresses
-                    </a>
-                </li>
                 <li class="@(ViewBag.Title.Contains("Service") ? "active" : "")">
                     <a href="@Url.Action("Index", "Hours", new { area = "Service" })">
                         <i class="fa fa-fw fa-globe"></i> Service

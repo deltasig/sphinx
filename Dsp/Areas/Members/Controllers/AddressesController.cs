@@ -3,8 +3,6 @@
     using Dsp.Controllers;
     using Entities;
     using Microsoft.AspNet.Identity;
-    using Models;
-    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -16,58 +14,38 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
     {
-        public async Task<ActionResult> Index(AddressIndexFilterModel model)
+        public async Task<ActionResult> Index(string s)
         {
-            if (model.IsBlank())
+            var model = new List<Member>();
+
+            if (!string.IsNullOrEmpty(s))
             {
-                model = new AddressIndexFilterModel
+                if (s == ":all")
                 {
-                    Pledges = true,
-                    Neophytes = true,
-                    Actives = true
-                };
-                return RedirectToAction("Index", model);
+                    model = await _db.Users
+                        .OrderBy(m => m.LastName)
+                        .ThenBy(m => m.FirstName)
+                        .ToListAsync();
+                    ViewBag.SearchTerm = "everyone";
+                }
+                else
+                {
+                    model = await _db.Users
+                        .Where(m =>
+                            m.FirstName.Contains(s) ||
+                            m.LastName.Contains(s) ||
+                            m.Addresses.Any(a => a.Address1.Contains(s)) ||
+                            m.Addresses.Any(a => a.Address2.Contains(s)) ||
+                            m.Addresses.Any(a => a.City.Contains(s)) ||
+                            m.Addresses.Any(a => a.State.Contains(s)) ||
+                            m.Addresses.Any(a => a.PostalCode.ToString().Contains(s)) ||
+                            m.Addresses.Any(a => a.Country.Contains(s)))
+                        .ToListAsync();
+                    ViewBag.SearchTerm = s;
+                }
             }
 
-            model.Addresses = await FilterAddressesAsync(model);
             return View(model);
-        }
-
-        public async Task<List<Address>> FilterAddressesAsync(AddressIndexFilterModel model)
-        {
-            var addresses = await _db.Addresses
-                .OrderBy(s => s.Member.StatusId)
-                .ThenBy(m => m.Member.LastName)
-                .ThenBy(a => a.Type).ToListAsync();
-
-            if (!model.Pledges)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Pledge").ToList();
-            }
-            if (!model.Neophytes)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Neophyte").ToList();
-            }
-            if (!model.Actives)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Active").ToList();
-            }
-            if (!model.Alumni)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Alumnus").ToList();
-                
-            }
-            if (!model.Affiliates)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Affiliate").ToList();
-                
-            }
-            if (!model.Released)
-            {
-                addresses = addresses.Where(a => a.Member.MemberStatus.StatusName != "Released").ToList();
-            }
-
-            return addresses;
         }
 
         public async Task<ActionResult> Edit(int? id)
@@ -111,7 +89,7 @@
             sb.AppendLine(header);
             foreach(var a in addresses)
             {
-                var line = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
                     a.Member.FirstName,
                     a.Member.LastName,
                     a.Member.MemberStatus.StatusName,

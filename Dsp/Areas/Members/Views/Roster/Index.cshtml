@@ -116,6 +116,15 @@
                     <small>Searched for: @ViewBag.SearchTerm</small>
                 }
             }
+            <br class="visible-sm visible-xs" />
+            <a class="btn btn-info pull-right" href="@Url.Action("Index", "PhoneNumbers")"
+               data-toggle="tooltip" data-placement="top" title="Phone Numbers">
+                <i class="fa fa-phone"></i>
+            </a>
+            <a class="btn btn-info pull-right" href="@Url.Action("Index", "Addresses")"
+               data-toggle="tooltip" data-placement="top" title="Addresses" style="margin-right:5px;">
+                <i class="fa fa-home"></i>
+            </a>
         </div>
     </div>
     <div class="row">

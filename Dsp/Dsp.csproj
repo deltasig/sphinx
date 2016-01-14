@@ -454,7 +454,6 @@
     </Compile>
     <Compile Include="Areas\Members\Models\EditMemberInfoModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassScheduleModel.cs" />
-    <Compile Include="Areas\Members\Models\PhoneIndexFilterModel.cs" />
     <Compile Include="Areas\Admin\Models\CreateSemesterModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourSubmissionModel.cs" />
     <Compile Include="Areas\Sphinx\Models\SphinxHomeIndexModel.cs" />
