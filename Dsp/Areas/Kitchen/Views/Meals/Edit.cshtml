@@ -6,8 +6,15 @@
 @Styles.Render("~/content/multi-select")
 
 <div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Meals
+            </a>
+        </div>
+    </div>
     <div class="row">
-        <div class="col-sm-5">
+        <div class="col-sm-6">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
@@ -17,12 +24,8 @@
                 <div class="form-group">
                     @Html.ListBoxFor(model => model.SelectedMealItemIds, Model.MealItems, new { id = "meal-item-selection", @class = "form-control" })
                 </div>
-
-                <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default" /> |
-                    @Html.ActionLink("Back to List", "Index")
-                </div>
-
+                
+                <input type="submit" value="Save" class="btn btn-default" />
             }
         </div>
     </div>
