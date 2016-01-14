@@ -35,15 +35,8 @@
                 @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
             </div>
         </div>
-        <div class="col-lg-6 text-right-sm">
-            <hr class="visible-xs visible-sm visible-md" />
-            @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-            {
-                <a class="btn btn-sm btn-info" href="@Url.Action("EditSchedule", "Meals", new { ViewBag.week })">
-                    <i class="fa fa-pencil"></i> Edit Schedule
-                </a>
-                <hr class="visible-xs" />
-            }
+        <div class="col-lg-6 text-sm-right">
+            <hr class="hidden-lg" />            
             <div class="btn-group" role="group" aria-label="...">
                 <a class="btn btn-sm btn-default" href="@Url.Action("Schedule", "Meals", new { week = ViewBag.week - 1 })">
                     <i class="fa fa-caret-left"></i> Previous Week
@@ -60,7 +53,15 @@
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="panel-heading">Posted Meals</div>
+                <div class="panel-heading">
+                    Posted Meals
+                    @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+                    {
+                        <a class="btn btn-xs btn-info pull-right" href="@Url.Action("EditSchedule", "Meals", new { ViewBag.week })">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                    }
+                </div>
                 <div class="table-responsive">
                     <table class="table table-condensed table-bordered">
                         <thead>
