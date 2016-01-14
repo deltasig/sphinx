@@ -1,164 +1,122 @@
-﻿@using Microsoft.AspNet.Identity
-@model Dsp.Areas.Members.Models.PhoneIndexFilterModel
+﻿@model IEnumerable<Dsp.Entities.Member>
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Phone Numbers";
-
-    var mobile = Model.PhoneNumbers.Where(m => m.Type == "Mobile");
-    var emergency = Model.PhoneNumbers.Where(m => m.Type == "Emergency");
-}
-@section styles {
-    @Styles.Render("~/content/bootstrap-table")
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-xs-12">
-            <a class="pull-right" href="@Url.Action("Download", "PhoneNumbers")">
-                <i class="fa fa-download fa-2x"></i>
+    <div class="row row-space">
+        <div class="col-sm-4">
+            <a class="btn btn-default" href="@Url.Action("Index", "Roster")">
+                <i class="fa fa-caret-left"></i> Back to Roster
             </a>
-            @using (Html.BeginForm("Index", "PhoneNumbers", FormMethod.Get, new { @class = "", role = "form" }))
+        </div>
+        <div class="col-sm-4 text-sm-right">
+            <a class="btn btn-info" href="@Url.Action("Index", "Addresses")"
+               data-toggle="tooltip" data-placement="top" title="Addresses">
+                <i class="fa fa-home"></i>
+            </a>
+            <a class="btn btn-default" href="@Url.Action("Download", "PhoneNumbers")">
+                <i class="fa fa-download"></i> Download
+            </a>
+        </div>
+    </div>
+    <div class="row row-space">
+        <div class="col-sm-4">
+            @using (Html.BeginForm("Index", "PhoneNumbers", FormMethod.Get, new { @class = "form-inline" }))
             {
-                <input type="submit" value="Filter" class="btn btn-default" />
+                <div class="input-group">
 
-                <div class="checkbox-inline" style="margin-left:10px">
-                    <label>
-                        @Html.CheckBoxFor(model => model.Pledges)
-                        <small>Pledges</small>
-                    </label>
+                    <span class="input-group-addon" id="search-addon" data-toggle="tooltip" data-placement="top"
+                          title="Search by first/last name or full/partial number.  Type :all to list everyone.">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input class="form-control" id="s" name="s" placeholder="Search" type="text"
+                           value="" aria-describedby="search-addon">
+
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                    {
+                        <span class="input-group-btn">
+                            <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Clear search"
+                               href="@Url.Action("Index")">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                        </span>
+                    }
                 </div>
-                <div class="checkbox-inline">
-                    <label>
-                        @Html.EditorFor(model => model.Neophytes)
-                        <small>Neophytes</small>
-                    </label>
-                </div>
-                <div class="checkbox-inline">
-                    <label>
-                        @Html.EditorFor(model => model.Actives)
-                        <small>Actives</small>
-                    </label>
-                </div>
-                <div class="checkbox-inline">
-                    <label>
-                        @Html.EditorFor(model => model.Alumni)
-                        <small>Alumni</small>
-                    </label>
-                </div>
-                <div class="checkbox-inline">
-                    <label>
-                        @Html.EditorFor(model => model.Affiliates)
-                        <small>Affiliates</small>
-                    </label>
-                </div>
-                <div class="checkbox-inline">
-                    <label>
-                        @Html.EditorFor(model => model.Released)
-                        <small>Released</small>
-                    </label>
-                </div>
-                <br /><br />
+                if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                {
+                    <small>Searched for: @ViewBag.SearchTerm</small>
+                }
             }
         </div>
     </div>
     <div class="row">
-        <div class="col-xs-12">
-            <ul class="nav nav-tabs nav-justified" role="tablist">
-                <li class="active"><a href="#mobile" data-toggle="pill">Mobile</a></li>
-                <li><a href="#emergency" data-toggle="pill">Emergency</a></li>
-            </ul>
-            <div class="tab-content">
-                <div class="tab-pane active" id="mobile">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                           data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-3" data-sortable="true" data-field="first-name">First Name</th>
-                                <th class="col-sm-3" data-sortable="true" data-field="last-name">Last Name</th>
-                                <th class="col-sm-3" data-sortable="true" data-field="status">Status</th>
-                                <th data-sortable="true" data-field="number">Phone Number</th>
-                                <th class="col-sm-2"></th>
-                            </tr>
-                        </thead>
-
-                        @foreach (var item in mobile)
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    @if (Model.Any())
+                    {
+                        foreach (var m in Model)
                         {
-                            <tr>
-                                <td>@item.Member.FirstName</td>
-                                <td>@item.Member.LastName</td>
-                                <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Number) ? "text-danger" : "")">
-                                    @if (string.IsNullOrEmpty(item.Number))
-                                    {
-                                        @: missing
-                                    }
-                                    else
-                                    {
-                                        <a href="tel:@item.Number">
-                                            @item.Number
-                                        </a>
-                                    }
-                                </td>
-                                <td class="text-right">
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == User.Identity.GetUserId<int>())
-                                    {
-                                        <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
-                                            Edit
-                                        </a>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </table>
-                </div>
-                <div class="tab-pane" id="emergency">
-                    <table data-toggle="table" data-classes="table table-condensed" 
-                        data-search="true" data-pagination="true" data-page-size="100" data-sort-name="last-name" data-sort-order="asc">
-                        <thead>
-                            <tr>
-                                <th class="col-sm-3" data-sortable="true" data-field="first-name">First Name</th>
-                                <th class="col-sm-3" data-sortable="true" data-field="last-name">Last Name</th>
-                                <th class="col-sm-3" data-sortable="true" data-field="status">Status</th>
-                                <th data-sortable="true" data-field="number">Phone Number</th>
-                                <th class="col-sm-2"></th>
-                            </tr>
-                        </thead>
+                            var name = m.ToString();
 
-                        @foreach (var item in emergency)
-                        {
-                            <tr>
-                                <td>@item.Member.FirstName</td>
-                                <td>@item.Member.LastName</td>
-                                <td>@item.Member.MemberStatus.StatusName</td>
-                                <td class="@(string.IsNullOrEmpty(item.Number) ? "text-danger" : "")">
-                                    @if (string.IsNullOrEmpty(item.Number))
-                                    {
-                                        @: missing
-                                    }
-                                    else
-                                    {
-                                        <a href="tel:@item.Number">
-                                            @item.Number
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-sm-4">
+                                        <a href="@Url.Action("Index", "Account", new { userName = m.UserName })">
+                                            @if (name.ToLower().Contains(ViewBag.SearchTerm.ToLower()))
+                                            {
+                                                var matchLocation = name.ToLower().IndexOf(ViewBag.SearchTerm.ToLower());
+                                                var searchLength = ViewBag.SearchTerm.Length;
+                                                name = name.Insert(matchLocation, "<mark>");
+                                                name = name.Insert(matchLocation + searchLength + 6, "</mark>");
+                                                @Html.Raw(name)
+                                            }
+                                            else
+                                            {
+                                                @: @name
+                                            }
                                         </a>
-                                    }
-                                </td>
-                                <td class="text-right">
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Secretary") || item.UserId == User.Identity.GetUserId<int>())
-                                    {
-                                        <a class="" href="@Url.Action("Edit", "PhoneNumbers", new { id = item.PhoneNumberId })">
-                                            Edit
-                                        </a>
-                                    }
-                                </td>
-                            </tr>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        @foreach (var p in m.PhoneNumbers)
+                                        {
+                                            var number = p.Number;
+
+                                            if (!string.IsNullOrEmpty(p.Number))
+                                            {
+                                                <span class="badge">@p.Type</span> 
+                                                <a href="tel:@p.Number">
+                                                    @if (number.ToLower().Contains(ViewBag.SearchTerm.ToLower()))
+                                                    {
+                                                        var matchLocation = number.ToLower().IndexOf(ViewBag.SearchTerm.ToLower());
+                                                        var searchLength = ViewBag.SearchTerm.Length;
+                                                        number = number.Insert(matchLocation, "<mark>");
+                                                        number = number.Insert(matchLocation + searchLength + 6, "</mark>");
+                                                        @Html.Raw(number)
+                                                    }
+                                                    else
+                                                    {
+                                                        @: @number
+                                                    }
+                                                </a> <br />
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         }
-                    </table>
+                    }
+                    else
+                    {
+                        <div class="list-group-item list-group-item-warning">
+                            No results! <br />
+                            Search by first/last name or full/partial number.  Type ":all" to list everyone.
+                        </div>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
-
-@section scripts {
-    @Scripts.Render("~/bundles/bootstrap-table")
-}
