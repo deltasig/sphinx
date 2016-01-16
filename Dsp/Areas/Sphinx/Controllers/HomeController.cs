@@ -1,6 +1,7 @@
 ﻿namespace Dsp.Areas.Sphinx.Controllers
 {
     using Dsp.Controllers;
+    using Dsp.Entities;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Models;
@@ -15,19 +16,16 @@
     public class HomeController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string userName, string message = "")
+        public async Task<ActionResult> Index(string message = "")
         {
             ViewBag.Message = message;
-            
-            if (!User.IsInRole("Administrator") || string.IsNullOrEmpty(userName))
-            {
-                userName = User.Identity.Name;
-            }
 
-            var twoHoursAgoCst = ConvertUtcToCst(DateTime.UtcNow).AddHours(-2);
-            var member = await UserManager.FindByNameAsync(userName);
+            var nowCst = ConvertUtcToCst(DateTime.UtcNow);
+            var twoHoursAgoCst = nowCst.AddHours(-2);
+            var member = await UserManager.FindByNameAsync(User.Identity.Name);
             var events = await GetAllCompletedEventsForUserAsync(member.Id);
             var thisSemester = await GetThisSemesterAsync();
+            var lastSemester = await GetLastSemesterAsync();
 
             var thisWeeksSoberShifts = await GetUpcomingSoberSignupsAsync();
             var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
@@ -55,8 +53,22 @@
                 LaundrySummary = laundrySignups.Take(laundryTake),
                 NeedsToSoberDrive = !memberSoberSignups.Any() && remainingDriverShifts.Any(),
                 CurrentSemester = thisSemester,
-                PreviousSemester = await GetLastSemesterAsync(),
+                PreviousSemester = await GetLastSemesterAsync()
             };
+            if (member.MemberStatus.StatusName == "Alumnus")
+            {
+                var mostRecentIncident = await _db.IncidentReports
+                    .OrderByDescending(i => i.DateTimeOfIncident)
+                    .FirstOrDefaultAsync() ?? new IncidentReport();
+                var startOfYearUtc = ConvertCstToUtc(new DateTime(nowCst.Year, 1, 1));
+                var serviceHoursSoFar = await _db.ServiceHours.Where(s => s.DateTimeSubmitted >= thisSemester.DateStart).ToListAsync();
+                model.DaysSinceIncident = (DateTime.UtcNow - mostRecentIncident.DateTimeSubmitted).Days;
+                model.IncidentsThisSemester = await _db.IncidentReports.CountAsync(i => i.DateTimeOfIncident > lastSemester.DateEnd);
+                model.ScholarshipSubmissionsThisYear = await _db.ScholarshipSubmissions.CountAsync(s => s.SubmittedOn >= startOfYearUtc);
+                model.LaundryUsageThisSemester = await _db.LaundrySignups.CountAsync(l => l.DateTimeShift >= thisSemester.DateStart);
+                model.ServiceHoursThisSemester = serviceHoursSoFar.Sum(s => s.DurationHours);
+                model.NewMembersThisSemester = await _db.Users.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.SemesterId);
+            }
 
             return View(model);
         }
