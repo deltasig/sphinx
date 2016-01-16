@@ -414,85 +414,101 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var r in Model.Rooms.OrderBy(r => r.Name))
+                            @if(Model.Rooms.Any())
                             {
-                                var rowColor = r.Members.Count >= r.MaxCapacity ? "success" : "";
-                                var overCapacity = r.Members.Count - r.MaxCapacity;
-                                rowColor = r.MaxCapacity == 0 ? "" : rowColor;
+                                foreach (var r in Model.Rooms.OrderBy(r => r.Name))
+                                {
+                                    var rowColor = r.Members.Count >= r.MaxCapacity ? "success" : "";
+                                    var overCapacity = r.Members.Count - r.MaxCapacity;
+                                    rowColor = r.MaxCapacity == 0 ? "" : rowColor;
 
-                                <tr id="@r.Name" class="@(rowColor)">
-                                    <td>@r.Name</td>
-                                    <td>
-                                        @if (r.MaxCapacity <= 0)
-                                        {
-                                            <span class="label label-default">n/a</span>
-                                        }
-                                        else
-                                        {
-                                            @r.MaxCapacity
-                                            if (overCapacity > 0)
+                                    <tr id="@r.Name" class="@(rowColor)">
+                                        <td>@r.Name</td>
+                                        <td>
+                                            @if (r.MaxCapacity <= 0)
                                             {
-                                                <span class="badge" data-toggle="tooltip" data-placement="top"
-                                                      title="Over Capacity">+@overCapacity</span>
+                                                <span class="label label-default">n/a</span>
                                             }
-                                        }
-                                    </td>
-                                    <td>
-                                        @foreach (var m in r.Members.OrderBy(m => m.Member.LastName))
-                                        {
-                                            var allSemester = (m.MovedIn == Model.Semester.DateStart && m.MovedOut == Model.Semester.DateEnd);
-
-                                            <div style="margin-bottom: 3px">
-                                                @m.Member.ToString()
-                                                <span class="badge">
-                                                    <small>
-                                                        @if (allSemester)
-                                                        {
-                                                            @: All semester
-                                                        }
-                                                        else
-                                                        {
-                                                            @m.MovedIn.ToShortDateString() @: to
-                                                            @(m.MovedOut == null ? "" : m.MovedOut.ToShortDateString())
-                                                        }
-                                                    </small>
-                                                </span>
-                                                @if (isAdmin || isHousing)
+                                            else
+                                            {
+                                                @r.MaxCapacity
+                                                if (overCapacity > 0)
                                                 {
-                                                    using (Html.BeginForm("Unassign", "Rooms", new {aid = m.RoomToMemberId, sid = m.Room.SemesterId},
-                                                        FormMethod.Post, new {@class = "pull-right"}))
-                                                    {
-                                                        @Html.AntiForgeryToken()
-
-                                                        <button type="submit" class="btn btn-link pull-right" style="padding: 0">
-                                                            <i class="fa fa-minus-circle text-danger" data-toggle="tooltip"
-                                                               data-placement="left" title="Delete"></i>
-                                                        </button>
-                                                    }
+                                                    <span class="badge" data-toggle="tooltip" data-placement="top"
+                                                          title="Over Capacity">+@overCapacity</span>
                                                 }
-                                            </div>
-                                        }
-                                        @if (r.MaxCapacity > 0)
-                                        {
-                                            for (var i = 0; i < r.MaxCapacity - r.Members.Count; i++)
-                                            {
-                                                <div style="margin-bottom: 3px">
-                                                    <small><span class="label label-danger">Vacancy</span></small>
-                                                </div>
-                                            }
-                                        }
-                                    </td>
-                                    @if (isAdmin || isHousing)
-                                    {
-                                        <td class="text-right no-print">
-                                            @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
-                                            @if (!r.Members.Any())
-                                            {
-                                                @: |
-                                                @Html.ActionLink("Delete", "Delete", new { id = r.RoomId })
                                             }
                                         </td>
-                                    }
+                                        <td>
+                                            @foreach (var m in r.Members.OrderBy(m => m.Member.LastName))
+                                            {
+                                                var allSemester = (m.MovedIn == Model.Semester.DateStart && m.MovedOut == Model.Semester.DateEnd);
+
+                                                <div style="margin-bottom: 3px">
+                                                    @m.Member.ToString()
+                                                    <span class="badge">
+                                                        <small>
+                                                            @if (allSemester)
+                                                            {
+                                                                @: All semester
+                                                        }
+                                                            else
+                                                            {
+                                                                @m.MovedIn.ToShortDateString() @: to
+                                                                @(m.MovedOut == null ? "" : m.MovedOut.ToShortDateString())
+                                                            }
+                                                        </small>
+                                                    </span>
+                                                    @if (isAdmin || isHousing)
+                                                    {
+                                                        using (Html.BeginForm("Unassign", "Rooms", new { aid = m.RoomToMemberId, sid = m.Room.SemesterId },
+                                                            FormMethod.Post, new { @class = "pull-right" }))
+                                                        {
+                                                            @Html.AntiForgeryToken()
+
+                                                            <button type="submit" class="btn btn-link pull-right" style="padding: 0">
+                                                                <i class="fa fa-minus-circle text-danger" data-toggle="tooltip"
+                                                                   data-placement="left" title="Delete"></i>
+                                                            </button>
+                                                        }
+                                                    }
+                                                </div>
+                                            }
+                                            @if (r.MaxCapacity > 0)
+                                            {
+                                                for (var i = 0; i < r.MaxCapacity - r.Members.Count; i++)
+                                                {
+                                                    <div style="margin-bottom: 3px">
+                                                        <small><span class="label label-danger">Vacancy</span></small>
+                                                    </div>
+                                                }
+                                            }
+                                        </td>
+                                        @if (isAdmin || isHousing)
+                                        {
+                                            <td class="text-right no-print">
+                                                @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
+                                                @if (!r.Members.Any())
+                                                {
+                                                    @: |
+                                                    @Html.ActionLink("Delete", "Delete", new { id = r.RoomId })
+                                                }
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                var cols = isAdmin || isHousing ? 4 : 3;
+                                <tr>
+                                    <td class="warning" colspan="@cols">
+                                        No rooms have been created!  
+                                        @if(isAdmin || isHousing)
+                                        {
+                                            @: Try auto-generating them with the button above.
+                                        }
+                                    </td>
                                 </tr>
                             }
                         </tbody>
