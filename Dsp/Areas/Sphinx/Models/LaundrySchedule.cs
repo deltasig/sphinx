@@ -10,11 +10,11 @@
         private const int DayLength = 24;
         private readonly List<LaundrySignup> _existingSignups;
 
-        public int WindowSize { get; }
-        public int SlotSize { get; }
-        public DateTime Now { get; }
-        public DateTime StartOfToday { get; }
-        public List<LaundryRow> Rows { get; }
+        public int WindowSize { get; set; }
+        public int SlotSize { get; set; }
+        public DateTime Now { get; set; }
+        public DateTime StartOfToday { get; set; }
+        public List<LaundryRow> Rows { get; set; }
 
         public LaundrySchedule(DateTime now, int windowSize, int slotSize, List<LaundrySignup> existingSignups)
         {
