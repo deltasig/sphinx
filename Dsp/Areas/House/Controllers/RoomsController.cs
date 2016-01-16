@@ -137,7 +137,7 @@
                 .Where(s => s.DateEnd < semester.DateStart)
                 .OrderByDescending(s => s.DateStart)
                 .ToListAsync())
-                .LastOrDefault();
+                .FirstOrDefault();
             if (previousSemester != null && previousSemester.Rooms.Any())
             {
                 foreach (var r in previousSemester.Rooms)
