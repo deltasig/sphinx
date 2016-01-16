@@ -33,7 +33,7 @@
                     {
                         foreach (var item in Model.OrderBy(s => s.DateOfShift).ThenBy(s => s.SoberTypeId).ThenBy(s => s.Description))
                         {
-                            <div class="list-group-item" style="page-break-inside: avoid">
+                            <div class="list-group-item">
                                 <div class="row">
                                     <div class="col-md-2 col-p-3">@item.DateOfShift.ToString("MM-dd-yyyy")</div>
                                     <div class="col-md-2 col-p-9">

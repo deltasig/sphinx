@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Rooms";
     ViewBag.Subtitle = Model.Semester.ToString();
+    ViewBag.Print = true;
     var isAdmin = User.IsInRole("Administrator");
     var isHousing = User.IsInRole("House Manager");
 
@@ -55,7 +56,7 @@
 }
 
 <div class="container-fluid">
-    <div class="row row-space">
+    <div class="row row-space no-print">
         <div class="col-sm-6">
             @using (Html.BeginForm("Index", "Rooms", new { area = "House" }, FormMethod.Get, new { @class = "form-inline", role = "form" }))
             {
@@ -75,27 +76,27 @@
         <div class="col-sm-6 text-right">
             @if (isAdmin || isHousing)
             {
-                <a href="@Url.Action("Create", "Rooms", new {area = "House", sid = Model.sid})" class="btn btn-sm btn-success">
-                    Add Room
-                </a>
+            <a href="@Url.Action("Create", "Rooms", new {area = "House", sid = Model.sid})" class="btn btn-sm btn-success">
+                Add Room
+            </a>
 
                 if (!Model.Rooms.Any())
                 {
-                    <input type="button" class="btn btn-sm btn-danger" value="Generate Rooms" id="generation-button"
-                           data-toggle="tooltip" data-placement="bottom"
-                           title="This will generate all of the rooms based on the previous semester.  
+            <input type="button" class="btn btn-sm btn-danger" value="Generate Rooms" id="generation-button"
+                   data-toggle="tooltip" data-placement="bottom"
+                   title="This will generate all of the rooms based on the previous semester.
                            If the previous semester doesn't contain any rooms, the website will generate some default ones for you." />
                 }
                 using (Html.BeginForm("GenerateRooms", "Rooms", new { area = "House" },
                     FormMethod.Post, new { @class = "form-inline", role = "form", id = "generation-form" }))
                 {
-                    @Html.AntiForgeryToken()
-                    @Html.Hidden("sid", Model.sid)
+            @Html.AntiForgeryToken()
+            @Html.Hidden("sid", Model.sid)
                 }
             }
         </div>
     </div>
-    <div class="@(isAdmin || isHousing ? "row" : "hidden")">
+    <div class="@(isAdmin || isHousing ? "row" : "hidden") no-print">
         <div class="col-sm-12">
             <div class="progress">
                 <div class="progress-bar progress-bar-danger" style="width: 33%" id="step-one">
@@ -111,7 +112,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="@(isAdmin || isHousing ? "col-sm-4 col-md-3" : "hidden")">
+        <div class="@(isAdmin || isHousing ? "col-sm-4 col-md-3" : "hidden") no-print">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Members
@@ -120,7 +121,7 @@
                         @remainingMembers|@Model.Members.Count()
                     </span>
                     <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
-                       title="Blue members below represent that the member already has an 
+                       title="Blue members below represent that the member already has an
                        assignment for this semester but you may assign them to another location if their living situation changed."></i>
                 </div>
                 <ul class="list-group" style="max-height: 600px; overflow-y:scroll">
@@ -137,7 +138,7 @@
             </div>
         </div>
         <div class="@(isAdmin || isHousing ? "col-sm-8 col-md-9" : "col-xs-12")">
-            <div class="@(isAdmin || isHousing ? "row" : "hidden")">
+            <div class="@(isAdmin || isHousing ? "row" : "hidden") no-print">
                 <form id="assign-form">
                     <div class="form-group col-xs-4 col-md-4">
                         <label class="control-label">
@@ -181,32 +182,23 @@
 
                         <!-- Rooms -->
                         <path d="M 600 0 L 810 0 L 810 140 L 600 140 z" class="room"
-                              onclick="assign(@(room101 == null ? -1 : room101.RoomId))"
-                              onmouseover="show1stFloorRoomNumber(101)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room101 == null ? -1 : room101.RoomId))" />
                         <rect width="25" height="3" x="645" y="137" class="door" />
 
                         <path d="M 395 0 L 600 0 L 600 150 L 395 150 z" class="room"
-                              onclick="assign(@(room102 == null ? -1 : room102.RoomId))"
-                              onmouseover="show1stFloorRoomNumber(102)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room102 == null ? -1 : room102.RoomId))" />
                         <rect width="25" height="3" x="565" y="147" class="door" />
 
                         <path d="M 280 0 L 395 0 L 395 215 L 280 215 z" class="room"
-                              onclick="assign(@(room103 == null ? -1 : room103.RoomId))"
-                              onmouseover="show1stFloorRoomNumber(103)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room103 == null ? -1 : room103.RoomId))" />
                         <rect width="25" height="3" x="360" y="212" class="door" />
 
                         <path d="M 95 0 L 280 0 L 280 265 L 95 265 z" class="room"
-                              onclick="assign(@(room104 == null ? -1 : room104.RoomId))"
-                              onmouseover="show1stFloorRoomNumber(104)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room104 == null ? -1 : room104.RoomId))" />
                         <rect width="3" height="25" x="277" y="227" class="door" />
-                        <path d="M 95 265 L 280 265 L 280 650 L 95 650 L 95 550 L 95 650 L 0 650 L 0 485 L 95 485 z" class="room"
-                              onclick="assign(@(room105 == null ? -1 : room105.RoomId))"
-                              onmouseover="show1stFloorRoomNumber(105)"
-                              onmouseout="clearRoomNumbers()" />
+
+                        <path d="M 95 265 L 280 265 L 280 650 L 95 650 L 95 550 L 95 650 L 0 650 L 0 485 L 95 485 z"
+                              onclick="assign(@(room105 == null ? -1 : room105.RoomId))" class="room" />
                         <rect width="3" height="25" x="277" y="400" class="door" />
 
                         <!-- Mechanical closet -->
@@ -257,6 +249,14 @@
                         <rect width="3" height="25" x="1307" y="285" class="door" />
                         <!-- Front Door -->
                         <rect width="3" height="25" x="1307" y="610" class="door" />
+
+                        <!-- Room Labels -->
+                        <text x="670" y="85">101</text>
+                        <text x="465" y="85">102</text>
+                        <text x="305" y="115">103</text>
+                        <text x="155" y="150">104</text>
+                        <text x="155" y="450">105</text>
+                        <!--<text x="560" y="305" class="control-group glyphicon glyphicon-zoom-in">&#xe005</text>-->
                     </svg>
                 </div>
                 <div class="col-sm-6">
@@ -266,99 +266,67 @@
 
                         <!-- Rooms -->
                         <path d="M 1185 0 L 1310 0 L 1310 215 L 1310 260 L 1145 260 L 1145 100 L 1185 100 z" class="room"
-                              onclick="assign(@(room201 == null ? -1 : room201.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(201)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room201 == null ? -1 : room201.RoomId))" />
                         <rect width="3" height="25" x="1145" y="225" class="door" />
 
                         <path d="M 1015 0 L 1185 0 L 1185 100 L 1145 100 L 1145 215 L 1055 215 L 1055 100 L 1015 100 z" class="room"
-                              onclick="assign(@(room202 == null ? -1 : room202.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(202)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room202 == null ? -1 : room202.RoomId))" />
                         <rect width="25" height="3" x="1110" y="212" class="door" />
 
                         <path d="M 895 0 L 1015 0 L 1015 100 L 1055 100 L 1055 215 L 895 215 z" class="room"
-                              onclick="assign(@(room203 == null ? -1 : room203.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(203)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room203 == null ? -1 : room203.RoomId))" />
                         <rect width="25" height="3" x="1010" y="212" class="door" />
 
                         <path d="M 735 0 L 895 0 L 895 215 L 735 215 z" class="room"
-                              onclick="assign(@(room204 == null ? -1 : room204.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(204)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room204 == null ? -1 : room204.RoomId))" />
                         <rect width="25" height="3" x="860" y="212" class="door" />
 
                         <path d="M 585 0 L 735 0 L 735 215 L 585 215 z" class="room"
-                              onclick="assign(@(room205 == null ? -1 : room205.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(205)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room205 == null ? -1 : room205.RoomId))" />
                         <rect width="25" height="3" x="640" y="212" class="door" />
 
                         <path d="M 435 0 L 585 0 L 585 215 L 435 215 z" class="room"
-                              onclick="assign(@(room206 == null ? -1 : room206.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(206)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room206 == null ? -1 : room206.RoomId))" />
                         <rect width="25" height="3" x="445" y="212" class="door" />
 
                         <path d="M 285 0 L 435 0 L 435 215 L 285 215 z" class="room"
-                              onclick="assign(@(room207 == null ? -1 : room207.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(207)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room207 == null ? -1 : room207.RoomId))" />
                         <rect width="25" height="3" x="400" y="212" class="door" />
 
                         <path d="M 145 0 L 285 0 L 285 215 L 145 215 z" class="room"
-                              onclick="assign(@(room208 == null ? -1 : room208.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(208)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room208 == null ? -1 : room208.RoomId))" />
                         <rect width="25" height="3" x="250" y="212" class="door" />
 
                         <path d="M 145 280 L 360 280 L 360 380 L 255 380 L 255 505 L 145 505 z" class="room"
-                              onclick="assign(@(room209 == null ? -1 : room209.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(209)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room209 == null ? -1 : room209.RoomId))" />
                         <rect width="3" height="25" x="357" y="345" class="door" />
 
                         <path d="M 145 505 L 255 505 L 255 380 L 360 380 L 360 650 L 145 650 z" class="room"
-                              onclick="assign(@(room210 == null ? -1 : room210.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(210)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room210 == null ? -1 : room210.RoomId))" />
                         <rect width="3" height="25" x="357" y="390" class="door" />
 
                         <path d="M 360 425 L 505 425 L 505 650 L 360 650 z" class="room"
-                              onclick="assign(@(room211 == null ? -1 : room211.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(211)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room211 == null ? -1 : room211.RoomId))" />
                         <rect width="25" height="3" x="470" y="425" class="door" />
 
                         <path d="M 505 425 L 650 425 L 650 650 L 505 650 z" class="room"
-                              onclick="assign(@(room212 == null ? -1 : room212.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(212)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room212 == null ? -1 : room212.RoomId))" />
                         <rect width="25" height="3" x="515" y="425" class="door" />
 
                         <path d="M 650 425 L 830 425 L 830 650 L 650 650 z" class="room"
-                              onclick="assign(@(room213 == null ? -1 : room213.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(213)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room213 == null ? -1 : room213.RoomId))" />
                         <rect width="25" height="3" x="660" y="425" class="door" />
 
                         <path d="M 830 425 L 975 425 L 975 650 L 830 650 z" class="room"
-                              onclick="assign(@(room214 == null ? -1 : room214.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(214)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room214 == null ? -1 : room214.RoomId))" />
                         <rect width="3" height="25" x="972" y="435" class="door" />
 
                         <path d="M 1050 420 L 1310 420 L 1310 650 L 1225 650 L 1225 580 L 1050 580 z" class="room"
-                              onclick="assign(@(room215 == null ? -1 : room215.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(215)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room215 == null ? -1 : room215.RoomId))" />
                         <rect width="3" height="25" x="1050" y="445" class="door" />
 
                         <path d="M 1145 260 L 1310 260 L 1310 420 L 1070 420 L 1070 280 L 1145 280 z" class="room"
-                              onclick="assign(@(room216 == null ? -1 : room216.RoomId))"
-                              onmouseover="show2ndFloorRoomNumber(216)"
-                              onmouseout="clearRoomNumbers()" />
+                              onclick="assign(@(room216 == null ? -1 : room216.RoomId))" />
                         <rect width="3" height="25" x="1070" y="385" class="door" />
 
                         <!-- Mechanical closet -->
@@ -375,10 +343,28 @@
                         <path d="M 1075 580 L 1225 580 L 1225 650 L 1075 650 z" class="stairs" />
                         <!-- Fire Escape Door -->
                         <rect width="3" height="25" x="145" y="235" class="door" />
+
+                        <!-- Room Labels -->
+                        <text x="1195" y="180">201</text>
+                        <text x="1065" y="75">202</text>
+                        <text x="940" y="165">203</text>
+                        <text x="780" y="120">204</text>
+                        <text x="625" y="120">205</text>
+                        <text x="475" y="120">206</text>
+                        <text x="330" y="120">207</text>
+                        <text x="190" y="120">208</text>
+                        <text x="220" y="350">209</text>
+                        <text x="225" y="595">210</text>
+                        <text x="400" y="550">211</text>
+                        <text x="545" y="550">212</text>
+                        <text x="705" y="550">213</text>
+                        <text x="865" y="550">214</text>
+                        <text x="1150" y="520">215</text>
+                        <text x="1165" y="365">216</text>
                     </svg>
                 </div>
             </div>
-            <div class="row row-space">
+            <div class="row row-space no-print">
                 <div class="col-xs-12 ooh-button hide">
                     <label class="control-label" style="width:100%">Other Locations</label>
                     <div class="btn-group" role="group" aria-label="...">
@@ -392,8 +378,8 @@
                     </div>
                 </div>
             </div>
-            <hr />
-            <div class="panel panel-default">
+            <hr class="no-print" />
+            <div class="panel panel-default" style="page-break-before: always;">
                 <div class="panel-heading">
                     Current Room Assignments
                     @{
@@ -401,7 +387,7 @@
                     }
                     @if (remainingSpots >= 0)
                     {
-                        <span class="badge pull-right" data-toggle="tooltip" data-placement="top"
+                        <span class="badge pull-right no-print" data-toggle="tooltip" data-placement="top"
                               title="Remaining house spots">
                             @remainingSpots
                         </span>
@@ -418,12 +404,12 @@
                     <table class="table table-condensed">
                         <thead>
                             <tr>
-                                <th class="col-xs-2">Location</th>
-                                <th class="col-xs-2">Capacity</th>
+                                <th class="col-xs-2 col-p-3">Location</th>
+                                <th class="col-xs-2 col-p-3">Capacity</th>
                                 <th>Members</th>
                                 @if (isAdmin || isHousing)
                                 {
-                                    <th class="col-xs-2"></th>
+                                    <th class="col-xs-2 no-print"></th>
                                 }
                             </tr>
                         </thead>
@@ -498,7 +484,7 @@
                                     </td>
                                     @if (isAdmin || isHousing)
                                     {
-                                        <td class="text-right">
+                                        <td class="text-right no-print">
                                             @Html.ActionLink("Edit", "Edit", new { id = r.RoomId })
                                             @if (!r.Members.Any())
                                             {
@@ -529,19 +515,6 @@
             format: "MM/DD/YYYY"
         });
 
-        function show1stFloorRoomNumber(num) {
-            $('#1stFloorRoom').text("Room " + num);
-        }
-
-        function show2ndFloorRoomNumber(num) {
-            $('#2ndFloorRoom').text("Room " + num);
-        }
-
-        function clearRoomNumbers() {
-            $('#1stFloorRoom').text("");
-            $('#2ndFloorRoom').text("");
-        }
-
         function selectMember(id, name) {
             if ($("#m-" + id).hasClass("list-group-item-success")) {
                 // Change display
@@ -552,6 +525,7 @@
                 }, function() {
                     $(this).css({ fill: "#f9f7bf" });
                 });
+                $("text").css({ fill: "black" });
                 $(".ooh-button").addClass("hide");
                 $("#step-one").removeClass("progress-bar-success");
                 $("#step-one").addClass("progress-bar-danger");
@@ -570,6 +544,7 @@
                 }, function() {
                     $(this).css({ fill: "#278955" });
                 });
+                $("text").css({ fill: "white" });
                 $(".ooh-button").removeClass("hide");
                 $("#step-one").removeClass("progress-bar-danger");
                 $("#step-one").addClass("progress-bar-success");

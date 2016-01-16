@@ -47,7 +47,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <div class="row row-space">
+            <div class="row row-space no-print">
                 <div class="col-md-8">
                     @using (Html.BeginForm("Index", "WorkOrders", FormMethod.Get, new { @class = "form-inline" }))
                     {
@@ -211,26 +211,10 @@
                             <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
                                 <h4 class="list-group-item-heading">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-8 col-p-8">
                                             @w.Title
                                         </div>
-                                        <div class="col-md-4 visible-md visible-lg text-right">
-                                            <small>
-                                                <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
-                                                      data-toggle="tooltip" data-placement="top" title="Status">
-                                                    @status
-                                                </span>
-                                                <span class="label @priorityLabelColor" style="font-weight: normal !important; margin-right: 5px;"
-                                                      data-toggle="tooltip" data-placement="top" title="Priority">
-                                                    @priority
-                                                </span>
-                                                <span class="badge" style="background-color: @commentLabelColor"
-                                                      data-toggle="tooltip" data-placement="top" title="Comments">
-                                                    <i class="fa fa-comment"></i> @w.Comments.Count
-                                                </span>
-                                            </small>
-                                        </div>
-                                        <div class="col-md-4 visible-xs visible-sm">
+                                        <div class="col-md-4 col-p-4 text-md-right text-p-right">
                                             <small>
                                                 <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
                                                       data-toggle="tooltip" data-placement="top" title="Status">
@@ -275,7 +259,7 @@
                 </div>
             }
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 no-print">
             @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
         </div>
     </div>
