@@ -95,7 +95,7 @@
             }
 
             // Build Body
-            var data = await base.GetThisWeeksSoberSignupsAsync(nowUtc);
+            var data = await base.GetUpcomingSoberSignupsAsync(nowUtc);
 
             if (!data.Any())
             {

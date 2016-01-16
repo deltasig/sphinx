@@ -559,6 +559,33 @@
                 .ToList();
             return data;
         }
+        protected virtual async Task<List<SoberSignup>> GetUpcomingSoberSignupsAsync()
+        {
+            return await GetUpcomingSoberSignupsAsync(DateTime.UtcNow);
+        }
+        protected virtual async Task<List<SoberSignup>> GetUpcomingSoberSignupsAsync(DateTime date)
+        {
+            var startOfTodayCst = ConvertUtcToCst(date).Date;
+            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
+            var thisSemester = await GetThisSemesterAsync();
+            var futureSignups = await _db.SoberSignups
+                .Where(s => s.DateOfShift >= startOfTodayUtc &&
+                            s.DateOfShift <= thisSemester.DateEnd)
+                .OrderBy(s => s.DateOfShift)
+                .ThenBy(s => s.SoberTypeId)
+                .ToListAsync();
+            var data = new List<SoberSignup>();
+            for (int i = 0; i < futureSignups.Count; i++)
+            {
+                if (i == futureSignups.Count - 1)
+                    data.Add(futureSignups[i]);
+                else if ((futureSignups[i + 1].DateOfShift - futureSignups[i].DateOfShift).TotalHours <= 24)
+                    data.Add(futureSignups[i]);
+                else
+                    break;
+            }            
+            return data;
+        }
         protected virtual async Task<List<SoberSignup>> GetThisWeeksSoberSignupsAsync(DateTime now)
         {
             var nowUtc = now;
