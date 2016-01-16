@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Chapter Contacts";
     ViewBag.Subtitle = Model.ToString();
+    ViewBag.Print = true;
     var leaders = Model.Leaders ?? new List<Leader>();
     var list = leaders
         .Where(l => l.Position.IsPublic)
@@ -21,7 +22,20 @@
         <div class="col-xs-12">
             @if (leaders.Any(l => l.Position.IsPublic))
             {
-                <div class="panel panel-default hidden-xs">
+                <div class="panel panel-default">
+                    <div class="panel-heading hide print">
+                        <div class="row">
+                            <div class="col-sm-4 col-p-4">
+                                Member
+                            </div>
+                            <div class="col-sm-3 col-p-3">
+                                Email
+                            </div>
+                            <div class="col-sm-3 col-p-4">
+                                Position
+                            </div>
+                        </div>
+                    </div>
                     <div class="list-group">
                         @foreach (var leader in list)
                         {
@@ -29,30 +43,30 @@
                                 <div class="media">
                                     <div class="media-left media-middle">
                                         <img src="~/Images/Avatars/@(leader.Member.GetAvatarString())"
-                                             height="35" width="35" class="img-circle" id="avatar" style=""/>
+                                             height="35" width="35" class="img-circle no-print" id="avatar" style="" />
                                     </div>
                                     <div class="media-body">
                                         <div class="row" style="margin-top: 7px">
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-4 col-p-4">
                                                 @leader.Member.ToString()
                                             </div>
-                                            <div class="col-sm-3">
-                                                <i class="fa fa-fw fa-envelope-o"></i>
+                                            <div class="col-sm-3 col-p-3">
+                                                <i class="fa fa-fw fa-envelope-o no-print"></i>
                                                 <a href="mailto:@leader.Member.Email">@leader.Member.Email</a>
                                             </div>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-3 col-p-4">
                                                 @leader.Position.Name
                                             </div>
-                                            <div class="col-sm-2 text-right">
+                                            <div class="col-sm-2 col-p-1 text-right">
                                                 @if (leader.Position.Name == "Vice President Growth")
                                                 {
-                                                    <i class="fa fa-fw fa-info-circle text-info" data-toggle="tooltip" data-placement="left"
+                                                    <i class="fa fa-fw fa-info-circle text-info no-print" data-toggle="tooltip" data-placement="left"
                                                        title="Scholarship Inquiries">
                                                     </i>
                                                 }
                                                 else if (leader.Position.Name == "Director of Recruitment")
                                                 {
-                                                    <i class="fa fa-fw fa-info-circle text-info" data-toggle="tooltip" data-placement="left"
+                                                    <i class="fa fa-fw fa-info-circle text-info no-print" data-toggle="tooltip" data-placement="left"
                                                        title="Membership Inquiries">
                                                     </i>
                                                 }
@@ -70,29 +84,6 @@
                     <div class="panel-footer text-right">
                         <i class="fa fa-fw fa-star text-warning"></i> Executive position
                     </div>
-                </div>
-                <div class="list-group visible-xs">
-                    @foreach (var leader in list)
-                    {
-                        <a href="mailto:@leader.Member.Email" class="list-group-item">
-                            <strong>@leader.Position.Name</strong>
-                            <i class="fa fa-envelope-o pull-right"></i> <br>
-                            @leader.Member.FirstName @leader.Member.LastName
-                            @if (leader.Position.Name == "Vice President Growth")
-                            {
-                                <span class="badge">
-                                    Scholarship
-                                </span>
-                            }
-                            else if (leader.Position.Name == "Director of Recruitment")
-                            {
-                                <span class="badge">
-                                    Membership
-                                </span>
-                            }
-
-                        </a>
-                    }
                 </div>
             }
             else
