@@ -1,12 +1,13 @@
 ﻿@model Dsp.Entities.IncidentReport
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
-    ViewBag.Title = "Incident Details";
-    ViewBag.Subtitle = "Id: " + Model.IncidentId;
+    ViewBag.Title = "Incident";
+    ViewBag.Subtitle = "ID: " + Model.IncidentId;
+    ViewBag.Print = true;
 }
 
 <div class="container-fluid">
-    <div class="row row-space">
+    <div class="row row-space no-print">
         <div class="col-md-8">
             <div class="row">
                 <div class="col-md-6">
@@ -31,36 +32,40 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">@Model.PolicyBroken</div>
-                <table class="table">
+                <div class="list-group">
                     @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Sergeant-at-Arms"))
                     {
-                        <tr class="">
-                            <th><small>Incident Description</small></th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <small>Incident Occurred on @Model.DateTimeOfIncident.ToShortDateString()</small><br/>
-                                @Model.Description
-                            </td>
-                        </tr>
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-3 col-p-3">
+                                    <p>Occurred On</p>
+                                    <small>@Model.DateTimeOfIncident.ToShortDateString()</small>
+                                </div>
+                                <div class="col-sm-3 col-p-3">
+                                    <p>Submitted On</p>
+                                    <small>@Model.DateTimeSubmitted.ToShortDateString()</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item">
+                            <p>Submitted Description</p>
+                            <small>@Model.Description</small>
+                        </div>
                     }
-                    <tr class="">
-                        <th><small>Official Report</small></th>
-                    </tr>
                     @if (!string.IsNullOrEmpty(Model.OfficialReport))
                     {
-                        <tr>
-                            <td>@Model.OfficialReport</td>
-                        </tr>
+                        <div class="list-group-item">
+                            <p>Official Report</p>
+                            <small>@Model.OfficialReport</small>
+                        </div>
                     }
                     else
                     {
-                        <tr class="warning">
-                            <td>No official report has been submitted yet.</td>
-                        </tr>
+                        <div class="list-group-item list-group-item-warning">
+                            No official report has been submitted yet.
+                        </div>
                     }
-                </table>
-                <div class="panel-footer"><small>Submitted on @Model.DateTimeSubmitted.ToShortDateString()</small></div>
+                </div>
             </div>
         </div>
     </div>

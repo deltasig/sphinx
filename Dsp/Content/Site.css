@@ -604,10 +604,22 @@ ul.alert-dropdown {
         margin:0 !important;
     }
 
+    .list-group-item {
+        page-break-inside: avoid;
+    }
+
+    a[href]:after {
+        content: none !important;
+    }
+
+    .panel {
+        border: none;
+    }
+
     .panel-default > .panel-heading {
         color: #333333;
         background-color: #f5f5f5 !important;
-        border-color: #dddddd;
+        border: 1px solid #dddddd;
         -webkit-print-color-adjust: exact;
     }
 
@@ -673,5 +685,21 @@ ul.alert-dropdown {
 
     .col-p-1 {
         width: 8.333333333333332%;
+    }
+
+    .text-p-left {
+        text-align: left;
+    }
+
+    .text-p-right {
+        text-align: right;
+    }
+
+    .text-p-center {
+        text-align: center;
+    }
+
+    .text-p-justify {
+        text-align: justify;
     }
 }
