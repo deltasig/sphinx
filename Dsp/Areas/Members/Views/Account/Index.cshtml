@@ -91,21 +91,43 @@
                                 }
                             </td>
                         </tr>
-                        <tr>
-                            <td class="active">Room</td>
-                            <td>@Model.Member.RoomString()</td>
-                        </tr>
+                        @if(Model.Member.Rooms.Any())
+                        {
+                            var counter = 0;
+                            foreach (var r in Model.Member.Rooms.OrderByDescending(s => s.MovedOut))
+                            {
+                                counter++;
+                                <tr>
+                                    @if (counter == 1)
+                                    {
+                                        <td class="active" rowspan="@(Model.Member.Rooms.Count)">Residences</td>
+                                    }
+                                    <td>
+                                        @r.Room.Name (@r.GetSemester())
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td class="active">Residences</td>
+                                <td class="warning"></td>
+                            </tr>
+                        }
                         <tr>
                             <td class="active">Big Bro</td>
-                            <td>@(Model.Member.BigBrother == null ? "None" : Model.Member.BigBrother.ToString())</td>
-                        </tr>
-                        <tr>
-                            <td class="active">Shirt Size</td>
-                            <td>@Model.Member.ShirtSize</td>
+                            <td class="@(Model.Member.BigBrother == null ? "warning" : "")">
+                                @(Model.Member.BigBrother == null ? "" : Model.Member.BigBrother.ToString())
+                            </td>
                         </tr>
                         <tr>
                             <td class="active">Pin</td>
                             <td class="@(Model.Member.Pin != null ? "" : "warning")">@Model.Member.Pin</td>
+                        </tr>
+                        <tr>
+                            <td class="active">Shirt Size</td>
+                            <td>@Model.Member.ShirtSize</td>
                         </tr>
                         <tr class="active">
                             <td colspan="2">

@@ -23,5 +23,12 @@
         public virtual Room Room { get; set; }
         [ForeignKey("UserId")]
         public virtual Member Member { get; set; }
+
+        public string GetSemester()
+        {
+            if (MovedIn.Month < 6) return "Spring " + MovedIn.Year;
+            else if (MovedIn.Month < 8) return "Summer " + MovedIn.Year;
+            else return "Fall " + MovedIn.Year;
+        }
     }
 }
