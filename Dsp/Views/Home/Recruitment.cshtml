@@ -2,23 +2,15 @@
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Recruitment";
+    ViewBag.Print = true;
 }
-
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
 @section AdditionalMeta {
     <meta name="description" content="Learn about how you can join Delta Sig's mission to change the fraternity experience." >
 }
-
-<div class="container">
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 text-center">
-            <h2>
-                @ViewBag.Title
-                <small>@ViewBag.Subtitle</small>
-            </h2>
-            <hr />
-        </div>
-    </div>
-</div>
 
 <div class="container">
     @if (Model.Any())
@@ -71,18 +63,10 @@
                 potential new members and their families that covers:
             </p>
             <ul>
-                <li>
-                    Common Concerns <small class="pull-right">(pg. 1)</small>
-                </li>
-                <li>
-                    New Member Education <small class="pull-right">(pgs. 2-3)</small>
-                </li>
-                <li>
-                    Costs <small class="pull-right">(pg. 4)</small>
-                </li>
-                <li>
-                    Housing <small class="pull-right">(pg. 5)</small>
-                </li>
+                <li>Common Concerns</li>
+                <li>New Member Education</li>
+                <li>Costs</li>
+                <li>Housing</li>
             </ul>
             <p class="text-justify">
                 We update the book every semester to make sure all of the information is consistent with university costs
