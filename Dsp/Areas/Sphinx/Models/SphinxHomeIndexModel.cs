@@ -14,8 +14,14 @@
         public IEnumerable<string> Roles { get; set; }
         public IEnumerable<ServiceHour> CompletedEvents { get; set; }
         public IEnumerable<SoberSignup> SoberSignups { get; set; }
-    }
 
-    
+        // Alumni/Admin info
+        public int DaysSinceIncident { get; set; }
+        public int IncidentsThisSemester { get; set; }
+        public int ScholarshipSubmissionsThisYear { get; set; }
+        public int LaundryUsageThisSemester { get; set; }
+        public double ServiceHoursThisSemester { get; set; }
+        public int NewMembersThisSemester { get; set; }
+    }
 }
 
