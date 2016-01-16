@@ -610,9 +610,6 @@ ul.alert-dropdown {
         border-color: #dddddd;
         -webkit-print-color-adjust: exact;
     }
-    .panel-footer {
-        page-break-before: always;
-    }
 
     .no-print, .no-print * {
         display: none !important;
