@@ -2,8 +2,8 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Service Hours";
-
     ViewBag.Subtitle = Model.Semester;
+    ViewBag.Print = true;
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
 
     var exemptMembers = Model.ServiceHours
@@ -77,7 +77,7 @@
 }
 
 <div class="container-fluid">
-    <div class="row row-space">
+    <div class="row row-space no-print">
         <div class="col-xs-6">
             <div class="dropdown">
                 <button class="btn btn-default dropdown-toggle" type="button" id="semester-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -107,12 +107,13 @@
             </p>
         </div>
     </div>
-    <div class="row">
+    <div class="row" style="page-break-after: always">
         <div class="col-xs-12">
             <div class="panel panel-default">
                 <div class="panel-heading">
                     Service Stats
-                    <a href="@Url.Action("Download", "Hours", new { id = Model.Semester.SemesterId })" class="btn btn-xs btn-default pull-right">
+                    <a href="@Url.Action("Download", "Hours", new { id = Model.Semester.SemesterId })" 
+                       class="btn btn-xs btn-default pull-right no-print">
                         <i class="fa fa-download"></i> Download
                     </a>
                 </div>
@@ -166,31 +167,32 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="panel-footer">
-                    @if (exemptMembers.Any())
-                    {
+                @if (exemptMembers.Any())
+                {
+                    <div class="panel-footer">
                         <strong>* Members exempted from service hours (excluded from stats above)</strong>
-                        <br/>
-                        for (var i = 0; i < exemptMembers.Count; i++)
+                        <br />
+                        @for (var i = 0; i < exemptMembers.Count; i++)
                         {
                             if (i < exemptMembers.Count - 1)
                             {
                                 @exemptMembers[i].Member.ToString()@:,
-                            }
+                                }
                             else
                             {
                                 @exemptMembers[i].Member.ToString()
                             }
                         }
-                    }
-                </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="panel panel-default">
-                <div class="table-responsive">
+                <div class="panel-heading">Members</div>
+                <div class="table-responsive no-print">
                     <table class="table table-condensed table-hover table-bordered">
                         <thead>
                             <tr class="active">
@@ -209,14 +211,14 @@
                                 var eventAmendmentTotal = eventAmendments.Sum(a => a.NumberEvents);
                                 var hoursGoal = Model.Semester.MinimumServiceHours + hourAmendmentTotal;
                                 var eventsGoal = Model.Semester.MinimumServiceEvents + eventAmendmentTotal;
-                                var percentage = item.Hours*100.0;
+                                var percentage = item.Hours * 100.0;
                                 if (hoursGoal > 0)
                                 {
                                     percentage /= hoursGoal;
                                 }
                                 var barColor = percentage < 25 ? "danger" : percentage >= 100 ? "success" : "warning";
 
-                                <tr type="button" data-toggle="collapse" data-target=".@item.Member.Id" 
+                                <tr type="button" data-toggle="collapse" data-target=".@item.Member.Id"
                                     aria-expanded="false" aria-controls="@item.Member.Id">
                                     <td>
                                         @item.Member.LastName, @item.Member.FirstName
@@ -275,7 +277,7 @@
                                     foreach (var s in item.ServiceHours)
                                     {
                                         var eventPercentage = (int)((s.DurationHours / s.Event.DurationHours) * 100.0);
-                                        
+
                                         <tr class="collapse @item.Member.Id active">
                                             <td>
                                                 @Html.ActionLink(s.Event.EventName, "Details", "Events", new {id = s.Event.EventId}, null)
@@ -318,8 +320,45 @@
                             }
                         </tbody>
                     </table>
-                    <div class="panel-footer">Member Count: @Model.ServiceHours.Count</div>
                 </div>
+                <div class="list-group print">
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="col-xs-3 col-p-3">Name</div>
+                            <div class="col-xs-3 col-p-3">Hours Progress</div>
+                            <div class="col-xs-3 col-p-3">Hours</div>
+                            <div class="col-xs-3 col-p-3">Events</div>
+                        </div>
+                    </div>
+                    @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
+                    {
+                        var hourAmendments = Model.Semester.ServiceHourAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                        var hourAmendmentTotal = hourAmendments.Sum(a => a.AmountHours);
+                        var eventAmendments = Model.Semester.ServiceEventAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                        var eventAmendmentTotal = eventAmendments.Sum(a => a.NumberEvents);
+                        var hoursGoal = Model.Semester.MinimumServiceHours + hourAmendmentTotal;
+                        var eventsGoal = Model.Semester.MinimumServiceEvents + eventAmendmentTotal;
+                        var percentage = item.Hours * 100.0;
+                        if (hoursGoal > 0)
+                        {
+                            percentage /= hoursGoal;
+                        }
+
+                        <div class="list-group-item" style="page-break-inside: avoid">
+                            <div class="row">
+                                <div class="col-xs-3 col-p-3">
+                                    @item.Member.LastName, @item.Member.FirstName
+                                </div>
+                                <div class="col-xs-3 col-p-3">@Math.Round(percentage, 2)%</div>
+                                <div class="col-xs-3 col-p-3">@item.Hours / @hoursGoal</div>
+                                <div class="col-xs-3 col-p-3">
+                                    @item.ServiceHours.Count() / @eventsGoal
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">Member Count: @Model.ServiceHours.Count</div>
             </div>
         </div>
     </div>

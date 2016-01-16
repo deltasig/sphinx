@@ -599,3 +599,82 @@ ul.alert-dropdown {
     margin-bottom: 5px;
 }
 
+@media print {
+    body {
+        margin:0 !important;
+    }
+
+    .panel-default > .panel-heading {
+        color: #333333;
+        background-color: #f5f5f5 !important;
+        border-color: #dddddd;
+        -webkit-print-color-adjust: exact;
+    }
+    .panel-footer {
+        page-break-before: always;
+    }
+
+    .no-print, .no-print * {
+        display: none !important;
+    }
+
+    .print, .print * {
+        display: block !important;
+    }
+
+    .print-inline, .print-inline * {
+        display: inline !important;
+    }
+
+    .col-p-1, .col-p-2, .col-p-3, .col-p-4, .col-p-5, .col-p-6, .col-p-7, .col-p-8, .col-p-9, .col-p-10, .col-p-11, .col-p-12 {
+        float: left;
+    }
+
+    .col-p-12 {
+        width: 100%;
+    }
+
+    .col-p-11 {
+        width: 91.66666666666666%;
+    }
+
+    .col-p-10 {
+        width: 83.33333333333334%;
+    }
+
+    .col-p-9 {
+        width: 75%;
+    }
+
+    .col-p-8 {
+        width: 66.66666666666666%;
+    }
+
+    .col-p-7 {
+        width: 58.333333333333336%;
+    }
+
+    .col-p-6 {
+        width: 50%;
+    }
+
+    .col-p-5 {
+        width: 41.66666666666667%;
+    }
+
+    .col-p-4 {
+        width: 33.33333333333333%;
+    }
+
+    .col-p-3 {
+        width: 25%;
+    }
+
+    .col-p-2 {
+        width: 16.666666666666664%;
+    }
+
+    .col-p-1 {
+        width: 8.333333333333332%;
+    }
+}
