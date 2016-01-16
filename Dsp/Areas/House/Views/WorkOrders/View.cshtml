@@ -6,6 +6,8 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Work Order";
+    ViewBag.Subtitle = "ID: " + Model.WorkOrder.WorkOrderId;
+    ViewBag.Print = true;
 
     var currentUserId = User.Identity.GetUserId<int>();
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
@@ -80,7 +82,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <div class="row row-space">
+            <div class="row row-space no-print">
                 <div class="col-md-4">
                     <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
                         <i class="fa fa-caret-left"></i> Back to Work Orders
@@ -142,12 +144,12 @@
                     }
                 </div>
             </div>
-            <hr class="visible-xs visible-sm" />
+            <hr class="visible-xs visible-sm no-print" />
             <div class="row">
                 <div class="col-xs-12">
                     <h3 style="margin-top:5px">
                         @Model.WorkOrder.Title
-                        <br class="visible-xs visible-sm"/>
+                        <br class="visible-xs visible-sm no-print"/>
                         <small>
                             <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
                                 @status
@@ -185,7 +187,7 @@
                     </p>
                     @if (Model.WorkOrder.GetCurrentStatus() != "Closed")
                     {
-                        <div class="media">
+                        <div class="media no-print">
                             <div class="media-left">
                                 <img src="~/Images/Avatars/@User.Identity.GetAvatar()" height="25" width="25" class="img-circle"
                                      data-toggle="tooltip" data-placement="top" title="@User.Identity.Name" />
@@ -211,18 +213,21 @@
                     @foreach (var d in discussion.OrderByDescending(o => o.OccurredOn))
                     {
                         <div class="media">
-                            <div class="media-left">
+                            <div class="media-left no-print">
                                 <img src="~/Images/Avatars/@d.AvatarPath" height="25" width="25" class="img-circle"
                                      data-toggle="tooltip" data-placement="top" title="@d.Name" />
                             </div>
                             <div class="media-body">
                                 <p style="margin-bottom: 0">
-                                    <a href="@Url.Action("Index", "Account", new {area = "Members", userName = @d.UserName})">
+                                    <a href="@Url.Action("Index", "Account", new {area = "Members", userName = @d.UserName})"
+                                       class="no-print">
                                         @d.Name
                                     </a>
+                                    <span class="hide print-inline">@d.Name</span>
                                     <small class="text-info">@d.Title</small>
                                 </p>
-                                <p><small>@Html.Raw(d.Text)</small>
+                                <p>
+                                    <small>@Html.Raw(d.Text)</small>
                                 </p>
                             </div>
                         </div>
@@ -230,18 +235,8 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-4 no-print">
             @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
         </div>
     </div>
 </div>
-
-@section scripts {
-    <script type="text/javascript">
-        var ids = $(".img-rounded").map(function () { return this.id; }).toArray();
-
-        $.each(ids, function (key, value) {
-            $(".img-" + value).attr("src", "http://thecatapi.com/api/images/get?format=src&type=png&" + key);
-        });
-    </script>
-}
