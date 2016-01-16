@@ -1,6 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "About Delta Epsilon";
+    ViewBag.Print = true;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
 }
