@@ -29,7 +29,7 @@
             var events = await GetAllCompletedEventsForUserAsync(member.Id);
             var thisSemester = await GetThisSemesterAsync();
 
-            var thisWeeksSoberShifts = await GetThisWeeksSoberSignupsAsync(DateTime.UtcNow);
+            var thisWeeksSoberShifts = await GetUpcomingSoberSignupsAsync();
             var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
             var remainingDriverShifts = await _db.SoberSignups
                 .Where(s => 
