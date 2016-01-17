@@ -565,6 +565,12 @@
         }
         protected virtual async Task<List<SoberSignup>> GetUpcomingSoberSignupsAsync(DateTime date)
         {
+            var dateCst = ConvertUtcToCst(date);
+            if(dateCst.Hour < 6) // Don't show next day until after 6am
+            {
+                date = date.AddDays(-1);
+            }
+
             var startOfTodayCst = ConvertUtcToCst(date).Date;
             var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
             var thisSemester = await GetThisSemesterAsync();
@@ -577,13 +583,12 @@
             var data = new List<SoberSignup>();
             for (int i = 0; i < futureSignups.Count; i++)
             {
-                if (i == futureSignups.Count - 1)
-                    data.Add(futureSignups[i]);
-                else if ((futureSignups[i + 1].DateOfShift - futureSignups[i].DateOfShift).TotalHours <= 24)
-                    data.Add(futureSignups[i]);
-                else
+                data.Add(futureSignups[i]);
+                if (i == futureSignups.Count - 1 || 
+                    (futureSignups[i].DateOfShift != futureSignups[i + 1].DateOfShift &&
+                    futureSignups[i].DateOfShift.AddDays(1) != futureSignups[i + 1].DateOfShift))
                     break;
-            }            
+            }
             return data;
         }
         protected virtual async Task<List<SoberSignup>> GetThisWeeksSoberSignupsAsync(DateTime now)
