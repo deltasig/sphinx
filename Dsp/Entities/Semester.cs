@@ -40,6 +40,8 @@ namespace Dsp.Entities
         public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; }
         [InverseProperty("Semester")]
         public virtual ICollection<ServiceEventAmendment> ServiceEventAmendments { get; set; }
+        [InverseProperty("Semester")]
+        public virtual ICollection<ChoreGroup> ChoreGroups { get; set; }
 
         public override string ToString()
         {
