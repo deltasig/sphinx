@@ -255,6 +255,13 @@
     <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Data\ElmahDbContext.cs" />
+    <Compile Include="Entities\ChoreGroupToMember.cs" />
+    <Compile Include="Entities\ChoreGroupType.cs" />
+    <Compile Include="Entities\ChoreGroup.cs" />
+    <Compile Include="Entities\ChoreAssignment.cs" />
+    <Compile Include="Entities\ChorePeriod.cs" />
+    <Compile Include="Entities\Chore.cs" />
+    <Compile Include="Entities\ChoreType.cs" />
     <Compile Include="Entities\ServiceEventAmendment.cs" />
     <Compile Include="Entities\ServiceHourAmendment.cs" />
     <Compile Include="Entities\StudyEntities.cs" />
@@ -311,6 +318,10 @@
     <Compile Include="Migrations\201510230422211_ServiceAmendmentsV2.cs" />
     <Compile Include="Migrations\201510230422211_ServiceAmendmentsV2.Designer.cs">
       <DependentUpon>201510230422211_ServiceAmendmentsV2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201602080646217_InitialChoreEntities.cs" />
+    <Compile Include="Migrations\201602080646217_InitialChoreEntities.Designer.cs">
+      <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
@@ -1021,6 +1032,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201510230422211_ServiceAmendmentsV2.resx">
       <DependentUpon>201510230422211_ServiceAmendmentsV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201602080646217_InitialChoreEntities.resx">
+      <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
