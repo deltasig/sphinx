@@ -10,5 +10,6 @@
         public IEnumerable<Member> Members { get; set; }
         public IEnumerable<StudySession> StudySessions { get; set; }
         public int? PreviousStudyPeriodId { get; set; }
+        public Semester Semester { get; internal set; }
     }
 }
