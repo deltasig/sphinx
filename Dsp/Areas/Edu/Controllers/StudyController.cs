@@ -58,7 +58,8 @@
                 StudyPeriod = studyPeriod,
                 DefaultHourAmount = da,
                 Members = await GetRosterForSemester(semester),
-                StudySessions = studySessions
+                StudySessions = studySessions,
+                Semester = semester
             };
 
             // Check for a previous period
@@ -79,6 +80,58 @@
             return View(model);
         }
         
+        [Authorize(Roles = "Administrator, Academics")]
+        public async Task<ActionResult> Report(int? sid)
+        {
+            var semester = await base.GetThisSemesterAsync();
+            if (sid != null)
+            {
+                semester = await _db.Semesters.FindAsync(sid);
+            }
+
+            var model = new StudyReportModel(semester);
+            var studyPeriods = await _db.StudyPeriods
+                .Where(p => p.BeginsOn >= semester.DateStart && p.EndsOn <= semester.DateEnd)
+                .ToListAsync();
+            model.Periods = studyPeriods;
+            var members = (from p in studyPeriods from a in p.Assignments select a.Member).Distinct();
+            foreach(var m in members)
+            {
+                var record = new StudyReportRecord();
+                record.Member = m;
+                record.Periods = new List<StudyReportPeriodRecord>();
+                foreach(var p in studyPeriods)
+                {
+                    var periodRecord = new StudyReportPeriodRecord();
+                    periodRecord.Period = p;
+                    periodRecord.Assignment = p.Assignments.SingleOrDefault(a => a.MemberId == m.Id);
+                    if(periodRecord.Assignment != null)
+                    {
+                        periodRecord.Goal = periodRecord.Assignment.AmountOfHours;
+                        periodRecord.Completed = (double)periodRecord.Assignment.StudyHours.Sum(s => s.DurationMinutes);
+                        periodRecord.SessionsAttended = periodRecord.Assignment.StudyHours.Count;
+                    }
+                    record.Periods.Add(periodRecord);
+                }
+                model.Records.Add(record);
+            }
+
+            // Identify valid semesters for dropdown
+            var allStudyPeriods = await _db.StudyPeriods.ToListAsync();
+            var allSemesters = await _db.Semesters.ToListAsync();
+            var semesters = new List<Semester>();
+            foreach (var sem in allSemesters)
+            {
+                if (allStudyPeriods.Any(i => i.BeginsOn >= sem.DateStart && i.EndsOn <= sem.DateEnd))
+                {
+                    semesters.Add(sem);
+                }
+            }
+            model.SemesterList = await GetCustomSemesterListAsync(semesters);
+
+            return View(model);
+        }
+
         [HttpPost, ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> AssignMemberToPeriod(int mid, int pid, double amount)
@@ -92,6 +145,14 @@
             }
 
             var member = await UserManager.FindByIdAsync(mid);
+
+            var existsAlready = await _db.StudyAssignments.AnyAsync(a => a.MemberId == mid && a.PeriodId == pid);
+            if (existsAlready)
+            {
+                TempData["FailureMessage"] = member + " has already been assigned to this period.";
+                return RedirectToAction("Period", new { id = pid, da = amount });
+            }
+
             var newAssignment = new StudyAssignment
             {
                 PeriodId = pid,

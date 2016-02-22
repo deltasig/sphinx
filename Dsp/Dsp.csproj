@@ -241,6 +241,7 @@
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
     <Compile Include="Areas\Edu\Models\EditEnrollmentModel.cs" />
     <Compile Include="Areas\Edu\Models\StudyIndexModel.cs" />
+    <Compile Include="Areas\Edu\Models\StudyReportModel.cs" />
     <Compile Include="Areas\Edu\Models\StudySessionModel.cs" />
     <Compile Include="Areas\Edu\Models\StudyPeriodModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
@@ -789,6 +790,7 @@
     <Content Include="Areas\Members\Views\Roster\GraduateActives.cshtml" />
     <Content Include="Areas\Alumni\Views\Acb\Index.cshtml" />
     <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
+    <Content Include="Areas\Edu\Views\Study\Report.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
