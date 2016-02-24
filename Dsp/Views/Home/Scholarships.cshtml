@@ -45,7 +45,7 @@
                         }
                         else
                         {
-                            foreach (var a in Model.Applications.Where(a => a.ScholarshipTypeId == t.ScholarshipTypeId).Take(2))
+                            foreach (var a in Model.Applications.Where(a => a.ScholarshipTypeId == t.ScholarshipTypeId).OrderByDescending(o => o.ClosesOn).Take(1))
                             {
                                 if (!a.IsPublic && !User.Identity.IsAuthenticated)
                                 {
@@ -77,7 +77,7 @@
                                                 </span>
                                             </strong>
                                         </div>
-                                        <div class="row">
+                                        <div class="row hidden-print">
                                             <div class="col-xs-12">
                                                 <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
                                                    class="btn btn-primary">
