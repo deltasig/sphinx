@@ -324,6 +324,11 @@
     <Compile Include="Migrations\201602080646217_InitialChoreEntities.Designer.cs">
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\Elmah\201604172003482_Initial.cs" />
+    <Compile Include="Migrations\Elmah\201604172003482_Initial.Designer.cs">
+      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Elmah\Configuration.cs" />
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -1037,6 +1042,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602080646217_InitialChoreEntities.resx">
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\Elmah\201604172003482_Initial.resx">
+      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
