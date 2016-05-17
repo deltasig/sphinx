@@ -21,18 +21,20 @@ Build the solution to download all the required NuGet packages, which may take a
 
 ### Building Your Local Databases
 This application uses [Entity Framework Code-First][1] to handle database interaction and management.
-After you've installed everything, cloned the repo, and built the solution, open the NuGet Package Manager Console in Visual Studio.
-
-Then run the following commands:
+After you've installed everything, cloned the repo, and built the solution, open the NuGet Package Manager Console in Visual Studio and run the following commands:
 
 ~~~ sh
-$ Enable-Migrations   // turns on Entity Framework Migrations for the solution
-$ Update-Database     // builds the two databases in the solution
+PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext
+PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext
+PM> Update-Database -ConfigurationTypeName Dsp.Migrations.Configuration
+PM> Update-Database -ConfigurationTypeName Dsp.Migrations.Elmah.Configuration
 ~~~
 
-There are two database configurations with this web application: (1) one for fraternity-related data and (2) for the Elmah error log data.
-It's possible that Entity Framework will complain to you and say you need to be specific about which database you want when you run each of the above commands.
-If so, just follow the instructions in the output messages to enable and update both of the databases.
+There are two database configurations: (1) one for fraternity-related data and (2) one for the Elmah error log data.
+
+Entity Framework makes use of something called *migrations* to keep track of every change made to the database schema.
+The first two commands simply turn on migrations and then the last two commands create both databases based on the migration history.
+
 Contact Ty if you get stuck.
 
 ### Data
