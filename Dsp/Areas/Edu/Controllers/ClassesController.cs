@@ -585,5 +585,10 @@
             TempData["SuccessMessage"] = "File deleted successfully.";
             return RedirectToAction("Details", new { id = classId });
         }
+
+        public ActionResult Uploading()
+        {
+            return View();
+        }
     }
 }
