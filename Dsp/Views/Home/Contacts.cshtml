@@ -3,7 +3,6 @@
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Chapter Contacts";
     ViewBag.Subtitle = Model.ToString();
-    ViewBag.Print = true;
     var leaders = Model.Leaders ?? new List<Leader>();
     var list = leaders
         .Where(l => l.Position.IsPublic)
