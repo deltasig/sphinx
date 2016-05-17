@@ -796,6 +796,7 @@
     <Content Include="Areas\Alumni\Views\Acb\Index.cshtml" />
     <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Study\Report.cshtml" />
+    <Content Include="Areas\Edu\Views\Classes\Uploading.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
