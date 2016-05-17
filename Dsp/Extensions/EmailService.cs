@@ -36,7 +36,7 @@
             }
             catch (SmtpException e)
             {
-
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
             }
 
             return Task.FromResult(0);
@@ -66,7 +66,7 @@
             }
             catch (SmtpException e)
             {
-
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
             }
 
             return Task.FromResult(0);

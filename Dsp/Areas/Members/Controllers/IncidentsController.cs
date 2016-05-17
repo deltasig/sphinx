@@ -94,6 +94,7 @@
             }
             catch (SmtpException e)
             {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
 

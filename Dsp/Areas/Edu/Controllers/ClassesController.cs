@@ -471,9 +471,9 @@
                 _db.ClassFiles.Add(file);
                 await _db.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
             }
 
             TempData["SuccessMessage"] = "File was added successfully.";
@@ -520,8 +520,9 @@
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 TempData["FailureMessage"] = "Failed to download the file because of a server error.  " +
                                              "If the problem persists please contact your administrator.";
                 return RedirectToAction("Details", new { id = file.Class.ClassId });
@@ -561,8 +562,9 @@
                     client.DeleteObject(request);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 TempData["FailureMessage"] = "Failed to delete the file because of a server error.  " +
                                              "If the problem persists please contact your administrator.";
                 return RedirectToAction("Details", new { id = classId });

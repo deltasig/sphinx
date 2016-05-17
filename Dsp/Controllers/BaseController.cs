@@ -291,7 +291,7 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
-        protected virtual async Task<SelectList> GetCustomSemesterListAsync(IEnumerable<Semester> list)
+        protected virtual SelectList GetCustomSemesterListAsync(IEnumerable<Semester> list)
         {
             var newList = new List<object>();
 
@@ -1045,7 +1045,7 @@
             return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        protected virtual async Task<IEnumerable<Member>> GetFilteredMembersList(
+        protected virtual IEnumerable<Member> GetFilteredMembersList(
             IList<Member> members, string s, string sort, string order)
         {
             IEnumerable<Member> filteredResults;

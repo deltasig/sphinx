@@ -270,7 +270,7 @@
             }
             catch (SmtpException e)
             {
-
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
             }
 
             TempData["SuccessMessage"] = "Work order created successfully.";

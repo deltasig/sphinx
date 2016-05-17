@@ -18,8 +18,9 @@
                 styleElement.SetInnerText(cssText);
                 return MvcHtmlString.Create(styleElement.ToString());
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 // return nothing if we can't read the file for any reason
                 return null;
             }

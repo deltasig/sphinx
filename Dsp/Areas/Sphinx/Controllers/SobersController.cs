@@ -220,7 +220,7 @@
                 }
                 catch (SmtpException e)
                 {
-
+                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 }
             }
 
@@ -300,7 +300,7 @@
             // Build model for view
             model.SelectedSemester = semester.SemesterId;
             model.Semester = semester;
-            model.SemesterList = await base.GetCustomSemesterListAsync(semesters);
+            model.SemesterList = base.GetCustomSemesterListAsync(semesters);
             // Identify members for current semester
             model.Members = await base.GetRosterForSemester(semester);;
 

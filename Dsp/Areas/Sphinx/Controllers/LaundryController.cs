@@ -45,7 +45,7 @@
             var model = new LaundryIndexModel
             {
                 Schedule = schedule,
-                SemesterList = await GetCustomSemesterListAsync(semesters)
+                SemesterList = GetCustomSemesterListAsync(semesters)
             };
             return View(model);
         }
@@ -189,7 +189,7 @@
                 semesters.Add(thisSemester);
             }
 
-            return View(await GetCustomSemesterListAsync(semesters));
+            return View(GetCustomSemesterListAsync(semesters));
         }
 
         [HttpGet, AllowAnonymous]

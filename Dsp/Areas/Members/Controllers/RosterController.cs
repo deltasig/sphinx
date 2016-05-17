@@ -31,7 +31,7 @@
             ViewBag.Sort = filter.sort;
             ViewBag.Order = filter.order;
             ViewBag.SearchTerm = filter.s;
-            var filteredResults = await base.GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
+            var filteredResults = base.GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
             
             var model = new RosterIndexModel
             {
