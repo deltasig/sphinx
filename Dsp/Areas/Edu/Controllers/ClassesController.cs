@@ -295,9 +295,9 @@
         }
 
         [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> Disenroll(int uid, int sid, int cid)
+        public async Task<ActionResult> Disenroll(int ctid)
         {
-            var entry = await _db.ClassesTaken.SingleAsync(c => c.UserId == uid && c.SemesterId == sid && c.ClassId == cid);
+            var entry = await _db.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
             if (entry == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             return View(entry);
         }
@@ -326,9 +326,9 @@
         }
 
         [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> EditEnrollment(int uid, int sid, int cid)
+        public async Task<ActionResult> EditEnrollment(int ctid)
         {
-            var enrollment = await _db.ClassesTaken.SingleAsync(c => c.UserId == uid && c.SemesterId == sid && c.ClassId == cid);
+            var enrollment = await _db.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
             if (enrollment == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
 
             var model = new EditEnrollmentModel

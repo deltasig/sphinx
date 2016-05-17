@@ -112,7 +112,7 @@
                                         <td><span class="badge"><small>@e.Class.CreditHours</small></span></td>
                                         @if (hasElevatedPermissions)
                                         {
-                                            var enrollmentInfo = new { uid = e.UserId, cid = e.ClassId, sid = e.SemesterId };
+                                            var enrollmentInfo = new { ctid = e.ClassTakenId };
                                             <td class="text-right">
                                                 <small>
                                                     <a href="@Url.Action("EditEnrollment", enrollmentInfo)">Edit</a> |
