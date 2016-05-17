@@ -398,7 +398,7 @@
                 semesters.Add(thisSemester);
             }
 
-            return await GetCustomSemesterListAsync(semesters);
+            return GetCustomSemesterListAsync(semesters);
         } 
 
         public async Task<ActionResult> Download(int? id)

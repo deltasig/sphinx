@@ -127,7 +127,7 @@
                     semesters.Add(sem);
                 }
             }
-            model.SemesterList = await GetCustomSemesterListAsync(semesters);
+            model.SemesterList = GetCustomSemesterListAsync(semesters);
 
             return View(model);
         }
