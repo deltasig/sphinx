@@ -21,11 +21,20 @@
         }
 
         [AllowAnonymous]
+        public ActionResult UploadTooLarge()
+        {
+            Response.TrySkipIisCustomErrors = true;
+            Response.StatusCode = (int)HttpStatusCode.NotFound;
+            Response.SubStatusCode = 13;
+            return View("404.13");
+        }
+
+        [AllowAnonymous]
         public ActionResult NotFound()
         {
             Response.TrySkipIisCustomErrors = true;
             Response.StatusCode = (int)HttpStatusCode.NotFound;
-            return View("NotFound");
+            return View("404");
         }
 
         [AllowAnonymous]
@@ -33,7 +42,7 @@
         {
             Response.TrySkipIisCustomErrors = true;
             Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return View("InternalServerError");
+            return View("500");
         }
 
         public async Task<ActionResult> Logs(int page = 1)

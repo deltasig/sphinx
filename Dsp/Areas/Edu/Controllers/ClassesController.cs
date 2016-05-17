@@ -434,6 +434,15 @@
                 TempData["FailureMessage"] = "Failed to add file because nothing was uploaded.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
+
+            var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
+            int maxLength = section != null ? section.MaxRequestLength*1024 : 4096*1024;
+
+            if (model.FileInfoModel.File.ContentLength > maxLength)
+            {
+                TempData["FailureMessage"] = string.Format("Failed to add file because it is too large. Max size: {0}", maxLength);
+                return RedirectToAction("Details", new { id = model.Class.ClassId });
+            }
             if (model.FileInfoModel.File.ContentType != "application/pdf")
             {
                 TempData["FailureMessage"] = "Failed to add file because the file type was identified as PDF.";

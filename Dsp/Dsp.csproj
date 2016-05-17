@@ -934,8 +934,8 @@
     <Content Include="Areas\Sphinx\Views\Laundry\Schedule.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Manager.cshtml" />
     <Content Include="Areas\Sphinx\Views\Sobers\Schedule.cshtml" />
-    <Content Include="Views\Error\NotFound.cshtml" />
-    <Content Include="Views\Error\InternalServerError.cshtml" />
+    <Content Include="Views\Error\404.cshtml" />
+    <Content Include="Views\Error\500.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Edit.cshtml" />
@@ -983,6 +983,7 @@
     <Content Include="Views\Emails\NewWorkOrder.cshtml" />
     <Content Include="Areas\Alumni\Views\Home\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Error\404.13.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
