@@ -9,13 +9,11 @@
         {
             routes.IgnoreRoute("robots.txt");
             routes.IgnoreRoute("sitemap.xml");
+            routes.IgnoreRoute("Error/403.html");
+            routes.IgnoreRoute("Error/404.13.html");
+            routes.IgnoreRoute("Error/404.html");
+            routes.IgnoreRoute("Error/500.html");
             routes.LowercaseUrls = true;
-
-            routes.MapRoute(
-                "ErrorIndex",
-                "Error/",
-                new { controller = "Error", action = "NotFound" }
-            );
 
             routes.MapRoute(
                 "Errors",

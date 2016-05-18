@@ -12,6 +12,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web.Configuration;
     using System.Web.Mvc;
@@ -448,7 +449,15 @@
                 TempData["FailureMessage"] = "Failed to add file because the file type was identified as PDF.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
+            Regex regex = new Regex(@"(Test|Hw|Quiz) \d - (SP|FS|SS)\d{4} - .{2,25}.pdf");
+            Match match = regex.Match(model.FileInfoModel.File.FileName);
+            if(!match.Success)
+            {
+                TempData["FailureMessage"] = "Your file name does not match the required format. Please review the upload instructions.";
+                return RedirectToAction("Details", new { id = model.Class.ClassId });
+            }
 
+            var newFileName = string.Join(" - ", model.Class.CourseShorthand, model.FileInfoModel.File.FileName);
             var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
             var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
             var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
@@ -456,7 +465,7 @@
             try
             {
                 IAmazonS3 client;
-                var key = string.Format(model.Class.CourseShorthand + "/{0}", model.FileInfoModel.File.FileName);
+                var key = string.Format(model.Class.CourseShorthand + "/{0}", newFileName);
                 using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
                 {
                     var request = new PutObjectRequest()
