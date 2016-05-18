@@ -14,35 +14,9 @@
     [Authorize(Roles = "Administrator")]
     public class ErrorController : Controller
     {
-        [AllowAnonymous]
         public ActionResult Index()
         {
-            return InternalServerError();
-        }
-
-        [AllowAnonymous]
-        public ActionResult UploadTooLarge()
-        {
-            Response.TrySkipIisCustomErrors = true;
-            Response.StatusCode = (int)HttpStatusCode.NotFound;
-            Response.SubStatusCode = 13;
-            return View("404.13");
-        }
-
-        [AllowAnonymous]
-        public ActionResult NotFound()
-        {
-            Response.TrySkipIisCustomErrors = true;
-            Response.StatusCode = (int)HttpStatusCode.NotFound;
-            return View("404");
-        }
-
-        [AllowAnonymous]
-        public ActionResult InternalServerError()
-        {
-            Response.TrySkipIisCustomErrors = true;
-            Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-            return View("500");
+            return HttpNotFound();
         }
 
         public async Task<ActionResult> Logs(int page = 1)
