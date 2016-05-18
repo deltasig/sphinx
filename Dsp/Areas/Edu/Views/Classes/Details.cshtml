@@ -1,6 +1,7 @@
 ﻿@using Dsp.Areas.Edu.Models
 @using Dsp.Entities
 @using Microsoft.AspNet.Identity
+@using System.Web.Configuration
 @model ClassDetailsModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -20,6 +21,9 @@
         }
     };
 
+    var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
+    var maxKB = section != null ? section.MaxRequestLength : 10240; // KB
+    var maxMB = maxKB / 1024; // MB
 }
 
 <div class="container-fluid">
@@ -189,7 +193,7 @@
                         <div class="form-group">
                             <input type="file" 
                                    name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
-                            <p class="help-block">PDF files only; max size is 4MB.</p>
+                            <p class="help-block">PDF files only; max size is @(maxMB)MB.</p>
                         </div>
                         <input type="submit" value="Upload" class="btn btn-sm btn-default" />
                     }

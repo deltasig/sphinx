@@ -437,7 +437,7 @@
             }
 
             var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
-            int maxLength = section != null ? section.MaxRequestLength*1024 : 4096*1024;
+            int maxLength = section != null ? section.MaxRequestLength*1024 : 10240*1024;
 
             if (model.FileInfoModel.File.ContentLength > maxLength)
             {
@@ -462,6 +462,19 @@
             var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
             var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
 
+            // Optimize the PDF file before sending it to AWS.
+            Aspose.Pdf.Document doc = new Aspose.Pdf.Document(model.FileInfoModel.File.InputStream);
+            doc.OptimizeResources(new Aspose.Pdf.Document.OptimizationOptions()
+            {
+                LinkDuplcateStreams = true,
+                RemoveUnusedObjects = true,
+                RemoveUnusedStreams = true,
+                CompressImages = true,
+                ImageQuality = 15
+            });
+            MemoryStream stream = new MemoryStream();
+            doc.Save(stream);
+
             try
             {
                 IAmazonS3 client;
@@ -473,7 +486,7 @@
                         BucketName = awsBucket,
                         CannedACL = S3CannedACL.Private,
                         Key = key,
-                        InputStream = model.FileInfoModel.File.InputStream
+                        InputStream = stream
                     };
 
                     client.PutObject(request);

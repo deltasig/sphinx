@@ -1,36 +1,13 @@
-﻿@{
+﻿@using System.Web.Configuration
+@{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Uploading";
+    var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
+    var maxKB = section != null ? section.MaxRequestLength : 10240; // KB
+    var maxMB = maxKB / 1024; // MB
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-6">
-            <h4>Size</h4>
-            <p>
-                <strong>The maximum upload size is 4 megabytes (MB) which is more than enough.</strong> <br />
-                When you scan a PDF the resulting file will often times be unnecessarily large (many megabytes). <br />
-                So <strong>always</strong> reduce the file size before uploading (see links).
-            </p>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Links
-                </div>
-                <div class="list-group">
-                    <a class="list-group-item" href="https://acrobatusers.com/tutorials/reducing-file-size"
-                       target="_blank">Windows users</a>
-                    <a class="list-group-item" href="http://osxdaily.com/2013/12/12/reduce-pdf-file-size-preview-mac/"
-                       target="_blank">Mac users</a>
-                </div>
-            </div>
-            <div class="alert alert-warning">
-                <small>If either link is broken, let your web master know.</small>
-            </div>
-        </div>
-    </div>
-    <hr />
     <div class="row">
         <div class="col-md-6">
             <h4>Naming</h4>
@@ -38,46 +15,54 @@
                 When you name a file, use the following format:
                 <pre>[type] [#] - [Semester] - [Instructor Last Name].pdf</pre>
             </p>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">Details</div>
-                <table class="table table-condensed table-bordered">
-                    <thead>
-                        <tr class="active">
-                            <th>Type</th>
-                            <th>#</th>
-                            <th>Semester</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-xs-3">
-                                Test <br />
-                                Hw <br />
-                                Quiz <br />
-                            </td>
-                            <td class="col-xs-6">
-                                Denotes the order in which the item occurred in the semester.
-                            </td>
-                            <td class="col-xs-3">
-                                SP2016 <br />
-                                FS2015 <br />
-                                SS2014, and so on
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <h4>Details</h4>
+            <table class="table table-condensed table-bordered">
+                <thead>
+                    <tr class="active">
+                        <th>Type</th>
+                        <th>#</th>
+                        <th>Semester</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="col-xs-3">
+                            Test <br />
+                            Hw <br />
+                            Quiz <br />
+                        </td>
+                        <td class="col-xs-6">
+                            Denotes the order in which the item occurred in the semester.
+                        </td>
+                        <td class="col-xs-3">
+                            SP2016 <br />
+                            FS2015 <br />
+                            SS2014, and so on
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr />
         </div>
     </div>
-    <hr />
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-6">
+            <h4>Size</h4>
+            <p>
+                <strong>The maximum upload size is @(maxMB)MB which is more than enough.</strong> <br />
+                When you scan a PDF the resulting file will often times be unnecessarily large (many megabytes). <br />
+                Therefore, the website compresses the files you provide to ensure future downloads are fast and website bandwidth isn't wasted.
+            </p>
+            <hr />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
             <h4>Format</h4>
             <p>
                 PDF - always.
             </p>
+            <hr />
         </div>
     </div>
 </div>
