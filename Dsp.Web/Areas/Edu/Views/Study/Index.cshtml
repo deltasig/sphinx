@@ -1,0 +1,146 @@
+﻿@using Dsp.Web.Extensions
+@model Dsp.Web.Areas.Edu.Models.StudyIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Study Dashboard";
+    ViewBag.Subtitle = Model.Semester;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <i class="fa fa-fw fa-clock-o"></i> Study periods
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            @if (hasElevatedPermissions)
+                            {
+                                @Html.ActionLink("Report", "Report", null, new { @class = "btn btn-xs btn-info", style="margin-right: 5px" })
+                                @Html.ActionLink("Add Period", "CreatePeriod", null, new {@class = "btn btn-xs btn-success"})
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                        <tr class="warning">
+                            <td colspan="4">
+                                <small>
+                                    <i class="fa fa-info-circle text-warning"></i> 
+                                    The time period (usually a week long) during which a member must complete his study hour assignment.
+                                </small>
+                            </td>
+                        </tr>
+                    <tr class="active">
+                        <th class="col-xs-1"><small>#</small></th>
+                        <th class=""><small>Begins</small></th>
+                        <th class=""><small>Ends</small></th>
+                        <th class="col-xs-1">
+                            <i class="fa fa-file-text-o" data-toggle="tooltip" data-placement="top"
+                               title="Assignments"></i>
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (Model.Periods.Any())
+                    {
+                        var i = 0;
+
+                        foreach (var p in Model.Periods.OrderBy(o => o.BeginsOn))
+                        {
+                            var isCurrentPeriod = p.BeginsOn < nowCst && nowCst < p.EndsOn;
+                            i++;
+
+                            <tr class="@(isCurrentPeriod ? "success" : "")" style="cursor: pointer"
+                                onclick="window.document.location = '@Url.Action("Period", new {id = p.Id})';">
+                                <td><small>@i</small></td>
+                                <td>
+                                    <small>@p.BeginsOn.ToString("MMM dd hh:mm tt")</small>
+                                </td>
+                                <td>
+                                    <small>@p.EndsOn.ToString("MMM dd hh:mm tt")</small>
+                                </td>
+                                <td>
+                                    <small>@p.Assignments.Count</small>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="warning">
+                            <td colspan="4">No periods have been defined yet.</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <i class="fa fa-fw fa-list-ol"></i> Future study sessions
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            @if (hasElevatedPermissions)
+                            {
+                                @Html.ActionLink("Add Session", "CreateSession", null, new {@class = "btn btn-xs btn-success"})
+                            }
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-condensed table-hover">
+                    <thead>
+                    <tr class="warning">
+                        <td colspan="3">
+                            <small>
+                                <i class="fa fa-info-circle text-warning"></i> 
+                                A proctored session where the member can study to complete his study hour assignment.
+                            </small>
+                        </td>
+                    </tr>
+                    <tr class="active">
+                        <th class="col-xs-3"><small>Date</small></th>
+                        <th class="col-xs-4"><small>Time</small></th>
+                        <th class=""><small>Location</small></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @if (Model.Sessions.Any())
+                    {
+                        foreach (var s in Model.Sessions.OrderBy(o => o.BeginsOn))
+                        {
+                            var isCurrentSession = s.BeginsOn < nowCst && nowCst < s.EndsOn;
+
+                            <tr class="@(isCurrentSession ? "success" : "")" style="cursor: pointer"
+                                onclick="window.document.location = '@Url.Action("Sessions", new {id = s.Id})';">
+                                <td>
+                                    <small>@s.BeginsOn.ToString("ddd, MMM d")<sup>@s.BeginsOn.GetDaySuffix()</sup></small>
+                                </td>
+                                <td>
+                                    <small>@s.BeginsOn.ToString("h:mm tt") to @s.EndsOn.ToString("h:mm tt")</small>
+                                </td>
+                                <td><small>@s.Location</small></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr class="warning">
+                            <td colspan="3">No future study sessions were found.</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

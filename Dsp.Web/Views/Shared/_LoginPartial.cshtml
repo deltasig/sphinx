@@ -1,0 +1,51 @@
+﻿@using Dsp.Web.Extensions
+@if (Request.IsAuthenticated)
+{
+    var avatar = User.Identity.GetAvatar();
+
+    if (!User.IsInRole("Released"))
+    {
+        <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
+            <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
+               data-toggle="tooltip" data-placement="bottom" title="Sphinx">
+                <i class="fa fa-home"></i>
+            </a>
+        </li>
+    }
+    <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
+        @if (string.IsNullOrEmpty(avatar) || avatar == "NoAvatar.jpg")
+        {
+            <a href="@Url.Action("Index", "Account", new {area = "Members"})"
+               data-toggle="tooltip" data-placement="bottom" title="Account">
+                <i class="fa fa-user"></i>
+            </a>
+        }
+        else
+        {
+            <a rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:7px"
+               data-toggle="tooltip" data-placement="bottom" title="Account">
+                <img src="~/Images/Avatars/@(avatar)" height="35" width="35" class="img-circle" id="avatar" />
+            </a>
+        }
+        
+    </li>
+    <li>
+        @using (Html.BeginForm("SignOut", "Account", new {area = "Members"}, FormMethod.Post, new {id = "signoutForm"}))
+        {
+            @Html.AntiForgeryToken()
+        }
+        <a href="javascript:document.getElementById('signoutForm').submit()"
+           data-toggle="tooltip" data-placement="bottom" title="Sign Out">
+            <i class="fa fa-sign-out"></i>
+        </a>
+    </li>
+}
+else
+{
+    <li class="@(ViewBag.Title.Contains("Sign In") ? "active" : "")">
+        <a href="@Url.Action("SignIn", "Account", new { area = "Members" })"
+           data-toggle="tooltip" data-placement="bottom" title="Member Sign In">
+            <i class="fa fa-sign-in"></i>
+        </a>
+    </li>
+}

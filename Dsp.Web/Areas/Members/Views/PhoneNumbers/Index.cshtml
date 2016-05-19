@@ -1,0 +1,131 @@
+﻿@model IEnumerable<Dsp.Web.Entities.Member>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Phone Numbers";
+    ViewBag.Print = true;
+}
+
+<div class="container-fluid">
+    <div class="row row-space no-print">
+        <div class="col-sm-4">
+            <a class="btn btn-default" href="@Url.Action("Index", "Roster")">
+                <i class="fa fa-caret-left"></i> Back to Roster
+            </a>
+        </div>
+        <div class="col-sm-4 text-sm-right">
+            <a class="btn btn-info" href="@Url.Action("Index", "Addresses")"
+               data-toggle="tooltip" data-placement="top" title="Addresses">
+                <i class="fa fa-fw fa-envelope"></i>
+            </a>
+            <a class="btn btn-default" href="@Url.Action("Download", "PhoneNumbers")">
+                <i class="fa fa-download"></i> Download
+            </a>
+        </div>
+    </div>
+    <div class="row row-space">
+        <div class="col-sm-8">
+            @using (Html.BeginForm("Index", "PhoneNumbers", FormMethod.Get, new { @class = "form-inline" }))
+            {
+                <div class="input-group no-print">
+                    <span class="input-group-addon" id="search-addon" data-toggle="tooltip" data-placement="top"
+                          title="Search by first/last name or full/partial number.  Type :all to list everyone.">
+                        <i class="fa fa-search"></i>
+                    </span>
+                    <input class="form-control" id="s" name="s" placeholder="Search" type="text"
+                           value="" aria-describedby="search-addon">
+
+                    @if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                    {
+                        <span class="input-group-btn">
+                            <a class="btn btn-default" data-toggle="tooltip" data-placement="top" title="Clear search"
+                               href="@Url.Action("Index")">
+                                <i class="fa fa-times-circle"></i>
+                            </a>
+                        </span>
+                    }
+                </div>
+                if (!string.IsNullOrEmpty(ViewBag.SearchTerm))
+                {
+                    <small>Searched for: @ViewBag.SearchTerm</small>
+                }
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-4 col-p-4">Member</div>
+                        <div class="col-sm-8 col-p-8">Number(s)</div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    @if (Model.Any())
+                    {
+                        foreach (var m in Model)
+                        {
+                            var name = m.ToString();
+
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-sm-4 col-p-4">
+                                        <a href="@Url.Action("Index", "Account", new { userName = m.UserName })" class="no-print">
+                                            @if (name.ToLower().Contains(ViewBag.SearchTerm.ToLower()))
+                                            {
+                                                var matchLocation = name.ToLower().IndexOf(ViewBag.SearchTerm.ToLower());
+                                                var searchLength = ViewBag.SearchTerm.Length;
+                                                name = name.Insert(matchLocation, "<mark>");
+                                                name = name.Insert(matchLocation + searchLength + 6, "</mark>");
+                                                @Html.Raw(name)
+                                            }
+                                            else
+                                            {
+                                                @: @name
+                                            }
+                                        </a>
+                                        <span class="hide print">@name</span>
+                                    </div>
+                                    <div class="col-sm-8 col-p-4">
+                                        @foreach (var p in m.PhoneNumbers)
+                                        {
+                                            var number = p.Number;
+
+                                            if (!string.IsNullOrEmpty(p.Number))
+                                            {
+                                                <span class="badge">@p.Type:</span>
+                                                <a href="tel:@p.Number" class="no-print">
+                                                    @if (number.ToLower().Contains(ViewBag.SearchTerm.ToLower()))
+                                                    {
+                                                        var matchLocation = number.ToLower().IndexOf(ViewBag.SearchTerm.ToLower());
+                                                        var searchLength = ViewBag.SearchTerm.Length;
+                                                        number = number.Insert(matchLocation, "<mark>");
+                                                        number = number.Insert(matchLocation + searchLength + 6, "</mark>");
+                                                        @Html.Raw(number)
+                                                    }
+                                                    else
+                                                    {
+                                                        @: @number
+                                                    }
+                                                </a> 
+                                                <span class="hide print-inline">@number</span>
+                                                <br />
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item list-group-item-warning">
+                            No results! <br />
+                            Search by first/last name or full/partial number.  Type ":all" to list everyone.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

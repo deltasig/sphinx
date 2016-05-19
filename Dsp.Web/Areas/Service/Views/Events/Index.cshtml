@@ -1,0 +1,85 @@
+﻿@model Dsp.Web.Areas.Service.Models.ServiceEventIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Service Events";
+    ViewBag.Subtitle = Model.Semester;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-6">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="semester-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Change Semester
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="semester-dropdown">
+                    @foreach (var s in Model.SemesterList)
+                    {
+                        <li><a href="@Url.Action("Index", new { s = s.Value })">@s.Text</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a href="@Url.Action("Index", "Hours", new { s = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
+                    Service Hours
+                </a>
+                @Html.ActionLink("Submit Hours", "Submit", "Hours", new { s = Model.Semester.SemesterId }, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Add New Event", "Create", "Events", new { s = Model.Semester.SemesterId }, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-sm-2">Date/Time</th>
+                                <th>Event Name</th>
+                                <th class="col-sm-1">
+                                    Duration
+                                    <i data-toggle="tooltip" data-placement="top" title="Displayed in Hours" class="fa fa-info-circle text-info"></i>
+                                </th>
+                                <th class="col-sm-1">Members</th>
+                                <th class="col-sm-1">Approved</th>
+                                @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
+                                {
+                                    <th class="col-sm-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Events.OrderByDescending(e => e.DateTimeOccurred))
+                            {
+                                <tr>
+                                    <td>@TimeZoneInfo.ConvertTimeFromUtc(item.DateTimeOccurred, cstZone).ToString("MM-dd@hh:mm tt (ddd)")</td>
+                                    <td>@item.EventName</td>
+                                    <td>@item.DurationHours</td>
+                                    <td>@item.ServiceHours.Count</td>
+                                    <td>@Html.DisplayFor(m => item.IsApproved)</td>
+                                    @if (User.IsInRole("Service") || User.IsInRole("Administrator"))
+                                    {
+                                        <td class="text-right">
+                                            @Html.ActionLink("Details", "Details", new { id = item.EventId }) |
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.EventId })
+                                            @if (!item.ServiceHours.Any())
+                                            {
+                                                @:|
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.EventId })
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

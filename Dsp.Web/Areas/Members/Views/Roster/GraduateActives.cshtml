@@ -1,0 +1,81 @@
+﻿@model Dsp.Web.Areas.Members.Models.GraduateActivesModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Graduate Actives";
+}
+@section styles {
+    @Styles.Render("~/content/multi-select")
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a class="btn btn-sm btn-default" href="@Url.Action("Index", "Roster", new {area = "Members"})">
+                <i class="fa fa-caret-left"></i> Back to Roster
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            @using (Html.BeginForm("GraduateActives", "Roster", FormMethod.Post, new {@class = "", role = "form"}))
+            {
+                @Html.AntiForgeryToken()
+
+                <h4>
+                    <strong>Select the actives to move to alumnus status</strong>
+                </h4>
+
+                <div class="row">
+                    <div class="form-group col-xs-12 col-sm-9">
+                        @Html.ListBoxFor(model => model.SelectedMemberIds, Model.Actives, new {id = "active-selection", @class = "form-control"})
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-xs-12">
+                        <input type="submit" value="Submit" class="btn btn-default"/>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/multi-select")
+    <script type="text/javascript">
+
+        $(function() {
+            var settings = {
+                selectableHeader: "<label class='control-label'>Members</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+                selectionHeader: "<label class='control-label'>Selected Members</label><input type='text' class='search-input form-control' autocomplete='off' placeholder='search'>",
+                afterInit: function (ms) {
+                    var that = this,
+                        $selectableSearch = that.$selectableUl.prev(),
+                        $selectionSearch = that.$selectionUl.prev(),
+                        selectableSearchString = "#" + that.$container.attr("id") + " .ms-elem-selectable:not(.ms-selected)",
+                        selectionSearchString = "#" + that.$container.attr("id") + " .ms-elem-selection.ms-selected";
+
+                    that.qs1 = $selectableSearch.quicksearch(selectableSearchString)
+                        .on("keydown", function (e) {
+                            if (e.which === 40) {
+                                that.$selectableUl.focus();
+                                return false;
+                            }
+                        });
+
+                    that.qs2 = $selectionSearch.quicksearch(selectionSearchString)
+                        .on("keydown", function (e) {
+                            if (e.which === 40) {
+                                that.$selectionUl.focus();
+                                return false;
+                            }
+                        });
+                },
+                cssClass: "full-width"
+            };
+
+            $("#active-selection").multiSelect(settings);
+        });
+
+    </script>
+}

@@ -1,0 +1,145 @@
+﻿@using Dsp.Web.Areas.Members.Models
+@using Dsp.Web.Extensions
+@using Dsp.Web.Models
+@model IncidentsIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Incident Reports";
+    var filter = new IncidentsIndexFilterModel
+    {
+        page = ViewBag.Page,
+        unresolved = ViewBag.Unresolved,
+        resolved = ViewBag.Resolved,
+        sort = ViewBag.Sort,
+        s = ViewBag.CurrentFilter
+    };
+    var sortNewestFilter = new IncidentsIndexFilterModel(filter);
+    var sortOldestFilter = new IncidentsIndexFilterModel(filter);
+    var pagePreviousFilter = new IncidentsIndexFilterModel(filter);
+    var pageNextFilter = new IncidentsIndexFilterModel(filter);
+    var unresolvedFilter = new IncidentsIndexFilterModel(filter);
+    var resolvedFilter = new IncidentsIndexFilterModel(filter);
+
+    const string newestSortText = "newest";
+    const string oldestSortText = "oldest";
+
+    sortNewestFilter.sort = filter.sort == newestSortText ? "" : newestSortText;
+    sortOldestFilter.sort = filter.sort == oldestSortText ? "" : oldestSortText;
+    pagePreviousFilter.page = filter.page - 1;
+    pageNextFilter.page = filter.page + 1;
+    unresolvedFilter.unresolved = !filter.unresolved;
+    resolvedFilter.resolved = !filter.resolved;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row row-space">
+                <div class="col-md-8">
+                    @using (Html.BeginForm("Index", "Incidents", FormMethod.Get, new {@class = "form-inline"}))
+                    {
+                        <div class="btn-group" role="group" aria-label="...">
+                            @Html.ActionLink("Unresolved", "Index", "Incidents", unresolvedFilter, new
+                            {
+                                @class = "btn btn-default " + (ViewBag.Title == "Incidents" ? "active" : "") + (ViewBag.Unresolved ? " active" : "")
+                            })
+                            @Html.ActionLink("Resolved", "Index", "Incidents", resolvedFilter, new
+                            {
+                                @class = "btn btn-default " + (ViewBag.Title == "Incidents" ? "active" : "") + (ViewBag.Resolved ? " active" : "")
+                            })
+                            <div class="btn-group" type="group">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                    Sort <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="presentation" class="@(ViewBag.sort == newestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
+                                            <i class="fa fa-sort-amount-asc"></i> Newest
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == oldestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
+                                            @if (ViewBag.sort == oldestSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-desc"></i> Oldest
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr class="visible-xs" />
+                        <div class="input-group">
+                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
+                            <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
+                            <input id="unresolved" name="unresolved" type="hidden" value="@ViewBag.Unresolved.ToString()">
+                            <input id="resolved" name="resolved" type="hidden" value="@ViewBag.Resolved.ToString()">
+                            <input id="sort" name="sort" type="hidden" value="@ViewBag.Sort.ToString()">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                        </div>
+                    }
+                    <hr class="visible-xs visible-sm" />
+                </div>
+                <div class="col-md-4 text-right">
+                    @Html.ActionLink("Submit Incident Report", "Submit", null, new { @class = "btn btn-sm btn-success" })
+                </div>
+            </div>
+
+            @if (Model.Incidents.Any())
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row row-fluid">
+                            <div class="col-md-6">
+                                <i class="fa fa-exclamation-circle"></i> @ViewBag.UnresolvedResultCount <small style="padding-right: 5px">Unresolved</small>
+                                <i class="fa fa-check-circle"></i> @ViewBag.ResolvedResultCount <small>Resolved</small>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                                {
+                                    <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <ul class="list-group">
+                        @foreach (var i in Model.Incidents)
+                        {
+                            var status = string.IsNullOrEmpty(i.OfficialReport) ? "unresolved" : "resolved";
+                            var labelColor = string.IsNullOrEmpty(i.OfficialReport) ? "label-warning" : "label-success";
+                            var timeSince = (DateTime.UtcNow - i.DateTimeSubmitted).ToUserFriendlyString();
+
+                            <a href="@Url.Action("Details", new {id = i.IncidentId})" class="list-group-item">
+                                <h4 class="list-group-item-heading">
+                                    @i.PolicyBroken
+                                    <small>
+                                        <span class="label @labelColor" style="font-weight: normal !important; margin-right: 5px;">
+                                            @status
+                                        </span>
+                                    </small>
+                                </h4>
+                                <p class="list-group-item-text">
+                                    submitted @timeSince
+                                </p>
+                            </a>
+                        }
+                    </ul>
+                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
+                    {
+                        Previous = pagePreviousFilter,
+                        Incrementer = filter,
+                        Next = pageNextFilter
+                    })
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No incident reports found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@model Dsp.Web.Entities.ClassFile
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Delete Class File";
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12">
+            <a href="@Url.Action("Details", new { id = Model.ClassId })" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Classes
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="alert alert-danger">
+                <p>Are you sure you want to delete the file: <strong>@Model.AwsCode</strong>?</p>
+            </div>
+
+            @using (Html.BeginForm(new { id = Model.ClassFileId, classId = Model.ClassId }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <input type="submit" value="Delete" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
