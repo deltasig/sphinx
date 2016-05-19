@@ -1,7 +1,7 @@
 namespace Dsp.Web.Migrations
 {
-    using Data;
-    using Entities;
+    using Dsp.Data;
+    using Dsp.Data.Entities;
     using Microsoft.AspNet.Identity;
     using System;
     using System.Collections.Generic;

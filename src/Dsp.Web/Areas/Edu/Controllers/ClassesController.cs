@@ -3,7 +3,7 @@
     using Amazon.S3;
     using Amazon.S3.Model;
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;

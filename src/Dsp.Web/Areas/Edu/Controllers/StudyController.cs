@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Models;
     using System.Data.Entity;
     using System.Linq;

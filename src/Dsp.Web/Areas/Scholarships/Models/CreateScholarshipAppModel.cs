@@ -1,8 +1,8 @@
 ﻿namespace Dsp.Web.Areas.Scholarships.Models
 {
+    using Dsp.Data.Entities;
     using System.Collections.Generic;
     using System.Web.Mvc;
-    using Entities;
 
     public class CreateScholarshipAppModel
     {

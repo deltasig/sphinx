@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Dsp.Web.Entities;
-using Dsp.Web.Migrations;
-
-namespace Dsp.Web.Areas.Scholarships.Models
+﻿namespace Dsp.Web.Areas.Scholarships.Models
 {
+    using Dsp.Data.Entities;
+    using System.Collections.Generic;
+
     public class SubmitScholarshipAppModel
     {
         public ScholarshipApp App { get; set; }

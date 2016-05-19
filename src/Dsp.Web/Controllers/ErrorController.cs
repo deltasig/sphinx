@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Controllers
 {
-    using Data;
+    using Dsp.Data;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;

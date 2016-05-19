@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Areas.Admin.Models
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Collections.Generic;
 
     public class AppointmentModel

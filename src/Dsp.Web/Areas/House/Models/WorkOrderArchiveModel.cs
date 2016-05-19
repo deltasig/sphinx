@@ -2,7 +2,7 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using Entities;
+    using Dsp.Data.Entities;
 
     public class WorkOrderArchiveModel
     {

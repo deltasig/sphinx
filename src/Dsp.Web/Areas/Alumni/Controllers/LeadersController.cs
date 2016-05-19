@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Alumni.Controllers
 {
+    using Dsp.Data.Entities;
     using Dsp.Web.Controllers;
-    using Entities;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;

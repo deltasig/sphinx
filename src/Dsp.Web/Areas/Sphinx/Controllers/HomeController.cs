@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Sphinx.Controllers
 {
     using Dsp.Web.Controllers;
-    using Dsp.Web.Entities;
+    using Dsp.Data.Entities;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Models;
@@ -109,7 +109,7 @@
                 .ToListAsync();
             var saas = await _db.Leaders
                 .Where(l => l.Position.Name == "Sergeant-at-Arms" && l.SemesterId == thisSemester.SemesterId).ToListAsync();
-            var saa = (saas.LastOrDefault() ?? new Entities.Leader
+            var saa = (saas.LastOrDefault() ?? new Leader
             {
                 Member = await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())
             }).Member;

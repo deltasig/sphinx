@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Areas.Edu.Models
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Web.Mvc;
 
     public class CreateClassModel

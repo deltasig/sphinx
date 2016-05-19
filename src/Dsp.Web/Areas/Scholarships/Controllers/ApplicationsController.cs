@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Scholarships.Controllers
 {
+    using Dsp.Data.Entities;
     using Dsp.Web.Controllers;
-    using Entities;
     using Extensions;
     using MarkdownSharp;
     using Microsoft.AspNet.Identity;

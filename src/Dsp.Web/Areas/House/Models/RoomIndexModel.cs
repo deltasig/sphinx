@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.House.Models
 {
     using System.Collections.Generic;
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Web.Mvc;
 
     public class RoomIndexModel

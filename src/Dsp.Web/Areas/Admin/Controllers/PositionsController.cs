@@ -1,8 +1,9 @@
 ﻿namespace Dsp.Web.Areas.Admin.Controllers
 {
-    using Data;
+    using Dsp.Data;
+    using Dsp.Data.Entities;
     using Dsp.Web.Controllers;
-    using Entities;
+    using Extensions;
     using Models;
     using System;
     using System.Collections.Generic;

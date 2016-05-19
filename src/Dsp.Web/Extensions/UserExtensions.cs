@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Extensions
 {
-    using Data;
+    using Dsp.Data;
     using Microsoft.AspNet.Identity;
     using System.Security.Principal;
     using Areas.Members.Controllers;
