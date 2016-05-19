@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Models;
     using System;
     using System.Data.Entity;

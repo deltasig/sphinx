@@ -13,7 +13,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Dsp.Web</RootNamespace>
     <AssemblyName>Dsp.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44301</IISExpressSSLPort>
@@ -259,17 +259,7 @@
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
     <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
-    <Compile Include="Data\ElmahDbContext.cs" />
-    <Compile Include="Entities\ChoreGroupToMember.cs" />
-    <Compile Include="Entities\ChoreGroupType.cs" />
-    <Compile Include="Entities\ChoreGroup.cs" />
-    <Compile Include="Entities\ChoreAssignment.cs" />
-    <Compile Include="Entities\ChorePeriod.cs" />
-    <Compile Include="Entities\Chore.cs" />
-    <Compile Include="Entities\ChoreType.cs" />
-    <Compile Include="Entities\ServiceEventAmendment.cs" />
-    <Compile Include="Entities\ServiceHourAmendment.cs" />
-    <Compile Include="Entities\StudyEntities.cs" />
+    <Compile Include="Extensions\DspRoleProvider.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Migrations\201507142355194_Initial.cs" />
@@ -340,55 +330,6 @@
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
-    <Compile Include="Data\SphinxDbContext.cs" />
-    <Compile Include="Data\SphinxRoleStore.cs" />
-    <Compile Include="Data\SphinxUserClaim.cs" />
-    <Compile Include="Data\SphinxUserLogin.cs" />
-    <Compile Include="Data\SphinxUserStore.cs" />
-    <Compile Include="Entities\Address.cs" />
-    <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\ClassFile.cs" />
-    <Compile Include="Entities\ClassTaken.cs" />
-    <Compile Include="Entities\Department.cs" />
-    <Compile Include="Entities\Email.cs" />
-    <Compile Include="Entities\EmailType.cs" />
-    <Compile Include="Entities\ServiceEvent.cs" />
-    <Compile Include="Entities\IncidentReport.cs" />
-    <Compile Include="Entities\LaundrySignup.cs" />
-    <Compile Include="Entities\Leader.cs" />
-    <Compile Include="Entities\Major.cs" />
-    <Compile Include="Entities\MajorToMember.cs" />
-    <Compile Include="Entities\Meal.cs" />
-    <Compile Include="Entities\MealItem.cs" />
-    <Compile Include="Entities\MealItemType.cs" />
-    <Compile Include="Entities\MealPlate.cs" />
-    <Compile Include="Entities\MealPeriod.cs" />
-    <Compile Include="Entities\MealToItem.cs" />
-    <Compile Include="Entities\MealToPeriod.cs" />
-    <Compile Include="Entities\MealVote.cs" />
-    <Compile Include="Entities\Member.cs" />
-    <Compile Include="Entities\MemberStatus.cs" />
-    <Compile Include="Entities\PhoneNumber.cs" />
-    <Compile Include="Entities\PledgeClass.cs" />
-    <Compile Include="Entities\Position.cs" />
-    <Compile Include="Entities\Room.cs" />
-    <Compile Include="Entities\RoomToMember.cs" />
-    <Compile Include="Entities\ScholarshipAnswer.cs" />
-    <Compile Include="Entities\ScholarshipApp.cs" />
-    <Compile Include="Entities\ScholarshipAppQuestion.cs" />
-    <Compile Include="Entities\ScholarshipQuestion.cs" />
-    <Compile Include="Entities\ScholarshipSubmission.cs" />
-    <Compile Include="Entities\ScholarshipType.cs" />
-    <Compile Include="Entities\Semester.cs" />
-    <Compile Include="Entities\ServiceHour.cs" />
-    <Compile Include="Entities\SoberSignup.cs" />
-    <Compile Include="Entities\SoberType.cs" />
-    <Compile Include="Entities\WorkOrder.cs" />
-    <Compile Include="Entities\WorkOrderComment.cs" />
-    <Compile Include="Entities\WorkOrderPriority.cs" />
-    <Compile Include="Entities\WorkOrderPriorityChange.cs" />
-    <Compile Include="Entities\WorkOrderStatus.cs" />
-    <Compile Include="Entities\WorkOrderStatusChange.cs" />
     <Compile Include="Extensions\EmailService.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\HtmlHelpers.cs" />
@@ -471,7 +412,6 @@
     <Compile Include="Areas\Admin\Controllers\SemestersController.cs" />
     <Compile Include="Areas\Service\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
-    <Compile Include="Data\DspRoleProvider.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
@@ -1060,6 +1000,12 @@
     <EmbeddedResource Include="Migrations\Elmah\201605190003276_NullableSequence.resx">
       <DependentUpon>201605190003276_NullableSequence.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj">
+      <Project>{9ce07462-20a3-4ee6-8797-7ea69e05acb8}</Project>
+      <Name>Dsp.Data</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

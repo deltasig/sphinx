@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Service.Models
 {
     using System.Collections.Generic;
-    using Entities;
+    using Dsp.Data.Entities;
 
     public class ServiceHourIndexMemberRowModel
     {

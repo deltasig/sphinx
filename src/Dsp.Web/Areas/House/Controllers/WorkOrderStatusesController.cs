@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.House.Controllers
 {
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;

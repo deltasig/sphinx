@@ -1,11 +1,12 @@
 namespace Dsp.Web.Migrations.Elmah
 {
+    using Dsp.Data;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Dsp.Web.Data.ElmahDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ElmahDbContext>
     {
         public Configuration()
         {
@@ -14,7 +15,7 @@ namespace Dsp.Web.Migrations.Elmah
             MigrationsDirectory = @"Migrations\Elmah";
         }
 
-        protected override void Seed(Dsp.Web.Data.ElmahDbContext context)
+        protected override void Seed(ElmahDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

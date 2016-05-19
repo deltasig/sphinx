@@ -2,7 +2,7 @@
 {
     using Dsp.Web.Controllers;
     using Edu.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;

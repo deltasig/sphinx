@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Controllers
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using Extensions;
     using MarkdownSharp;
     using Microsoft.AspNet.Identity;

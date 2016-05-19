@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Areas.Kitchen.Models
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using System;
     using System.Collections.Generic;
 

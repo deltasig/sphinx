@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Edu.Controllers
 {
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Microsoft.AspNet.Identity;
     using System.Collections.Generic;
     using System.Data.Entity;

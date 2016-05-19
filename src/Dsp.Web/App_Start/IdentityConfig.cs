@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web
 {
-    using Data;
-    using Entities;
+    using Dsp.Data;
+    using Dsp.Data.Entities;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;

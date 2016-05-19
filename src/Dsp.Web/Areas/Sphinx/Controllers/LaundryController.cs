@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Sphinx.Controllers
 {
     using Dsp.Web.Controllers;
-    using Entities;
+    using Dsp.Data.Entities;
     using Microsoft.AspNet.Identity;
     using Models;
     using Newtonsoft.Json;

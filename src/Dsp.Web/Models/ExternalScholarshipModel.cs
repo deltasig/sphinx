@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Models
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Collections.Generic;
 
     public class ExternalScholarshipModel

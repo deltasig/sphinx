@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Areas.Members.Models
 {
-    using Entities;
+    using Dsp.Data.Entities;
     using System.Collections.Generic;
     using System.Web.Mvc;
 

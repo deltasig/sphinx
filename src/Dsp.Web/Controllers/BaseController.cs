@@ -1,8 +1,8 @@
 ﻿namespace Dsp.Web.Controllers
 {
     using Areas.Scholarships.Models;
-    using Data;
-    using Entities;
+    using Dsp.Data;
+    using Dsp.Data.Entities;
     using Extensions;
     using Microsoft.AspNet.Identity.Owin;
     using System;
