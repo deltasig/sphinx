@@ -162,7 +162,7 @@
                 <div class="list-group">
                     @foreach (var m in Model.Members)
                     {
-                        var phone = m.PhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Web.Entities.PhoneNumber();
+                        var phone = m.PhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Data.Entities.PhoneNumber();
 
                         <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" class="list-group-item">
                             <h4 class="list-group-item-heading">
