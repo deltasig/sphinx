@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Dsp.Web.Entities.SoberSignup>
+﻿@model IEnumerable<Dsp.Data.Entities.SoberSignup>
 @{
     var dates = Model.Select(s => s.DateOfShift).Distinct();
     var returnUrl = Request.RawUrl.Split('?')[0];
