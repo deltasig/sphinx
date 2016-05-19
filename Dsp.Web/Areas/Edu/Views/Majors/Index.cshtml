@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Dsp.Web.Entities.Major>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Majors";
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12 text-right">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-12 text-right">
+                            @if (hasElevatedPermissions)
+                            {
+                                @Html.ActionLink("Add Major", "Create", null, new { @class = "btn btn-xs btn-success" })
+                            }
+                            @Html.ActionLink("Assign Major", "Assign", null, new { @class = "btn btn-xs btn-success" })
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                        <tr class="active">
+                            <th class="col-sm-3">Name</th>
+                            <th>Department</th>
+                            <th class="col-sm-2">Members</th>
+                            @if (hasElevatedPermissions)
+                            {
+                                <th class="col-sm-2"></th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.OrderBy(o => o.MajorName))
+                        {
+                            <tr>
+                                <td>@item.MajorName</td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Departments", new {id = item.DepartmentId})">
+                                        @item.Department.Name
+                                    </a>
+                                </td>
+                                <td>@item.MajorToMembers.Count</td>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <td class="text-right">
+                                        @if (!item.MajorToMembers.Any())
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.MajorId })
+                                            @: |
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.MajorId })
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">Count: @Model.Count()</div>
+            </div>
+        </div>
+    </div>
+</div>

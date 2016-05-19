@@ -1,0 +1,72 @@
+﻿@model Dsp.Web.Entities.IncidentReport
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Incident";
+    ViewBag.Subtitle = "ID: " + Model.IncidentId;
+    ViewBag.Print = true;
+}
+
+<div class="container-fluid">
+    <div class="row row-space no-print">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6">
+                    <p>
+                        <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                            <i class="fa fa-caret-left"></i> Back to Incident Reports
+                        </a>
+                    </p>
+                </div>
+                <div class="col-md-6 text-right">
+                    @if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
+                    {
+                        <a href="@Url.Action("Edit", new { id = Model.IncidentId })" class="btn btn-sm btn-info">
+                            <i class="fa fa-wrench"></i> Edit
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">@Model.PolicyBroken</div>
+                <div class="list-group">
+                    @if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Sergeant-at-Arms"))
+                    {
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-sm-3 col-p-3">
+                                    <p>Occurred On</p>
+                                    <small>@Model.DateTimeOfIncident.ToShortDateString()</small>
+                                </div>
+                                <div class="col-sm-3 col-p-3">
+                                    <p>Submitted On</p>
+                                    <small>@Model.DateTimeSubmitted.ToShortDateString()</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="list-group-item no-print">
+                            <p>Submitted Description</p>
+                            <small>@Model.Description</small>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.OfficialReport))
+                    {
+                        <div class="list-group-item">
+                            <p>Official Report</p>
+                            <small>@Model.OfficialReport</small>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="list-group-item list-group-item-warning">
+                            No official report has been submitted yet.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+﻿@model Dsp.Web.Areas.Edu.Models.ClassScheduleModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Schedule";
+    ViewBag.Subtitle = Model.Member.ToString();
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-12 text-right">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        @if (hasElevatedPermissions || User.Identity.Name == Model.SelectedUserName)
+        {
+            <div class="col-md-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Add a New Class
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Enroll", "Classes", FormMethod.Post, new { @class = "", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(m => Model.ClassTaken.UserId)
+                            @Html.HiddenFor(m => Model.SelectedUserName)
+                            var list = Model.AllClasses.Select(c => new { c.ClassId, Text = c.CourseShorthand + ": " + c.CourseName });
+
+                            <div class="form-group">
+                                @Html.Label("Semester", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => Model.ClassTaken.SemesterId, Model.Semesters,
+                                    new
+                                    {
+                                        @class = "form-control selectpicker",
+                                        autocomplete = "off",
+                                        id = "semester-dd",
+                                        data_live_search = "true"
+                                    })
+                            </div>
+                            <div class="form-group">
+                                @Html.Label("Class", new { @class = "control-label" })
+                                @Html.DropDownListFor(m => Model.ClassTaken.ClassId, new SelectList(list, "ClassId", "Text"),
+                                    new
+                                    {
+                                        @class = "form-control selectpicker",
+                                        autocomplete = "off",
+                                        id = "class-dd",
+                                        data_live_search = "true"
+                                    })
+                            </div>
+
+                            <div class="checkbox form-group">
+                                <label class="control-label">
+                                    @Html.EditorFor(model => Model.ClassTaken.IsSummerClass)
+                                    Summer Class
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-default">Add</button>
+                        }
+                    </div>
+                </div>
+                <div class="alert alert-warning">
+                    <strong>Regarding Summer Classes</strong>
+                    <hr />
+                    <p>
+                        Select the Fall version of the year from the semester dropdown, then check the box.
+                    </p>
+                </div>
+            </div>
+        }
+        <div class="col-md-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">All classes</div>
+
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-md-2"><small>Semester</small></th>
+                                <th><small>Number</small></th>
+                                <th class="hidden-xs hidden-sm"><small>Name</small></th>
+                                <th class="col-md-1"><small>Credits</small></th>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <th class="col-md-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.ClassesTaken.Any())
+                            {
+                                foreach (var e in Model.ClassesTaken.OrderByDescending(s => s.Semester.DateStart).ThenByDescending(s => !s.IsSummerClass))
+                                {
+                                    <tr>
+                                        <td>
+                                            <small>
+                                                @(e.IsSummerClass ? "Summer " + e.Semester.DateStart.Year : e.Semester.ToString())
+                                            </small>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Details", new {id = e.ClassId})">
+                                                <small>@e.Class.CourseShorthand</small>
+                                            </a>
+                                        </td>
+                                        <td class="hidden-sm hidden-xs"><small>@e.Class.CourseName</small></td>
+                                        <td><span class="badge"><small>@e.Class.CreditHours</small></span></td>
+                                        @if (hasElevatedPermissions)
+                                        {
+                                            var enrollmentInfo = new { ctid = e.ClassTakenId };
+                                            <td class="text-right">
+                                                <small>
+                                                    <a href="@Url.Action("EditEnrollment", enrollmentInfo)">Edit</a> |
+                                                    <a href="@Url.Action("Disenroll", enrollmentInfo)">Delete</a>
+                                                </small>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                var columns = hasElevatedPermissions ? 5 : 4;
+
+                                <tr class="warning">
+                                    <td colspan="@(columns)">No classes added</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    @Model.ClassesTaken.Count() @(Model.ClassesTaken.Count() == 1 ? "class" : "classes"),
+                    @Model.ClassesTaken.Sum(c => c.Class.CreditHours) credit hours
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

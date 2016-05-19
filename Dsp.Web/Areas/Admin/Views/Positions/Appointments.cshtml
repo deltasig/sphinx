@@ -1,0 +1,86 @@
+﻿@using Dsp.Web.Entities
+@model IList<Dsp.Web.Areas.Admin.Models.AppointmentModel>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Appointments";
+    var semesters = Model.Select(m => m.Leader.Semester).Distinct();
+    var positionTypes = Enum.GetValues(typeof(Position.PositionType)).Cast<Position.PositionType>().ToList();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Appointments", "Positions", new { area = "Admin"}, FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+
+                foreach (var semester in semesters)
+                {
+                    <div class="panel panel-default">
+                        <!-- Default panel contents -->
+                        <div class="panel-heading">
+                            <strong>@semester</strong>
+                        </div>
+
+                        <ul class="list-group">
+                            @for (var i = 0; i < Model.Count(); i++)
+                            {
+                                if (Model[i].Leader.SemesterId != semester.SemesterId)
+                                {
+                                    continue;
+                                }
+                                <li class="list-group-item">
+                                    @Html.HiddenFor(m => Model[i].Leader.SemesterId)
+                                    @Html.HiddenFor(m => Model[i].Leader.RoleId)
+                                    
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <h4>
+                                                @Html.DisplayFor(m => Model[i].Leader.Position.Name)
+                                                <small>
+                                                    @Html.DisplayFor(m => Model[i].Leader.Position.Type)
+                                                </small>
+                                            </h4>   
+                                        </div>
+                                        <div class="col-md-4">
+                                            @if (Model[i].Leader.Position.Type == Position.PositionType.Alumni)
+                                            {
+                                                @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Alumni, "UserId", "Name", Model[i].Leader.UserId),
+                                                    new
+                                                    {
+                                                        @class = "form-control selectpicker",
+                                                        autocomplete = "off",
+                                                        data_live_search = "true",
+                                                        data_size = "10"
+                                                    })
+                                            }
+                                            else
+                                            {
+                                                @Html.DropDownListFor(m => Model[i].Leader.UserId,
+                                                    new SelectList(Model[i].Users, "UserId", "Name", Model[i].Leader.UserId),
+                                                    new
+                                                    {
+                                                        @class = "form-control selectpicker",
+                                                        autocomplete = "off",
+                                                        data_live_search = "true",
+                                                        data_size = "10"
+                                                    })
+                                            }
+                                        </div>
+                                    </div>
+                                </li>
+                            }
+                        </ul>
+
+                        <div class="panel-footer">
+                            <button type="submit" class="btn btn-success">Update</button>
+                        </div>
+                    </div>
+                    
+                }
+            }
+        </div>
+    </div>
+</div>

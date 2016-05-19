@@ -1,0 +1,266 @@
+﻿@model WorkOrderIndexModel
+@using System.Web.Mvc.Html
+@using Dsp.Web.Areas.House.Models;
+@using Dsp.Web.Extensions;
+@using Dsp.Web.Models
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Work Orders";
+    var filter = new WorkOrderIndexFilterModel
+    {
+        page = ViewBag.Page,
+        open = ViewBag.Open,
+        closed = ViewBag.Closed,
+        sort = ViewBag.Sort,
+        s = ViewBag.CurrentFilter
+    };
+    var sortNewestFilter = new WorkOrderIndexFilterModel(filter);
+    var sortOldestFilter = new WorkOrderIndexFilterModel(filter);
+    var sortMostCommentedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortLeastCommentedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
+    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
+    var pagePreviousFilter = new WorkOrderIndexFilterModel(filter);
+    var pageNextFilter = new WorkOrderIndexFilterModel(filter);
+    var openFilter = new WorkOrderIndexFilterModel(filter);
+    var closedFilter = new WorkOrderIndexFilterModel(filter);
+
+    const string newestSortText = "newest";
+    const string oldestSortText = "oldest";
+    const string mostCommentedSortText = "most-commented";
+    const string leastCommentedSortText = "least-commented";
+    const string recentlyUpdatedSortText = "recently-updated";
+    const string leastRecentlyUpdatedSortText = "least-recently-updated";
+
+    sortNewestFilter.sort = filter.sort == newestSortText ? "" : newestSortText;
+    sortOldestFilter.sort = filter.sort == oldestSortText ? "" : oldestSortText;
+    sortMostCommentedFilter.sort = filter.sort == mostCommentedSortText ? "" : mostCommentedSortText;
+    sortLeastCommentedFilter.sort = filter.sort == leastCommentedSortText ? "" : leastCommentedSortText;
+    sortRecentlyUpdatedFilter.sort = filter.sort == recentlyUpdatedSortText ? "" : recentlyUpdatedSortText;
+    sortLeastRecentlyUpdatedFilter.sort = filter.sort == leastRecentlyUpdatedSortText ? "" : leastRecentlyUpdatedSortText;
+    pagePreviousFilter.page = filter.page - 1;
+    pageNextFilter.page = filter.page + 1;
+    openFilter.open = !filter.open;
+    closedFilter.closed = !filter.closed;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row row-space no-print">
+                <div class="col-md-8">
+                    @using (Html.BeginForm("Index", "WorkOrders", FormMethod.Get, new { @class = "form-inline" }))
+                    {
+                        <div class="btn-group" role="group" aria-label="...">
+                            @Html.ActionLink("Open", "Index", "WorkOrders", openFilter, new
+                            {
+                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Open ? " active" : "")
+                            })
+                            @Html.ActionLink("Closed", "Index", "WorkOrders", closedFilter, new
+                            {
+                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Closed ? " active" : "")
+                            })
+                            <div class="btn-group" role="group" aria-label="...">
+                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                    Sort <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+                                    <li role="presentation" class="@(ViewBag.sort == newestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
+                                            <i class="fa fa-sort-amount-asc"></i> Newest
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == oldestSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
+                                            @if (ViewBag.sort == oldestSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-desc"></i> Oldest
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == mostCommentedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortMostCommentedFilter)">
+                                            @if (ViewBag.sort == mostCommentedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-numeric-desc"></i> Most Commented
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == leastCommentedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastCommentedFilter)">
+                                            @if (ViewBag.sort == leastCommentedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-numeric-asc"></i> Least Commented
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == recentlyUpdatedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortRecentlyUpdatedFilter)">
+                                            @if (ViewBag.sort == recentlyUpdatedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-asc"></i> Recently Updated
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(ViewBag.sort == leastRecentlyUpdatedSortText ? "active" : "")">
+                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastRecentlyUpdatedFilter)">
+                                            @if (ViewBag.sort == leastRecentlyUpdatedSortText)
+                                            {
+                                                <i class="fa fa-lg fa-times-circle-o"></i>
+                                            }
+                                            <i class="fa fa-sort-amount-desc"></i> Least Recently Updated
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <hr class="visible-xs" />
+                        <div class="input-group">
+                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
+                            <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
+                            <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
+                            <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
+                            <input id="sort" name="sort" type="hidden" value="@ViewBag.Sort.ToString()">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                        </div>
+                    }
+                    <hr class="visible-xs visible-sm" />
+                </div>
+                <div class="col-md-4 text-right">
+                    <div class="btn-group">
+                        <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-success">
+                            Create New W.O.
+                        </a>
+                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                        {
+                            <button type="button" class="btn btn-default dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-right">
+                                <li>
+                                    <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="">
+                                        Create Past Work Order
+                                    </a>
+                                </li>
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="">
+                                            Priorities
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="">
+                                            Statuses
+                                        </a>
+                                    </li>
+                                }
+                            </ul>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (Model.WorkOrders.Any())
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row row-fluid">
+                            <div class="col-md-6">
+                                <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
+                                <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
+                            </div>
+                            <div class="col-md-6 text-right">
+                                @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                                {
+                                    <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group">
+                        @foreach (var w in Model.WorkOrders)
+                        {
+                            var statuses = w.StatusChanges.OrderBy(o => o.ChangedOn);
+                            var status = @statuses.Last().Status.Name;
+                            var priorities = w.PriorityChanges.OrderBy(o => o.ChangedOn);
+                            var priority = priorities.Last().Priority.Name;
+                            var statusLabelColor = status == "On-Hold"
+                                ? "label-default"
+                                : status == "Closed"
+                                    ? "label-success"
+                                    : status == "Under Review"
+                                        ? "label-info"
+                                        : status == "In Progress"
+                                            ? "label-warning"
+                                            : "label-default";
+                            var priorityLabelColor = priority == "Moderate"
+                                ? "label-warning"
+                                : priority == "High"
+                                    ? "label-danger"
+                                    : "label-default";
+                            var commentLabelColor = w.Comments.Any() ? "#31708f" : "";
+                            var timeSinceCreation = (DateTime.UtcNow - w.GetDateTimeCreated()).ToUserFriendlyString();
+                            var timeSinceClosure = (DateTime.UtcNow - statuses.Last().ChangedOn).ToUserFriendlyString();
+
+                            <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
+                                <h4 class="list-group-item-heading">
+                                    <div class="row">
+                                        <div class="col-md-8 col-p-8">
+                                            @w.Title
+                                        </div>
+                                        <div class="col-md-4 col-p-4 text-md-right text-p-right">
+                                            <small>
+                                                <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Status">
+                                                    @status
+                                                </span>
+                                                <span class="label @priorityLabelColor" style="font-weight: normal !important; margin-right: 5px;"
+                                                      data-toggle="tooltip" data-placement="top" title="Priority">
+                                                    @priority
+                                                </span>
+                                                <span class="badge" style="background-color: @commentLabelColor"
+                                                      data-toggle="tooltip" data-placement="top" title="Comments">
+                                                    <i class="fa fa-comment"></i> @w.Comments.Count
+                                                </span>
+                                            </small>
+                                        </div>
+                                    </div>
+                                </h4>
+                                <p class="list-group-item-text">
+                                    opened @timeSinceCreation by <strong>@statuses.First().Member</strong>
+                                </p>
+                                @if (statuses.Last().Status.Name == "Closed")
+                                {
+                                    <p class="list-group-item-text">
+                                        closed @timeSinceClosure by <strong>@statuses.Last().Member</strong>
+                                    </p>
+                                }                                
+                            </a>
+                        }
+                    </ul>
+                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
+                    {
+                        Previous = pagePreviousFilter,
+                        Incrementer = filter,
+                        Next = pageNextFilter
+                    })
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No work orders found.
+                </div>
+            }
+        </div>
+        <div class="col-md-4 no-print">
+            @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
+        </div>
+    </div>
+</div>

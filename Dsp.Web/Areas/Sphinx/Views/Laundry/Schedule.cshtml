@@ -1,0 +1,254 @@
+﻿@using Dsp.Web.Entities
+@using Dsp.Web.Areas.Sphinx.Models
+@using Microsoft.AspNet.Identity
+@using System.Web.Mvc.Html
+@model LaundryIndexModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Laundry Schedule";
+    var currentUserId = User.Identity.GetUserId<int>();
+}
+@section AdditionalMeta{
+    <meta http-equiv="refresh" content="60">
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-calendar"
+                       data-toggle="tooltip" data-placement="top" title="Current window"></i>
+                    <small>
+                        @Model.Schedule.StartOfToday.ToShortDateString() to
+                        @Model.Schedule.StartOfToday.AddDays(Model.Schedule.WindowSize).ToShortDateString()
+                    </small> | 
+                    <i class="fa fa-clock-o"
+                       data-toggle="tooltip" data-placement="top" title="Current time"></i>
+                    <small>
+                        @Model.Schedule.Now.ToShortTimeString() CST 
+                    </small>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered" style="text-align: center">
+                        @if (Model.Schedule.Rows.Any())
+                        {
+                            <thead>
+                                <tr class="active">
+                                    <th class="text-center col-xs-2"><small>Time Slot</small></th>
+                                    @foreach (var timeSlot in Model.Schedule.Rows.First().Signups)
+                                    {
+                                        <th class="text-center">
+                                            <small>@timeSlot.DateTimeShift.DayOfWeek.ToString().Substring(0, 3)</small>
+                                        </th>
+                                    }
+                                </tr>
+                            </thead>
+                        }
+                        @foreach (var row in Model.Schedule.Rows)
+                        {
+                            <tr>
+                                <td class="active">
+                                    <small>@row.Label</small>
+                                </td>
+
+                                @foreach (var slot in row.Signups)
+                                {
+                                    var isDstChange = slot.DstChangeOccursDuringSlot(Model.Schedule.SlotSize);
+                                    var dstMessage = "Due to DST changes, this slot is actually " +
+                                        slot.GetSlotSizeActualSize(Model.Schedule.SlotSize) + " hour(s) long.";
+                                    var cellColor = 
+                                        slot.DateTimeShift <= Model.Schedule.Now && 
+                                        Model.Schedule.Now < slot.DateTimeShift.AddHours(Model.Schedule.SlotSize) 
+                                        ? "warning" : "";
+
+                                    <td class="text-center @cellColor">
+                                        @if (slot.Member != null)
+                                        {
+                                            <img src="~/Images/Avatars/@slot.Member.GetAvatarString()" height="30" width="30" class="img-circle"
+                                                 data-toggle="tooltip" data-placement="top" title="@slot.Member.ToString()"
+                                                 onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                                            // Reserved by current user
+                                            if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now).TotalHours >= 0)
+                                            {
+                                                using (Html.BeginForm("Cancel", "Laundry", slot, FormMethod.Post, new { style="display:inline" }))
+                                                {
+                                                    <button class="btn btn-link btn-light social" type="submit"
+                                                            data-toggle="tooltip" data-placement="top" title="Click to cancel your reservation.">
+                                                        <i class="fa fa-minus-circle text-danger"></i>
+                                                    </button>
+                                                }
+                                            }
+                                            if (isDstChange)
+                                            {
+                                                <i class="fa fa-exclamation-circle text-warning"
+                                                   data-toggle="tooltip" data-placement="top" title="@dstMessage"></i>
+                                            }
+                                        }
+                                        // Unreserved; allows sign ups up to an hour into the slot.
+                                        else if ((slot.DateTimeShift - Model.Schedule.Now).TotalHours > -1)
+                                        {
+                                            using (Html.BeginForm("Reserve", "Laundry", new LaundrySignup { DateTimeShift = slot.DateTimeShift }, FormMethod.Post, new { @class = "form-inline" }))
+                                            {
+                                                <button type="submit" class="btn btn-sm btn-success"
+                                                        data-toggle="tooltip" data-placement="top" title="@(isDstChange ? dstMessage : "")">
+                                                    Open
+                                                    @if (isDstChange)
+                                                    {
+                                                        <i class="fa fa-exclamation-circle"></i>
+                                                    }
+                                                </button>
+                                            }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    You cannot:
+                    <ul>
+                        <li>Sign up more than <strong>2</strong> times within the current window</li>
+                        <li>Cancel a slot after that slot has started</li>
+                        <li>Sign up for a slot that has less than an hour left</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <h4>Statistics <i id="loading" class="fa fa-lg fa-spinner fa-spin"></i></h4>
+                        </div>
+                        <div class="col-xs-6 text-right">
+                            @Html.DropDownList("Semesters", Model.SemesterList, new
+                            {
+                                @class = "form-control pull-right", id = "semester-list", style="width:auto"
+                            })
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <dl class="dl-horizontal">
+                                <dt id="">Semester</dt>
+                                <dd id="dates"></dd>
+                                <dt id="">Total Signups</dt>
+                                <dd id="totals"></dd>
+                                <dt id="">Signups/Week</dt>
+                                <dd id="week-avg"></dd>
+                                <dt id="">Signups/Month</dt>
+                                <dd id="month-avg"></dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-6">
+                            
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <h4>Daily Averages</h4>
+                            <div id="week-well" class="">
+                                <canvas id="week-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <h4>Monthly Totals</h4>
+                            <div id="month-well" class="">
+                                <canvas id="month-chart" style="padding-right: 35px"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript" src="~/Scripts/Chart.min.js"></script>
+    <script type="text/javascript">
+        Chart.defaults.global.responsive = true;
+        Chart.defaults.global.scaleOverride = true;
+
+        LoadStats();
+        $('#loading').hide();
+
+        $('#semester-list').change(function () {
+            $('#loading').show();
+            LoadStats();
+            $('#loading').hide();
+        });
+
+        function LoadStats() {
+            var options = {};
+            options.sid = $('#semester-list option:selected').val();
+            $.getJSON('GetStats', options).done(function (data) {
+
+                data = $.parseJSON(data);
+                var weekData = {
+                    labels: data.WeekChartXLabels,
+                    datasets: [
+                        {
+                            label: "Week Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.WeekChartXValues
+                        }
+                    ]
+                };
+                var monthData = {
+                    labels: data.MonthChartXLabels,
+                    datasets: [
+                        {
+                            label: "Month Chart",
+                            fillColor: "rgba(151,187,205,0.2)",
+                            strokeColor: "rgba(151,187,205,1)",
+                            pointColor: "rgba(151,187,205,1)",
+                            pointStrokeColor: "#fff",
+                            pointHighlightFill: "#fff",
+                            pointHighlightStroke: "rgba(220,220,220,1)",
+                            data: data.MonthChartXValues
+                        }
+                    ]
+                };
+                $('#dates').text(data.Semester + " (" + data.StartDate + " - " + data.EndDate + ")");
+                $('#totals').text(data.TotalSignups);
+                $('#week-avg').text(data.WeekAverage);
+                $('#month-avg').text(data.MonthAverage);
+
+                $('#week-chart').remove();
+                $('#month-chart').remove();
+                $('#week-well').append('<canvas id="week-chart"></canvas>');
+                $('#month-well').append('<canvas id="month-chart"></canvas>');
+
+                Chart.defaults.global.scaleSteps = 10;
+                Chart.defaults.global.scaleStepWidth = 1;
+                Chart.defaults.global.scaleStartValue = 0;
+                var weekChart = document.getElementById('week-chart').getContext('2d');
+                new Chart(weekChart).Line(weekData);
+
+
+                Chart.defaults.global.scaleSteps = 10;
+                Chart.defaults.global.scaleStepWidth = 25;
+                Chart.defaults.global.scaleStartValue = 0;
+                var monthChart = document.getElementById('month-chart').getContext('2d');
+                new Chart(monthChart).Line(monthData);
+            });
+        }
+
+    </script>
+
+}
