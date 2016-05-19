@@ -37,7 +37,7 @@
         public string User { get; set; }
         public int StatusCode { get; set; }
         public DateTime TimeUtc { get; set; }
-        public int Sequence { get; set; }
+        public int? Sequence { get; set; }
         public string AllXml { get; set; }
     }
 }
