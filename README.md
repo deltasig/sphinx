@@ -26,8 +26,8 @@ After you've installed everything, cloned the repo, and built the solution, open
 ~~~ sh
 PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext
 PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext
-PM> Update-Database -ConfigurationTypeName Dsp.Migrations.Configuration
-PM> Update-Database -ConfigurationTypeName Dsp.Migrations.Elmah.Configuration
+PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration
+PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration
 ~~~
 
 There are two database configurations: (1) one for fraternity-related data and (2) one for the Elmah error log data.

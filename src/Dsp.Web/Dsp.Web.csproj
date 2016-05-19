@@ -262,71 +262,6 @@
     <Compile Include="Extensions\DspRoleProvider.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
-    <Compile Include="Migrations\201507142355194_Initial.cs" />
-    <Compile Include="Migrations\201507142355194_Initial.Designer.cs">
-      <DependentUpon>201507142355194_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507150136182_IncreasedClassShorthand.cs" />
-    <Compile Include="Migrations\201507150136182_IncreasedClassShorthand.Designer.cs">
-      <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507152053564_LeaderPKRefactoring.cs" />
-    <Compile Include="Migrations\201507152053564_LeaderPKRefactoring.Designer.cs">
-      <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507230024165_AddRoomSemester.cs" />
-    <Compile Include="Migrations\201507230024165_AddRoomSemester.Designer.cs">
-      <DependentUpon>201507230024165_AddRoomSemester.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507231924452_RemoveRoomField.cs" />
-    <Compile Include="Migrations\201507231924452_RemoveRoomField.Designer.cs">
-      <DependentUpon>201507231924452_RemoveRoomField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.cs" />
-    <Compile Include="Migrations\201507232040482_ChangedMoveOutFieldType.Designer.cs">
-      <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508082327224_AddMemberAvatarField.cs" />
-    <Compile Include="Migrations\201508082327224_AddMemberAvatarField.Designer.cs">
-      <DependentUpon>201508082327224_AddMemberAvatarField.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508160431007_RemoveClassFileVotes.cs" />
-    <Compile Include="Migrations\201508160431007_RemoveClassFileVotes.Designer.cs">
-      <DependentUpon>201508160431007_RemoveClassFileVotes.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201508222223219_StudyHours.cs" />
-    <Compile Include="Migrations\201508222223219_StudyHours.Designer.cs">
-      <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510010058282_StudyHoursUpdate.cs" />
-    <Compile Include="Migrations\201510010058282_StudyHoursUpdate.Designer.cs">
-      <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.cs" />
-    <Compile Include="Migrations\201510220016341_UpdateServiceHourTables.Designer.cs">
-      <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510220032149_ServiceAmendments.cs" />
-    <Compile Include="Migrations\201510220032149_ServiceAmendments.Designer.cs">
-      <DependentUpon>201510220032149_ServiceAmendments.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201510230422211_ServiceAmendmentsV2.cs" />
-    <Compile Include="Migrations\201510230422211_ServiceAmendmentsV2.Designer.cs">
-      <DependentUpon>201510230422211_ServiceAmendmentsV2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201602080646217_InitialChoreEntities.cs" />
-    <Compile Include="Migrations\201602080646217_InitialChoreEntities.Designer.cs">
-      <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Elmah\201604172003482_Initial.cs" />
-    <Compile Include="Migrations\Elmah\201604172003482_Initial.Designer.cs">
-      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Elmah\201605190003276_NullableSequence.cs" />
-    <Compile Include="Migrations\Elmah\201605190003276_NullableSequence.Designer.cs">
-      <DependentUpon>201605190003276_NullableSequence.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Elmah\Configuration.cs" />
     <Compile Include="Models\Pager.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentsIndexModel.cs" />
@@ -413,7 +348,6 @@
     <Compile Include="Areas\Service\Controllers\HoursController.cs" />
     <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -950,56 +884,6 @@
     <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sphinx\Views\Shared\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201507142355194_Initial.resx">
-      <DependentUpon>201507142355194_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507150136182_IncreasedClassShorthand.resx">
-      <DependentUpon>201507150136182_IncreasedClassShorthand.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507152053564_LeaderPKRefactoring.resx">
-      <DependentUpon>201507152053564_LeaderPKRefactoring.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507230024165_AddRoomSemester.resx">
-      <DependentUpon>201507230024165_AddRoomSemester.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507231924452_RemoveRoomField.resx">
-      <DependentUpon>201507231924452_RemoveRoomField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201507232040482_ChangedMoveOutFieldType.resx">
-      <DependentUpon>201507232040482_ChangedMoveOutFieldType.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508082327224_AddMemberAvatarField.resx">
-      <DependentUpon>201508082327224_AddMemberAvatarField.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508160431007_RemoveClassFileVotes.resx">
-      <DependentUpon>201508160431007_RemoveClassFileVotes.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201508222223219_StudyHours.resx">
-      <DependentUpon>201508222223219_StudyHours.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510010058282_StudyHoursUpdate.resx">
-      <DependentUpon>201510010058282_StudyHoursUpdate.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510220016341_UpdateServiceHourTables.resx">
-      <DependentUpon>201510220016341_UpdateServiceHourTables.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510220032149_ServiceAmendments.resx">
-      <DependentUpon>201510220032149_ServiceAmendments.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201510230422211_ServiceAmendmentsV2.resx">
-      <DependentUpon>201510230422211_ServiceAmendmentsV2.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201602080646217_InitialChoreEntities.resx">
-      <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Elmah\201604172003482_Initial.resx">
-      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Elmah\201605190003276_NullableSequence.resx">
-      <DependentUpon>201605190003276_NullableSequence.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj">
