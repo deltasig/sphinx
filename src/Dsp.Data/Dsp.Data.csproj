@@ -171,13 +171,9 @@
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\Elmah\201604172003482_Initial.cs" />
-    <Compile Include="Migrations\Elmah\201604172003482_Initial.Designer.cs">
-      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Elmah\201605190003276_NullableSequence.cs" />
-    <Compile Include="Migrations\Elmah\201605190003276_NullableSequence.Designer.cs">
-      <DependentUpon>201605190003276_NullableSequence.cs</DependentUpon>
+    <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
+    <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
+      <DependentUpon>201605251901557_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Elmah\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -234,11 +230,8 @@
     <EmbeddedResource Include="Migrations\201602080646217_InitialChoreEntities.resx">
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Elmah\201604172003482_Initial.resx">
-      <DependentUpon>201604172003482_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Elmah\201605190003276_NullableSequence.resx">
-      <DependentUpon>201605190003276_NullableSequence.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
+      <DependentUpon>201605251901557_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

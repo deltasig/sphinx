@@ -24,10 +24,10 @@ This application uses [Entity Framework Code-First][1] to handle database intera
 After you've installed everything, cloned the repo, and built the solution, open the NuGet Package Manager Console in Visual Studio and run the following commands:
 
 ~~~ sh
-PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext
-PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext
-PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration
-PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration
+PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext -ProjectName Dsp.Data
+PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext -ProjectName Dsp.Data
+PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data
+PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration -ProjectName Dsp.Data
 ~~~
 
 There are two database configurations: (1) one for fraternity-related data and (2) one for the Elmah error log data.
