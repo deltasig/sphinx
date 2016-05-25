@@ -463,22 +463,32 @@
             var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
 
             // Optimize the PDF file before sending it to AWS.
-            Aspose.Pdf.Document doc = new Aspose.Pdf.Document(model.FileInfoModel.File.InputStream);
-            doc.OptimizeResources(new Aspose.Pdf.Document.OptimizationOptions()
-            {
-                LinkDuplcateStreams = true,
-                RemoveUnusedObjects = true,
-                RemoveUnusedStreams = true,
-                CompressImages = true,
-                ImageQuality = 15
-            });
             MemoryStream stream = new MemoryStream();
-            doc.Save(stream);
+            try
+            {
+                Aspose.Pdf.Document doc = new Aspose.Pdf.Document(model.FileInfoModel.File.InputStream);
+                doc.OptimizeResources(new Aspose.Pdf.Document.OptimizationOptions()
+                {
+                    LinkDuplcateStreams = true,
+                    RemoveUnusedObjects = true,
+                    RemoveUnusedStreams = true,
+                    CompressImages = true,
+                    ImageQuality = 15
+                });
+                doc.Save(stream);
+            }
+            catch(Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                TempData["FailureMessage"] = "An error occurred while processing the file. " +
+                    "Please ensure that your PDF is not corrupt (try resaving it to a new file and check the selected format).";
+                return RedirectToAction("Details", new { id = model.Class.ClassId });
+            }
 
+            var key = string.Format(model.Class.CourseShorthand + "/{0}", newFileName);
             try
             {
                 IAmazonS3 client;
-                var key = string.Format(model.Class.CourseShorthand + "/{0}", newFileName);
                 using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
                 {
                     var request = new PutObjectRequest()
@@ -491,20 +501,30 @@
 
                     client.PutObject(request);
                 }
-
-                var file = new ClassFile
-                {
-                    ClassId = model.Class.ClassId,
-                    UserId = User.Identity.GetUserId<int>(),
-                    AwsCode = key,
-                    UploadedOn = DateTime.UtcNow,
-                };
-                _db.ClassFiles.Add(file);
-                await _db.SaveChangesAsync();
             }
             catch (Exception e)
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                TempData["FailureMessage"] = "An error occurred while saving the file because of an AWS error.  Contact your admin.";
+                return RedirectToAction("Details", new { id = model.Class.ClassId });
+            }
+            try
+            { 
+                var file = new ClassFile
+                    {
+                        ClassId = model.Class.ClassId,
+                        UserId = User.Identity.GetUserId<int>(),
+                        AwsCode = key,
+                        UploadedOn = DateTime.UtcNow,
+                    };
+                    _db.ClassFiles.Add(file);
+                    await _db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+                TempData["FailureMessage"] = "An error occurred while saving the file because of a database error. Contact your admin.";
+                return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
 
             TempData["SuccessMessage"] = "File was added successfully.";
