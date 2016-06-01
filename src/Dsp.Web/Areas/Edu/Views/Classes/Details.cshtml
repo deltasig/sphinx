@@ -137,7 +137,7 @@
                 <ul class="list-group">
                     @if (Model.Class.ClassFiles.Any())
                     {
-                        foreach (var f in Model.Class.ClassFiles)
+                        foreach (var f in Model.Class.ClassFiles.OrderBy(c => c.AwsCode.Split('/')[1]))
                         {
                             <li class="list-group-item">
                                 <div class="row">
