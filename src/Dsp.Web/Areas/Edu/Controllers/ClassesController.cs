@@ -479,6 +479,7 @@
             }
             catch(Exception e)
             {
+                stream.Dispose();
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 TempData["FailureMessage"] = "An error occurred while processing the file. " +
                     "Please ensure that your PDF is not corrupt (try resaving it to a new file and check the selected format).";
@@ -508,6 +509,11 @@
                 TempData["FailureMessage"] = "An error occurred while saving the file because of an AWS error.  Contact your admin.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
+            finally
+            {
+                stream.Dispose();
+            }
+
             try
             { 
                 var file = new ClassFile
