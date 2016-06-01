@@ -449,7 +449,7 @@
                 TempData["FailureMessage"] = "Failed to add file because the file type was identified as PDF.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
-            Regex regex = new Regex(@"^(Test|Hw|Quiz) \d - (SP|FS|SS)\d{4} - .{2,25}.pdf$");
+            Regex regex = new Regex(@"^(Test|Hw|Quiz) \d{2} - (SP|FS|SS)\d{4} - .{2,25}.pdf$");
             Match match = regex.Match(model.FileInfoModel.File.FileName);
             if(!match.Success)
             {
