@@ -26,6 +26,15 @@ namespace Dsp.Data.Entities
         [Required, DefaultValue(4), Display(Name = "Minimum Service Events")]
         public int MinimumServiceEvents { get; set; }
 
+        [Required, DefaultValue(30), Display(Name = "Minimum Quest Challenge Length")]
+        public int MinQuestChallengeMinutes { get; set; }
+
+        [Required, DefaultValue(90), Display(Name = "Maximum Quest Challenge Length")]
+        public int MaxQuestChallengeMinutes { get; set; }
+
+        [Required, DefaultValue(1), Display(Name = "Default Quest Challengers")]
+        public int DefaultQuestChallengers { get; set; }
+
         [InverseProperty("Semester")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
         [InverseProperty("Semester")]
