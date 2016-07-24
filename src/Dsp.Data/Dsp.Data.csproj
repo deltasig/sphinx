@@ -92,6 +92,9 @@
     <Compile Include="Entities\PhoneNumber.cs" />
     <Compile Include="Entities\PledgeClass.cs" />
     <Compile Include="Entities\Position.cs" />
+    <Compile Include="Entities\QuestCompletion.cs" />
+    <Compile Include="Entities\QuestChallenge.cs" />
+    <Compile Include="Entities\QuestPeriod.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\RoomToMember.cs" />
     <Compile Include="Entities\ScholarshipAnswer.cs" />
@@ -170,6 +173,10 @@
     <Compile Include="Migrations\201602080646217_InitialChoreEntities.Designer.cs">
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607240433104_BroQuest.cs" />
+    <Compile Include="Migrations\201607240433104_BroQuest.Designer.cs">
+      <DependentUpon>201607240433104_BroQuest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
@@ -229,6 +236,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201602080646217_InitialChoreEntities.resx">
       <DependentUpon>201602080646217_InitialChoreEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607240433104_BroQuest.resx">
+      <DependentUpon>201607240433104_BroQuest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
       <DependentUpon>201605251901557_Initial.cs</DependentUpon>
