@@ -8,6 +8,7 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System;
 
     [Authorize(Roles = "Administrator, President, Secretary, Academics, Service")]
     public class SemestersController : BaseController
@@ -54,6 +55,8 @@
             semester.DateStart = base.ConvertUtcToCst(semester.DateStart);
             semester.DateEnd = base.ConvertUtcToCst(semester.DateEnd);
             semester.TransitionDate = base.ConvertUtcToCst(semester.TransitionDate);
+            semester.QuestingBeginsOn = base.ConvertUtcToCst(semester.QuestingBeginsOn);
+            semester.QuestingEndsOn = base.ConvertUtcToCst(semester.QuestingEndsOn);
             return View(semester);
         }
 
@@ -66,6 +69,8 @@
             semester.DateStart = base.ConvertCstToUtc(semester.DateStart);
             semester.DateEnd = base.ConvertCstToUtc(semester.DateEnd);
             semester.TransitionDate = base.ConvertCstToUtc(semester.TransitionDate);
+            semester.QuestingBeginsOn = base.ConvertCstToUtc(semester.QuestingBeginsOn);
+            semester.QuestingEndsOn = base.ConvertCstToUtc(semester.QuestingEndsOn);
             _db.Entry(semester).State = EntityState.Modified;
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");

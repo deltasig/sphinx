@@ -233,6 +233,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\QuestController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -254,6 +255,10 @@
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Nme\Controllers\BroQuestController.cs" />
+    <Compile Include="Areas\Nme\Models\BroQuestIndexModel.cs" />
+    <Compile Include="Areas\Nme\Models\BroQuestManagerModel.cs" />
+    <Compile Include="Areas\Nme\NmeAreaRegistration.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
@@ -680,6 +685,11 @@
     <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Study\Report.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Uploading.cshtml" />
+    <Content Include="Areas\Nme\Views\web.config" />
+    <Content Include="Areas\Nme\Views\BroQuest\Manager.cshtml" />
+    <Content Include="Areas\Nme\Views\Shared\_HourSelectOptionsPartial.cshtml" />
+    <Content Include="Areas\Nme\Views\Shared\_MinuteSelectOptionsPartial.cshtml" />
+    <Content Include="Areas\Nme\Views\BroQuest\Index.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

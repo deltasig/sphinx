@@ -94,7 +94,6 @@
     <Compile Include="Entities\Position.cs" />
     <Compile Include="Entities\QuestCompletion.cs" />
     <Compile Include="Entities\QuestChallenge.cs" />
-    <Compile Include="Entities\QuestPeriod.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\RoomToMember.cs" />
     <Compile Include="Entities\ScholarshipAnswer.cs" />
@@ -177,6 +176,14 @@
     <Compile Include="Migrations\201607240433104_BroQuest.Designer.cs">
       <DependentUpon>201607240433104_BroQuest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607240450423_BroQuest2.cs" />
+    <Compile Include="Migrations\201607240450423_BroQuest2.Designer.cs">
+      <DependentUpon>201607240450423_BroQuest2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607242359249_BroQuest3.cs" />
+    <Compile Include="Migrations\201607242359249_BroQuest3.Designer.cs">
+      <DependentUpon>201607242359249_BroQuest3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
@@ -239,6 +246,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607240433104_BroQuest.resx">
       <DependentUpon>201607240433104_BroQuest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607240450423_BroQuest2.resx">
+      <DependentUpon>201607240450423_BroQuest2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607242359249_BroQuest3.resx">
+      <DependentUpon>201607242359249_BroQuest3.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
       <DependentUpon>201605251901557_Initial.cs</DependentUpon>
