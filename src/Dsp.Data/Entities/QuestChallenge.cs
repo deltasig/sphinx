@@ -13,7 +13,7 @@
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         
-        public int PeriodId { get; set; }
+        public int SemesterId { get; set; }
         
         public int MemberId { get; set; }
 
@@ -23,8 +23,8 @@
         [Display(Name = "Ends On")]
         public DateTime? EndsOn { get; set; }
 
-        [ForeignKey("PeriodId")]
-        public virtual QuestPeriod Period { get; set; }
+        [ForeignKey("SemesterId")]
+        public virtual Semester Semester { get; set; }
         [ForeignKey("MemberId")]
         public virtual Member Member { get; set; }
         [InverseProperty("Challenge")]

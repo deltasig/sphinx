@@ -35,7 +35,6 @@
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
         public virtual DbSet<QuestChallenge> QuestChallenges { get; set; }
-        public virtual DbSet<QuestPeriod> QuestPeriods { get; set; }
         public virtual DbSet<QuestCompletion> QuestCompletions { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomToMember> RoomsToMembers { get; set; }

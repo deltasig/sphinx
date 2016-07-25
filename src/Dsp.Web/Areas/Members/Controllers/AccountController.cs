@@ -160,6 +160,8 @@
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.ShirtSize = model.Member.ShirtSize;
+            member.QuestChallengeSize = model.Member.QuestChallengeSize;
+            member.MaxQuesters = model.Member.MaxQuesters;
             member.LastUpdatedOn = DateTime.UtcNow;
 
             UserManager.Update(member);
