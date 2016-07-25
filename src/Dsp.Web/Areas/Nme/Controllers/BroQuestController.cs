@@ -13,13 +13,13 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class BroQuestController : BaseController
     {
-        public async Task<ActionResult> Index(int? sid)
+        public async Task<ActionResult> Index(int? s, bool i = true, bool c = false)
         {
             var thisSemester = await GetThisSemesterAsync();
             Semester semester = thisSemester;
-            if (sid != null)
+            if (s != null)
             {
-                semester = await _db.Semesters.FindAsync(sid);
+                semester = await _db.Semesters.FindAsync(s);
             }
 
             var model = new BroQuestIndexModel(semester);
@@ -37,6 +37,30 @@
                 }
             }
             model.SemesterList = GetCustomSemesterListAsync(semesters);
+            // Get members list depending on whether or not the current user is an active or new member
+            model.Member = await UserManager.FindByNameAsync(User.Identity.Name);
+            model.Members = new List<Member>();
+            var roster = model.Members = await base.GetRosterForSemester(semester); 
+            if (User.IsInRole("Administrator") || User.IsInRole("New Member Educator"))
+            {
+                model.Members = roster;
+            }
+            else if (User.IsInRole("Active"))
+            {
+                model.Members = roster.Where(m => m.MemberStatus.StatusName == "Pledge");
+            }
+            else if(User.IsInRole("Pledge"))
+            {
+                model.Members = roster.Where(m => m.MemberStatus.StatusName == "Active");
+            }
+            else
+            {
+                // Nothing for now.
+            }
+
+            ViewBag.s = semester.SemesterId;
+            ViewBag.i = i;
+            ViewBag.c = c;
 
             return View(model);
         }

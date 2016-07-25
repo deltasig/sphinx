@@ -258,6 +258,7 @@
     <Compile Include="Areas\Nme\Controllers\BroQuestController.cs" />
     <Compile Include="Areas\Nme\Models\BroQuestIndexModel.cs" />
     <Compile Include="Areas\Nme\Models\BroQuestManagerModel.cs" />
+    <Compile Include="Areas\Nme\Models\BroQuestIndexFilterModel.cs" />
     <Compile Include="Areas\Nme\NmeAreaRegistration.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />

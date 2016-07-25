@@ -6,12 +6,29 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest";
+    ViewBag.Subtitle = Model.Semester;
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("New Member Educator");
+    var userCompletions = Model.Member.QuestCompletions.Where(c => c.Challenge.SemesterId == Model.Semester.SemesterId);
+    var userChallenges = userCompletions.Select(c => c.Challenge);
+    var listCount = 0;
+
+    var filter = new BroQuestIndexFilterModel
+    {
+        s = ViewBag.s,
+        i = ViewBag.i,
+        c = ViewBag.c
+    };
+
+    var incompleteFilter = new BroQuestIndexFilterModel(filter);
+    var completeFilter = new BroQuestIndexFilterModel(filter);
+
+    incompleteFilter.i = !filter.i;
+    completeFilter.c = !filter.c;
 }
 
 <div class="container-fluid">
     <div class="row row-space">
-        <div class="col-md-6">
+        <div class="col-md-3">
             @if (Model.SemesterList.Any())
             {
                 <div class="dropdown">
@@ -23,13 +40,13 @@
                     <ul class="dropdown-menu" aria-labelledby="semester-dropdown">
                         @foreach (var s in Model.SemesterList)
                         {
-                            <li><a href="@Url.Action("Index", new { sid = s.Value })">@s.Text</a></li>
+                            <li><a href="@Url.Action("Index", new { s = s.Value, i = ViewBag.i.ToString(), c = ViewBag.c.ToString() })">@s.Text</a></li>
                         }
                     </ul>
                 </div>
             }
         </div>
-        <div class="col-md-6 text-right">
+        <div class="col-md-3 text-right">
             @if (hasElevatedPermissions)
             {
                 <a href="@Url.Action("Manager")" class="btn btn-sm btn-default">
@@ -39,9 +56,83 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
-            
+        <div class="col-md-8 col-lg-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            @using (Html.BeginForm("Index", "BroQuest", FormMethod.Get, new { @class = "form-inline" }))
+                            {
 
+                                <div class="btn-group" role="group" aria-label="...">
+                                    @Html.ActionLink("Incomplete", "Index", "BroQuest", incompleteFilter, new
+                                    {
+                                        @class = "btn btn-default " + (ViewBag.i ? "active" : "")
+                                    })
+                                    @Html.ActionLink("Complete", "Index", "BroQuest", completeFilter, new
+                                    {
+                                        @class = "btn btn-default " + (ViewBag.c ? "active" : "")
+                                    })
+                                </div>
+                            }
+                        </div>
+                        <div class="col-sm-4 text-sm-right">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="list-group">
+                    @foreach (var m in Model.Members.OrderBy(o => o.LastName).ThenBy(o => o.FirstName))
+                    {
+                        var challenges = m.QuestChallenges.Where(c => c.SemesterId == Model.Semester.SemesterId);
+                        var overlap = challenges.Intersect(userChallenges);
+                        string statusIcon = "fa-circle text-danger";
+                        string statusText = "Unchallenged";
+                        if (overlap.Any())
+                        {
+                            statusIcon = "fa-check";
+                            if(overlap.Any(c => c.EndsOn < DateTime.UtcNow))
+                            {
+                                if (!ViewBag.c)
+                                {
+                                    continue;
+                                }
+
+                                statusIcon += " text-success";
+                                statusText = "Complete";
+                            }
+                            else
+                            {
+                                statusIcon += " text-warning";
+                                statusText = "Challenge Accepted";
+                            }
+                        }
+                        else if(!ViewBag.i)
+                        {
+                            continue;
+                        }
+                        listCount++;
+
+                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" class="list-group-item">
+                            <h4 class="list-group-item-heading">
+                                @m.ToString()
+                                <small class="pull-right">
+                                    @statusText <i class="fa fa-fw @statusIcon"></i> 
+                                </small>
+                            </h4>
+                        </a>
+                    }
+                    @if(listCount == 0)
+                    {
+                        <li class="list-group-item list-group-item-warning">
+                            No results
+                        </li>
+                    }
+                </div>
+                <div class="panel-footer">
+                    Count: @listCount 
+                </div>
+            </div>
         </div>
     </div>
 </div>
