@@ -13,30 +13,11 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class BroQuestController : BaseController
     {
-        public async Task<ActionResult> Index(int? s, bool i = true, bool c = false)
+        public async Task<ActionResult> Index(bool i = true, bool c = false)
         {
-            var thisSemester = await GetThisSemesterAsync();
-            Semester semester = thisSemester;
-            if (s != null)
-            {
-                semester = await _db.Semesters.FindAsync(s);
-            }
+            Semester semester = await GetThisSemesterAsync();
 
             var model = new BroQuestIndexModel(semester);
-
-            // Identify valid semesters for dropdown
-            var allSemesters = (await _db.Semesters
-                .ToListAsync())
-                .Except(new List<Semester> { thisSemester });
-            var semesters = new List<Semester> { thisSemester };
-            foreach (var sem in allSemesters)
-            {
-                if (sem.QuestChallenges.Any())
-                {
-                    semesters.Add(sem);
-                }
-            }
-            model.SemesterList = GetCustomSemesterListAsync(semesters);
             // Get members list depending on whether or not the current user is an active or new member
             model.Member = await UserManager.FindByNameAsync(User.Identity.Name);
             model.Members = new List<Member>();
@@ -57,8 +38,7 @@
             {
                 // Nothing for now.
             }
-
-            ViewBag.s = semester.SemesterId;
+            
             ViewBag.i = i;
             ViewBag.c = c;
 

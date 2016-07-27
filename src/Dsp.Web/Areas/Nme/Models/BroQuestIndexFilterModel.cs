@@ -4,7 +4,6 @@
 
     public class BroQuestIndexFilterModel
     {
-        public int? s { get; set; }
         public bool i { get; set; }
         public bool c { get; set; }
 
@@ -14,7 +13,6 @@
         }
         public BroQuestIndexFilterModel(BroQuestIndexFilterModel original)
         {
-            s = original.s;
             i = original.i;
             c = original.c;
         }

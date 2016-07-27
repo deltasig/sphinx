@@ -59,5 +59,37 @@
 
             return output.ToString();
         }
+
+        public static string ToPreciseTimeUntilString(this TimeSpan timeSpan)
+        {
+            var output = new StringBuilder();
+
+            if (timeSpan.TotalDays >= 1)
+            {
+                output.Append(string.Format("{0} day", (int)timeSpan.TotalDays));
+                output.Append(timeSpan.TotalDays != 1 ? "s" : string.Empty);
+            }
+            else if(timeSpan.TotalHours >= 1)
+            {
+                output.Append(string.Format("{0} hour", (int)timeSpan.TotalHours));
+                output.Append(timeSpan.TotalHours != 1 ? "s" : string.Empty);
+            }
+            else if (timeSpan.TotalMinutes >= 1)
+            {
+                output.Append(string.Format("{0} minute", (int)timeSpan.TotalMinutes));
+                output.Append(timeSpan.TotalMinutes != 1 ? "s" : string.Empty);
+            }
+            else if (timeSpan.TotalSeconds >= 0)
+            {
+                output.Append(string.Format("{0} second", (int)timeSpan.TotalSeconds));
+                output.Append(timeSpan.TotalSeconds != 1 ? "s" : string.Empty);
+            }
+            else
+            {
+                output.Append("An inexplicable amount of time.");
+            }
+
+            return output.ToString();
+        }
     }
 }

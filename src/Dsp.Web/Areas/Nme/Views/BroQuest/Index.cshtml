@@ -14,7 +14,6 @@
 
     var filter = new BroQuestIndexFilterModel
     {
-        s = ViewBag.s,
         i = ViewBag.i,
         c = ViewBag.c
     };
@@ -29,22 +28,9 @@
 <div class="container-fluid">
     <div class="row row-space">
         <div class="col-md-3">
-            @if (Model.SemesterList.Any())
-            {
-                <div class="dropdown">
-                    <button class="btn btn-sm btn-default dropdown-toggle" type="button" id="semester-dropdown"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Change Semester
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="semester-dropdown">
-                        @foreach (var s in Model.SemesterList)
-                        {
-                            <li><a href="@Url.Action("Index", new { s = s.Value, i = ViewBag.i.ToString(), c = ViewBag.c.ToString() })">@s.Text</a></li>
-                        }
-                    </ul>
-                </div>
-            }
+            <p id="time-left" class="hidden">
+                
+            </p>
         </div>
         <div class="col-md-3 text-right">
             @if (hasElevatedPermissions)
@@ -140,8 +126,33 @@
 
 @section scripts {
     <script type="text/javascript">
+        'use strict';
+        (function () {
+            function setTimeLeft(label) {
+                $("#time-left").text(label);
+                $("#time-left").removeClass("hidden");
+            }
 
+            function getTimeLeft() {
+                var xhr = new XMLHttpRequest();
+                xhr.open("GET", "/api/broquest/timeleft", true);
+                xhr.onload = function (e) {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            setTimeLeft(xhr.responseText.replace(/['"]+/g, ''));
+                        } else {
+                            console.error(xhr.statusText);
+                        }
+                    }
+                };
+                xhr.onerror = function (e) {
+                    console.error(xhr.statusText);
+                };
+                xhr.send(null);
+            }
 
+            getTimeLeft();
+        })();
 
     </script>
 }

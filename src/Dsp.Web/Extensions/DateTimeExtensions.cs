@@ -64,5 +64,27 @@
                     return "th";
             }
         }
+        
+        public static DateTime FromUtcToCst(this DateTime utc)
+        {
+            return ConvertFromUtc(utc, "Central Standard Time");
+        }
+
+        public static DateTime FromCstToUtc(this DateTime cst)
+        {
+            return ConvertToUtc(cst, "Central Standard Time");
+        }
+
+        public static DateTime ConvertToUtc(DateTime cst, string timezoneString)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneString);
+            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+        }
+
+        public static DateTime ConvertFromUtc(DateTime utc, string timezoneString)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById(timezoneString);
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+        }
     }
 }
