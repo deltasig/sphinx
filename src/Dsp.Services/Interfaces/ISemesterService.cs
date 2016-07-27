@@ -6,6 +6,6 @@
     public interface ISemesterService
     {
         Task<Semester> GetCurrentSemesterAsync();
-        
+        Task<Semester> GetSemesterByIdAsync(int id);
     }
 }

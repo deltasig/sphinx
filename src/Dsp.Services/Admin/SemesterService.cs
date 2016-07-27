@@ -22,5 +22,10 @@
                     .ToListAsync())
                     .First();
         }
+
+        public async Task<Semester> GetSemesterByIdAsync(int id)
+        {
+            return await _db.Semesters.FindAsync(id);
+        }
     }
 }
