@@ -6,7 +6,6 @@
 
     public class BroQuestIndexModel
     {
-        public IEnumerable<SelectListItem> SemesterList { get; set; }
         public Semester Semester { get; set; }
         public Member Member { get; set; }
         public IEnumerable<Member> Members { get; set; }
