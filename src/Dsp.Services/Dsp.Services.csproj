@@ -57,6 +57,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\MemberService.cs" />
+    <Compile Include="Interfaces\IMemberService.cs" />
     <Compile Include="Interfaces\ISemesterService.cs" />
     <Compile Include="Admin\SemesterService.cs" />
     <Compile Include="BaseService.cs" />

@@ -16,10 +16,12 @@ namespace Dsp.Web.Api
     {
         private SphinxDbContext _db;
         private ISemesterService _semesterService;
+        private IMemberService _memberService;
         public BroQuestController()
         {
             _db = new SphinxDbContext();
             _semesterService = new SemesterService(_db);
+            _memberService = new MemberService(_db);
         }
 
         [Route("period")]
@@ -38,7 +40,7 @@ namespace Dsp.Web.Api
         [Route("period/{id:int}")]
         public async Task<IHttpActionResult> GetPeriod(int id)
         {
-            var semester = await GetSemesterByIdAsync(id);
+            var semester = await _semesterService.GetSemesterByIdAsync(id);
             if(semester == null)
             {
                 return NotFound();
@@ -78,14 +80,53 @@ namespace Dsp.Web.Api
             return Ok(timeLeft);
         }
 
-        private async Task<Semester> GetSemesterByIdAsync(int id)
+
+        [Route("progress/{id:int}")]
+        public async Task<IHttpActionResult> GetMemberProgress(int id)
         {
-            return (await _db.Semesters
-                    .Where(s => s.DateEnd >= DateTime.UtcNow)
-                    .OrderBy(s => s.DateStart)
-                    .ToListAsync())
-                    .First();
+
+            var semester = await _semesterService.GetCurrentSemesterAsync();
+            if (semester == null)
+            {
+                return NotFound();
+            }
+            var member = _db.Users.Find(id);
+            if (semester == null)
+            {
+                return NotFound();
+            }
+            var status = member.MemberStatus.StatusName;
+            var progress = 0;
+            var pledges = await _memberService.GetNewMembersAsync(semester);
+            var actives = await _memberService.GetActivesAsync(semester);
+            var activeCount = actives.Count();
+
+            if (status == "Active")
+            {
+                if (pledges.Any())
+                {
+                    var pledgesCompleted = member
+                        .QuestCompletions.Where(c =>
+                            c.Challenge.SemesterId == semester.SemesterId &&
+                            (c.Challenge.EndsOn == null ||
+                            c.Challenge.EndsOn < DateTime.UtcNow));
+                    progress = (100 * pledgesCompleted.Count()) / pledges.Count();
+                }
+            }
+            else if(status == "Pledge")
+            {
+                if (actives.Any())
+                {
+                    var activesCompleted = member
+                        .QuestCompletions.Where(c =>
+                            c.Challenge.SemesterId == semester.SemesterId &&
+                            (c.Challenge.EndsOn == null ||
+                            c.Challenge.EndsOn < DateTime.UtcNow));
+                    progress = (100 * activesCompleted.Count()) / actives.Count();
+                }
+            }
+
+            return Ok(progress);
         }
     }
 }
-;

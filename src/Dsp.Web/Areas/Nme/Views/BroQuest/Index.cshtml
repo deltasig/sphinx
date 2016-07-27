@@ -62,8 +62,15 @@
                                 </div>
                             }
                         </div>
-                        <div class="col-sm-4 text-sm-right">
+                        <div class="col-sm-6 text-sm-right">
 
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="progress" style="margin: 0;">
+                        <div class="progress-bar progress-bar-striped progress-bar-success" role="progressbar"
+                             id="progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
                         </div>
                     </div>
                 </div>
@@ -100,12 +107,12 @@
                         listCount++;
 
                         <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" class="list-group-item">
-                            <h4 class="list-group-item-heading">
+                            <h5 class="list-group-item-heading">
                                 @m.ToString()
                                 <small class="pull-right">
                                     @statusText <i class="fa fa-fw @statusIcon"></i> 
                                 </small>
-                            </h4>
+                            </h5>
                         </a>
                     }
                     @if(listCount == 0)
@@ -151,7 +158,36 @@
                 xhr.send(null);
             }
 
+            function setProgress(label) {
+                var p = Number(label);
+                if (p > 100) p = 100;
+                else if (p < 0) p = 0;
+                $("#progress").text(label + "%");
+                $("#progress").width(label+"%");
+                $("#progress").removeClass("hidden");
+            }
+
+            function getProgress() {
+                var xhr = new XMLHttpRequest();
+                var url = "/api/broquest/progress/@(Model.Member.Id)";
+                xhr.open("GET", url, true);
+                xhr.onload = function (e) {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            setProgress(xhr.responseText);
+                        } else {
+                            console.error(xhr.statusText);
+                        }
+                    }
+                };
+                xhr.onerror = function (e) {
+                    console.error(xhr.statusText);
+                };
+                xhr.send(null);
+            }
+
             getTimeLeft();
+            getProgress();
         })();
 
     </script>

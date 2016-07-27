@@ -22,17 +22,17 @@
             model.Member = await UserManager.FindByNameAsync(User.Identity.Name);
             model.Members = new List<Member>();
             var roster = model.Members = await base.GetRosterForSemester(semester); 
-            if (User.IsInRole("Administrator") || User.IsInRole("New Member Educator"))
-            {
-                model.Members = roster;
-            }
-            else if (User.IsInRole("Active"))
+            if (User.IsInRole("Active"))
             {
                 model.Members = roster.Where(m => m.MemberStatus.StatusName == "Pledge");
             }
             else if(User.IsInRole("Pledge"))
             {
                 model.Members = roster.Where(m => m.MemberStatus.StatusName == "Active");
+            }
+            else if (User.IsInRole("Administrator"))
+            {
+                model.Members = roster;
             }
             else
             {
