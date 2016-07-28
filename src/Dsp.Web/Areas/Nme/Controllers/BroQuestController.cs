@@ -53,5 +53,15 @@
 
             return View();
         }
+
+        [Authorize(Roles = "Administrator, Active")]
+        public async Task<ActionResult> Challenges()
+        {
+            var semester = await GetThisSemesterAsync();
+            var member = await UserManager.FindByNameAsync(User.Identity.Name);
+            var model = new BroQuestChallengeModel(semester, member);
+
+            return View(model);
+        }
     }
 }

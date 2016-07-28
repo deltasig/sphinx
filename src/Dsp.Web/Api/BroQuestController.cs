@@ -3,6 +3,7 @@ using Dsp.Data.Entities;
 using Dsp.Services.Admin;
 using Dsp.Services.Interfaces;
 using Dsp.Web.Extensions;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -11,6 +12,7 @@ using System.Web.Http;
 
 namespace Dsp.Web.Api
 {
+    [Authorize(Roles = "Active, Alumnus, Pledge")]
     [RoutePrefix("api/broquest")]
     public class BroQuestController : ApiController
     {
@@ -28,10 +30,7 @@ namespace Dsp.Web.Api
         public async Task<IHttpActionResult> GetPeriod()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
-            if (semester == null)
-            {
-                return NotFound();
-            }
+            if (semester == null) return NotFound();
             var beginsOn = semester.QuestingBeginsOn.FromUtcToCst();
             var endsOn = semester.QuestingEndsOn.FromUtcToCst();
             return Ok(new { BeginsOn = beginsOn, EndsOn = endsOn });
@@ -41,10 +40,7 @@ namespace Dsp.Web.Api
         public async Task<IHttpActionResult> GetPeriod(int id)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(id);
-            if(semester == null)
-            {
-                return NotFound();
-            }
+            if(semester == null) return NotFound();
             var beginsOn = semester.QuestingBeginsOn.FromUtcToCst();
             var endsOn = semester.QuestingEndsOn.FromUtcToCst();
             return Ok(new { BeginsOn = semester.QuestingBeginsOn, EndsOn = semester.QuestingEndsOn });
@@ -54,10 +50,7 @@ namespace Dsp.Web.Api
         public async Task<IHttpActionResult> GetTimeLeftBegins()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
-            if (semester == null)
-            {
-                return NotFound();
-            }
+            if (semester == null) return NotFound();
             var now = DateTime.UtcNow;
             var beginsOn = semester.QuestingBeginsOn;
             var endsOn = semester.QuestingEndsOn;
@@ -79,22 +72,14 @@ namespace Dsp.Web.Api
 
             return Ok(timeLeft);
         }
-
-
+        
         [Route("progress/{id:int}")]
         public async Task<IHttpActionResult> GetMemberProgress(int id)
         {
-
             var semester = await _semesterService.GetCurrentSemesterAsync();
-            if (semester == null)
-            {
-                return NotFound();
-            }
+            if (semester == null) return NotFound();
             var member = _db.Users.Find(id);
-            if (semester == null)
-            {
-                return NotFound();
-            }
+            if (member == null) return NotFound();
             var status = member.MemberStatus.StatusName;
             var progress = 0;
             var pledges = await _memberService.GetNewMembersAsync(semester);
@@ -127,6 +112,33 @@ namespace Dsp.Web.Api
             }
 
             return Ok(progress);
+        }
+
+        [Route("challenge/add")]
+        public async Task<IHttpActionResult> AddChallenge(DateTime? beginsOn, DateTime? endsOn)
+        {
+            var semester = await _semesterService.GetCurrentSemesterAsync();
+            if (semester == null) return NotFound();
+            var member = _db.Users.Find(User.Identity.GetUserId());
+            if (member == null) return NotFound();
+
+            try
+            {
+                var challenge = new QuestChallenge();
+                challenge.MemberId = member.Id;
+                challenge.SemesterId = semester.SemesterId;
+                challenge.BeginsOn = beginsOn;
+                challenge.EndsOn = endsOn;
+
+                _db.QuestChallenges.Add(challenge);
+                await _db.SaveChangesAsync();
+            }
+            catch(Exception e)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
         }
     }
 }

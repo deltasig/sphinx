@@ -1,6 +1,4 @@
-﻿@using Dsp.Data.Entities
-@using Dsp.Web.Areas.Nme.Models
-@using Microsoft.AspNet.Identity
+﻿@using Dsp.Web.Areas.Nme.Models
 @using System.Web.Mvc.Html
 @model BroQuestIndexModel
 @{
@@ -63,7 +61,9 @@
                             }
                         </div>
                         <div class="col-sm-6 text-sm-right">
-
+                            <a href="@Url.Action("Challenges")" class="btn btn-sm btn-default">
+                                <i class="fa fa-bolt"></i> My Challenges
+                            </a>
                         </div>
                     </div>
                 </div>

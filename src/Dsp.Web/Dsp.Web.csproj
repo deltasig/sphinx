@@ -256,6 +256,7 @@
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Nme\Controllers\BroQuestController.cs" />
+    <Compile Include="Areas\Nme\Models\BroQuestChallengeModel.cs" />
     <Compile Include="Areas\Nme\Models\BroQuestIndexModel.cs" />
     <Compile Include="Areas\Nme\Models\BroQuestManagerModel.cs" />
     <Compile Include="Areas\Nme\Models\BroQuestIndexFilterModel.cs" />
@@ -691,6 +692,7 @@
     <Content Include="Areas\Nme\Views\Shared\_HourSelectOptionsPartial.cshtml" />
     <Content Include="Areas\Nme\Views\Shared\_MinuteSelectOptionsPartial.cshtml" />
     <Content Include="Areas\Nme\Views\BroQuest\Index.cshtml" />
+    <Content Include="Areas\Nme\Views\BroQuest\Challenges.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

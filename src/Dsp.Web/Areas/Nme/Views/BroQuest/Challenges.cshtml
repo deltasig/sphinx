@@ -1,0 +1,106 @@
+﻿@using Dsp.Web.Extensions;
+@using Dsp.Web.Areas.Nme.Models
+@model BroQuestChallengeModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "BroQuest Challenges";
+    ViewBag.Subtitle = Model.Semester;
+
+    var start = Model.Semester.QuestingBeginsOn.FromUtcToCst();
+    var end = Model.Semester.QuestingEndsOn.FromUtcToCst();
+    var interval = Model.Semester.MaxQuestChallengeMinutes;
+    var headers = new List<DateTime>();
+    if (start < DateTime.UtcNow.FromUtcToCst())
+    {
+        start = DateTime.UtcNow.FromUtcToCst().Date;
+    }
+
+    if(start.AddDays(14) < end.Date)
+    {
+        end = start.AddDays(13);
+    }
+
+    for (var rolling = start.Date; rolling <= end.Date; rolling = rolling.AddDays(1))
+    {
+        headers.Add(rolling);
+    }
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-md-3">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Index
+            </a>
+        </div>
+        <div class="col-md-3 text-right">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-condensed table-bordered">
+                    <thead style="user-select:none;">
+                        <tr class="active">
+                            @if (headers.Any())
+                            {
+                                <th></th>
+                                foreach (var h in headers)
+                                {
+                                    var color = string.Empty;
+                                    if (h.Date == DateTime.UtcNow.FromUtcToCst()) { color = "success"; }
+
+                                    <th class="@color text-center">@h.ToString("ddd MM/dd")</th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(var i = 0; i < 1440; i += 30)
+                        {
+                            <tr>
+                                <td class="active" style="user-select:none;">
+                                    @if(i % 60 == 0)
+                                    {
+                                        var quantity = (i / 60) % 12;
+
+                                        <strong>@((quantity == 0 ? 12 : quantity).ToString())</strong>
+                                    }
+                                    else
+                                    {
+                                        <strong><i class="fa fa-arrow-down"></i></strong>
+                                    }
+                                </td>
+                                @foreach (var h in headers)
+                                {
+                                    <td id="" onmousemove="addChallenge(this)"></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        'use strict';
+        var mouseDown = 0;
+        document.body.onmousedown = function () {
+            mouseDown = 1;
+        }
+        document.body.onmouseup = function () {
+            mouseDown = 0;
+        }
+        function addChallenge(ele) {
+            if (mouseDown) {
+                //console.log(ele);
+                $(ele).addClass("warning");
+            }
+        }
+
+    </script>
+}
