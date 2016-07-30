@@ -233,6 +233,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\MembersController.cs" />
+    <Compile Include="Api\AdminController.cs" />
     <Compile Include="Api\BroQuestController.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />

@@ -76,7 +76,7 @@
             {
                 // Adjust ordering of all positions to accomodate change.
                 var positions = await _db.Roles
-                    .Where(p => 
+                    .Where(p =>
                         p.Type == position.Type &&
                         p.Id != position.Id)
                     .OrderBy(p => p.DisplayOrder)
@@ -116,85 +116,26 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
-        
-        [HttpGet, Authorize(Roles = "Administrator, President")]
-        public async Task<ActionResult> Appointments()
-        {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.SuccessMessage = TempData["FailureMessage"];
 
+        [HttpGet, Authorize(Roles = "Administrator, President")]
+        public async Task<ActionResult> Appointments(int? sid)
+        {
+            var semesters = await GetThisAndNextSemesterListAsync();
+            Semester semester;
+            if (sid == null) semester = semesters.First();
+            else semester = semesters.Single(s => s.SemesterId == sid);
             var positions = await _db.Roles
-                .Where(p => !p.IsDisabled)
+                .Where(p => !p.IsDisabled && p.Name != "Administrator")
                 .OrderBy(p => p.Type)
                 .ThenBy(p => p.DisplayOrder)
                 .ToListAsync();
-            var semesters = (await GetThisAndNextSemesterListAsync()).ToList();
-            var model = new List<AppointmentModel>();
 
-            foreach (var position in positions)
-            {
-                if (position.Name == "Administrator") continue;
-                foreach (var semester in semesters)
-                {
-                    var leader = await _db.Leaders.SingleOrDefaultAsync(l =>
-                        l.SemesterId == semester.SemesterId &&
-                        l.RoleId == position.Id) ?? new Leader();
-                    model.Add(new AppointmentModel
-                    {
-                        Leader = new Leader
-                        {
-                            Position = position,
-                            RoleId = position.Id,
-                            Semester = semester,
-                            SemesterId = semester.SemesterId,
-                            UserId = leader.UserId
-                        },
-                        Users = await GetUserIdListAsFullNameWithNoneNonSelectListAsync(),
-                        Alumni = await GetAlumniIdListAsFullNameWithNoneNonSelectListAsync()
-                    });
-                }
-            }
+            var model = new AppointmentModel();
+            model.Semester = semester;
+            model.Positions = positions;
+            model.SemesterList = base.GetCustomSemesterListAsync(semesters);
 
             return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, President")]
-        public async Task<ActionResult> Appointments(IList<AppointmentModel> model)
-        {
-            try
-            {
-                foreach (var ap in model)
-                {
-                    // Check if a Leader entry already exists.
-                    var leader = await _db.Leaders
-                        .SingleOrDefaultAsync(m => m.SemesterId == ap.Leader.SemesterId &&
-                                     m.RoleId == ap.Leader.RoleId);
-
-                    if (leader == null)
-                    {
-                        if (ap.Leader.UserId == 0) continue;
-                        ((DspRoleProvider)Roles.Provider).AddUserToRole(ap.Leader.UserId, ap.Leader.RoleId, ap.Leader.SemesterId);
-                    }
-                    else if (ap.Leader.UserId == 0)
-                    {
-                        var leaderToRemove = _db.Leaders.Find(leader.RoleId);
-                        _db.Leaders.Remove(leaderToRemove);
-                    }
-                    else if (ap.Leader.UserId != 0)
-                    {
-                        leader.UserId = ap.Leader.UserId;
-                        _db.Entry(leader).State = EntityState.Modified;
-                    }
-                }
-                await _db.SaveChangesAsync();
-                TempData["FailureMessage"] = "Appointments were successful.";
-            }
-            catch (Exception)
-            {
-                TempData["FailureMessage"] = "Appointments failed. Please check your appointments and try again.";
-            }
-
-            return RedirectToAction("Appointments");
         }
     }
 }
