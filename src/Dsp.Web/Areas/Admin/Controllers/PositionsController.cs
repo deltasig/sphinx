@@ -118,17 +118,10 @@
         }
         
         [HttpGet, Authorize(Roles = "Administrator, President")]
-        public async Task<ActionResult> Appointments(AppointmentMessageId? message)
+        public async Task<ActionResult> Appointments()
         {
-            switch (message)
-            {
-                case AppointmentMessageId.AppointmentSuccess:
-                    ViewBag.SuccessMessage = GetAppointmentMessage(message);
-                    break;
-                case AppointmentMessageId.AppointmentFailure:
-                    ViewBag.FailMessage = GetAppointmentMessage(message);
-                    break;
-            }
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.SuccessMessage = TempData["FailureMessage"];
 
             var positions = await _db.Roles
                 .Where(p => !p.IsDisabled)
@@ -168,8 +161,6 @@
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, President")]
         public async Task<ActionResult> Appointments(IList<AppointmentModel> model)
         {
-            AppointmentMessageId? message;
-
             try
             {
                 foreach (var ap in model)
@@ -196,28 +187,14 @@
                     }
                 }
                 await _db.SaveChangesAsync();
-                message = AppointmentMessageId.AppointmentSuccess;
+                TempData["FailureMessage"] = "Appointments were successful.";
             }
             catch (Exception)
             {
-                message = AppointmentMessageId.AppointmentFailure;
+                TempData["FailureMessage"] = "Appointments failed. Please check your appointments and try again.";
             }
 
-            return RedirectToAction("Appointments", new { Message = message });
-        }
-        
-        private static dynamic GetAppointmentMessage(AppointmentMessageId? message)
-        {
-            return
-                message == AppointmentMessageId.AppointmentSuccess ? "Appointments completed."
-                : message == AppointmentMessageId.AppointmentFailure ? "Appointments failed. Please check your appointments and try again."
-                : "";
-        }
-
-        public enum AppointmentMessageId
-        {
-            AppointmentSuccess,
-            AppointmentFailure
+            return RedirectToAction("Appointments");
         }
     }
 }
