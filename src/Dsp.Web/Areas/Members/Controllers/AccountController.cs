@@ -300,7 +300,9 @@
                     PledgeClassId = int.Parse(model.PledgeClassId),
                     ExpectedGraduationId = int.Parse(model.ExpectedGraduationId),
                     ShirtSize = model.ShirtSize,
-                    CreatedOn = DateTime.UtcNow
+                    CreatedOn = DateTime.UtcNow,
+                    MaxQuesters = 1,
+                    QuestChallengeSize = 30
                 };
                 var result = await UserManager.CreateAsync(user, tempPassword);
                 if (result.Succeeded)
