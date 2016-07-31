@@ -58,8 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\MemberService.cs" />
+    <Compile Include="Admin\BroQuestService.cs" />
     <Compile Include="Admin\PositionService.cs" />
     <Compile Include="Interfaces\IMemberService.cs" />
+    <Compile Include="Interfaces\IBroQuestService.cs" />
     <Compile Include="Interfaces\IPositionService.cs" />
     <Compile Include="Interfaces\ISemesterService.cs" />
     <Compile Include="Admin\SemesterService.cs" />

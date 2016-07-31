@@ -5,10 +5,12 @@ using Dsp.Services.Interfaces;
 using Dsp.Web.Extensions;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Description;
 
 namespace Dsp.Web.Api
 {
@@ -19,11 +21,13 @@ namespace Dsp.Web.Api
         private SphinxDbContext _db;
         private ISemesterService _semesterService;
         private IMemberService _memberService;
+        private IBroQuestService _broQuestService;
         public BroQuestController()
         {
             _db = new SphinxDbContext();
             _semesterService = new SemesterService(_db);
             _memberService = new MemberService(_db);
+            _broQuestService = new BroQuestService(_db);
         }
 
         [Route("period")]
@@ -113,32 +117,127 @@ namespace Dsp.Web.Api
 
             return Ok(progress);
         }
-
-        [Route("challenge/add")]
-        public async Task<IHttpActionResult> AddChallenge(DateTime? beginsOn, DateTime? endsOn)
+        
+        [Route("challenges/{mid:int}/{sid:int}")]
+        public async Task<IHttpActionResult> GetMemberChallenges(int mid, int sid)
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             if (semester == null) return NotFound();
-            var member = _db.Users.Find(User.Identity.GetUserId());
+            var member = _db.Users.Find(mid);
             if (member == null) return NotFound();
+
+            var slots = new List<int>();
+            var challenges = await _broQuestService.GetChallengesForMemberAsync(mid, sid);
+            foreach(var c in challenges)
+            {
+                if (c.BeginsOn == null || c.EndsOn == null) continue;
+                var start = (DateTime)c.BeginsOn;
+                var end = (DateTime)c.EndsOn;
+                TimeSpan elapsedSpan = new TimeSpan(start.Ticks);
+                var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
+                for (var i = elapsedSpan.TotalMinutes; i < stop; i += 15)
+                {
+                    slots.Add((int)i);
+                }
+            }
+
+            return Ok(slots);
+        }
+
+        [Route("challenge")]
+        [HttpPost, ResponseType(typeof(NewChallenge))]
+        public async Task<IHttpActionResult> AddChallenge([FromBody] NewChallenge body)
+        {
+            var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
+            if (semester == null) return NotFound();
+            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            var member = _db.Users.Find(body.mid);
+            if (member == null) return NotFound();
+
+            var start = DateTime.MinValue.AddMinutes(body.mins);
+            var end = start.AddMinutes(member.QuestChallengeSize);
+
+            if(end > semester.QuestingEndsOn) return Ok("This challenge would go outside the questing period.");
+
+            var conflict = await _db.QuestChallenges
+                .AnyAsync(q => 
+                    (q.BeginsOn < start && start < q.EndsOn) || 
+                    (q.BeginsOn < end && end < q.EndsOn) || 
+                    (q.BeginsOn < start && end < q.EndsOn));
+            if (conflict) return Ok("This challenge overlaps with an existing one.");
+            
+            var challenge = new QuestChallenge();
+            challenge.BeginsOn = start;
+            challenge.EndsOn = end;
+            challenge.MemberId = member.Id;
+            challenge.SemesterId = semester.SemesterId;
 
             try
             {
-                var challenge = new QuestChallenge();
-                challenge.MemberId = member.Id;
-                challenge.SemesterId = semester.SemesterId;
-                challenge.BeginsOn = beginsOn;
-                challenge.EndsOn = endsOn;
+                await _broQuestService.AddChallengeAsync(member.Id, semester.SemesterId, start, end);
 
-                _db.QuestChallenges.Add(challenge);
-                await _db.SaveChangesAsync();
+                var slots = new List<int>();
+                TimeSpan elapsedSpan = new TimeSpan(start.Ticks);
+                var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
+                for (var i = elapsedSpan.TotalMinutes; i < stop; i += 15)
+                {
+                    slots.Add((int)i);
+                }
+                return Ok(slots);
             }
-            catch(Exception e)
+            catch(Exception)
             {
                 return BadRequest();
             }
+        }
 
-            return Ok();
+        [Route("challenge")]
+        [HttpDelete, ResponseType(typeof(NewChallenge))]
+        public async Task<IHttpActionResult> DeleteChallenge([FromBody] NewChallenge body)
+        {
+            var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
+            if (semester == null) return NotFound();
+            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            var member = _db.Users.Find(body.mid);
+            if (member == null) return NotFound();
+
+            var start = DateTime.MinValue.AddMinutes(body.mins);
+            var end = start.AddMinutes(15);
+
+            var challenge = await _db.QuestChallenges
+                .SingleOrDefaultAsync(c => 
+                    c.MemberId == member.Id && 
+                    c.SemesterId == semester.SemesterId &&
+                    c.BeginsOn <= start && end <= c.EndsOn);
+            if(challenge == null) return Ok("The challenge requested to be deleted does not exist.");
+
+            try
+            {
+                start = (DateTime)challenge.BeginsOn;
+                end = (DateTime)challenge.EndsOn;
+                var slots = new List<int>();
+                TimeSpan elapsedSpan = new TimeSpan(start.Ticks);
+                var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
+                for (var i = elapsedSpan.TotalMinutes; i < stop; i += 15)
+                {
+                    slots.Add((int)i);
+                }
+
+                await _broQuestService.DeleteChallengeAsync(challenge);
+
+                return Ok(slots);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        public class NewChallenge
+        {
+            public int mid { get; set; }
+            public int sid { get; set; }
+            public int mins { get; set; }
         }
     }
 }

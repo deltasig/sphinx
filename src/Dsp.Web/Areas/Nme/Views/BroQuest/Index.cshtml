@@ -134,61 +134,59 @@
 @section scripts {
     <script type="text/javascript">
         'use strict';
-        (function () {
-            function setTimeLeft(label) {
-                $("#time-left").text(label);
-                $("#time-left").removeClass("hidden");
-            }
 
-            function getTimeLeft() {
-                var xhr = new XMLHttpRequest();
-                xhr.open("GET", "/api/broquest/timeleft", true);
-                xhr.onload = function (e) {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            setTimeLeft(xhr.responseText.replace(/['"]+/g, ''));
-                        } else {
-                            console.error(xhr.statusText);
-                        }
+        getTimeLeft();
+        getProgress();
+
+        function setTimeLeft(label) {
+            $("#time-left").text(label);
+            $("#time-left").removeClass("hidden");
+        }
+
+        function getTimeLeft() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/api/broquest/timeleft", true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        setTimeLeft(xhr.responseText.replace(/['"]+/g, ''));
+                    } else {
+                        console.error(xhr.statusText);
                     }
-                };
-                xhr.onerror = function (e) {
-                    console.error(xhr.statusText);
-                };
-                xhr.send(null);
-            }
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.statusText);
+            };
+            xhr.send(null);
+        }
 
-            function setProgress(label) {
-                var p = Number(label);
-                if (p > 100) p = 100;
-                else if (p < 0) p = 0;
-                $("#progress").text(label + "%");
-                $("#progress").width(label+"%");
-                $("#progress").removeClass("hidden");
-            }
+        function setProgress(label) {
+            var p = Number(label);
+            if (p > 100) p = 100;
+            else if (p < 0) p = 0;
+            $("#progress").text(label + "%");
+            $("#progress").width(label+"%");
+            $("#progress").removeClass("hidden");
+        }
 
-            function getProgress() {
-                var xhr = new XMLHttpRequest();
-                var url = "/api/broquest/progress/@(Model.Member.Id)";
-                xhr.open("GET", url, true);
-                xhr.onload = function (e) {
-                    if (xhr.readyState === 4) {
-                        if (xhr.status === 200) {
-                            setProgress(xhr.responseText);
-                        } else {
-                            console.error(xhr.statusText);
-                        }
+        function getProgress() {
+            var xhr = new XMLHttpRequest();
+            var url = "/api/broquest/progress/@(Model.Member.Id)";
+            xhr.open("GET", url, true);
+            xhr.onload = function (e) {
+                if (xhr.readyState === 4) {
+                    if (xhr.status === 200) {
+                        setProgress(xhr.responseText);
+                    } else {
+                        console.error(xhr.statusText);
                     }
-                };
-                xhr.onerror = function (e) {
-                    console.error(xhr.statusText);
-                };
-                xhr.send(null);
-            }
-
-            getTimeLeft();
-            getProgress();
-        })();
-
+                }
+            };
+            xhr.onerror = function (e) {
+                console.error(xhr.statusText);
+            };
+            xhr.send(null);
+        }
     </script>
 }
