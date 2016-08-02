@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Validation;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -94,12 +96,10 @@ namespace Dsp.Web.Api
             {
                 if (pledges.Any())
                 {
-                    var pledgesCompleted = member
-                        .QuestCompletions.Where(c =>
-                            c.Challenge.SemesterId == semester.SemesterId &&
-                            (c.Challenge.EndsOn == null ||
-                            c.Challenge.EndsOn < DateTime.UtcNow));
-                    progress = (100 * pledgesCompleted.Count()) / pledges.Count();
+                    var thisUsersCompletions = member.QuestChallenges.Where(c => c.SemesterId == semester.SemesterId);
+                    var completed = thisUsersCompletions.Where(c => c.Completions.Any());
+                    var percent = (completed.Count() / pledges.Count()) * 100;
+                    progress = percent > 100 ? 100 : percent;
                 }
             }
             else if(status == "Pledge")
@@ -109,8 +109,7 @@ namespace Dsp.Web.Api
                     var activesCompleted = member
                         .QuestCompletions.Where(c =>
                             c.Challenge.SemesterId == semester.SemesterId &&
-                            (c.Challenge.EndsOn == null ||
-                            c.Challenge.EndsOn < DateTime.UtcNow));
+                            c.Challenge.EndsOn < DateTime.UtcNow.FromUtcToCst());
                     progress = (100 * activesCompleted.Count()) / actives.Count();
                 }
             }
@@ -130,9 +129,8 @@ namespace Dsp.Web.Api
             var challenges = await _broQuestService.GetChallengesForMemberAsync(mid, sid);
             foreach(var c in challenges)
             {
-                if (c.BeginsOn == null || c.EndsOn == null) continue;
-                var start = (DateTime)c.BeginsOn;
-                var end = (DateTime)c.EndsOn;
+                var start = c.BeginsOn;
+                var end = c.EndsOn;
                 TimeSpan elapsedSpan = new TimeSpan(start.Ticks);
                 var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
                 for (var i = elapsedSpan.TotalMinutes; i < stop; i += 15)
@@ -157,7 +155,9 @@ namespace Dsp.Web.Api
             var start = DateTime.MinValue.AddMinutes(body.mins);
             var end = start.AddMinutes(member.QuestChallengeSize);
 
-            if(end > semester.QuestingEndsOn) return Ok("This challenge would go outside the questing period.");
+            if (start < DateTime.UtcNow.FromUtcToCst()) return Ok("This challenge would go outside the questing period.");
+            if (end > semester.QuestingEndsOn.FromUtcToCst() || start < semester.QuestingBeginsOn.FromUtcToCst())
+                return Ok("This challenge would go outside the questing period.");
 
             var conflict = await _db.QuestChallenges
                 .AnyAsync(q => 
@@ -213,8 +213,8 @@ namespace Dsp.Web.Api
 
             try
             {
-                start = (DateTime)challenge.BeginsOn;
-                end = (DateTime)challenge.EndsOn;
+                start = challenge.BeginsOn;
+                end = challenge.EndsOn;
                 var slots = new List<int>();
                 TimeSpan elapsedSpan = new TimeSpan(start.Ticks);
                 var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
@@ -233,11 +233,69 @@ namespace Dsp.Web.Api
             }
         }
 
+        [Route("complete")]
+        [HttpPost, ResponseType(typeof(NewCompletion))]
+        public async Task<IHttpActionResult> MarkComplete([FromBody] NewCompletion body)
+        {
+            var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
+            if (semester == null) return NotFound();
+            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            var member = _db.Users.Find(body.mid);
+            if (member == null) return NotFound();
+            var newMember = _db.Users.Find(body.nmid);
+            if (newMember == null) return NotFound();
+            
+            try
+            {
+                var challenge = new QuestChallenge();
+                var now = DateTime.UtcNow.FromUtcToCst();
+                challenge.BeginsOn = now.AddMinutes(-member.QuestChallengeSize);
+                challenge.EndsOn = now;
+                challenge.MemberId = member.Id;
+                challenge.SemesterId = semester.SemesterId;
+                await _broQuestService.AddChallengeAsync(challenge);
+                //challenge = await _broQuestService.GetChallengeAsync(member.Id, semester.SemesterId);
+
+                var completion = new QuestCompletion();
+                completion.NewMemberId = newMember.Id;
+                completion.ChallengeId = challenge.Id;
+                completion.IsVerified = true;
+                await _broQuestService.AcceptChallengeAsync(completion);
+                
+                return Ok();
+            }
+            catch (DbEntityValidationException e)
+            {
+                foreach (var eve in e.EntityValidationErrors)
+                {
+                    Debug.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
+                        eve.Entry.Entity.GetType().Name, eve.Entry.State);
+                    foreach (var ve in eve.ValidationErrors)
+                    {
+                        Debug.WriteLine("- Property: \"{0}\", Error: \"{1}\"",
+                            ve.PropertyName, ve.ErrorMessage);
+                    }
+                }
+                throw;
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         public class NewChallenge
         {
             public int mid { get; set; }
             public int sid { get; set; }
             public int mins { get; set; }
+        }
+
+        public class NewCompletion
+        {
+            public int mid { get; set; }
+            public int nmid { get; set; }
+            public int sid { get; set; }
         }
     }
 }

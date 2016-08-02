@@ -6,6 +6,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Controllers;
@@ -13,7 +14,7 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class BroQuestController : BaseController
     {
-        public async Task<ActionResult> Index(bool i = true, bool c = false)
+        public async Task<ActionResult> Index(bool i = true, bool c = true)
         {
             Semester semester = await GetThisSemesterAsync();
 
@@ -55,10 +56,23 @@
         }
 
         [Authorize(Roles = "Administrator, Active")]
-        public async Task<ActionResult> Challenges()
+        public async Task<ActionResult> MyChallenges()
         {
             var semester = await GetThisSemesterAsync();
             var member = await UserManager.FindByNameAsync(User.Identity.Name);
+            var model = new BroQuestChallengeModel(semester, member);
+
+            return View(model);
+        }
+
+        [Authorize(Roles = "Administrator, Pledge")]
+        public async Task<ActionResult> Challenges(int? mid)
+        {
+            if (mid == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            var member = await UserManager.FindByIdAsync((int)mid);
+            if (member == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+
+            var semester = await GetThisSemesterAsync();
             var model = new BroQuestChallengeModel(semester, member);
 
             return View(model);

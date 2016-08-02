@@ -1,13 +1,18 @@
 ﻿@using Dsp.Web.Areas.Nme.Models
 @using System.Web.Mvc.Html
+@using Microsoft.AspNet.Identity;
 @model BroQuestIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest";
     ViewBag.Subtitle = Model.Semester;
+    var currentUserId = User.Identity.GetUserId<int>();
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("New Member Educator");
-    var userCompletions = Model.Member.QuestCompletions.Where(c => c.Challenge.SemesterId == Model.Semester.SemesterId);
-    var userChallenges = userCompletions.Select(c => c.Challenge);
+    var isActive = User.IsInRole("Active");
+    var isPledge = User.IsInRole("Pledge");
+    var userChallenges = Model.Member.QuestChallenges.Where(c => c.SemesterId == Model.Semester.SemesterId);
+    var totalChallengeTime = userChallenges
+        .Sum(c => (c.EndsOn - c.BeginsOn).TotalMinutes);
     var listCount = 0;
 
     var filter = new BroQuestIndexFilterModel
@@ -61,69 +66,121 @@
                             }
                         </div>
                         <div class="col-sm-6 text-sm-right">
-                            <a href="@Url.Action("Challenges")" class="btn btn-sm btn-default">
-                                <i class="fa fa-bolt"></i> My Challenges
-                            </a>
+                            @if (isActive)
+                            {
+                                <a href="@Url.Action("MyChallenges")" class="btn btn-sm btn-default">
+                                    <i class="fa fa-bolt"></i> My Challenges
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    <div class="progress" style="margin: 0;">
-                        <div class="progress-bar progress-bar-striped progress-bar-success" role="progressbar"
-                             id="progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                    @if (isActive && Model.Members.Any())
+                    {
+                        <div class="progress" style="margin: 0;">
+                            <div class="progress-bar progress-bar-striped progress-bar-success" role="progressbar"
+                                 id="progress" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <div class="list-group">
                     @foreach (var m in Model.Members.OrderBy(o => o.LastName).ThenBy(o => o.FirstName))
                     {
-                        var challenges = m.QuestChallenges.Where(c => c.SemesterId == Model.Semester.SemesterId);
-                        var overlap = challenges.Intersect(userChallenges);
-                        string statusIcon = "fa-circle text-danger";
-                        string statusText = "Unchallenged";
-                        if (overlap.Any())
+                        if (isActive)
                         {
-                            statusIcon = "fa-check";
-                            if(overlap.Any(c => c.EndsOn < DateTime.UtcNow))
+                            var nmCompletions = m.QuestCompletions.Where(c => c.Challenge.SemesterId == Model.Semester.SemesterId);
+                            var nmChallenges = nmCompletions.Select(c => c.Challenge);
+                            string statusIcon = "fa-circle text-danger";
+                            string statusText = "Unchallenged";
+
+                            if (nmChallenges.Any(c => c.Member.Id == currentUserId))
                             {
-                                if (!ViewBag.c)
+                                statusIcon = "fa-check";
+                                if (nmChallenges.Any(c => c.EndsOn < DateTime.UtcNow))
                                 {
-                                    continue;
+                                    if (!ViewBag.c)
+                                    {
+                                        continue;
+                                    }
+
+                                    statusIcon += " text-success";
+                                    statusText = "Complete";
                                 }
-
-                                statusIcon += " text-success";
-                                statusText = "Complete";
+                                else
+                                {
+                                    statusIcon += " text-warning";
+                                    statusText = "Challenge Accepted";
+                                }
                             }
-                            else
+                            else if (!ViewBag.i) // Don't display incomplete members if the button is set as such.
                             {
-                                statusIcon += " text-warning";
-                                statusText = "Challenge Accepted";
+                                continue;
                             }
-                        }
-                        else if(!ViewBag.i)
-                        {
-                            continue;
-                        }
-                        listCount++;
+                            listCount++;
 
-                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" class="list-group-item">
-                            <h5 class="list-group-item-heading">
-                                @m.ToString()
-                                <small class="pull-right">
-                                    @statusText <i class="fa fa-fw @statusIcon"></i> 
-                                </small>
-                            </h5>
-                        </a>
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})">
+                                            @m.ToString()
+                                        </a>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <!-- TODO: Hook up button to API for quick-complete -->
+                                        <small id="status-@m.Id">
+                                            @statusText <i class="fa fa-fw @statusIcon"></i>
+                                        </small>
+                                        @if (statusText == "Unchallenged")
+                                        {
+                                            <button class="btn btn-xs btn-success" id="mark-@m.Id" 
+                                                    onclick="markComplete(@currentUserId, @m.Id, @Model.Semester.SemesterId)"
+                                                    data-toggle="tooltip" data-placement="top" title="Mark as complete"> 
+                                                <i class="fa fa-check"></i>
+                                            </button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Challenges", "BroQuest", new {userName = m.UserName, area = "Nme"})" class="list-group-item">
+                                <h5 class="list-group-item-heading">
+                                    @m.ToString()
+                                    <small class="pull-right">
+                                        
+                                    </small>
+                                </h5>
+                            </a>
+                        }
                     }
                     @if(listCount == 0)
                     {
-                        <li class="list-group-item list-group-item-warning">
+                        <div class="list-group-item list-group-item-warning">
                             No results
-                        </li>
+                        </div>
                     }
                 </div>
                 <div class="panel-footer">
-                    Count: @listCount 
+                    @if (isActive)
+                    {
+                        <span data-toggle="tooltip" data-placement="top" title="New members">
+                            <i class="fa fa-users"></i>
+                            @listCount
+                        </span>
+                        <span data-toggle="tooltip" data-placement="top" title="Hours you have been available">
+                            <i class="fa fa-calendar"></i>
+                            @((totalChallengeTime / 60).ToString("N2"))
+                        </span>
+                        
+                    }
+                    else
+                    {
+                        @: Members: @listCount
+                    }
+                    
                 </div>
             </div>
         </div>
@@ -134,7 +191,7 @@
 @section scripts {
     <script type="text/javascript">
         'use strict';
-
+        var userId = @currentUserId;
         getTimeLeft();
         getProgress();
 
@@ -172,7 +229,7 @@
 
         function getProgress() {
             var xhr = new XMLHttpRequest();
-            var url = "/api/broquest/progress/@(Model.Member.Id)";
+            var url = "/api/broquest/progress/"+userId;
             xhr.open("GET", url, true);
             xhr.onload = function (e) {
                 if (xhr.readyState === 4) {
@@ -187,6 +244,25 @@
                 console.error(xhr.statusText);
             };
             xhr.send(null);
+        }
+
+        function markComplete(mid, nmid, sid)
+        {
+            $.ajax({
+                url: '/api/broquest/complete',
+                type: 'POST',
+                data: { mid: mid, nmid: nmid, sid: sid },
+                success: function (result) {
+                    $("#mark-"+nmid).remove();
+                    $(".tooltip").remove();
+                    var template = 'Complete <i class="fa fa-fw fa-check"></i>';
+                    $("#status-"+nmid).html(template);
+                    getProgress();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
         }
     </script>
 }
