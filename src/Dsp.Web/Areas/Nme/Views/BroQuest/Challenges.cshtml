@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest Challenges";
-    ViewBag.Subtitle = Model.Semester;
+    ViewBag.Subtitle = Model.Member.FirstName + " " + Model.Member.LastName;
 
     var start = Model.Semester.QuestingBeginsOn.FromUtcToCst();
     var end = Model.Semester.QuestingEndsOn.FromUtcToCst();
@@ -89,10 +89,7 @@
                                 {
                                     TimeSpan elapsedSpan = new TimeSpan(h.AddMinutes(i).Ticks);
 
-                                    <td id="@elapsedSpan.TotalMinutes" 
-                                        onmouseenter="entered(this)" 
-                                        onmousedown="clicked(this)"
-                                        onmouseup="unclicked()">
+                                    <td>
 
                                     </td>
                                 }
@@ -108,96 +105,7 @@
 @section scripts {
     <script type="text/javascript">
         'use strict';
-        var sid = @(Model.Semester.SemesterId);
-        var mid = @(Model.Member.Id);
-        var stepSize = 30;
-        var mouseDown = 0;
-        var state = 0; // 1 = adding challenge, 0 = removing challenge
-        var color = "success";
-        document.body.onmouseup = unclicked;
 
-        getChallenges(mid, sid);
-
-        function clicked(ele) {
-            mouseDown = 1;
-            if ($(ele).hasClass(color)) {
-                state = 0;
-                removeChallenge(ele);
-            } else {
-                state = 1;
-                addChallenge(ele);
-            }
-        }
-
-        function unclicked() {
-            mouseDown = 0;
-        }
-
-        function getChallenges(m, s) {
-            var uri = `/api/broquest/challenges/${m}/${s}`;
-            $.get(uri, function (result) {
-                $.each(result, function(){
-                    $("#"+this).addClass(color);
-                });
-            })
-            .fail(function (result) {
-                console.log(result);
-            });
-        }
-
-        function addChallenge(ele) {
-            if($(ele).hasClass(color) && state == 1) return;
-            $.ajax({
-                url: '/api/broquest/challenge',
-                type: 'POST',
-                data: { mid: mid, sid: sid, mins: ele.id },
-                success: function (result) {
-                    if(result.constructor === Array) {
-                        $.each(result, function() {
-                            $("#"+this).addClass(color);
-                        });
-                    } else {
-                        console.log(result);
-                        $(ele).addClass("danger");
-                        setTimeout(function() { $(ele).removeClass("danger") }, 150);
-                    }
-                },
-                error: function (result) {
-                    //console.log(result);
-                }
-            });
-        }
-
-        function removeChallenge(ele) {
-            if(!$(ele).hasClass(color) && state == 0) return; 
-            $.ajax({
-                url: '/api/broquest/challenge',
-                type: 'DELETE',
-                data: { mid: mid, sid: sid, mins: ele.id },
-                success: function (result) {
-                    if(result.constructor === Array) {
-                        $.each(result, function() {
-                            $("#"+this).removeClass(color);
-                        });
-                    } else {
-                        console.log(result);
-                    }
-                },
-                error: function (result) {
-                    //console.log(result);
-                }
-            });
-        }
-
-        function entered(ele) {
-            if (mouseDown) {
-                if (state === 1) {
-                    addChallenge(ele);
-                } else {
-                    removeChallenge(ele);
-                }
-            }
-        }
 
     </script>
 }

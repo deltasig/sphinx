@@ -21,11 +21,11 @@
 
         [Required, Column(Order = 2), Index("IX_QuestChallenge", 2, IsUnique = true)]
         [Display(Name = "Begins On")]
-        public DateTime? BeginsOn { get; set; }
+        public DateTime BeginsOn { get; set; }
 
         [Required, Column(Order = 3), Index("IX_QuestChallenge", 3, IsUnique = true)]
         [Display(Name = "Ends On")]
-        public DateTime? EndsOn { get; set; }
+        public DateTime EndsOn { get; set; }
 
         [ForeignKey("SemesterId")]
         public virtual Semester Semester { get; set; }
