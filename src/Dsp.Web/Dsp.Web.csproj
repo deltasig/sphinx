@@ -441,7 +441,6 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomGoogleApi.js" />
-    <Content Include="TestPage.html" />
     <Content Include="DownPage.html" />
     <Content Include="google2da471a22d508cbe.html" />
     <Content Include="Images\back_disabled.png" />
