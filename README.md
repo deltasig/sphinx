@@ -26,6 +26,8 @@ After you've installed everything, cloned the repo, and built the solution, open
 ~~~ sh
 PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext -ProjectName Dsp.Data
 PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext -ProjectName Dsp.Data
+PM> Add-Migration -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data <NAME>
+PM> Add-Migration -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration -ProjectName Dsp.Data <NAME>
 PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data
 PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration -ProjectName Dsp.Data
 ~~~
