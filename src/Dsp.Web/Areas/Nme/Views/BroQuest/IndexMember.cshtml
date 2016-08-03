@@ -5,7 +5,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest";
-    ViewBag.Subtitle = Model.Semester;
+    ViewBag.Subtitle = "Member | " + Model.Semester;
     var currentUserId = User.Identity.GetUserId<int>();
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("New Member Educator");
     var isActive = User.IsInRole("Active");
@@ -66,17 +66,14 @@
                             }
                         </div>
                         <div class="col-sm-6 text-sm-right">
-                            @if (isActive)
-                            {
-                                <a href="@Url.Action("MyChallenges")" class="btn btn-sm btn-default">
-                                    <i class="fa fa-bolt"></i> My Challenges
-                                </a>
-                            }
+                            <a href="@Url.Action("MyChallenges")" class="btn btn-sm btn-default">
+                                <i class="fa fa-bolt"></i> My Challenges
+                            </a>
                         </div>
                     </div>
                 </div>
                 <div class="panel-body">
-                    @if (isActive && Model.Members.Any())
+                    @if (Model.Members.Any())
                     {
                         <div class="progress" style="margin: 0;">
                             <div class="progress-bar progress-bar-striped progress-bar-success" role="progressbar"
@@ -88,73 +85,58 @@
                 <div class="list-group">
                     @foreach (var m in Model.Members.OrderBy(o => o.LastName).ThenBy(o => o.FirstName))
                     {
-                        if (isActive)
+                        var nmCompletions = m.QuestCompletions.Where(c => c.Challenge.SemesterId == Model.Semester.SemesterId);
+                        var nmChallenges = nmCompletions.Select(c => c.Challenge);
+                        string statusIcon = "fa-circle text-danger";
+                        string statusText = "Unchallenged";
+
+                        if (nmChallenges.Any(c => c.Member.Id == currentUserId))
                         {
-                            var nmCompletions = m.QuestCompletions.Where(c => c.Challenge.SemesterId == Model.Semester.SemesterId);
-                            var nmChallenges = nmCompletions.Select(c => c.Challenge);
-                            string statusIcon = "fa-circle text-danger";
-                            string statusText = "Unchallenged";
-
-                            if (nmChallenges.Any(c => c.Member.Id == currentUserId))
+                            statusIcon = "fa-check";
+                            if (nmChallenges.Any(c => c.EndsOn < DateTime.UtcNow))
                             {
-                                statusIcon = "fa-check";
-                                if (nmChallenges.Any(c => c.EndsOn < DateTime.UtcNow))
+                                if (!ViewBag.c)
                                 {
-                                    if (!ViewBag.c)
+                                    continue;
+                                }
+
+                                statusIcon += " text-success";
+                                statusText = "Complete";
+                            }
+                            else
+                            {
+                                statusIcon += " text-warning";
+                                statusText = "Challenge Accepted";
+                            }
+                        }
+                        else if (!ViewBag.i) // Don't display incomplete members if the button is set as such.
+                        {
+                            continue;
+                        }
+                        listCount++;
+
+                        <div class="list-group-item">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})">
+                                        @m.ToString()
+                                    </a>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <small id="status-@m.Id">
+                                        @statusText <i class="fa fa-fw @statusIcon"></i>
+                                    </small>
+                                    @if (statusText == "Unchallenged")
                                     {
-                                        continue;
+                                        <button class="btn btn-xs btn-success" id="mark-@m.Id" 
+                                                onclick="markComplete(@currentUserId, @m.Id, @Model.Semester.SemesterId)"
+                                                data-toggle="tooltip" data-placement="top" title="Mark as complete"> 
+                                            <i class="fa fa-check"></i>
+                                        </button>
                                     }
-
-                                    statusIcon += " text-success";
-                                    statusText = "Complete";
-                                }
-                                else
-                                {
-                                    statusIcon += " text-warning";
-                                    statusText = "Challenge Accepted";
-                                }
-                            }
-                            else if (!ViewBag.i) // Don't display incomplete members if the button is set as such.
-                            {
-                                continue;
-                            }
-                            listCount++;
-
-                            <div class="list-group-item">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})">
-                                            @m.ToString()
-                                        </a>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <!-- TODO: Hook up button to API for quick-complete -->
-                                        <small id="status-@m.Id">
-                                            @statusText <i class="fa fa-fw @statusIcon"></i>
-                                        </small>
-                                        @if (statusText == "Unchallenged")
-                                        {
-                                            <button class="btn btn-xs btn-success" id="mark-@m.Id" 
-                                                    onclick="markComplete(@currentUserId, @m.Id, @Model.Semester.SemesterId)"
-                                                    data-toggle="tooltip" data-placement="top" title="Mark as complete"> 
-                                                <i class="fa fa-check"></i>
-                                            </button>
-                                        }
-                                    </div>
                                 </div>
                             </div>
-                        }
-                        else
-                        {
-                            <a href="@Url.Action("Challenges", "BroQuest", new {userName = m.UserName, area = "Nme"})" class="list-group-item">
-                                <h5 class="list-group-item-heading">
-                                    @m.ToString()
-                                    <small class="pull-right">
-                                        
-                                    </small>
-                                </h5>
-                            </a>
-                        }
+                        </div>
                     }
                     @if(listCount == 0)
                     {
@@ -164,23 +146,14 @@
                     }
                 </div>
                 <div class="panel-footer">
-                    @if (isActive)
-                    {
-                        <span data-toggle="tooltip" data-placement="top" title="New members">
-                            <i class="fa fa-users"></i>
-                            @listCount
-                        </span>
-                        <span data-toggle="tooltip" data-placement="top" title="Hours you have been available">
-                            <i class="fa fa-calendar"></i>
-                            @((totalChallengeTime / 60).ToString("N2"))
-                        </span>
-                        
-                    }
-                    else
-                    {
-                        @: Members: @listCount
-                    }
-                    
+                    <span data-toggle="tooltip" data-placement="top" title="New members">
+                        <i class="fa fa-users"></i>
+                        @listCount
+                    </span>
+                    <span data-toggle="tooltip" data-placement="top" title="Hours you have been available">
+                        <i class="fa fa-calendar"></i>
+                        @((totalChallengeTime / 60).ToString("N2"))
+                    </span>
                 </div>
             </div>
         </div>

@@ -1,0 +1,111 @@
+﻿@using Dsp.Web.Extensions;
+@using Dsp.Web.Areas.Nme.Models
+@model BroQuestChallengeModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "BroQuest Challenges";
+    ViewBag.Subtitle = Model.Member.FirstName + " " + Model.Member.LastName;
+
+    var start = Model.Semester.QuestingBeginsOn.FromUtcToCst();
+    var end = Model.Semester.QuestingEndsOn.FromUtcToCst();
+    var interval = Model.Semester.MaxQuestChallengeMinutes;
+    var headers = new List<DateTime>();
+    if (start < DateTime.UtcNow.FromUtcToCst())
+    {
+        start = DateTime.UtcNow.FromUtcToCst().Date;
+    }
+
+    if (start.AddDays(14) < end.Date)
+    {
+        end = start.AddDays(13);
+    }
+
+    for (var rolling = start.Date; rolling <= end.Date; rolling = rolling.AddDays(1))
+    {
+        headers.Add(rolling);
+    }
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-md-6">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Index
+            </a>
+        </div>
+        <div class="col-md-6 text-right">
+            My Quest Size: @Model.Member.QuestChallengeSize min
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="table-responsive">
+                <table class="table table-condensed table-bordered"
+                       style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" >
+                    <thead style="user-select:none;">
+                        <tr class="active">
+                            @if (headers.Any())
+                            {
+                                <th></th>
+                                foreach (var h in headers)
+                                {
+                                    var color = string.Empty;
+                                    if (h.Date == DateTime.UtcNow.FromUtcToCst()) { color = "success"; }
+
+                                    <th class="@color text-center"><small>@h.ToString("ddd MM/dd")</small></th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for(var i = 0; i < 1440; i += 15)
+                        {
+                            var hour = ((i / 60) % 12).ToString("D2");
+                            hour = hour == "00" ? "12" : hour;
+                            var minute = (i % 60).ToString("D2");
+                            var time = hour + ":" + minute;
+                            if ((i / 60) < 12)
+                            {
+                                time += " am";
+                            }
+                            else
+                            {
+                                time += " pm";
+                            }
+                            <tr class="@(minute == "00" ? "active" : "")">
+                                <td class="active text-right" style="user-select:none;">
+                                    <small>
+                                        @if (minute == "00")
+                                        {
+                                            <strong>@time</strong>
+                                        }
+                                        else
+                                        {
+                                            @time
+                                        }
+                                    </small>
+                                </td>
+                                @foreach (var h in headers)
+                                {
+                                    TimeSpan elapsedSpan = new TimeSpan(h.AddMinutes(i).Ticks);
+
+                                    <td>
+
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        'use strict';
+
+
+    </script>
+}

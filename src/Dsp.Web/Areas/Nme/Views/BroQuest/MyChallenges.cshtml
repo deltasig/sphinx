@@ -88,10 +88,12 @@
                             {
                                 TimeSpan elapsedSpan = new TimeSpan(h.AddMinutes(i).Ticks);
 
-                                <td id="@elapsedSpan.TotalMinutes" 
+                                <td id="@elapsedSpan.TotalMinutes"
                                     onmouseenter="entered(this)" 
+                                    onmouseout="exited(this)"
                                     onmousedown="clicked(this)"
-                                    onmouseup="unclicked()">
+                                    onmouseup="unclicked()"
+                                    style="cursor: pointer">
 
                                 </td>
                             }
@@ -111,14 +113,13 @@
         var stepSize = 30;
         var mouseDown = 0;
         var state = 0; // 1 = adding challenge, 0 = removing challenge
-        var color = "success";
         document.body.onmouseup = unclicked;
 
         getChallenges(mid, sid);
 
         function clicked(ele) {
             mouseDown = 1;
-            if ($(ele).hasClass(color)) {
+            if ($(ele).hasClass("success") || $(ele).hasClass("warning")) {
                 state = 0;
                 removeChallenge(ele);
             } else {
@@ -133,9 +134,18 @@
 
         function getChallenges(m, s) {
             var uri = `/api/broquest/challenges/${m}/${s}`;
-            $.get(uri, function (result) {
-                $.each(result, function(){
-                    $("#"+this).addClass(color);
+            $.get(uri, function (results) {
+                $.each(results, function(i, slot){
+                    var time = slot.time;
+                    if(!slot.isFull) {
+                        $("#"+time).addClass("success");
+                    } else {
+                        $("#"+time).addClass("warning");
+                    }
+                    $("#"+time).text("");
+                    $.each(slot.newMembers, function(k, nm) {
+                        $("#"+time).append(`<small>${nm.item2}</small><br>`);
+                    });
                 });
             })
             .fail(function (result) {
@@ -144,7 +154,7 @@
         }
 
         function addChallenge(ele) {
-            if($(ele).hasClass(color) && state == 1) return;
+            if(($(ele).hasClass("success") || $(ele).hasClass("warning")) && state == 1) return;
             $.ajax({
                 url: '/api/broquest/challenge',
                 type: 'POST',
@@ -152,7 +162,7 @@
                 success: function (result) {
                     if(result.constructor === Array) {
                         $.each(result, function() {
-                            $("#"+this).addClass(color);
+                            $("#"+this).addClass("success");
                         });
                     } else {
                         console.log(result);
@@ -167,7 +177,15 @@
         }
 
         function removeChallenge(ele) {
-            if(!$(ele).hasClass(color) && state == 0) return; 
+            if(!$(ele).hasClass("success") && !$(ele).hasClass("warning") && state == 0) return;
+            if($(ele).hasClass("warning")) {
+                unclicked();
+                state = 0;
+                if(!confirm("Are you sure you want to delete this challenge? At least one new member has already signed up!")) {
+                    return;
+                }
+            }
+                
             $.ajax({
                 url: '/api/broquest/challenge',
                 type: 'DELETE',
@@ -175,7 +193,9 @@
                 success: function (result) {
                     if(result.constructor === Array) {
                         $.each(result, function() {
-                            $("#"+this).removeClass(color);
+                            $("#"+this).removeClass("success");
+                            $("#"+this).removeClass("warning");
+                            $("#"+this).text("");
                         });
                     } else {
                         console.log(result);
