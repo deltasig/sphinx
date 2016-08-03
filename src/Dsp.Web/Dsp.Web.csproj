@@ -692,8 +692,9 @@
     <Content Include="Areas\Nme\Views\BroQuest\Manager.cshtml" />
     <Content Include="Areas\Nme\Views\Shared\_HourSelectOptionsPartial.cshtml" />
     <Content Include="Areas\Nme\Views\Shared\_MinuteSelectOptionsPartial.cshtml" />
-    <Content Include="Areas\Nme\Views\BroQuest\Index.cshtml" />
+    <Content Include="Areas\Nme\Views\BroQuest\IndexMember.cshtml" />
     <Content Include="Areas\Nme\Views\BroQuest\MyChallenges.cshtml" />
+    <Content Include="Areas\Nme\Views\BroQuest\IndexNewMember.cshtml" />
     <Content Include="Areas\Nme\Views\BroQuest\Challenges.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />

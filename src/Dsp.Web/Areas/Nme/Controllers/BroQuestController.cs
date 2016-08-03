@@ -16,34 +16,32 @@
     {
         public async Task<ActionResult> Index(bool i = true, bool c = true)
         {
+            ViewBag.i = i;
+            ViewBag.c = c;
             Semester semester = await GetThisSemesterAsync();
-
             var model = new BroQuestIndexModel(semester);
             // Get members list depending on whether or not the current user is an active or new member
             model.Member = await UserManager.FindByNameAsync(User.Identity.Name);
             model.Members = new List<Member>();
+
             var roster = model.Members = await base.GetRosterForSemester(semester); 
             if (User.IsInRole("Active"))
             {
                 model.Members = roster.Where(m => m.MemberStatus.StatusName == "Pledge");
+                return View("IndexMember", model);
             }
             else if(User.IsInRole("Pledge"))
             {
                 model.Members = roster.Where(m => m.MemberStatus.StatusName == "Active");
+                return View("IndexNewMember", model);
             }
             else if (User.IsInRole("Administrator"))
             {
                 model.Members = roster;
+                return View("IndexMember", model);
             }
-            else
-            {
-                // Nothing for now.
-            }
-            
-            ViewBag.i = i;
-            ViewBag.c = c;
 
-            return View(model);
+            return new HttpStatusCodeResult(HttpStatusCode.NotFound);
         }
 
         [Authorize(Roles = "Administrator, New Member Educator")]
@@ -66,13 +64,12 @@
         }
 
         [Authorize(Roles = "Administrator, Pledge")]
-        public async Task<ActionResult> Challenges(int? mid)
+        public async Task<ActionResult> Challenges(string userName)
         {
-            if (mid == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            var member = await UserManager.FindByIdAsync((int)mid);
-            if (member == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
+            if(string.IsNullOrEmpty(userName)) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);            
 
             var semester = await GetThisSemesterAsync();
+            var member = await UserManager.FindByNameAsync(userName);
             var model = new BroQuestChallengeModel(semester, member);
 
             return View(model);

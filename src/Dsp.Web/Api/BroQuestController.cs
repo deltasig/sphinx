@@ -46,7 +46,7 @@ namespace Dsp.Web.Api
         public async Task<IHttpActionResult> GetPeriod(int id)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(id);
-            if(semester == null) return NotFound();
+            if (semester == null) return NotFound();
             var beginsOn = semester.QuestingBeginsOn.FromUtcToCst();
             var endsOn = semester.QuestingEndsOn.FromUtcToCst();
             return Ok(new { BeginsOn = semester.QuestingBeginsOn, EndsOn = semester.QuestingEndsOn });
@@ -61,12 +61,12 @@ namespace Dsp.Web.Api
             var beginsOn = semester.QuestingBeginsOn;
             var endsOn = semester.QuestingEndsOn;
             var timeLeft = string.Empty;
-            if(now < beginsOn) // Questing hasn't started
+            if (now < beginsOn) // Questing hasn't started
             {
                 timeLeft = (beginsOn - now).ToPreciseTimeUntilString();
                 timeLeft = string.Format("Questing begins in: {0}", timeLeft);
             }
-            else if(now < endsOn) // Questing has started, but not finished
+            else if (now < endsOn) // Questing has started, but not finished
             {
                 timeLeft = (endsOn - now).ToPreciseTimeUntilString();
                 timeLeft = string.Format("Questing ends in: {0}", timeLeft);
@@ -78,7 +78,7 @@ namespace Dsp.Web.Api
 
             return Ok(timeLeft);
         }
-        
+
         [Route("progress/{id:int}")]
         public async Task<IHttpActionResult> GetMemberProgress(int id)
         {
@@ -102,7 +102,7 @@ namespace Dsp.Web.Api
                     progress = percent > 100 ? 100 : percent;
                 }
             }
-            else if(status == "Pledge")
+            else if (status == "Pledge")
             {
                 if (actives.Any())
                 {
@@ -116,7 +116,7 @@ namespace Dsp.Web.Api
 
             return Ok(progress);
         }
-        
+
         [Route("challenges/{mid:int}/{sid:int}")]
         public async Task<IHttpActionResult> GetMemberChallenges(int mid, int sid)
         {
@@ -125,9 +125,9 @@ namespace Dsp.Web.Api
             var member = _db.Users.Find(mid);
             if (member == null) return NotFound();
 
-            var slots = new List<int>();
+            var slots = new List<Slot>();
             var challenges = await _broQuestService.GetChallengesForMemberAsync(mid, sid);
-            foreach(var c in challenges)
+            foreach (var c in challenges)
             {
                 var start = c.BeginsOn;
                 var end = c.EndsOn;
@@ -135,7 +135,16 @@ namespace Dsp.Web.Api
                 var stop = elapsedSpan.TotalMinutes + (end - start).TotalMinutes;
                 for (var i = elapsedSpan.TotalMinutes; i < stop; i += 15)
                 {
-                    slots.Add((int)i);
+                    var slot = new Slot();
+                    slot.time = (int)i;
+                    slot.newMembers = new List<Tuple<int, string>>();
+                    foreach (var comp in c.Completions)
+                    {
+                        var tup = new Tuple<int, string>(comp.NewMemberId, comp.Member.ToString());
+                        slot.newMembers.Add(tup);
+                    }
+                    if (c.Completions.Count >= member.MaxQuesters) slot.isFull = true;
+                    slots.Add(slot);
                 }
             }
 
@@ -160,12 +169,12 @@ namespace Dsp.Web.Api
                 return Ok("This challenge would go outside the questing period.");
 
             var conflict = await _db.QuestChallenges
-                .AnyAsync(q => 
-                    (q.BeginsOn < start && start < q.EndsOn) || 
-                    (q.BeginsOn < end && end < q.EndsOn) || 
+                .AnyAsync(q =>
+                    (q.BeginsOn < start && start < q.EndsOn) ||
+                    (q.BeginsOn < end && end < q.EndsOn) ||
                     (q.BeginsOn < start && end < q.EndsOn));
             if (conflict) return Ok("This challenge overlaps with an existing one.");
-            
+
             var challenge = new QuestChallenge();
             challenge.BeginsOn = start;
             challenge.EndsOn = end;
@@ -185,7 +194,7 @@ namespace Dsp.Web.Api
                 }
                 return Ok(slots);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return BadRequest();
             }
@@ -201,15 +210,18 @@ namespace Dsp.Web.Api
             var member = _db.Users.Find(body.mid);
             if (member == null) return NotFound();
 
+            var now = DateTime.UtcNow.FromUtcToCst();
             var start = DateTime.MinValue.AddMinutes(body.mins);
             var end = start.AddMinutes(15);
 
             var challenge = await _db.QuestChallenges
-                .SingleOrDefaultAsync(c => 
-                    c.MemberId == member.Id && 
+                .SingleOrDefaultAsync(c =>
+                    c.MemberId == member.Id &&
                     c.SemesterId == semester.SemesterId &&
                     c.BeginsOn <= start && end <= c.EndsOn);
-            if(challenge == null) return Ok("The challenge requested to be deleted does not exist.");
+            if (challenge == null) return Ok("The challenge requested to be deleted does not exist.");
+            if (challenge.BeginsOn < now)
+                return Ok("The challenge requested to be deleted can't be deleted because it's already started/occurred.");
 
             try
             {
@@ -234,8 +246,8 @@ namespace Dsp.Web.Api
         }
 
         [Route("complete")]
-        [HttpPost, ResponseType(typeof(NewCompletion))]
-        public async Task<IHttpActionResult> MarkComplete([FromBody] NewCompletion body)
+        [HttpPost, ResponseType(typeof(NewQuickCompletion))]
+        public async Task<IHttpActionResult> MarkComplete([FromBody] NewQuickCompletion body)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
             if (semester == null) return NotFound();
@@ -244,7 +256,7 @@ namespace Dsp.Web.Api
             if (member == null) return NotFound();
             var newMember = _db.Users.Find(body.nmid);
             if (newMember == null) return NotFound();
-            
+
             try
             {
                 var challenge = new QuestChallenge();
@@ -254,14 +266,13 @@ namespace Dsp.Web.Api
                 challenge.MemberId = member.Id;
                 challenge.SemesterId = semester.SemesterId;
                 await _broQuestService.AddChallengeAsync(challenge);
-                //challenge = await _broQuestService.GetChallengeAsync(member.Id, semester.SemesterId);
 
                 var completion = new QuestCompletion();
                 completion.NewMemberId = newMember.Id;
                 completion.ChallengeId = challenge.Id;
                 completion.IsVerified = true;
                 await _broQuestService.AcceptChallengeAsync(completion);
-                
+
                 return Ok();
             }
             catch (DbEntityValidationException e)
@@ -283,6 +294,78 @@ namespace Dsp.Web.Api
                 return BadRequest();
             }
         }
+        
+        [Route("complete")]
+        [HttpPut, ResponseType(typeof(NewCompletion))]
+        public async Task<IHttpActionResult> AcceptChallenge([FromBody] NewCompletion body)
+        {
+            var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
+            if (semester == null) return NotFound();
+            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            var member = _db.Users.Find(body.mid);
+            if (member == null) return NotFound();
+
+            var now = DateTime.UtcNow.FromUtcToCst();
+            var start = DateTime.MinValue.AddMinutes(body.mins);
+            var end = start.AddMinutes(15);
+
+            var challenge = await _db.QuestChallenges
+                .SingleOrDefaultAsync(c =>
+                    c.MemberId == member.Id &&
+                    c.SemesterId == semester.SemesterId &&
+                    c.BeginsOn <= start && end <= c.EndsOn);
+            if (challenge == null) return Ok("You can't back out of this challenge because it doesn't exist.");
+
+            try
+            {
+                await _broQuestService.AcceptChallengeAsync(challenge.Id, body.nmid, true);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [Route("complete")]
+        [HttpDelete, ResponseType(typeof(NewCompletion))]
+        public async Task<IHttpActionResult> UnacceptChallenge([FromBody] NewCompletion body)
+        {
+            var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
+            if (semester == null) return NotFound();
+            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            var member = _db.Users.Find(body.mid);
+            if (member == null) return NotFound();
+
+            var now = DateTime.UtcNow.FromUtcToCst();
+            var start = DateTime.MinValue.AddMinutes(body.mins);
+            var end = start.AddMinutes(15);
+
+            var challenge = await _db.QuestChallenges
+                .SingleOrDefaultAsync(c =>
+                    c.MemberId == member.Id &&
+                    c.SemesterId == semester.SemesterId &&
+                    c.BeginsOn <= start && end <= c.EndsOn);
+            if (challenge == null) return Ok("You can't back out of this challenge because it doesn't exist.");
+            var completion = challenge.Completions.SingleOrDefault(c => c.NewMemberId == body.nmid);
+            
+            try
+            {
+                await _broQuestService.UnacceptChallengeAsync(completion);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        public class Slot
+        {
+            public int time { get; set; }
+            public bool isFull { get; set; }
+            public List<Tuple<int, string>> newMembers { get; set; }
+        }
 
         public class NewChallenge
         {
@@ -291,8 +374,16 @@ namespace Dsp.Web.Api
             public int mins { get; set; }
         }
 
+        public class NewQuickCompletion
+        {
+            public int mid { get; set; }
+            public int nmid { get; set; }
+            public int sid { get; set; }
+        }
+
         public class NewCompletion
         {
+            public int mins { get; set; }
             public int mid { get; set; }
             public int nmid { get; set; }
             public int sid { get; set; }

@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest Challenges";
-    ViewBag.Subtitle = Model.Member.FirstName + " " + Model.Member.LastName;
+    ViewBag.Subtitle = Model.Member + " | " + Model.Semester;
 
     var start = Model.Semester.QuestingBeginsOn.FromUtcToCst();
     var end = Model.Semester.QuestingEndsOn.FromUtcToCst();
@@ -34,70 +34,66 @@
             </a>
         </div>
         <div class="col-md-6 text-right">
-            My Quest Size: @Model.Member.QuestChallengeSize min
+
         </div>
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="table-responsive">
-                <table class="table table-condensed table-bordered"
-                       style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;" >
-                    <thead style="user-select:none;">
-                        <tr class="active">
-                            @if (headers.Any())
+            <table class="table table-condensed table-bordered"
+                   style="-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;">
+                <thead style="user-select:none;">
+                    <tr class="active">
+                        @if (headers.Any())
+                        {
+                            <th></th>
+                            foreach (var h in headers)
                             {
-                                <th></th>
-                                foreach (var h in headers)
-                                {
-                                    var color = string.Empty;
-                                    if (h.Date == DateTime.UtcNow.FromUtcToCst()) { color = "success"; }
+                                var color = string.Empty;
+                                if (h.Date == DateTime.UtcNow.FromUtcToCst()) { color = "success"; }
 
-                                    <th class="@color text-center"><small>@h.ToString("ddd MM/dd")</small></th>
-                                }
+                                <th class="@color text-center"><small>@h.ToString("ddd MM/dd")</small></th>
+                            }
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var i = 0; i < 1440; i += 15)
+                    {
+                        var hour = ((i / 60) % 12).ToString("D2");
+                        hour = hour == "00" ? "12" : hour;
+                        var minute = (i % 60).ToString("D2");
+                        var time = hour + ":" + minute;
+                        if ((i / 60) < 12)
+                        {
+                            time += " am";
+                        }
+                        else
+                        {
+                            time += " pm";
+                        }
+                        <tr class="@(minute == "00" ? "active" : "")">
+                            <td class="active text-right" style="user-select:none;">
+                                <small>
+                                    @if (minute == "00")
+                                    {
+                                        <strong>@time</strong>
+                                    }
+                                    else
+                                    {
+                                        @time
+                                    }
+                                </small>
+                            </td>
+                            @foreach (var h in headers)
+                            {
+                                TimeSpan elapsedSpan = new TimeSpan(h.AddMinutes(i).Ticks);
+
+                                <td id="@elapsedSpan.TotalMinutes" onmousedown="clicked(this)"></td>
                             }
                         </tr>
-                    </thead>
-                    <tbody>
-                        @for(var i = 0; i < 1440; i += 15)
-                        {
-                            var hour = ((i / 60) % 12).ToString("D2");
-                            hour = hour == "00" ? "12" : hour;
-                            var minute = (i % 60).ToString("D2");
-                            var time = hour + ":" + minute;
-                            if ((i / 60) < 12)
-                            {
-                                time += " am";
-                            }
-                            else
-                            {
-                                time += " pm";
-                            }
-                            <tr class="@(minute == "00" ? "active" : "")">
-                                <td class="active text-right" style="user-select:none;">
-                                    <small>
-                                        @if (minute == "00")
-                                        {
-                                            <strong>@time</strong>
-                                        }
-                                        else
-                                        {
-                                            @time
-                                        }
-                                    </small>
-                                </td>
-                                @foreach (var h in headers)
-                                {
-                                    TimeSpan elapsedSpan = new TimeSpan(h.AddMinutes(i).Ticks);
-
-                                    <td>
-
-                                    </td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -105,7 +101,83 @@
 @section scripts {
     <script type="text/javascript">
         'use strict';
+        var sid = @(Model.Semester.SemesterId);
+        var mid = @(Model.Member.Id);
 
+        getChallenges(mid, sid);
 
+        function getChallenges(m, s) {
+            var uri = `/api/broquest/challenges/${m}/${s}`;
+            $.get(uri, function (results) {
+                $.each(results, function(i, slot){
+                    var time = slot.time;
+                    if(!slot.isFull) {
+                        $("#"+time).addClass("success");
+                    } else {
+                        $("#"+time).addClass("warning");
+                    }
+                    $("#"+time).text("");
+                    $.each(slot.newMembers, function(k, nm) {
+                        $("#"+time).append(`<small>${nm.item2}</small><br>`);
+                    });
+                });
+            })
+            .fail(function (result) {
+                console.log(result);
+            });
+        }
+
+        function clicked(ele) {
+            if($(ele).hasClass("success") === true) {
+                // unaccept challenge
+            } else if($(ele).hasClass("warning")) { 
+                // accept challenge
+            }
+        }
+
+        function acceptChallenge(ele) {
+            if($(ele).hasClass(color) && state == 1) return;
+            $.ajax({
+                url: '/api/broquest/challenge',
+                type: 'POST',
+                data: { mid: mid, sid: sid, mins: ele.id },
+                success: function (result) {
+                    if(result.constructor === Array) {
+                        $.each(result, function() {
+                            $("#"+this).addClass(color);
+                        });
+                    } else {
+                        console.log(result);
+                        $(ele).addClass("danger");
+                        setTimeout(function() { $(ele).removeClass("danger") }, 150);
+                    }
+                },
+                error: function (result) {
+                    //console.log(result);
+                }
+            });
+        }
+
+        function unacceptChallenge(ele) {
+            if(!$(ele).hasClass(color) && state == 0) return;
+            $.ajax({
+                url: '/api/broquest/challenge',
+                type: 'DELETE',
+                data: { mid: mid, sid: sid, mins: ele.id },
+                success: function (result) {
+                    if(result.constructor === Array) {
+                        $.each(result, function() {
+                            $("#"+this).removeClass(color);
+                        });
+                    } else {
+                        console.log(result);
+                    }
+                },
+                error: function (result) {
+                    //console.log(result);
+                }
+            });
+        }
+        
     </script>
 }
