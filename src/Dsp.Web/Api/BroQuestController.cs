@@ -110,7 +110,10 @@ namespace Dsp.Web.Api
                         .QuestCompletions.Where(c =>
                             c.Challenge.SemesterId == semester.SemesterId &&
                             c.Challenge.EndsOn < DateTime.UtcNow.FromUtcToCst());
-                    progress = (100 * activesCompleted.Count()) / actives.Count();
+                    var activesGone = actives.Where(c => 
+                        c.LivingAssignmentForSemester(semester.SemesterId) == "Co-Op" ||
+                        c.LivingAssignmentForSemester(semester.SemesterId) == "Study Abroad");
+                    progress = (100 * activesCompleted.Count()) / (actives.Count() - activesGone.Count());
                 }
             }
 
