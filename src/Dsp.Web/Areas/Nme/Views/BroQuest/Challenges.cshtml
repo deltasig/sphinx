@@ -1,11 +1,12 @@
-﻿@using Dsp.Web.Extensions;
+﻿@using Dsp.Web.Extensions
 @using Dsp.Web.Areas.Nme.Models
+@using Microsoft.AspNet.Identity
 @model BroQuestChallengeModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "BroQuest Challenges";
     ViewBag.Subtitle = Model.Member + " | " + Model.Semester;
-
+    var currentUserId = User.Identity.GetUserId<int>();
     var start = Model.Semester.QuestingBeginsOn.FromUtcToCst();
     var end = Model.Semester.QuestingEndsOn.FromUtcToCst();
     var interval = Model.Semester.MaxQuestChallengeMinutes;
@@ -101,26 +102,40 @@
 @section scripts {
     <script type="text/javascript">
         'use strict';
-        var sid = @(Model.Semester.SemesterId);
         var mid = @(Model.Member.Id);
+        var nmid = @(currentUserId);
+        var sid = @(Model.Semester.SemesterId);
 
         getChallenges(mid, sid);
 
         function getChallenges(m, s) {
             var uri = `/api/broquest/challenges/${m}/${s}`;
             $.get(uri, function (results) {
+                var hasSelected = false;
+                if(results.constructor !== Array) return;
+                $("td").removeClass("info");
                 $.each(results, function(i, slot){
                     var time = slot.time;
-                    if(!slot.isFull) {
-                        $("#"+time).addClass("success");
-                    } else {
-                        $("#"+time).addClass("warning");
+                    if(!hasSelected) {
+                        if(!slot.isFull) {
+                            $("#"+time).addClass("success");
+                        } else {
+                            $("#"+time).addClass("warning");
+                        }
                     }
                     $("#"+time).text("");
                     $.each(slot.newMembers, function(k, nm) {
+                        if(nm.item1 === nmid) {
+                            hasSelected = true;
+                            $("#"+time).addClass("info");
+                        }
                         $("#"+time).append(`<small>${nm.item2}</small><br>`);
                     });
                 });
+                if(hasSelected) {
+                    $("td").removeClass("success");
+                    $("td").removeClass("warning");
+                }
             })
             .fail(function (result) {
                 console.log(result);
@@ -128,29 +143,22 @@
         }
 
         function clicked(ele) {
-            if($(ele).hasClass("success") === true) {
-                // unaccept challenge
-            } else if($(ele).hasClass("warning")) { 
-                // accept challenge
+            if($(ele).hasClass("success")) {
+                acceptChallenge(ele.id, mid, nmid, sid);
+            } else if($(ele).hasClass("warning")) {
+
+            } else if($(ele).hasClass("info")) {
+                unacceptChallenge(ele.id, mid, nmid, sid);
             }
         }
 
-        function acceptChallenge(ele) {
-            if($(ele).hasClass(color) && state == 1) return;
+        function acceptChallenge(mins, mid, nmid, sid) {
             $.ajax({
-                url: '/api/broquest/challenge',
-                type: 'POST',
-                data: { mid: mid, sid: sid, mins: ele.id },
+                url: '/api/broquest/complete',
+                type: 'PUT',
+                data: { mins: mins, mid: mid, nmid: nmid, sid: sid },
                 success: function (result) {
-                    if(result.constructor === Array) {
-                        $.each(result, function() {
-                            $("#"+this).addClass(color);
-                        });
-                    } else {
-                        console.log(result);
-                        $(ele).addClass("danger");
-                        setTimeout(function() { $(ele).removeClass("danger") }, 150);
-                    }
+                    getChallenges(mid, sid);
                 },
                 error: function (result) {
                     //console.log(result);
@@ -158,26 +166,19 @@
             });
         }
 
-        function unacceptChallenge(ele) {
-            if(!$(ele).hasClass(color) && state == 0) return;
+        function unacceptChallenge(mins, mid, nmid, sid) {
             $.ajax({
-                url: '/api/broquest/challenge',
+                url: '/api/broquest/complete',
                 type: 'DELETE',
-                data: { mid: mid, sid: sid, mins: ele.id },
+                data: { mins: mins, mid: mid, nmid: nmid, sid: sid },
                 success: function (result) {
-                    if(result.constructor === Array) {
-                        $.each(result, function() {
-                            $("#"+this).removeClass(color);
-                        });
-                    } else {
-                        console.log(result);
-                    }
+                    getChallenges(mid, sid);
                 },
                 error: function (result) {
                     //console.log(result);
                 }
             });
         }
-        
+
     </script>
 }
