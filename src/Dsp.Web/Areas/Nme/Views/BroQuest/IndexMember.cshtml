@@ -1,6 +1,7 @@
 ﻿@using Dsp.Web.Areas.Nme.Models
 @using System.Web.Mvc.Html
-@using Microsoft.AspNet.Identity;
+@using Microsoft.AspNet.Identity
+@using Dsp.Web.Extensions
 @model BroQuestIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -93,7 +94,7 @@
                         if (nmChallenges.Any(c => c.Member.Id == currentUserId))
                         {
                             statusIcon = "fa-check";
-                            if (nmChallenges.Any(c => c.EndsOn < DateTime.UtcNow))
+                            if (nmChallenges.Any(c => c.EndsOn < DateTime.UtcNow.FromUtcToCst()))
                             {
                                 if (!ViewBag.c)
                                 {

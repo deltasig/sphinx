@@ -301,7 +301,7 @@ namespace Dsp.Web.Api
         {
             var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
             if (semester == null) return NotFound();
-            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            if (body.nmid != User.Identity.GetUserId<int>()) return NotFound();
             var member = _db.Users.Find(body.mid);
             if (member == null) return NotFound();
 
@@ -333,7 +333,7 @@ namespace Dsp.Web.Api
         {
             var semester = await _semesterService.GetSemesterByIdAsync(body.sid);
             if (semester == null) return NotFound();
-            if (body.mid.ToString() != User.Identity.GetUserId()) return NotFound();
+            if (body.nmid != User.Identity.GetUserId<int>()) return NotFound();
             var member = _db.Users.Find(body.mid);
             if (member == null) return NotFound();
 

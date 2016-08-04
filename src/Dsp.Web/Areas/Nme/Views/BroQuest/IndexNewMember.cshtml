@@ -87,10 +87,10 @@
                         string statusIcon = "fa-circle text-danger";
                         string statusText = "Unchallenged";
 
-                        if (challenges.Any(c => c.Member.Id == currentUserId))
+                        if (challenges.Any(c => c.Completions.Any(o => o.NewMemberId == currentUserId)))
                         {
                             statusIcon = "fa-check";
-                            if (challenges.Any(c => c.EndsOn < DateTime.UtcNow))
+                            if (challenges.Any(c => c.EndsOn < DateTime.UtcNow.FromUtcToCst() && c.Completions.Any(o => o.NewMemberId == currentUserId)))
                             {
                                 if (!ViewBag.c)
                                 {
