@@ -273,7 +273,6 @@ namespace Dsp.Web.Api
                 var completion = new QuestCompletion();
                 completion.NewMemberId = newMember.Id;
                 completion.ChallengeId = challenge.Id;
-                completion.IsVerified = true;
                 await _broQuestService.AcceptChallengeAsync(completion);
 
                 return Ok();
@@ -321,7 +320,7 @@ namespace Dsp.Web.Api
 
             try
             {
-                await _broQuestService.AcceptChallengeAsync(challenge.Id, body.nmid, true);
+                await _broQuestService.AcceptChallengeAsync(challenge.Id, body.nmid);
                 return Ok();
             }
             catch (Exception)
