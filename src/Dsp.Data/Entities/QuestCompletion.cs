@@ -17,8 +17,6 @@
         [Required, Column(Order = 1), Index("IX_QuestCompletion", 1, IsUnique = true)]
         public int NewMemberId { get; set; }
 
-        public bool IsVerified { get; set; }
-
         [ForeignKey("ChallengeId")]
         public virtual QuestChallenge Challenge { get; set; }
         [ForeignKey("NewMemberId")]

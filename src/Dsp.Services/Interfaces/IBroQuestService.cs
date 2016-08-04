@@ -16,7 +16,7 @@
         Task AddChallengeAsync(QuestChallenge challenge);
         Task DeleteChallengeAsync(int id);
         Task DeleteChallengeAsync(QuestChallenge challenge);
-        Task AcceptChallengeAsync(int cid, int nmid, bool verified);
+        Task AcceptChallengeAsync(int cid, int nmid);
         Task AcceptChallengeAsync(QuestCompletion completion);
         Task UnacceptChallengeAsync(int id);
         Task UnacceptChallengeAsync(QuestCompletion completion);

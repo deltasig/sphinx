@@ -188,6 +188,10 @@
     <Compile Include="Migrations\201607310108175_QuestChallengeIndex.Designer.cs">
       <DependentUpon>201607310108175_QuestChallengeIndex.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608040511353_RemovedIsVerified.cs" />
+    <Compile Include="Migrations\201608040511353_RemovedIsVerified.Designer.cs">
+      <DependentUpon>201608040511353_RemovedIsVerified.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
@@ -259,6 +263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607310108175_QuestChallengeIndex.resx">
       <DependentUpon>201607310108175_QuestChallengeIndex.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608040511353_RemovedIsVerified.resx">
+      <DependentUpon>201608040511353_RemovedIsVerified.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
       <DependentUpon>201605251901557_Initial.cs</DependentUpon>

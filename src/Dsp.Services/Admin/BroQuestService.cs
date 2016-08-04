@@ -74,13 +74,12 @@
             await _db.SaveChangesAsync();
         }
 
-        public async Task AcceptChallengeAsync(int cid, int nmid, bool verified)
+        public async Task AcceptChallengeAsync(int cid, int nmid)
         {
             var completion = new QuestCompletion
             {
                 ChallengeId = cid,
-                NewMemberId = nmid,
-                IsVerified = verified
+                NewMemberId = nmid
             };
             await AcceptChallengeAsync(completion);
         }
