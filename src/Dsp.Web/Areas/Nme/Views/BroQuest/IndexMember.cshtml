@@ -100,12 +100,15 @@
                                 {
                                     continue;
                                 }
-
                                 statusIcon += " text-success";
                                 statusText = "Complete";
                             }
                             else
                             {
+                                if (!ViewBag.i)
+                                {
+                                    continue;
+                                }
                                 statusIcon += " text-warning";
                                 statusText = "Challenge Accepted";
                             }
