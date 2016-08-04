@@ -83,10 +83,15 @@
                         var availabilityCount = futureAvailableChallenges.Count();
                         var availabilityHours = futureAvailableChallenges.Sum(c => (c.EndsOn - c.BeginsOn).Minutes) / 60.0;
                         var nextAvailable = futureAvailableChallenges.FirstOrDefault();
+                        var location = m.LivingAssignmentForSemester(Model.Semester.SemesterId);
 
                         string statusIcon = "fa-circle text-danger";
                         string statusText = "Unchallenged";
 
+                        if(location == "Co-Op" || location == "Study Abroad")
+                        {
+                            continue;
+                        }
                         if (challenges.Any(c => c.Completions.Any(o => o.NewMemberId == currentUserId)))
                         {
                             statusIcon = "fa-check";
@@ -121,17 +126,17 @@
                             <div class="row">
                                 <div class="col-md-3">
                                     <small>
-                                        <strong>@m.ToString()</strong>
+                                        <i class="fa fa-user"></i> <strong>@m.ToString()</strong>
                                     </small>
                                 </div>
                                 <div class="col-md-3">
                                     <small>
-                                        <i class="fa fa-phone"> @m.PhoneNumbers.SingleOrDefault(p => p.Type == "Mobile").Number</i>
+                                        <i class="fa fa-mobile"></i> @m.PhoneNumbers.SingleOrDefault(p => p.Type == "Mobile").Number
                                     </small>
                                 </div>
                                 <div class="col-md-3">
                                     <small>
-                                        <i class="fa fa-home"> @m.LivingAssignmentForSemester(Model.Semester.SemesterId)</i>
+                                        <i class="fa fa-home"></i> @location
                                     </small>
                                 </div>
                                 <div class="col-md-3 text-md-right">
@@ -158,7 +163,6 @@
                                 </div>
                                 <div class="col-md-6">
                                     <small>
-
                                         @if (availabilityCount > 0)
                                         {
                                             @: Total scheduled availability: 
@@ -177,7 +181,8 @@
                     }
                 </div>
                 <div class="panel-footer">
-                    <span data-toggle="tooltip" data-placement="top" title="Members">
+                    <span data-toggle="tooltip" data-placement="top" 
+                          title="Members on co-op and study abroad are not shown">
                         <i class="fa fa-users"></i>
                         @listCount
                     </span>
@@ -223,7 +228,7 @@
             if (p > 100) p = 100;
             else if (p < 0) p = 0;
             $("#progress").text(label + "%");
-            $("#progress").width(label + "%");
+            $("#progress").width(p + "%");
             $("#progress").removeClass("hidden");
         }
 
