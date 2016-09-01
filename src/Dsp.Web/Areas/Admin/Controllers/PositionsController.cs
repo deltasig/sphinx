@@ -89,6 +89,10 @@
                     _db.Entry(positions[i]).State = EntityState.Modified;
                 }
             }
+            else
+            {
+                _db.Entry(position).State = EntityState.Modified;
+            }
 
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
