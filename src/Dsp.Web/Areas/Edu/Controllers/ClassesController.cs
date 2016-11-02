@@ -437,11 +437,11 @@
             }
 
             var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
-            int maxLength = section != null ? section.MaxRequestLength*1024 : 10240*1024;
+            var maxLength = section != null ? section.MaxRequestLength*1024 : 10240*1024;
 
             if (model.FileInfoModel.File.ContentLength > maxLength)
             {
-                TempData["FailureMessage"] = string.Format("Failed to add file because it is too large. Max size: {0}", maxLength);
+                TempData["FailureMessage"] = $"Failed to add file because it is too large. Max size: {maxLength}";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
             if (model.FileInfoModel.File.ContentType != "application/pdf")
@@ -449,8 +449,8 @@
                 TempData["FailureMessage"] = "Failed to add file because the file type was identified as PDF.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
             }
-            Regex regex = new Regex(@"^(Test|Hw|Quiz) \d{2} - (SP|FS|SS)\d{4} - [a-zA-Z]{2,25}.pdf$");
-            Match match = regex.Match(model.FileInfoModel.File.FileName);
+            var regex = new Regex(@"^(Test|Hw|Quiz|Crib|Proj|PTest|Lab) \d{2} - (SP|FS|SS)\d{4} - [a-zA-Z]{2,25}.pdf$");
+            var match = regex.Match(model.FileInfoModel.File.FileName);
             if(!match.Success)
             {
                 TempData["FailureMessage"] = "Your file name does not match the required format. Please review the upload instructions.";
@@ -461,30 +461,6 @@
             var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
             var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
             var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
-
-            // Optimize the PDF file before sending it to AWS.
-            MemoryStream stream = new MemoryStream();
-            try
-            {
-                Aspose.Pdf.Document doc = new Aspose.Pdf.Document(model.FileInfoModel.File.InputStream);
-                doc.OptimizeResources(new Aspose.Pdf.Document.OptimizationOptions()
-                {
-                    LinkDuplcateStreams = true,
-                    RemoveUnusedObjects = true,
-                    RemoveUnusedStreams = true,
-                    CompressImages = true,
-                    ImageQuality = 15
-                });
-                doc.Save(stream);
-            }
-            catch(Exception e)
-            {
-                stream.Dispose();
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["FailureMessage"] = "An error occurred while processing the file. " +
-                    "Please ensure that your PDF is not corrupt (try resaving it to a new file and check the selected format).";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
 
             var key = string.Format(model.Class.CourseShorthand + "/{0}", newFileName);
             try
@@ -497,7 +473,7 @@
                         BucketName = awsBucket,
                         CannedACL = S3CannedACL.Private,
                         Key = key,
-                        InputStream = stream
+                        InputStream = model.FileInfoModel.File.InputStream
                     };
 
                     client.PutObject(request);
@@ -508,10 +484,6 @@
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 TempData["FailureMessage"] = "An error occurred while saving the file because of an AWS error.  Contact your admin.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-            finally
-            {
-                stream.Dispose();
             }
 
             try
