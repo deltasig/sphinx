@@ -9,19 +9,26 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-xs-12">
+        <div class="col-md-4">
             <p>
                 <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Types List
-                </a>
-                <a href="@Url.Action("Info", new {id = @Model.SoberTypeId})" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Back to Type Info
+                    <i class="fa fa-caret-left"></i> Back to Index
                 </a>
             </p>
         </div>
+        <div class="col-md-4 text-right">
+            @if (!Model.Signups.Any())
+            {
+                <a class="btn btn-sm btn-danger"
+                   href="@Url.Action("Delete", new { id = Model.SoberTypeId })">
+                    <i class="fa fa-fw fa-times-circle"></i>
+                    Delete
+                </a>
+            }
+        </div>
     </div>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-8">
             @using (Html.BeginForm())
             {
                 @Html.AntiForgeryToken()
