@@ -37,14 +37,6 @@
         [Display(Name = "Shirt Size")]
         public string ShirtSize { get; set; }
 
-        [Display(Name = "Quest Challenge Length (minutes)")]
-        [Range(30, 90, ErrorMessage = "Min: 30, Max: 90 (increments of 15)")]
-        public int QuestChallengeSize { get; set; }
-
-        [Display(Name = "Max Questers")]
-        [Range(1, 10, ErrorMessage = "Min: 1, Max: 10")]
-        public int MaxQuesters { get; set; }
-
         public DateTime? CreatedOn { get; set; }
 
         public DateTime? LastUpdatedOn { get; set; }
@@ -87,10 +79,6 @@
         public virtual ICollection<Member> LittleBrothers { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<PhoneNumber> PhoneNumbers { get; set; }
-        [InverseProperty("Member")]
-        public virtual ICollection<QuestChallenge> QuestChallenges { get; set; }
-        [InverseProperty("Member")]
-        public virtual ICollection<QuestCompletion> QuestCompletions { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<RoomToMember> Rooms { get; set; }
         [InverseProperty("Member")]

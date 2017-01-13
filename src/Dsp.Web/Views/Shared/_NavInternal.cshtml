@@ -37,15 +37,6 @@
                 <i class="fa fa-cutlery"></i>
             </a>
         </li>
-        @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Pledge"))
-        {
-            <li class="@(ViewBag.Title.Contains("BroQuest") ? "active" : "")"
-                data-toggle="tooltip" data-placement="bottom" title="BroQuest">
-                <a href="@Url.Action("Index", "BroQuest", new {area = "Nme"})">
-                    <i class="fa fa-map"></i>
-                </a>
-            </li>
-        }
     </ul>
     <!-- Top Menu Items (Right Side) -->
     <ul class="nav navbar-nav navbar-right top-nav" style="margin: 0">
@@ -67,15 +58,6 @@
                 <i class="fa fa-cutlery"></i>
             </a>
         </li>
-        @if (User.IsInRole("Administrator") || User.IsInRole("Active") || User.IsInRole("Pledge"))
-        {
-            <li class="@(ViewBag.Title.Contains("BroQuest") ? "active" : "") visible-xs visible-sm"
-                data-toggle="tooltip" data-placement="bottom" title="BroQuest">
-                <a href="@Url.Action("Index", "BroQuest", new {area = "Nme"})">
-                    <i class="fa fa-flag"></i>
-                </a>
-            </li>
-        }
         @Html.Partial("_LoginPartial")
     </ul>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
