@@ -543,7 +543,6 @@
     <Content Include="Areas\Sphinx\Views\SoberTypes\Delete.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Edit.cshtml" />
     <Content Include="Areas\Sphinx\Views\SoberTypes\Index.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Info.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Create.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Delete.cshtml" />

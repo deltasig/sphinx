@@ -92,27 +92,13 @@
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var soberType = await _db.SoberTypes.FindAsync(id);
-            _db.SoberTypes.Remove(soberType);
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        public async Task<ActionResult> Info(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var soberType = await _db.SoberTypes.FindAsync(id);
             if (soberType == null)
             {
                 return HttpNotFound();
             }
-
-            var markdown = new Markdown();
-            soberType.Description = markdown.Transform(soberType.Description);
-
-            return View(soberType);
+            _db.SoberTypes.Remove(soberType);
+            await _db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
     }
 }
