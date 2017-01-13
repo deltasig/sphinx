@@ -3,6 +3,7 @@
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Recruitment";
 }
+@Scripts.Render("~/bundles/datetimepicker")
 @section Title
 {
     @Html.Partial("_TitleExternal")
@@ -29,7 +30,7 @@
         }
     }
     <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 well">
+        <div class="col-md-8">
             <h3>
                 <i class="fa fa-lightbulb-o"></i>
                 Introduction
@@ -89,5 +90,110 @@
                 whether it's answering your questions, touring the house, hanging out, or attending events.
             </p>
         </div>
+        <div class="col-md-4">
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-calendar"></i> Upcoming Events
+                </div>
+                <div class="list-group" id="events">
+                    <div class="list-group-item list-group-item-warning" id="no-events">
+                        No events posted yet, but there will be soon!
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <div class="list-group-item list-group-item-info">
+                            <i class="fa fa-exclamation-triangle"></i>
+                            If an event on the ***REMOVED*** calendar does not appear here,
+                            make sure that [RECRUITMENT] is added to the event's description field, 
+                            brackets included.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+@section scripts{
+
+    <script type="text/javascript">
+(function() {
+    function isoDateString(d) {
+        function pad(n) { return n < 10 ? '0' + n : n }
+
+        return d.getUTCFullYear() +
+            '-' +
+            pad(d.getUTCMonth() + 1) +
+            '-' +
+            pad(d.getUTCDate()) +
+            'T' +
+            pad(d.getUTCHours()) +
+            ':' +
+            pad(d.getUTCMinutes()) +
+            ':' +
+            pad(d.getUTCSeconds()) +
+            'Z';
+    }
+
+    var mykey = '***REMOVED***';
+    var calendarid = '***REMOVED***';
+    var currentTime = new Date();
+    var formattedTime = isoDateString(currentTime);
+
+    $.ajax({
+        type: 'GET',
+        url: encodeURI('https://www.googleapis.com/calendar/v3/calendars/' +
+            calendarid +
+            '/events?key=' +
+            mykey +
+            '&timeMin=' +
+            formattedTime +
+            '&singleEvents=True&orderBy=startTime'),
+        dataType: 'json',
+        success: function (response) {
+            //console.log(response);
+            $('.event-item').remove();
+            if (typeof response.items !== 'undefined' && response.items.length > 0) {
+                $('#no-events').hide();
+            } else {
+                $('#no-events').show();
+                return;
+            }
+            var posted = 0;
+            for (var i = 0; i < response.items.length && posted < 10; i++) {
+                var item = response.items[i];
+                var date = moment(item.start.dateTime);
+                if(!item.description || !item.description.toLowerCase().includes("[RECRUITMENT]")) continue;
+                var template = `
+                    <div class="list-group-item event-item">
+                        <p style="margin:0">
+                            <strong>${item.summary}</strong> <br/>`;
+                if (item.location) {
+                    template += `
+                        <small>
+                            <i class ="fa fa-fw fa-map-marker"></i>
+                            ${item.location}
+                        </small><br/>`;
+                }
+                template += `
+                        <small>
+                            <i class ="fa fa-fw fa-clock-o"></i>
+                            ${date.format("dddd, MMMM D, YYYY @@ h:mm a")}
+                        </small><br/>
+                `;
+                template += `</p></div>`;
+                $('#events').append(template);
+                posted++;
+            }
+            if (posted <= 0) {
+                $('#no-events').show();
+            }
+        },
+        error: function (response) {
+            $('.event-item').remove();
+            $('#no-events').show();
+        }
+    });
+    })();
+    </script>
+}
