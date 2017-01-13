@@ -92,8 +92,6 @@
     <Compile Include="Entities\PhoneNumber.cs" />
     <Compile Include="Entities\PledgeClass.cs" />
     <Compile Include="Entities\Position.cs" />
-    <Compile Include="Entities\QuestCompletion.cs" />
-    <Compile Include="Entities\QuestChallenge.cs" />
     <Compile Include="Entities\Room.cs" />
     <Compile Include="Entities\RoomToMember.cs" />
     <Compile Include="Entities\ScholarshipAnswer.cs" />
@@ -192,6 +190,10 @@
     <Compile Include="Migrations\201608040511353_RemovedIsVerified.Designer.cs">
       <DependentUpon>201608040511353_RemovedIsVerified.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201701131340141_RemovedBroQuest.cs" />
+    <Compile Include="Migrations\201701131340141_RemovedBroQuest.Designer.cs">
+      <DependentUpon>201701131340141_RemovedBroQuest.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
@@ -266,6 +268,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608040511353_RemovedIsVerified.resx">
       <DependentUpon>201608040511353_RemovedIsVerified.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201701131340141_RemovedBroQuest.resx">
+      <DependentUpon>201701131340141_RemovedBroQuest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
       <DependentUpon>201605251901557_Initial.cs</DependentUpon>

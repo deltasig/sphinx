@@ -26,19 +26,6 @@ namespace Dsp.Data.Entities
         [Required, DefaultValue(4), Display(Name = "Minimum Service Events")]
         public int MinimumServiceEvents { get; set; }
 
-        [Required, DefaultValue(30), Display(Name = "Minimum Quest Challenge Length")]
-        [Range(30, 90, ErrorMessage = "Min: 30, Max: 90 (increments of 15)")]
-        public int MinQuestChallengeMinutes { get; set; }
-
-        [Required, DefaultValue(90), Display(Name = "Maximum Quest Challenge Length")]
-        public int MaxQuestChallengeMinutes { get; set; }
-        
-        [Display(Name = "Questing Begins On")]
-        public DateTime QuestingBeginsOn { get; set; }
-
-        [Display(Name = "Questing Ends On")]
-        public DateTime QuestingEndsOn { get; set; }
-
         [InverseProperty("Semester")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
         [InverseProperty("Semester")]
@@ -47,8 +34,6 @@ namespace Dsp.Data.Entities
         public virtual ICollection<Member> GraduatingMembers { get; set; }
         [InverseProperty("Semester")]
         public virtual ICollection<PledgeClass> PledgeClasses { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<QuestChallenge> QuestChallenges { get; set; }
         [InverseProperty("Semester")]
         public virtual ICollection<Room> Rooms { get; set; }
         [InverseProperty("Semester")]

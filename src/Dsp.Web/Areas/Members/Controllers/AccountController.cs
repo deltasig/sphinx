@@ -160,8 +160,6 @@
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.ShirtSize = model.Member.ShirtSize;
-            member.QuestChallengeSize = model.Member.QuestChallengeSize;
-            member.MaxQuesters = model.Member.MaxQuesters;
             member.LastUpdatedOn = DateTime.UtcNow;
 
             UserManager.Update(member);
@@ -300,9 +298,7 @@
                     PledgeClassId = int.Parse(model.PledgeClassId),
                     ExpectedGraduationId = int.Parse(model.ExpectedGraduationId),
                     ShirtSize = model.ShirtSize,
-                    CreatedOn = DateTime.UtcNow,
-                    MaxQuesters = 1,
-                    QuestChallengeSize = 30
+                    CreatedOn = DateTime.UtcNow
                 };
                 var result = await UserManager.CreateAsync(user, tempPassword);
                 if (result.Succeeded)

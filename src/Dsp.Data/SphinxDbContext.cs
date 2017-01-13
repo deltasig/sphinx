@@ -34,8 +34,6 @@
         public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
-        public virtual DbSet<QuestChallenge> QuestChallenges { get; set; }
-        public virtual DbSet<QuestCompletion> QuestCompletions { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }
         public virtual DbSet<RoomToMember> RoomsToMembers { get; set; }
         public virtual DbSet<ScholarshipAnswer> ScholarshipAnswers { get; set; }
@@ -72,12 +70,6 @@
             modelBuilder.Entity<Leader>().HasKey(u => new { u.UserId, u.RoleId, u.SemesterId });
             modelBuilder.Entity<SphinxUserLogin>().ToTable("MemberLogins", "dbo");
             modelBuilder.Entity<SphinxUserClaim>().ToTable("MemberClaims", "dbo");
-            
-            modelBuilder.Entity<QuestCompletion>()
-                .HasRequired(p => p.Member)
-                .WithMany(p => p.QuestCompletions)
-                .HasForeignKey(p => p.NewMemberId)
-                .WillCascadeOnDelete(false);
         }
 
         public static SphinxDbContext Create()
