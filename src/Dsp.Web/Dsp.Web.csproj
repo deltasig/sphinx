@@ -429,6 +429,7 @@
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
     <Content Include="Error\403.html" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\coa-simple-lg.png" />
     <Content Include="Images\coa-simple-md.png" />
     <Content Include="Images\coa-simple-sm.png" />
@@ -580,9 +581,6 @@
     <Content Include="Content\bootstrap-datetimepicker-build.css.map">
       <DependentUpon>bootstrap-datetimepicker-build.css</DependentUpon>
     </Content>
-    <Content Include="Content\bootstrap.css.map">
-      <DependentUpon>bootstrap.css</DependentUpon>
-    </Content>
     <Content Include="Areas\Edu\Views\Shared\_EduNavPartial.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Details.cshtml" />
     <Content Include="Areas\Members\Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -603,7 +601,6 @@
     <Content Include="Areas\Edu\Views\Study\DeleteSession.cshtml" />
     <Content Include="Areas\Edu\Views\Study\EditSession.cshtml" />
     <Content Include="Areas\Edu\Views\Study\Sessions.cshtml" />
-    <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Content\bootstrap\wells.less" />
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\type.less" />
@@ -699,6 +696,14 @@
     <Content Include="Content\fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\fonts\FontAwesome.otf" />
     <Content Include="Content\fonts\OpenSans-Regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
     <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
