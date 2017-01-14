@@ -13,27 +13,32 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     [AllowAnonymous, RequireHttps]
     public class HomeController : BaseController
     {
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult Index()
         {
             return View();
         }
 
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Contacts()
         {
             var term = await GetCurrentTerm();
             return View(term);
         }
 
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Recruitment()
         {
             return View(await _db.ScholarshipApps
                 .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
 
+        [OutputCache(Duration=3600, Location=OutputCacheLocation.Any, VaryByParam="none")]
         public async Task<ActionResult> Scholarships()
         {
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -54,11 +59,13 @@
             return View(model);
         }
 
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult Alumni()
         {
            return RedirectToAction("Index", "Home", new { area = "Alumni" });
         }
-        
+
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult About()
         {
             return View();
