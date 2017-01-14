@@ -51,6 +51,8 @@
     var unapprovedWidth = unapprovedPercentage + approvedPercentage > 100 ? 100 - approvedPercentage : unapprovedPercentage;
 }
 
+@Scripts.Render("~/bundles/datetimepicker")
+
 <div class="container-fluid">
     @if (isAdmin && Model.MemberInfo.UserName != User.Identity.Name)
     {
@@ -63,86 +65,123 @@
         <div class="row">
             <div class="col-lg-9 col-md-8">
                 <div class="row">
-                    <div class="col-lg-5">
+                <div class="col-lg-5">
+                    <ul class="nav nav-tabs nav-justified" role="tablist">
+                        <li class="active">
+                            <a href="#sober-signups" data-toggle="pill">
+                                <i class="fa fa-fw fa-car"></i> Sober Signups
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#upcoming-socials" data-toggle="pill">
+                                <i class="fa fa-fw fa-calendar"></i> Upcoming Socials
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="sober-signups">
+                            <div class="panel panel-default">
+                                @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="upcoming-socials">
+                            <div class="panel panel-default">
+                                <div class="list-group" id="socials">
+                                    <div class="list-group-item list-group-item-warning" id="no-socials">
+                                        No socials posted yet!
+                                        @if (User.IsInRole("Social"))
+                                        {
+                                            <br />
+                                            <i class="fa fa-exclamation-triangle"></i>
+                                            <span>
+                                                Make sure that [SOCIAL] is added to the event's description field,
+                                                brackets included.
+                                            </span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-fw fa-car"></i>
+                            Sober Signups <small class="pull-right">this week</small>
+                        </div>
+                        @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                    </div>*@
+                    @if (isUndergrad || isAdmin)
+                    {
                         <div class="panel panel-default">
                             <div class="panel-heading">
-                                <i class="fa fa-fw fa-car"></i>
-                                Sober Signups <small class="pull-right">this week</small>
+                                <i class="fa fa-fw fa-tint"></i>
+                                Laundry Status
                             </div>
-                            @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
-                        </div>
-                        @if (isUndergrad)
-                        {
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <i class="fa fa-fw fa-tint"></i>
-                                    Laundry Status
-                                </div>
-                                <div class="list-group">
-                                    @if (laundry.Any())
-                                    {
-                                        var minutesTil = (int)(laundry.First().DateTimeShift - nowCst).TotalMinutes;
-                                        var hoursTil = (int)minutesTil / 60;
+                            <div class="list-group">
+                                @if (laundry.Any())
+                                {
+                                    var minutesTil = (int) (laundry.First().DateTimeShift - nowCst).TotalMinutes;
+                                    var hoursTil = (int) minutesTil / 60;
 
-                                        if (minutesTil <= 0)
-                                        {
-                                            <div class="list-group-item list-group-item-danger">
-                                                <small>
-                                                    <i class="fa fa-ban"></i>
-                                                    Laundry room is currently reserved.
-                                                </small>
-                                            </div>
-                                        }
-                                        else if (minutesTil < 120)
-                                        {
-                                            <div class="list-group-item list-group-item-warning">
-                                                <small>
-                                                    <i class="fa fa-ban"></i>
-                                                    Someone will be using the room in @minutesTil minutes.
-                                                </small>
-                                            </div>
-                                        }
-                                        else if (minutesTil >= 120)
-                                        {
-                                            <div class="list-group-item list-group-item-success">
-                                                <small>
-                                                    <i class="fa fa-exclamation-circle"></i>
-                                                    Laundry room is available for the next @hoursTil hours.
-                                                </small>
-                                            </div>
-                                        }
+                                    if (minutesTil <= 0)
+                                    {
+                                        <div class="list-group-item list-group-item-danger">
+                                            <small>
+                                                <i class="fa fa-ban"></i>
+                                                Laundry room is currently reserved.
+                                            </small>
+                                        </div>
                                     }
-                                    else
+                                    else if (minutesTil < 120)
+                                    {
+                                        <div class="list-group-item list-group-item-warning">
+                                            <small>
+                                                <i class="fa fa-ban"></i>
+                                                Someone will be using the room in @minutesTil minutes.
+                                            </small>
+                                        </div>
+                                    }
+                                    else if (minutesTil >= 120)
                                     {
                                         <div class="list-group-item list-group-item-success">
                                             <small>
                                                 <i class="fa fa-exclamation-circle"></i>
-                                                Laundry room is completely available.
+                                                Laundry room is available for the next @hoursTil hours.
                                             </small>
                                         </div>
                                     }
-                                </div>
+                                }
+                                else
+                                {
+                                    <div class="list-group-item list-group-item-success">
+                                        <small>
+                                            <i class="fa fa-exclamation-circle"></i>
+                                            Laundry room is completely available.
+                                        </small>
+                                    </div>
+                                }
                             </div>
-                        }
+                        </div>
+                    }
 
-                        @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
-                        {
-                            <div class="alert alert-warning">
-                                <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().
+                    @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().
 
-                                <small>
-                                    <i class="fa fa-exclamation-triangle"></i> 
-                                    If this is your first semester in college after graduating high school, disregard this message.
-                                </small>
+                            <small>
+                                <i class="fa fa-exclamation-triangle"></i>
+                                If this is your first semester in college after graduating high school, disregard this message.
+                            </small>
 
-                                Otherwise, please go fill out your classes for last semester with the
-                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
+                            Otherwise, please go fill out your classes for last semester with the
+                            @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
 
-                                If you transferred here from another college you attended after graduating high school,
-                                you still need to enter your previous semester classes.
-                            </div>
-                        }
-                    </div>
+                            If you transferred here from another college you attended after graduating high school,
+                            you still need to enter your previous semester classes.
+                        </div>
+                    }
+                </div>
                     <div class="col-lg-7">
                         @if (Model.NeedsToSoberDrive && isUndergrad)
                         {
@@ -453,8 +492,8 @@
 @section scripts
 {
     <script type="text/javascript">
-        
-        var loadMoreFeedItems = function () {
+
+        var loadMoreFeedItems = function() {
             this.page = (typeof this.page !== "undefined") ? this.page : 0;
             var parent = this;
             $("#feed-loading").show();
@@ -462,7 +501,7 @@
                 url: "home/feed",
                 data: { page: this.page },
                 dataType: "html",
-                success: function (data) {
+                success: function(data) {
                     $(".no-feed-results").remove();
                     $("#feed-loading").before(data);
                     parent.page++;
@@ -479,10 +518,79 @@
             $("#feed-loading").hide();
         };
 
-        (function () {
+        (function() {
             $(".delayed").delay(1000).show(500);
             $("#feed-load-btn").click(loadMoreFeedItems);
             $("#feed-load-btn").click();
+        })();
+
+        (function() {
+
+            var tag = '[SOCIAL]';
+            var maxItems = 10;
+            var cid = '@System.Configuration.ConfigurationManager.AppSettings["google-calendar-id"]';
+            var key = '@System.Configuration.ConfigurationManager.AppSettings["google-public-api-key"]';
+            var resultsListEle = $('#socials');
+            var noResultsEle = $('#no-socials');
+            var eventItemClass = 'event-item';
+            var minTime = moment().startOf('day').toISOString();
+            var dateTimeFormat = 'dddd, MMMM D, YYYY @@ h:mm a';
+            var apiUrl = `https://www.googleapis.com/calendar/v3/calendars/${cid}/events?key=${key}&timeMin=${minTime}&singleEvents=True&orderBy=startTime`;
+
+            $.ajax({
+                type: 'GET',
+                url: encodeURI(apiUrl),
+                dataType: 'json',
+                success: function(response) {
+                    //console.log(response);
+                    $(`.${eventItemClass}`).remove();
+                    if (typeof response.items !== 'undefined' && response.items.length > 0) {
+                        noResultsEle.hide();
+                    } else {
+                        noResultsEle.show();
+                        return;
+                    }
+                    var posted = 0;
+                    for (var i = 0; i < response.items.length && posted < maxItems; i++) {
+                        var item = response.items[i];
+                        var start = moment(item.start.dateTime);
+                        var end = moment(item.end.dateTime);
+                        var now = moment();
+                        if (end <= now) continue;
+                        var status = start <= now && now < end
+                            ? 'active'
+                            : '';
+                        if (!item.description || !item.description.includes(tag)) continue;
+                        var template = `
+                            <div class ="list-group-item ${status} ${eventItemClass}">
+                                <p style="margin:0">
+                                    <strong>${item.summary}</strong> <br/>`;
+                        if (item.location) {
+                            template += `
+                                <small>
+                                    <i class ="fa fa-fw fa-map-marker"></i>
+                                    ${item.location}
+                                </small><br/>`;
+                        }
+                        template += `
+                                <small>
+                                    <i class ="fa fa-fw fa-clock-o"></i>
+                                    ${start.format(dateTimeFormat)}
+                                </small><br/>
+                        `;
+                        template += `</p></div>`;
+                        resultsListEle.append(template);
+                        posted++;
+                    }
+                    if (posted <= 0) {
+                        noResultsEle.show();
+                    }
+                },
+                error: function(response) {
+                    $(`.${eventItemClass}`).remove();
+                    noResultsEle.show();
+                }
+            });
         })();
 
     </script>
