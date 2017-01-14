@@ -1,4 +1,5 @@
-﻿@model Dsp.Web.Areas.Sphinx.Models.SphinxHomeIndexModel
+﻿@using Dsp.Web.Areas.Sphinx.Models
+@model Dsp.Web.Areas.Sphinx.Models.SphinxHomeIndexModel
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sphinx";
@@ -49,196 +50,201 @@
     var barColor = approvedPercentage < 25 ? "danger" : approvedPercentage >= 100 ? "success" : "warning";
     var approvedWidth = approvedPercentage > 100 ? 100 : approvedPercentage;
     var unapprovedWidth = unapprovedPercentage + approvedPercentage > 100 ? 100 - approvedPercentage : unapprovedPercentage;
+
+    // Notifications
+    var notifications = new List<Notification>();
+    //if (Model.NeedsToSoberDrive && isUndergrad)
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Sign up to sober drive at least once.",
+            LinkText = "Go to Schedule",
+            Link = Url.Action("Schedule", "Sobers"),
+            Why = "With people like Luckert, it is true that not everyone needs to sign up - see the report. " +
+                  "Still, signing up spreads out the workload and provides a real contribution to the fraternity's risk management. ",
+            Priority = NotificationPriority.Moderate
+        });
+    }
+    //if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Add a mailing address.",
+            LinkText = "Go to Account",
+            Link = Url.Action("Index", "Account", new { area = "Members" }),
+            Why = "This is mainly for recordkeeping purposes so that we know where to mail things.",
+            Priority = NotificationPriority.Low
+        });
+    }
+    //if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Add a mobile phone number.",
+            LinkText = "Go to Account",
+            Link = Url.Action("Index", "Account", new { area = "Members" }),
+            Why = "This is mainly for recordkeeping as well as having a number to call for sober driving.",
+            Priority = NotificationPriority.Moderate
+        });
+    }
+    //if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true) && isUndergrad)
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Report last semesters grades.",
+            LinkText = "Go to Transcript",
+            Link = Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName }),
+            Why = "This is how you are held accountable to academic standards. " +
+                  "The academic chairman will contact you about this if you wait too long.",
+            Priority = NotificationPriority.High
+        });
+    }
+    if (!thisSemesterClasses.Any() && isUndergrad)
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Report this semester's courses.",
+            LinkText = "Go to Class Schedule",
+            Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }),
+            Why = "This is how you are held accountable to academic standards. " +
+                  "The academic chairman will contact you about this if you wait too long.",
+            Priority = NotificationPriority.High
+        });
+    }
+    if (!Model.MemberInfo.MajorsToMember.Any())
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Report your major(s).",
+            LinkText = "Go to Account",
+            Link = Url.Action("Index", "Account", new { area = "Members" }),
+            Why = "This is just for recordkeeping purposes so we can show what majors make up the fraternity over time.",
+            Priority = NotificationPriority.Moderate
+        });
+    }
 }
 
 @Scripts.Render("~/bundles/datetimepicker")
 
 <div class="container-fluid">
-    @if (isAdmin && Model.MemberInfo.UserName != User.Identity.Name)
-    {
-        <div class="alert alert-warning">
-            <small><i class="fa fa-eye"></i> You are viewing this page as <strong>@Model.MemberInfo.ToString()</strong></small>
-        </div>
-    }
     @if (isActive || isPledge || isNeophyte || isAlumnus)
     {
         <div class="row">
             <div class="col-lg-9 col-md-8">
                 <div class="row">
-                <div class="col-lg-5">
-                    <ul class="nav nav-tabs nav-justified" role="tablist">
-                        <li class="active">
-                            <a href="#sober-signups" data-toggle="pill">
-                                <i class="fa fa-fw fa-car"></i> Sober Signups
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#upcoming-socials" data-toggle="pill">
-                                <i class="fa fa-fw fa-calendar"></i> Upcoming Socials
-                            </a>
-                        </li>
-                    </ul>
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="sober-signups">
-                            <div class="panel panel-default">
-                                @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                    <div class="col-lg-5">
+                        <ul class="nav nav-tabs nav-justified" role="tablist">
+                            <li class="active">
+                                <a href="#sober-signups" data-toggle="pill">
+                                    <i class="fa fa-fw fa-car"></i> Sober Signups
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#upcoming-socials" data-toggle="pill">
+                                    <i class="fa fa-fw fa-calendar"></i> Upcoming Socials
+                                </a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane active" id="sober-signups">
+                                <div class="panel panel-default">
+                                    @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                                </div>
                             </div>
-                        </div>
-                        <div class="tab-pane" id="upcoming-socials">
-                            <div class="panel panel-default">
-                                <div class="list-group" id="socials">
-                                    <div class="list-group-item list-group-item-warning" id="no-socials">
-                                        No socials posted yet!
-                                        @if (User.IsInRole("Social"))
-                                        {
-                                            <br />
-                                            <i class="fa fa-exclamation-triangle"></i>
-                                            <span>
-                                                Make sure that [SOCIAL] is added to the event's description field,
-                                                brackets included.
-                                            </span>
-                                        }
+                            <div class="tab-pane" id="upcoming-socials">
+                                <div class="panel panel-default">
+                                    <div class="list-group" id="socials">
+                                        <div class="list-group-item list-group-item-warning" id="no-socials">
+                                            No socials posted yet!
+                                            @if (User.IsInRole("Social"))
+                                            {
+                                                <br />
+                                                <i class="fa fa-exclamation-triangle"></i>
+                                                <span>
+                                                    Make sure that [SOCIAL] is added to the event's description field,
+                                                    brackets included.
+                                                </span>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    @*<div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-fw fa-car"></i>
-                            Sober Signups <small class="pull-right">this week</small>
-                        </div>
-                        @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
-                    </div>*@
-                    @if (isUndergrad || isAdmin)
-                    {
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <i class="fa fa-fw fa-tint"></i>
-                                Laundry Status
-                            </div>
-                            <div class="list-group">
-                                @if (laundry.Any())
-                                {
-                                    var minutesTil = (int) (laundry.First().DateTimeShift - nowCst).TotalMinutes;
-                                    var hoursTil = (int) minutesTil / 60;
+                        @if (isUndergrad || isAdmin)
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-fw fa-tint"></i>
+                                    Laundry Status
+                                </div>
+                                <div class="list-group">
+                                    @if (laundry.Any())
+                                    {
+                                        var minutesTil = (int) (laundry.First().DateTimeShift - nowCst).TotalMinutes;
+                                        var hoursTil = (int) minutesTil / 60;
 
-                                    if (minutesTil <= 0)
-                                    {
-                                        <div class="list-group-item list-group-item-danger">
-                                            <small>
-                                                <i class="fa fa-ban"></i>
-                                                Laundry room is currently reserved.
-                                            </small>
-                                        </div>
+                                        if (minutesTil <= 0)
+                                        {
+                                            <div class="list-group-item list-group-item-danger">
+                                                <small>
+                                                    <i class="fa fa-ban"></i>
+                                                    Laundry room is currently reserved.
+                                                </small>
+                                            </div>
+                                        }
+                                        else if (minutesTil < 120)
+                                        {
+                                            <div class="list-group-item list-group-item-warning">
+                                                <small>
+                                                    <i class="fa fa-ban"></i>
+                                                    Someone will be using the room in @minutesTil minutes.
+                                                </small>
+                                            </div>
+                                        }
+                                        else if (minutesTil >= 120)
+                                        {
+                                            <div class="list-group-item list-group-item-success">
+                                                <small>
+                                                    <i class="fa fa-exclamation-circle"></i>
+                                                    Laundry room is available for the next @hoursTil hours.
+                                                </small>
+                                            </div>
+                                        }
                                     }
-                                    else if (minutesTil < 120)
-                                    {
-                                        <div class="list-group-item list-group-item-warning">
-                                            <small>
-                                                <i class="fa fa-ban"></i>
-                                                Someone will be using the room in @minutesTil minutes.
-                                            </small>
-                                        </div>
-                                    }
-                                    else if (minutesTil >= 120)
+                                    else
                                     {
                                         <div class="list-group-item list-group-item-success">
                                             <small>
                                                 <i class="fa fa-exclamation-circle"></i>
-                                                Laundry room is available for the next @hoursTil hours.
+                                                Laundry room is completely available.
                                             </small>
                                         </div>
                                     }
-                                }
-                                else
-                                {
-                                    <div class="list-group-item list-group-item-success">
-                                        <small>
-                                            <i class="fa fa-exclamation-circle"></i>
-                                            Laundry room is completely available.
-                                        </small>
-                                    </div>
-                                }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
 
-                    @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
-                    {
-                        <div class="alert alert-warning">
-                            <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().
+                        @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
+                        {
+                            <div class="alert alert-warning">
+                                <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().
 
-                            <small>
-                                <i class="fa fa-exclamation-triangle"></i>
-                                If this is your first semester in college after graduating high school, disregard this message.
-                            </small>
+                                <small>
+                                    <i class="fa fa-exclamation-triangle"></i>
+                                    If this is your first semester in college after graduating high school, disregard this message.
+                                </small>
 
-                            Otherwise, please go fill out your classes for last semester with the
-                            @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
+                                Otherwise, please go fill out your classes for last semester with the
+                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
 
-                            If you transferred here from another college you attended after graduating high school,
-                            you still need to enter your previous semester classes.
-                        </div>
-                    }
-                </div>
+                                If you transferred here from another college you attended after graduating high school,
+                                you still need to enter your previous semester classes.
+                            </div>
+                        }
+                    </div>
                     <div class="col-lg-7">
-                        @if (Model.NeedsToSoberDrive && isUndergrad)
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                Please sign up to sober drive at least once!
-                                <a href="@Url.Action("Schedule", "Sobers")">
-                                    Go to Schedule <i class="fa fa-caret-right"></i>
-                                </a>
-                            </div>
-                        }
-                        @if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                Please provide your mailing address!
-                                <a href="@Url.Action("Index", "Account", new {area = "Members"})">
-                                    Go to Account <i class="fa fa-caret-right"></i>
-                                </a>!
-                            </div>
-                        }
-                        @if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                Please provide your mobile phone number!
-                                <a href="@Url.Action("Index", "Account", new {area = "Members"})">
-                                    Go to Account <i class="fa fa-caret-right"></i>
-                                </a>!
-                            </div>
-                        }
-                        @if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true) && isUndergrad)
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                You have not reported all of your grades for last semester!
-                                <a href="@Url.Action("Transcript", "Classes", new {area = "Edu", userName = Model.MemberInfo.UserName})">
-                                    Go to Transcript <i class="fa fa-caret-right"></i>
-                                </a>
-                            </div>
-                        }
-                        @if (!thisSemesterClasses.Any() && isUndergrad)
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                You have not entered your courses for this semester!
-                                <a href="@Url.Action("Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"})">
-                                    Go to Class Schedule <i class="fa fa-caret-right"></i>
-                                </a>
-                            </div>
-                        }
-                        @if (!Model.MemberInfo.MajorsToMember.Any())
-                        {
-                            <div class="alert alert-warning delayed" style="display: none;">
-                                Please report your major! <a href="@Url.Action("Index", "Account", new {area = "Members"})">
-                                    Go to Account <i class="fa fa-caret-right"></i>
-                                </a>
-                            </div>
-                        }
-
                         <!-- SERVICE HOURS -->
-                        @if (isUndergrad)
+                        @if (isUndergrad ||  isAdmin)
                         {
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -456,30 +462,65 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-4">
-                @if (!isAlumnus || isAdmin)
-                {
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="fa fa-fw fa-newspaper-o"></i>
-                            Feed <small class="pull-right">past 30 days</small>
+                <ul class="nav nav-tabs nav-justified" role="tablist">
+                    @if (notifications.Any())
+                    {
+                        <li class="active" role="presentation">
+                            <a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab">
+                                <i class="fa fa-fw fa-exclamation-circle"></i> Notifications
+                            </a>
+                        </li>
+                    }
+                    <li class="@(notifications.Any() ? "" : "active")" role="presentation">
+                        <a href="#feed" aria-controls="feed" role="tab" data-toggle="tab">
+                            <i class="fa fa-fw fa-newspaper-o"></i> Feed
+                        </a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    @if (notifications.Any())
+                    {
+                        <div class="tab-pane active" id="notifications" role="tabpanel">
+                            <div class="panel panel-default">
+                                <div class="list-group">
+                                    @foreach (var n in notifications.OrderByDescending(o => o.Priority))
+                                    {
+                                        var color = n.Priority == NotificationPriority.High
+                                            ? "list-group-item-danger"
+                                            : n.Priority == NotificationPriority.Moderate
+                                                ? "list-group-item-warning"
+                                                : "";
+
+                                        <div class="list-group-item @color">
+                                            @n.Message
+                                            <a href="@n.Link" class="btn btn-xs btn-default pull-right"
+                                               data-toggle="tooltip" data-placement="left" title="@n.Why">
+                                                <i class="fa fa-fw fa-wrench"></i>
+                                            </a>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
                         </div>
-                        <ul class="list-group" style="max-height: 650px; overflow-y:scroll">
-                            <li class="list-group-item" id="feed-loading">
-                                <i class="fa fa-spinner fa-spin"></i>
-                            </li>
-                            <li class="list-group-item text-center">
-                                <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">
-                                    Load More
-                                </button>
-                                <p class="subtext"><small id="feed-pages"></small></p>
-                            </li>
-                        </ul>
+                    }
+                    <div class="tab-pane @(notifications.Any() ? "" : "active")" id="feed" role="tabpanel">
+                        <div class="panel panel-default">
+                            <ul class="list-group" style="max-height: 650px; overflow-y: scroll">
+                                <li class="list-group-item" id="feed-loading">
+                                    <i class="fa fa-spinner fa-spin"></i>
+                                </li>
+                                <li class="list-group-item text-center">
+                                    <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">
+                                        Load More
+                                    </button>
+                                    <p class="subtext">
+                                        <small id="feed-pages"></small>
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                }
-                else
-                {
-                    
-                }
+                </div>
             </div>
         </div>
     }
@@ -498,7 +539,7 @@
             var parent = this;
             $("#feed-loading").show();
             $.ajax({
-                url: "home/feed",
+                url: "feed",
                 data: { page: this.page },
                 dataType: "html",
                 success: function(data) {
@@ -522,9 +563,6 @@
             $(".delayed").delay(1000).show(500);
             $("#feed-load-btn").click(loadMoreFeedItems);
             $("#feed-load-btn").click();
-        })();
-
-        (function() {
 
             var tag = '[SOCIAL]';
             var maxItems = 10;

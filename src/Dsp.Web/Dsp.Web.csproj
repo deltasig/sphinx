@@ -255,6 +255,7 @@
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
+    <Compile Include="Areas\Sphinx\Models\Notification.cs" />
     <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
     <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
     <Compile Include="Extensions\DspRoleProvider.cs" />
