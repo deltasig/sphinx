@@ -1,4 +1,5 @@
-﻿@model IEnumerable<ScholarshipApp>
+﻿@using System.Configuration
+@model IEnumerable<ScholarshipApp>
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Recruitment";
@@ -33,7 +34,7 @@
         <div class="col-md-8">
             <h3>
                 <i class="fa fa-lightbulb-o"></i>
-                Introduction
+                Our Philosophy
             </h3>
             <p class="text-justify">
                 Our recruitment process is values-based.  This means that our members make an intentional effort to get
@@ -42,7 +43,7 @@
                 a vision for making themselves and the community a better place.
             </p>
             <p class="text-justify">
-                Each fraternity has a different culture and offers different experiences and friendships.
+                Each fraternity will have its own established culture and as a result, it will offer a unique experience.
                 That is why we encourage all potential new members to get to know both us <strong>and</strong> other fraternities.
                 In other words, if Delta Sig isn't the right place for you, we will help you find a fraternity that is.
                 We believe in the value of Greek Life that much, while also acknowledging that Greek Life isn't for everyone.
@@ -59,8 +60,7 @@
                    target="_blank" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-o-down"></i> Download</a>
             </p>
             <p class="text-justify">
-                Our goal with the <em>Recruitment Book</em> is to provide a convenient informational resource to 
-                potential new members and their families that covers:
+                The <em>Recruitment Book</em> provides new members and their families with information regarding:
             </p>
             <ul>
                 <li>Common Concerns</li>
@@ -69,7 +69,7 @@
                 <li>Housing</li>
             </ul>
             <p class="text-justify">
-                We update the book every semester to make sure all of the information is consistent with university costs
+                The book is updated every semester to make sure all of the information is consistent with university costs
                 and our fraternity policies.
                 If you look through it and still have questions, feel free to @Html.ActionLink("contact", "Contacts", "Home") 
                 our Director of Recruitment directly via email.
@@ -80,8 +80,8 @@
                 Getting in Touch
             </h3>
             <p class="text-justify">
-                Many of our members were originally met within our classes, involvements, or existing social circles.
-                However, potential new members have sought us out themselves, and we encourage you to do that if you do not know someone in Delta Sig.
+                Most of our members were originally met in our classes, involvements, or existing social circles.
+                Still, potential new members have sought us out themselves, and we encourage you to do that if you do not know someone in Delta Sig.
             </p>
             <p class="text-justify">
                 If you want to start getting to know us, introduce yourself by
@@ -117,83 +117,73 @@
 @section scripts{
 
     <script type="text/javascript">
-(function() {
-    function isoDateString(d) {
-        function pad(n) { return n < 10 ? '0' + n : n }
+        (function() {
 
-        return d.getUTCFullYear() +
-            '-' +
-            pad(d.getUTCMonth() + 1) +
-            '-' +
-            pad(d.getUTCDate()) +
-            'T' +
-            pad(d.getUTCHours()) +
-            ':' +
-            pad(d.getUTCMinutes()) +
-            ':' +
-            pad(d.getUTCSeconds()) +
-            'Z';
-    }
+            var tag = '[RECRUITMENT]';
+            var maxItems = 10;
+            var cid = '@System.Configuration.ConfigurationManager.AppSettings["google-calendar-id"]';
+            var key = '@System.Configuration.ConfigurationManager.AppSettings["google-public-api-key"]';
+            var resultsListEle = $('#events');
+            var noResultsEle = $('#no-events');
+            var eventItemClass = 'event-item';
+            var minTime = moment().startOf('day').toISOString();
+            var dateTimeFormat = 'dddd, MMMM D, YYYY @@ h:mm a';
+            var apiUrl = `https://www.googleapis.com/calendar/v3/calendars/${cid}/events?key=${key}&timeMin=${minTime}&singleEvents=True&orderBy=startTime`;
 
-    var mykey = '***REMOVED***';
-    var calendarid = '***REMOVED***';
-    var currentTime = new Date();
-    var formattedTime = isoDateString(currentTime);
-
-    $.ajax({
-        type: 'GET',
-        url: encodeURI('https://www.googleapis.com/calendar/v3/calendars/' +
-            calendarid +
-            '/events?key=' +
-            mykey +
-            '&timeMin=' +
-            formattedTime +
-            '&singleEvents=True&orderBy=startTime'),
-        dataType: 'json',
-        success: function (response) {
-            //console.log(response);
-            $('.event-item').remove();
-            if (typeof response.items !== 'undefined' && response.items.length > 0) {
-                $('#no-events').hide();
-            } else {
-                $('#no-events').show();
-                return;
-            }
-            var posted = 0;
-            for (var i = 0; i < response.items.length && posted < 10; i++) {
-                var item = response.items[i];
-                var date = moment(item.start.dateTime);
-                if(!item.description || !item.description.includes("[RECRUITMENT]")) continue;
-                var template = `
-                    <div class="list-group-item event-item">
-                        <p style="margin:0">
-                            <strong>${item.summary}</strong> <br/>`;
-                if (item.location) {
-                    template += `
-                        <small>
-                            <i class ="fa fa-fw fa-map-marker"></i>
-                            ${item.location}
-                        </small><br/>`;
+            $.ajax({
+                type: 'GET',
+                url: encodeURI(apiUrl),
+                dataType: 'json',
+                success: function(response) {
+                    //console.log(response);
+                    $(`.${eventItemClass}`).remove();
+                    if (typeof response.items !== 'undefined' && response.items.length > 0) {
+                        noResultsEle.hide();
+                    } else {
+                        noResultsEle.show();
+                        return;
+                    }
+                    var posted = 0;
+                    for (var i = 0; i < response.items.length && posted < maxItems; i++) {
+                        var item = response.items[i];
+                        var start = moment(item.start.dateTime);
+                        var end = moment(item.end.dateTime);
+                        var now = moment();
+                        if (end <= now) continue;
+                        var status = start <= now && now < end
+                            ? 'active'
+                            : '';
+                        if (!item.description || !item.description.includes(tag)) continue;
+                        var template = `
+                            <div class ="list-group-item ${status} ${eventItemClass}">
+                                <p style="margin:0">
+                                    <strong>${item.summary}</strong> <br/>`;
+                        if (item.location) {
+                            template += `
+                                <small>
+                                    <i class ="fa fa-fw fa-map-marker"></i>
+                                    ${item.location}
+                                </small><br/>`;
+                        }
+                        template += `
+                                <small>
+                                    <i class ="fa fa-fw fa-clock-o"></i>
+                                    ${start.format(dateTimeFormat)}
+                                </small><br/>
+                        `;
+                        template += `</p></div>`;
+                        resultsListEle.append(template);
+                        posted++;
+                    }
+                    if (posted <= 0) {
+                        noResultsEle.show();
+                    }
+                },
+                error: function(response) {
+                    $(`.${eventItemClass}`).remove();
+                    noResultsEle.show();
                 }
-                template += `
-                        <small>
-                            <i class ="fa fa-fw fa-clock-o"></i>
-                            ${date.format("dddd, MMMM D, YYYY @@ h:mm a")}
-                        </small><br/>
-                `;
-                template += `</p></div>`;
-                $('#events').append(template);
-                posted++;
-            }
-            if (posted <= 0) {
-                $('#no-events').show();
-            }
-        },
-        error: function (response) {
-            $('.event-item').remove();
-            $('#no-events').show();
-        }
-    });
-    })();
+            });
+        })();
     </script>
 }
