@@ -53,7 +53,7 @@
 
     // Notifications
     var notifications = new List<Notification>();
-    //if (Model.NeedsToSoberDrive && isUndergrad)
+    if (Model.NeedsToSoberDrive && isUndergrad)
     {
         notifications.Add(new Notification
         {
@@ -61,11 +61,11 @@
             LinkText = "Go to Schedule",
             Link = Url.Action("Schedule", "Sobers"),
             Why = "With people like Luckert, it is true that not everyone needs to sign up - see the report. " +
-                  "Still, signing up spreads out the workload and provides a real contribution to the fraternity's risk management. ",
+                  "Signing up spreads the work though, helping brothers, reducing risk, and spreading the Taco Bell. ",
             Priority = NotificationPriority.Moderate
         });
     }
-    //if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
+    if (Model.MemberInfo.Addresses.Any(a => a.Type == "Mailing" && !a.IsFilledOut()))
     {
         notifications.Add(new Notification
         {
@@ -76,7 +76,7 @@
             Priority = NotificationPriority.Low
         });
     }
-    //if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
+    if (Model.MemberInfo.PhoneNumbers.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.Number)))
     {
         notifications.Add(new Notification
         {
@@ -87,11 +87,11 @@
             Priority = NotificationPriority.Moderate
         });
     }
-    //if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true) && isUndergrad)
+    if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true) && isUndergrad)
     {
         notifications.Add(new Notification
         {
-            Message = "Report last semesters grades.",
+            Message = "Report previous semester grades.",
             LinkText = "Go to Transcript",
             Link = Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName }),
             Why = "This is how you are held accountable to academic standards. " +
@@ -103,7 +103,7 @@
     {
         notifications.Add(new Notification
         {
-            Message = "Report this semester's courses.",
+            Message = "Report upcoming or current semester courses.",
             LinkText = "Go to Class Schedule",
             Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }),
             Why = "This is how you are held accountable to academic standards. " +
@@ -123,8 +123,8 @@
         });
     }
 }
-
-@Scripts.Render("~/bundles/datetimepicker")
+@Scripts.Render("~/bundles/moment")
+@Scripts.Render("~/bundles/mustache")
 
 <div class="container-fluid">
     @if (isActive || isPledge || isNeophyte || isAlumnus)
@@ -133,6 +133,32 @@
             <div class="col-lg-9 col-md-8">
                 <div class="row">
                     <div class="col-lg-5">
+                        @if (notifications.Any())
+                        {
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <i class="fa fa-fw fa-exclamation-circle"></i> Notifications
+                                </div>
+                                <div class="list-group">
+                                    @foreach (var n in notifications.OrderByDescending(o => o.Priority))
+                                    {
+                                        var color = n.Priority == NotificationPriority.High
+                                            ? "list-group-item-danger"
+                                            : n.Priority == NotificationPriority.Moderate
+                                                ? "list-group-item-warning"
+                                                : "";
+
+                                        <div class="list-group-item @color">
+                                            <a href="@n.Link" class="btn btn-xs btn-default"
+                                               data-toggle="tooltip" data-placement="right" title="@n.Why">
+                                                <i class="fa fa-fw fa-pencil-square-o"></i>
+                                            </a>
+                                            <small>@n.Message</small>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
                         <ul class="nav nav-tabs nav-justified" role="tablist">
                             <li class="active">
                                 <a href="#sober-signups" data-toggle="pill">
@@ -145,7 +171,7 @@
                                 </a>
                             </li>
                         </ul>
-                        <div class="tab-content">
+                        <div class="tab-content panel">
                             <div class="tab-pane active" id="sober-signups">
                                 <div class="panel panel-default">
                                     @Html.Partial("~/Areas/Sphinx/Views/Sobers/_SoberSchedulePartial.cshtml", Model.SoberSignups)
@@ -223,7 +249,6 @@
                                 </div>
                             </div>
                         }
-
                         @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
                         {
                             <div class="alert alert-warning">
@@ -462,64 +487,26 @@
                 </div>
             </div>
             <div class="col-lg-3 col-md-4">
-                <ul class="nav nav-tabs nav-justified" role="tablist">
-                    @if (notifications.Any())
-                    {
-                        <li class="active" role="presentation">
-                            <a href="#notifications" aria-controls="notifications" role="tab" data-toggle="tab">
-                                <i class="fa fa-fw fa-exclamation-circle"></i> Notifications
-                            </a>
-                        </li>
-                    }
-                    <li class="@(notifications.Any() ? "" : "active")" role="presentation">
-                        <a href="#feed" aria-controls="feed" role="tab" data-toggle="tab">
-                            <i class="fa fa-fw fa-newspaper-o"></i> Feed
-                        </a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    @if (notifications.Any())
-                    {
-                        <div class="tab-pane active" id="notifications" role="tabpanel">
-                            <div class="panel panel-default">
-                                <div class="list-group">
-                                    @foreach (var n in notifications.OrderByDescending(o => o.Priority))
-                                    {
-                                        var color = n.Priority == NotificationPriority.High
-                                            ? "list-group-item-danger"
-                                            : n.Priority == NotificationPriority.Moderate
-                                                ? "list-group-item-warning"
-                                                : "";
-
-                                        <div class="list-group-item @color">
-                                            @n.Message
-                                            <a href="@n.Link" class="btn btn-xs btn-default pull-right"
-                                               data-toggle="tooltip" data-placement="left" title="@n.Why">
-                                                <i class="fa fa-fw fa-wrench"></i>
-                                            </a>
-                                        </div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                    <div class="tab-pane @(notifications.Any() ? "" : "active")" id="feed" role="tabpanel">
-                        <div class="panel panel-default">
-                            <ul class="list-group" style="max-height: 650px; overflow-y: scroll">
-                                <li class="list-group-item" id="feed-loading">
-                                    <i class="fa fa-spinner fa-spin"></i>
-                                </li>
-                                <li class="list-group-item text-center">
-                                    <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">
-                                        Load More
-                                    </button>
-                                    <p class="subtext">
-                                        <small id="feed-pages"></small>
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-fw fa-newspaper-o"></i> Feed
                     </div>
+                    <ul class="list-group" style="max-height: 650px; overflow-y: scroll">
+                        <li class="list-group-item" id="feed-loading">
+                            <i class="fa fa-spinner fa-spin"></i>
+                        </li>
+                        <li class="list-group-item" id="no-feed-results">
+                            Nothing found.
+                        </li>
+                        <li class="list-group-item text-center">
+                            <button type="button" class="btn btn-xs btn-link" id="feed-load-btn">
+                                Load More
+                            </button>
+                            <p class="subtext">
+                                <small id="feed-pages"></small>
+                            </p>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -530,6 +517,50 @@
     }
 </div>
 
+<script id="social-template" type="text/x-custom-template">
+    <div class="list-group-item {{status}} {{color}}">
+        <strong>{{summary}}</strong><br />
+        {{#location}}
+        <small>
+            <i class="fa fa-fw fa-map-marker"></i>
+            {{location}}
+        </small><br />
+        {{/location}}
+        <small>
+            <i class="fa fa-fw fa-clock-o"></i>
+            {{datetime}}
+        </small>
+    </div>
+</script>
+<script id="feed-template" type="x-template-mustache">
+    <li class="list-group-item">
+        <div class="media">
+            <div class="media-left">
+                <a href="{{link}}">
+                    <img src="/Images/Avatars/{{imageName}}" height="25" width="25" class="img-circle" alt="{{userName}}" />
+                </a>
+            </div>
+            <div class="media-body">
+                <p class="subtext">
+                    <a href="{{link}}"><i class="fa fa-fw {{symbol}}"></i></a>
+                    {{#userName}}
+                    <a href="/members/account/index?userName={{userName}}">{{name}}</a>
+                    {{/userName}}
+                    {{^userName}}
+                        {{#name}}
+                        {{name}}
+                        {{/name}}
+                    {{/userName}}
+                    {{timeSince}}
+                </p>
+                <small>
+                    {{displayText}}
+                </small>
+            </div>
+        </div>
+    </li>
+</script>
+
 @section scripts
 {
     <script type="text/javascript">
@@ -539,20 +570,25 @@
             var parent = this;
             $("#feed-loading").show();
             $.ajax({
-                url: "home/feed",
-                data: { page: this.page },
-                dataType: "html",
+                url: `/api/members/feed/${this.page}`,
                 success: function(data) {
-                    $(".no-feed-results").remove();
-                    $("#feed-loading").before(data);
+                    $("#no-feed-results").hide();
+                    var template = document.getElementById('feed-template').innerHTML;
+                    Mustache.parse(template);
+                    for (var i = 0; i < data.length; i++) {
+                        var rendered = Mustache.render(template, data[i]);
+                        $("#feed-loading").before(rendered);
+                    }
                     parent.page++;
                     if (parent.page >= 10) {
-                        $(".no-feed-results").remove();
                         $("#feed-load-btn").hide();
                         $("#feed-pages").text("Maximum feed length reached.");
                     } else {
                         $("#feed-pages").text("retrieved " + parent.page + " page(s)");
                     }
+                },
+                error: function(response) {
+                    $("#no-feed-results").show();
                 }
             });
 
@@ -580,7 +616,6 @@
                 url: encodeURI(apiUrl),
                 dataType: 'json',
                 success: function(response) {
-                    //console.log(response);
                     $(`.${eventItemClass}`).remove();
                     if (typeof response.items !== 'undefined' && response.items.length > 0) {
                         noResultsEle.hide();
@@ -588,43 +623,32 @@
                         noResultsEle.show();
                         return;
                     }
+                    var template = document.getElementById('social-template').innerHTML;
+                    Mustache.parse(template);
                     var posted = 0;
                     for (var i = 0; i < response.items.length && posted < maxItems; i++) {
                         var item = response.items[i];
-                        var start = moment(item.start.dateTime);
+                        if (!item.description || !item.description.includes(tag)) continue;
                         var end = moment(item.end.dateTime);
                         var now = moment();
                         if (end <= now) continue;
-                        var status = start <= now && now < end
-                            ? 'active'
-                            : '';
-                        if (!item.description || !item.description.includes(tag)) continue;
-                        var template = `
-                            <div class ="list-group-item ${status} ${eventItemClass}">
-                                <p style="margin:0">
-                                    <strong>${item.summary}</strong> <br/>`;
-                        if (item.location) {
-                            template += `
-                                <small>
-                                    <i class ="fa fa-fw fa-map-marker"></i>
-                                    ${item.location}
-                                </small><br/>`;
-                        }
-                        template += `
-                                <small>
-                                    <i class ="fa fa-fw fa-clock-o"></i>
-                                    ${start.format(dateTimeFormat)}
-                                </small><br/>
-                        `;
-                        template += `</p></div>`;
-                        resultsListEle.append(template);
+                        var start = moment(item.start.dateTime);
+
+                        var data = {
+                            datetime: start.format(dateTimeFormat),
+                            summary: item.summary,
+                            status: start <= now && now < end ? 'active' : '',
+                            color: eventItemClass
+                        };
+                        var rendered = Mustache.render(template, data);
+                        resultsListEle.append(rendered);
                         posted++;
                     }
                     if (posted <= 0) {
                         noResultsEle.show();
                     }
                 },
-                error: function(response) {
+                error: function (response) {
                     $(`.${eventItemClass}`).remove();
                     noResultsEle.show();
                 }
