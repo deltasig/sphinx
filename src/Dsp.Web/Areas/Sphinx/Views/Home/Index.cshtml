@@ -4,6 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
     ViewBag.Title = "Sphinx";
     ViewBag.Subtitle = Model.CurrentSemester.ToString();
+    ViewBag.Updates = true;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
 
