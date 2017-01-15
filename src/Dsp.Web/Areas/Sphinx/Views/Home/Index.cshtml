@@ -268,13 +268,32 @@
                         }
                     </div>
                     <div class="col-lg-7">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Chapter Status</div>
+                            <div class="panel-body">
+                                <dl class="dl-horizontal">
+                                    <dt>New Members</dt>
+                                    <dd>@Model.NewMembersThisSemester.ToString("00") <small>this semester</small></dd>
+                                    <dt>Total Service</dt>
+                                    <dd>@Model.ServiceHoursThisSemester.ToString("0000") <small>hours this semester</small></dd>
+                                    <dt>Scholarship Apps</dt>
+                                    <dd>@Model.ScholarshipSubmissionsThisYear.ToString("00") <small>this year</small></dd>
+                                    <dt>Incidents</dt>
+                                    <dd>@Model.IncidentsThisSemester.ToString("00") <small>this semester</small></dd>
+                                    <dt>Last Incident</dt>
+                                    <dd>@Model.DaysSinceIncident.ToString("000") <small>days ago</small></dd>
+                                    <dt>Laundry</dt>
+                                    <dd>@((Model.LaundryUsageThisSemester * 2).ToString("0000")) <small>hours this semester</small></dd>
+                                </dl>
+                            </div>
+                        </div>
                         <!-- SERVICE HOURS -->
                         @if (isUndergrad ||  isAdmin)
                         {
                             <div class="panel panel-default">
                                 <div class="panel-heading">
                                     <i class="fa fa-fw fa-globe"></i>
-                                    Service Progress
+                                    My Service Progress
                                     <small class="pull-right">
                                         <a href="@Url.Action("Submit", "Hours", new {area = "Service"})"
                                            class="">
@@ -387,99 +406,6 @@
                                 <div class="panel-footer">
                                     <small>Minimum Hours Required: <strong>@hoursGoal hours</strong></small><br />
                                     <small>Event Attendance: <strong>@Model.CompletedEvents.Count()/@eventGoal events</strong></small>
-                                </div>
-                            </div>
-                        }
-                        @if(isAlumnus)
-                        {
-                            <style>
-                                .panel-body .list-group, .panel-body .alert, .panel-body .table, .panel-body p {
-                                    margin-bottom: 20px !important; 
-                                }
-                            </style>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">Chapter Status</div>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item @(Model.NewMembersThisSemester > 0 ? "list-group-item-success" : "list-group-item-warning")">
-                                                    <i class="fa fa-fw fa-users"></i> New Members
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @Model.NewMembersThisSemester
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">This Semester</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item list-group-item-success">
-                                                    <i class="fa fa-fw fa-globe"></i> Hours Served
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @Model.ServiceHoursThisSemester
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">This Semester</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item @(Model.ScholarshipSubmissionsThisYear > 0 ? "list-group-item-success" : "list-group-item-warning")">
-                                                    <i class="fa fa-fw fa-graduation-cap"></i> Scholarship Apps
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @Model.ScholarshipSubmissionsThisYear
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">This Year</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item @(Model.DaysSinceIncident > 100 ? "list-group-item-success" : "")">
-                                                    <i class="fa fa-fw fa-exclamation-triangle"></i> Last Incident
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @Model.DaysSinceIncident
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">Days Ago</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item @(Model.IncidentsThisSemester == 0 ? "list-group-item-success" : "list-group-item-warning")">
-                                                    <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @Model.IncidentsThisSemester
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">This Semester</small>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-4">
-                                            <div class="list-group">
-                                                <div class="list-group-item">
-                                                    <i class="fa fa-fw fa-tint"></i> Laundry
-                                                </div>
-                                                <div class="list-group-item">
-                                                    <h1 class="list-group-item-text text-success text-center" style="margin-top:0">
-                                                        @(Model.LaundryUsageThisSemester * 2)
-                                                    </h1>
-                                                </div>
-                                                <small class="list-group-item">Hours</small>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         }
