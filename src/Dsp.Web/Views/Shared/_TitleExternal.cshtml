@@ -2,7 +2,6 @@
 {
     var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? "hidden" : "";
     var hideFailure = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
-    var hideMessage = string.IsNullOrEmpty(ViewBag.Message) ? "hidden" : "";
     
     <div class="container-fluid" style="padding: 0">
         <div class="page-header" style="margin-top: 0; background-color: #fcfcfc">
@@ -42,12 +41,6 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                     @ViewBag.FailMessage
-                </div>
-                <div class="alert alert-warning alert-dismissible fade in @(hideMessage)" role="alert" id="message">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    @ViewBag.Message
                 </div>
             </div>
         </div>

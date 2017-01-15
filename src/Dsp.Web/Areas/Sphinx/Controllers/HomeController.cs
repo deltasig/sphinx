@@ -8,15 +8,15 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class HomeController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string message = "")
+        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        public async Task<ActionResult> Index()
         {
-            ViewBag.Message = message;
-
             var nowCst = ConvertUtcToCst(DateTime.UtcNow);
             var twoHoursAgoCst = nowCst.AddHours(-2);
             var member = await UserManager.FindByNameAsync(User.Identity.Name);

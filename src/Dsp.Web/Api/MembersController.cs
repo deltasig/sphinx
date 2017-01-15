@@ -14,11 +14,13 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
+    using System.Web.Mvc;
+    using System.Web.UI;
     using Areas.Sphinx.Models;
     using Microsoft.AspNet.Identity;
 
-    [Authorize]
-    [RoutePrefix("api/members")]
+    [System.Web.Http.Authorize]
+    [System.Web.Http.RoutePrefix("api/members")]
     public class MembersController : ApiController
     {
         private SphinxDbContext _db;
@@ -34,8 +36,8 @@
             _positionService = new PositionService(_db);
         }
 
-        [Authorize(Roles = "Pledge, Active, Alumnus")]
-        [HttpGet, Route("roster/{sid:int}")]
+        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.HttpGet, System.Web.Http.Route("roster/{sid:int}")]
         public async Task<IHttpActionResult> Roster(int sid)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(sid);
@@ -57,8 +59,8 @@
             }
         }
 
-        [Authorize(Roles = "Pledge, Active, Alumnus")]
-        [HttpGet, Route("alumni/{sid:int}")]
+        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.HttpGet, System.Web.Http.Route("alumni/{sid:int}")]
         public async Task<IHttpActionResult> Alumni(int sid)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(sid);
@@ -80,8 +82,9 @@
             }
         }
 
-        [Authorize(Roles = "Pledge, Active, Alumnus")]
-        [HttpGet, Route("feed/{page:int}")]
+        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.HttpGet, System.Web.Http.Route("feed/{page:int}")]
+        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<IHttpActionResult> Feed(int page = 0)
         {
             const int pageLength = 10;
