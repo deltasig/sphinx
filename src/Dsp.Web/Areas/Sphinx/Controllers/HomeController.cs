@@ -9,6 +9,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.UI;
+    using MarkdownSharp;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class HomeController : BaseController
@@ -68,6 +69,15 @@
             }
 
             return View(model);
+        }
+
+        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        public ActionResult Updates()
+        {
+            var markdown = new Markdown();
+            var data = System.IO.File.ReadAllText(Server.MapPath(@"~/Documents/Updates.md"));
+            var content = markdown.Transform(data);
+            return View("Updates", (object)content);
         }
     }
 }

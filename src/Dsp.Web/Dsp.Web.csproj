@@ -870,6 +870,8 @@
     <Content Include="Areas\Alumni\Views\Home\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Error\404.13.html" />
+    <Content Include="Areas\Sphinx\Views\Home\Updates.cshtml" />
+    <Content Include="Documents\Updates.md" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

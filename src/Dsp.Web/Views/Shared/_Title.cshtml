@@ -15,6 +15,13 @@
                                    title="This page supports nifty printing from the browser (CTRL+P).  
                                         Did you know you can export to PDF that way too?"></i>
                             }
+                            @if (ViewBag.Updates != null && ViewBag.Updates)
+                            {
+                                <a href="@Url.Action("Updates")">
+                                    <i class="fa fa-file-text-o" data-toggle="tooltip" data-placement="left"
+                                       title="Updates"></i>
+                                </a>
+                            }
                         </small>
                     </h3>
                 </div>
