@@ -9,11 +9,13 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
     public class RosterController : BaseController
     {
         [HttpGet]
+        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Index(RosterFilterModel filter)
         {
             Semester semester;
