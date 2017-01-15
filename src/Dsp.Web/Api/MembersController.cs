@@ -108,7 +108,7 @@
                 TimeSince = (nowCst - l.DateTimeSignedUp).ToUserFriendlyString(),
                 OccurredOn = l.DateTimeSignedUp.FromCstToUtc(),
                 DisplayText = "Laundry reservation added for " + l.DateTimeShift.ToString("f"),
-                Link = Url.Link("Default", new { area = "Sphinx", controller = "Laundry", action = "Schedule" }),
+                Link = $"/sphinx/laundry/schedule",
                 Symbol = "fa-tint"
             }));
 
@@ -138,7 +138,7 @@
                         TimeSince = (nowUtc - (DateTime)s.CreatedOn).ToUserFriendlyString(),
                         OccurredOn = (DateTime)s.CreatedOn,
                         DisplayText = "Sober shift added for " + s.DateOfShift.FromUtcToCst().ToString("D"),
-                        Link = Url.Link("Default", new { area = "Sphinx", controller = "Sobers", action = "Schedule" }),
+                        Link = "/sphinx/sobers/schedule",
                         Symbol = "fa-car"
                     }));
                 }
@@ -152,7 +152,7 @@
                         TimeSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).ToUserFriendlyString(),
                         OccurredOn = (g.First().CreatedOn ?? nowUtc),
                         DisplayText = count + " sober shifts added",
-                        Link = Url.Link("Default", new { area = "Sphinx", controller = "Sobers", action = "Schedule" }),
+                        Link = "/sphinx/sobers/schedule",
                         Symbol = "fa-car"
                     });
                 }
@@ -170,7 +170,7 @@
                 TimeSince = (nowUtc - (DateTime)s.DateTimeSignedUp).ToUserFriendlyString(),
                 OccurredOn = (DateTime)s.DateTimeSignedUp,
                 DisplayText = "New volunteer for Sober " + s.SoberType.Name + " on " + s.DateOfShift.FromUtcToCst().ToString("D"),
-                Link = Url.Link("Default", new { area = "Sphinx", controller = "Sobers", action = "Schedule" }),
+                Link = "/sphinx/sobers/schedule",
                 Symbol = "fa-beer"
             }));
 
@@ -188,7 +188,7 @@
                     TimeSince = (nowUtc - s.SignedUpOn).ToUserFriendlyString(),
                     OccurredOn = s.SignedUpOn,
                     DisplayText = s.Type + " plate signup added",
-                    Link = Url.Link("Default", new { area = "Kitchen", controller = "Meals", action = "Schedule" }),
+                    Link = "/kitchen/meals/schedule",
                     Symbol = "fa-cutlery"
                 }));
             }
@@ -205,7 +205,7 @@
                 TimeSince = (nowUtc - (DateTime)s.CreatedOn).ToUserFriendlyString(),
                 OccurredOn = (DateTime)s.CreatedOn,
                 DisplayText = s.EventName + " service event was added",
-                Link = Url.Link("Default", new { area = "Service", controller = "Events", action = "Details", id = s.EventId }),
+                Link = $"/service/events/details?id={s.EventId}",
                 Symbol = "fa-globe"
             }));
 
@@ -221,7 +221,7 @@
                 TimeSince = (nowUtc - s.SubmittedOn).ToUserFriendlyString(),
                 OccurredOn = s.SubmittedOn,
                 DisplayText = "New scholarship application was submitted",
-                Link = Url.Link("Default", new { area = "Scholarships", controller = "Applications", action = "Submission", id = s.ScholarshipSubmissionId }),
+                Link = $"/scholarships/applications/submission?id={s.ScholarshipSubmissionId}",
                 Symbol = "fa-graduation-cap"
             }));
 
@@ -237,7 +237,7 @@
                 TimeSince = (nowUtc - s.UploadedOn).ToUserFriendlyString(),
                 OccurredOn = s.UploadedOn,
                 DisplayText = "New file uploaded for " + s.Class.CourseShorthand,
-                Link = Url.Link("Default", new { area = "Edu", controller = "Classes", action = "Details", id = s.ClassId }),
+                Link = $"/edu/classes/details?id={s.ClassId}",
                 Symbol = "fa-folder"
             }));
 
@@ -253,7 +253,7 @@
                 TimeSince = (nowUtc - s.DateTimeSubmitted).ToUserFriendlyString(),
                 OccurredOn = s.DateTimeSubmitted,
                 DisplayText = "New incident report submitted",
-                Link = Url.Link("Default", new { area = "Members", controller = "Incidents", action = "Details", id = s.IncidentId }),
+                Link = $"/members/incidents/details?id={s.IncidentId}",
                 Symbol = "fa-exclamation-triangle"
             }));
 
@@ -269,7 +269,7 @@
                 TimeSince = (nowUtc - s.ChangedOn).ToUserFriendlyString(),
                 OccurredOn = s.ChangedOn,
                 DisplayText = s.WorkOrder.Title + " work order submitted",
-                Link = Url.Link("Default", new { area = "House", controller = "WorkOrders", action = "View", id = s.WorkOrderId }),
+                Link = $"/house/workorders/view?id={s.WorkOrderId}",
                 Symbol = "fa-wrench"
             }));
 

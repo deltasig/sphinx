@@ -362,7 +362,6 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Areas\Sphinx\Views\Home\Feed.cshtml" />
     <Content Include="Content\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap-datetimepicker-build.css" />
     <Content Include="Content\bootstrap-datetimepicker-build.min.css">
