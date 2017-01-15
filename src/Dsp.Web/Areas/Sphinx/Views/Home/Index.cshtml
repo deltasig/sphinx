@@ -269,20 +269,20 @@
                     </div>
                     <div class="col-lg-7">
                         <div class="panel panel-default">
-                            <div class="panel-heading">Chapter Status</div>
+                            <div class="panel-heading"><i class="fa fa-fw fa-home"></i> Chapter Status</div>
                             <div class="panel-body">
                                 <dl class="dl-horizontal">
-                                    <dt>New Members</dt>
+                                    <dt><i class="fa fa-fw fa-users"></i> New Members</dt>
                                     <dd>@Model.NewMembersThisSemester.ToString("00") <small>this semester</small></dd>
-                                    <dt>Total Service</dt>
+                                    <dt><i class="fa fa-fw fa-globe"></i> Total Service</dt>
                                     <dd>@Model.ServiceHoursThisSemester.ToString("0000") <small>hours this semester</small></dd>
-                                    <dt>Scholarship Apps</dt>
+                                    <dt><i class="fa fa-fw fa-graduation-cap"></i>Scholarship Apps</dt>
                                     <dd>@Model.ScholarshipSubmissionsThisYear.ToString("00") <small>this year</small></dd>
-                                    <dt>Incidents</dt>
+                                    <dt><i class="fa fa-fw fa-exclamation-triangle"></i> Incidents</dt>
                                     <dd>@Model.IncidentsThisSemester.ToString("00") <small>this semester</small></dd>
-                                    <dt>Last Incident</dt>
+                                    <dt><i class="fa fa-fw fa-exclamation-triangle"></i>Last Incident</dt>
                                     <dd>@Model.DaysSinceIncident.ToString("000") <small>days ago</small></dd>
-                                    <dt>Laundry</dt>
+                                    <dt><i class="fa fa-fw fa-tint"></i>Laundry</dt>
                                     <dd>@((Model.LaundryUsageThisSemester * 2).ToString("0000")) <small>hours this semester</small></dd>
                                 </dl>
                             </div>
