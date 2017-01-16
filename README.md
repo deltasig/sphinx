@@ -9,10 +9,9 @@ Following the instructions below in order to get the website running locally and
 ### Installations
 
 - Visual Studio Community Edition (latest)
-  - 
-- SQL Server 2012 Express 
-  - Download `ENU\x64\SQLEXPRWT_x64_ENU.exe` from [here][2]
-  - Make sure SQL Server Management Studio is included during the installation process
+- SQL Server 2016 Express 
+  - Download and install the Express edition from [here][2]
+  - Make sure you get SQL Server Management Studio too
 
 ### Clone & Build
 
@@ -55,7 +54,7 @@ INSERT INTO Leaders VALUES (/*your user id from Members table*/, 1, 30, '2014-01
 3. Push to the branch: `git push origin my-new-feature`
 4. Submit a pull request
 
-It's best to do your work on a branch other than `master` and then submit a pull request for that branch to be merged into master on the upstream repo.
+The idea is to do your work on a branch other than `master` and then submit a pull request for that branch to be merged into master on the upstream repo.
 
 ## Deployment
 
@@ -68,4 +67,4 @@ If there are new database migrations since the last time you published, make sur
 Use the issues feature of this repository to report bugs or make suggestions/requests for new features, or enhancements to existing ones.
 
 [1]: http://www.entityframeworktutorial.net/code-first/entity-framework-code-first.aspx
-[2]: https://www.microsoft.com/en-us/download/details.aspx?id=29062
+[2]: https://www.microsoft.com/en-us/sql-server/sql-server-downloads
