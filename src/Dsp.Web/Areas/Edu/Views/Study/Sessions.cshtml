@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @model Dsp.Web.Areas.Edu.Models.StudySessionModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Study Session";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);

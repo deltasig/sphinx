@@ -1,6 +1,6 @@
 ﻿namespace Dsp.Web.Controllers
 {
-    using Dsp.Data.Entities;
+    using Data.Entities;
     using Extensions;
     using MarkdownSharp;
     using Microsoft.AspNet.Identity;
@@ -15,30 +15,30 @@
     using System.Web.Mvc;
     using System.Web.UI;
 
-    [AllowAnonymous, RequireHttps]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate"), RequireHttps]
     public class HomeController : BaseController
     {
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult Index()
         {
             return View();
         }
-
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Contacts()
         {
             var term = await GetCurrentTerm();
             return View(term);
         }
-
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Recruitment()
         {
             return View(await _db.ScholarshipApps
                 .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
-
-        [OutputCache(Duration=3600, Location=OutputCacheLocation.Any, VaryByParam="none")]
+        
+        [AllowAnonymous, OutputCache(Duration=3600, Location=OutputCacheLocation.Any, VaryByParam="none")]
         public async Task<ActionResult> Scholarships()
         {
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -58,26 +58,27 @@
 
             return View(model);
         }
-
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult Alumni()
         {
            return RedirectToAction("Index", "Home", new { area = "Alumni" });
         }
-
-        [OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult About()
         {
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<ActionResult> EmailSoberSchedule()
         {
             var nowUtc = DateTime.UtcNow;
             var nowCst = ConvertUtcToCst(nowUtc);
 
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
-            if (type == null || string.IsNullOrEmpty(type.Destination)) 
+            if (string.IsNullOrEmpty(type?.Destination)) 
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var emails = await _db.Emails
                 .Where(e => 
@@ -102,14 +103,14 @@
             }
 
             // Build Body
-            var data = await base.GetUpcomingSoberSignupsAsync(nowUtc);
+            var data = await GetUpcomingSoberSignupsAsync(nowUtc);
 
             if (!data.Any())
             {
                 return Content("No sober signups found; no email sent.");
             }
 
-            var body = base.RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
+            var body = RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
             var bytes = Encoding.Default.GetBytes(body);
             body = Encoding.UTF8.GetString(bytes);
 
@@ -144,6 +145,72 @@
             await _db.SaveChangesAsync();
 
             return Content("OK");
+        }
+        
+        [HttpGet]
+        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        public async Task<ActionResult> Sphinx()
+        {
+            var nowCst = ConvertUtcToCst(DateTime.UtcNow);
+            var twoHoursAgoCst = nowCst.AddHours(-2);
+            var member = await UserManager.FindByNameAsync(User.Identity.Name);
+            var events = await GetAllCompletedEventsForUserAsync(member.Id);
+            var thisSemester = await GetThisSemesterAsync();
+            var lastSemester = await GetLastSemesterAsync();
+
+            var thisWeeksSoberShifts = await GetUpcomingSoberSignupsAsync();
+            var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
+            var remainingDriverShifts = await _db.SoberSignups
+                .Where(s =>
+                    s.UserId == null &&
+                    s.SoberType.Name == "Driver" &&
+                    s.DateOfShift >= DateTime.UtcNow &&
+                    s.DateOfShift <= thisSemester.DateEnd)
+                .ToListAsync();
+
+            var laundrySignups = await _db.LaundrySignups
+                .Where(l => l.DateTimeShift >= twoHoursAgoCst)
+                .OrderBy(l => l.DateTimeShift)
+                .ToListAsync();
+            var laundryTake = laundrySignups.Count > 5 ? 5 : laundrySignups.Count;
+
+            var model = new SphinxModel
+            {
+                MemberInfo = member,
+                Roles = await UserManager.GetRolesAsync(member.Id),
+                RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(member.Id),
+                CompletedEvents = events,
+                SoberSignups = thisWeeksSoberShifts,
+                LaundrySummary = laundrySignups.Take(laundryTake),
+                NeedsToSoberDrive = !memberSoberSignups.Any() && remainingDriverShifts.Any(),
+                CurrentSemester = thisSemester,
+                PreviousSemester = await GetLastSemesterAsync()
+            };
+            if (member.MemberStatus.StatusName == "Alumnus")
+            {
+                var mostRecentIncident = await _db.IncidentReports
+                    .OrderByDescending(i => i.DateTimeOfIncident)
+                    .FirstOrDefaultAsync() ?? new IncidentReport();
+                var startOfYearUtc = ConvertCstToUtc(new DateTime(nowCst.Year, 1, 1));
+                var serviceHoursSoFar = await _db.ServiceHours.Where(s => s.DateTimeSubmitted >= thisSemester.DateStart).ToListAsync();
+                model.DaysSinceIncident = (DateTime.UtcNow - mostRecentIncident.DateTimeSubmitted).Days;
+                model.IncidentsThisSemester = await _db.IncidentReports.CountAsync(i => i.DateTimeOfIncident > lastSemester.DateEnd);
+                model.ScholarshipSubmissionsThisYear = await _db.ScholarshipSubmissions.CountAsync(s => s.SubmittedOn >= startOfYearUtc);
+                model.LaundryUsageThisSemester = await _db.LaundrySignups.CountAsync(l => l.DateTimeShift >= thisSemester.DateStart);
+                model.ServiceHoursThisSemester = serviceHoursSoFar.Sum(s => s.DurationHours);
+                model.NewMembersThisSemester = await _db.Users.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.SemesterId);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet, Authorize, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        public ActionResult Updates()
+        {
+            var markdown = new Markdown();
+            var data = System.IO.File.ReadAllText(Server.MapPath(@"~/Documents/Updates.md"));
+            var content = markdown.Transform(data);
+            return View("Updates", (object)content);
         }
     }
 }

@@ -234,7 +234,7 @@
             {
                 case SignInStatus.Success:
                     if (string.IsNullOrEmpty(model.ReturnUrl))
-                        return RedirectToAction("Index", "Home", new { area = "Sphinx" });
+                        return RedirectToAction("Sphinx", "Home", new { area = "" });
                     return Redirect(model.ReturnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -545,7 +545,7 @@
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Home", new { area = "Sphinx" });
+                return RedirectToAction("Sphinx", "Home", new { area = "" });
             }
 
             if (ModelState.IsValid)
@@ -754,7 +754,7 @@
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home", new { area = "Sphinx" });
+            return RedirectToAction("Sphinx", "Home", new { area = "" });
         }
 
         private const string XsrfKey = "XsrfId";
