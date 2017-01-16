@@ -29,7 +29,7 @@
                     <tr class="@(item.Member == null ? "" : item.Member.UserName == User.Identity.Name ? "warning" : "")">
                         <td class="col-xs-5">
                             <small>
-                                <a href="@Url.Action("Info", "SoberTypes", new { id = item.SoberTypeId })">
+                                <a href="@Url.Action("Details", "SoberTypes", new { id = item.SoberTypeId })">
                                     <i data-toggle="tooltip" data-placement="top" class="fa fa-lg fa-info-circle text-info"
                                        title="Click to learn about this job."></i>
                                 </a>
