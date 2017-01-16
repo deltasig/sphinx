@@ -1,6 +1,6 @@
 ﻿@using System.Web.Configuration
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Uploading";
     var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
     var maxKB = section != null ? section.MaxRequestLength : 10240; // KB

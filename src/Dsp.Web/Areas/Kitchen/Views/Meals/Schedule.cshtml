@@ -1,7 +1,7 @@
 ﻿@using Microsoft.AspNet.Identity
 @model Dsp.Web.Areas.Kitchen.Models.MealScheduleModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Meal Schedule";
     ViewBag.Subtitle = Model.StartOfWeek.ToShortDateString() + " to " + Model.StartOfWeek.AddDays(6).ToShortDateString();
     ViewBag.Print = true;

@@ -6,12 +6,12 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
+        <a href="@Url.Action("Sphinx", "Home", new { area = "" })"
            class="navbar-brand blur hidden-xs" style="padding: 13px 77px; background-color:#074532">
             <img src="~/Images/letters.png" width="70" alt="DSP"
                  data-toggle="tooltip" data-placement="left" title="Sphinx" />
         </a>
-        <a href="@Url.Action("Index", "Home", new {area = "Sphinx"})"
+        <a href="@Url.Action("Sphinx", "Home", new { area = "" })"
            class="navbar-brand visible-xs" style="padding: 14px 15px;">
             <img src="~/Images/letters.png" width="70" alt="DSP"
                  data-toggle="tooltip" data-placement="left" title="Sphinx" />
@@ -20,14 +20,14 @@
     <!-- Top Menu Items (Left Side) -->
     <ul class="nav navbar-nav hidden-xs hidden-sm">
         <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "")">
-            <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})"
+            <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
                data-toggle="tooltip" data-placement="bottom" title="Sobers">
                 <i class="fa fa-car"></i>
             </a>
         </li>
         <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "")"
             data-toggle="tooltip" data-placement="bottom" title="Laundry">
-            <a href="@Url.Action("Schedule", "Laundry", new {area = "Sphinx"})">
+            <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
                 <i class="fa fa-lg fa-tint"></i>
             </a>
         </li>
@@ -41,20 +41,20 @@
     <!-- Top Menu Items (Right Side) -->
     <ul class="nav navbar-nav navbar-right top-nav" style="margin: 0">
         <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs visible-sm">
-            <a href="@Url.Action("Schedule", "Sobers", new {area = "Sphinx"})"
+            <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
                data-toggle="tooltip" data-placement="bottom" title="Sobers">
                 <i class="fa fa-car"></i>
             </a>
         </li>
         <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "") visible-xs visible-sm"
             data-toggle="tooltip" data-placement="bottom" title="Laundry">
-            <a href="@Url.Action("Schedule", "Laundry", new {area = "Sphinx"})">
+            <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
                 <i class="fa fa-lg fa-tint"></i>
             </a>
         </li>
         <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "") visible-xs visible-sm"
             data-toggle="tooltip" data-placement="bottom" title="Meals">
-            <a href="@Url.Action("Schedule", "Meals", new {area = "Kitchen"})">
+            <a href="@Url.Action("Schedule", "Mealss", new {area = "Kitchen"})">
                 <i class="fa fa-cutlery"></i>
             </a>
         </li>
@@ -161,6 +161,9 @@
             <li>
                 <a href="~/">
                     <i class="fa fa-fw fa-reply"></i> External Site
+                </a>
+                <a href="@Url.Action("Updates", "Home", new { area = "" })">
+                    <i class="fa fa-fw fa-bug"></i> Updates
                 </a>
             </li>
         </ul>

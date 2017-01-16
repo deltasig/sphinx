@@ -1,6 +1,6 @@
 ﻿@model Dsp.Data.Entities.Department
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Department";
     ViewBag.Subtitle = Model.Name;
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");

@@ -14,7 +14,7 @@
     <RootNamespace>Dsp.Web</RootNamespace>
     <AssemblyName>Dsp.Web</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <MvcBuildViews>false</MvcBuildViews>
+    <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort>44301</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
@@ -246,6 +246,7 @@
     <Compile Include="Areas\Edu\Models\StudyReportModel.cs" />
     <Compile Include="Areas\Edu\Models\StudySessionModel.cs" />
     <Compile Include="Areas\Edu\Models\StudyPeriodModel.cs" />
+    <Compile Include="Areas\Laundry\LaundryAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
@@ -255,10 +256,11 @@
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\Notification.cs" />
-    <Compile Include="Areas\Sphinx\Models\FeedItem.cs" />
-    <Compile Include="Areas\Sphinx\Models\LaundrySchedule.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\FeedItem.cs" />
+    <Compile Include="Areas\Laundry\Models\LaundrySchedule.cs" />
     <Compile Include="Extensions\DspRoleProvider.cs" />
+    <Compile Include="Extensions\Attributes.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Models\Pager.cs" />
@@ -324,19 +326,19 @@
     <Compile Include="Areas\Scholarships\Models\SubmitScholarshipAppModel.cs" />
     <Compile Include="Areas\Scholarships\ScholarshipsAreaRegistration.cs" />
     <Compile Include="Areas\Service\Models\ServiceEventIndexModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\LaundryIndexModel.cs" />
+    <Compile Include="Areas\Laundry\Models\LaundryIndexModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourIndexModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourIndexMemberRowModel.cs" />
     <Compile Include="Areas\Service\ServiceAreaRegistration.cs" />
-    <Compile Include="Areas\Sphinx\Controllers\LaundryController.cs" />
-    <Compile Include="Areas\Sphinx\Controllers\SoberTypesController.cs" />
-    <Compile Include="Areas\Sphinx\Controllers\SobersController.cs" />
-    <Compile Include="Areas\Sphinx\Models\LaundryStatsModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\MultiAddSoberSignupModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\SoberManagerModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\EditSoberSignupModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\SoberReportModel.cs" />
-    <Compile Include="Areas\Sphinx\SphinxAreaRegistration.cs" />
+    <Compile Include="Areas\Laundry\Controllers\ScheduleController.cs" />
+    <Compile Include="Areas\Sobers\Controllers\TypesController.cs" />
+    <Compile Include="Areas\Sobers\Controllers\ScheduleController.cs" />
+    <Compile Include="Areas\Laundry\Models\LaundryStatsModel.cs" />
+    <Compile Include="Areas\Sobers\Models\MultiAddSoberSignupModel.cs" />
+    <Compile Include="Areas\Sobers\Models\SoberManagerModel.cs" />
+    <Compile Include="Areas\Sobers\Models\EditSoberSignupModel.cs" />
+    <Compile Include="Areas\Sobers\Models\SoberReportModel.cs" />
+    <Compile Include="Areas\Sobers\SobersAreaRegistration.cs" />
     <Compile Include="Areas\Members\Controllers\AccountController.cs" />
     <Compile Include="Areas\Edu\Controllers\ClassesController.cs" />
     <Compile Include="Areas\Members\Controllers\IncidentsController.cs" />
@@ -345,7 +347,6 @@
     <Compile Include="Areas\Admin\Controllers\PositionsController.cs" />
     <Compile Include="Areas\Admin\Controllers\SemestersController.cs" />
     <Compile Include="Areas\Service\Controllers\HoursController.cs" />
-    <Compile Include="Areas\Sphinx\Controllers\HomeController.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -354,7 +355,7 @@
     <Compile Include="Areas\Edu\Models\ClassScheduleModel.cs" />
     <Compile Include="Areas\Admin\Models\CreateSemesterModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceHourSubmissionModel.cs" />
-    <Compile Include="Areas\Sphinx\Models\SphinxHomeIndexModel.cs" />
+    <Compile Include="Models\SphinxModel.cs" />
     <Compile Include="Models\ExternalScholarshipModel.cs" />
     <Compile Include="Models\PagerModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -463,7 +464,7 @@
     <Content Include="Areas\Edu\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Sphinx\Views\web.config">
+    <Content Include="Areas\Sobers\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Alumni\Views\web.config">
@@ -538,11 +539,11 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\Report.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Create.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Delete.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Edit.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Index.cshtml" />
+    <Content Include="Areas\Sobers\Views\Schedule\Report.cshtml" />
+    <Content Include="Areas\Sobers\Views\Types\Create.cshtml" />
+    <Content Include="Areas\Sobers\Views\Types\Delete.cshtml" />
+    <Content Include="Areas\Sobers\Views\Types\Edit.cshtml" />
+    <Content Include="Areas\Sobers\Views\Types\Index.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Index.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Create.cshtml" />
     <Content Include="Areas\House\Views\Rooms\Delete.cshtml" />
@@ -566,7 +567,7 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Areas\Sphinx\Views\Laundry\MemberUsage.cshtml" />
+    <Content Include="Areas\Laundry\Views\Schedule\Usage.cshtml" />
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\bootstrap\_bootstrap-datetimepicker.less" />
@@ -673,7 +674,8 @@
     <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Study\Report.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Uploading.cshtml" />
-    <Content Include="Areas\Sphinx\Views\SoberTypes\Details.cshtml" />
+    <Content Include="Areas\Sobers\Views\Types\Details.cshtml" />
+    <Content Include="Areas\Laundry\Views\web.config" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -799,14 +801,12 @@
     </Content>
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Members\Views\Account\_SetPasswordPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\SignIn.cshtml" />
     <Content Include="Areas\Members\Views\Account\Index.cshtml" />
     <Content Include="Views\Home\Contacts.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Recruitment.cshtml" />
     <Content Include="Views\Home\Scholarships.cshtml" />
@@ -814,20 +814,20 @@
     <Content Include="Areas\Members\Views\Account\Registration.cshtml" />
     <Content Include="Areas\Members\Views\Account\_RegisterPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\_UnregisterPartial.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Home\Index.cshtml" />
+    <Content Include="Views\Home\Sphinx.cshtml" />
     <Content Include="Views\Shared\_NavExternal.cshtml" />
     <Content Include="Views\Shared\_NavInternal.cshtml" />
     <Content Include="Views\Shared\Footer.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Laundry\Schedule.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\Manager.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\Schedule.cshtml" />
+    <Content Include="Areas\Laundry\Views\Schedule\Index.cshtml" />
+    <Content Include="Areas\Sobers\Views\Schedule\Manager.cshtml" />
+    <Content Include="Areas\Sobers\Views\Schedule\Index.cshtml" />
     <Content Include="Error\404.html" />
     <Content Include="Error\500.html" />
     <Content Include="Areas\Admin\Views\Semesters\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\Semesters\Index.cshtml" />
-    <Content Include="Views\Shared\_Title.cshtml" />
+    <Content Include="Views\Shared\_TitleInternal.cshtml" />
     <Content Include="Areas\Members\Views\Addresses\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Addresses\Index.cshtml" />
     <Content Include="Areas\Members\Views\PhoneNumbers\Edit.cshtml" />
@@ -842,7 +842,7 @@
     <Content Include="Areas\Edu\Views\Classes\Delete.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Edit.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Index.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\_SoberSchedulePartial.cshtml" />
+    <Content Include="Areas\Sobers\Views\Schedule\_SoberSchedulePartial.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Submit.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Details.cshtml" />
     <Content Include="Areas\Members\Views\Incidents\Edit.cshtml" />
@@ -851,7 +851,7 @@
     <Content Include="Areas\Edu\Views\Classes\EditEnrollment.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Index.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Submit.cshtml" />
-    <Content Include="Areas\Sphinx\Views\Sobers\EditSignup.cshtml" />
+    <Content Include="Areas\Sobers\Views\Schedule\EditSignup.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Create.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Positions\Details.cshtml" />
@@ -871,8 +871,9 @@
     <Content Include="Areas\Alumni\Views\Home\Index.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Error\404.13.html" />
-    <Content Include="Areas\Sphinx\Views\Home\Updates.cshtml" />
+    <Content Include="Views\Home\Updates.cshtml" />
     <Content Include="Documents\Updates.md" />
+    <Content Include="Views\Shared\_LayoutInternal.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -886,9 +887,10 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\House\Views\Shared\" />
+    <Folder Include="Areas\Laundry\Views\Shared\" />
     <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
-    <Folder Include="Areas\Sphinx\Views\Shared\" />
+    <Folder Include="Areas\Sobers\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj">

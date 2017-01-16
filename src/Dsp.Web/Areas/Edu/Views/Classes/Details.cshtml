@@ -4,7 +4,7 @@
 @using System.Web.Configuration
 @model ClassDetailsModel
 @{
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = Model.Class.CourseName;
     ViewBag.Subtitle = Model.Class.CourseShorthand;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");

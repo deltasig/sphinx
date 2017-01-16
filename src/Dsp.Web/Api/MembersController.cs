@@ -16,7 +16,7 @@
     using System.Web.Http.Description;
     using System.Web.Mvc;
     using System.Web.UI;
-    using Areas.Sphinx.Models;
+    using Models;
     using Microsoft.AspNet.Identity;
 
     [System.Web.Http.Authorize]
@@ -111,7 +111,7 @@
                 TimeSince = (nowCst - l.DateTimeSignedUp).ToUserFriendlyString(),
                 OccurredOn = l.DateTimeSignedUp.FromCstToUtc(),
                 DisplayText = "Laundry reservation added for " + l.DateTimeShift.ToString("f"),
-                Link = $"/sphinx/laundry/schedule",
+                Link = $"/laundry/schedule",
                 Symbol = "fa-tint"
             }));
 
@@ -141,7 +141,7 @@
                         TimeSince = (nowUtc - (DateTime)s.CreatedOn).ToUserFriendlyString(),
                         OccurredOn = (DateTime)s.CreatedOn,
                         DisplayText = "Sober shift added for " + s.DateOfShift.FromUtcToCst().ToString("D"),
-                        Link = "/sphinx/sobers/schedule",
+                        Link = "/sobers/schedule",
                         Symbol = "fa-car"
                     }));
                 }
@@ -155,7 +155,7 @@
                         TimeSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).ToUserFriendlyString(),
                         OccurredOn = (g.First().CreatedOn ?? nowUtc),
                         DisplayText = count + " sober shifts added",
-                        Link = "/sphinx/sobers/schedule",
+                        Link = "/sobers/schedule",
                         Symbol = "fa-car"
                     });
                 }
@@ -173,7 +173,7 @@
                 TimeSince = (nowUtc - (DateTime)s.DateTimeSignedUp).ToUserFriendlyString(),
                 OccurredOn = (DateTime)s.DateTimeSignedUp,
                 DisplayText = "New volunteer for Sober " + s.SoberType.Name + " on " + s.DateOfShift.FromUtcToCst().ToString("D"),
-                Link = "/sphinx/sobers/schedule",
+                Link = "/sobers/schedule",
                 Symbol = "fa-beer"
             }));
 
