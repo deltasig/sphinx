@@ -100,5 +100,23 @@
             await _db.SaveChangesAsync();
             return RedirectToAction("Index");
         }
+
+        public async Task<ActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var soberType = await _db.SoberTypes.FindAsync(id);
+            if (soberType == null)
+            {
+                return HttpNotFound();
+            }
+
+            var markdown = new Markdown();
+            soberType.Description = markdown.Transform(soberType.Description);
+
+            return View(soberType);
+        }
     }
 }
