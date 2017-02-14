@@ -103,17 +103,39 @@
             var laundryItems = await _db.LaundrySignups
                 .Where(l => l.DateTimeSignedUp > startOfFeedCst && l.DateTimeSignedUp <= nowCst)
                 .ToListAsync();
-            model.AddRange(laundryItems.Select(l => new FeedItem
+            var laundryGroups = laundryItems.GroupBy(s => s.DateTimeSignedUp.Date);
+            foreach (var g in laundryGroups)
             {
-                UserName = l.Member.UserName,
-                Name = l.Member.ToString(),
-                ImageName = l.Member.GetAvatarString(),
-                TimeSince = (nowCst - l.DateTimeSignedUp).ToUserFriendlyString(),
-                OccurredOn = l.DateTimeSignedUp.FromCstToUtc(),
-                DisplayText = "Laundry reservation added for " + l.DateTimeShift.ToString("f"),
-                Link = $"/laundry/schedule",
-                Symbol = "fa-tint"
-            }));
+                var count = g.Count();
+                if (count < 4)
+                {
+                    model.AddRange(g.Select(l => new FeedItem
+                    {
+                        UserName = l.Member.UserName,
+                        Name = l.Member.ToString(),
+                        ImageName = l.Member.GetAvatarString(),
+                        TimeSince = (nowCst - l.DateTimeSignedUp).ToUserFriendlyString(),
+                        OccurredOn = l.DateTimeSignedUp.FromCstToUtc(),
+                        DisplayText = "Laundry reservation added for " + l.DateTimeShift.ToString("f"),
+                        Link = $"/laundry/schedule",
+                        Symbol = "fa-tint"
+                    }));
+                }
+                else
+                {
+                    model.Add(new FeedItem
+                    {
+                        UserName = null,
+                        Name = null,
+                        ImageName = "NoAvatar.jpg",
+                        TimeSince = (nowUtc - g.OrderBy(l => l.DateTimeSignedUp).Last().DateTimeSignedUp).ToUserFriendlyString(),
+                        OccurredOn = g.First().DateTimeSignedUp,
+                        DisplayText = count + " laundry signups",
+                        Link = $"/laundry/schedule",
+                        Symbol = "fa-tint"
+                    });
+                }
+            }
 
             // Sober shifts added
             var soberSlotsAdded = await _db.SoberSignups
@@ -153,7 +175,7 @@
                         Name = saa.ToString(),
                         ImageName = saa.GetAvatarString(),
                         TimeSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).ToUserFriendlyString(),
-                        OccurredOn = (g.First().CreatedOn ?? nowUtc),
+                        OccurredOn =  g.First().CreatedOn ?? nowUtc,
                         DisplayText = count + " sober shifts added",
                         Link = "/sobers/schedule",
                         Symbol = "fa-car"
@@ -177,23 +199,42 @@
                 Symbol = "fa-beer"
             }));
 
-            if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
+            // Meal Plates
+            var plates = await _db.MealPlates
+                .Where(p => p.SignedUpOn > startOfFeedUtc && p.SignedUpOn <= nowUtc)
+                .ToListAsync();
+            var plateGroups = plates.GroupBy(s => s.SignedUpOn.Date);
+            foreach (var g in plateGroups)
             {
-                // Meal Plates
-                var plates = await _db.MealPlates
-                    .Where(p => p.SignedUpOn > startOfFeedUtc && p.SignedUpOn <= nowUtc)
-                    .ToListAsync();
-                model.AddRange(plates.Select(s => new FeedItem
+                var count = g.Count();
+                if (count < 4)
                 {
-                    UserName = s.Member.UserName,
-                    Name = s.Member.ToString(),
-                    ImageName = s.Member.GetAvatarString(),
-                    TimeSince = (nowUtc - s.SignedUpOn).ToUserFriendlyString(),
-                    OccurredOn = s.SignedUpOn,
-                    DisplayText = s.Type + " plate signup added",
-                    Link = "/kitchen/meals/schedule",
-                    Symbol = "fa-cutlery"
-                }));
+                    model.AddRange(g.Select(s => new FeedItem
+                    {
+                        UserName = s.Member.UserName,
+                        Name = s.Member.ToString(),
+                        ImageName = s.Member.GetAvatarString(),
+                        TimeSince = (nowUtc - s.SignedUpOn).ToUserFriendlyString(),
+                        OccurredOn = s.SignedUpOn,
+                        DisplayText = s.Type + " plate signup added",
+                        Link = "/kitchen/meals/schedule",
+                        Symbol = "fa-cutlery"
+                    }));
+                }
+                else
+                {
+                    model.Add(new FeedItem
+                    {
+                        UserName = null,
+                        Name = null,
+                        ImageName = "NoAvatar.jpg",
+                        TimeSince = (nowUtc - g.OrderBy(l => l.SignedUpOn).Last().SignedUpOn).ToUserFriendlyString(),
+                        OccurredOn = g.OrderBy(l => l.SignedUpOn).Last().SignedUpOn,
+                        DisplayText = count + " plate signups added",
+                        Link = "/kitchen/meals/schedule",
+                        Symbol = "fa-cutlery"
+                    });
+                }
             }
 
             // Service
