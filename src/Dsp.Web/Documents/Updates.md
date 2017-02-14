@@ -1,7 +1,12 @@
-﻿
+﻿### February 2017
 
+- Four or more meal plate signups in the sphinx feed within a given day will now be collapsed into a single item displaying the total.
+  The time component represents the time since the most recent signup.
+- Late plates in the feed can now be seen by everyone instead of just the house steward and administrators.
+- Four or more laundry signups in the sphinx feed within a given day will now be collapsed into a single item displaying the total.
+  The time component represents the time since the most recent signup.
 
-
+---
 
 ### January 2017
 
