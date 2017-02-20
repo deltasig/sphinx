@@ -23,22 +23,22 @@
         {
             return View();
         }
-        
+
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Contacts()
         {
             var term = await GetCurrentTerm();
             return View(term);
         }
-        
+
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Recruitment()
         {
             return View(await _db.ScholarshipApps
                 .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
         }
-        
-        [AllowAnonymous, OutputCache(Duration=3600, Location=OutputCacheLocation.Any, VaryByParam="none")]
+
+        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Scholarships()
         {
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -58,13 +58,13 @@
 
             return View(model);
         }
-        
+
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult Alumni()
         {
-           return RedirectToAction("Index", "Home", new { area = "Alumni" });
+            return RedirectToAction("Index", "Home", new { area = "Alumni" });
         }
-        
+
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult About()
         {
@@ -78,11 +78,11 @@
             var nowCst = ConvertUtcToCst(nowUtc);
 
             var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
-            if (string.IsNullOrEmpty(type?.Destination)) 
+            if (string.IsNullOrEmpty(type?.Destination))
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var emails = await _db.Emails
-                .Where(e => 
-                    e.EmailTypeId == type.EmailTypeId && 
+                .Where(e =>
+                    e.EmailTypeId == type.EmailTypeId &&
                     e.Destination == type.Destination)
                 .OrderByDescending(e => e.SentOn)
                 .ToListAsync();
@@ -116,7 +116,7 @@
 
             var message = new IdentityMessage
             {
-                Subject = "Sober Schedule: " + 
+                Subject = "Sober Schedule: " +
                 nowCst.ToShortDateString() + " - " + nowCst.AddDays(7).ToShortDateString(),
                 Body = body,
                 Destination = type.Destination
@@ -135,9 +135,9 @@
 
             var email = new Email
             {
-                SentOn = nowUtc, 
-                EmailTypeId = type.EmailTypeId, 
-                Destination = type.Destination, 
+                SentOn = nowUtc,
+                EmailTypeId = type.EmailTypeId,
+                Destination = type.Destination,
                 Body = body
             };
 
@@ -146,7 +146,7 @@
 
             return Content("OK");
         }
-        
+
         [HttpGet]
         [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Sphinx()
@@ -186,19 +186,26 @@
                 CurrentSemester = thisSemester,
                 PreviousSemester = await GetLastSemesterAsync()
             };
-            if (member.MemberStatus.StatusName == "Alumnus")
+
+            var mostRecentIncident = await _db.IncidentReports
+                .OrderByDescending(i => i.DateTimeOfIncident)
+                .FirstOrDefaultAsync() ?? new IncidentReport();
+            var startOfYearUtc = ConvertCstToUtc(new DateTime(nowCst.Year, 1, 1));
+            model.DaysSinceIncident = (DateTime.UtcNow - mostRecentIncident.DateTimeSubmitted).Days;
+            model.IncidentsThisSemester = await _db.IncidentReports.CountAsync(i => i.DateTimeOfIncident > lastSemester.DateEnd);
+            model.ScholarshipSubmissionsThisYear = await _db.ScholarshipSubmissions.CountAsync(s => s.SubmittedOn >= startOfYearUtc);
+            model.LaundryUsageThisSemester = await _db.LaundrySignups.CountAsync(l => l.DateTimeShift >= thisSemester.DateStart);
+            model.NewMembersThisSemester = await _db.Users.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.SemesterId);
+            model.ServiceHoursThisSemester = 0;
+            var members = await GetRosterForSemester(thisSemester);
+            foreach (var m in members)
             {
-                var mostRecentIncident = await _db.IncidentReports
-                    .OrderByDescending(i => i.DateTimeOfIncident)
-                    .FirstOrDefaultAsync() ?? new IncidentReport();
-                var startOfYearUtc = ConvertCstToUtc(new DateTime(nowCst.Year, 1, 1));
-                var serviceHoursSoFar = await _db.ServiceHours.Where(s => s.DateTimeSubmitted >= thisSemester.DateStart).ToListAsync();
-                model.DaysSinceIncident = (DateTime.UtcNow - mostRecentIncident.DateTimeSubmitted).Days;
-                model.IncidentsThisSemester = await _db.IncidentReports.CountAsync(i => i.DateTimeOfIncident > lastSemester.DateEnd);
-                model.ScholarshipSubmissionsThisYear = await _db.ScholarshipSubmissions.CountAsync(s => s.SubmittedOn >= startOfYearUtc);
-                model.LaundryUsageThisSemester = await _db.LaundrySignups.CountAsync(l => l.DateTimeShift >= thisSemester.DateStart);
-                model.ServiceHoursThisSemester = serviceHoursSoFar.Sum(s => s.DurationHours);
-                model.NewMembersThisSemester = await _db.Users.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.SemesterId);
+                var serviceHours = m.ServiceHours
+                    .Where(e =>
+                        e.Event.DateTimeOccurred > lastSemester.DateEnd &&
+                        e.Event.DateTimeOccurred <= thisSemester.DateEnd &&
+                        e.Event.IsApproved).Sum(e => e.DurationHours);
+                model.ServiceHoursThisSemester += serviceHours;
             }
 
             return View(model);
