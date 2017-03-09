@@ -676,6 +676,8 @@
     <Content Include="Areas\Edu\Views\Classes\Uploading.cshtml" />
     <Content Include="Areas\Sobers\Views\Types\Details.cshtml" />
     <Content Include="Areas\Laundry\Views\web.config" />
+    <Content Include="Areas\Sobers\Views\Schedule\SignupConfirmation.cshtml" />
+    <Content Include="bower.json" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

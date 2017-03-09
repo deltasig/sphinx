@@ -16,7 +16,7 @@
                 .Include("~/Content/Site.css"));
             bundles.Add(new StyleBundle("~/content/font-awesome")
                 .Include("~/Content/font-awesome.css"));
-            
+
             bundles.Add(new StyleBundle("~/content/datepicker")
                 .Include("~/Content/datepicker.css"));
             bundles.Add(new StyleBundle("~/content/datetimepicker")
@@ -27,6 +27,10 @@
                 .Include("~/Content/wmd.css"));
 
             // Scripts
+            bundles.Add(new ScriptBundle("~/bundles/clipboard").Include(
+                "~/bower_components/clipboard/dist/clipboard.js"
+            ));
+
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-core")
                 .Include("~/Scripts/bootstrap.js")
                 .Include("~/Scripts/bootstrap-select.js"));
@@ -39,7 +43,7 @@
                 .Include("~/Scripts/jquery-ui-{version}.js")
                 .Include("~/Scripts/jquery.unobtrusive*")
                 .Include("~/Scripts/jquery.validate*"));
-            
+
             bundles.Add(new ScriptBundle("~/bundles/datepicker")
                 .Include("~/Scripts/bootstrap-datepicker.js"));
             bundles.Add(new ScriptBundle("~/bundles/datetimepicker")

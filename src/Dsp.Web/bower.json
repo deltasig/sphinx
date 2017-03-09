@@ -1,0 +1,15 @@
+{
+  "name": "dsp.bower",
+  "private": true,
+  "authors": [
+    "Tyler Morrow <tjm6f4@gmail.com>"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "dependencies": {
+    "clipboard": "1.6.1"
+  }
+}
