@@ -45,23 +45,11 @@
                                     </div>
                                     <div class="col-md-4 col-p-12">@item.Description</div>
                                     <div class="col-md-2 col-p-12">
-                                        @if (item.UserId == null)
+                                        @if (item.Member == null)
                                         {
                                             if (!User.IsInRole("Pledge") || item.SoberType.Name != "Officer")
                                             {
-                                                @Html.ActionLink("Sign up", "Signup", "Schedule", new { id = item.SignupId }, new { @class = "no-print" })
-                                            }
-                                        }
-                                        else if (item.Member.UserName == User.Identity.Name || hasElevatedPermissions)
-                                        {
-                                            using (Html.BeginForm("CancelSignup", "Schedule", new { id = item.SignupId },
-                                                FormMethod.Get, new { style = "display: inline" }))
-                                            {
-                                                <button type="submit" class="btn btn-sm btn-link no-print" 
-                                                        style="padding: 0; color: #d9534f; display: inline">
-                                                    <i class="fa fa-minus-square"></i>
-                                                </button>
-                                                @item.Member.ToString()
+                                                @Html.ActionLink("Sign up", "SignupConfirmation", "Schedule", new { id = item.SignupId }, new { @class = "no-print" })
                                             }
                                         }
                                         else

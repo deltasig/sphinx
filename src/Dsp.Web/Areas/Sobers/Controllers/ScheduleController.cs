@@ -1,12 +1,11 @@
 ﻿namespace Dsp.Web.Areas.Sobers.Controllers
 {
-    using Dsp.Web.Controllers;
-    using Dsp.Data.Entities;
+    using Data.Entities;
+    using Web.Controllers;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Net;
@@ -50,7 +49,7 @@
                 NewSignup = new SoberSignup(),
                 MultiAddModel = new MultiAddSoberSignupModel
                 {
-                    DriverAmount = 0, 
+                    DriverAmount = 0,
                     OfficerAmount = 0
                 }
             };
@@ -62,7 +61,7 @@
         public async Task<ActionResult> AddSignup(SoberManagerModel model)
         {
             if (!ModelState.IsValid) return RedirectToAction("Manager", new { message = SoberMessage.AddSignupFailure });
-            
+
             model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
             model.NewSignup.CreatedOn = DateTime.UtcNow;
 
@@ -96,7 +95,7 @@
                     var parsed = DateTime.TryParse(s, out date);
                     if (!parsed) continue;
                     var utcDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
-                    var cstDate = base.ConvertUtcToCst(utcDate);
+                    var cstDate = ConvertUtcToCst(utcDate);
                     var difference = Math.Abs((utcDate - cstDate).Hours);
                     date = date.AddHours(difference);
 
@@ -134,8 +133,11 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var signupToCancel = await _db.SoberSignups.FindAsync(id);
-            _db.SoberSignups.Remove(signupToCancel);
+            var model = await _db.SoberSignups.FindAsync(id);
+
+            if (model == null) return HttpNotFound();
+
+            _db.SoberSignups.Remove(model);
             await _db.SaveChangesAsync();
 
             if (string.IsNullOrEmpty(returnUrl))
@@ -143,100 +145,51 @@
             return Redirect(returnUrl);
         }
 
-        public async Task<ActionResult> Signup(int? id, string returnUrl)
+        public async Task<ActionResult> SignupConfirmation(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var model = await _db.SoberSignups.FindAsync(id);
 
-            var signup = await _db.SoberSignups.FindAsync(id);
+            if (model == null) return HttpNotFound();
 
-            if (signup.UserId != null)
-            {
-                if (string.IsNullOrEmpty(returnUrl))
-                    return RedirectToAction("Index", new { message = SoberMessage.SignupFailure });
-                return Redirect(returnUrl);
-            }
-            if (User.IsInRole("Pledge") && signup.SoberType.Name == "Officer")
-            {
-                if (string.IsNullOrEmpty(returnUrl))
-                    return RedirectToAction("Index", new { message = SoberMessage.SignupPledgeOfficerFailure });
-                return Redirect(returnUrl);
-            }
-
-            signup.UserId = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;
-            signup.DateTimeSignedUp = DateTime.UtcNow;
-
-            _db.Entry(signup).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-
-            if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", new { message = SoberMessage.SignupSuccess });
-            return Redirect(returnUrl);
+            return View(model);
         }
 
-        public async Task<ActionResult> CancelSignup(int? id, string returnUrl)
+        [HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Signup(int id)
         {
-            if (id == null)
+            var model = await _db.SoberSignups.FindAsync(id);
+
+            if (model == null) return HttpNotFound();
+
+            if (model.UserId != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index", new { message = SoberMessage.SignupFailure });
+            }
+            if (User.IsInRole("Pledge") && model.SoberType.Name == "Officer")
+            {
+                return RedirectToAction("Index", new { message = SoberMessage.SignupPledgeOfficerFailure });
             }
 
-            var signup = await _db.SoberSignups.FindAsync(id);
-            var oldUserId = signup.UserId;
-            var userId = User.Identity.GetUserId<int>();
+            model.UserId = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;
+            model.DateTimeSignedUp = DateTime.UtcNow;
 
-            if (signup.UserId == null ||
-                (signup.UserId != userId && !User.IsInRole("Administrator") && !User.IsInRole("Sergeant-at-Arms")))
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            signup.UserId = null;
-            signup.DateTimeSignedUp = null;
-
-            _db.Entry(signup).State = EntityState.Modified;
+            _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
 
-            if (User.Identity.GetUserId<int>() == oldUserId)
-            {
-                var member = await UserManager.FindByIdAsync((int)oldUserId);
-                var currentSemesterId = await GetThisSemestersIdAsync();
-                var position = await _db.Roles.SingleAsync(p => p.Name == "Sergeant-at-Arms");
-                var saa = await _db.Leaders.SingleAsync(l => l.SemesterId == currentSemesterId && l.RoleId == position.Id);
-
-                var message = new IdentityMessage
-                {
-                    Subject = "Sphinx - Sober Signup Cancellation: " + member,
-                    Body = member + " has cancelled his signup for " + signup.DateOfShift.ToShortDateString() + ".",
-                    Destination = saa.Member.Email
-                };
-
-                try
-                {
-                    var emailService = new EmailService();
-                    await emailService.SendAsync(message);
-                }
-                catch (SmtpException e)
-                {
-                    Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                }
-            }
-
-            if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", new { message = SoberMessage.CancelSignupSuccess });
-            return Redirect(returnUrl);
+            return RedirectToAction("Index", new { message = SoberMessage.SignupSuccess });
         }
 
         [HttpGet, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
-        public async Task<ActionResult> EditSignup(int? id)
+        public async Task<ActionResult> EditSignup(int id, string returnUrl)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             var signup = await _db.SoberSignups.FindAsync(id);
+
+            if (signup == null) return HttpNotFound();
+
             var model = new EditSoberSignupModel
             {
                 SoberSignup = signup,
@@ -257,10 +210,18 @@
 
             var existingSignup = await _db.SoberSignups.FindAsync(model.SoberSignup.SignupId);
 
+            if (existingSignup == null) return HttpNotFound();
+
             if (model.SelectedMember <= 0)
+            {
                 existingSignup.UserId = null;
+                existingSignup.DateTimeSignedUp = null;
+            }
             else
+            {
                 existingSignup.UserId = model.SelectedMember;
+                existingSignup.DateTimeSignedUp = DateTime.UtcNow;
+            }
 
             existingSignup.Description = model.SoberSignup.Description;
             _db.Entry(existingSignup).State = EntityState.Modified;
@@ -272,7 +233,7 @@
         [HttpGet]
         public async Task<ActionResult> Report(SoberReportModel model)
         {
-            var thisSemester = await base.GetThisSemesterAsync();
+            var thisSemester = await GetThisSemesterAsync();
             // Identify semester
             Semester semester;
             if (model.SelectedSemester == null)
@@ -280,17 +241,15 @@
             else
                 semester = await _db.Semesters.FindAsync(model.SelectedSemester);
 
+            if (semester == null) return HttpNotFound();
+
             // Identify valid semesters for dropdown
             var signups = await _db.SoberSignups.ToListAsync();
             var allSemesters = await _db.Semesters.ToListAsync();
-            var semesters = new List<Semester>();
-            foreach (var s in allSemesters)
-            {
-                if (signups.Any(i => i.DateOfShift >= s.DateStart && i.DateOfShift <= s.DateEnd))
-                {
-                    semesters.Add(s);
-                }
-            }
+            var semesters = allSemesters
+                .Where(s =>
+                    signups.Any(i => i.DateOfShift >= s.DateStart && i.DateOfShift <= s.DateEnd))
+                .ToList();
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
             if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
             {
@@ -300,13 +259,13 @@
             // Build model for view
             model.SelectedSemester = semester.SemesterId;
             model.Semester = semester;
-            model.SemesterList = base.GetCustomSemesterListAsync(semesters);
+            model.SemesterList = GetCustomSemesterListAsync(semesters);
             // Identify members for current semester
-            model.Members = await base.GetRosterForSemester(semester);;
+            model.Members = await GetRosterForSemester(semester);
 
             return View(model);
         }
-        
+
         public async Task<ActionResult> Download(int? sid)
         {
             if (sid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -314,16 +273,16 @@
             var semester = await _db.Semesters.FindAsync(sid);
             var soberSlots = await _db.SoberSignups
                 .Where(s => s.DateOfShift >= semester.DateStart && s.DateOfShift <= semester.DateEnd)
-                .ToListAsync();            
+                .ToListAsync();
 
-            var header = "Shift Date, Day of Week, Type, First Name, Last Name";
+            const string header = "Shift Date, Day of Week, Type, First Name, Last Name";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (var s in soberSlots.OrderBy(s => s.DateOfShift))
             {
-                var line = s.DateOfShift.ToString("MM/dd/yyyy, ddd,") + 
+                var line = s.DateOfShift.ToString("MM/dd/yyyy, ddd,") +
                     s.SoberType.Name.Replace(",", "") + ",";
-                if(s.UserId != null)
+                if (s.UserId != null)
                 {
                     line += s.Member.FirstName.Replace(",", "") + "," + s.Member.LastName.Replace(",", "");
                 }

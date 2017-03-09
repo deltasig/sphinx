@@ -1,194 +1,111 @@
 ﻿@model IEnumerable<Dsp.Data.Entities.SoberSignup>
 @{
     var dates = Model.Select(s => s.DateOfShift).Distinct();
-    var returnUrl = Request.RawUrl.Split('?')[0];
 }
 
 <!-- Standard view. -->
-<div class="hidden-xs hidden-sm">
-    <table class="table" style="margin-bottom: 0">
-        <tbody>
-            @if (!Model.Any())
+<table class="table table-bordered" style="margin-bottom: 0">
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="2">None</td>
+                <td></td>
+            </tr>
+        }
+        else
+        {
+            <tr class="">
+                <td colspan="4">
+                    <small>
+                        <i class="fa fa-info-circle text-warning"></i>
+                        Contact the Seargeant-at-Arms to cancel signups.
+                    </small>
+                </td>
+            </tr>
+        }
+        @foreach (var date in dates)
+        {
+            <tr class="active">
+                <td colspan="2">
+                    <small>
+                        @date.DayOfWeek.ToString(), @date.ToString("MMMM dd")
+                    </small>
+                </td>
+            </tr>
+            foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
             {
-                <tr>
-                    <td colspan="2">None</td>
-                    <td></td>
-                </tr>
-            }
-            @foreach (var date in dates)
-            {
-                <tr class="active">
-                    <td colspan="2">
+                <tr class="@(item.Member == null ? "" : item.Member.UserName == User.Identity.Name ? "warning" : "")">
+                    <td class="col-xs-5">
                         <small>
-                            @date.DayOfWeek.ToString(), @date.ToString("MMMM dd")
+                            <a href="@Url.Action("Details", "Types", new { id = item.SoberTypeId })">
+                                <i data-toggle="tooltip" data-placement="top" class="fa fa-lg fa-info-circle text-info"
+                                   title="Click to learn about this job."></i>
+                            </a>
+                            @item.SoberType.Name
                         </small>
                     </td>
-                </tr>
-                foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
-                {
-                    <tr class="@(item.Member == null ? "" : item.Member.UserName == User.Identity.Name ? "warning" : "")">
-                        <td class="col-xs-5">
-                            <small>
-                                <a href="@Url.Action("Details", "Types", new { id = item.SoberTypeId })">
-                                    <i data-toggle="tooltip" data-placement="top" class="fa fa-lg fa-info-circle text-info"
-                                       title="Click to learn about this job."></i>
-                                </a>
-                                @item.SoberType.Name
-                            </small>
-                        </td>
-                        <td id="@(item.SignupId)cell">
-                            @if (item.UserId == null)
+                    <td>
+                        @if (item.Member == null)
+                        {
+                            if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
                             {
-                                if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
-                                {
-                                    <small>None</small>
-                                }
-                                else
-                                {
-                                    <small>
-                                        None
-                                    </small>
-                                    <a href="@Url.Action("Signup", "Schedule", new { id = item.SignupId, returnUrl })"
-                                        class="social pull-right"
-                                        data-toggle="tooltip" data-placement="left"
-                                        title="Sign up">
-                                        <i class="fa fa-plus-square fa-lg text-success"></i>
-                                    </a>
-                                }
+                                <small>None</small>
                             }
                             else
                             {
-                                // TODO: Look into this
-                                var number = item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
-
-                                if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                                {
-                                    <a href="@Url.Action("CancelSignup", "Schedule", new { id = item.SignupId, returnUrl })"
-                                       class="social"
-                                       data-toggle="tooltip" data-placement="top"
-                                       title="Cancel signup">
-                                        <i class="fa fa-minus-square fa-lg text-danger"></i>
-                                    </a>
-                                }
-                                
-                                <small id="@item.SignupId">
-                                    @item.Member.ToString()
+                                <small>
+                                    None
                                 </small>
-                                <small id="@(item.SignupId)num">
-                                    <strong>
-                                        @number
-                                    </strong>
-                                </small>
-
-                                <button class="btn btn-link pull-right" id="@(item.SignupId)show" type="button"
-                                        style="padding: 0; display: inline; margin: 0; border: none"
-                                        data-toggle="tooltip" data-placement="top"
-                                        title="Copy">
-                                    <i class="fa fa-phone-square fa-lg text-info"></i>
-                                </button>
-                                <script>
-                                    $('#@(item.SignupId)num').addClass('hidden');
-                                    $('#@(item.SignupId)show').hover(function () {
-                                        $('#@(item.SignupId)').addClass('hidden');
-                                        $('#@(item.SignupId)cell').addClass('warning');
-                                        $('#@(item.SignupId)num').removeClass('hidden');
-                                    }, function () {
-                                        $('#@(item.SignupId)num').addClass('hidden');
-                                        $('#@(item.SignupId)cell').removeClass('warning');
-                                        $('#@(item.SignupId)').removeClass('hidden');
-                                    });
-                                    $('#@(item.SignupId)show').on("click", function () {
-                                        var number = $('#@(item.SignupId)num strong').text().trim();
-                                        window.prompt("Copy to clipboard: Ctrl+C, Enter", number);
-                                    });
-                                </script>
+                                <a href="@Url.Action("SignupConfirmation", "Schedule", new { area = "Sobers", id = item.SignupId })"
+                                   class="social pull-right"
+                                   data-toggle="tooltip" data-placement="left"
+                                   title="Sign up">
+                                    <i class="fa fa-plus-square fa-lg text-success"></i>
+                                </a>
                             }
+                        }
+                        else
+                        {
+                            <small id="@item.SignupId">
+                                @item.Member.ToString()
+                            </small>
+                        }
+                    </td>
+                </tr>
+                if (item.Member != null)
+                {
+                    var number = item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
+                    <tr class="@(item.Member.UserName == User.Identity.Name ? "warning" : "")">
+                        <td><small>Phone</small></td>
+                        <td>
+                            <small><a href="tel:@number">@number</a></small>
+                            <button class="btn btn-xs btn-default pull-right clipboard" id="copy-button"
+                                    type="button" data-clipboard-text="@number"
+                                    style="margin: 0" data-title="Copied!" data-placement="top" data-toggle="tooltip">
+                                <i class="fa fa-clipboard" alt="Copy"></i>
+                            </button>
                         </td>
                     </tr>
                 }
             }
-        </tbody>
-    </table>
-</div>
-<!-- Compact view. -->
-<div class="visible-xs visible-sm">
-    <table class="table">
-        <thead>
-            <tr>
-                <th><small>Next 7 Days</small></th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Any())
-            {
-                <tr>
-                    <td>No lifeguards on duty</td>
-                </tr>
-            }
-            @foreach (var item in Model)
-            {
-                <tr>
-                    @if (item.UserId == null)
-                    {
-                        if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
-                        {
-                            <td>
-                                <small class="pull-right">
-                                    @item.DateOfShift.ToString("MM-dd")
-                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
-                                </small>
-                                None <small>@item.SoberType.Name</small>
-                            </td>
-                        }
-                        else
-                        {
-                            <td>
-                                <small class="pull-right">
-                                    @item.DateOfShift.ToString("MM-dd")
-                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
-                                </small>
-                                @Html.ActionLink("Sign up", "Signup", "Schedule", new { id = item.SignupId, returnUrl }, null) 
-                                <small>@item.SoberType.Name</small>
-                            </td>
-                        }
-                    }
-                    else if (item.Member.UserName == User.Identity.Name || User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"))
-                    {
-                        using (Html.BeginForm("CancelSignup", "Schedule", new { id = item.SignupId, returnUrl },
-                            FormMethod.Get, new { style = "display: inline" }))
-                        {
-                            <td>
-                                <small class="pull-right">
-                                    @item.DateOfShift.ToString("MM-dd")
-                                    (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
-                                </small>
-                                <button type="submit" class="btn btn-sm btn-link" style="padding: 0; color: #d9534f; display: inline">
-                                    <i class="fa fa-minus-square"></i>
-                                </button>
-                                @item.Member.ToString()
-                                <small>@item.SoberType.Name</small><br/>
-                                <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                    @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                                </a>
-                            </td>
-                        }
-                    }
-                    else
-                    {
-                        <td>
-                            <small class="pull-right">
-                                @item.DateOfShift.ToString("MM-dd")
-                                (@item.DateOfShift.DayOfWeek.ToString().Substring(0, 3))
-                            </small>
-                            @item.Member.ToString()
-                            <small>@item.SoberType.Name</small><br/>
-                            <a href="tel:@item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number">
-                                @item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number
-                            </a>
-                        </td>
-                    }
-                </tr>
-            }
-        </tbody>
-    </table>
-</div>
+        }
+    </tbody>
+</table>
+
+<script>
+    var clipboard = new Clipboard("#copy-button");
+
+    clipboard.on('success', function (e) {
+        $(e.trigger).tooltip("enable");
+        $(e.trigger).tooltip("show");
+        setTimeout(function() {
+            $(e.trigger).tooltip("disable");
+        }, 2000);
+    });
+
+    clipboard.on('error', function (e) {
+        console.error('Action:', e.action);
+        console.error('Trigger:', e.trigger);
+    });
+</script>
