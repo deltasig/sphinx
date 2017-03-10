@@ -77,10 +77,10 @@
                 {
                     var number = item.Member.PhoneNumbers.Single(m => m.Type == "Mobile").Number;
                     <tr class="@(item.Member.UserName == User.Identity.Name ? "warning" : "")">
-                        <td><small>Phone</small></td>
+                        <td></td>
                         <td>
                             <small><a href="tel:@number">@number</a></small>
-                            <button class="btn btn-xs btn-default pull-right clipboard" id="copy-button"
+                            <button class="btn btn-xs btn-default pull-right clipboard hidden" 
                                     type="button" data-clipboard-text="@number"
                                     style="margin: 0" data-title="Copied!" data-placement="top" data-toggle="tooltip">
                                 <i class="fa fa-clipboard" alt="Copy"></i>
@@ -94,18 +94,22 @@
 </table>
 
 <script>
-    var clipboard = new Clipboard("#copy-button");
+    
+    if (Clipboard.isSupported()) {
+        var clipboard = new Clipboard(".clipboard");
 
-    clipboard.on('success', function (e) {
-        $(e.trigger).tooltip("enable");
-        $(e.trigger).tooltip("show");
-        setTimeout(function() {
-            $(e.trigger).tooltip("disable");
-        }, 2000);
-    });
+        clipboard.on("success",
+            function(e) {
+                $(e.trigger).tooltip("enable");
+                $(e.trigger).tooltip("show");
+                setTimeout(function() {
+                        $(e.trigger).tooltip("disable");
+                    },
+                    2000);
+            });
+        $(".clipboard").removeClass("hidden");
+    } else {
+        $(".clipboard").addClass("hidden");
+    }
 
-    clipboard.on('error', function (e) {
-        console.error('Action:', e.action);
-        console.error('Trigger:', e.trigger);
-    });
 </script>
