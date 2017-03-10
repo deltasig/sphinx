@@ -7,7 +7,7 @@
     var list = leaders
         .Where(l => l.Position.IsPublic)
         .OrderBy(l => l.Position.Type)
-        .ThenBy(l => l.Position.DisplayOrder);
+        .ThenBy(l => l.Position.Name);
 }
 @section Title
 {
@@ -18,85 +18,45 @@
 }
 <div class="container">
     <div class="row">
-        <div class="col-xs-12">
-            @if (leaders.Any(l => l.Position.IsPublic))
+        @if (leaders.Any(l => l.Position.IsPublic))
+        {
+            foreach (var leader in list)
             {
-                <div class="panel panel-default">
-                    <div class="panel-heading hide print">
-                        <div class="row">
-                            <div class="col-sm-4 col-p-4">
-                                Member
-                            </div>
-                            <div class="col-sm-3 col-p-3">
-                                Email
-                            </div>
-                            <div class="col-sm-3 col-p-4">
-                                Position
-                            </div>
+                var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
+
+                <div class="col-sm-3 text-center">
+                    <div class="list-group">
+                        <div class="list-group-item" id="@(formattedId)" 
+                             style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; word-break: break-all; word-wrap: break-word;">
+                            @leader.Position.Name
+                        </div>
+                        <div class="list-group-item">
+                            <p>
+                                <img src="~/Images/Avatars/@(leader.Member.GetAvatarString())"
+                                     height="75" width="75" class="img-circle no-print" id="avatar" />
+                            </p>
+                            <p class="list-group-item-text">
+                                <a href="mailto:@leader.Member.Email">
+                                    @leader.Member.ToShortLastNameString()
+                                </a>
+                            </p>
                         </div>
                     </div>
-                    <div class="list-group">
-                        @foreach (var leader in list)
-                        {
-                            var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
-
-                            <div class="list-group-item" id="@(formattedId)">
-                                <div class="media">
-                                    <div class="media-left media-middle">
-                                        <img src="~/Images/Avatars/@(leader.Member.GetAvatarString())"
-                                             height="35" width="35" class="img-circle no-print" id="avatar" style="" />
-                                    </div>
-                                    <div class="media-body">
-                                        <div class="row" style="margin-top: 7px">
-                                            <div class="col-sm-4 col-p-4">
-                                                @leader.Member.ToString()
-                                            </div>
-                                            <div class="col-sm-3 col-p-3">
-                                                <i class="fa fa-fw fa-envelope-o no-print"></i>
-                                                <a href="mailto:@leader.Member.Email">@leader.Member.Email</a>
-                                            </div>
-                                            <div class="col-sm-3 col-p-4">
-                                                @leader.Position.Name
-                                            </div>
-                                            <div class="col-sm-2 col-p-1 text-right">
-                                                @if (leader.Position.Name == "Vice President Growth")
-                                                {
-                                                    <i class="fa fa-fw fa-info-circle text-info no-print" data-toggle="tooltip" data-placement="left"
-                                                       title="Scholarship Inquiries">
-                                                    </i>
-                                                }
-                                                else if (leader.Position.Name == "Director of Recruitment")
-                                                {
-                                                    <i class="fa fa-fw fa-info-circle text-info no-print" data-toggle="tooltip" data-placement="left"
-                                                       title="Membership Inquiries">
-                                                    </i>
-                                                }
-                                                @if (leader.Position.IsExecutive)
-                                                {
-                                                    @: <i class="fa fa-fw fa-star text-warning"></i>
-                                                }
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                    </div>
-                    <div class="panel-footer text-right">
-                        <i class="fa fa-fw fa-star text-warning"></i> Executive position
-                    </div>
                 </div>
             }
-            else
-            {
-                <div class="alert alert-warning">
-                    <p>
-                        Contact information for our leadership will be available as soon as appointments are made.
-                        We apologize for the inconvenience. <br />
-                    </p>
-                </div>
-            }
-        </div>
+            <div class="col-xs-12">
+                <i class="fa fa-fw fa-star text-warning"></i> Executive position
+            </div>
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                <p>
+                    Contact information for our leadership will be available as soon as appointments are made.
+                    We apologize for the inconvenience. <br/>
+                </p>
+            </div>
+        }
     </div>
 </div>
 
