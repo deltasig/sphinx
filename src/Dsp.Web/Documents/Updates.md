@@ -1,4 +1,14 @@
-﻿### February 2017
+﻿### March 2017
+
+- Removed ability to cencel sober signups; tweaked layout; added button to single-click copy phone number (only works in newer browsers).
+- The social tab on the sphinx page now shows the number of upcoming social events since it's not selected by default.
+- Chapter `about` page was given some images and the layout was modified.
+- External page links that refer visitors to the contacts page will now take them directly to the member on the contacts they need to contact 
+  and even highlight them.
+
+---
+
+### February 2017
 
 - Four or more meal plate signups in the sphinx feed within a given day will now be collapsed into a single item displaying the total.
   The time component represents the time since the most recent signup.

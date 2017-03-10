@@ -10,7 +10,7 @@
     @Html.Partial("_TitleExternal")
 }
 @section AdditionalMeta {
-    <meta name="description" content="Learn about how you can join Delta Sig's mission to change the fraternity experience." >
+    <meta name="description" content="Learn about how you can join Delta Sig." >
 }
 
 <div class="container">
@@ -71,8 +71,8 @@
             <p class="text-justify">
                 The book is updated every semester to make sure all of the information is consistent with university costs
                 and our fraternity policies.
-                If you look through it and still have questions, feel free to @Html.ActionLink("contact", "Contacts", "Home") 
-                our Director of Recruitment directly via email.
+                If you look through it and still have questions, feel free to 
+                <a href="@Url.Action("Contacts")#director_of_recruitment">email our Director of Recruitment</a>.
             </p>
             <hr />
             <h3>
@@ -85,7 +85,7 @@
             </p>
             <p class="text-justify">
                 If you want to start getting to know us, introduce yourself by
-                <a href="@Url.Action("Contacts")">sending an email to our Director of Recruitment</a>.
+                <a href="@Url.Action("Contacts")#director_of_recruitment">emailing our Director of Recruitment</a>.
                 Once we know you're out there, we can get you involved in Delta Sig however you want,
                 whether it's answering your questions, touring the house, hanging out, or attending events.
             </p>

@@ -38,7 +38,9 @@
                     <div class="list-group">
                         @foreach (var leader in list)
                         {
-                            <div class="list-group-item">
+                            var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
+
+                            <div class="list-group-item" id="@(formattedId)">
                                 <div class="media">
                                     <div class="media-left media-middle">
                                         <img src="~/Images/Avatars/@(leader.Member.GetAvatarString())"
@@ -97,3 +99,10 @@
         </div>
     </div>
 </div>
+
+@section scripts{
+    <script type="text/javascript">
+        var selectedId = location.hash.slice(1);
+        $(`#${selectedId}`).addClass("list-group-item-success");
+    </script>
+}
