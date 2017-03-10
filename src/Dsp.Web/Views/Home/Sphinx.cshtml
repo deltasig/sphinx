@@ -167,7 +167,7 @@
                             </li>
                             <li>
                                 <a href="#upcoming-socials" data-toggle="pill">
-                                    <i class="fa fa-fw fa-calendar"></i> Upcoming Socials
+                                    <i class="fa fa-fw fa-calendar"></i> Upcoming Socials <span id="social-count" class="badge">0</span>
                                 </a>
                             </li>
                         </ul>
@@ -532,6 +532,7 @@
             var key = '@System.Configuration.ConfigurationManager.AppSettings["google-public-api-key"]';
             var resultsListEle = $('#socials');
             var noResultsEle = $('#no-socials');
+            var countEle = $('#social-count');
             var eventItemClass = 'event-item';
             var minTime = moment().startOf('day').toISOString();
             var dateTimeFormat = 'dddd, MMMM D, YYYY @@ h:mm a';
@@ -543,7 +544,8 @@
                 dataType: 'json',
                 success: function(response) {
                     $(`.${eventItemClass}`).remove();
-                    if (typeof response.items !== 'undefined' && response.items.length > 0) {
+                    var count = response.items.length;
+                    if (typeof response.items !== 'undefined' && count > 0) {
                         noResultsEle.hide();
                     } else {
                         noResultsEle.show();
@@ -552,7 +554,7 @@
                     var template = document.getElementById('social-template').innerHTML;
                     Mustache.parse(template);
                     var posted = 0;
-                    for (var i = 0; i < response.items.length && posted < maxItems; i++) {
+                    for (var i = 0; i < count && posted < maxItems; i++) {
                         var item = response.items[i];
                         if (!item.description || !item.description.includes(tag)) continue;
                         var end = moment(item.end.dateTime);
@@ -572,6 +574,8 @@
                     }
                     if (posted <= 0) {
                         noResultsEle.show();
+                    } else {
+                        countEle.text(posted);
                     }
                 },
                 error: function (response) {
