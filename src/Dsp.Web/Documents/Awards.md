@@ -1,7 +1,5 @@
 ﻿# Awards
 
-## Chapter
-
 #### Delta Sigma Phi Nationals
 
 - Pyramid of Excellence - The highest award given to undergraduate chapters for excellence in all areas of operation.
