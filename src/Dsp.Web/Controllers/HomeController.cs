@@ -68,7 +68,14 @@
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public ActionResult About()
         {
-            return View();
+            var model = new AboutModel();
+            var markdown = new Markdown();
+            var data = System.IO.File.ReadAllText(Server.MapPath(@"~/Documents/History.md"));
+            model.History = markdown.Transform(data);
+            data = System.IO.File.ReadAllText(Server.MapPath(@"~/Documents/Awards.md"));
+            model.Awards = markdown.Transform(data);
+
+            return View(model);
         }
 
         [AllowAnonymous]

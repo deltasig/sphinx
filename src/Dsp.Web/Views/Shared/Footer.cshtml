@@ -29,9 +29,9 @@
                 <p>
                     <i class="fa fa-fw fa-map-marker"></i> 215 W 8th St, Rolla, MO 65401 
                     <br class="visible-xs" />
-                    <a href="@Url.Action("Index")#directions">Directions</a>
+                    <a href="@Url.Action("Index", "Home", new { area = "" })#directions">Directions</a>
                 </p>
-                <p><i class="fa fa-fw fa-envelope"></i> <a href="@Url.Action("Contacts")">See Contacts Page</a></p>
+                <p><i class="fa fa-fw fa-envelope"></i> <a href="@Url.Action("Contacts", "Home", new { area = "" })">See Contacts Page</a></p>
                 <div class="visible-xs" style="margin:50px"></div>
             </div>
             <div class="col-sm-4 text-xs-center text-sm-left">
