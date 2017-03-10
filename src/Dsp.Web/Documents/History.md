@@ -15,14 +15,16 @@ The first 16 members were initiated in May by brothers from chapters at Washingt
 
 ### 1957
 
-![First Chapter House][chapter-house-1]
-
 On March 10, 1957, Delta Sigma Phi Club at MSM was installed as the Delta Epsilon Chapter of the Delta Sigma Phi Fraternity.
 It began with 29 charter members, a total membership of over 40, and Fred Dietrich as the first chapter president.
 The speaker at that formal event was Francis "Pete" Wacker, fraternity Executive Director from 1947-1978.
 In addition S. O. Smith, President of Delta Sigma Phi, and Curtis L. Wilson, Dean of the University, made presentations.
 The Faculty Adviser was Wells Leitner and one of the original ACB members was J. C. Alexander (who owned Bishop's Clothing), 
 serving until his death in 1979.
+
+<p class="text-center">
+<img class="img-thumbnail" src="/images/history/chapter-house-1.jpg" />
+</p>
 
 By the chartering ceremony the chapter had purchased a duplex on the north side of Rolla where Thomas Jefferson housing is today, 
 remodeled it over Christmas break, and moved in 31 residents.
@@ -41,8 +43,6 @@ At the time, the student body consisted of 2387 males (of which 711 were in one 
 
 ### 1966
 
-![Thomas Jefferson as a Tombstone][chapter-house-2]
-
 The university established an area for fraternities to build new houses on Highway E.
 By this time, Delta Sig in Rolla was flourishing and out of room.
 This led to the construction of new facilities on *Fraternity Row* in the Fall of 1966.
@@ -50,7 +50,9 @@ The existing site was sold to the university in order to build the Thomas Jeffer
 Surely the fact that the location was only a block from the regional Highway Patrol Headquarters was a coincidence.
 The new location included a rectangular residential building (long house) and a round social building (round house).
 
-![Long House and Round House][chapter-house-3]
+<p class="text-center">
+<img class="img-thumbnail" src="/images/history/chapter-house-2.jpg" />
+</p>
 
 Long house had 36 two-man rooms and a single room designated for the chapter president.
 There was one phone (364-4192) for the entire house (extension to the round house) with an intercom to notify residents 
@@ -58,11 +60,15 @@ of incoming calls in the evening (one of the pledge duties).
 The room under the president was used for an extensive file system on classes that saved many brothers anguish.
 Long house had 24-hour quiet hours, except for a half an hour each evening.
 
+<p class="text-center">
+<img class="img-thumbnail" src="/images/history/chapter-house-3.jpg" />
+</p>
+
 Round house had a small formal living room, large chapter lounge, kitchen and dining room.
 This is where the only television was located (eventually hooked up to cable).
 This was the site of memorable parties, frequently in association with another house on campus.
 There were no quiet hours in the round house and made a great place to take a break from studies.
-After the Old Chem Building burned down in the late 60's, the chapter found the dump site and constructed a patio and 
+After the old Chemistry Building burned down in the late 1960's, the chapter found the dump site and constructed a patio and 
 barbeque pit from the salvaged 1885 bricks.
 
 ### 1968 - Early 1990's
@@ -101,12 +107,15 @@ With stimulation from national, the glimmer of Delta Sig at Rolla started again.
 The high standards of the initial chapter were maintained as members were solicited.
 Under the on-campus leadership of Faculty Adviser Paul Hirtz, Delta Epsilon was re-colonized in 2006 and re-chartered in 2008.
 
-![Ramsey Building][chapter-house-4]
-
 ### 2009
 
 In August of 2009, the chapter moved into the newly renovated Ramsey Furniture building at 8th and Rolla streets on a lease with 
 an option to buy in five years.
+
+<p class="text-center">
+<img class="img-thumbnail" src="/images/history/chapter-house-4.jpg" />
+</p>
+
 With a lot of talented and dedicated members of the ACB, to include Ron Hoffman who had to shut down the chapter in 1995, 
 the chapter was given the opportunity to flourish.
 Members committed to grow, develop, and lead until they were once again recognized as leaders on campus, in the community, 
@@ -126,11 +135,9 @@ The chapter actively participates in the Downtown Business Association and in th
 including the *Rolla Annual Arts and Crafts Festival* and *Celebration of Nations*.
 Delta Epsilon has won, and continues to win, numerous awards on campus and with the national fraternity.
 
-![Current Chapter House][chapter-house-5]
+<p class="text-center">
+<img class="img-thumbnail" src="/images/history/chapter-house-5.jpg" />
+</p>
 
 [1]: /contacts#web_master
-[chapter-house-1]: /images/history/chapter-house-1.jpg "First Chapter House"
-[chapter-house-2]: /images/history/chapter-house-2.jpg "Thomas Jefferson as a Tombstone"
-[chapter-house-3]: /images/history/chapter-house-3.jpg "Long House and Round House"
-[chapter-house-4]: /images/history/chapter-house-4.jpg "Ramsey Building"
-[chapter-house-5]: /images/history/chapter-house-5.jpg "Current Chapter House"
+
