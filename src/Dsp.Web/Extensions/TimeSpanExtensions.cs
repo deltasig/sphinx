@@ -7,54 +7,59 @@
     {
         public static string ToUserFriendlyString(this TimeSpan timeSpan)
         {
-            var value = 0;
             var output = new StringBuilder();
 
-            if(timeSpan.TotalMinutes < 1)
+            if (timeSpan.TotalMinutes < 1)
             {
                 output.Append("just now");
             }
             else
             {
+                var value = 0;
                 if (timeSpan.TotalMinutes < 60)
                 {
-                    value = (int)timeSpan.TotalMinutes;
-                    output.Append(value);
-                    output.Append(" minute");
+                    output.Append($"{(int)timeSpan.TotalMinutes} minute{(value != 1 ? "s" : string.Empty)} ago");
+                }
+                else if (timeSpan.TotalMinutes <= 60)
+                {
+                    output.Append("an hour ago");
                 }
                 else if (timeSpan.TotalHours < 24)
                 {
-                    value = (int)timeSpan.TotalHours;
-                    output.Append(value);
-                    output.Append(" hour");
+                    output.Append($"{(int)timeSpan.TotalHours} hours ago");
+                }
+                else if (timeSpan.TotalDays < 2)
+                {
+                    output.Append("yesterday");
                 }
                 else if (timeSpan.TotalDays < 7)
                 {
-                    value = (int)timeSpan.TotalDays;
-                    output.Append(value);
-                    output.Append(" day");
+                    output.Append($"{(int)timeSpan.TotalDays} days ago");
+                }
+                else if (timeSpan.TotalDays < 14)
+                {
+                    output.Append("a week ago");
                 }
                 else if (timeSpan.TotalDays < 31)
                 {
-                    value = (int)timeSpan.TotalDays / 7;
-                    output.Append(value);
-                    output.Append(" week");
+                    output.Append($"{(int)timeSpan.TotalDays / 7} weeks ago");
+                }
+                else if (timeSpan.TotalDays < 62)
+                {
+                    output.Append("a month ago");
                 }
                 else if (timeSpan.TotalDays < 365)
                 {
-                    value = (int)timeSpan.TotalDays / 31;
-                    output.Append(value);
-                    output.Append(" month");
+                    output.Append($"{(int)timeSpan.TotalDays / 31} months ago");
+                }
+                else if (timeSpan.TotalDays < 730)
+                {
+                    output.Append("a year ago");
                 }
                 else
                 {
-                    value = (int)timeSpan.TotalDays / 365;
-                    output.Append(value);
-                    output.Append(" year");
+                    output.Append($"{(int)timeSpan.TotalDays / 365} years ago");
                 }
-                if (value != 1)
-                    output.Append("s");
-                output.Append(" ago");
             }
 
             return output.ToString();
@@ -66,23 +71,19 @@
 
             if (timeSpan.TotalDays >= 1)
             {
-                output.Append(string.Format("{0} day", (int)timeSpan.TotalDays));
-                output.Append(timeSpan.TotalDays != 1 ? "s" : string.Empty);
+                output.Append($"{(int)timeSpan.TotalDays} day{(Math.Abs(timeSpan.TotalSeconds - 1) > double.Epsilon ? "s" : string.Empty)}");
             }
-            else if(timeSpan.TotalHours >= 1)
+            else if (timeSpan.TotalHours >= 1)
             {
-                output.Append(string.Format("{0} hour", (int)timeSpan.TotalHours));
-                output.Append(timeSpan.TotalHours != 1 ? "s" : string.Empty);
+                output.Append($"{(int)timeSpan.TotalHours} hour{(Math.Abs(timeSpan.TotalSeconds - 1) > double.Epsilon ? "s" : string.Empty)}");
             }
             else if (timeSpan.TotalMinutes >= 1)
             {
-                output.Append(string.Format("{0} minute", (int)timeSpan.TotalMinutes));
-                output.Append(timeSpan.TotalMinutes != 1 ? "s" : string.Empty);
+                output.Append($"{(int)timeSpan.TotalMinutes} minute{(Math.Abs(timeSpan.TotalSeconds - 1) > double.Epsilon ? "s" : string.Empty)}");
             }
             else if (timeSpan.TotalSeconds >= 0)
             {
-                output.Append(string.Format("{0} second", (int)timeSpan.TotalSeconds));
-                output.Append(timeSpan.TotalSeconds != 1 ? "s" : string.Empty);
+                output.Append($"{(int)timeSpan.TotalSeconds} second{(Math.Abs(timeSpan.TotalSeconds - 1) > double.Epsilon ? "s" : string.Empty)}");
             }
             else
             {
