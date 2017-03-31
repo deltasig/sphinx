@@ -104,7 +104,7 @@
                                         <td>@s.Semester</td>
                                         @if (hasElevatedPermissions)
                                         {
-                                            var enrollmentInfo = new { uid = s.UserId, cid = s.ClassId, sid = s.SemesterId };
+                                            var enrollmentInfo = new { ctid = s.ClassTakenId };
                                             <td class="text-right">
                                                 <small>
                                                     <a href="@Url.Action("EditEnrollment", enrollmentInfo)">Edit</a> |
