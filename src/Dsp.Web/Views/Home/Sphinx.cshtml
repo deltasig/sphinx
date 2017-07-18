@@ -121,6 +121,17 @@
             Priority = NotificationPriority.Moderate
         });
     }
+    if (string.IsNullOrEmpty(Model.MemberInfo.AvatarPath))
+    {
+        notifications.Add(new Notification
+        {
+            Message = "Upload a profile picture!",
+            LinkText = "Go to Profile",
+            Link = Url.Action("Edit", "Account", new { userName = Model.MemberInfo.UserName, area = "Members" }),
+            Why = "Use your composite photo if you have it.",
+            Priority = NotificationPriority.Moderate
+        });
+    }
 }
 @Scripts.Render("~/bundles/moment")
 @Scripts.Render("~/bundles/mustache")
