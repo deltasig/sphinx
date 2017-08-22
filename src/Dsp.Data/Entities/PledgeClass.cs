@@ -11,11 +11,13 @@ namespace Dsp.Data.Entities
 
         public int SemesterId { get; set; }
 
+        [DataType(DataType.Date), Display(Name = "Pinning Date")]
         public DateTime? PinningDate { get; set; }
 
+        [DataType(DataType.Date), Display(Name = "Initiation Date")]
         public DateTime? InitiationDate { get; set; }
 
-        [Required, StringLength(50)]
+        [Required, StringLength(50), Display(Name = "Name")]
         public string PledgeClassName { get; set; }
 
         [InverseProperty("PledgeClass")] 
