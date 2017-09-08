@@ -22,6 +22,7 @@
         {
             foreach (var leader in list)
             {
+                var avatar = string.IsNullOrEmpty(leader.Member.AvatarPath) ? "NoAvatar.jpg" : leader.Member.AvatarPath;
                 var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
 
                 <div class="col-sm-3 text-center">
@@ -32,8 +33,7 @@
                         </div>
                         <div class="list-group-item">
                             <p>
-                                <img src="~/Images/Avatars/@(leader.Member.GetAvatarString())"
-                                     height="75" width="75" class="img-circle no-print" id="avatar" />
+                                <img src="~/Images/Avatars/@avatar" height="75" width="75" class="img-circle no-print" id="avatar" />
                             </p>
                             <p class="list-group-item-text">
                                 <a href="mailto:@leader.Member.Email">

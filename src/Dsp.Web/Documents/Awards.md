@@ -3,7 +3,7 @@
 #### Delta Sigma Phi Nationals
 
 - Pyramid of Excellence - The highest award given to undergraduate chapters for excellence in all areas of operation.
-  - 2010, 2011, 2012, 2013, 2014, 2016
+  - 2010, 2011, 2012, 2013, 2014, 2016, 2017
 - Chapter Distinction Award
   - 2015
 - Charles G. Bartell Outstanding Chapter Advisor Award - This award recognizes a Chapter Advisor or 
