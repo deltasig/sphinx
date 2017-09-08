@@ -1,4 +1,24 @@
-﻿### March 2017
+﻿### September 2017
+
+- Updated Awards
+- Changed the titles of the "Sobers and Socials" tabs on the sphinx page.
+- Fixed profile picture display bug.
+
+---
+
+### August 2017
+
+- Fixed bug with semester creation.
+
+---
+
+### July 2017
+
+- Changed the way the contacts page looks and added profile picture notifications.
+
+---
+
+### March 2017
 
 - Removed ability to cencel sober signups; tweaked layout; added button to single-click copy phone number (only works in newer browsers).
 - The social tab on the sphinx page now shows the number of upcoming social events since it's not selected by default.
