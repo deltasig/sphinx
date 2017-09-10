@@ -14,8 +14,10 @@
                 <img class="img-responsive pull-left" src="~/Images/MobileTouch-57x57.png" alt="DSP" width="35" style="margin-right:10px">
                 <h4>
                     @ViewBag.Title
-                    <small class="pull-right" data-toggle="tooltip" data-placement="top" title="Forgot password, locked out, etc.">
-                        <a href="mailto:dlefh7@mst.edu" class="social">
+                    <small class="pull-right" data-toggle="tooltip" data-placement="top" 
+                           title="Forgot password, locked out, etc.">
+                        <a href="@Url.Action("Contacts", "Home", new { area = "" })#web_master" 
+                           class="social">
                             <i class="fa fa-question-circle"></i> Help
                         </a>
                     </small>
