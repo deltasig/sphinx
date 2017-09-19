@@ -194,6 +194,10 @@
     <Compile Include="Migrations\201701131340141_RemovedBroQuest.Designer.cs">
       <DependentUpon>201701131340141_RemovedBroQuest.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201709120110388_MealToPeriodIndex.cs" />
+    <Compile Include="Migrations\201709120110388_MealToPeriodIndex.Designer.cs">
+      <DependentUpon>201709120110388_MealToPeriodIndex.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
     <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
@@ -271,6 +275,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201701131340141_RemovedBroQuest.resx">
       <DependentUpon>201701131340141_RemovedBroQuest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201709120110388_MealToPeriodIndex.resx">
+      <DependentUpon>201709120110388_MealToPeriodIndex.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
       <DependentUpon>201605251901557_Initial.cs</DependentUpon>
