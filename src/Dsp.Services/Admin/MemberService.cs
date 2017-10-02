@@ -81,12 +81,14 @@
         public async Task<IEnumerable<Member>> GetAlumniAsync(Semester semester)
         {
             return await _db.Users
-                .Where(m => (m.MemberStatus.StatusName == "Released" ||
+                .Where(m => (
+                    m.MemberStatus.StatusName == "Advisor" ||
+                    (m.MemberStatus.StatusName == "Released" ||
                     m.MemberStatus.StatusName == "Alumnus" ||
                     m.MemberStatus.StatusName == "Neophyte" ||
                     m.MemberStatus.StatusName == "Active" ||
                     m.MemberStatus.StatusName == "Pledge") &&
-                    m.GraduationSemester.DateEnd < semester.DateStart)
+                    m.GraduationSemester.DateEnd < semester.DateStart))
                 .OrderBy(m => m.LastName)
                 .ToListAsync();
         }
@@ -101,14 +103,14 @@
         {
             return await _db.Users
                 .Where(d =>
-                    d.LastName != "Hirtz" &&
-                    (d.MemberStatus.StatusName == "Released" ||
+                    d.MemberStatus.StatusName == "Advisor" ||
+                    ((d.MemberStatus.StatusName == "Released" ||
                     d.MemberStatus.StatusName == "Alumnus" ||
                     d.MemberStatus.StatusName == "Neophyte" ||
                     d.MemberStatus.StatusName == "Active" ||
                     d.MemberStatus.StatusName == "Pledge") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
-                    d.GraduationSemester.DateEnd > semester.DateStart)
+                    d.GraduationSemester.DateEnd > semester.DateStart))
                 .OrderBy(m => m.LastName)
                 .ToListAsync();
         }
