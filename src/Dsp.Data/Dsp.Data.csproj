@@ -59,7 +59,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ElmahDbContext.cs" />
     <Compile Include="Entities\Address.cs" />
     <Compile Include="Entities\Chore.cs" />
     <Compile Include="Entities\ChoreAssignment.cs" />
@@ -72,6 +71,7 @@
     <Compile Include="Entities\ClassFile.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Entities\Department.cs" />
+    <Compile Include="Entities\ElmahErrorLog.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\EmailType.cs" />
     <Compile Include="Entities\IncidentReport.cs" />
@@ -198,12 +198,11 @@
     <Compile Include="Migrations\201709120110388_MealToPeriodIndex.Designer.cs">
       <DependentUpon>201709120110388_MealToPeriodIndex.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Migrations\Elmah\201605251901557_Initial.cs" />
-    <Compile Include="Migrations\Elmah\201605251901557_Initial.Designer.cs">
-      <DependentUpon>201605251901557_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\201710212045585_ConsolidateElmahDb.cs" />
+    <Compile Include="Migrations\201710212045585_ConsolidateElmahDb.Designer.cs">
+      <DependentUpon>201710212045585_ConsolidateElmahDb.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Elmah\Configuration.cs" />
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
     <Compile Include="SphinxRoleStore.cs" />
@@ -279,8 +278,8 @@
     <EmbeddedResource Include="Migrations\201709120110388_MealToPeriodIndex.resx">
       <DependentUpon>201709120110388_MealToPeriodIndex.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\Elmah\201605251901557_Initial.resx">
-      <DependentUpon>201605251901557_Initial.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201710212045585_ConsolidateElmahDb.resx">
+      <DependentUpon>201710212045585_ConsolidateElmahDb.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,16 +1,13 @@
 ﻿namespace Dsp.Web.Controllers
 {
     using Data.Entities;
+    using Dsp.Services;
     using Extensions;
     using MarkdownSharp;
-    using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Data.Entity;
     using System.Linq;
-    using System.Net;
-    using System.Net.Mail;
-    using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.UI;
@@ -81,91 +78,24 @@
         [AllowAnonymous]
         public async Task<ActionResult> EmailSoberSchedule()
         {
-            var nowUtc = DateTime.UtcNow;
-            var nowCst = ConvertUtcToCst(nowUtc);
-
-            var type = await _db.EmailTypes.SingleOrDefaultAsync(e => e.Name == "Sober Schedule");
-            if (string.IsNullOrEmpty(type?.Destination))
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var emails = await _db.Emails
-                .Where(e =>
-                    e.EmailTypeId == type.EmailTypeId &&
-                    e.Destination == type.Destination)
-                .OrderByDescending(e => e.SentOn)
-                .ToListAsync();
-            var mostRecentEmail = emails.FirstOrDefault();
-
-            // Check if it has been over 24 hours since the last email.
-            var noPreviousEmail = mostRecentEmail == null || (nowUtc - mostRecentEmail.SentOn).TotalHours > 24;
-            // Check if the current time is between the arbitrary range.
-            var isTime = (nowCst.DayOfWeek == DayOfWeek.Friday &&
-                          nowCst.Hour >= 16 && nowCst.Hour < 19);
-            // If an admin or the sergeant is trying to manually send the email, just allow it.
-            var canOverride = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
-
-            // Don't send the email if conditions aren't right.
-            if ((!isTime || !noPreviousEmail) && !canOverride)
-            {
-                return Content("Time: " + isTime + ", Email: " + noPreviousEmail);
-            }
-
-            // Build Body
-            var data = await GetUpcomingSoberSignupsAsync(nowUtc);
-
-            if (!data.Any())
-            {
-                return Content("No sober signups found; no email sent.");
-            }
-
-            var body = RenderRazorViewToString("~/Views/Emails/SoberSchedule.cshtml", data);
-            var bytes = Encoding.Default.GetBytes(body);
-            body = Encoding.UTF8.GetString(bytes);
-
-            var message = new IdentityMessage
-            {
-                Subject = "Sober Schedule: " +
-                nowCst.ToShortDateString() + " - " + nowCst.AddDays(7).ToShortDateString(),
-                Body = body,
-                Destination = type.Destination
-            };
-
-            try
-            {
-                var emailService = new EmailService();
-                await emailService.SendTemplatedAsync(message);
-            }
-            catch (SmtpException e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
-            }
-
-            var email = new Email
-            {
-                SentOn = nowUtc,
-                EmailTypeId = type.EmailTypeId,
-                Destination = type.Destination,
-                Body = body
-            };
-
-            _db.Emails.Add(email);
-            await _db.SaveChangesAsync();
-
-            return Content("OK");
+            var isPermitted = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
+            var result = await EmailService.TryToSendSoberSchedule(new SoberService(_db), _db, isPermitted);
+            return Content(result);
         }
 
         [HttpGet]
         [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Sphinx()
         {
-            var nowCst = ConvertUtcToCst(DateTime.UtcNow);
+            var nowCst = DateTime.UtcNow.FromUtcToCst();
             var twoHoursAgoCst = nowCst.AddHours(-2);
             var member = await UserManager.FindByNameAsync(User.Identity.Name);
             var events = await GetAllCompletedEventsForUserAsync(member.Id);
             var thisSemester = await GetThisSemesterAsync();
             var lastSemester = await GetLastSemesterAsync();
+            var soberService = new SoberService(_db);
 
-            var thisWeeksSoberShifts = await GetUpcomingSoberSignupsAsync();
+            var thisWeeksSoberShifts = await soberService.GetUpcomingSoberSignupsAsync();
             var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
             var remainingDriverShifts = await _db.SoberSignups
                 .Where(s =>

@@ -1,12 +1,12 @@
 ﻿namespace Dsp.Web.Controllers
 {
     using Dsp.Data;
+    using Dsp.Data.Entities;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.IO;
     using System.Linq;
-    using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Xml;
@@ -22,7 +22,7 @@
         public async Task<ActionResult> Logs(int page = 1)
         {
             List<ElmahErrorLog> logs;
-            using (var db = new ElmahDbContext())
+            using (var db = new SphinxDbContext())
             {
                 const int pageSize = 10;
                 var logsCount = await db.Errors.CountAsync();
@@ -58,7 +58,7 @@
         public async Task<JsonResult> GetLogDetails(Guid id)
         {
             string data;
-            using (var db = new ElmahDbContext())
+            using (var db = new SphinxDbContext())
             {
                 var log = await db.Errors.FindAsync(id);
                 using (var reader = XmlReader.Create(new StringReader(log.AllXml)))
