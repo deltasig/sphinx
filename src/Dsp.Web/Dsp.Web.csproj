@@ -16,10 +16,10 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>true</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort>44301</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
-    <IISExpressUseClassicPipelineMode />
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -27,6 +27,7 @@
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>4193ea30</NuGetPackageImportStamp>
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,7 +42,7 @@
         <ObjectGroup Name="DefaultConnection-Deployment" Order="1" Enabled="False">
           <Destination Path="" />
           <Object Type="DbFullSql">
-            <PreSource Path="Data Source=%28LocalDb%29\v11.0%3bAttachDbFilename=|DataDirectory|\aspnet-DeltaSigmaPhiWebsite-20131123054730.mdf%3bInitial Catalog=aspnet-DeltaSigmaPhiWebsite-20131123054730%3bIntegrated Security=True" ScriptSchema="True" ScriptData="True" CopyAllFullTextCatalogs="False" DriDefaults="True" />
+            <PreSource Path="Data Source=TY-PC\SS16%3bData Source=TY-PC\SS16%3bInitial Catalog=DB_2139_dspdb%3bIntegrated Security=True" ScriptSchema="True" ScriptData="True" CopyAllFullTextCatalogs="False" DriDefaults="True" />
             <Source Path="obj\Debug\AutoScripts\DefaultConnection-Deployment_SchemaAndData.sql" Transacted="True" />
           </Object>
         </ObjectGroup>
@@ -70,9 +71,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="AWSSDK, Version=2.3.55.2, Culture=neutral, PublicKeyToken=9f476d3089b52be3, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.2.3.55.2\lib\net45\AWSSDK.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.3.18.2\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.S3.3.3.11.4\lib\net45\AWSSDK.S3.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.SimpleEmail, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.SimpleEmail.3.3.4.1\lib\net45\AWSSDK.SimpleEmail.dll</HintPath>
     </Reference>
     <Reference Include="Elmah, Version=1.2.14706.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -89,6 +95,12 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.17\lib\net45\Hangfire.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.17.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.17\lib\net45\Hangfire.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
@@ -150,6 +162,9 @@
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.10.0.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.10.0\lib\net45\RazorEngine.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -256,6 +271,7 @@
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
+    <Compile Include="Extensions\ApplicationPreload.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\FeedItem.cs" />
     <Compile Include="Areas\Laundry\Models\LaundrySchedule.cs" />
@@ -687,11 +703,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Documents\History.md" />
     <Content Include="Documents\Awards.md" />
-    <None Include="Properties\PublishProfiles\deltasig-de - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\deltasig-de - Web Deploy.pubxml" />
-    <None Include="Properties\PublishProfiles\deltasig-de.com - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - FTP.pubxml" />
-    <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy %282%29.pubxml" />
     <Content Include="Images\switch.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap-combobox.js" />
@@ -707,7 +719,7 @@
       <DependentUpon>Chart.js</DependentUpon>
     </Content>
     <Content Include="Scripts\bootstrap-select.js.map" />
-    <None Include="Properties\PublishProfiles\Local.pubxml" />
+    <None Include="Properties\PublishProfiles\DSP - AWS.pubxml" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.min.js" />
@@ -920,8 +932,6 @@
           <DevelopmentServerPort>12025</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost:44300</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>https://localhost:44300/</IISAppRootUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

@@ -88,9 +88,9 @@
             try
             {
                 var emailService = new EmailService();
-                await emailService.SendTemplatedAsync(message);
+                await emailService.SendAsync(message);
                 message.Destination = president.Member.Email;
-                await emailService.SendTemplatedAsync(message);
+                await emailService.SendAsync(message);
             }
             catch (SmtpException e)
             {

@@ -18,6 +18,7 @@
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
         public virtual DbSet<EmailType> EmailTypes { get; set; }
+        public virtual DbSet<ElmahErrorLog> Errors { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
         public virtual DbSet<Leader> Leaders { get; set; }
@@ -70,6 +71,8 @@
             modelBuilder.Entity<Leader>().HasKey(u => new { u.UserId, u.RoleId, u.SemesterId });
             modelBuilder.Entity<SphinxUserLogin>().ToTable("MemberLogins", "dbo");
             modelBuilder.Entity<SphinxUserClaim>().ToTable("MemberClaims", "dbo");
+
+            modelBuilder.Entity<ElmahErrorLog>().ToTable("ELMAH_Error");
         }
 
         public static SphinxDbContext Create()

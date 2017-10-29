@@ -57,8 +57,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Admin\SoberService.cs" />
     <Compile Include="Admin\MemberService.cs" />
     <Compile Include="Admin\PositionService.cs" />
+    <Compile Include="Interfaces\ISoberService.cs" />
     <Compile Include="Interfaces\IMemberService.cs" />
     <Compile Include="Interfaces\IPositionService.cs" />
     <Compile Include="Interfaces\ISemesterService.cs" />

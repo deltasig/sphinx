@@ -1,23 +1,8 @@
-﻿namespace Dsp.Data
+﻿namespace Dsp.Data.Entities
 {
     using System;
     using System.ComponentModel.DataAnnotations;
     using System.Data.Entity;
-
-    public class ElmahDbContext : DbContext
-    {
-        public ElmahDbContext() : base("Elmah")
-        {
-        }
-
-        public virtual DbSet<ElmahErrorLog> Errors { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<ElmahErrorLog>().ToTable("ELMAH_Error");
-        }
-    }
 
     public class ElmahErrorLog
     {

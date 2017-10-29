@@ -466,7 +466,7 @@
             try
             {
                 IAmazonS3 client;
-                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
                 {
                     var request = new PutObjectRequest()
                     {
@@ -521,7 +521,7 @@
                 var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
                 var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
                 IAmazonS3 client;
-                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
                 {
                     var request = new GetObjectRequest
                     {
@@ -581,7 +581,7 @@
                 var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
                 var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
                 IAmazonS3 client;
-                using (client = Amazon.AWSClientFactory.CreateAmazonS3Client(awsAccessKey, awsSecretKey))
+                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
                 {
                     var request = new DeleteObjectRequest
                     {

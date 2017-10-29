@@ -16,6 +16,18 @@ namespace Dsp.Services
             _db = db;
         }
 
+        public virtual DateTime ConvertUtcToCst(DateTime utc)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
+        }
+
+        public virtual DateTime ConvertCstToUtc(DateTime cst)
+        {
+            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+            return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
+        }
+
         public void Dispose()
         {
             _db.Dispose();

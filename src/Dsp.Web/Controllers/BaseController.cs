@@ -559,38 +559,6 @@
                 .ToList();
             return data;
         }
-        protected virtual async Task<List<SoberSignup>> GetUpcomingSoberSignupsAsync()
-        {
-            return await GetUpcomingSoberSignupsAsync(DateTime.UtcNow);
-        }
-        protected virtual async Task<List<SoberSignup>> GetUpcomingSoberSignupsAsync(DateTime date)
-        {
-            var dateCst = ConvertUtcToCst(date);
-            if(dateCst.Hour < 6) // Don't show next day until after 6am
-            {
-                date = date.AddDays(-1);
-            }
-
-            var startOfTodayCst = ConvertUtcToCst(date).Date;
-            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
-            var thisSemester = await GetThisSemesterAsync();
-            var futureSignups = await _db.SoberSignups
-                .Where(s => s.DateOfShift >= startOfTodayUtc &&
-                            s.DateOfShift <= thisSemester.DateEnd)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
-                .ToListAsync();
-            var data = new List<SoberSignup>();
-            for (int i = 0; i < futureSignups.Count; i++)
-            {
-                data.Add(futureSignups[i]);
-                if (i == futureSignups.Count - 1 || 
-                    (futureSignups[i].DateOfShift != futureSignups[i + 1].DateOfShift &&
-                    futureSignups[i].DateOfShift.AddDays(1) != futureSignups[i + 1].DateOfShift))
-                    break;
-            }
-            return data;
-        }
         protected virtual async Task<List<SoberSignup>> GetThisWeeksSoberSignupsAsync(DateTime now)
         {
             var nowUtc = now;
@@ -1141,7 +1109,7 @@
                 .OrderBy(s => s.DateStart)
                 .FirstOrDefaultAsync() ?? new Semester();
         }
-
+        
         public string RenderRazorViewToString(string viewName, object model)
         {
             ViewData.Model = model;
@@ -1156,7 +1124,7 @@
         }
 
         #region Messages
-        
+
         public enum SoberMessage
         {
             SignupSuccess,

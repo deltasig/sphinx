@@ -7,6 +7,7 @@
     using System.Web.Optimization;
     using System.Web.Routing;
     using Dsp.Data;
+    using Dsp.Web.Extensions;
 
     public class MvcApplication : HttpApplication
     {
@@ -18,6 +19,13 @@
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            HangfireBootstrapper.Instance.Start();
+        }
+
+        protected void Application_End()
+        {
+            HangfireBootstrapper.Instance.Stop();
         }
     }
 }

@@ -266,7 +266,7 @@
             try
             {
                 var emailService = new EmailService();
-                await emailService.SendTemplatedAsync(message);
+                await emailService.SendAsync(message);
             }
             catch (SmtpException e)
             {
