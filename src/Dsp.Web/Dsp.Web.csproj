@@ -266,6 +266,7 @@
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
+    <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />

@@ -7,7 +7,7 @@ namespace Dsp.Data.Entities
     public class IncidentReport
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IncidentId { get; set; }
+        public int Id { get; set; }
 
         [Display(Name = "Submitted On")]
         public DateTime DateTimeSubmitted { get; set; }
@@ -22,6 +22,9 @@ namespace Dsp.Data.Entities
 
         [Required, DataType(DataType.MultilineText), StringLength(1500), Display(Name = "Incident Description")]
         public string Description { get; set; }
+
+        [Required, DataType(DataType.MultilineText), StringLength(3000), Display(Name = "Investigation Notes")]
+        public string InvestigationNotes { get; set; }
 
         [DataType(DataType.MultilineText), StringLength(1500), Display(Name = "Official Report")]
         public string OfficialReport { get; set; }

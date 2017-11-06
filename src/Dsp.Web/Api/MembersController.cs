@@ -297,7 +297,7 @@
                 TimeSince = (nowUtc - s.DateTimeSubmitted).ToUserFriendlyString(),
                 OccurredOn = s.DateTimeSubmitted,
                 DisplayText = "New incident report submitted",
-                Link = $"/members/incidents/details?id={s.IncidentId}",
+                Link = $"/members/incidents/details?id={s.Id}",
                 Symbol = "fa-exclamation-triangle"
             }));
 
