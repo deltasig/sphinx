@@ -11,6 +11,8 @@
     using System.Net.Mail;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Security;
+    using System.Linq;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
@@ -42,7 +44,15 @@
             {
                 return HttpNotFound();
             }
-            return View(incidentReport);
+            var eBoardRoles = await _db.Roles.Where(m => m.IsExecutive).Select(e => e.Name).ToListAsync();
+            var userRoles = Roles.GetRolesForUser(User.Identity.Name).ToList();
+            var model = new IncidentReportDetailsModel();
+            model.Report = incidentReport;
+            model.CanEditReport = userRoles.Contains("Administrator") || userRoles.Contains("Sergeant-at-Arms") || userRoles.Contains("President");
+            model.CanViewOriginalReport = model.CanEditReport; // Could change in the future
+            model.CanViewInvestigationNotes = eBoardRoles.Intersect(userRoles).Any();
+
+            return View(model);
         }
 
         public ActionResult Submit()

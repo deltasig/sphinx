@@ -202,6 +202,10 @@
     <Compile Include="Migrations\201710212045585_ConsolidateElmahDb.Designer.cs">
       <DependentUpon>201710212045585_ConsolidateElmahDb.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201711060219354_ExpandedIncidentReport.cs" />
+    <Compile Include="Migrations\201711060219354_ExpandedIncidentReport.Designer.cs">
+      <DependentUpon>201711060219354_ExpandedIncidentReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -280,6 +284,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201710212045585_ConsolidateElmahDb.resx">
       <DependentUpon>201710212045585_ConsolidateElmahDb.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201711060219354_ExpandedIncidentReport.resx">
+      <DependentUpon>201711060219354_ExpandedIncidentReport.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
