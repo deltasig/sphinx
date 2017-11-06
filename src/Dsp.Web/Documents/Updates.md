@@ -1,6 +1,17 @@
-﻿### September 2017
+﻿### November 2017
 
-- Updated Awards
+- Expanded Incident Reports to include investigation notes visible to Executive Board members.
+
+### October 2017
+
+- Migrated website to new host: Amazon Web Services.
+- Allowed Affiliates could not be assigned to leadership positions.
+
+---
+
+### September 2017
+
+- Updated Awards.
 - Changed the titles of the "Sobers and Socials" tabs on the sphinx page.
 - Fixed profile picture display bug.
 
