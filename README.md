@@ -24,17 +24,14 @@ After you've installed everything, cloned the repo, and built the solution, open
 
 ~~~ sh
 PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext -ProjectName Dsp.Data
-PM> Enable-Migrations -ContextTypeName Dsp.Data.ElmahDbContext -ProjectName Dsp.Data
 PM> Add-Migration -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data <NAME>
-PM> Add-Migration -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration -ProjectName Dsp.Data <NAME>
 PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data
-PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Elmah.Configuration -ProjectName Dsp.Data
 ~~~
 
-There are two database configurations: (1) one for fraternity-related data and (2) one for the Elmah error log data.
-
-Entity Framework makes use of something called *migrations* to keep track of every change made to the database schema.
-The first two commands simply turn on migrations and then the last two commands create both databases based on the migration history.
+Entity Framework *migrations* exist to keep track of every change made to the database schema over time.
+The first command simply turns on the ability to use migrations.
+The second command creates a new migration based on anything that has changed since the previous migration.
+The third command actually updates your local database by applying any unapplied migrations.
 
 Contact Ty if you get stuck.
 
