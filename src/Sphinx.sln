@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Services", "Dsp.Service
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Tests", "Dsp.Tests\Dsp.Tests.csproj", "{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Core", "Dsp.Core\Dsp.Core.csproj", "{B7123765-8C69-4B7D-B39C-C38ACC89D911}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Repositories", "Dsp.Repositories\Dsp.Repositories.csproj", "{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B7123765-8C69-4B7D-B39C-C38ACC89D911}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B7123765-8C69-4B7D-B39C-C38ACC89D911}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B7123765-8C69-4B7D-B39C-C38ACC89D911}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B7123765-8C69-4B7D-B39C-C38ACC89D911}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

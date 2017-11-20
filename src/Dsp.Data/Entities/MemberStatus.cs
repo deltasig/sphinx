@@ -10,7 +10,7 @@ namespace Dsp.Data.Entities
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int StatusId { get; set; }
 
-        [Required, StringLength(50)]
+        [Required, StringLength(50), DataType(DataType.Text), Display(Name = "Name")]
         public string StatusName { get; set; }
 
         [InverseProperty("MemberStatus")]
