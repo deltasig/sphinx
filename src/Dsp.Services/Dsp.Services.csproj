@@ -57,22 +57,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\SoberService.cs" />
-    <Compile Include="Admin\MemberService.cs" />
-    <Compile Include="Admin\PositionService.cs" />
+    <Compile Include="Interfaces\IStatusService.cs" />
+    <Compile Include="Services\StatusService.cs" />
+    <Compile Include="Services\SoberService.cs" />
+    <Compile Include="Services\MemberService.cs" />
+    <Compile Include="Services\PositionService.cs" />
     <Compile Include="Interfaces\ISoberService.cs" />
     <Compile Include="Interfaces\IMemberService.cs" />
     <Compile Include="Interfaces\IPositionService.cs" />
     <Compile Include="Interfaces\ISemesterService.cs" />
-    <Compile Include="Admin\SemesterService.cs" />
-    <Compile Include="BaseService.cs" />
-    <Compile Include="IService.cs" />
+    <Compile Include="Services\SemesterService.cs" />
+    <Compile Include="Services\BaseService.cs" />
+    <Compile Include="Interfaces\IService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj">
       <Project>{9ce07462-20a3-4ee6-8797-7ea69e05acb8}</Project>
       <Name>Dsp.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Dsp.Repositories\Dsp.Repositories.csproj">
+      <Project>{00cf890e-d0b7-45d9-aa1c-73d57cebccff}</Project>
+      <Name>Dsp.Repositories</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

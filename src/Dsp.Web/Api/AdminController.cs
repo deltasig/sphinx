@@ -2,15 +2,11 @@
 {
     using Data;
     using Data.Entities;
-    using Extensions;
-    using Services.Admin;
+    using Services;
     using Services.Interfaces;
     using System;
-    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Description;
@@ -77,7 +73,7 @@
             {
                 await _positionService.AppointMemberToPositionAsync(app.UserId, app.RoleId, app.SemesterId);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return BadRequest("Appointment failed. Check if someone is already appointed and remove them first.");
             }

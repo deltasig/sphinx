@@ -3,21 +3,18 @@
     using Data;
     using Data.Entities;
     using Extensions;
-    using Services.Admin;
+    using Microsoft.AspNet.Identity;
+    using Models;
+    using Services;
     using Services.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
-    using System.Net;
-    using System.Net.Http;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Http.Description;
     using System.Web.Mvc;
     using System.Web.UI;
-    using Models;
-    using Microsoft.AspNet.Identity;
 
     [System.Web.Http.Authorize]
     [System.Web.Http.RoutePrefix("api/members")]
@@ -175,7 +172,7 @@
                         Name = saa.ToString(),
                         ImageName = saa.GetAvatarString(),
                         TimeSince = (nowUtc - (g.First().CreatedOn ?? nowUtc)).ToUserFriendlyString(),
-                        OccurredOn =  g.First().CreatedOn ?? nowUtc,
+                        OccurredOn = g.First().CreatedOn ?? nowUtc,
                         DisplayText = count + " sober shifts added",
                         Link = "/sobers/schedule",
                         Symbol = "fa-car"

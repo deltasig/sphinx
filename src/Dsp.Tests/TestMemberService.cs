@@ -2,16 +2,16 @@
 {
     using Data;
     using Data.Entities;
+    using Dsp.Services;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using Services.Admin;
+    using Services.Interfaces;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     using System.Linq;
     using System.Threading.Tasks;
-    using Services.Interfaces;
 
     [TestClass]
     public class TestMemberService
@@ -101,7 +101,7 @@
 
             _memberService = new MemberService(mockContext.Object);
         }
-        
+
         [TestMethod]
         public async Task MemberService_GetMemberByIdAsync_Found()
         {
