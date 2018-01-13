@@ -95,7 +95,7 @@
             var lastSemester = await GetLastSemesterAsync();
             var soberService = new SoberService(_db);
 
-            var thisWeeksSoberShifts = await soberService.GetUpcomingSoberSignupsAsync();
+            var thisWeeksSoberShifts = await soberService.GetUpcomingSignupsAsync();
             var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
             var remainingDriverShifts = await _db.SoberSignups
                 .Where(s =>

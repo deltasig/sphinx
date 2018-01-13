@@ -87,7 +87,7 @@
             }
 
             // Build Body
-            var data = await soberService.GetUpcomingSoberSignupsAsync(nowUtc);
+            var data = await soberService.GetUpcomingSignupsAsync(nowUtc);
 
             if (!data.Any())
             {

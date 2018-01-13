@@ -4,6 +4,7 @@
     using Dsp.Data;
     using Dsp.Data.Entities;
     using Extensions;
+    using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using System;
     using System.Collections.Generic;
@@ -15,7 +16,6 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
-    using Microsoft.AspNet.Identity;
 
     public class BaseController : Controller
     {
@@ -26,7 +26,7 @@
         protected ApplicationUserManager _userManager;
         protected ApplicationRoleManager _roleManager;
         protected readonly SphinxDbContext _db = new SphinxDbContext();
-        
+
         public BaseController()
         {
         }
@@ -70,7 +70,7 @@
                 _roleManager = value;
             }
         }
-        
+
         protected virtual async Task<List<Member>> GetAllActiveMembersAsync()
         {
             return await _db.Users.Where(m => m.MemberStatus.StatusName == "Active").ToListAsync();
@@ -97,8 +97,8 @@
                 .Where(d =>
                     d.LastName != "Hirtz" &&
                     (d.MemberStatus.StatusName == "Alumnus" ||
-                    d.MemberStatus.StatusName == "Active" || 
-                    d.MemberStatus.StatusName == "Pledge" || 
+                    d.MemberStatus.StatusName == "Active" ||
+                    d.MemberStatus.StatusName == "Pledge" ||
                     d.MemberStatus.StatusName == "Neophyte") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                     d.GraduationSemester.DateEnd > semester.DateStart)
@@ -315,7 +315,7 @@
                 newList.Add(new
                 {
                     UserId = member.Id,
-                    Name = member.FirstName + " " + member.LastName 
+                    Name = member.FirstName + " " + member.LastName
                 });
             }
             return new SelectList(newList, "UserId", "Name");
@@ -341,7 +341,7 @@
                 .ToListAsync();
             var semesterIds = thisAndPreviousSemesters.Select(s => (int?)s.SemesterId);
             var members = UserManager.Users
-                .Where(m => 
+                .Where(m =>
                     (m.ExpectedGraduationId == null || semesterIds.Contains(m.ExpectedGraduationId))
                     && m.MemberStatus.StatusName == "Active")
                 .OrderBy(m => m.LastName);
@@ -431,7 +431,7 @@
                 .OrderBy(s => s.DateStart)
                 .ToListAsync();
 
-            
+
 
             var recentAppointsments = new List<Leader>();
 
@@ -448,8 +448,8 @@
             try
             {
                 var serviceHours = await _db.ServiceHours
-                    .Where(h => h.Member.Id == userId && 
-                                h.Event.DateTimeOccurred > lastSemester.DateEnd && 
+                    .Where(h => h.Member.Id == userId &&
+                                h.Event.DateTimeOccurred > lastSemester.DateEnd &&
                                 h.Event.DateTimeOccurred <= currentSemester.DateEnd)
                     .ToListAsync();
                 if (serviceHours.Any())
@@ -469,8 +469,8 @@
             var thisSemester = await GetThisSemesterAsync();
 
             var events = await _db.ServiceEvents
-                .Where(e => 
-                    e.DateTimeOccurred > lastSemester.DateEnd && 
+                .Where(e =>
+                    e.DateTimeOccurred > lastSemester.DateEnd &&
                     e.DateTimeOccurred <= thisSemester.DateEnd)
                 .OrderByDescending(o => o.DateTimeOccurred)
                 .ToListAsync();
@@ -520,8 +520,8 @@
             var lastSemester = await GetLastSemesterAsync();
 
             return await _db.ServiceHours
-                .Where(e => e.UserId == userId && 
-                            e.Event.DateTimeOccurred > lastSemester.DateEnd && 
+                .Where(e => e.UserId == userId &&
+                            e.Event.DateTimeOccurred > lastSemester.DateEnd &&
                             e.Event.DateTimeOccurred <= thisSemester.DateEnd)
                 .ToListAsync();
         }
@@ -534,8 +534,8 @@
                 .Last();
 
             return await _db.SoberSignups
-                .Where(s => s.UserId == userId && 
-                            s.DateOfShift > previousSemester.DateEnd && 
+                .Where(s => s.UserId == userId &&
+                            s.DateOfShift > previousSemester.DateEnd &&
                             s.DateOfShift <= semester.DateEnd)
                 .ToListAsync();
         }
@@ -655,9 +655,9 @@
         {
             var gradeList = new List<string> { "", "A", "B", "C", "D", "F", "I", "S", "U" };
             var list = new List<object>();
-            foreach(var g in gradeList)
+            foreach (var g in gradeList)
             {
-                list.Add(new { Value = g, Text = g } );
+                list.Add(new { Value = g, Text = g });
             }
             return list;
         }
@@ -750,22 +750,8 @@
             }
             return new SelectList(newList, "MealId", "Text");
         }
-        protected virtual async Task<SelectList> GetSoberTypesSelectList()
-        {
-            var list = await _db.SoberTypes.ToListAsync();
-            var newList = new List<object>();
-            foreach (var m in list)
-            {
-                newList.Add(new
-                {
-                    m.SoberTypeId,
-                    Text = m.Name
-                });
-            }
-            return new SelectList(newList, "SoberTypeId", "Text");
-        }
         protected virtual IEnumerable<WorkOrder> GetFilteredWorkOrderList(
-            IList<WorkOrder> workOrders, 
+            IList<WorkOrder> workOrders,
             string s, string sort, int page, bool open, bool closed, int pageSize = 10)
         {
             var filterResults = new List<WorkOrder>();
@@ -921,18 +907,18 @@
             switch (select)
             {
                 case "me-all":
-                    filterResults = classes.Where(c => 
+                    filterResults = classes.Where(c =>
                         c.ClassesTaken.Any(t => t.UserId == userId)).ToList();
                     break;
                 case "me-now":
-                    filterResults = classes.Where(c => 
-                        c.ClassesTaken.Any(t => 
-                            t.UserId == userId && 
+                    filterResults = classes.Where(c =>
+                        c.ClassesTaken.Any(t =>
+                            t.UserId == userId &&
                             t.SemesterId == thisSemester.SemesterId &&
                             !t.IsSummerClass)).ToList();
                     break;
                 case "being-taken":
-                    filterResults = classes.Where(c => 
+                    filterResults = classes.Where(c =>
                         c.ClassesTaken.Any(t => t.SemesterId == thisSemester.SemesterId)).ToList();
                     break;
                 case "none-taking":
@@ -1017,8 +1003,8 @@
             IList<Member> members, string s, string sort, string order)
         {
             IEnumerable<Member> filteredResults;
-            
-            if(!string.IsNullOrEmpty(s))
+
+            if (!string.IsNullOrEmpty(s))
             {
                 var lcs = s.ToLower();
                 filteredResults = members
@@ -1071,7 +1057,7 @@
             var formattedText = string.Empty;
 
             var words = original.Split(' ');
-            for(var i = 0; i < words.Length; i++)
+            for (var i = 0; i < words.Length; i++)
             {
                 if (!IsAllUpper(words[i]) && !Char.IsNumber(words[i][0]))
                 {
@@ -1109,7 +1095,7 @@
                 .OrderBy(s => s.DateStart)
                 .FirstOrDefaultAsync() ?? new Semester();
         }
-        
+
         public string RenderRazorViewToString(string viewName, object model)
         {
             ViewData.Model = model;
@@ -1139,6 +1125,7 @@
             EditSignupFailure,
             SignupPledgeOfficerFailure,
             DeleteSignupSuccess,
+            MultiAddSignupNoDatesFailure,
         }
         public void SetSoberMessage(SoberMessage? message)
         {
@@ -1170,6 +1157,9 @@
                     break;
                 case SoberMessage.MultiAddSignupFailure:
                     ViewBag.FailMessage = "Multi-add tool failed because no amounts or dates were provided.";
+                    break;
+                case SoberMessage.MultiAddSignupNoDatesFailure:
+                    ViewBag.FailMessage = "Multi-add tool failed because no dates were provided.";
                     break;
                 case SoberMessage.MultiAddSignupMissingTypesFailure:
                     ViewBag.FailMessage = "There was an error with the multi-add tool.  " +
