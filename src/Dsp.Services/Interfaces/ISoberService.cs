@@ -7,8 +7,21 @@
 
     public interface ISoberService
     {
-        Task<IEnumerable<SoberSignup>> GetUpcomingSoberSignupsAsync();
+        Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync();
+        Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync(DateTime date);
+        Task<IEnumerable<SoberSignup>> GetAllFutureSignupsAsync();
+        Task<IEnumerable<SoberSignup>> GetAllFutureSignupsAsync(DateTime start);
+        Task<IEnumerable<SoberSignup>> GetFutureVacantSignups();
+        Task<IEnumerable<SoberType>> GetTypesAsync();
 
-        Task<IEnumerable<SoberSignup>> GetUpcomingSoberSignupsAsync(DateTime date);
+        Task AddSignupAsync(SoberSignup signup);
+        Task AddSignupsAsync(IEnumerable<SoberSignup> signups);
+        Task AddTypeAsync(SoberType type);
+
+        Task UpdateSignupAsync(SoberSignup signup);
+        Task UpdateTypeAsync(SoberType type);
+
+        Task DeleteSignupAsync(int id);
+        Task DeleteTypeAsync(int id);
     }
 }
