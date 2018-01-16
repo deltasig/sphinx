@@ -104,7 +104,8 @@
                 var signups = new List<SoberSignup>();
                 foreach (var s in dateStrings)
                 {
-                    var parsed = DateTime.TryParse(s, out DateTime date);
+                    DateTime date;
+                    var parsed = DateTime.TryParse(s, out date);
                     if (!parsed) continue;
                     var utcDate = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Utc);
                     var cstDate = ConvertUtcToCst(utcDate);

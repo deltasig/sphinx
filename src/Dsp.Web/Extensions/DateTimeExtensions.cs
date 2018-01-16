@@ -64,7 +64,7 @@
                     return "th";
             }
         }
-        
+
         public static DateTime FromUtcToCst(this DateTime utc)
         {
             return ConvertFromUtc(utc, "Central Standard Time");

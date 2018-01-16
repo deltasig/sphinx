@@ -16,9 +16,11 @@
         public virtual DbSet<ClassFile> ClassFiles { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
+        public virtual DbSet<Donation> Donations { get; set; }
         public virtual DbSet<Email> Emails { get; set; }
         public virtual DbSet<EmailType> EmailTypes { get; set; }
         public virtual DbSet<ElmahErrorLog> Errors { get; set; }
+        public virtual DbSet<Fundraiser> Fundraisers { get; set; }
         public virtual DbSet<IncidentReport> IncidentReports { get; set; }
         public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
         public virtual DbSet<Leader> Leaders { get; set; }
@@ -33,6 +35,7 @@
         public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
         public virtual DbSet<MealVote> MealVotes { get; set; }
         public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
+        public virtual DbSet<Cause> Philanthropies { get; set; }
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
         public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
         public virtual DbSet<Room> Rooms { get; set; }

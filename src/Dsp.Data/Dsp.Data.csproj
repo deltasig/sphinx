@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Fundraiser.cs" />
+    <Compile Include="Entities\Cause.cs" />
+    <Compile Include="Entities\Donation.cs" />
     <Compile Include="Entities\Address.cs" />
     <Compile Include="Entities\Chore.cs" />
     <Compile Include="Entities\ChoreAssignment.cs" />
@@ -206,6 +209,18 @@
     <Compile Include="Migrations\201711060219354_ExpandedIncidentReport.Designer.cs">
       <DependentUpon>201711060219354_ExpandedIncidentReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801140018352_Philanthropy.cs" />
+    <Compile Include="Migrations\201801140018352_Philanthropy.Designer.cs">
+      <DependentUpon>201801140018352_Philanthropy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801150053109_Philanthropy2.cs" />
+    <Compile Include="Migrations\201801150053109_Philanthropy2.Designer.cs">
+      <DependentUpon>201801150053109_Philanthropy2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801160331190_Philanthropy3.cs" />
+    <Compile Include="Migrations\201801160331190_Philanthropy3.Designer.cs">
+      <DependentUpon>201801160331190_Philanthropy3.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -287,6 +302,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201711060219354_ExpandedIncidentReport.resx">
       <DependentUpon>201711060219354_ExpandedIncidentReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801140018352_Philanthropy.resx">
+      <DependentUpon>201801140018352_Philanthropy.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801150053109_Philanthropy2.resx">
+      <DependentUpon>201801150053109_Philanthropy2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801160331190_Philanthropy3.resx">
+      <DependentUpon>201801160331190_Philanthropy3.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

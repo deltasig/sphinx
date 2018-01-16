@@ -75,6 +75,11 @@
                         <i class="fa fa-fw fa-globe"></i> Service
                     </a>
                 </li>
+                <li class="@(ViewBag.Title.Contains("Cause") || ViewBag.Title.Contains("Fundraiser") || ViewBag.Title.Contains("Donation") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Causes", new { area = "Treasury" })">
+                        <i class="fa fa-fw fa-money"></i> Causes
+                    </a>
+                </li>
                 <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
                     <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
                         <i class="fa fa-fw fa-institution"></i> Classes

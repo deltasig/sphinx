@@ -269,10 +269,15 @@
     <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Treasury\Controllers\DonationsController.cs" />
+    <Compile Include="Areas\Treasury\Controllers\FundraisersController.cs" />
+    <Compile Include="Areas\Treasury\Controllers\CausesController.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddEventAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAddHourAmendmentModel.cs" />
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
+    <Compile Include="Areas\Treasury\TreasuryAreaRegistration.cs" />
     <Compile Include="Extensions\ApplicationPreload.cs" />
+    <Compile Include="Models\DonationModel.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\FeedItem.cs" />
     <Compile Include="Areas\Laundry\Models\LaundrySchedule.cs" />
@@ -687,6 +692,20 @@
     <Content Include="Areas\Laundry\Views\web.config" />
     <Content Include="Areas\Sobers\Views\Schedule\SignupConfirmation.cshtml" />
     <Content Include="bower.json" />
+    <Content Include="Areas\Treasury\Views\Fundraisers\Create.cshtml" />
+    <Content Include="Areas\Treasury\Views\Fundraisers\Delete.cshtml" />
+    <Content Include="Areas\Treasury\Views\Fundraisers\Details.cshtml" />
+    <Content Include="Areas\Treasury\Views\Fundraisers\Edit.cshtml" />
+    <Content Include="Areas\Treasury\Views\Causes\Edit.cshtml" />
+    <Content Include="Areas\Treasury\Views\Causes\Create.cshtml" />
+    <Content Include="Areas\Treasury\Views\Causes\Delete.cshtml" />
+    <Content Include="Areas\Treasury\Views\Causes\Details.cshtml" />
+    <Content Include="Areas\Treasury\Views\Causes\Index.cshtml" />
+    <Content Include="Areas\Treasury\Views\Donations\Create.cshtml" />
+    <Content Include="Areas\Treasury\Views\Donations\Delete.cshtml" />
+    <Content Include="Areas\Treasury\Views\Donations\Details.cshtml" />
+    <Content Include="Areas\Treasury\Views\Donations\Edit.cshtml" />
+    <Content Include="Areas\Treasury\Views\web.config" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -883,6 +902,8 @@
     <Content Include="Views\Home\Updates.cshtml" />
     <Content Include="Documents\Updates.md" />
     <Content Include="Views\Shared\_LayoutInternal.cshtml" />
+    <Content Include="Views\Home\Donate.cshtml" />
+    <Content Include="Views\Home\DonationConfirmation.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -900,6 +921,8 @@
     <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />
     <Folder Include="Areas\Sobers\Views\Shared\" />
+    <Folder Include="Areas\Treasury\Models\" />
+    <Folder Include="Areas\Treasury\Views\Shared\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj">

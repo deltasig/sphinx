@@ -1,0 +1,98 @@
+﻿@model Dsp.Data.Entities.Fundraiser
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Edit Fundraiser";
+}
+@section styles {
+    @Styles.Render("~/content/datetimepicker")
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-12">
+            <p>
+                <a href="@Url.Action("Details", "Causes",  new { id = Model.CauseId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Cause
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.Id)
+                @Html.HiddenFor(m => m.CauseId)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BeginsOn, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group date">
+                        @Html.EditorFor(m => m.BeginsOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.BeginsOn, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.EndsOn, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group date">
+                        @Html.EditorFor(m => m.EndsOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.EndsOn, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Goal, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Goal, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Goal, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        </div>
+        <div class="col-sm-6">
+            <div class="alert alert-warning">
+                <strong>Begins/ Ends</strong>
+                <hr />
+                <p>
+                    If the fundraiser is an ever-constant fundraiser, then it does not have a real beginning or end date.
+                    Therefore, you can and should leave those fields blank.
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Goal</strong>
+                <hr />
+                <p>
+                    Sometimes a fundraiser has a target amount in mind, in which case you can and should specify it in the goal field.
+                    If the fundraiser has no goal, set the goal to zero.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/datetimepicker")
+    <script type="text/javascript">
+        
+        $(function() {
+            $('.date').datetimepicker();
+        });
+
+    </script>
+}

@@ -1,0 +1,73 @@
+﻿@model Dsp.Data.Entities.Donation
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Donation Confirmation";
+}
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12">
+            <h2 class="text-success">
+                @Model.FirstName, thank you for your pledge!
+            </h2>
+            <p>
+                You pledged @Model.Amount.ToString("C2") to the @Model.Fundraiser.Name fundraiser. <br/>
+                @if (Model.Fundraiser.EndsOn != null)
+                {
+                    <span>
+                        The fundraiser ends on @Model.Fundraiser.EndsOn.Value.ToShortDateString() at
+                        @Model.Fundraiser.EndsOn.Value.ToShortTimeString(), so we will contact you
+                        shortly after that via
+                        @if (!string.IsNullOrEmpty(Model.PhoneNumber) && !string.IsNullOrEmpty(Model.PhoneNumber))
+                        {
+                            @: phone (@Model.PhoneNumber) and email (@Model.Email) since you provided both.
+                        }
+                        else if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                        {
+                            @: phone (@Model.PhoneNumber) since that is all you provided.
+                        }
+                        else if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            @: email (@Model.Email) since that is all you provided.
+                        }
+                        else
+                        {
+                            @: some mystical means.
+                        }
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        The fundraiser does not end, so we will be in contact with you soon.
+                        Expect contact via
+                        @if (!string.IsNullOrEmpty(Model.PhoneNumber) && !string.IsNullOrEmpty(Model.PhoneNumber))
+                        {
+                            @: phone (@Model.PhoneNumber) and email (@Model.Email) since you provided both.
+                        }
+                        else if (!string.IsNullOrEmpty(Model.PhoneNumber))
+                        {
+                            @: phone (@Model.PhoneNumber) since that is all you provided.
+                        }
+                        else if (!string.IsNullOrEmpty(Model.Email))
+                        {
+                            @: email (@Model.Email) since that is all you provided.
+                        }
+                        else
+                        {
+                            @: some mystical means.
+                        }
+                    </span>
+                }
+            </p>
+            <p>
+                Thank you again, <br/>
+                <em class="lead">The Gentlemen of Delta Sigma Phi, Delta Epsilon Chapter</em>
+            </p>
+        </div>
+    </div>
+</div>
