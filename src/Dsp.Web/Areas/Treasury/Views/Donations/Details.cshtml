@@ -1,0 +1,47 @@
+﻿@model Dsp.Data.Entities.Donation
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Donation Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <p>
+                <a href="@Url.Action("Details", "Fundraisers",  new { id = Model.FundraiserId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Fundraiser
+                </a>
+            </p>
+        </div>
+        <div class="col-md-3 text-right">
+            <p>
+                <a href="@Url.Action("Edit", "Donations", new { id = Model.Id })" class="btn btn-sm btn-info">
+                    Edit
+                </a>
+                <a href="@Url.Action("Delete", "Donations", new { id = Model.Id })" class="btn btn-sm btn-danger">
+                    Delete
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.FirstName)</dt>
+                    <dd>@Html.DisplayFor(model => model.FirstName)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.LastName)</dt>
+                    <dd>@Html.DisplayFor(model => model.LastName)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Email)</dt>
+                    <dd>@Html.DisplayFor(model => model.Email)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.PhoneNumber)</dt>
+                    <dd>@Html.DisplayFor(model => model.PhoneNumber)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.ReceivedOn)</dt>
+                    <dd>@Html.DisplayFor(model => model.ReceivedOn)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.Amount)</dt>
+                    <dd>@Model.Amount.ToString("C2")</dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

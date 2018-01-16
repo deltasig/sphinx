@@ -1,0 +1,29 @@
+﻿@model IEnumerable<Dsp.Data.Entities.Cause>
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Causes";
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-sm-6 text-right">
+            <p>
+                <a href="@Url.Action("Create")" class="btn btn-sm btn-success">Create New Cause</a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    @foreach(var p in Model)
+                    {
+                        <a href="@Url.Action("Details", new { id = p.Id })" class="list-group-item">
+                            @p.Name
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

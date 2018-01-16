@@ -1,0 +1,138 @@
+﻿@model Dsp.Web.Models.DonationPledgeModel
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Donate";
+}
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+@section AdditionalMeta {
+    <meta name="description" content="Donate to us or one of our fundraisers." >
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="text-success">Donate Now...</h1>
+            <h3>Via PayPal</h3>
+            <p>
+                If you know that you'd like to make a donation here and now, click the donate button below.
+            </p>
+            <div class="text-center" style="margin-top: 30px; margin-bottom: 30px">
+                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                    <input type="hidden" name="cmd" value="_s-xclick">
+                    <input type="hidden" name="hosted_button_id" value="VFAAQL4FT27ES">
+                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" 
+                           border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                </form>
+            </div>
+            <p>
+                If you're donating to a specific cause, please let us know which one by including
+                its name in the "special instructions" field of the PayPal form.
+            </p>
+            <h3>Via Check</h3>
+            <p>
+                If you would prefer to write a check, please make the check out to:
+            </p>
+            <p class="text-center">
+                Delta Sigma Phi, Delta Epsilon Chapter <br/>
+                Memo: <code>please specify a cause</code>
+            </p>
+            <p>
+                Then, mail the check to:
+                <address class="text-center">
+                    DSP Treasurer<br>
+                    215 W 8th St<br>
+                    Rolla, MO 65401<br>
+                </address>
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h1>... Or Make a Pledge</h1>
+            <p class="">
+                With this form you can make a pledge to a particular fundraiser.
+                When the fundraiser ends, we will send you a reminder to come back and make your donation.
+            </p>
+            @using (Html.BeginForm())
+            {
+                @Html.ValidationSummary(true, "Whoopsidaisies!", new { @class = "text-danger" })
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.FundraiserId)
+                    @Html.DropDownListFor(m => m.FundraiserId, Model.Fundraisers,
+                        new { @class = "form-control selectpicker", autocomplete = "off", id = "events-dd", data_live_search = "true" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-user"></span>
+                        </span>
+                        @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </span>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PhoneNumber, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-phone"></span>
+                        </span>
+                        @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Amount, htmlAttributes: new { @class = "control-label" })
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-usd"></span>
+                        </span>
+                        @Html.EditorFor(model => model.Amount, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.Amount, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group text-center">
+                    <input type="submit" value="Submit" class="btn btn-success btn-lg btn-block" />
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <hr/>
+            <h2 class="text-success">
+                Your contributions are appreciated, thank you!
+            </h2>
+        </div>
+    </div>
+</div>

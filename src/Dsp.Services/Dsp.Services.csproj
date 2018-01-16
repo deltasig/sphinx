@@ -57,7 +57,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\ITreasuryService.cs" />
     <Compile Include="Interfaces\IStatusService.cs" />
+    <Compile Include="Services\TreasuryService.cs" />
     <Compile Include="Services\StatusService.cs" />
     <Compile Include="Services\SoberService.cs" />
     <Compile Include="Services\MemberService.cs" />

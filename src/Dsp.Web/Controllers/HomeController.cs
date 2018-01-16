@@ -76,6 +76,74 @@
         }
 
         [AllowAnonymous]
+        public async Task<ActionResult> Donate()
+        {
+            var model = new DonationPledgeModel();
+            var treasuryService = new TreasuryService();
+            var fundraisers = (await treasuryService.GetAllFundraisersAsync())
+                .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
+                .ToList();
+            for (var i = 0; i < fundraisers.Count; i++)
+            {
+                fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
+            }
+            model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+            model.Amount = 5;
+
+            return View(model);
+        }
+
+        [AllowAnonymous, HttpPost, ValidateAntiForgeryToken]
+        public async Task<ActionResult> Donate(DonationPledgeModel model)
+        {
+            var treasuryService = new TreasuryService();
+            if (!ModelState.IsValid)
+            {
+                var fundraisers = (await treasuryService.GetAllFundraisersAsync())
+                    .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
+                    .ToList();
+                for (var i = 0; i < fundraisers.Count; i++)
+                {
+                    fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
+                }
+                model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+                return View(model);
+            }
+
+            if (string.IsNullOrEmpty(model.PhoneNumber) && string.IsNullOrEmpty(model.Email))
+            {
+                var failureMessage = "Your donation pledge must contain either an email or " +
+                       "phone number so we can contact you later.";
+                ModelState.AddModelError(string.Empty, failureMessage);
+
+                var fundraisers = (await treasuryService.GetAllFundraisersAsync())
+                    .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
+                    .ToList();
+                for (var i = 0; i < fundraisers.Count; i++)
+                {
+                    fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
+                }
+                model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+                return View(model);
+            }
+
+            var donation = new Donation
+            {
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                PhoneNumber = model.PhoneNumber,
+                Amount = model.Amount,
+                FundraiserId = model.FundraiserId
+            };
+            await treasuryService.AddDonationAsync(donation);
+
+            donation.Fundraiser = await treasuryService.GetFundraiserByIdAsync(donation.FundraiserId);
+
+            return View("DonationConfirmation", donation);
+        }
+
+        [AllowAnonymous]
         public async Task<ActionResult> EmailSoberSchedule()
         {
             var isPermitted = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
