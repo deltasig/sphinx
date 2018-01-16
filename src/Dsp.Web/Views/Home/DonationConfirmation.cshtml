@@ -22,7 +22,7 @@
                         The fundraiser ends on @Model.Fundraiser.EndsOn.Value.ToShortDateString() at
                         @Model.Fundraiser.EndsOn.Value.ToShortTimeString(), so we will contact you
                         shortly after that via
-                        @if (!string.IsNullOrEmpty(Model.PhoneNumber) && !string.IsNullOrEmpty(Model.PhoneNumber))
+                        @if (!string.IsNullOrEmpty(Model.PhoneNumber) && !string.IsNullOrEmpty(Model.Email))
                         {
                             @: phone (@Model.PhoneNumber) and email (@Model.Email) since you provided both.
                         }
