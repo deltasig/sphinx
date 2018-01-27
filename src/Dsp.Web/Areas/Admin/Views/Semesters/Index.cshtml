@@ -34,8 +34,21 @@
                                         <i class="fa fa-info-circle"></i>
                                     </a>
                                 </th>
-                                <th>@Html.DisplayNameFor(model => model.MinimumServiceHours)</th>
-                                <th>@Html.DisplayNameFor(model => model.MinimumServiceEvents)</th>
+                                <th class="text-success">
+                                    <span data-toggle="tooltip" data-placement="top"
+                                          title="Minimum Service Hours">
+                                        <i class="fa fa-fw fa-globe"></i> Hours
+                                    </span>
+                                </th>
+                                <th class="text-success">
+                                    <span data-toggle="tooltip" data-placement="top"
+                                          title="Minimum Service Events">
+                                        <i class="fa fa-fw fa-globe"></i> Events
+                                    </span>
+                                </th>
+                                <th>
+                                    Recruitment Book
+                                </th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -59,6 +72,16 @@
                                 <td>@item.TransitionDate.ToString("MM/dd/yyyy")</td>
                                 <td>@item.MinimumServiceHours</td>
                                 <td>@item.MinimumServiceEvents</td>
+                                <td>
+                                    @if(string.IsNullOrEmpty(item.RecruitmentBookUrl))
+                                    {
+                                        <strong class="text-danger">None</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="success">We good!</span>
+                                    }
+                                </td>
                                 <td class="text-right">
                                     @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
                                     @if (User.IsInRole("Administrator"))

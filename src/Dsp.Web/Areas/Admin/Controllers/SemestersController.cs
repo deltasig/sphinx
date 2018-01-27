@@ -13,7 +13,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Administrator, President, Secretary, Academics, Service")]
+    [Authorize(Roles = "Administrator, President, Secretary, Academics, Service, Director of Recruitment")]
     public class SemestersController : BaseController
     {
         private ISemesterService _semesterService;

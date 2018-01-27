@@ -278,6 +278,7 @@
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
     <Compile Include="Areas\Treasury\TreasuryAreaRegistration.cs" />
     <Compile Include="Extensions\ApplicationPreload.cs" />
+    <Compile Include="Models\RecruitmentModel.cs" />
     <Compile Include="Models\DonationModel.cs" />
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\FeedItem.cs" />

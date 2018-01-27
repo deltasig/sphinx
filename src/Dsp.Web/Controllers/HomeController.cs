@@ -32,8 +32,18 @@
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Recruitment()
         {
-            return View(await _db.ScholarshipApps
-                .Where(s => s.IsPublic && s.Type.Name == "Building Better Men Scholarship").ToListAsync());
+            var model = new RecruitmentModel();
+            model.ScholarshipApps = await _db.ScholarshipApps
+                .Where(m =>
+                    m.IsPublic &&
+                    m.Type.Name == "Building Better Men Scholarship")
+                .ToListAsync();
+            model.Semester = await _db.Semesters
+                .Where(m => !string.IsNullOrEmpty(m.RecruitmentBookUrl))
+                .OrderByDescending(m => m.DateEnd)
+                .FirstOrDefaultAsync();
+
+            return View(model);
         }
 
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]

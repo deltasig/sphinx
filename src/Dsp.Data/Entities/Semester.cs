@@ -16,7 +16,7 @@ namespace Dsp.Data.Entities
 
         [Required, DataType(DataType.Date), Display(Name = "End Date")]
         public DateTime DateEnd { get; set; }
-        
+
         [Required, DataType(DataType.Date), Display(Name = "Transition Date")]
         public DateTime TransitionDate { get; set; }
 
@@ -25,6 +25,9 @@ namespace Dsp.Data.Entities
 
         [Required, DefaultValue(4), Display(Name = "Minimum Service Events")]
         public int MinimumServiceEvents { get; set; }
+
+        [Display(Name = "Recruitment Book URL")]
+        public string RecruitmentBookUrl { get; set; }
 
         [InverseProperty("Semester")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
