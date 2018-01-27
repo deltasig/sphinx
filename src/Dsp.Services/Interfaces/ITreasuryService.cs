@@ -10,6 +10,8 @@
         Task<IEnumerable<Cause>> GetAllCausesAsync();
         Task<Fundraiser> GetFundraiserByIdAsync(int id);
         Task<IEnumerable<Fundraiser>> GetAllFundraisersAsync();
+        Task<IEnumerable<Fundraiser>> GetActiveFundraisersAsync();
+        Task<IEnumerable<Fundraiser>> GetActivePledgeableFundraisersAsync();
         Task<Donation> GetDonationByIdAsync(int id);
 
         Task AddCauseAsync(Cause signup);

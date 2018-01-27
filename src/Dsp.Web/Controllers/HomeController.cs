@@ -6,6 +6,7 @@
     using MarkdownSharp;
     using Models;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -80,14 +81,9 @@
         {
             var model = new DonationPledgeModel();
             var treasuryService = new TreasuryService();
-            var fundraisers = (await treasuryService.GetAllFundraisersAsync())
-                .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
-                .ToList();
-            for (var i = 0; i < fundraisers.Count; i++)
-            {
-                fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
-            }
-            model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+            model.ActiveFundraisers = await treasuryService.GetActiveFundraisersAsync();
+            var pledgeableFundraisers = model.ActiveFundraisers.Where(m => m.IsPledgeable);
+            model.PledgeableFundraisers = GetFundraiserSelectList(pledgeableFundraisers);
             model.Amount = 5;
 
             return View(model);
@@ -99,14 +95,9 @@
             var treasuryService = new TreasuryService();
             if (!ModelState.IsValid)
             {
-                var fundraisers = (await treasuryService.GetAllFundraisersAsync())
-                    .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
-                    .ToList();
-                for (var i = 0; i < fundraisers.Count; i++)
-                {
-                    fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
-                }
-                model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+                model.ActiveFundraisers = (await treasuryService.GetActiveFundraisersAsync());
+                var pledgeableFundraisers = model.ActiveFundraisers.Where(m => m.IsPledgeable);
+                model.PledgeableFundraisers = GetFundraiserSelectList(pledgeableFundraisers);
                 return View(model);
             }
 
@@ -116,14 +107,9 @@
                        "phone number so we can contact you later.";
                 ModelState.AddModelError(string.Empty, failureMessage);
 
-                var fundraisers = (await treasuryService.GetAllFundraisersAsync())
-                    .Where(m => m.EndsOn == null || m.EndsOn > DateTime.UtcNow)
-                    .ToList();
-                for (var i = 0; i < fundraisers.Count; i++)
-                {
-                    fundraisers[i].Name = fundraisers[i].Name + " fundraiser for " + fundraisers[i].Cause.Name;
-                }
-                model.Fundraisers = new SelectList(fundraisers, "Id", "Name");
+                model.ActiveFundraisers = (await treasuryService.GetActiveFundraisersAsync());
+                var pledgeableFundraisers = model.ActiveFundraisers.Where(m => m.IsPledgeable);
+                model.PledgeableFundraisers = GetFundraiserSelectList(pledgeableFundraisers);
                 return View(model);
             }
 
@@ -223,6 +209,20 @@
             var data = System.IO.File.ReadAllText(Server.MapPath(@"~/Documents/Updates.md"));
             var content = markdown.Transform(data);
             return View("Updates", (object)content);
+        }
+
+        private SelectList GetFundraiserSelectList(IEnumerable<Fundraiser> fundraisers)
+        {
+            var items = new List<SelectListItem>();
+            foreach (var f in fundraisers)
+            {
+                items.Add(new SelectListItem
+                {
+                    Value = f.Id.ToString(),
+                    Text = f.Name + " Fundraiser for " + f.Cause.Name
+                });
+            }
+            return new SelectList(items, "Value", "Text");
         }
     }
 }

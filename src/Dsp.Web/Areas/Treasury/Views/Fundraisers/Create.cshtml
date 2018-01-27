@@ -35,6 +35,18 @@
                 </div>
 
                 <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DonationInstructions, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.DonationInstructions, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.DonationInstructions, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
                     @Html.LabelFor(model => model.BeginsOn, htmlAttributes: new { @class = "control-label" })
                     <div class="input-group date">
                         @Html.EditorFor(m => m.BeginsOn, new { htmlAttributes = new { @class = "form-control", type = "datetime" } })
@@ -62,6 +74,20 @@
                     @Html.ValidationMessageFor(model => model.Goal, "", new { @class = "text-danger" })
                 </div>
 
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsPublic)
+                        @Html.LabelFor(model => model.IsPublic, htmlAttributes: new { @class = "control-label" })
+                    </label>
+                </div>
+
+                <div class="checkbox form-group">
+                    <label class="control-label">
+                        @Html.EditorFor(model => model.IsPledgeable)
+                        @Html.LabelFor(model => model.IsPledgeable, htmlAttributes: new { @class = "control-label" })
+                    </label>
+                </div>
+
                 <div class="form-group">
                     <input type="submit" value="Create" class="btn btn-default" />
                 </div>
@@ -69,11 +95,12 @@
         </div>
         <div class="col-sm-6">
             <div class="alert alert-warning">
-                <strong>Begins/ Ends</strong>
+                <strong>Begins / Ends</strong>
                 <hr />
                 <p>
-                    If the fundraiser is an ever-constant fundraiser, then it does not have a real beginning or end date.
-                    Therefore, you can and should leave those fields blank.
+                    Every fundraiser has a begin date, whether it is today or when the chapter was created.
+                    If the fundraiser is ongoing at all times, then it does not have an end date.
+                    In this case, you should leave that field blank.
                 </p>
             </div>
             <div class="alert alert-warning">
@@ -82,6 +109,23 @@
                 <p>
                     Sometimes a fundraiser has a target amount in mind, in which case you can and should specify it in the goal field.
                     If the fundraiser has no goal, set the goal to zero.
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Display on Donate Page</strong>
+                <hr />
+                <p>
+                    Checking that checkbox will cause the fundraiser to appear on the external "Donate" page.
+                    The only exception to this is if the End date of the fundraiser is in the past.
+                    The external "Donate" page will not show fundraisers that have ended, even if this checkbox is checked.
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Allow Donation Pledges</strong>
+                <hr />
+                <p>
+                    Checking that checkbox will cause the fundraiser to appear on the external "Donate" page's "Pledge Dropdown".
+                    WARNING: this will only work if you ALSO check the "Display on Donate Page" checkbox.
                 </p>
             </div>
         </div>

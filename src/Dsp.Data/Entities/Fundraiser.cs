@@ -24,6 +24,18 @@ namespace Dsp.Data.Entities
         [Display(Name = "Ends")]
         public DateTime? EndsOn { get; set; }
 
+        [Required, StringLength(2000), DataType(DataType.MultilineText), Display(Name = "Description")]
+        public string Description { get; set; }
+
+        [Required, StringLength(2000), DataType(DataType.MultilineText), Display(Name = "Donation Instructions")]
+        public string DonationInstructions { get; set; }
+
+        [Required, Display(Name = "Display on Donate Page")]
+        public bool IsPublic { get; set; }
+
+        [Required, Display(Name = "Allow Pledges")]
+        public bool IsPledgeable { get; set; }
+
         [ForeignKey("CauseId")]
         public virtual Cause Cause { get; set; }
 

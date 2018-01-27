@@ -29,7 +29,7 @@
 
                 <div class="form-group">
                     @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label" })
-                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control dtp", autocomplete = "off" } })
+                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
                     @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
                 </div>
 
