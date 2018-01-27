@@ -236,8 +236,8 @@
                             .First();
                     var member = db.Users.Single(m => m.UserName == userName);
                     var positions = member.PositionsHeld
-                        .Where(l => 
-                            l.SemesterId == term.SemesterId || 
+                        .Where(l =>
+                            l.SemesterId == term.SemesterId ||
                             l.Position.Name == "Administrator")
                         .Select(l => l.Position.Name);
 
@@ -296,6 +296,22 @@
                         var adminAppointments = db.Leaders
                             .Where(l => l.Position.Name == roleName && l.Member.UserName == userName);
                         isValid = adminAppointments.Any();
+                        if (!isValid)
+                        {
+                            var now = DateTime.UtcNow;
+                            var semesters = db.Semesters.ToList();
+                            // "term" represents the semester with appointments that are currently in power.
+                            // Note: the previous term is obtained with the opposite where clause.
+                            var term = semesters
+                                .Where(s => s.TransitionDate > now)
+                                .OrderBy(s => s.DateStart)
+                                .First();
+                            isValid = term.Leaders
+                                .Where(l =>
+                                    l.Member.UserName == userName &&
+                                    l.Position.Name == "Web Master")
+                                .Any();
+                        }
                     }
                     // Position check
                     else
@@ -314,7 +330,7 @@
                                 l.Member.UserName == userName &&
                                 l.Position.Name == roleName)
                             .Any();
-                    }                    
+                    }
                 }
                 catch
                 {
