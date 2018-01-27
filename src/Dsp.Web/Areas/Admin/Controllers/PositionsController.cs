@@ -134,12 +134,23 @@
         }
 
         [HttpGet, Authorize(Roles = "Administrator, President")]
-        public async Task<ActionResult> Appointments(int sid)
+        public async Task<ActionResult> Appointments(int? sid = null)
         {
             try
             {
-                var semester = await _semesterService.GetSemesterByIdAsync(sid);
-                var positions = await _positionService.GetAppointmentsAsync(sid);
+                Semester semester;
+                int semesterId;
+                if (sid == null)
+                {
+                    semester = await _semesterService.GetCurrentSemesterAsync();
+                    semesterId = semester.SemesterId;
+                }
+                else
+                {
+                    semesterId = (int)sid;
+                    semester = await _semesterService.GetSemesterByIdAsync(semesterId);
+                }
+                var positions = await _positionService.GetAppointmentsAsync(semesterId);
                 var semesters = await _semesterService.GetCurrentAndNextSemesterAsync();
 
                 var model = new AppointmentModel

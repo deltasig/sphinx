@@ -221,6 +221,18 @@
     <Compile Include="Migrations\201801160331190_Philanthropy3.Designer.cs">
       <DependentUpon>201801160331190_Philanthropy3.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201801191611287_FundraiserDescriptions.cs" />
+    <Compile Include="Migrations\201801191611287_FundraiserDescriptions.Designer.cs">
+      <DependentUpon>201801191611287_FundraiserDescriptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801191637314_FundraiserExternalControl.cs" />
+    <Compile Include="Migrations\201801191637314_FundraiserExternalControl.Designer.cs">
+      <DependentUpon>201801191637314_FundraiserExternalControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201801191710242_FundraiserExternalControl2.cs" />
+    <Compile Include="Migrations\201801191710242_FundraiserExternalControl2.Designer.cs">
+      <DependentUpon>201801191710242_FundraiserExternalControl2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -311,6 +323,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201801160331190_Philanthropy3.resx">
       <DependentUpon>201801160331190_Philanthropy3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801191611287_FundraiserDescriptions.resx">
+      <DependentUpon>201801191611287_FundraiserDescriptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801191637314_FundraiserExternalControl.resx">
+      <DependentUpon>201801191637314_FundraiserExternalControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201801191710242_FundraiserExternalControl2.resx">
+      <DependentUpon>201801191710242_FundraiserExternalControl2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -66,6 +66,20 @@
             return await _repository.GetAllAsync<Fundraiser>(o => o.OrderBy(p => p.Name));
         }
 
+        public async Task<IEnumerable<Fundraiser>> GetActiveFundraisersAsync()
+        {
+            return await _repository.GetAsync<Fundraiser>(
+                filter: m => m.IsPublic && (m.EndsOn == null || m.EndsOn > DateTime.UtcNow),
+                orderBy: o => o.OrderByDescending(p => p.EndsOn).ThenBy(p => p.Name));
+        }
+
+        public async Task<IEnumerable<Fundraiser>> GetActivePledgeableFundraisersAsync()
+        {
+            return await _repository.GetAsync<Fundraiser>(
+                filter: m => m.IsPledgeable && m.IsPublic && (m.EndsOn == null || m.EndsOn > DateTime.UtcNow),
+                orderBy: o => o.OrderByDescending(p => p.EndsOn).ThenBy(p => p.Name));
+        }
+
         public async Task AddDonationAsync(Donation donation)
         {
             donation.CreatedOn = DateTime.UtcNow;

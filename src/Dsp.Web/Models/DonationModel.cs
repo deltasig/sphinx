@@ -1,11 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Dsp.Data.Entities;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
 namespace Dsp.Web.Models
 {
     public class DonationPledgeModel
     {
-        public SelectList Fundraisers { get; set; }
+        public IEnumerable<Fundraiser> ActiveFundraisers { get; set; }
+        public SelectList PledgeableFundraisers { get; set; }
 
         [Required, Display(Name = "Fundraiser")]
         public int FundraiserId { get; set; }

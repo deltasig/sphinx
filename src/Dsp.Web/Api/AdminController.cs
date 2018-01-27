@@ -82,7 +82,7 @@
         }
 
         [Authorize(Roles = "Administrator, President")]
-        [HttpDelete, Route("appoint"), ResponseType(typeof(Leader))]
+        [HttpDelete, Route("unappoint"), ResponseType(typeof(Leader))]
         public async Task<IHttpActionResult> Unappoint([FromBody] Leader app)
         {
             var member = await _memberService.GetMemberByIdAsync(app.UserId);
