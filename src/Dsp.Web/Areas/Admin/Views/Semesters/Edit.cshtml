@@ -71,6 +71,13 @@
                 </div>
 
                 <div class="form-group">
+                    @Html.LabelFor(m => m.RecruitmentBookUrl, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(m => m.RecruitmentBookUrl, new { htmlAttributes = new { @class = "form-control", autocomplete = "off", placeholder = "USE A URL TO A PDF IN GOOGLE DRIVE!!!" } })
+                    @Html.ValidationMessageFor(m => m.RecruitmentBookUrl, "", new { @class = "text-danger" })
+                    <p class="text-info">USE A URL TO A <strong>PDF</strong> IN <strong>GOOGLE DRIVE</strong>!!!</p>
+                </div>
+
+                <div class="form-group">
                     <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             }

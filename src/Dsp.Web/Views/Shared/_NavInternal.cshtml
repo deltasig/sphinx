@@ -1,4 +1,26 @@
-﻿<nav class="navbar navbar-inverse navbar-fixed-top no-print" role="navigation">
+﻿@{ 
+    var isAdmin = User.IsInRole("Administrator");
+    var isActive = isAdmin || User.IsInRole("Active");
+    var isReleased = isActive ? false : User.IsInRole("Released");
+    var isSecretary = isAdmin || User.IsInRole("Secretary");
+    var isPresident = isAdmin || User.IsInRole("President");
+    var isVpGrowth = isAdmin || User.IsInRole("Vice President Growth");
+    var isAcademics = isAdmin || User.IsInRole("Academics");
+    var isService = isAdmin || User.IsInRole("Service");
+    var isDor = isAdmin || User.IsInRole("Director of Recruitment");
+    var isNme = isAdmin || User.IsInRole("New Member Education");
+    var showErrorLogLink = isAdmin;
+    var showAppointmentsLink = isAdmin || isPresident;
+    var showPositionsLink = isAdmin || isPresident;
+    var showRegistrationLink = isAdmin || isSecretary || isDor || isNme || isVpGrowth;
+    var showSemesterLink = isAdmin || isPresident || isSecretary || isAcademics || isService || isDor || isVpGrowth;
+    var showStatusesLink = isAdmin;
+    var showAdminLink = showErrorLogLink || showAppointmentsLink || showPositionsLink || 
+                        showRegistrationLink || showSemesterLink || showStatusesLink;
+
+}
+
+<nav class="navbar navbar-inverse navbar-fixed-top no-print" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -63,7 +85,7 @@
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav side-nav">
-            @if (Request.IsAuthenticated && !User.IsInRole("Released"))
+            @if (Request.IsAuthenticated && !isReleased)
             {
                 <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
                     <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
@@ -120,40 +142,36 @@
                         </li>
                     </ul>
                 </li>
-                if (User.IsInRole("Administrator") || User.IsInRole("President") || User.IsInRole("Vice President Growth") || User.IsInRole("Secretary") ||
-                    User.IsInRole("Director of Recruitment") || User.IsInRole("New Member Education") || User.IsInRole("Academics") || User.IsInRole("Service"))
+                if (showAdminLink)
                 {
                     <li>
                         <a href="javascript:;" data-toggle="collapse" data-target="#admin">
                             <i class="fa fa-fw fa-lock"></i> Admin <i class="fa fa-fw fa-caret-down"></i>
                         </a>
                         <ul id="admin" class="collapse">
-                            @if (User.IsInRole("Administrator"))
+                            @if (showErrorLogLink)
                             {
                                 <li>@Html.ActionLink("Error Logs", "Logs", "Error", new { area = "" }, null)</li>
-                                <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
-                                <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
-                                <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
                             }
-                            else
+                            @if (showAppointmentsLink)
                             {
-                                if (User.IsInRole("President"))
-                                {
-                                    <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
-                                    <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
-                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
-                                }
-                                if (User.IsInRole("Secretary") || User.IsInRole("Director of Recruitment") ||
-                                    User.IsInRole("New Member Education") || User.IsInRole("Vice President Growth"))
-                                {
-                                    <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
-                                }
-                                if (User.IsInRole("Secretary") || User.IsInRole("Academics") || User.IsInRole("Service"))
-                                {
-                                    <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
-                                }
+                                <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
+                            }
+                            @if (showPositionsLink)
+                            { 
+                                <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
+                            }
+                            @if (showRegistrationLink)
+                            {
+                                <li>@Html.ActionLink("Registration", "Registration", "Account", new { area = "Members" }, null)</li>
+                            }
+                            @if (showSemesterLink)
+                            {
+                                <li>@Html.ActionLink("Semesters", "Index", "Semesters", new { area = "Admin" }, null)</li>
+                            }
+                            @if (showStatusesLink)
+                            {
+                                <li>@Html.ActionLink("Statuses", "Index", "Statuses", new { area = "Admin" }, null)</li>
                             }
                         </ul>
                     </li>

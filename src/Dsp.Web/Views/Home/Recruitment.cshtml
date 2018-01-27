@@ -1,8 +1,10 @@
 ﻿@using System.Configuration
-@model IEnumerable<ScholarshipApp>
+@model RecruitmentModel
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Recruitment";
+
+    var anyApps = Model.ScholarshipApps.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow);
 }
 @Scripts.Render("~/bundles/datetimepicker")
 @section Title
@@ -14,21 +16,18 @@
 }
 
 <div class="container">
-    @if (Model.Any())
+    @if (anyApps)
     {
-        if (Model.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow))
-        {
-            <div class="row">
-                <div class="col-xs-12">
-                    <div class="alert alert-warning">
-                        <p>
-                            <strong>Attention first-semester students!</strong>  
-                            If you have not applied for our scholarship, @Html.ActionLink("click here", "Scholarships", "Home") to learn more!
-                        </p>
-                    </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="alert alert-warning">
+                    <p>
+                        <strong>Attention first-semester students!</strong>  
+                        If you have not applied for our scholarship, @Html.ActionLink("click here", "Scholarships", "Home") to learn more!
+                    </p>
                 </div>
             </div>
-        }
+        </div>
     }
     <div class="row">
         <div class="col-md-8">
@@ -49,32 +48,36 @@
                 We believe in the value of Greek Life that much, while also acknowledging that Greek Life isn't for everyone.
             </p>
             <hr />
-            <h3>
-                <i class="fa fa-book"></i>
-                Recruitment Book
-                <a href="https://docs.google.com/a/mst.edu/uc?authuser=0&id=0B2cf6ht4HK8jYVY0WDZ4SWs1b28&export=download"
-                   target="_blank" class="btn btn-default btn-sm pull-right visible-lg"><i class="fa fa-arrow-circle-o-down"></i> Download</a>
-            </h3>
-            <p class="hidden-lg">
-                <a href="https://docs.google.com/a/mst.edu/uc?authuser=0&id=0B2cf6ht4HK8jYVY0WDZ4SWs1b28&export=download"
-                   target="_blank" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-o-down"></i> Download</a>
-            </p>
-            <p class="text-justify">
-                The <em>Recruitment Book</em> provides new members and their families with information regarding:
-            </p>
-            <ul>
-                <li>Common Concerns</li>
-                <li>New Member Education</li>
-                <li>Costs</li>
-                <li>Housing</li>
-            </ul>
-            <p class="text-justify">
-                The book is updated every semester to make sure all of the information is consistent with university costs
-                and our fraternity policies.
-                If you look through it and still have questions, feel free to 
-                <a href="@Url.Action("Contacts")#director_of_recruitment">email our Director of Recruitment</a>.
-            </p>
-            <hr />
+            @if (Model.Semester != null)
+            {
+                <h3>
+                    <i class="fa fa-book"></i> Recruitment Book
+                    <a href="@Model.Semester.RecruitmentBookUrl" target="_blank" 
+                       class="btn btn-default btn-sm pull-right visible-lg">
+                        <i class="fa fa-arrow-circle-o-down"></i> Download
+                    </a>
+                </h3>
+                <p class="hidden-lg">
+                    <a href="@Model.Semester.RecruitmentBookUrl"
+                       target="_blank" class="btn btn-default btn-sm"><i class="fa fa-arrow-circle-o-down"></i>Download</a>
+                </p>
+                <p class="text-justify">
+                    The <em>Recruitment Book</em> provides new members and their families with information regarding:
+                </p>
+                <ul>
+                    <li>Common Concerns</li>
+                    <li>New Member Education</li>
+                    <li>Costs</li>
+                    <li>Housing</li>
+                </ul>
+                <p class="text-justify">
+                    The book is updated every semester to make sure all of the information is consistent with university costs
+                    and our fraternity policies.
+                    If you look through it and still have questions, feel free to
+                    <a href="@Url.Action("Contacts")#director_of_recruitment">email our Director of Recruitment</a>.
+                </p>
+                <hr />
+            }
             <h3>
                 <i class="fa fa-envelope-o"></i>
                 Getting in Touch
