@@ -67,46 +67,54 @@
             if (!ModelState.IsValid) return View(incidentReport);
             incidentReport.DateTimeSubmitted = DateTime.UtcNow;
             incidentReport.ReportedBy = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;
-            
+
             _db.IncidentReports.Add(incidentReport);
             await _db.SaveChangesAsync();
 
             // Send notification emails to Sergean-at-Arms and President.
+#if !DEBUG
             var currentSemesterId = await GetThisSemestersIdAsync();
             var saaPosition = await _db.Roles.SingleAsync(p => p.Name == "Sergeant-at-Arms");
             var presidentPosition = await _db.Roles.SingleAsync(p => p.Name == "President");
 
             var saa = await _db.Leaders
-                .SingleAsync(l => 
-                    l.SemesterId == currentSemesterId && 
+                .SingleOrDefaultAsync(l =>
+                    l.SemesterId == currentSemesterId &&
                     l.RoleId == saaPosition.Id);
             var president = await _db.Leaders
-                .SingleAsync(l => 
-                    l.SemesterId == currentSemesterId && 
+                .SingleOrDefaultAsync(l =>
+                    l.SemesterId == currentSemesterId &&
                     l.RoleId == presidentPosition.Id);
 
             var body = RenderRazorViewToString("~/Views/Emails/NewIncidentReport.cshtml", incidentReport);
 
             var message = new IdentityMessage
             {
-                Subject = "New Incident Report Submitted: " + 
+                Subject = "New Incident Report Submitted: " +
                     base.ConvertUtcToCst(incidentReport.DateTimeSubmitted).ToString("G"),
-                Body = body,
-                Destination = saa.Member.Email
+                Body = body
             };
 
             try
             {
                 var emailService = new EmailService();
-                await emailService.SendAsync(message);
-                message.Destination = president.Member.Email;
-                await emailService.SendAsync(message);
+                if (saa != null)
+                {
+                    message.Destination = saa.Member.Email;
+                    await emailService.SendAsync(message);
+                }
+                if (president != null)
+                {
+                    message.Destination = president.Member.Email;
+                    await emailService.SendAsync(message);
+                }
             }
             catch (SmtpException e)
             {
                 Elmah.ErrorSignal.FromCurrentContext().Raise(e);
                 return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
             }
+#endif
 
             return RedirectToAction("Index");
         }
