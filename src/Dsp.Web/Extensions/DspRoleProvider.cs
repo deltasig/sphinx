@@ -230,16 +230,17 @@
                 try
                 {
                     var now = DateTime.UtcNow;
-                    var term = db.Semesters
-                            .Where(s => s.TransitionDate > now)
-                            .OrderBy(s => s.DateStart)
-                            .First();
                     var member = db.Users.Single(m => m.UserName == userName);
-                    var positions = member.PositionsHeld
-                        .Where(l =>
-                            l.SemesterId == term.SemesterId ||
-                            l.Position.Name == "Administrator")
-                        .Select(l => l.Position.Name);
+                    var positions = member
+                        .PositionsHeld
+                        .Where(m =>
+                            (m.Member.UserName == userName &&
+                            m.Semester.TransitionDate > now) ||
+                            m.Position.Name == "Administrator")
+                        .Select(m => m.Position.Name)
+                        .ToList();
+                    if (positions.Contains("Web Master"))
+                        positions.Add("Administrator");
 
                     roles.AddRange(positions);
                     roles.Add(member.MemberStatus.StatusName);
