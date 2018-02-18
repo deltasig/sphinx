@@ -19,14 +19,17 @@ Clone the repository with git and open the solution in Visual Studio.
 Build the solution to download all the required NuGet packages, which may take a few minutes.
 
 ### Building Your Local Databases
+
 This application uses [Entity Framework Code-First][1] to handle database interaction and management.
 After you've installed everything, cloned the repo, and built the solution, open the NuGet Package Manager Console in Visual Studio and run the following commands:
 
 ~~~ sh
 PM> Enable-Migrations -ContextTypeName Dsp.Data.SphinxDbContext -ProjectName Dsp.Data
-PM> Add-Migration -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data <NAME>
 PM> Update-Database -ConfigurationTypeName Dsp.Data.Migrations.Configuration -ProjectName Dsp.Data
 ~~~
+
+If you receive an error about the database not existing, you will need to modify the connection string in the root `Web.config` to point to a fresh, local sql server database that you will need to create.
+Get the latest version of SQL Server Management Studio to create a local database.
 
 Entity Framework *migrations* exist to keep track of every change made to the database schema over time.
 The first command simply turns on the ability to use migrations.
