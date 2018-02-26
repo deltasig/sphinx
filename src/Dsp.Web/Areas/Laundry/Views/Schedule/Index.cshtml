@@ -65,9 +65,10 @@
                                     <td class="text-center @cellColor">
                                         @if (slot.Member != null)
                                         {
-                                            <img src="~/Images/Avatars/@slot.Member.GetAvatarString()" height="30" width="30" class="img-circle"
+
+                                            <img src="~/Images/Avatars/@slot.Member.AvatarPath" height="30" width="30" class="img-circle"
                                                  data-toggle="tooltip" data-placement="top" title="@slot.Member.ToString()"
-                                                 onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                                                 onError="this.onerror = null; this.src = '/Images/Avatars/NoAvatar.jpg';" />
                                             // Reserved by current user
                                             if (slot.UserId == currentUserId && (slot.DateTimeShift - Model.Schedule.Now).TotalHours >= 0)
                                             {
