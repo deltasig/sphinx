@@ -20,7 +20,7 @@ namespace Dsp.Data.Entities
         public string Email { get; set; }
 
         [Column("PhoneNumber"), DataType(DataType.PhoneNumber), Display(Name = "Preferred Phone Number")]
-        [RegularExpression(@"^(([0-9]{3}[-]([0-9]{3})[-][0-9]{4})|([+]?[0-9]{11,15}))$",
+        [RegularExpression(@"^(([0-9]{3}[-]?([0-9]{3})[-]?[0-9]{4})|([+]?[0-9]{11,15}))$",
             ErrorMessage = "Phone number format was invalid.")]
         public string PhoneNumber { get; set; }
 
