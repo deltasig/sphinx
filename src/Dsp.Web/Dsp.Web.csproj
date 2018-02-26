@@ -357,7 +357,6 @@
     <Compile Include="Areas\Laundry\Controllers\ScheduleController.cs" />
     <Compile Include="Areas\Sobers\Controllers\TypesController.cs" />
     <Compile Include="Areas\Sobers\Controllers\ScheduleController.cs" />
-    <Compile Include="Areas\Laundry\Models\LaundryStatsModel.cs" />
     <Compile Include="Areas\Sobers\Models\MultiAddSoberSignupModel.cs" />
     <Compile Include="Areas\Sobers\Models\SoberManagerModel.cs" />
     <Compile Include="Areas\Sobers\Models\EditSoberSignupModel.cs" />
@@ -583,7 +582,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Areas\Laundry\Views\Schedule\Usage.cshtml" />
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\bootstrap\_bootstrap-datetimepicker.less" />
