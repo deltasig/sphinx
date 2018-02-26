@@ -22,9 +22,9 @@ namespace Dsp.Web.Models
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
 
-        [DataType(DataType.PhoneNumber), Display(Name = "Preferred Phone Number (###-###-####)")]
-        [RegularExpression(@"^(([0-9]{3}[-]([0-9]{3})[-][0-9]{4})|([+]?[0-9]{11,15}))$",
-            ErrorMessage = "Phone number format was invalid. Please include dashes as follows: ###-###-####")]
+        [DataType(DataType.PhoneNumber), Display(Name = "Preferred Phone Number (###-###-#### or ##########)")]
+        [RegularExpression(@"^(([0-9]{3}[-]?([0-9]{3})[-]?[0-9]{4})|([+]?[0-9]{11,15}))$",
+            ErrorMessage = "Phone number format was invalid. Please include dashes as follows: ###-###-#### or ##########")]
         public string PhoneNumber { get; set; }
 
         [Range(0.01, double.MaxValue, ErrorMessage = "The amount must be at least 1 cent.")]
