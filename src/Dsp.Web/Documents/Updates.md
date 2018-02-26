@@ -1,6 +1,26 @@
-﻿### November 2017
+﻿### February 2017
+
+- Fixed a bug where incident reports could not be submitted, and I apparently messed with the emails for incident reports that go to the President and SAA, but I don't remember why.
+- Removed laundry statistics, they were unnecessary.
+- Removed study hours URL from sidebar. Academic plan must be stable for website support moving forward.
+- Fixed a bug where people on iPhone could not fill out the donation form because the iPhone wasn't letting them enter hyphens.
+- Moved the "updates" and "External site" links to the "Website" grouping to make more room and in anticipation for a "report an issue" link.
+
+---
+
+### January 2018
+
+- Implemented internal and external fundraiser, donation, and pledging features.
+- Recruitment book is now updated on the website by the DoR entering a URL into one of the Semester fields.
+
+---
+
+### November 2017
 
 - Expanded Incident Reports to include investigation notes visible to Executive Board members.
+- Fixed a bug where certain appointments were just not happening.
+
+---
 
 ### October 2017
 
