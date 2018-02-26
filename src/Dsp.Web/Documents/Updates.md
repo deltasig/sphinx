@@ -5,6 +5,7 @@
 - Removed study hours URL from sidebar. Academic plan must be stable for website support moving forward.
 - Fixed a bug where people on iPhone could not fill out the donation form because the iPhone wasn't letting them enter hyphens.
 - Moved the "updates" and "External site" links to the "Website" grouping to make more room and in anticipation for a "report an issue" link.
+- Fixed a bug where people's profile pictures weren't showing up on the laundry schedule.
 
 ---
 
