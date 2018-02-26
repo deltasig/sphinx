@@ -1,4 +1,4 @@
-﻿@{ 
+﻿@{
     var isAdmin = User.IsInRole("Administrator");
     var isActive = isAdmin || User.IsInRole("Active");
     var isReleased = isActive ? false : User.IsInRole("Released");
@@ -15,7 +15,7 @@
     var showRegistrationLink = isAdmin || isSecretary || isDor || isNme || isVpGrowth;
     var showSemesterLink = isAdmin || isPresident || isSecretary || isAcademics || isService || isDor || isVpGrowth;
     var showStatusesLink = isAdmin;
-    var showAdminLink = showErrorLogLink || showAppointmentsLink || showPositionsLink || 
+    var showAdminLink = showErrorLogLink || showAppointmentsLink || showPositionsLink ||
                         showRegistrationLink || showSemesterLink || showStatusesLink;
 
 }
@@ -105,11 +105,6 @@
                 <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
                     <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
                         <i class="fa fa-fw fa-institution"></i> Classes
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Study") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Study", new { area = "Edu" })">
-                        <i class="fa fa-fw fa-book"></i> Study
                     </a>
                 </li>
                 <li class="@(ViewBag.Title.Contains("Work Order") ? "active" : "")">
