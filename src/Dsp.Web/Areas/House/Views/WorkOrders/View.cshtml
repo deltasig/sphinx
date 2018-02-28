@@ -190,7 +190,8 @@
                         <div class="media no-print">
                             <div class="media-left">
                                 <img src="~/Images/Avatars/@User.Identity.GetAvatar()" height="25" width="25" class="img-circle"
-                                     data-toggle="tooltip" data-placement="top" title="@User.Identity.Name" />
+                                     data-toggle="tooltip" data-placement="top" title="@User.Identity.Name"
+                                     onError="this.onerror = null; this.src = '/Images/Avatars/NoAvatar.jpg';" />
                             </div>
                             <div class="media-body">
                                 @using (Html.BeginForm("Comment", "WorkOrders", FormMethod.Post))

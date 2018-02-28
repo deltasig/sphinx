@@ -18,9 +18,7 @@
                     imageName = member.AvatarPath;
                 }
             }
-            var filePath = AccountController.ImageUpload.GetUploadPath(imageName);
-            var fileExists = System.IO.File.Exists(filePath);
-            return fileExists ? imageName : "NoAvatar.jpg";
+            return imageName;
         }
     }
 }

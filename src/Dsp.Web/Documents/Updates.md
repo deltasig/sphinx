@@ -1,4 +1,4 @@
-﻿### February 2017
+﻿### February 2018
 
 - Fixed a bug where incident reports could not be submitted, and I apparently messed with the emails for incident reports that go to the President and SAA, but I don't remember why.
 - Removed laundry statistics, they were unnecessary.
@@ -6,6 +6,7 @@
 - Fixed a bug where people on iPhone could not fill out the donation form because the iPhone wasn't letting them enter hyphens.
 - Moved the "updates" and "External site" links to the "Website" grouping to make more room and in anticipation for a "report an issue" link.
 - Fixed a bug where people's profile pictures weren't showing up on the laundry schedule.
+- Fixed a bug where Nathan Weidner's existence was preventing the roster CSV download from working - good times.
 
 ---
 
