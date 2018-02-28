@@ -1,8 +1,6 @@
 ﻿@using Dsp.Web.Extensions
 @if (Request.IsAuthenticated)
 {
-    var avatar = User.Identity.GetAvatar();
-
     if (!User.IsInRole("Released"))
     {
         <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
@@ -13,21 +11,11 @@
         </li>
     }
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        @if (string.IsNullOrEmpty(avatar) || avatar == "NoAvatar.jpg")
-        {
-            <a href="@Url.Action("Index", "Account", new {area = "Members"})"
-               data-toggle="tooltip" data-placement="bottom" title="Account">
-                <i class="fa fa-user"></i>
-            </a>
-        }
-        else
-        {
-            <a rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:7px"
-               data-toggle="tooltip" data-placement="bottom" title="Account">
-                <img src="~/Images/Avatars/@(avatar)" height="35" width="35" class="img-circle" id="avatar" />
-            </a>
-        }
-        
+        <a rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:7px"
+           data-toggle="tooltip" data-placement="bottom" title="Account">
+            <img src="~/Images/Avatars/@User.Identity.GetAvatar()" height="35" width="35" class="img-circle" id="avatar"
+                 onError="this.onerror = null; this.src = '/Images/Avatars/NoAvatar.jpg';" />
+        </a>
     </li>
     <li>
         @using (Html.BeginForm("SignOut", "Account", new {area = "Members"}, FormMethod.Post, new {id = "signoutForm"}))

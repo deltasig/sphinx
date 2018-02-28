@@ -34,18 +34,18 @@
             ViewBag.Order = filter.order;
             ViewBag.SearchTerm = filter.s;
             var filteredResults = base.GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
-            
+
             var model = new RosterIndexModel
             {
-                 SelectedSemester = semester.SemesterId,
-                 Semester = semester,
-                 Semesters = await base.GetSemesterListAsync(),
-                 Members = filteredResults
+                SelectedSemester = semester.SemesterId,
+                Semester = semester,
+                Semesters = await base.GetSemesterListAsync(),
+                Members = filteredResults
             };
 
             return View(model);
         }
-        
+
         [HttpGet, Authorize(Roles = "Administrator, Secretary")]
         public async Task<ActionResult> InitiatePledges(string message)
         {
@@ -63,12 +63,12 @@
         public async Task<ActionResult> InitiatePledges(InitiatePledgesModel model)
         {
             var pledges = await _db.Users
-                .Where(m => 
+                .Where(m =>
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
             var activeId = (await _db.MemberStatuses.SingleAsync(s => s.StatusName == "Active")).StatusId;
 
-            foreach(var p in pledges)
+            foreach (var p in pledges)
             {
                 p.StatusId = activeId;
                 _db.Entry(p).State = EntityState.Modified;
@@ -78,7 +78,7 @@
             TempData["SuccessMessage"] = "Pledges successfully moved to active status.";
             return RedirectToAction("InitiatePledges");
         }
-        
+
         [HttpGet, Authorize(Roles = "Administrator, Secretary")]
         public async Task<ActionResult> GraduateActives(string message)
         {
@@ -119,24 +119,32 @@
                 .OrderBy(m => m.MemberStatus.StatusId)
                 .ThenBy(m => m.LastName)
                 .ToListAsync();
-            const string header = "First Name, Last Name, Mobile, Email, Member Status, Pledge Class, Pin, Graduation, Room, Big Bro, T-Shirt";
+            const string header = "First Name, Last Name, Mobile, Email, Member Status, Pledge Class, Pin, Graduation, Location, Big Bro";
             var sb = new StringBuilder();
             sb.AppendLine(header);
             foreach (var m in members)
             {
-                var phone = m.PhoneNumbers.SingleOrDefault(p => p.Type == "Mobile");
-                var line = String.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10}",
-                    m.FirstName,
-                    m.LastName,
-                    phone == null ? "None" : phone.Number,
-                    m.Email,
-                    m.MemberStatus.StatusName,
-                    m.PledgeClass.PledgeClassName,
-                    m.Pin,
-                    m.GraduationSemester.ToString(),
-                    m.RoomString(),
-                    m.BigBrother == null ? "None" : m.BigBrother.FirstName + " " + m.BigBrother.LastName,
-                    m.ShirtSize);
+                var firstName = m.FirstName;
+                var lastName = m.LastName;
+                var phone = m.PhoneNumbers.SingleOrDefault(p => p.Type == "Mobile")?.Number ?? "None";
+                var email = m.Email;
+                var status = m.MemberStatus.StatusName;
+                var pledgeClass = m.PledgeClass?.PledgeClassName ?? "None";
+                var pin = m.Pin?.ToString() ?? "None";
+                var graduationSemester = m.GraduationSemester?.ToString() ?? "None";
+                var location = m.RoomString();
+                var bigBro = m.BigBrother == null ? "None" : m.BigBrother.FirstName + " " + m.BigBrother.LastName;
+                var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+                    firstName,
+                    lastName,
+                    phone,
+                    email,
+                    status,
+                    pledgeClass,
+                    pin,
+                    graduationSemester,
+                    location,
+                    bigBro);
                 sb.AppendLine(line);
             }
 
