@@ -11,6 +11,7 @@
     var isAcademic = User.IsInRole("Academics");
     var isHousing = User.IsInRole("House Manager");
     var isCurrentUser = User.Identity.GetUserId<int>() == Model.Member.Id;
+    var pledgeClassLetters = Model.Member.PledgeClass.GetLetters();
 }
 
 <div class="container-fluid">
@@ -49,7 +50,7 @@
                         <tr>
                             <td class="active">Pledge Class</td>
                             <td>
-                                &@(Model.Member.PledgeClass.PledgeClassName.Contains("Alpha") ? "Alpha" : Model.Member.PledgeClass.PledgeClassName);
+                                @Html.Raw(pledgeClassLetters)
                                 <i data-toggle="tooltip" data-placement="left"
                                    title="@Model.Member.PledgeClass.PledgeClassName"
                                    class="fa fa-question-circle pull-right">
