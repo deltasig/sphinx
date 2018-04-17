@@ -5,15 +5,15 @@
 }
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md-3">
+    <div class="row no-print">
+        <div class="col-md-5">
             <p>
                 <a href="@Url.Action("Details", "Causes",  new { id = Model.CauseId })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Cause
                 </a>
             </p>
         </div>
-        <div class="col-md-3 text-right">
+        <div class="col-md-5 text-right">
             <p>
                 <a href="@Url.Action("Create", "Donations", new { fid = Model.Id })" class="btn btn-sm btn-success">
                     Add Donation
@@ -31,7 +31,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-6">
+        <div class="col-sm-10">
             <div class="form-group">
                 <dl class="dl-horizontal">
                     <dt>@Html.DisplayNameFor(model => model.Name)</dt>
@@ -58,22 +58,55 @@
                     <dd>
                         @if (Model.Donations.Any())
                         {
-                            foreach (var s in Model.Donations.OrderByDescending(m => m.ReceivedOn))
-                            {
-                                var label = string.Format("{0} {1} ({2:C2})", s.FirstName, s.LastName, s.Amount);
-
-                                if (User.IsInRole("Administrator") || User.IsInRole("Treasurer"))
+                            <div class="list-group">
+                                <div class="list-group-item">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <strong>Name</strong>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <strong>Amount</strong>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <strong>Email</strong>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <strong>Phone</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                @foreach (var s in Model.Donations.OrderByDescending(m => m.ReceivedOn))
                                 {
-                                    <small>
-                                        <a href="@Url.Action("Details", "Donations", new { id = s.Id })">@label</a>
-                                    </small>
+                                    <div class="list-group-item">
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Treasurer"))
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    @s.FirstName @s.LastName
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @s.Amount
+                                                </div>
+                                                <div class="col-md-4">
+                                                    @s.Email
+                                                </div>
+                                                <div class="col-md-3">
+                                                    @s.PhoneNumber
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-xs-12">
+                                                    <small>@s.CreatedOn.ToString("u")</small>
+                                                </div>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <small>@string.Format("{0} {1} ({2:C2})", s.FirstName, s.LastName, s.Amount)</small>
+                                        }
+                                    </div>
                                 }
-                                else
-                                {
-                                    <small>@label</small>
-                                }
-                                <br />
-                            }
+                            </div>
                         }
                         else
                         {
