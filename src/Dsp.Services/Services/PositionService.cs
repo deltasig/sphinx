@@ -81,6 +81,18 @@
             await RemovePositionAsync(entity);
         }
 
+        public async Task CreatePositionAsync(Position entity)
+        {
+            var exists = await _repository.GetExistsAsync<Position>(m => m.Name == entity.Name);
+            if (exists)
+            {
+                throw new ArgumentException("A position with that name already exists.");
+            }
+
+            _repository.Create(entity);
+            await _repository.SaveAsync();
+        }
+
         public async Task UpdatePositionAsync(Position entity)
         {
             if (entity == null)
@@ -97,10 +109,19 @@
             {
                 throw new ObjectNotFoundException("The entity being updated does not exist in the database.");
             }
+            oldPosition.Name = entity.Name;
+            oldPosition.Description = entity.Description;
+            oldPosition.Inquiries = entity.Inquiries;
+            oldPosition.Type = entity.Type;
+            oldPosition.IsExecutive = entity.IsExecutive;
+            oldPosition.IsElected = entity.IsElected;
+            oldPosition.IsDisabled = entity.IsDisabled;
+            oldPosition.IsPublic = entity.IsPublic;
 
             // Check if order changed.
             if (oldPosition.DisplayOrder != entity.DisplayOrder)
             {
+                oldPosition.DisplayOrder = entity.DisplayOrder;
                 // Auto adjusting the display order of all positions to accomodate change.
                 var allPositions = await _repository
                     .GetAsync<Position>(
@@ -108,7 +129,7 @@
                         o => o.OrderBy(p => p.DisplayOrder));
 
                 var positionsList = allPositions.ToList();
-                positionsList.Insert(entity.DisplayOrder, entity);
+                positionsList.Add(oldPosition);
 
                 for (var i = 0; i < positionsList.Count; i++)
                 {
@@ -118,7 +139,7 @@
             }
             else
             {
-                _repository.Update(entity);
+                _repository.Update(oldPosition);
             }
 
             await _repository.SaveAsync();

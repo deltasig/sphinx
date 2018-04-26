@@ -65,11 +65,21 @@
         public async Task<ActionResult> Create(Position position)
         {
             if (!ModelState.IsValid) return View(position);
+            if (string.IsNullOrEmpty(position.Name))
+            {
+                ViewBag.FailureMessage = "The Name field is required.";
+                return View(position);
+            }
 
             try
             {
-                await _positionService.UpdatePositionAsync(position);
+                await _positionService.CreatePositionAsync(position);
                 return RedirectToAction("Index");
+            }
+            catch (ArgumentException ex)
+            {
+                ViewBag.FailureMessage = ex.Message;
+                return View(position);
             }
             catch (Exception)
             {
