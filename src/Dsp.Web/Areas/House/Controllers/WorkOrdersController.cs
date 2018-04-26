@@ -14,7 +14,7 @@
     using System.Web.Mvc;
     using Extensions;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
     public class WorkOrdersController : BaseController
     {
         [HttpGet]
@@ -98,7 +98,7 @@
             {
                 UserId = User.Identity.GetUserId<int>(),
                 ChangedOn = DateTime.UtcNow,
-                WorkOrderId = (int) id,
+                WorkOrderId = (int)id,
                 WorkOrderStatusId = status.WorkOrderStatusId
             };
 
@@ -171,7 +171,7 @@
                 {
                     WorkOrderStatusId = closedStatus.WorkOrderStatusId,
                     ChangedOn = commentTime.AddSeconds(1),
-                    WorkOrderId = (int) workOrderId,
+                    WorkOrderId = (int)workOrderId,
                     UserId = userId
                 };
 
@@ -182,7 +182,7 @@
 
             var newComment = new WorkOrderComment
             {
-                WorkOrderId = (int) workOrderId,
+                WorkOrderId = (int)workOrderId,
                 SubmittedOn = commentTime,
                 UserId = userId,
                 Text = comment
@@ -191,8 +191,8 @@
             _db.WorkOrderComments.Add(newComment);
             await _db.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = close 
-                ? "Work order closed successfully." 
+            TempData["SuccessMessage"] = close
+                ? "Work order closed successfully."
                 : "Comment posted successfully.";
             return RedirectToAction("View", new { id = workOrderId });
         }
@@ -396,7 +396,7 @@
             TempData["SuccessMessage"] = "Work order deleted successfully.";
             return RedirectToAction("Index");
         }
-        
+
         private async Task UpdateWorkOrderStatus(WorkOrder workOrder, WorkOrderStatus newStatus)
         {
             var statusChange = new WorkOrderStatusChange
