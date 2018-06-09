@@ -21,7 +21,7 @@
 
         [Range(0, 999999999, ErrorMessage = "Pin number is too long."), DataType(DataType.Text)]
         public int? Pin { get; set; }
-        
+
         [Required, Display(Name = "Member Status")]
         public int StatusId { get; set; }
 
@@ -92,12 +92,6 @@
         [InverseProperty("Member")]
         public virtual ICollection<SoberSignup> SoberSignups { get; set; }
         [InverseProperty("Member")]
-        public virtual ICollection<StudyAssignment> StudyAssignments { get; set; }
-        [InverseProperty("Member")]
-        public virtual ICollection<StudyHour> StudyHours { get; set; }
-        [InverseProperty("Member")]
-        public virtual ICollection<StudyProctor> StudyProctorShifts { get; set; }
-        [InverseProperty("Member")]
         public virtual ICollection<WorkOrder> WorkOrders { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<WorkOrderComment> WorkOrderComments { get; set; }
@@ -105,7 +99,7 @@
         public virtual ICollection<WorkOrderPriorityChange> WorkOrderPriorityChanges { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<WorkOrderStatusChange> WorkOrderStatusChanges { get; set; }
-        
+
         public RoomToMember GetMostRecentRoomAssignment()
         {
             return Rooms.OrderByDescending(r => r.MovedOut).FirstOrDefault();
@@ -177,7 +171,7 @@
             }
 
             var assignments = Rooms.Where(r => r.Room.SemesterId == sid).OrderByDescending(r => r.MovedOut);
-            
+
             return assignments.First().Room.Name;
         }
 
