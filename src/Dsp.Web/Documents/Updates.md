@@ -1,4 +1,21 @@
-﻿### February 2018
+﻿### June 2018
+
+- Added API endpoint for upcoming sober drivers.
+- Added "BA" (Bachelors of Arts) option to add major form.
+- The "Add a new class" form on class schedule page will now remember the previously selected semester after you add a class (won't remember if you navigate away from the page though).
+- Gave ACB House Manager ability to modify work orders.
+
+---
+
+### April 2018
+
+- Fixed bug with pledge class letter display in profiles.
+- Added some details to donations for the Treasurer.
+- Fixed bug where you couldn't add new positions.
+
+---
+
+### February 2018
 
 - Fixed a bug where incident reports could not be submitted, and I apparently messed with the emails for incident reports that go to the President and SAA, but I don't remember why.
 - Removed laundry statistics, they were unnecessary.
