@@ -42,6 +42,11 @@
     pageNextFilter.page = filter.page + 1;
     openFilter.open = !filter.open;
     closedFilter.closed = !filter.closed;
+
+    var elevatedPermissions =
+        User.IsInRole("Administrator") ||
+        User.IsInRole("House Manager") ||
+        User.IsInRole("ACB House Manager") ||
 }
 
 <div class="container-fluid">
@@ -135,7 +140,7 @@
                         <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-success">
                             Create New W.O.
                         </a>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager"))
+                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") || User.IsInRole("ACB House Manager"))
                         {
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
