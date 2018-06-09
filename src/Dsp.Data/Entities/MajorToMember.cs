@@ -32,6 +32,7 @@ namespace Dsp.Data.Entities
         Minor,
         Ms,
         PhD,
-        Cert
+        Cert,
+        Ba
     }
 }
