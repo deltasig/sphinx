@@ -46,7 +46,7 @@
     var elevatedPermissions =
         User.IsInRole("Administrator") ||
         User.IsInRole("House Manager") ||
-        User.IsInRole("ACB House Manager") ||
+        User.IsInRole("ACB House Manager");
 }
 
 <div class="container-fluid">
@@ -140,7 +140,7 @@
                         <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-success">
                             Create New W.O.
                         </a>
-                        @if (User.IsInRole("Administrator") || User.IsInRole("House Manager") || User.IsInRole("ACB House Manager"))
+                        @if (elevatedPermissions)
                         {
                             <button type="button" class="btn btn-default dropdown-toggle"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
