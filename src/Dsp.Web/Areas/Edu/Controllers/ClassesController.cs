@@ -2,8 +2,8 @@
 {
     using Amazon.S3;
     using Amazon.S3.Model;
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -91,7 +91,7 @@
             };
             return View(model);
         }
-        
+
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
@@ -120,7 +120,7 @@
 
             TempData["SuccessMessage"] = model.Class.CourseName + " updated successfully.";
             return RedirectToAction("Details", new { id = model.Class.ClassId });
-            
+
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -186,7 +186,7 @@
                 TempData["FailureMessage"] = "Nothing was merged because no primary class was selected.";
                 return RedirectToAction("Duplicates");
             }
-            
+
             foreach (var group in model)
             {
                 // Skip if they did not check only one box.
@@ -226,7 +226,7 @@
             return RedirectToAction("Duplicates");
         }
 
-        public async Task<ActionResult> Schedule(string userName)
+        public async Task<ActionResult> Schedule(string userName, int? semesterId = null)
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];
@@ -247,7 +247,7 @@
                 Semesters = await GetSemesterListAsync(),
                 ClassTaken = new ClassTaken
                 {
-                    SemesterId = (await GetThisSemesterAsync()).SemesterId,
+                    SemesterId = semesterId == null ? (await GetThisSemesterAsync()).SemesterId : (int)semesterId,
                     UserId = member.Id
                 },
                 ClassesTaken = member.ClassesTaken
@@ -282,7 +282,7 @@
             {
                 TempData["FailureMessage"] = "Failed to enroll in class.  " +
                                              "Enrollment in the same class multiple times for a given semester is not allowed.";
-                return RedirectToAction("Schedule", new { userName = model.SelectedUserName });
+                return RedirectToAction("Schedule", new { userName = model.SelectedUserName, semesterId = model.ClassTaken.SemesterId });
             }
 
             model.ClassTaken.CreatedOn = DateTime.UtcNow;
@@ -292,7 +292,7 @@
             var semester = await _db.Semesters.FindAsync(model.ClassTaken.SemesterId);
 
             TempData["SuccessMessage"] = member + " was successfully enrolled in " + course.CourseShorthand + " for " + semester + ".";
-            return RedirectToAction("Schedule", new { userName = model.SelectedUserName });
+            return RedirectToAction("Schedule", new { userName = model.SelectedUserName, semesterId = model.ClassTaken.SemesterId });
         }
 
         [Authorize(Roles = "Administrator, Academics")]
@@ -375,7 +375,7 @@
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            
+
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];
 
@@ -437,7 +437,7 @@
             }
 
             var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
-            var maxLength = section != null ? section.MaxRequestLength*1024 : 10240*1024;
+            var maxLength = section != null ? section.MaxRequestLength * 1024 : 10240 * 1024;
 
             if (model.FileInfoModel.File.ContentLength > maxLength)
             {
@@ -451,7 +451,7 @@
             }
             var regex = new Regex(@"^(Test|Hw|Quiz|Crib|Proj|PTest|Lab) \d{2} - (SP|FS|SS)\d{4} - [a-zA-Z]{2,25}.pdf$");
             var match = regex.Match(model.FileInfoModel.File.FileName);
-            if(!match.Success)
+            if (!match.Success)
             {
                 TempData["FailureMessage"] = "Your file name does not match the required format. Please review the upload instructions.";
                 return RedirectToAction("Details", new { id = model.Class.ClassId });
@@ -487,16 +487,16 @@
             }
 
             try
-            { 
+            {
                 var file = new ClassFile
-                    {
-                        ClassId = model.Class.ClassId,
-                        UserId = User.Identity.GetUserId<int>(),
-                        AwsCode = key,
-                        UploadedOn = DateTime.UtcNow,
-                    };
-                    _db.ClassFiles.Add(file);
-                    await _db.SaveChangesAsync();
+                {
+                    ClassId = model.Class.ClassId,
+                    UserId = User.Identity.GetUserId<int>(),
+                    AwsCode = key,
+                    UploadedOn = DateTime.UtcNow,
+                };
+                _db.ClassFiles.Add(file);
+                await _db.SaveChangesAsync();
             }
             catch (Exception e)
             {
@@ -561,7 +561,7 @@
         [Authorize(Roles = "Administrator, Academics")]
         public async Task<ActionResult> DeleteFile(int? id)
         {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound); 
+            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             var model = await _db.ClassFiles.FindAsync(id);
             if (model == null) return HttpNotFound();
 
@@ -573,7 +573,7 @@
         public async Task<ActionResult> DeleteFileConfirmed(int id, int classId)
         {
             var file = await _db.ClassFiles.SingleAsync(f => f.ClassFileId == id);
-            if (file == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound); 
+            if (file == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
 
             try
             {
@@ -598,7 +598,7 @@
                                              "If the problem persists please contact your administrator.";
                 return RedirectToAction("Details", new { id = classId });
             }
-            
+
             _db.Entry(file).State = EntityState.Deleted;
             await _db.SaveChangesAsync();
 
