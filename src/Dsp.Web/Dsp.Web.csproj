@@ -238,12 +238,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
     </Reference>
+    <Reference Include="WebApiThrottle, Version=1.5.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebApiThrottle.1.5.4\lib\net45\WebApiThrottle.dll</HintPath>
+    </Reference>
     <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\SobersController.cs" />
     <Compile Include="Api\TreasuryController.cs" />
     <Compile Include="Api\MembersController.cs" />
     <Compile Include="Api\AdminController.cs" />
@@ -441,6 +445,7 @@
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
     <Content Include="Content\wmd.css" />
+    <Content Include="Error\429.html" />
     <Content Include="Error\403.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\Avatars\NoAvatar.jpg" />
