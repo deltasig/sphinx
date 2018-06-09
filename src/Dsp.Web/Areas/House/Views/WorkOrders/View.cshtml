@@ -15,6 +15,7 @@
     var elevatedPermissions =
         User.IsInRole("Administrator") ||
         User.IsInRole("House Manager") ||
+        User.IsInRole("ACB House Manager") ||
         Model.WorkOrder.UserId == currentUserId;
 
     var comments = Model.WorkOrder.Comments.OrderBy(o => o.SubmittedOn);
