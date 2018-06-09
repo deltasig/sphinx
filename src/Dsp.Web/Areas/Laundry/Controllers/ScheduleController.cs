@@ -1,17 +1,32 @@
 ﻿namespace Dsp.Web.Areas.Laundry.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Exceptions;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
     public class ScheduleController : BaseController
     {
+        private ILaundryService _laundryService;
+
+        public ScheduleController()
+        {
+            _laundryService = new LaundryService(new Repository<SphinxDbContext>(_db));
+        }
+
+        public ScheduleController(ILaundryService laundryService)
+        {
+            _laundryService = laundryService;
+        }
+
         [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Index()
         {
@@ -20,35 +35,18 @@
 
             // Build Laundry Schedule
             var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
-            var existingSignups = await _db.LaundrySignups.Where(l => l.DateTimeShift >= nowCst.Date).ToListAsync();
+            var existingSignups = await _laundryService.GetSignups(nowCst);
             var schedule = new LaundrySchedule(nowCst, 7, 2, existingSignups);
-
-            // Get semester list for stats.
-            var signups = await _db.LaundrySignups.ToListAsync();
-            var allSemesters = await _db.Semesters.ToListAsync();
-            var thisSemester = await GetThisSemesterAsync();
-            var semesters = allSemesters
-                .Where(s =>
-                    signups.Any(i =>
-                        i.DateTimeShift >= s.DateStart &&
-                        i.DateTimeShift <= s.DateEnd))
-                .ToList();
-            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
-            {
-                semesters.Add(thisSemester);
-            }
 
             var model = new LaundryIndexModel
             {
-                Schedule = schedule,
-                SemesterList = GetCustomSemesterListAsync(semesters)
+                Schedule = schedule
             };
             return View(model);
         }
 
         [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
-        public async Task<ActionResult> Reserve(LaundrySignup signup)
+        public async Task<ActionResult> Reserve(LaundrySignup entity)
         {
             if (!ModelState.IsValid)
             {
@@ -57,62 +55,42 @@
                 return RedirectToAction("Index");
             }
 
-            var nowCst = TimeZoneInfo.ConvertTimeBySystemTimeZoneId(DateTime.UtcNow, "Central Standard Time");
-            var currentUserId = User.Identity.GetUserId<int>();
-
-            // Check if they've already signed up too many times within the current window.
-            var existingSignups = await _db.LaundrySignups
-                .Where(l => l.DateTimeShift >= nowCst.Date && l.UserId == currentUserId).ToListAsync();
-            var maxSignups = 2;
-            if (User.IsInRole("House Steward")) maxSignups = 4;
-            if (existingSignups.Count() >= maxSignups)
+            entity.UserId = User.Identity.GetUserId<int>();
+            try
             {
-                TempData["FailureMessage"] = "You have signed up too many times within the current window.  " +
-                                             "Your maximum allowed is: " + maxSignups;
-                return RedirectToAction("Index");
+                await _laundryService.Reserve(entity, User.IsInRole("House Steward") ? 4 : 2);
+                TempData["SuccessMessage"] = "You have reserved the laundry room for the following time: " + entity.DateTimeShift;
+            }
+            catch (LaundrySignupsExceededException ex)
+            {
+                TempData["FailureMessage"] = ex.Message;
+            }
+            catch (LaundrySignupAlreadyExistsException ex)
+            {
+                TempData["FailureMessage"] = ex.Message;
             }
 
-            // Check if a signup already exists
-            var shift = await _db.LaundrySignups.SingleOrDefaultAsync(s => s.DateTimeShift == signup.DateTimeShift);
-            if (shift != null)
-            {
-                TempData["FailureMessage"] = "Sorry, " + shift.Member + " signed up for that slot after you loaded page " +
-                                             "but before you tried to sign up.  You will have to pick a new slot.";
-                return RedirectToAction("Index");
-            }
-
-            // All good, add their reservation.
-            signup.UserId = currentUserId;
-            signup.DateTimeSignedUp = nowCst;
-            signup.DateTimeShift = signup.DateTimeShift;
-
-            _db.LaundrySignups.Add(signup);
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "You have reserved the laundry room for the following time: " + signup.DateTimeShift;
             return RedirectToAction("Index");
         }
 
         [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
-        public async Task<ActionResult> Cancel(LaundrySignup cancel)
+        public async Task<ActionResult> Cancel(LaundrySignup entity)
         {
-            var shift = await _db.LaundrySignups.SingleOrDefaultAsync(s => s.DateTimeShift == cancel.DateTimeShift);
-
-            if (shift == null)
+            entity.UserId = User.Identity.GetUserId<int>();
+            try
             {
-                TempData["FailureMessage"] = "Could not cancel reservation because no existing reservation was found.";
-                return RedirectToAction("Index");
+                await _laundryService.Cancel(entity);
+                TempData["SuccessMessage"] = "You cancelled your reservation for: " + entity.DateTimeShift;
             }
-            if (shift.UserId != User.Identity.GetUserId<int>())
+            catch (LaundrySignupNotFoundException ex)
             {
-                TempData["FailureMessage"] = "You cannot cancel someone else's shift!";
-                return RedirectToAction("Index");
+                TempData["FailureMessage"] = ex.Message;
+            }
+            catch (LaundrySignupPermissionException ex)
+            {
+                TempData["FailureMessage"] = ex.Message;
             }
 
-            _db.LaundrySignups.Remove(shift);
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "You cancelled your reservation for: " + shift.DateTimeShift;
             return RedirectToAction("Index");
         }
     }

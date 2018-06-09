@@ -8,7 +8,7 @@
     public class LaundrySchedule
     {
         private const int DayLength = 24;
-        private readonly List<LaundrySignup> _existingSignups;
+        private readonly IEnumerable<LaundrySignup> _existingSignups;
 
         public int WindowSize { get; set; }
         public int SlotSize { get; set; }
@@ -16,7 +16,7 @@
         public DateTime StartOfToday { get; set; }
         public List<LaundryRow> Rows { get; set; }
 
-        public LaundrySchedule(DateTime now, int windowSize, int slotSize, List<LaundrySignup> existingSignups)
+        public LaundrySchedule(DateTime now, int windowSize, int slotSize, IEnumerable<LaundrySignup> existingSignups)
         {
             Now = now;
             StartOfToday = now.Date;
