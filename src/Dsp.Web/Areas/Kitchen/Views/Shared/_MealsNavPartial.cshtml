@@ -16,12 +16,7 @@
         @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Items" ? "active" : "")
     }) 
     if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-    {
-        @Html.ActionLink("Item Types", "Index", "MealItemTypes", new { area = "Kitchen" }, new
-        {
-            @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Item Types" ? "active" : "")
-        }) 
-    
+    {    
         @Html.ActionLink("Periods", "Index", "MealPeriods", new { area = "Kitchen" }, new
         {
             @class = "btn btn-sm btn-default " + (ViewBag.Title == "Meal Periods" ? "active" : "")

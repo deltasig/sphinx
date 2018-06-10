@@ -84,7 +84,6 @@
     <Compile Include="Entities\MajorToMember.cs" />
     <Compile Include="Entities\Meal.cs" />
     <Compile Include="Entities\MealItem.cs" />
-    <Compile Include="Entities\MealItemType.cs" />
     <Compile Include="Entities\MealPeriod.cs" />
     <Compile Include="Entities\MealPlate.cs" />
     <Compile Include="Entities\MealToItem.cs" />
@@ -240,6 +239,10 @@
     <Compile Include="Migrations\201806092114024_RemovedStudyEntities.Designer.cs">
       <DependentUpon>201806092114024_RemovedStudyEntities.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806102123119_RemovedMealItemTypes.cs" />
+    <Compile Include="Migrations\201806102123119_RemovedMealItemTypes.Designer.cs">
+      <DependentUpon>201806102123119_RemovedMealItemTypes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -345,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806092114024_RemovedStudyEntities.resx">
       <DependentUpon>201806092114024_RemovedStudyEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102123119_RemovedMealItemTypes.resx">
+      <DependentUpon>201806102123119_RemovedMealItemTypes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

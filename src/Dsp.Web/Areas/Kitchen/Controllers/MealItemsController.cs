@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Kitchen.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;
@@ -13,13 +13,12 @@
         public async Task<ActionResult> Index()
         {
             ViewBag.ReturnUrl = "MealItems/Index";
-            var mealItems = _db.MealItems.Include(m => m.MealItemType);
-            return View(await mealItems.ToListAsync());
+            var mealItems = await _db.MealItems.ToListAsync();
+            return View(mealItems);
         }
 
         public ActionResult Create()
         {
-            ViewBag.MealItemTypeId = new SelectList(_db.MealItemTypes, "MealItemTypeId", "Name");
             return View();
         }
 
@@ -47,7 +46,7 @@
             {
                 return HttpNotFound();
             }
-            ViewBag.MealItemTypeId = new SelectList(_db.MealItemTypes, "MealItemTypeId", "Name", mealItem.MealItemTypeId);
+
             return View(mealItem);
         }
 
