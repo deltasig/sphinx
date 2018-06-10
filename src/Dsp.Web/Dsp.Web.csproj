@@ -322,7 +322,6 @@
     <Compile Include="Areas\House\Models\WorkOrderIndexModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderIndexFilterModel.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealItemsController.cs" />
-    <Compile Include="Areas\Kitchen\Controllers\MealItemTypesController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealPeriodsController.cs" />
     <Compile Include="Areas\Kitchen\Controllers\MealsController.cs" />
     <Compile Include="Areas\Kitchen\KitchenAreaRegistration.cs" />
@@ -517,10 +516,6 @@
     <Content Include="Areas\Kitchen\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Kitchen\Views\MealItemTypes\Create.cshtml" />
-    <Content Include="Areas\Kitchen\Views\MealItemTypes\Delete.cshtml" />
-    <Content Include="Areas\Kitchen\Views\MealItemTypes\Edit.cshtml" />
-    <Content Include="Areas\Kitchen\Views\MealItemTypes\Index.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Create.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Delete.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Edit.cshtml" />
