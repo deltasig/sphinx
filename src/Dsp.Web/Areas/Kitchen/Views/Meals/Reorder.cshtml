@@ -31,9 +31,9 @@
                 for (var i = 0; i < Model.Count(); i++)
                 {
                     <div class="form-group">
-                        @Html.HiddenFor(m => Model[i].MealToItemId)
-                        @Html.HiddenFor(m => Model[i].MealItemId)
+                        @Html.HiddenFor(m => Model[i].Id)
                         @Html.HiddenFor(m => Model[i].MealId)
+                        @Html.HiddenFor(m => Model[i].MealItemId)
                         @Html.Label(Model[i].MealItem.Name, htmlAttributes: new { @class = "control-label col-sm-3" })
                         <div class="col-sm-3">
                             @Html.EditorFor(model => Model[i].DisplayOrder, new { htmlAttributes = new { @class = "form-control" } })

@@ -3,15 +3,14 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Table("MealsToItems")]
     public class MealToItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealToItemId { get; set; }
+        public int Id { get; set; }
 
-        [Column(Order = 0), Index("IX_MealToItem", 0, IsUnique = true)]
         public int MealId { get; set; }
 
-        [Column(Order = 1), Index("IX_MealToItem", 1, IsUnique = true)]
         public int MealItemId { get; set; }
 
         public int DisplayOrder { get; set; }

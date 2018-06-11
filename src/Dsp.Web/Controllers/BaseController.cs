@@ -716,39 +716,11 @@
             {
                 newList.Add(new
                 {
-                    m.MealItemId,
+                    m.Id,
                     Text = m.Name
                 });
             }
-            return new SelectList(newList, "MealItemId", "Text");
-        }
-        protected virtual async Task<SelectList> GetMealsSelectListAsync()
-        {
-            var list = await _db.Meals.ToListAsync();
-            var newList = new List<object>();
-            foreach (var m in list)
-            {
-                newList.Add(new
-                {
-                    m.MealId,
-                    Text = m.ToString()
-                });
-            }
-            return new SelectList(newList, "MealId", "Text");
-        }
-        protected virtual async Task<SelectList> GetMealsSelectListWithNoneAsync()
-        {
-            var list = await _db.Meals.ToListAsync();
-            var newList = new List<object> { new { MealId = -1, Text = "None" } };
-            foreach (var m in list)
-            {
-                newList.Add(new
-                {
-                    m.MealId,
-                    Text = m.ToString()
-                });
-            }
-            return new SelectList(newList, "MealId", "Text");
+            return new SelectList(newList, "Id", "Text");
         }
         protected virtual IEnumerable<WorkOrder> GetFilteredWorkOrderList(
             IList<WorkOrder> workOrders,

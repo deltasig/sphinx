@@ -3,15 +3,13 @@
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
-    public class MealVote
+    public class MealItemVote
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealVoteId { get; set; }
+        public int Id { get; set; }
 
-        [Column(Order = 0), Index("IX_MealVote", 0, IsUnique = true)]
         public int UserId { get; set; }
 
-        [Column(Order = 1), Index("IX_MealVote", 1, IsUnique = true)]
         public int MealItemId { get; set; }
 
         public bool IsUpvote { get; set; }

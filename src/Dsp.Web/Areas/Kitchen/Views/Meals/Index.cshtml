@@ -34,12 +34,12 @@
                                 <tr>
                                     <td>@item.ToString()</td>
                                     <td class="text-right">
-                                        @Html.ActionLink("Reorder", "Reorder", new { id = item.MealId }) |
-                                        @Html.ActionLink("Contents", "Edit", new { id = item.MealId })
-                                        @if (!item.MealsToPeriods.Any() || !item.MealsToItems.Any())
+                                        @Html.ActionLink("Reorder", "Reorder", new { id = item.Id }) |
+                                        @Html.ActionLink("Contents", "Edit", new { id = item.Id })
+                                        @if (!item.MealPeriods.Any() || !item.MealItems.Any())
                                         {
                                             @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealId })
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                                         }
                                     </td>
                                 </tr>

@@ -38,11 +38,11 @@
                                     <td>@item.StartTime.ToShortTimeString()</td>
                                     <td>@item.EndTime.ToShortTimeString()</td>
                                     <td class="text-right">
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.MealPeriodId })
-                                        @if (!item.MealToPeriods.Any())
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                                        @if (!item.Meals.Any())
                                         {
                                             @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.MealPeriodId })
+                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                                         }
                                     </td>
                                 </tr>

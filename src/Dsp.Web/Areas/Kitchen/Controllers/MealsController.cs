@@ -35,8 +35,8 @@
             model.Meals = await _db.Meals.ToListAsync();
             model.MealPeriods = await _db.MealPeriods.ToListAsync();
             model.UsersVotes = Request.IsAuthenticated 
-                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealVotes 
-                : new List<MealVote>();
+                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealItemVotes 
+                : new List<MealItemVote>();
             model.Plates = await _db.MealPlates
                 .Where(m => 
                     m.PlateDateTime >= startOfWeekUtc.Date && 
@@ -54,13 +54,13 @@
                 {
                     var slot = existingAssignments
                         .SingleOrDefault(m => 
-                            m.MealPeriodId == p.MealPeriodId && 
+                            m.MealPeriodId == p.Id && 
                             m.Date == startOfWeekUtc.AddDays(i).Date);
                     if (slot == null)
                     {
                         slot = new MealToPeriod
                         {
-                            MealPeriodId = p.MealPeriodId,
+                            MealPeriodId = p.Id,
                             Date = startOfWeekUtc.AddDays(i)
                         };
                     }
@@ -86,8 +86,8 @@
             model.Meals = await _db.Meals.ToListAsync();
             model.MealPeriods = await _db.MealPeriods.ToListAsync();
             model.UsersVotes = Request.IsAuthenticated
-                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealVotes
-                : new List<MealVote>();
+                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealItemVotes
+                : new List<MealItemVote>();
 
             var existingAssignments = await _db.MealToPeriods
                 .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
@@ -100,13 +100,13 @@
                 {
                     var slot = existingAssignments
                         .SingleOrDefault(m =>
-                            m.MealPeriodId == p.MealPeriodId &&
+                            m.MealPeriodId == p.Id &&
                             m.Date == startOfWeekUtc.AddDays(i).Date);
                     if (slot == null)
                     {
                         slot = new MealToPeriod
                         {
-                            MealPeriodId = p.MealPeriodId,
+                            MealPeriodId = p.Id,
                             Date = startOfWeekUtc.AddDays(i)
                         };
                     }
@@ -173,14 +173,14 @@
             var existingVote = await _db.MealVotes
                     .SingleOrDefaultAsync(v => 
                         v.UserId == userId && 
-                        v.MealItemId == mealItem.MealItemId);
+                        v.MealItemId == mealItem.Id);
 
             if (existingVote == null)
             {
-                _db.MealVotes.Add(new MealVote
+                _db.MealVotes.Add(new MealItemVote
                 {
                     UserId = userId,
-                    MealItemId = mealItem.MealItemId,
+                    MealItemId = mealItem.Id,
                     IsUpvote = true
                 });
             }
@@ -221,14 +221,14 @@
             var existingVote = await _db.MealVotes
                     .SingleOrDefaultAsync(v =>
                         v.UserId == userId &&
-                        v.MealItemId == mealItem.MealItemId);
+                        v.MealItemId == mealItem.Id);
 
             if (existingVote == null)
             {
-                _db.MealVotes.Add(new MealVote
+                _db.MealVotes.Add(new MealItemVote
                 {
                     UserId = userId,
-                    MealItemId = mealItem.MealItemId,
+                    MealItemId = mealItem.Id,
                     IsUpvote = false
                 });
             }
@@ -326,7 +326,7 @@
             {
                 var item = new MealToItem
                 {
-                    MealId = meal.MealId, 
+                    MealId = meal.Id, 
                     MealItemId = id
                 };
                 _db.MealToItems.Add(item);
@@ -351,8 +351,8 @@
             var model = new EditMealModel
             {
                 MealItems = await base.GetMealItemsSelectListAsync(), 
-                SelectedMealItemIds = meal.MealsToItems.Select(m => m.MealItemId).ToArray(),
-                MealId = meal.MealId
+                SelectedMealItemIds = meal.MealItems.Select(m => m.MealItemId).ToArray(),
+                MealId = meal.Id
             };
             return View(model);
         }
@@ -369,23 +369,23 @@
                 return HttpNotFound();
             }
 
-            foreach (var i in meal.MealsToItems.ToList())
+            foreach (var i in meal.MealItems.ToList())
             {
                 if (!model.SelectedMealItemIds.Contains(i.MealItemId))
                 {
                     _db.Entry(i).State = EntityState.Deleted;
                 }
             }
-            var remainingIds = meal.MealsToItems.Select(m => m.MealItemId).ToList();
+            var remainingIds = meal.MealItems.Select(m => m.MealItemId).ToList();
             foreach (var i in model.SelectedMealItemIds)
             {
                 if (remainingIds.Contains(i)) continue;
                 var mealItem = new MealToItem
                 {
-                    MealId = meal.MealId, 
+                    MealId = meal.Id, 
                     MealItemId = i
                 };
-                meal.MealsToItems.Add(mealItem);
+                meal.MealItems.Add(mealItem);
             }
 
             _db.Entry(meal).State = EntityState.Modified;
@@ -406,7 +406,7 @@
                 return HttpNotFound();
             }
 
-            return View(meal.MealsToItems.OrderBy(i => i.DisplayOrder).ToList());
+            return View(meal.MealItems.OrderBy(i => i.DisplayOrder).ToList());
         }
         
         [HttpPost, ValidateAntiForgeryToken]

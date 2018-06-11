@@ -8,7 +8,7 @@
     public class MealPeriod
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealPeriodId { get; set; }
+        public int Id { get; set; }
 
         [Required, StringLength(100)]
         public string Name { get; set; }
@@ -18,6 +18,6 @@
         public DateTime EndTime { get; set; }
 
         [InverseProperty("MealPeriod")]
-        public virtual ICollection<MealToPeriod> MealToPeriods { get; set; }
+        public virtual ICollection<MealToPeriod> Meals { get; set; }
     }
 }

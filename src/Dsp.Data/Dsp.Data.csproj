@@ -31,12 +31,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
-      <Private>True</Private>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
@@ -88,7 +86,7 @@
     <Compile Include="Entities\MealPlate.cs" />
     <Compile Include="Entities\MealToItem.cs" />
     <Compile Include="Entities\MealToPeriod.cs" />
-    <Compile Include="Entities\MealVote.cs" />
+    <Compile Include="Entities\MealItemVote.cs" />
     <Compile Include="Entities\Member.cs" />
     <Compile Include="Entities\MemberStatus.cs" />
     <Compile Include="Entities\PhoneNumber.cs" />
@@ -243,6 +241,50 @@
     <Compile Include="Migrations\201806102123119_RemovedMealItemTypes.Designer.cs">
       <DependentUpon>201806102123119_RemovedMealItemTypes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806102128228_ChangingMealItemPK.cs" />
+    <Compile Include="Migrations\201806102128228_ChangingMealItemPK.Designer.cs">
+      <DependentUpon>201806102128228_ChangingMealItemPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102139287_ChangingMealPK.cs" />
+    <Compile Include="Migrations\201806102139287_ChangingMealPK.Designer.cs">
+      <DependentUpon>201806102139287_ChangingMealPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102150165_ChangingMealPeriodPK.cs" />
+    <Compile Include="Migrations\201806102150165_ChangingMealPeriodPK.Designer.cs">
+      <DependentUpon>201806102150165_ChangingMealPeriodPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102156141_ChangingMealPlatePK.cs" />
+    <Compile Include="Migrations\201806102156141_ChangingMealPlatePK.Designer.cs">
+      <DependentUpon>201806102156141_ChangingMealPlatePK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102158017_ChangingMealVotePK.cs" />
+    <Compile Include="Migrations\201806102158017_ChangingMealVotePK.Designer.cs">
+      <DependentUpon>201806102158017_ChangingMealVotePK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102202043_ChangingMealToItemPK.cs" />
+    <Compile Include="Migrations\201806102202043_ChangingMealToItemPK.Designer.cs">
+      <DependentUpon>201806102202043_ChangingMealToItemPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102205176_ChangingMealToPeriodPK.cs" />
+    <Compile Include="Migrations\201806102205176_ChangingMealToPeriodPK.Designer.cs">
+      <DependentUpon>201806102205176_ChangingMealToPeriodPK.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102208427_ChangingMealTableNames.cs" />
+    <Compile Include="Migrations\201806102208427_ChangingMealTableNames.Designer.cs">
+      <DependentUpon>201806102208427_ChangingMealTableNames.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806102216522_ChangingMealVoteTableName.cs" />
+    <Compile Include="Migrations\201806102216522_ChangingMealVoteTableName.Designer.cs">
+      <DependentUpon>201806102216522_ChangingMealVoteTableName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806110004492_RemovingMealIndexes.cs" />
+    <Compile Include="Migrations\201806110004492_RemovingMealIndexes.Designer.cs">
+      <DependentUpon>201806110004492_RemovingMealIndexes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806110031107_AddNewMealIndexes.cs" />
+    <Compile Include="Migrations\201806110031107_AddNewMealIndexes.Designer.cs">
+      <DependentUpon>201806110031107_AddNewMealIndexes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -351,6 +393,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806102123119_RemovedMealItemTypes.resx">
       <DependentUpon>201806102123119_RemovedMealItemTypes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102128228_ChangingMealItemPK.resx">
+      <DependentUpon>201806102128228_ChangingMealItemPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102139287_ChangingMealPK.resx">
+      <DependentUpon>201806102139287_ChangingMealPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102150165_ChangingMealPeriodPK.resx">
+      <DependentUpon>201806102150165_ChangingMealPeriodPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102156141_ChangingMealPlatePK.resx">
+      <DependentUpon>201806102156141_ChangingMealPlatePK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102158017_ChangingMealVotePK.resx">
+      <DependentUpon>201806102158017_ChangingMealVotePK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102202043_ChangingMealToItemPK.resx">
+      <DependentUpon>201806102202043_ChangingMealToItemPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102205176_ChangingMealToPeriodPK.resx">
+      <DependentUpon>201806102205176_ChangingMealToPeriodPK.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102208427_ChangingMealTableNames.resx">
+      <DependentUpon>201806102208427_ChangingMealTableNames.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806102216522_ChangingMealVoteTableName.resx">
+      <DependentUpon>201806102216522_ChangingMealVoteTableName.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806110004492_RemovingMealIndexes.resx">
+      <DependentUpon>201806110004492_RemovingMealIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806110031107_AddNewMealIndexes.resx">
+      <DependentUpon>201806110031107_AddNewMealIndexes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

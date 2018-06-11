@@ -120,7 +120,7 @@
                                 {
                                     var slot = Model.MealsToPeriods
                                         .SingleOrDefault(m =>
-                                            m.MealPeriodId == p.MealPeriodId &&
+                                            m.MealPeriodId == p.Id &&
                                             m.Date == Model.StartOfWeek.AddDays(i).Date);
                                     <td>
                                         @if (Request.IsAuthenticated)
@@ -190,7 +190,7 @@
                                             {
                                                 <br class="visible-xs no-print"/>
                                             }
-                                            foreach (var item in slot.Meal.MealsToItems.OrderBy(m => m.DisplayOrder))
+                                            foreach (var item in slot.Meal.MealItems.OrderBy(m => m.DisplayOrder))
                                             {
                                                 <ul class="list-inline" style="margin: 0">
                                                     <li style="padding: 0">
@@ -323,7 +323,7 @@
                                                                 @if (plate.UserId == User.Identity.GetUserId<int>() ||
                                                                 User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                                                 {
-                                                                    using (Html.BeginForm("RemovePlate", "Meals", new { id = plate.MealPlateId, ViewBag.week },
+                                                                    using (Html.BeginForm("RemovePlate", "Meals", new { id = plate.Id, ViewBag.week },
                                                                         FormMethod.Post, new { @class = "" }))
                                                                     {
                                                                         @Html.AntiForgeryToken()

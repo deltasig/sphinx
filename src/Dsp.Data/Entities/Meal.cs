@@ -8,18 +8,18 @@ namespace Dsp.Data.Entities
     public class Meal
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealId { get; set; }
+        public int Id { get; set; }
 
         [InverseProperty("Meal")]
-        public virtual ICollection<MealToItem> MealsToItems { get; set; }
+        public virtual ICollection<MealToItem> MealItems { get; set; }
         [InverseProperty("Meal")]
-        public virtual ICollection<MealToPeriod> MealsToPeriods { get; set; }
+        public virtual ICollection<MealToPeriod> MealPeriods { get; set; }
 
         public override string ToString()
         {
-            if (MealsToItems == null) return "No Meal Items";
+            if (MealItems == null) return "No Meal Items";
             var label = string.Empty;
-            foreach (var m in MealsToItems.OrderBy(i => i.DisplayOrder))
+            foreach (var m in MealItems.OrderBy(i => i.DisplayOrder))
             {
                 label += m.MealItem.Name + ", ";
             }
