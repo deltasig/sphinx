@@ -7,7 +7,7 @@
     public class MealPlate
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealPlateId { get; set; }
+        public int Id { get; set; }
 
         public int UserId { get; set; }
 

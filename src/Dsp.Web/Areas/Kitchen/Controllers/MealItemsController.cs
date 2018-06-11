@@ -54,7 +54,7 @@
         [Authorize(Roles = "Administrator, House Steward")]
         public async Task<ActionResult> Edit(MealItem mealItem)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Edit", new { id = mealItem.MealItemId });
+            if (!ModelState.IsValid) return RedirectToAction("Edit", new { id = mealItem.Id });
 
             mealItem.Name = base.ToTitleCaseString(mealItem.Name);
             mealItem.Name = mealItem.Name.Replace("And", "&");

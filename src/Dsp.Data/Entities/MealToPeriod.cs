@@ -1,22 +1,22 @@
 ﻿namespace Dsp.Data.Entities
 {
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
+    [Table("MealsToPeriods")]
     public class MealToPeriod
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealToPeriodId { get; set; }
+        public int Id { get; set; }
 
-        [Required, Column(Order = 0), Index("IX_MealToPeriod", 0, IsUnique = true)]
+        [Required]
         public int MealPeriodId { get; set; }
 
-        [Required, Column(Order = 1), Index("IX_MealToPeriod", 1, IsUnique = true)]
+        [Required]
         public int MealId { get; set; }
 
-        [Required, Column(Order = 2, TypeName="Date"), Index("IX_MealToPeriod", 2, IsUnique = true)]
+        [Required, Column(TypeName = "Date")]
         public DateTime Date { get; set; }
 
         [ForeignKey("MealPeriodId")]

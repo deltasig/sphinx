@@ -3,12 +3,12 @@
     Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Edit Meal Schedule";
 
-    var newList = new List<object> { new { MealId = -1, Text = "None" } };
+    var newList = new List<object> { new { Id = -1, Text = "None" } };
     foreach (var m in Model.Meals)
     {
         newList.Add(new
         {
-            m.MealId,
+            m.Id,
             Text = m.ToString()
         });
     }
@@ -76,14 +76,14 @@
                                         @for (var i = 0; i < 7; i++)
                                         {
                                             var slot = Model.MealsToPeriods
-                                                .Single(m => m.MealPeriodId == p.MealPeriodId && m.Date.Date == Model.StartOfWeek.AddDays(i).Date);
-                                            @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealToPeriodId)
+                                                .Single(m => m.MealPeriodId == p.Id && m.Date.Date == Model.StartOfWeek.AddDays(i).Date);
+                                            @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Id)
                                             @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealPeriodId)
                                             @Html.HiddenFor(m => Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].Date)
 
                                             <td>
                                                 @Html.DropDownListFor(m => m.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId,
-                                                    new SelectList(newList, "MealId", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
+                                                    new SelectList(newList, "Id", "Text", Model.MealsToPeriods[Model.MealsToPeriods.IndexOf(slot)].MealId),
                                                     new { @class = "form-control dd", data_live_search = true })
                                             </td>
                                         }

@@ -1,0 +1,18 @@
+namespace Dsp.Data.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class ChangingMealVoteTableName : DbMigration
+    {
+        public override void Up()
+        {
+            RenameTable(name: "dbo.MealVotes", newName: "MealItemVotes");
+        }
+        
+        public override void Down()
+        {
+            RenameTable(name: "dbo.MealItemVotes", newName: "MealVotes");
+        }
+    }
+}

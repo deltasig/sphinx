@@ -7,7 +7,7 @@
     public class MealItem
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MealItemId { get; set; }
+        public int Id { get; set; }
 
         [Required, StringLength(150)]
         public string Name { get; set; }
@@ -16,9 +16,9 @@
         public bool IsGlutenFree { get; set; }
 
         [InverseProperty("MealItem")]
-        public virtual ICollection<MealToItem> MealToItems { get; set; }
+        public virtual ICollection<MealToItem> Meals { get; set; }
         [InverseProperty("MealItem")]
-        public virtual ICollection<MealVote> MealVotes { get; set; }
+        public virtual ICollection<MealItemVote> MealVotes { get; set; }
 
         public string GetGlutenLabel()
         {

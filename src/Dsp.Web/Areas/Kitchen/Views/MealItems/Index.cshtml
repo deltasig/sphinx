@@ -69,8 +69,8 @@
                                                 @item.Name
                                             </li>
                                             <li style="padding: 0">
-                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.MealItemId })">
-                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
+                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.Id })">
+                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.Id && v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
                                                     {
                                                         <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
                                                     }
@@ -81,8 +81,8 @@
                                                 </a>
                                             </li>
                                             <li style="padding: 0">
-                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.MealItemId })">
-                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.MealItemId && !v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
+                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.Id })">
+                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.Id && !v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
                                                     {
                                                         <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
                                                     }
@@ -100,11 +100,11 @@
                                     <td class="text-right">
                                         @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
                                         {
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.MealItemId })
-                                            if (!item.MealToItems.Any())
+                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                                            if (!item.Meals.Any())
                                             {
                                                 @: |
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.MealItemId })
+                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                                             }
                                         }
                                     </td>

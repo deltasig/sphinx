@@ -32,7 +32,7 @@
         public virtual DbSet<MealPeriod> MealPeriods { get; set; }
         public virtual DbSet<MealToItem> MealToItems { get; set; }
         public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
-        public virtual DbSet<MealVote> MealVotes { get; set; }
+        public virtual DbSet<MealItemVote> MealVotes { get; set; }
         public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
         public virtual DbSet<Cause> Philanthropies { get; set; }
         public virtual DbSet<PhoneNumber> PhoneNumbers { get; set; }
@@ -68,8 +68,23 @@
             modelBuilder.Entity<Leader>().HasKey(u => new { u.UserId, u.RoleId, u.SemesterId });
             modelBuilder.Entity<SphinxUserLogin>().ToTable("MemberLogins", "dbo");
             modelBuilder.Entity<SphinxUserClaim>().ToTable("MemberClaims", "dbo");
-
             modelBuilder.Entity<ElmahErrorLog>().ToTable("ELMAH_Error");
+
+            modelBuilder
+                .Entity<MealItemVote>()
+                .HasIndex(c => new { c.UserId, c.MealItemId })
+                .IsUnique()
+                .HasName("IX_User_MealItem");
+            modelBuilder
+                .Entity<MealToItem>()
+                .HasIndex(c => new { c.MealId, c.MealItemId })
+                .IsUnique()
+                .HasName("IX_Meal_MealItem");
+            modelBuilder
+                .Entity<MealToPeriod>()
+                .HasIndex(c => new { c.MealPeriodId, c.MealId, c.Date })
+                .IsUnique()
+                .HasName("IX_MealPeriod_Meal_Date");
         }
 
         public static SphinxDbContext Create()
