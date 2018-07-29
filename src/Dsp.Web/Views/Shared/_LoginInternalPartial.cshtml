@@ -1,15 +1,12 @@
 ﻿@using Dsp.Web.Extensions
 @if (Request.IsAuthenticated)
 {
-    if (!User.IsInRole("Released"))
-    {
-        <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
-            <a href="@Url.Action("Sphinx", "Home", new { area = "" })"
-               data-toggle="tooltip" data-placement="bottom" title="Sphinx">
-                <i class="fa fa-home"></i>
-            </a>
-        </li>
-    }
+    <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
+        <a href="@Url.Action("Sphinx", "Home", new { area = "" })"
+            data-toggle="tooltip" data-placement="bottom" title="Sphinx">
+            <i class="fa fa-home"></i>
+        </a>
+    </li>
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
         <a rel="home" href="@Url.Action("Index", "Account", new {area = "Members"})" style="padding:7px"
            data-toggle="tooltip" data-placement="bottom" title="Account">

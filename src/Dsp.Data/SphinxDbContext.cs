@@ -3,12 +3,16 @@
     using Entities;
     using Microsoft.AspNet.Identity.EntityFramework;
     using System.Data.Entity;
+    using System.Diagnostics;
 
     public class SphinxDbContext : IdentityDbContext
         <Member, Position, int, SphinxUserLogin, Leader, SphinxUserClaim>
     {
         public SphinxDbContext() : base("DefaultConnection")
         {
+#if DEBUG
+            Database.Log = s => Debug.Write(s);
+#endif
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
@@ -26,12 +30,10 @@
         public virtual DbSet<Leader> Leaders { get; set; }
         public virtual DbSet<Major> Majors { get; set; }
         public virtual DbSet<MajorToMember> MajorsToMembers { get; set; }
-        public virtual DbSet<Meal> Meals { get; set; }
         public virtual DbSet<MealItem> MealItems { get; set; }
         public virtual DbSet<MealPlate> MealPlates { get; set; }
         public virtual DbSet<MealPeriod> MealPeriods { get; set; }
-        public virtual DbSet<MealToItem> MealToItems { get; set; }
-        public virtual DbSet<MealToPeriod> MealToPeriods { get; set; }
+        public virtual DbSet<MealItemToPeriod> MealItemsToPeriods { get; set; }
         public virtual DbSet<MealItemVote> MealVotes { get; set; }
         public virtual DbSet<MemberStatus> MemberStatuses { get; set; }
         public virtual DbSet<Cause> Philanthropies { get; set; }
@@ -76,15 +78,10 @@
                 .IsUnique()
                 .HasName("IX_User_MealItem");
             modelBuilder
-                .Entity<MealToItem>()
-                .HasIndex(c => new { c.MealId, c.MealItemId })
+                .Entity<MealItemToPeriod>()
+                .HasIndex(c => new { c.MealPeriodId, c.MealItemId, c.Date })
                 .IsUnique()
-                .HasName("IX_Meal_MealItem");
-            modelBuilder
-                .Entity<MealToPeriod>()
-                .HasIndex(c => new { c.MealPeriodId, c.MealId, c.Date })
-                .IsUnique()
-                .HasName("IX_MealPeriod_Meal_Date");
+                .HasName("IX_MealPeriod_MealItem_Date");
         }
 
         public static SphinxDbContext Create()

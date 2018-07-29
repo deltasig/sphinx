@@ -245,6 +245,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Api\MealsController.cs" />
+    <Compile Include="Api\Models\MealItemVoteApiModel.cs" />
     <Compile Include="Api\SobersController.cs" />
     <Compile Include="Api\TreasuryController.cs" />
     <Compile Include="Api\MembersController.cs" />
@@ -259,6 +261,9 @@
     <Compile Include="Areas\Edu\Models\CreateClassModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexFilterModel.cs" />
     <Compile Include="Areas\Edu\Models\EditEnrollmentModel.cs" />
+    <Compile Include="Areas\Kitchen\Models\MealItemToPeriodModel.cs" />
+    <Compile Include="Areas\Kitchen\Models\MealPeriodIndexModel.cs" />
+    <Compile Include="Areas\Kitchen\Models\MealItemIndexModel.cs" />
     <Compile Include="Areas\Laundry\LaundryAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
@@ -275,6 +280,7 @@
     <Compile Include="Areas\Service\Models\ServiceAmendmentModel.cs" />
     <Compile Include="Areas\Treasury\TreasuryAreaRegistration.cs" />
     <Compile Include="Extensions\ApplicationPreload.cs" />
+    <Compile Include="Models\BaseViewModel.cs" />
     <Compile Include="Models\RecruitmentModel.cs" />
     <Compile Include="Models\DonationModel.cs" />
     <Compile Include="Models\Notification.cs" />
@@ -325,8 +331,7 @@
     <Compile Include="Areas\Kitchen\KitchenAreaRegistration.cs" />
     <Compile Include="Areas\Kitchen\Models\EditMealModel.cs" />
     <Compile Include="Areas\Kitchen\Models\CreateMealModel.cs" />
-    <Compile Include="Areas\Kitchen\Models\MealScheduleModel.cs" />
-    <Compile Include="Areas\Kitchen\Models\ReorderModel.cs" />
+    <Compile Include="Areas\Kitchen\Models\MealIndexModel.cs" />
     <Compile Include="Areas\Members\Controllers\RosterController.cs" />
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\AccountInformationModel.cs" />
@@ -452,6 +457,8 @@
     <Content Include="Images\History\chapter-house-3.jpg" />
     <Content Include="Images\History\chapter-house-4.jpg" />
     <Content Include="Images\History\chapter-house-5.jpg" />
+    <Content Include="Scripts\bootstrap-select.js" />
+    <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomGoogleApi.js" />
@@ -511,28 +518,21 @@
     <Content Include="Areas\Scholarships\Views\Types\Index.cshtml" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Areas\Edu\Views\Classes\Disenroll.cshtml" />
-    <Content Include="Areas\Kitchen\Views\web.config">
+    <Content Include="Areas\Kitchen\Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Kitchen\Views\MealItems\Create.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Delete.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealItems\Index.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\Create.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\Delete.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\Meals\Index.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\Schedule.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Shared\_MealsNavPartial.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Create.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Delete.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Edit.cshtml" />
     <Content Include="Areas\Kitchen\Views\MealPeriods\Index.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\EditSchedule.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
     <Content Include="Areas\Service\Views\Events\Details.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
-    <Content Include="Areas\Kitchen\Views\Meals\Reorder.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Create.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Delete.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Index.cshtml" />
@@ -575,7 +575,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
-    <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Content\bootstrap\bootstrap-datetimepicker-build.less" />
     <Content Include="Content\bootstrap\_bootstrap-datetimepicker.less" />
     <Content Include="Content\bootstrap-datetimepicker-build.css.map">
@@ -704,6 +703,7 @@
     <Content Include="Content\bootstrap-theme.css.map" />
     <Content Include="Documents\History.md" />
     <Content Include="Documents\Awards.md" />
+    <Content Include="Content\bootstrap-select.css.map" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - FTP.pubxml" />
     <Content Include="Images\switch.png" />
     <Content Include="robots.txt" />
@@ -711,17 +711,17 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
-    <Content Include="Scripts\bootstrap-select.js" />
-    <Content Include="Scripts\bootstrap-select.min.js" />
     <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\Chart.min.js.map">
       <DependentUpon>Chart.js</DependentUpon>
     </Content>
-    <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Properties\PublishProfiles\DSP - AWS.pubxml" />
+    <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
+    <Content Include="Scripts\i18n\defaults-ar_AR.js" />
+    <Content Include="Scripts\i18n\defaults-ar_AR.min.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.js" />
     <Content Include="Scripts\i18n\defaults-bg_BG.min.js" />
     <Content Include="Scripts\i18n\defaults-cs_CZ.js" />
@@ -734,18 +734,36 @@
     <Content Include="Scripts\i18n\defaults-en_US.min.js" />
     <Content Include="Scripts\i18n\defaults-es_CL.js" />
     <Content Include="Scripts\i18n\defaults-es_CL.min.js" />
+    <Content Include="Scripts\i18n\defaults-es_ES.js" />
+    <Content Include="Scripts\i18n\defaults-es_ES.min.js" />
+    <Content Include="Scripts\i18n\defaults-et_EE.js" />
+    <Content Include="Scripts\i18n\defaults-et_EE.min.js" />
     <Content Include="Scripts\i18n\defaults-eu.js" />
     <Content Include="Scripts\i18n\defaults-eu.min.js" />
     <Content Include="Scripts\i18n\defaults-fa_IR.js" />
     <Content Include="Scripts\i18n\defaults-fa_IR.min.js" />
+    <Content Include="Scripts\i18n\defaults-fi_FI.js" />
+    <Content Include="Scripts\i18n\defaults-fi_FI.min.js" />
     <Content Include="Scripts\i18n\defaults-fr_FR.js" />
     <Content Include="Scripts\i18n\defaults-fr_FR.min.js" />
+    <Content Include="Scripts\i18n\defaults-hr_HR.js" />
+    <Content Include="Scripts\i18n\defaults-hr_HR.min.js" />
     <Content Include="Scripts\i18n\defaults-hu_HU.js" />
     <Content Include="Scripts\i18n\defaults-hu_HU.min.js" />
+    <Content Include="Scripts\i18n\defaults-id_ID.js" />
+    <Content Include="Scripts\i18n\defaults-id_ID.min.js" />
     <Content Include="Scripts\i18n\defaults-it_IT.js" />
     <Content Include="Scripts\i18n\defaults-it_IT.min.js" />
+    <Content Include="Scripts\i18n\defaults-ja_JP.js" />
+    <Content Include="Scripts\i18n\defaults-ja_JP.min.js" />
+    <Content Include="Scripts\i18n\defaults-kh_KM.js" />
+    <Content Include="Scripts\i18n\defaults-kh_KM.min.js" />
     <Content Include="Scripts\i18n\defaults-ko_KR.js" />
     <Content Include="Scripts\i18n\defaults-ko_KR.min.js" />
+    <Content Include="Scripts\i18n\defaults-lt_LT.js" />
+    <Content Include="Scripts\i18n\defaults-lt_LT.min.js" />
+    <Content Include="Scripts\i18n\defaults-nb_NO.js" />
+    <Content Include="Scripts\i18n\defaults-nb_NO.min.js" />
     <Content Include="Scripts\i18n\defaults-nl_NL.js" />
     <Content Include="Scripts\i18n\defaults-nl_NL.min.js" />
     <Content Include="Scripts\i18n\defaults-pl_PL.js" />
@@ -768,6 +786,8 @@
     <Content Include="Scripts\i18n\defaults-tr_TR.min.js" />
     <Content Include="Scripts\i18n\defaults-ua_UA.js" />
     <Content Include="Scripts\i18n\defaults-ua_UA.min.js" />
+    <Content Include="Scripts\i18n\defaults-vi_VN.js" />
+    <Content Include="Scripts\i18n\defaults-vi_VN.min.js" />
     <Content Include="Scripts\i18n\defaults-zh_CN.js" />
     <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.js" />
@@ -807,7 +827,7 @@
     <Content Include="Views\Home\Contacts.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
-    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Shared\_LoginInternalPartial.cshtml" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Recruitment.cshtml" />
     <Content Include="Views\Home\Scholarships.cshtml" />
@@ -890,6 +910,7 @@
     <Folder Include="Areas\Alumni\Models\" />
     <Folder Include="Areas\Alumni\Views\Shared\" />
     <Folder Include="Areas\House\Views\Shared\" />
+    <Folder Include="Areas\Kitchen\Views\Shared\" />
     <Folder Include="Areas\Laundry\Views\Shared\" />
     <Folder Include="Areas\Scholarships\Views\Shared\" />
     <Folder Include="Areas\Service\Views\Shared\" />

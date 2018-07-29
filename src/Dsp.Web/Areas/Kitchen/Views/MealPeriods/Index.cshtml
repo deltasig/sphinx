@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Dsp.Data.Entities.MealPeriod>
+﻿@model MealPeriodIndexModel
 @{
     Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Meal Periods";
@@ -6,43 +6,50 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="btn-group" role="group" aria-label="...">
-                @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
-            </div>
+        <div class="col-lg-4">
+            <a href="@Url.Action("Index", "Meals")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Meals
+            </a>
         </div>
-        <div class="col-sm-4 text-sm-right">
+        <div class="col-lg-4 text-right">
             <p>
                 @Html.ActionLink("Create New", "Create", "MealPeriods", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="table-responsive">
                     <table class="table table-condensed table-hover table-bordered">
                         <thead>
                             <tr class="active">
                                 <th>Name</th>
-                                <th class="col-sm-2">Start Time</th>
-                                <th class="col-sm-2">End Time</th>
-                                <th class="col-sm-2"></th>
+                                <th class="col-xs-2">Start Time</th>
+                                <th class="col-xs-2">End Time</th>
+                                <th class="col-xs-2"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.TableContents)
                             {
+                                var entity = item.Entity;
                                 <tr>
-                                    <td>@item.Name</td>
-                                    <td>@item.StartTime.ToShortTimeString()</td>
-                                    <td>@item.EndTime.ToShortTimeString()</td>
+                                    <td>@entity.Name</td>
+                                    <td>@entity.StartTime.ToShortTimeString()</td>
+                                    <td>@entity.EndTime.ToShortTimeString()</td>
                                     <td class="text-right">
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                                        @if (!item.Meals.Any())
+                                        @if (item.AllowEdit)
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new { id = entity.Id })
+                                        }
+                                        @if (item.AllowEdit && item.AllowDelete)
                                         {
                                             @: |
-                                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                        }
+                                        @if (item.AllowDelete)
+                                        {
+                                            @Html.ActionLink("Delete", "Delete", new { id = entity.Id })
                                         }
                                     </td>
                                 </tr>

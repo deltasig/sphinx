@@ -13,7 +13,7 @@
     using System.Web.Mvc;
     using System.Web.UI;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate"), RequireHttps]
+    [AllowAnonymous, RequireHttps]
     public class HomeController : BaseController
     {
         [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
@@ -147,7 +147,7 @@
             return Content(result);
         }
 
-        [HttpGet]
+        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate"), HttpGet]
         [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Sphinx()
         {

@@ -1,25 +1,35 @@
 ﻿@if (Request.IsAuthenticated)
 {
+    <li class="@(ViewBag.Title.Contains("Sphinx") ? "active" : "")">
+        <a href="@Url.Action("Sphinx", "Home", new { area = "" })"
+           data-toggle="tooltip" data-placement="bottom" title="Sphinx">
+            <i class="fa fa-home"></i> <span class="hidden-sm hidden-md hidden-lg">Sphinx</span>
+        </a>
+    </li>
+
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
-        <a href="@Url.Action("Index", "Account", new {area = "Members"})">
-            <i class="fa fa-user"></i> Account
+        <a href="@Url.Action("Index", "Account", new {area = "Members"})"
+           data-toggle="tooltip" data-placement="bottom" title="Account">
+            <i class="fa fa-user"></i> <span class="hidden-sm hidden-md hidden-lg">Account</span>
         </a>
     </li>
     <li>
-        @using (Html.BeginForm("SignOut", "Account", new {area = "Members"}, FormMethod.Post, new {id = "signoutForm"}))
+        @using (Html.BeginForm("SignOut", "Account", new { area = "Members" }, FormMethod.Post, new { id = "signoutForm" }))
         {
             @Html.AntiForgeryToken()
         }
-        <a href="javascript:document.getElementById('signoutForm').submit()">
-            <i class="fa fa-sign-out"></i> Sign Out
+        <a href="javascript:document.getElementById('signoutForm').submit()"
+           data-toggle="tooltip" data-placement="bottom" title="Sign Out">
+            <i class="fa fa-sign-out"></i> <span class="hidden-sm hidden-md hidden-lg">Sign Out</span>
         </a>
     </li>
 }
 else
 {
     <li class="@(ViewBag.Title.Contains("Sign In") ? "active" : "")">
-        <a href="@Url.Action("SignIn", "Account", new { area = "Members" })">
-            <i class="fa fa-sign-in"></i> Member Sign In
+        <a href="@Url.Action("SignIn", "Account", new { area = "Members" })"
+           data-toggle="tooltip" data-placement="bottom" title="Member Sign In">
+            <i class="fa fa-sign-in"></i>  <span class="hidden-sm hidden-md hidden-lg">Sign In</span>
         </a>
     </li>
 }

@@ -1,14 +1,37 @@
 ﻿@{
-    var isAdmin = User.IsInRole("Administrator");
-    var isActive = isAdmin || User.IsInRole("Active");
-    var isReleased = isActive ? false : User.IsInRole("Released");
-    var isSecretary = isAdmin || User.IsInRole("Secretary");
-    var isPresident = isAdmin || User.IsInRole("President");
-    var isVpGrowth = isAdmin || User.IsInRole("Vice President Growth");
-    var isAcademics = isAdmin || User.IsInRole("Academics");
-    var isService = isAdmin || User.IsInRole("Service");
-    var isDor = isAdmin || User.IsInRole("Director of Recruitment");
-    var isNme = isAdmin || User.IsInRole("New Member Education");
+    var userRoles = Roles.GetRolesForUser();
+    var isAdmin = userRoles.Any(r => r =="Administrator");
+    var isActive = isAdmin;
+    var isReleased = false;
+    var isSecretary = isAdmin;
+    var isPresident = isAdmin;
+    var isVpGrowth = isAdmin;
+    var isAcademics = isAdmin;
+    var isService = isAdmin;
+    var isDor = isAdmin;
+    var isNme = isAdmin;
+
+    if(!isAdmin)
+    {
+        foreach (var r in userRoles)
+        {
+            switch (r)
+            {
+                case "Administrator": break;
+                case "Active": isActive = true; break;
+                case "Released": isReleased = isActive ? false : true; break;
+                case "Secretary": isSecretary = true; break;
+                case "President": isPresident = true; break;
+                case "Vice President Growth": isVpGrowth = true; break;
+                case "Academics": isAcademics = true; break;
+                case "Service": isService = true; break;
+                case "Director of Recruitment": isDor = true; break;
+                case "New Member Education": isNme = true; break;
+                default: break;
+            }
+        }
+    }
+
     var showErrorLogLink = isAdmin;
     var showAppointmentsLink = isAdmin || isPresident;
     var showPositionsLink = isAdmin || isPresident;
@@ -55,7 +78,7 @@
         </li>
         <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")"
             data-toggle="tooltip" data-placement="bottom" title="Meals">
-            <a href="@Url.Action("Schedule", "Meals", new {area = "Kitchen"})">
+            <a href="@Url.Action("Index", "Meals", new {area = "Kitchen"})">
                 <i class="fa fa-cutlery"></i>
             </a>
         </li>
@@ -80,7 +103,7 @@
                 <i class="fa fa-cutlery"></i>
             </a>
         </li>
-        @Html.Partial("_LoginPartial")
+        @Html.Partial("_LoginInternalPartial")
     </ul>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse">

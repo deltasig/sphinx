@@ -1,256 +1,89 @@
 ﻿namespace Dsp.Web.Areas.Kitchen.Controllers
 {
-    using Dsp.Web.Controllers;
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Exceptions;
+    using Dsp.Services.Interfaces;
+    using Dsp.Web.Areas.Kitchen.Models;
+    using Dsp.Web.Controllers;
+    using Dsp.Web.Extensions;
     using Microsoft.AspNet.Identity;
-    using Models;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Security;
+    using System.Web.UI;
 
     [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
     public class MealsController : BaseController
     {
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Index()
+        private IMealService _mealService;
+
+        public MealsController()
         {
-            return View(await _db.Meals.ToListAsync());
+            _mealService = new MealService(new Repository<SphinxDbContext>(_db));
         }
 
-        [AllowAnonymous]
-        public async Task<ActionResult> Schedule(int week = 0)
+        public MealsController(IMealService mealService)
         {
-            ViewBag.week = week;
-            var startOfWeekCst = GetStartOfCurrentWeek().AddDays(7 * week);
-            var startOfWeekUtc = ConvertCstToUtc(startOfWeekCst);
-            ViewBag.StartOfWeek = startOfWeekUtc;
-            var startOfNextWeekUtc = ConvertCstToUtc(startOfWeekCst.AddDays(7));
+            _mealService = mealService;
+        }
 
-            var model = new MealScheduleModel();
-            model.StartOfWeek = startOfWeekCst;
-            model.Meals = await _db.Meals.ToListAsync();
-            model.MealPeriods = await _db.MealPeriods.ToListAsync();
-            model.UsersVotes = Request.IsAuthenticated 
-                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealItemVotes 
-                : new List<MealItemVote>();
-            model.Plates = await _db.MealPlates
-                .Where(m => 
-                    m.PlateDateTime >= startOfWeekUtc.Date && 
-                    m.PlateDateTime < startOfNextWeekUtc.Date)
-                .ToListAsync();
+        [OutputCache(Duration = 86400, VaryByParam = "week", Location = OutputCacheLocation.Server)]
+        public async Task<ActionResult> Index(int week = 0)
+        {
+            var nowUtc = DateTime.UtcNow.AddDays(week * 7);
+            var weekOfYear = DateTimeExtensions.GetWeekOfYear(nowUtc);
+            var startDate = DateTimeExtensions.FirstDateOfWeek(nowUtc.Year, weekOfYear);
+            var endDate = startDate.AddDays(7);
 
-            var existingAssignments = await _db.MealToPeriods
-                .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
-                .ToListAsync();
+            var periods = await _mealService.GetAllPeriodsAsync();
+            var mpItems = await _mealService.GetMealItemToPeriodsAsync(startDate, endDate);
+            var plates = await _mealService.GetMealPlatesAsync(startDate, endDate);
+            var userRoles = Roles.GetRolesForUser();
+            var hasElevatedPermissions = userRoles.Any(r => r == "Administrator" || r == "House Steward");
 
-            var allSlots = new List<MealToPeriod>();
-            foreach (var p in model.MealPeriods)
+            var model = new MealIndexModel(periods, mpItems, plates, startDate, hasElevatedPermissions)
             {
-                for (var i = 0; i < 7; i++)
-                {
-                    var slot = existingAssignments
-                        .SingleOrDefault(m => 
-                            m.MealPeriodId == p.Id && 
-                            m.Date == startOfWeekUtc.AddDays(i).Date);
-                    if (slot == null)
-                    {
-                        slot = new MealToPeriod
-                        {
-                            MealPeriodId = p.Id,
-                            Date = startOfWeekUtc.AddDays(i)
-                        };
-                    }
-                    allSlots.Add(slot);
-                }
+                WeekOffset = week
+            };
+            if (hasElevatedPermissions)
+            {
+                model.MealItems = await _mealService.GetAllItemsAsync();
             }
-
-            model.MealsToPeriods = allSlots;
 
             return View(model);
         }
 
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> EditSchedule(int week = 0)
+        public async Task<ActionResult> Upvote(int id, int week = 0)
         {
-            ViewBag.week = week;
-            var startOfWeekCst = GetStartOfCurrentWeek().AddDays(7 * week);
-            var startOfWeekUtc = ConvertCstToUtc(startOfWeekCst);
-            var startOfNextWeekUtc = ConvertCstToUtc(startOfWeekCst.AddDays(7));
-
-            var model = new MealScheduleModel();
-            model.StartOfWeek = startOfWeekCst;
-            model.Meals = await _db.Meals.ToListAsync();
-            model.MealPeriods = await _db.MealPeriods.ToListAsync();
-            model.UsersVotes = Request.IsAuthenticated
-                ? (await UserManager.FindByIdAsync(User.Identity.GetUserId<int>())).MealItemVotes
-                : new List<MealItemVote>();
-
-            var existingAssignments = await _db.MealToPeriods
-                .Where(m => m.Date >= startOfWeekUtc.Date && m.Date < startOfNextWeekUtc.Date)
-                .ToListAsync();
-
-            var allSlots = new List<MealToPeriod>();
-            foreach (var p in model.MealPeriods)
+            var vote = new MealItemVote
             {
-                for (var i = 0; i < 7; i++)
-                {
-                    var slot = existingAssignments
-                        .SingleOrDefault(m =>
-                            m.MealPeriodId == p.Id &&
-                            m.Date == startOfWeekUtc.AddDays(i).Date);
-                    if (slot == null)
-                    {
-                        slot = new MealToPeriod
-                        {
-                            MealPeriodId = p.Id,
-                            Date = startOfWeekUtc.AddDays(i)
-                        };
-                    }
-                    allSlots.Add(slot);
-                }
-            }
+                UserId = User.Identity.GetUserId<int>(),
+                MealItemId = id,
+                IsUpvote = true
+            };
+            await _mealService.ProcessVote(vote);
 
-            model.MealsToPeriods = allSlots;
-
-            return View(model);
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> EditSchedule(MealScheduleModel model, int week = 0)
+        public async Task<ActionResult> Downvote(int id, int week = 0)
         {
-            if (!ModelState.IsValid) return RedirectToAction("Schedule", new { week });
-
-            foreach (var i in model.MealsToPeriods)
+            var vote = new MealItemVote
             {
-                var copy = i;
-                var existingSlot = await _db.MealToPeriods
-                    .SingleOrDefaultAsync(m => 
-                        m.MealPeriodId == copy.MealPeriodId && m.Date == copy.Date);
-                if (existingSlot == null)
-                {
-                    if (copy.MealId > 0)
-                    {
-                        _db.MealToPeriods.Add(i);
-                    }
-                }
-                else
-                {
-                    if (i.MealId <= 0)
-                    {
-                        _db.Entry(existingSlot).State = EntityState.Deleted;
-                    }
-                    else
-                    {
-                        existingSlot.MealId = copy.MealId;
-                        _db.Entry(existingSlot).State = EntityState.Modified;
-                    }
-                }
-            }
+                UserId = User.Identity.GetUserId<int>(),
+                MealItemId = id,
+                IsUpvote = false
+            };
+            await _mealService.ProcessVote(vote);
 
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("EditSchedule", new { week });
-        }
-
-        public async Task<ActionResult> Upvote(int? id, int week = 0)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var mealItem = await _db.MealItems.FindAsync(id);
-            if (mealItem == null)
-            {
-                return HttpNotFound();
-            }
-
-            var userId = User.Identity.GetUserId<int>();
-            var existingVote = await _db.MealVotes
-                    .SingleOrDefaultAsync(v => 
-                        v.UserId == userId && 
-                        v.MealItemId == mealItem.Id);
-
-            if (existingVote == null)
-            {
-                _db.MealVotes.Add(new MealItemVote
-                {
-                    UserId = userId,
-                    MealItemId = mealItem.Id,
-                    IsUpvote = true
-                });
-            }
-            else
-            {
-                if (existingVote.IsUpvote)
-                {
-                    _db.Entry(existingVote).State = EntityState.Deleted;
-                }
-                else
-                {
-                    existingVote.IsUpvote = true;
-                    _db.Entry(existingVote).State = EntityState.Modified;
-                }
-            }
-
-            await _db.SaveChangesAsync();
-            if (week != 0)
-            {
-                return RedirectToAction("Schedule", new { week });
-            }
-            return Redirect(Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Schedule");
-        }
-
-        public async Task<ActionResult> Downvote(int? id, int week = 0)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var mealItem = await _db.MealItems.FindAsync(id);
-            if (mealItem == null)
-            {
-                return HttpNotFound();
-            }
-
-            var userId = User.Identity.GetUserId<int>();
-            var existingVote = await _db.MealVotes
-                    .SingleOrDefaultAsync(v =>
-                        v.UserId == userId &&
-                        v.MealItemId == mealItem.Id);
-
-            if (existingVote == null)
-            {
-                _db.MealVotes.Add(new MealItemVote
-                {
-                    UserId = userId,
-                    MealItemId = mealItem.Id,
-                    IsUpvote = false
-                });
-            }
-            else
-            {
-                if (!existingVote.IsUpvote)
-                {
-                    _db.Entry(existingVote).State = EntityState.Deleted;
-                }
-                else
-                {
-                    existingVote.IsUpvote = false;
-                    _db.Entry(existingVote).State = EntityState.Modified;
-                }
-            }
-
-            await _db.SaveChangesAsync();
-            if (week != 0)
-            {
-                return RedirectToAction("Schedule", new { week });
-            }
-            return Redirect(Request.UrlReferrer != null ? Request.UrlReferrer.ToString() : "Schedule");
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -260,195 +93,93 @@
             {
                 PlateDateTime = dateTime,
                 SignedUpOn = DateTime.UtcNow,
-                UserId = User.Identity.GetUserId<int>()
+                UserId = User.Identity.GetUserId<int>(),
+                Type = type
             };
 
-            var existingPlates = await _db.MealPlates
-                    .Where(v => v.UserId == plate.UserId &&
-                        v.PlateDateTime == dateTime)
-                    .ToListAsync();
+            await _mealService.CreatePlate(plate);
 
-            if (type == "Late" && existingPlates.Any(p => p.Type == "Late"))
-            {
-                plate.Type = "+1";
-            }
-            else
-            {
-                plate.Type = type;
-            }
+            Response.RemoveOutputCacheItem(Url.Action("Index"));
 
-            _db.MealPlates.Add(plate);
-            await _db.SaveChangesAsync();
-
-            return RedirectToAction("Schedule", new { week });
+            return RedirectToAction("Index", new { week });
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePlate(int id, int week = 0)
         {
-            var plate = await _db.MealPlates.FindAsync(id);
-            if (plate == null)
-            {
-                return HttpNotFound();
-            }
-            if (!User.IsInRole("Administrator") && !User.IsInRole("House Steward") &&
-                plate.UserId != User.Identity.GetUserId<int>())
+            var plate = await _mealService.GetPlateByIdAsync(id);
+
+            if (plate == null) return HttpNotFound();
+
+            if (!User.IsInRole("Administrator") && !User.IsInRole("House Steward") && plate.UserId != User.Identity.GetUserId<int>())
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            _db.MealPlates.Remove(plate);
-            await _db.SaveChangesAsync();
+            await _mealService.DeletePlate(id);
 
-            return RedirectToAction("Schedule", new { week });
+            Response.RemoveOutputCacheItem(Url.Action("Index"));
+
+            return RedirectToAction("Index", new { week });
         }
 
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Create()
+        [HttpPost, Authorize(Roles = "Administrator, House Steward")]
+        public async Task<ActionResult> AddMealItemsToPeriod(MealItemToPeriod[] model)
         {
-            var model = new CreateMealModel
+            var response = new List<MealItemToPeriodModel>();
+            var itemsWereRemoved = false;
+            try
             {
-                MealItems = await base.GetMealItemsSelectListAsync()
-            };
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Create(CreateMealModel model)
-        {
-            if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Create");
-
-            var meal = new Meal();
-            _db.Meals.Add(meal);
-            await _db.SaveChangesAsync();
-            foreach(var id in model.SelectedMealItemIds)
-            {
-                var item = new MealToItem
+                foreach (var mealItemToPeriod in model)
                 {
-                    MealId = meal.Id, 
-                    MealItemId = id
-                };
-                _db.MealToItems.Add(item);
-            }
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
+                    try
+                    {
+                        await _mealService.CreateItemToPeriod(mealItemToPeriod);
+                        var mealItem = await _mealService.GetItemByIdAsync(mealItemToPeriod.MealItemId);
 
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var meal = await _db.Meals.FindAsync(id);
-            if (meal == null)
-            {
-                return HttpNotFound();
-            }
+                        var responseData = new MealItemToPeriodModel
+                        {
+                            Id = mealItemToPeriod.Id,
+                            MealItemId = mealItemToPeriod.MealItemId,
+                            MealPeriodId = mealItemToPeriod.MealPeriodId,
+                            MealItemName = mealItem.Name,
+                        };
+                        response.Add(responseData);
+                        itemsWereRemoved = true;
+                    }
+                    catch (MealItemAlreadyAssignedException)
+                    {
 
-            var model = new EditMealModel
-            {
-                MealItems = await base.GetMealItemsSelectListAsync(), 
-                SelectedMealItemIds = meal.MealItems.Select(m => m.MealItemId).ToArray(),
-                MealId = meal.Id
-            };
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Edit(EditMealModel model)
-        {
-            if (!ModelState.IsValid || model.SelectedMealItemIds == null) return RedirectToAction("Edit", new { id = model.MealId });
-
-            var meal = await _db.Meals.FindAsync(model.MealId);
-            if (meal == null)
-            {
-                return HttpNotFound();
-            }
-
-            foreach (var i in meal.MealItems.ToList())
-            {
-                if (!model.SelectedMealItemIds.Contains(i.MealItemId))
-                {
-                    _db.Entry(i).State = EntityState.Deleted;
+                    }
                 }
+
+                if (itemsWereRemoved) Response.RemoveOutputCacheItem(Url.Action("Index"));
             }
-            var remainingIds = meal.MealItems.Select(m => m.MealItemId).ToList();
-            foreach (var i in model.SelectedMealItemIds)
+            catch (Exception)
             {
-                if (remainingIds.Contains(i)) continue;
-                var mealItem = new MealToItem
-                {
-                    MealId = meal.Id, 
-                    MealItemId = i
-                };
-                meal.MealItems.Add(mealItem);
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Failed to add meal items to period!");
             }
 
-            _db.Entry(meal).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return Json(response);
         }
 
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Reorder(int? id)
+        [HttpDelete, Authorize(Roles = "Administrator, House Steward")]
+        public async Task<ActionResult> DeleteMealItemFromPeriod(int id)
         {
-            if (id == null)
+            if (id <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Improper id received!");
+
+            try
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                await _mealService.DeleteItemFromPeriod(id);
+
+                Response.RemoveOutputCacheItem(Url.Action("Index"));
             }
-            var meal = await _db.Meals.FindAsync(id);
-            if (meal == null)
+            catch (Exception)
             {
-                return HttpNotFound();
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Failed to delete meal item from period!");
             }
 
-            return View(meal.MealItems.OrderBy(i => i.DisplayOrder).ToList());
-        }
-        
-        [HttpPost, ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Reorder(IList<MealToItem> model)
-        {
-            if (!ModelState.IsValid || !model.Any()) return RedirectToAction("Index", new {  });
-
-            var items = model.OrderBy(m => m.DisplayOrder).ToList();
-            for (var i = 0; i < model.Count; i++)
-            {
-                items[i].DisplayOrder = i;
-                _db.Entry(items[i]).State = EntityState.Modified;
-            }
-            
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
-
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var meal = await _db.Meals.FindAsync(id);
-            if (meal == null)
-            {
-                return HttpNotFound();
-            }
-            return View(meal);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
-        [Authorize(Roles = "Administrator, House Steward")]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            var meal = await _db.Meals.FindAsync(id);
-            _db.Meals.Remove(meal);
-            await _db.SaveChangesAsync();
-            return RedirectToAction("Index");
+            return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
     }
 }

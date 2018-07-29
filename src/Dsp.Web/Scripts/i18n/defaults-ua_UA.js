@@ -1,8 +1,8 @@
 /*!
- * Bootstrap-select v1.7.2 (http://silviomoreto.github.io/bootstrap-select)
+ * Bootstrap-select v1.13.1 (https://developer.snapappointments.com/bootstrap-select)
  *
- * Copyright 2013-2015 bootstrap-select
- * Licensed under MIT (https://github.com/silviomoreto/bootstrap-select/blob/master/LICENSE)
+ * Copyright 2012-2018 SnapAppointments, LLC
+ * Licensed under MIT (https://github.com/snapappointments/bootstrap-select/blob/master/LICENSE)
  */
 
 (function (root, factory) {
@@ -11,15 +11,15 @@
     define(["jquery"], function (a0) {
       return (factory(a0));
     });
-  } else if (typeof exports === 'object') {
+  } else if (typeof module === 'object' && module.exports) {
     // Node. Does not work with strict CommonJS, but
     // only CommonJS-like environments that support module.exports,
     // like Node.
     module.exports = factory(require("jquery"));
   } else {
-    factory(jQuery);
+    factory(root["jQuery"]);
   }
-}(this, function () {
+}(this, function (jQuery) {
 
 (function ($) {
   $.fn.selectpicker.defaults = {
@@ -27,7 +27,9 @@
     noneResultsText: 'Збігів не знайдено {0}',
     countSelectedText: 'Вибрано {0} із {1}',
     maxOptionsText: ['Досягнута межа ({n} {var} максимум)', 'Досягнута межа в групі ({n} {var} максимум)', ['items', 'item']],
-    multipleSeparator: ', '
+    multipleSeparator: ', ',
+    selectAllText: 'Вибрати все',
+    deselectAllText: 'Скасувати вибір усі'
   };
 })(jQuery);
 

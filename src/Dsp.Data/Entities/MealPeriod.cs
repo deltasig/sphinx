@@ -18,6 +18,6 @@
         public DateTime EndTime { get; set; }
 
         [InverseProperty("MealPeriod")]
-        public virtual ICollection<MealToPeriod> Meals { get; set; }
+        public virtual ICollection<MealItemToPeriod> MealItems { get; set; }
     }
 }

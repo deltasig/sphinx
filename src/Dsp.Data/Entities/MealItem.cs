@@ -15,8 +15,12 @@
         [Required]
         public bool IsGlutenFree { get; set; }
 
+        public int Upvotes { get; set; }
+
+        public int Downvotes { get; set; }
+
         [InverseProperty("MealItem")]
-        public virtual ICollection<MealToItem> Meals { get; set; }
+        public virtual ICollection<MealItemToPeriod> MealPeriods { get; set; }
         [InverseProperty("MealItem")]
         public virtual ICollection<MealItemVote> MealVotes { get; set; }
 
