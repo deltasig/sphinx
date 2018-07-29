@@ -43,7 +43,13 @@
                 weekNum -= 1;
             }
             var result = firstThursday.AddDays(weekNum * 7);
-            return result.AddDays(-3);
+            return result.AddDays(-4);
+        }
+
+        public static DateTime FirstDateOfWeek(DateTime dateTime)
+        {
+            var weekOfYear = GetWeekOfYear(dateTime);
+            return FirstDateOfWeek(dateTime.Year, weekOfYear, CultureInfo.GetCultureInfo("en-US"));
         }
 
         public static string GetDaySuffix(this DateTime date)

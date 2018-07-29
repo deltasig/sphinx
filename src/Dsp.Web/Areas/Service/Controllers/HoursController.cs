@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Service.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -12,14 +12,16 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class HoursController : BaseController
     {
+        [OutputCache(Duration = 86400, VaryByParam = "none", Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index(int? s)
         {
             var thisSemester = await GetThisSemesterAsync();
-            if(s == null)
+            if (s == null)
             {
                 s = thisSemester.SemesterId;
             }
@@ -101,7 +103,7 @@
             }
 
             var fraction = (model.HoursServed % 1) * 10;
-            if(!fraction.Equals(5))
+            if (!fraction.Equals(5))
             {
                 model.HoursServed = Math.Floor(model.HoursServed);
             }
@@ -267,19 +269,19 @@
                 memberList.Add(new
                 {
                     UserId = member.Id,
-                    Name = member.FirstName + " " + member.LastName + 
+                    Name = member.FirstName + " " + member.LastName +
                         " (" + member.LivingAssignmentForSemester(semester.SemesterId) + ")"
                 });
             }
             model.Members = new SelectList(memberList, "UserId", "Name");
-            
+
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> AddHourAmendment(ServiceAddHourAmendmentModel model)
         {
-            if (model.Amendment.AmountHours.Equals(0) || 
+            if (model.Amendment.AmountHours.Equals(0) ||
                 model.Amendment.AmountHours < -50 ||
                 model.Amendment.AmountHours > 50)
             {
@@ -299,7 +301,7 @@
             TempData["SuccessMessage"] = "Service amendment added successfully.";
             return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
         }
-        
+
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> DeleteHourAmendment(int? aid)
         {
@@ -399,7 +401,7 @@
             }
 
             return GetCustomSemesterListAsync(semesters);
-        } 
+        }
 
         public async Task<ActionResult> Download(int? id)
         {

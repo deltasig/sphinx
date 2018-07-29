@@ -7,7 +7,6 @@ html, body {
 }
 
 body {
-    display: table;
     width:100%;
 }
 
@@ -16,7 +15,8 @@ blockquote {
 }
 
 .external-body {
-    margin-top:50px;
+    display: table;
+    margin-top: 50px;
 }
 
 .subtext {
@@ -26,6 +26,11 @@ blockquote {
 
 .tooltip {
     min-width: 75px;
+}
+
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 /* Big icons (featured on home page) */

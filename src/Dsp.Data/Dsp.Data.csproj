@@ -80,12 +80,10 @@
     <Compile Include="Entities\Leader.cs" />
     <Compile Include="Entities\Major.cs" />
     <Compile Include="Entities\MajorToMember.cs" />
-    <Compile Include="Entities\Meal.cs" />
     <Compile Include="Entities\MealItem.cs" />
     <Compile Include="Entities\MealPeriod.cs" />
     <Compile Include="Entities\MealPlate.cs" />
-    <Compile Include="Entities\MealToItem.cs" />
-    <Compile Include="Entities\MealToPeriod.cs" />
+    <Compile Include="Entities\MealItemToPeriod.cs" />
     <Compile Include="Entities\MealItemVote.cs" />
     <Compile Include="Entities\Member.cs" />
     <Compile Include="Entities\MemberStatus.cs" />
@@ -285,6 +283,22 @@
     <Compile Include="Migrations\201806110031107_AddNewMealIndexes.Designer.cs">
       <DependentUpon>201806110031107_AddNewMealIndexes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806161629223_MealSchemaReduction1.cs" />
+    <Compile Include="Migrations\201806161629223_MealSchemaReduction1.Designer.cs">
+      <DependentUpon>201806161629223_MealSchemaReduction1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806161649318_MealSchemaReduction2.cs" />
+    <Compile Include="Migrations\201806161649318_MealSchemaReduction2.Designer.cs">
+      <DependentUpon>201806161649318_MealSchemaReduction2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806161705472_MealSchemaReduction3.cs" />
+    <Compile Include="Migrations\201806161705472_MealSchemaReduction3.Designer.cs">
+      <DependentUpon>201806161705472_MealSchemaReduction3.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806241957117_CachingMealVotes.cs" />
+    <Compile Include="Migrations\201806241957117_CachingMealVotes.Designer.cs">
+      <DependentUpon>201806241957117_CachingMealVotes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -426,6 +440,18 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806110031107_AddNewMealIndexes.resx">
       <DependentUpon>201806110031107_AddNewMealIndexes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806161629223_MealSchemaReduction1.resx">
+      <DependentUpon>201806161629223_MealSchemaReduction1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806161649318_MealSchemaReduction2.resx">
+      <DependentUpon>201806161649318_MealSchemaReduction2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806161705472_MealSchemaReduction3.resx">
+      <DependentUpon>201806161705472_MealSchemaReduction3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806241957117_CachingMealVotes.resx">
+      <DependentUpon>201806241957117_CachingMealVotes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

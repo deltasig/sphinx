@@ -1,5 +1,4 @@
-﻿@using Microsoft.AspNet.Identity
-@model IEnumerable<Dsp.Data.Entities.MealItem>
+﻿@model MealItemIndexModel
 @{
     Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Meal Items";
@@ -7,107 +6,63 @@
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-sm-4">
-            <div class="btn-group" role="group" aria-label="...">
-                @{ Html.RenderPartial("~/Areas/Kitchen/Views/Shared/_MealsNavPartial.cshtml"); }
-            </div>
+        <div class="col-lg-4">
+            <a href="@Url.Action("Index", "Meals")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Meals Schedule
+            </a>
         </div>
-        <div class="col-sm-4 text-sm-right">
-            <p>
-                @Html.ActionLink("Create New", "Create", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
-            </p>
+        <div class="col-lg-4 text-right">
+            @if (Model.AllowCreate)
+            {
+                <p>
+                    @Html.ActionLink("Create New", "Create", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
+                </p>
+            }
         </div>
     </div>
     <div class="row">
-        <div class="col-sm-8">
+        <div class="col-lg-8">
             <div class="panel panel-default">
                 <div class="table-responsive">
                     <table class="table table-condensed table-hover table-bordered">
                         <thead>
                             <tr class="active">
                                 <th>Name</th>
-                                <th class="col-sm-1">
-                                    <i data-toggle="tooltip" data-placement="top" title="Total Upvotes" class="fa fa-arrow-circle-up text-success"></i>
-                                </th>
-                                <th class="col-sm-1">
-                                    <i data-toggle="tooltip" data-placement="top" title="Total Downvotes" class="fa fa-arrow-circle-down text-danger"></i>
-                                </th>
-                                <th class="col-sm-1">Favorability</th>
-                                <th class=""></th>
+                                <th class="col-xs-1">Score</th>
+                                @if (Model.HasElevatedPermissions)
+                                {
+                                    <th class="col-xs-2"></th>
+                                }
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var item in Model)
+                            @foreach (var item in Model.TableContents)
                             {
-                                var ups = item.MealVotes.Count(v => v.IsUpvote);
-                                var downs = item.MealVotes.Count(v => !v.IsUpvote);
-                                var favor = 0.0;
-                                var favorability = "0.00";
-                                var color = string.Empty;
-                                if (item.MealVotes.Any())
-                                {
-                                    favor = (ups / (double)item.MealVotes.Count()) * 100.0;
-                                    favorability = (favor).ToString("F");
-                                }
-                                if (favor >= 80.0)
-                                {
-                                    color = "success";
-                                }
-                                else if (favor >= 40)
-                                {
-                                    color = "warning";
-                                }
-                                else if (favor > 0)
-                                {
-                                    color = "danger";
-                                }
-
+                                var entity = item.Entity;
                                 <tr>
+                                    <td class="truncate">@entity.Name</td>
                                     <td>
-                                        <ul class="list-inline" style="margin: 0">
-                                            <li style="padding: 0">
-                                                @item.Name
-                                            </li>
-                                            <li style="padding: 0">
-                                                <a href="@Url.Action("Upvote", "Meals", new { id = item.Id })">
-                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.Id && v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
-                                                    {
-                                                        <i data-toggle="tooltip" data-placement="top" title="Cancel Upvote" class="fa fa-lg fa-arrow-circle-up text-success"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i data-toggle="tooltip" data-placement="top" title="Upvote" class="fa fa-arrow-circle-up text-muted"></i>
-                                                    }
-                                                </a>
-                                            </li>
-                                            <li style="padding: 0">
-                                                <a href="@Url.Action("Downvote", "Meals", new { id = item.Id })">
-                                                    @if (item.MealVotes.Any(v => v.MealItemId == item.Id && !v.IsUpvote && v.UserId == User.Identity.GetUserId<int>()))
-                                                    {
-                                                        <i data-toggle="tooltip" data-placement="top" title="Cancel Downvote" class="fa fa-lg fa-arrow-circle-down text-danger"></i>
-                                                    }
-                                                    else
-                                                    {
-                                                        <i data-toggle="tooltip" data-placement="top" title="Downvote" class="fa fa-arrow-circle-down text-muted"></i>
-                                                    }
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <span data-toggle="tooltip" data-placement="left" title="(+@item.Upvotes / -@item.Downvotes)">
+                                            @item.VoteDifferential
+                                        </span>
                                     </td>
-                                    <td>@ups</td>
-                                    <td>@downs</td>
-                                    <td class="@color">@favorability</td>
-                                    <td class="text-right">
-                                        @if (User.IsInRole("Administrator") || User.IsInRole("House Steward"))
-                                        {
-                                            @Html.ActionLink("Edit", "Edit", new { id = item.Id })
-                                            if (!item.Meals.Any())
+                                    @if (Model.HasElevatedPermissions)
+                                    {
+                                        <td class="text-right">
+                                            @if (item.AllowEdit)
+                                            {
+                                                @Html.ActionLink("Edit", "Edit", new { id = entity.Id })
+                                            }
+                                            @if (item.AllowEdit && item.AllowDelete)
                                             {
                                                 @: |
-                                                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                                             }
-                                        }
-                                    </td>
+                                            @if (item.AllowDelete)
+                                            {
+                                                @Html.ActionLink("Delete", "Delete", new { id = entity.Id })
+                                            }
+                                        </td>
+                                    }
                                 </tr>
                             }
                         </tbody>
