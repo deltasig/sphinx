@@ -17,7 +17,7 @@
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
     public class HoursController : BaseController
     {
-        [OutputCache(Duration = 86400, VaryByParam = "none", Location = OutputCacheLocation.Server)]
+        [OutputCache(Duration = 86400, VaryByParam = "s", Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index(int? s)
         {
             var thisSemester = await GetThisSemesterAsync();
@@ -133,6 +133,10 @@
                     _db.ServiceHours.Remove(duplicateSubmission.Single());
                     await _db.SaveChangesAsync();
                     TempData["SuccessMessage"] = "Service hours deleted successfully.";
+
+                    ClearIndexCache(semester.SemesterId);
+                    ClearEventIndexCache(semester.SemesterId);
+
                     return RedirectToAction("Submit", new { s = semester.SemesterId });
                 }
 
@@ -140,6 +144,10 @@
                 duplicateSubmission.First().DurationHours = model.HoursServed;
                 await _db.SaveChangesAsync();
                 TempData["SuccessMessage"] = "Service hours updated successfully.";
+
+                ClearIndexCache(semester.SemesterId);
+                ClearEventIndexCache(semester.SemesterId);
+
                 return RedirectToAction("Submit", new { s = semester.SemesterId });
             }
 
@@ -162,6 +170,10 @@
             _db.ServiceHours.Add(submission);
             await _db.SaveChangesAsync();
             TempData["SuccessMessage"] = "Service hours submitted successfully.";
+
+            ClearIndexCache(semester.SemesterId);
+            ClearEventIndexCache(semester.SemesterId);
+
             return RedirectToAction("Submit", new { s = semester.SemesterId });
         }
 
@@ -189,10 +201,12 @@
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service hours updated successfully.";
-            return RedirectToAction("Index", new
-            {
-                s = (await GetSemestersForUtcDateAsync(serviceHour.Event.DateTimeOccurred)).SemesterId
-            });
+
+            var semesterId = (await GetSemestersForUtcDateAsync(serviceHour.Event.DateTimeOccurred)).SemesterId;
+
+            ClearIndexCache(semesterId);
+
+            return RedirectToAction("Index", new { s = semesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
@@ -212,13 +226,16 @@
         {
             var serviceHour = await _db.ServiceHours.SingleAsync(s => s.EventId == model.EventId && s.UserId == model.UserId);
             var time = serviceHour.Event.DateTimeOccurred;
+
             _db.ServiceHours.Remove(serviceHour);
             await _db.SaveChangesAsync();
             TempData["SuccessMessage"] = "Service hours deleted successfully.";
-            return RedirectToAction("Index", new
-            {
-                s = (await GetSemestersForUtcDateAsync(time)).SemesterId
-            });
+
+            var semesterId = (await GetSemestersForUtcDateAsync(time)).SemesterId;
+
+            ClearIndexCache(semesterId);
+
+            return RedirectToAction("Index", new { s = semesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
@@ -299,6 +316,9 @@
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service amendment added successfully.";
+
+            ClearIndexCache(model.Amendment.SemesterId);
+
             return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
         }
 
@@ -313,6 +333,9 @@
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service amendment deleted successfully.";
+
+            ClearIndexCache(semesterId);
+
             return RedirectToAction("Amendments", new { s = semesterId });
         }
 
@@ -362,8 +385,10 @@
 
             _db.ServiceEventAmendments.Add(model.Amendment);
             await _db.SaveChangesAsync();
-
             TempData["SuccessMessage"] = "Service amendment added successfully.";
+
+            ClearIndexCache(model.Amendment.SemesterId);
+
             return RedirectToAction("AddEventAmendment", new { s = model.Amendment.SemesterId });
         }
 
@@ -378,6 +403,9 @@
             await _db.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Service amendment deleted successfully.";
+
+            ClearIndexCache(semesterId);
+
             return RedirectToAction("Amendments", new { s = semesterId });
         }
 
@@ -490,6 +518,18 @@
             sb.AppendLine(totalsLine);
 
             return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-service-" + semester + ".csv");
+        }
+
+        private void ClearIndexCache(int semesterId)
+        {
+            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = (int?)null }));
+            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = semesterId }));
+        }
+
+        private void ClearEventIndexCache(int semesterId)
+        {
+            Response.RemoveOutputCacheItem(Url.Action("Index", "Events", new { s = (int?)null }));
+            Response.RemoveOutputCacheItem(Url.Action("Index", "Events", new { s = semesterId }));
         }
     }
 }
