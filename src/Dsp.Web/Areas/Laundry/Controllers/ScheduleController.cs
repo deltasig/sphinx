@@ -12,6 +12,7 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     public class ScheduleController : BaseController
     {
@@ -28,6 +29,7 @@
         }
 
         [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [OutputCache(Duration = 120, Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index()
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -52,6 +54,7 @@
             {
                 TempData["FailureMessage"] = "There was an unknown error with your reservation.  " +
                                              "Contact your administrator if the problem persists.";
+                Response.RemoveOutputCacheItem(Url.Action("Index"));
                 return RedirectToAction("Index");
             }
 
@@ -70,6 +73,7 @@
                 TempData["FailureMessage"] = ex.Message;
             }
 
+            Response.RemoveOutputCacheItem(Url.Action("Index"));
             return RedirectToAction("Index");
         }
 
@@ -91,6 +95,7 @@
                 TempData["FailureMessage"] = ex.Message;
             }
 
+            Response.RemoveOutputCacheItem(Url.Action("Index"));
             return RedirectToAction("Index");
         }
     }

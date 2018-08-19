@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Service.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -11,10 +11,12 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.UI;
 
     [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
     public class EventsController : BaseController
     {
+        [OutputCache(Duration = 86400, VaryByParam = "s", Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index(int? s)
         {
             var thisSemester = await GetThisSemesterAsync();
@@ -81,7 +83,7 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            if(User.IsInRole("Administrator") || User.IsInRole("Service"))
+            if (User.IsInRole("Administrator") || User.IsInRole("Service"))
             {
                 model.IsApproved = true;
             }
@@ -93,14 +95,16 @@
             model.SubmitterId = User.Identity.GetUserId<int>();
             model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
             model.CreatedOn = DateTime.UtcNow;
+
             _db.ServiceEvents.Add(model);
             await _db.SaveChangesAsync();
-
             TempData["SuccessMessage"] = "Service event created successfully.";
-            return RedirectToAction("Index", new
-            {
-                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
-            });
+
+            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
+
+            ClearIndexCache(semesterId);
+
+            return RedirectToAction("Index", new { s = semesterId });
         }
 
         public async Task<ActionResult> Details(int? id)
@@ -135,16 +139,18 @@
             if (!ModelState.IsValid) return View(model);
 
             model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
+
             _db.Entry(model).State = EntityState.Modified;
             await _db.SaveChangesAsync();
-
             TempData["SuccessMessage"] = "Service event modified successfully.";
-            return RedirectToAction("Index", new
-            {
-                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
-            });
+
+            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
+
+            ClearIndexCache(semesterId);
+
+            return RedirectToAction("Index", new { s = semesterId });
         }
-        
+
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> Delete(int? id)
         {
@@ -169,14 +175,22 @@
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var model = await _db.ServiceEvents.FindAsync(id);
+
             _db.ServiceEvents.Remove(model);
             await _db.SaveChangesAsync();
-
             TempData["SuccessMessage"] = "Service event deleted successfully.";
-            return RedirectToAction("Index", new
-            {
-                s = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId
-            });
+
+            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
+
+            ClearIndexCache(semesterId);
+
+            return RedirectToAction("Index", new { s = semesterId });
+        }
+
+        private void ClearIndexCache(int semesterId)
+        {
+            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = (int?)null }));
+            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = semesterId }));
         }
     }
 }

@@ -148,7 +148,6 @@
         }
 
         [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate"), HttpGet]
-        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Sphinx()
         {
             var nowCst = DateTime.UtcNow.FromUtcToCst();
