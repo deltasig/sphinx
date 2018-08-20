@@ -34,7 +34,6 @@
             _mealService = mealService;
         }
 
-        [OutputCache(Duration = 86400, VaryByParam = "week", Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index(int week = 0)
         {
             var nowUtc = DateTime.UtcNow.AddDays(week * 7);
