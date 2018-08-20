@@ -15,7 +15,6 @@
     public class RosterController : BaseController
     {
         [HttpGet]
-        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<ActionResult> Index(RosterFilterModel filter)
         {
             Semester semester;
