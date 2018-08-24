@@ -85,7 +85,7 @@
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost,]
         public async Task<ActionResult> AddPlate(DateTime dateTime, string type, int week = 0)
         {
             var plate = new MealPlate
@@ -98,12 +98,10 @@
 
             await _mealService.CreatePlate(plate);
 
-            Response.RemoveOutputCacheItem(Url.Action("Index"));
-
             return RedirectToAction("Index", new { week });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost,]
         public async Task<ActionResult> RemovePlate(int id, int week = 0)
         {
             var plate = await _mealService.GetPlateByIdAsync(id);
@@ -116,8 +114,6 @@
             }
 
             await _mealService.DeletePlate(id);
-
-            Response.RemoveOutputCacheItem(Url.Action("Index"));
 
             return RedirectToAction("Index", new { week });
         }
@@ -170,8 +166,6 @@
             try
             {
                 await _mealService.DeleteItemFromPeriod(id);
-
-                Response.RemoveOutputCacheItem(Url.Action("Index"));
             }
             catch (Exception)
             {
