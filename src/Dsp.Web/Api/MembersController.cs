@@ -81,7 +81,6 @@
 
         [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
         [System.Web.Http.HttpGet, System.Web.Http.Route("feed/{page:int}")]
-        [OutputCache(Duration = 60, Location = OutputCacheLocation.Any, VaryByParam = "none")]
         public async Task<IHttpActionResult> Feed(int page = 0)
         {
             const int pageLength = 10;

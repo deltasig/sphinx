@@ -95,7 +95,6 @@
                                                     @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "Late", week = Model.WeekOffset },
                                                             FormMethod.Post, new { style = "display:inline" }))
                                                     {
-                                                        @Html.AntiForgeryToken()
                                                         <button class="btn btn-xs btn-default" type="submit"
                                                                 data-toggle="tooltip" data-placement="top" title="Late plate">
                                                             <i class="fa fa-cutlery"></i>
@@ -104,7 +103,6 @@
                                                     @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "+1", week = Model.WeekOffset },
                                                             FormMethod.Post, new { style = "display:inline" }))
                                                     {
-                                                        @Html.AntiForgeryToken()
                                                         <button class="btn btn-xs btn-default" type="submit"
                                                                 data-toggle="tooltip" data-placement="top" title="+1 plate">
                                                             +1
@@ -113,7 +111,6 @@
                                                     @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "Guest", week = Model.WeekOffset },
                                                             FormMethod.Post, new { style = "display:inline" }))
                                                     {
-                                                        @Html.AntiForgeryToken()
                                                         <button class="btn btn-xs btn-default" type="submit"
                                                                 data-toggle="tooltip" data-placement="top" title="Guest plate">
                                                             <i class="fa fa-user"></i>
@@ -349,6 +346,7 @@
         periodIdEle.val(periodId);
         dateEle.text(date);
         console.log(period, periodId, date);
+        mealItemSelectEle.selectpicker("deselectAll");
         mealItemModalEle.modal();
     }
 

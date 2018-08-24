@@ -16,20 +16,20 @@
     [AllowAnonymous, RequireHttps]
     public class HomeController : BaseController
     {
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public ActionResult Index()
         {
             return View();
         }
 
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public async Task<ActionResult> Contacts()
         {
             var term = await GetCurrentTerm();
             return View(term);
         }
 
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public async Task<ActionResult> Recruitment()
         {
             var model = new RecruitmentModel();
@@ -46,7 +46,7 @@
             return View(model);
         }
 
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public async Task<ActionResult> Scholarships()
         {
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -67,13 +67,13 @@
             return View(model);
         }
 
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public ActionResult Alumni()
         {
             return RedirectToAction("Index", "Home", new { area = "Alumni" });
         }
 
-        [AllowAnonymous, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [AllowAnonymous]
         public ActionResult About()
         {
             var model = new AboutModel();
@@ -211,7 +211,7 @@
             return View(model);
         }
 
-        [HttpGet, Authorize, OutputCache(Duration = 3600, Location = OutputCacheLocation.Any, VaryByParam = "none")]
+        [HttpGet]
         public ActionResult Updates()
         {
             var markdown = new Markdown();
