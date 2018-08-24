@@ -1,4 +1,11 @@
-﻿### June 2018
+﻿### July-August 2018
+
+- Redesigned the meal schedule functionality to make life easier for house steward (voting removed, hopefully only temporary).
+- Trying some caching on service hours/events pages to reduce resource usage and page load times.
+
+---
+
+### June 2018
 
 - Added API endpoint for upcoming sober drivers.
 - Added "BA" (Bachelors of Arts) option to add major form.
