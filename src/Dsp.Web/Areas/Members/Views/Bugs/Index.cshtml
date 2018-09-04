@@ -1,0 +1,94 @@
+﻿@model BugsIndexModel
+@{
+    ViewBag.Title = "Bug Reports";
+    ViewBag.Count = Model.Filter.count;
+    ViewBag.Page = Model.Filter.page;
+    ViewBag.Pages = Model.Filter.pages;
+    ViewBag.PageSize = Model.Filter.pageSize;
+
+    var previousFilter = new BugsIndexFilterModel(Model.Filter);
+    previousFilter.page--;
+    var nextFilter = new BugsIndexFilterModel(Model.Filter);
+    nextFilter.page++;
+    var includeFixedFilter = new BugsIndexFilterModel(Model.Filter);
+    includeFixedFilter.includeFixed = !includeFixedFilter.includeFixed;
+    var pagerModel = new PagerModel
+    {
+        Previous = previousFilter,
+        Incrementer = Model.Filter,
+        Next = nextFilter,
+    };
+
+    var countMsg = ViewBag.Count + " Bug Report";
+    if (ViewBag.Count != 1)
+    {
+        countMsg += "s";
+    }
+
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-fw fa-bug"></i> @countMsg
+                    <a href="@Url.Action("Index", includeFixedFilter)"
+                       class="@(Model.Filter.includeFixed ? "active" : "") btn btn-xs btn-default pull-right">
+                        Include Fixed
+                    </a>
+                </div>
+                <ul class="list-group">
+                @if (Model.BugReports.Any())
+                {
+                    foreach (var br in Model.BugReports)
+                    {
+                        var now = DateTime.UtcNow.FromUtcToCst();
+                        var timeSinceReported = (now - br.ReportedOn).ToUserFriendlyString();
+                        var timeSinceLastUpdate = (now - br.LastUpdatedOn).ToUserFriendlyString();
+                        var statusLabel = br.IsFixed ? "Fixed" : "Pending";
+                        var statusLabelColor = br.IsFixed ? "label-success" : "label-default";
+
+                        <a href="@Url.Action("Details", new { id = br.Id })" class="list-group-item truncate">
+                            <h4 class="list-group-item-heading">
+                                <div class="row">
+                                    <div class="col-md-8 col-p-8">
+                                        <span class="badge">#@br.Id</span> @br.UrlWithProblem
+                                    </div>
+                                    <div class="col-md-4 col-p-4 text-md-right text-p-right">
+                                        <small>
+                                            <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;">
+                                                @statusLabel
+                                            </span>
+                                        </small>
+                                    </div>
+                                </div>
+                            </h4>
+                            <p class="list-group-item-text truncate">
+                                reported @timeSinceReported by <strong>@br.Member.ToString()</strong>
+                            </p>
+                            <p class="list-group-item-text truncate">
+                                last updated @timeSinceLastUpdate
+                            </p>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <li class="list-group-item list-group-item-success">
+                        No problems.
+                    </li>
+                }
+                </ul>
+                @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", pagerModel)
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="alert alert-info">
+                <i class="fa fa-exclamation-circle"></i>
+                To submit a bug report, go to the page with a problem and click the "report a problem" 
+                link located at the very top-right of the page (next to the "sign out" link)!
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,4 +1,10 @@
-﻿### July-August 2018
+﻿### September 2018
+
+- Added bug reporting feature.
+
+---
+
+### July-August 2018
 
 - Redesigned the meal schedule functionality to make life easier for house steward (voting removed, hopefully only temporary).
 - Trying some caching on service hours/events pages to reduce resource usage and page load times.

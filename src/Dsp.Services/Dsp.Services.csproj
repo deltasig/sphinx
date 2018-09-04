@@ -58,10 +58,12 @@
   <ItemGroup>
     <Compile Include="Exceptions\MealExceptions.cs" />
     <Compile Include="Exceptions\LaundryExceptions.cs" />
+    <Compile Include="Interfaces\IBugService.cs" />
     <Compile Include="Interfaces\ILaundryService.cs" />
     <Compile Include="Interfaces\IMealService.cs" />
     <Compile Include="Interfaces\ITreasuryService.cs" />
     <Compile Include="Interfaces\IStatusService.cs" />
+    <Compile Include="Services\BugService.cs" />
     <Compile Include="Services\LaundryService.cs" />
     <Compile Include="Services\MealService.cs" />
     <Compile Include="Services\TreasuryService.cs" />

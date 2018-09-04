@@ -54,6 +54,8 @@
         [InverseProperty("Member")]
         public virtual ICollection<Address> Addresses { get; set; }
         [InverseProperty("Member")]
+        public virtual ICollection<BugReport> BugReports { get; set; }
+        [InverseProperty("Member")]
         public virtual ICollection<ChoreGroupToMember> ChoreGroups { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<ChoreAssignment> ChoreSignOffs { get; set; }

@@ -1,0 +1,71 @@
+﻿@model BugReport
+@{
+    ViewBag.Title = "Submit a Bug Report";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-3">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Bug Reports
+                </a>
+            </p>
+        </div>
+        <div class="col-md-3 text-right">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <label>Submitted By</label>
+                    <p>@User.Identity.Name</p>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.UrlWithProblem, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextBoxFor(m => m.UrlWithProblem, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.UrlWithProblem, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Description, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextAreaFor(m => m.Description, new { @class = "form-control", rows = 10 })
+                    @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Submit" class="btn btn-default" />
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <div class="alert alert-warning">
+                <strong>Description</strong>
+                <hr />
+                <p>
+                    The description should include as much of the following information as possible:
+                    <ul>
+                        <li>What you were doing at the time of the error; and/or</li>
+                        <li>Steps to reproduce the problem</li>
+                    </ul>
+                </p>
+            </div>
+            <div class="alert alert-warning">
+                <strong>Got a feature or change request?</strong>
+                <hr />
+                <p>
+                    This is not the place to submit feature or change requests.
+                    If you would like to do so, please send an email to 
+                    <a href="mailto:tmorrow@mst.edu?subject=[SPHINX%20FEATURE%20REQUEST]">tmorrow@mst.edu</a>
+                    with the subject <kbd>[SPHINX FEATURE REQUEST]</kbd>.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

@@ -18,7 +18,8 @@
                 var value = 0;
                 if (timeSpan.TotalMinutes < 60)
                 {
-                    output.Append($"{(int)timeSpan.TotalMinutes} minute{(value != 1 ? "s" : string.Empty)} ago");
+                    value = (int)timeSpan.TotalMinutes;
+                    output.Append($"{value} minute{(value != 1 ? "s" : string.Empty)} ago");
                 }
                 else if (timeSpan.TotalMinutes <= 60)
                 {
@@ -26,7 +27,8 @@
                 }
                 else if (timeSpan.TotalHours < 24)
                 {
-                    output.Append($"{(int)timeSpan.TotalHours} hours ago");
+                    value = (int)timeSpan.TotalHours;
+                    output.Append($"{value} hour{(value != 1 ? "s" : string.Empty)} ago");
                 }
                 else if (timeSpan.TotalDays < 2)
                 {
@@ -34,7 +36,8 @@
                 }
                 else if (timeSpan.TotalDays < 7)
                 {
-                    output.Append($"{(int)timeSpan.TotalDays} days ago");
+                    value = (int)timeSpan.TotalDays;
+                    output.Append($"{value} day{(value != 1 ? "s" : string.Empty)} ago");
                 }
                 else if (timeSpan.TotalDays < 14)
                 {
@@ -42,7 +45,8 @@
                 }
                 else if (timeSpan.TotalDays < 31)
                 {
-                    output.Append($"{(int)timeSpan.TotalDays / 7} weeks ago");
+                    value = (int)timeSpan.TotalDays / 7;
+                    output.Append($"{value} week{(value != 1 ? "s" : string.Empty)} ago");
                 }
                 else if (timeSpan.TotalDays < 62)
                 {
@@ -50,7 +54,8 @@
                 }
                 else if (timeSpan.TotalDays < 365)
                 {
-                    output.Append($"{(int)timeSpan.TotalDays / 31} months ago");
+                    value = (int)timeSpan.TotalDays / 31;
+                    output.Append($"{value} month{(value != 1 ? "s" : string.Empty)} ago");
                 }
                 else if (timeSpan.TotalDays < 730)
                 {
@@ -58,7 +63,8 @@
                 }
                 else
                 {
-                    output.Append($"{(int)timeSpan.TotalDays / 365} years ago");
+                    value = (int)timeSpan.TotalDays / 365;
+                    output.Append($"{value} year{(value != 1 ? "s" : string.Empty)} ago");
                 }
             }
 

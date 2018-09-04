@@ -1,7 +1,5 @@
-﻿@model Dsp.Web.Areas.Members.Models.AccountManagementModel
-@using Microsoft.Owin.Security
+﻿@model AccountManagementModel
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Account Management";
     ViewBag.Subtitle = Model.Member.ToString();
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().ToList();
