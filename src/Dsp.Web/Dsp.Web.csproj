@@ -265,11 +265,14 @@
     <Compile Include="Areas\Kitchen\Models\MealPeriodIndexModel.cs" />
     <Compile Include="Areas\Kitchen\Models\MealItemIndexModel.cs" />
     <Compile Include="Areas\Laundry\LaundryAreaRegistration.cs" />
+    <Compile Include="Areas\Members\Controllers\BugsController.cs" />
+    <Compile Include="Areas\Members\Models\BugsIndexModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
+    <Compile Include="Areas\Members\Models\BugsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Treasury\Controllers\DonationsController.cs" />
@@ -281,6 +284,7 @@
     <Compile Include="Areas\Treasury\TreasuryAreaRegistration.cs" />
     <Compile Include="Extensions\ApplicationPreload.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
+    <Compile Include="Areas\Members\Models\BugsEditModel.cs" />
     <Compile Include="Models\RecruitmentModel.cs" />
     <Compile Include="Models\DonationModel.cs" />
     <Compile Include="Models\Notification.cs" />
@@ -477,7 +481,7 @@
     <Content Include="Areas\Admin\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Members\Views\web.config">
+    <Content Include="Areas\Members\Views\Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Edu\Views\web.config">
@@ -686,6 +690,9 @@
     <Content Include="Areas\Treasury\Views\Donations\Details.cshtml" />
     <Content Include="Areas\Treasury\Views\Donations\Edit.cshtml" />
     <Content Include="Areas\Treasury\Views\web.config" />
+    <Content Include="Areas\Members\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Members\Views\Bugs\Edit.cshtml" />
+    <Content Include="Areas\Members\Views\Bugs\Delete.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
@@ -897,6 +904,10 @@
     <Content Include="Views\Shared\_LayoutInternal.cshtml" />
     <Content Include="Views\Home\Donate.cshtml" />
     <Content Include="Views\Home\DonationConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Bugs\Submit.cshtml" />
+    <Content Include="Areas\Members\Views\Bugs\Index.cshtml" />
+    <Content Include="Areas\Members\Views\Bugs\Details.cshtml" />
+    <Content Include="Views\Emails\NewBugReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

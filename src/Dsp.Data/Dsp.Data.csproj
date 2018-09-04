@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\BugReport.cs" />
     <Compile Include="Entities\Fundraiser.cs" />
     <Compile Include="Entities\Cause.cs" />
     <Compile Include="Entities\Donation.cs" />
@@ -299,6 +300,18 @@
     <Compile Include="Migrations\201806241957117_CachingMealVotes.Designer.cs">
       <DependentUpon>201806241957117_CachingMealVotes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809011555039_InitialBugReportEntities.cs" />
+    <Compile Include="Migrations\201809011555039_InitialBugReportEntities.Designer.cs">
+      <DependentUpon>201809011555039_InitialBugReportEntities.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809032326475_RemovedErroredOnFromBugReport.cs" />
+    <Compile Include="Migrations\201809032326475_RemovedErroredOnFromBugReport.Designer.cs">
+      <DependentUpon>201809032326475_RemovedErroredOnFromBugReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201809040129566_BugReportRequiredProperties.cs" />
+    <Compile Include="Migrations\201809040129566_BugReportRequiredProperties.Designer.cs">
+      <DependentUpon>201809040129566_BugReportRequiredProperties.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -452,6 +465,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201806241957117_CachingMealVotes.resx">
       <DependentUpon>201806241957117_CachingMealVotes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809011555039_InitialBugReportEntities.resx">
+      <DependentUpon>201809011555039_InitialBugReportEntities.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809032326475_RemovedErroredOnFromBugReport.resx">
+      <DependentUpon>201809032326475_RemovedErroredOnFromBugReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809040129566_BugReportRequiredProperties.resx">
+      <DependentUpon>201809040129566_BugReportRequiredProperties.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

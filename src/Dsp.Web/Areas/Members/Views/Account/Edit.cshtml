@@ -1,8 +1,5 @@
-﻿@using Dsp.Web.Extensions
-@using Microsoft.AspNet.Identity
-@model Dsp.Web.Areas.Members.Models.EditMemberInfoModel
+﻿@model EditMemberInfoModel
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Editing " + Model.Member;
     var isAdmin = User.IsInRole("Administrator");
     var isSecretary = User.IsInRole("Secretary");

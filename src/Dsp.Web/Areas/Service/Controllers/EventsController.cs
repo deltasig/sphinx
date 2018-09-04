@@ -11,12 +11,10 @@
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.UI;
 
     [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
     public class EventsController : BaseController
     {
-        [OutputCache(Duration = 86400, VaryByParam = "s", Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index(int? s)
         {
             var thisSemester = await GetThisSemesterAsync();
@@ -102,8 +100,6 @@
 
             var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
 
-            ClearIndexCache(semesterId);
-
             return RedirectToAction("Index", new { s = semesterId });
         }
 
@@ -146,8 +142,6 @@
 
             var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
 
-            ClearIndexCache(semesterId);
-
             return RedirectToAction("Index", new { s = semesterId });
         }
 
@@ -182,15 +176,7 @@
 
             var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
 
-            ClearIndexCache(semesterId);
-
             return RedirectToAction("Index", new { s = semesterId });
-        }
-
-        private void ClearIndexCache(int semesterId)
-        {
-            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = (int?)null }));
-            Response.RemoveOutputCacheItem(Url.Action("Index", new { s = semesterId }));
         }
     }
 }

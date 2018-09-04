@@ -12,7 +12,6 @@
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.UI;
 
     public class ScheduleController : BaseController
     {
@@ -29,7 +28,6 @@
         }
 
         [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
-        [OutputCache(Duration = 120, Location = OutputCacheLocation.Server)]
         public async Task<ActionResult> Index()
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];

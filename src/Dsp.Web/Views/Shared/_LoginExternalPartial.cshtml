@@ -6,7 +6,6 @@
             <i class="fa fa-home"></i> <span class="hidden-sm hidden-md hidden-lg">Sphinx</span>
         </a>
     </li>
-
     <li class="@(ViewBag.Title.Contains("Account") ? "active" : "")">
         <a href="@Url.Action("Index", "Account", new {area = "Members"})"
            data-toggle="tooltip" data-placement="bottom" title="Account">
@@ -21,6 +20,12 @@
         <a href="javascript:document.getElementById('signoutForm').submit()"
            data-toggle="tooltip" data-placement="bottom" title="Sign Out">
             <i class="fa fa-sign-out"></i> <span class="hidden-sm hidden-md hidden-lg">Sign Out</span>
+        </a>
+    </li>
+    <li class="@(ViewBag.Title.Contains("Bug Report") ? "active" : "")">
+        <a href="@Url.Action("Submit", "Bugs", new { area = "Members", urlWithProblem = Request.Url })"
+           data-toggle="tooltip" data-placement="bottom" title="Report a Problem">
+            <i class="fa fa-bug"></i> <span class="hidden-sm hidden-md hidden-lg">Report a Problem</span>
         </a>
     </li>
 }
