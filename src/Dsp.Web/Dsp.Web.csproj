@@ -908,6 +908,8 @@
     <Content Include="Areas\Members\Views\Bugs\Index.cshtml" />
     <Content Include="Areas\Members\Views\Bugs\Details.cshtml" />
     <Content Include="Views\Emails\NewBugReport.cshtml" />
+    <Content Include="Views\Emails\BugReportUserUpdate.cshtml" />
+    <Content Include="Views\Emails\BugReportAdminUpdate.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
