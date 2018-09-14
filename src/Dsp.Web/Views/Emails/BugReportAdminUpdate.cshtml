@@ -15,15 +15,21 @@
 <div style="height: 40px; width: 100%; border-bottom: 1px solid gainsboro;">
     <img style="float: right;" height="35" width="35"
          src="https://www.deltasig-de.org/Images/MobileTouch-57x57.png"/>
-    <h2 style="margin: 0">
-        URL with problem: <a href="@link">@Model.UrlWithProblem</a>
-    </h2>
+    <a href="@link">@link</a>
 </div>
 <div style="width: 100%;">
-    <h4 style="margin-bottom: 5px">Description</h4>
+    <h4 style="margin-bottom: 5px">Admin Update</h4>
     <p style="margin-top: 20px; white-space: pre-line">
-        @Model.Description
+        @Model.Response
     </p>
+    @if(Model.IsFixed)
+    {
+        <p>
+            <strong>
+                This bug report has been marked as fixed!
+            </strong>
+        </p>
+    }
 </div>
 </body>
 </html>

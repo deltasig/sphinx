@@ -7,8 +7,8 @@
     <div class="row">
         <div class="col-md-3">
             <p>
-                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
-                    <i class="fa fa-caret-left"></i> Bug Reports
+                <a href="@Url.Action("Details", new { id = Model.BugReport.Id })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back
                 </a>
             </p>
         </div>
@@ -42,6 +42,8 @@
                 }
                 else
                 {
+                    @Html.HiddenFor(model => model.BugReport.UrlWithProblem)
+                    @Html.HiddenFor(model => model.BugReport.Description)
                     <div class="form-group">
                         @Html.LabelFor(model => model.BugReport.UrlWithProblem, htmlAttributes: new { @class = "control-label" })
                         @Html.DisplayFor(model => model.BugReport.UrlWithProblem, new { htmlAttributes = new { @class = "form-control" } })

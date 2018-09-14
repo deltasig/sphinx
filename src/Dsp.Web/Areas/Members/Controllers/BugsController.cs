@@ -55,6 +55,9 @@ namespace Dsp.Web.Areas.Members.Controllers
 
             if (model == null) return HttpNotFound();
 
+            ViewBag.SuccessMessage = TempData["SuccessMessage"];
+            ViewBag.FailureMessage = TempData["FailureMessage"];
+
             return View(model);
         }
 
@@ -81,7 +84,6 @@ namespace Dsp.Web.Areas.Members.Controllers
             await _bugService.CreateBugReportAsync(model);
 
             // Send email to admin
-            var houseMan = await GetCurrentLeader("House Manager");
             var body = RenderRazorViewToString("~/Views/Emails/NewBugReport.cshtml", model);
             var bytes = Encoding.Default.GetBytes(body);
             body = Encoding.UTF8.GetString(bytes);
@@ -124,10 +126,6 @@ namespace Dsp.Web.Areas.Members.Controllers
             model.IsAdmin = isAdmin;
             model.IsCurrentUser = isCurrentUser;
 
-
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
-
             return View(model);
         }
 
@@ -162,8 +160,46 @@ namespace Dsp.Web.Areas.Members.Controllers
 
             await _bugService.UpdateBugReportAsync(entity);
 
+            // Send email to admin
+            var personToEmail = ADMIN_EMAIL;
+            var subject = "[SPHINX BUG REPORT] - " + entity.Id;
+            var body = "";
+            if (isAdmin)
+            {
+                personToEmail = entity.Member.Email;
+                subject += " - Admin Update";
+                if (entity.IsFixed)
+                {
+                    subject += " - FIXED";
+                }
+                body = RenderRazorViewToString("~/Views/Emails/BugReportAdminUpdate.cshtml", entity);
+            }
+            else
+            {
+                subject += " - User Update";
+                body = RenderRazorViewToString("~/Views/Emails/BugReportUserUpdate.cshtml", entity);
+            }
+            var bytes = Encoding.Default.GetBytes(body);
+            body = Encoding.UTF8.GetString(bytes);
+
+            var message = new IdentityMessage
+            {
+                Subject = subject,
+                Body = body,
+                Destination = personToEmail
+            };
+            try
+            {
+                var emailService = new EmailService();
+                await emailService.SendAsync(message);
+            }
+            catch (SmtpException e)
+            {
+                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
+            }
+
             TempData["SuccessMessage"] = "Bug report updated!";
-            return RedirectToAction("Edit", new { id = model.BugReport.Id });
+            return RedirectToAction("Details", new { id = model.BugReport.Id });
         }
 
         [HttpGet]
