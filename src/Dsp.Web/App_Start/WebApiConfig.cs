@@ -2,7 +2,6 @@
 {
     using System.Net.Http.Headers;
     using System.Web.Http;
-    using WebApiThrottle;
 
     public static class WebApiConfig
     {
@@ -16,6 +15,7 @@
                 defaults: new { id = RouteParameter.Optional }
             );
 
+#if !DEBUG
             config.MessageHandlers.Add(new ThrottlingHandler()
             {
                 // Generic rate limit applied to ALL APIs
@@ -27,6 +27,7 @@
                 },
                 Repository = new MemoryCacheRepository()
             });
+#endif
 
             // WebAPI when dealing with JSON & JavaScript!
             // Setup json serialization to serialize classes to camel (std. Json format)

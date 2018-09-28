@@ -1,7 +1,8 @@
 ﻿namespace Dsp.Web.Areas.House.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
+    using Extensions;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
@@ -12,7 +13,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Extensions;
 
     [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
     public class WorkOrdersController : BaseController
@@ -251,6 +251,13 @@
 
             // Send email to house manager.
             var houseMan = await GetCurrentLeader("House Manager");
+            if (houseMan == null)
+            {
+
+                TempData["SuccessMessage"] = "Work order created successfully but no email was " +
+                    "sent to the house manager because no one is currently appointed.";
+                return RedirectToAction("View", new { id = model.WorkOrderId });
+            }
             model.Member = member;
             var body = RenderRazorViewToString("~/Views/Emails/NewWorkOrder.cshtml", model);
             var bytes = Encoding.Default.GetBytes(body);
