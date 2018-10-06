@@ -2,6 +2,9 @@
 {
     using System.Net.Http.Headers;
     using System.Web.Http;
+#if !DEBUG
+    using WebApiThrottle;
+#endif
 
     public static class WebApiConfig
     {
