@@ -178,7 +178,14 @@
                                             {
                                                 <div id="@p.Id" class="row">
                                                     <div class="col-xs-12">
-                                                        <small>@p.Member.FirstName @p.Member.LastName[0]. (@p.Type)</small>
+                                                        <small>
+                                                            @p.Member.FirstName @p.Member.LastName[0]. (@p.Type)
+                                                            @if (!string.IsNullOrEmpty(p.Member.DietaryInstructions))
+                                                            {
+                                                                @:(<i class="fa fa-fw fa-heart text-danger" data-toggle="tooltip" date-placement="top" title="Dietary Instructions"></i>:
+                                                                @p.Member.DietaryInstructions@:)
+                                                            }
+                                                        </small>
                                                         @if (User.Identity.GetUserId<int>() == p.UserId)
                                                         {
                                                             using (Html.BeginForm("RemovePlate", "Meals", new { id = p.Id, week = Model.WeekOffset },

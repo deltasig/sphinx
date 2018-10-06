@@ -43,6 +43,9 @@
 
         public string AvatarPath { get; set; }
 
+        [StringLength(50), Display(Name = "Dietary Instructions")]
+        public string DietaryInstructions { get; set; }
+
         [ForeignKey("StatusId")]
         public virtual MemberStatus MemberStatus { get; set; }
         [ForeignKey("PledgeClassId")]
