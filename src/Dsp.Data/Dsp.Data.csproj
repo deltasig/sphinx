@@ -312,6 +312,10 @@
     <Compile Include="Migrations\201809040129566_BugReportRequiredProperties.Designer.cs">
       <DependentUpon>201809040129566_BugReportRequiredProperties.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201810060122124_MemberDietaryInstructions.cs" />
+    <Compile Include="Migrations\201810060122124_MemberDietaryInstructions.Designer.cs">
+      <DependentUpon>201810060122124_MemberDietaryInstructions.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -474,6 +478,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809040129566_BugReportRequiredProperties.resx">
       <DependentUpon>201809040129566_BugReportRequiredProperties.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201810060122124_MemberDietaryInstructions.resx">
+      <DependentUpon>201810060122124_MemberDietaryInstructions.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

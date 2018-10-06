@@ -1,8 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
-    using Dsp.Web.Controllers;
-    using Edu.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
@@ -60,7 +59,7 @@
 
             return View(model);
         }
-        
+
         public async Task<ActionResult> Manage(ManageMessageId? message, string userName)
         {
             ViewBag.FailMessage =
@@ -133,7 +132,7 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMemberInfoModel model)
         {
-            if(!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != model.Member.UserName)
+            if (!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != model.Member.UserName)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
@@ -160,6 +159,7 @@
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
             member.ShirtSize = model.Member.ShirtSize;
+            member.DietaryInstructions = model.Member.DietaryInstructions;
             member.LastUpdatedOn = DateTime.UtcNow;
 
             UserManager.Update(member);
@@ -262,7 +262,7 @@
             {
                 RegisterModel = new RegisterModel
                 {
-                    StatusList = await GetStatusListAsync(), 
+                    StatusList = await GetStatusListAsync(),
                     PledgeClassList = await GetPledgeClassListAsync(),
                     SemesterList = await GetAllSemesterListAsync(),
                     ShirtSizes = GetShirtSizesSelectList()
@@ -367,11 +367,11 @@
                     var member = await UserManager.FindByIdAsync(model.SelectedUserId);
 
                     // Disallow unregistration if someone has meaninfully interacted with the system.
-                    if(member.ClassesTaken.Any() || 
+                    if (member.ClassesTaken.Any() ||
                        member.IncidentReports.Any() ||
-                       member.LaundrySignups.Any() || 
-                       member.LittleBrothers.Any() || 
-                       member.MajorsToMember.Any() || 
+                       member.LaundrySignups.Any() ||
+                       member.LittleBrothers.Any() ||
+                       member.MajorsToMember.Any() ||
                        member.PositionsHeld.Any() ||
                        member.ClassFileUploads.Any() ||
                        member.Rooms.Any() ||
@@ -384,7 +384,7 @@
                     }
 
                     await UserManager.DeleteAsync(member);
-                    
+
                     TempData["SuccessMessage"] = "Successfully removed the user.";
                     return RedirectToAction("Registration");
                 }
@@ -400,13 +400,13 @@
             TempData["FailureMessage"] = "Failed to remove the user for an unknown reason.  Please contact your administrator.";
             return RedirectToAction("Registration");
         }
-        
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> ChangePassword(AccountManagementModel model)
         {
             if (model.OldPassword == null || model.NewPassword == null || model.ConfirmPassword == null)
                 return RedirectToAction("Manage", new { message = ManageMessageId.ChangePasswordMissingInfo });
-            if (model.NewPassword != model.ConfirmPassword) 
+            if (model.NewPassword != model.ConfirmPassword)
                 return RedirectToAction("Manage", new { message = ManageMessageId.ChangePasswordMismatch });
 
             var userId = User.Identity.GetUserId<int>();
@@ -431,7 +431,7 @@
             }
             return View(member);
         }
-        
+
         [Authorize(Roles = "Administrator"), HttpPost, ValidateAntiForgeryToken, ActionName("ResetPassword")]
         public async Task<ActionResult> ResetPasswordConfirmed(Member member)
         {
@@ -579,7 +579,7 @@
         {
             return View();
         }
-        
+
         [HttpPost, ValidateAntiForgeryToken]
         public ActionResult LinkLogin(string provider)
         {
@@ -599,7 +599,7 @@
                 ? RedirectToAction("Manage", new { Message = ManageMessageId.ExternalLoginAddSuccess })
                 : RedirectToAction("Manage", new { Message = ManageMessageId.ExternalLoginAddFailure });
         }
-        
+
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
         {

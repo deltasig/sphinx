@@ -179,6 +179,14 @@
                                 <small class="pull-right" style="margin-right:5px">
                                     <span class="label label-default">@m.PledgeClass.PledgeClassName</span>
                                 </small>
+                                @if (!string.IsNullOrEmpty(m.DietaryInstructions))
+                                {
+                                    <small class="pull-right" style="margin-right:5px">
+                                        <i class="fa fa-fw fa-heart text-danger" data-toggle="tooltip" date-placement="top" 
+                                           title="Dietary instructions: @m.DietaryInstructions">
+                                        </i>
+                                    </small>
+                                }
                             </h4>
                             <div class="row">
                                 <div class="col-md-3 col-sm-6">
