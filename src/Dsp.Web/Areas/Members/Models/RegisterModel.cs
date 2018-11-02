@@ -17,7 +17,7 @@
         [Display(Name = "Email")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
         public string Email { get; set; }
-        
+
         [Required]
         [DataType(DataType.Text)]
         [Display(Name = "First Name")]
@@ -33,23 +33,15 @@
         [Display(Name = "Status")]
         public string StatusId { get; set; }
         public IEnumerable<SelectListItem> StatusList { get; set; }
-        
-        [Required]
+
         [DataType(DataType.Text)]
         [Display(Name = "Graduation")]
         public string ExpectedGraduationId { get; set; }
         public IEnumerable<SelectListItem> SemesterList { get; set; }
 
-        [Required]
         [DataType(DataType.Text)]
         [Display(Name = "Pledge Class")]
         public string PledgeClassId { get; set; }
         public IEnumerable<SelectListItem> PledgeClassList { get; set; }
-        
-        [Required]
-        [DataType(DataType.Text)]
-        [Display(Name = "Shirt Size")]
-        public string ShirtSize { get; set; }
-        public IEnumerable<SelectListItem> ShirtSizes { get; set; }
     }
 }

@@ -263,9 +263,8 @@
                 RegisterModel = new RegisterModel
                 {
                     StatusList = await GetStatusListAsync(),
-                    PledgeClassList = await GetPledgeClassListAsync(),
-                    SemesterList = await GetAllSemesterListAsync(),
-                    ShirtSizes = GetShirtSizesSelectList()
+                    PledgeClassList = await GetPledgeClassListWithNoneAsync(),
+                    SemesterList = await GetAllSemesterListWithNoneAsync()
                 },
                 UnregisterModel = new UnregisterModel
                 {
@@ -279,15 +278,21 @@
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Register(RegisterModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                TempData["FailureMessage"] = "Registration failed because the format of some of the provided data was invalid.";
-                return RedirectToAction("Registration");
-            }
-            // Attempt to register the user
             try
             {
+                if (!ModelState.IsValid)
+                {
+                    throw new ArgumentException("Registration failed because the format of some of the provided data was invalid.");
+                }
+                var existingUser = await UserManager.FindByEmailAsync(model.Email);
+                if (existingUser != null)
+                {
+                    throw new ArgumentException("This email is already in use, please select another.");
+                }
+
                 var tempPassword = Membership.GeneratePassword(10, 5);
+                var pledgeClassId = int.Parse(model.PledgeClassId);
+                var expectedGraduationId = int.Parse(model.ExpectedGraduationId);
                 var user = new Member
                 {
                     UserName = model.UserName.ToLower(),
@@ -295,11 +300,11 @@
                     FirstName = model.FirstName,
                     LastName = model.LastName,
                     StatusId = int.Parse(model.StatusId),
-                    PledgeClassId = int.Parse(model.PledgeClassId),
-                    ExpectedGraduationId = int.Parse(model.ExpectedGraduationId),
-                    ShirtSize = model.ShirtSize,
                     CreatedOn = DateTime.UtcNow
                 };
+                if (pledgeClassId > 0) user.PledgeClassId = pledgeClassId;
+                if (expectedGraduationId > 0) user.ExpectedGraduationId = expectedGraduationId;
+
                 var result = await UserManager.CreateAsync(user, tempPassword);
                 if (result.Succeeded)
                 {
@@ -330,17 +335,28 @@
                     await UserManager.SendEmailAsync(user.Id, "Account Registration Successful!", body);
 
                     TempData["SuccessMessage"] = user + " was successfully registered and emailed for confirmation.";
-                    return RedirectToAction("Registration");
                 }
-                AddErrors(result);
+                else
+                {
+                    var msg = "Something unexpected went wrong.  Please contact your administrator.";
+                    if (result.Errors.Any())
+                    {
+                        msg = string.Join(" ", result.Errors);
+                    }
+                    throw new Exception(msg);
+                }
+            }
+            catch (ArgumentException e)
+            {
+                TempData["FailureMessage"] = e.Message;
             }
             catch (MembershipCreateUserException e)
             {
-                ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                TempData["FailureMessage"] = ErrorCodeToString(e.StatusCode);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                ModelState.AddModelError("", "Something went wrong.  Sorry for the inconvenience.");
+                TempData["FailureMessage"] = e.Message;
             }
             return RedirectToAction("Registration");
         }

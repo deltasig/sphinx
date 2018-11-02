@@ -16,7 +16,7 @@ using System.Web.Mvc;
 
 namespace Dsp.Web.Areas.Members.Controllers
 {
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate, Advisor")]
     public class BugsController : BaseController
     {
         private const string ADMIN_USERNAME = "tjm6f4";

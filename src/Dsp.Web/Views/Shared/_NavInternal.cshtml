@@ -10,15 +10,20 @@
     var isService = isAdmin;
     var isDor = isAdmin;
     var isNme = isAdmin;
+    var isMember = isAdmin;
+    var isAffiliate = false;
 
-    if(!isAdmin)
+    if (!isAdmin)
     {
         foreach (var r in userRoles)
         {
             switch (r)
             {
                 case "Administrator": break;
-                case "Active": isActive = true; break;
+                case "Active":
+                    isActive = true;
+                    isMember = true;
+                    break;
                 case "Released": isReleased = isActive ? false : true; break;
                 case "Secretary": isSecretary = true; break;
                 case "President": isPresident = true; break;
@@ -27,20 +32,29 @@
                 case "Service": isService = true; break;
                 case "Director of Recruitment": isDor = true; break;
                 case "New Member Education": isNme = true; break;
+                case "Pledge": isMember = true; break;
+                case "Neophyte": isMember = true; break;
+                case "Alumnus": isMember = true; break;
+                case "Advisor": isMember = true; break;
+                case "Affiliate": isAffiliate = true; break;
                 default: break;
             }
         }
     }
 
     var showErrorLogLink = isAdmin;
-    var showAppointmentsLink = isAdmin || isPresident;
-    var showPositionsLink = isAdmin || isPresident;
-    var showRegistrationLink = isAdmin || isSecretary || isDor || isNme || isVpGrowth;
-    var showSemesterLink = isAdmin || isPresident || isSecretary || isAcademics || isService || isDor || isVpGrowth;
+    var showAppointmentsLink = isPresident;
+    var showPositionsLink = isPresident;
+    var showRegistrationLink = isSecretary || isDor || isNme || isVpGrowth;
+    var showSemesterLink = isPresident || isSecretary || isAcademics || isService || isDor || isVpGrowth;
     var showStatusesLink = isAdmin;
     var showAdminLink = showErrorLogLink || showAppointmentsLink || showPositionsLink ||
                         showRegistrationLink || showSemesterLink || showStatusesLink;
 
+    var showSobersLink = isMember;
+    var showMealsLink = isMember || isAffiliate;
+    var showLaundryLink = isMember;
+    var showUpdatesLink = isMember;
 }
 
 <nav class="navbar navbar-inverse navbar-fixed-top no-print" role="navigation">
@@ -64,51 +78,69 @@
     </div>
     <!-- Top Menu Items (Left Side) -->
     <ul class="nav navbar-nav hidden-xs hidden-sm">
-        <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "")">
-            <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
-               data-toggle="tooltip" data-placement="bottom" title="Sobers">
-                <i class="fa fa-car"></i>
-            </a>
-        </li>
-        <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "")"
-            data-toggle="tooltip" data-placement="bottom" title="Laundry">
-            <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
-                <i class="fa fa-lg fa-tint"></i>
-            </a>
-        </li>
-        <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")"
-            data-toggle="tooltip" data-placement="bottom" title="Meals">
-            <a href="@Url.Action("Index", "Meals", new {area = "Kitchen"})">
-                <i class="fa fa-cutlery"></i>
-            </a>
-        </li>
+        @if (showSobersLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "")">
+                <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
+                   data-toggle="tooltip" data-placement="bottom" title="Sobers">
+                    <i class="fa fa-car"></i>
+                </a>
+            </li>
+        }
+        @if (showLaundryLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "")"
+                data-toggle="tooltip" data-placement="bottom" title="Laundry">
+                <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
+                    <i class="fa fa-lg fa-tint"></i>
+                </a>
+            </li>
+        }
+        @if (showMealsLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "")"
+                data-toggle="tooltip" data-placement="bottom" title="Meals">
+                <a href="@Url.Action("Index", "Meals", new {area = "Kitchen"})">
+                    <i class="fa fa-cutlery"></i>
+                </a>
+            </li>
+        }
     </ul>
     <!-- Top Menu Items (Right Side) -->
     <ul class="nav navbar-nav navbar-right top-nav" style="margin: 0">
-        <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs visible-sm">
-            <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
-               data-toggle="tooltip" data-placement="bottom" title="Sobers">
-                <i class="fa fa-car"></i>
-            </a>
-        </li>
-        <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "") visible-xs visible-sm"
-            data-toggle="tooltip" data-placement="bottom" title="Laundry">
-            <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
-                <i class="fa fa-lg fa-tint"></i>
-            </a>
-        </li>
-        <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "") visible-xs visible-sm"
-            data-toggle="tooltip" data-placement="bottom" title="Meals">
-            <a href="@Url.Action("Index", "Meals", new {area = "Kitchen"})">
-                <i class="fa fa-cutlery"></i>
-            </a>
-        </li>
+        @if (showSobersLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Sober") ? "active" : "") visible-xs visible-sm">
+                <a href="@Url.Action("Index", "Schedule", new {area = "Sobers"})"
+                   data-toggle="tooltip" data-placement="bottom" title="Sobers">
+                    <i class="fa fa-car"></i>
+                </a>
+            </li>
+        }
+        @if (showLaundryLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Laundry") ? "active" : "") visible-xs visible-sm"
+                data-toggle="tooltip" data-placement="bottom" title="Laundry">
+                <a href="@Url.Action("Index", "Schedule", new {area = "Laundry"})">
+                    <i class="fa fa-lg fa-tint"></i>
+                </a>
+            </li>
+        }
+        @if (showMealsLink)
+        {
+            <li class="@(ViewBag.Title.Contains("Meal") ? "active" : "") visible-xs visible-sm"
+                data-toggle="tooltip" data-placement="bottom" title="Meals">
+                <a href="@Url.Action("Index", "Meals", new {area = "Kitchen"})">
+                    <i class="fa fa-cutlery"></i>
+                </a>
+            </li>
+        }
         @Html.Partial("_LoginInternalPartial")
     </ul>
     <!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
     <div class="collapse navbar-collapse">
         <ul class="nav navbar-nav side-nav">
-            @if (Request.IsAuthenticated && !isReleased)
+            @if (Request.IsAuthenticated && !isReleased && !isAffiliate)
             {
                 <li class="@(ViewBag.Title.Contains("Roster") ? "active" : "")">
                     <a href="@Url.Action("Index", "Roster", new { area = "Members" })">
@@ -209,11 +241,14 @@
                             <i class="fa fa-fw fa-reply"></i> External Site
                         </a>
                     </li>
-                    <li>
-                        <a href="@Url.Action("Updates", "Home", new { area = "" })">
-                            <i class="fa fa-fw fa-book"></i> Updates
-                        </a>
-                    </li>
+                    @if (showUpdatesLink)
+                    {
+                        <li>
+                            <a href="@Url.Action("Updates", "Home", new { area = "" })">
+                                <i class="fa fa-fw fa-book"></i> Updates
+                            </a>
+                        </li>
+                    }
                     <li>
                         <a href="@Url.Action("Index", "Bugs", new { area = "Members" })">
                             <i class="fa fa-fw fa-bug"></i> Bug Reports
