@@ -1,7 +1,7 @@
 ﻿@model LoginModel
 @{
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
-    ViewBag.Title = "Member Authentication";
+    ViewBag.Title = "Sign In";
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().ToList();
 }
 
@@ -11,10 +11,9 @@
             <div class="clearfix" style="margin-top: 100px">
                 <img class="img-responsive pull-left" src="~/Images/MobileTouch-57x57.png" alt="DSP" width="35" style="margin-right:10px">
                 <h4>
-                    @ViewBag.Title
                     <small class="pull-right" data-toggle="tooltip" data-placement="top" 
                            title="Forgot password, locked out, etc.">
-                        <a href="@Url.Action("Contacts", "Home", new { area = "" })#web_master" 
+                        <a href="@Url.Action("Contacts", "Home", new { area = "" })#secretary" 
                            class="social">
                             <i class="fa fa-question-circle"></i> Help
                         </a>
