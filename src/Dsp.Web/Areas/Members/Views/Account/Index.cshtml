@@ -4,12 +4,38 @@
     ViewBag.Subtitle = Model.Member.ToString();
 
     // Permissions
-    var isAdmin = User.IsInRole("Administrator");
-    var isSecretary = User.IsInRole("Secretary");
-    var isAcademic = User.IsInRole("Academics");
-    var isHousing = User.IsInRole("House Manager");
+    var userRoles = Roles.GetRolesForUser();
+    var isAdmin = userRoles.Any(r => r == "Administrator");
     var isCurrentUser = User.Identity.GetUserId<int>() == Model.Member.Id;
-    var pledgeClassLetters = Model.Member.PledgeClass.GetLetters();
+    var isSecretary = isAdmin;
+    var isAcademic = isAdmin;
+    var isHousing = isAdmin;
+    var isMember = isAdmin;
+
+    if (!isAdmin)
+    {
+        foreach (var r in userRoles)
+        {
+            switch (r)
+            {
+                case "Administrator": break;
+                case "Secretary": isSecretary = true; break;
+                case "Academics": isAcademic = true; break;
+                case "House Manager": isHousing = true; break;
+                case "Active": isMember = true; break;
+                case "Pledge": isMember = true; break;
+                case "Neophyte": isMember = true; break;
+                case "Alumnus": isMember = true; break;
+                case "Advisor": isMember = true; break;
+                default: break;
+            }
+        }
+    }
+
+    var showEdit = isSecretary || isAcademic || isHousing || isCurrentUser;
+    var canModifyMajor = isAcademic || isSecretary || isCurrentUser;
+    var canModifyPhoneNumbers = isSecretary || isCurrentUser;
+    var canModifyAddresses = isSecretary || isCurrentUser;
 }
 
 <div class="container-fluid">
@@ -21,7 +47,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <i class="fa fa-info-circle"></i> Information
-                    @if (isAdmin || isSecretary || isAcademic || isHousing || isCurrentUser)
+                    @if (showEdit)
                     {
                         <a href="@Url.Action("Edit", "Account", new { userName = Model.Member.UserName })"
                            class="btn btn-xs btn-default pull-right"
@@ -45,93 +71,103 @@
                             <td class="active">Status</td>
                             <td>@Model.Member.MemberStatus.StatusName</td>
                         </tr>
-                        <tr>
-                            <td class="active">Pledge Class</td>
-                            <td>
-                                @Html.Raw(pledgeClassLetters)
-                                <i data-toggle="tooltip" data-placement="left"
-                                   title="@Model.Member.PledgeClass.PledgeClassName"
-                                   class="fa fa-question-circle pull-right">
-                                </i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="active">Graduation</td>
-                            <td>@Model.Member.GraduationSemester.ToString()</td>
-                        </tr>
-                        <tr>
-                            <td class="active">
-                                @(Model.Member.MajorsToMember.Count <= 1 ? "Major" : "Majors")
-                                @if (isAdmin || isAcademic || isSecretary || isCurrentUser)
-                                {
-                                    <a href="@Url.Action("Assign", "Majors", new {area = "Edu", id = Model.Member.Id})" class="pull-right">
-                                        <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
-                                           title="Add a new major"></i>
-                                    </a>
-                                }
-                            </td>
-                            <td class="@(Model.Member.MajorsToMember.Any() ? "" : "warning")">
-                                @if (Model.Member.MajorsToMember.Any())
-                                {
-                                    foreach (var m in Model.Member.MajorsToMember)
-                                    {
-                                        @m.Major.MajorName
-                                        @:(@m.DegreeLevel)
-                                        if (isAdmin || isAcademic || isSecretary || isCurrentUser)
-                                        {
-                                            <a href="@Url.Action("Unassign", "Majors", new {area = "Edu", id = m.MajorToMemberId})"
-                                               class="pull-right">
-                                                <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
-                                                   title="Remove this major"></i>
-                                            </a>
-                                        }
-                                        <br />
-                                    }
-                                }
-                            </td>
-                        </tr>
-                        @if(Model.Member.Rooms.Any())
+                        @if (isMember)
                         {
-                            var counter = 0;
-                            foreach (var r in Model.Member.Rooms.OrderByDescending(s => s.MovedOut))
+                            if (Model.Member.PledgeClass != null)
                             {
-                                counter++;
+                                var pledgeClassLetters = Model.Member.PledgeClass.GetLetters();
                                 <tr>
-                                    @if (counter == 1)
-                                    {
-                                        <td class="active" rowspan="@(Model.Member.Rooms.Count)">Residences</td>
-                                    }
+                                    <td class="active">Pledge Class</td>
                                     <td>
-                                        @r.Room.Name (@r.GetSemester())
+                                        @Html.Raw(pledgeClassLetters)
+                                        <i data-toggle="tooltip" data-placement="left"
+                                           title="@Model.Member.PledgeClass.PledgeClassName"
+                                           class="fa fa-question-circle pull-right">
+                                        </i>
                                     </td>
                                 </tr>
                             }
-                        }
-                        else
-                        {
+                            if (Model.Member.GraduationSemester != null)
+                            {
+                                <tr>
+                                    <td class="active">Graduation</td>
+                                    <td>@Model.Member.GraduationSemester.ToString()</td>
+                                </tr>
+                            }
                             <tr>
-                                <td class="active">Residences</td>
-                                <td class="warning"></td>
+                                <td class="active">
+                                    @(Model.Member.MajorsToMember.Count <= 1 ? "Major" : "Majors")
+                                    @if (canModifyMajor)
+                                    {
+                                        <a href="@Url.Action("Assign", "Majors", new { area = "Edu", id = Model.Member.Id })" class="pull-right">
+                                            <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
+                                               title="Add a new major"></i>
+                                        </a>
+                                    }
+                                </td>
+                                <td class="@(Model.Member.MajorsToMember.Any() ? "" : "warning")">
+                                    @if (Model.Member.MajorsToMember.Any())
+                                    {
+                                        foreach (var m in Model.Member.MajorsToMember)
+                                        {
+                                            @m.Major.MajorName
+                                            @:(@m.DegreeLevel)
+                                            if (canModifyMajor)
+                                            {
+                                                <a href="@Url.Action("Unassign", "Majors", new { area = "Edu", id = m.MajorToMemberId })"
+                                                   class="pull-right">
+                                                    <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
+                                                       title="Remove this major"></i>
+                                                </a>
+                                            }
+                                            <br />
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            if (Model.Member.Rooms.Any())
+                            {
+                                var counter = 0;
+                                foreach (var r in Model.Member.Rooms.OrderByDescending(s => s.MovedOut))
+                                {
+                                    counter++;
+                                    <tr>
+                                        @if (counter == 1)
+                                        {
+                                            <td class="active" rowspan="@(Model.Member.Rooms.Count)">Residences</td>
+                                        }
+                                        <td>
+                                            @r.Room.Name (@r.GetSemester())
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td class="active">Residences</td>
+                                    <td class="warning"></td>
+                                </tr>
+                            }
+                            <tr>
+                                <td class="active">Big Bro</td>
+                                <td class="@(Model.Member.BigBrother == null ? "warning" : "")">
+                                    @(Model.Member.BigBrother == null ? "" : Model.Member.BigBrother.ToString())
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="active">Pin</td>
+                                <td class="@(Model.Member.Pin != null ? "" : "warning")">@Model.Member.Pin</td>
+                            </tr>
+                            <tr>
+                                <td class="active">Shirt Size</td>
+                                <td>@Model.Member.ShirtSize</td>
+                            </tr>
+                            <tr>
+                                <td class="active">Dietary Instructions</td>
+                                <td>@Model.Member.DietaryInstructions</td>
                             </tr>
                         }
-                        <tr>
-                            <td class="active">Big Bro</td>
-                            <td class="@(Model.Member.BigBrother == null ? "warning" : "")">
-                                @(Model.Member.BigBrother == null ? "" : Model.Member.BigBrother.ToString())
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="active">Pin</td>
-                            <td class="@(Model.Member.Pin != null ? "" : "warning")">@Model.Member.Pin</td>
-                        </tr>
-                        <tr>
-                            <td class="active">Shirt Size</td>
-                            <td>@Model.Member.ShirtSize</td>
-                        </tr>
-                        <tr>
-                            <td class="active">Dietary Instructions</td>
-                            <td>@Model.Member.DietaryInstructions</td>
-                        </tr>
                         <tr class="active">
                             <td colspan="2">
                                 <small><i class="fa fa-phone-square"></i> Phone Numbers</small>
@@ -148,7 +184,7 @@
                                             @item.Number
                                         </a>
                                     }
-                                    @if (isAdmin || isSecretary || isCurrentUser)
+                                    @if (canModifyPhoneNumbers)
                                     {
                                         <a href="@Url.Action("Edit", "PhoneNumbers", new {id = item.PhoneNumberId})"
                                            class="btn btn-xs btn-default pull-right"
@@ -181,7 +217,7 @@
                                             @item.City, @item.State @item.PostalCode, @item.Country
                                         </small>
                                     }
-                                    @if (isAdmin || isSecretary || isCurrentUser)
+                                    @if (canModifyAddresses)
                                     {
                                         <a href="@Url.Action("Edit", "Addresses", new { id = item.AddressId })"
                                            class="btn btn-xs btn-default pull-right"
@@ -197,70 +233,73 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-8 col-md-offset-4 col-lg-5 col-lg-offset-0">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <i class="fa fa-graduation-cap"></i> <small>Schedule - @Model.CurrentSemester</small>
-                        </div>
-                        <div class="col-xs-6 text-right">
-                            <small>
-                                @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
-                                @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || Model.Member.UserName == User.Identity.GetUserName())
-                                {
-                                    @: |
-                                    @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
-                                }
-                            </small>
+        @if (isMember)
+        {
+            <div class="col-md-8 col-md-offset-4 col-lg-5 col-lg-offset-0">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <div class="row">
+                            <div class="col-xs-6">
+                                <i class="fa fa-graduation-cap"></i> <small>Schedule - @Model.CurrentSemester</small>
+                            </div>
+                            <div class="col-xs-6 text-right">
+                                <small>
+                                    @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
+                                    @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || Model.Member.UserName == User.Identity.GetUserName())
+                                    {
+                                        @: |
+                                        @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
+                                    }
+                                </small>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr class="active @(Model.ThisSemesterCourses.Any() ? "" : "hidden")">
-                                <td>Course</td>
-                                <td>
-                                    Brothers
-                                    <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
-                                       title="Number of other brothers taking this class this semester"></i>
-                                </td>
-                                <td>Files</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @if (Model.ThisSemesterCourses.Any())
-                            {
-                                foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr class="active @(Model.ThisSemesterCourses.Any() ? "" : "hidden")">
+                                    <td>Course</td>
+                                    <td>
+                                        Brothers
+                                        <i class="fa fa-info-circle text-info" data-toggle="tooltip" data-placement="top"
+                                           title="Number of other brothers taking this class this semester"></i>
+                                    </td>
+                                    <td>Files</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ThisSemesterCourses.Any())
                                 {
-                                    var fileCount = item.Class.ClassFiles.Count;
-                                    var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
+                                    foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
+                                    {
+                                        var fileCount = item.Class.ClassFiles.Count;
+                                        var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
 
-                                    <tr>
-                                        <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
-                                        <td>
-                                            @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
-                                        </td>
-                                        <td>
-                                            @Html.ActionLink(fileCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
-                                        </td>
+                                        <tr>
+                                            <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
+                                            <td>
+                                                @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
+                                            </td>
+                                            <td>
+                                                @Html.ActionLink(fileCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="warning">
+                                        <td colspan="3">No classes added!</td>
                                     </tr>
                                 }
-                            }
-                            else
-                            {
-                                <tr class="warning">
-                                    <td colspan="3">No classes added!</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="panel-footer @(Model.ThisSemesterCourses.Any(c => !c.IsSummerClass) ? "" : "hidden")">
-                    <small>Credit Hours: @Model.ThisSemesterCourses.Where(c => !c.IsSummerClass).Sum(c => c.Class.CreditHours)</small>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="panel-footer @(Model.ThisSemesterCourses.Any(c => !c.IsSummerClass) ? "" : "hidden")">
+                        <small>Credit Hours: @Model.ThisSemesterCourses.Where(c => !c.IsSummerClass).Sum(c => c.Class.CreditHours)</small>
+                    </div>
                 </div>
             </div>
-        </div>
+        }
     </div>
 </div>

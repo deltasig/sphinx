@@ -17,9 +17,8 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Security;
-    using System.Web.UI;
 
-    [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
+    [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge, Affiliate")]
     public class MealsController : BaseController
     {
         private IMealService _mealService;

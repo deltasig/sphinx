@@ -256,6 +256,22 @@
 
             return new SelectList(newList, "SemesterId", "Name", (await GetThisSemesterAsync()).SemesterId);
         }
+        protected virtual async Task<SelectList> GetAllSemesterListWithNoneAsync()
+        {
+            var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
+            var newList = new List<object> { new { SemesterId = 0, Name = "None" } };
+
+            foreach (var s in semesters)
+            {
+                newList.Add(new
+                {
+                    s.SemesterId,
+                    Name = s.ToString()
+                });
+            }
+
+            return new SelectList(newList, "SemesterId", "Name");
+        }
         protected virtual async Task<SelectList> GetSemesterListAsync()
         {
             var currentSemester = await GetThisSemesterAsync();
@@ -411,7 +427,7 @@
         protected virtual async Task<SelectList> GetPledgeClassListWithNoneAsync()
         {
             var pledgeClasses = await _db.PledgeClasses.OrderByDescending(s => s.Semester.DateEnd).ToListAsync();
-            var newList = new List<object> { new { PledgeClassId = -1, PledgeClassName = "--Pledge Class (optional)--" } };
+            var newList = new List<object> { new { PledgeClassId = 0, PledgeClassName = "None" } };
 
             foreach (var p in pledgeClasses)
             {
@@ -423,19 +439,6 @@
             }
 
             return new SelectList(newList, "PledgeClassId", "PledgeClassName");
-        }
-        protected virtual async Task<IEnumerable<Leader>> GetRecentAppointmentsAsync()
-        {
-            var thisAndComingSemesters = await _db.Semesters
-                .Where(s => s.DateEnd >= DateTime.UtcNow)
-                .OrderBy(s => s.DateStart)
-                .ToListAsync();
-
-
-
-            var recentAppointsments = new List<Leader>();
-
-            return recentAppointsments;
         }
         protected virtual async Task<double> GetRemainingServiceHoursForUserAsync(int userId)
         {
@@ -1160,4 +1163,4 @@
             base.Dispose(disposing);
         }
     }
-}
+} 

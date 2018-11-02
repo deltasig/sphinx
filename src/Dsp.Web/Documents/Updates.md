@@ -1,6 +1,22 @@
-﻿### September 2018
+﻿### November 2018
+
+- Reworked user registration:
+  - Non-members can now be registered more easily as "Affiliates."
+  - Affiliates can only see the meal schedule (for the chef), their account page, and the bug reporting page.
+  - Fixed some bugs where affiliates could not see their account page.
+
+---
+
+### October 2018
+
+- Added dietary instructions to member profiles.
+
+---
+
+### September 2018
 
 - Added bug reporting feature.
+- Fixed a bug with work order submission.
 
 ---
 
