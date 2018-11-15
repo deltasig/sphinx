@@ -14,6 +14,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
@@ -268,7 +269,13 @@
                 },
                 UnregisterModel = new UnregisterModel
                 {
-                    Users = await GetUserIdListAsFullNameAsync()
+                    Users = await GetUsersAsFullNameAsync(
+                        u =>
+                            u.MemberStatus.StatusName == "Pledge" ||
+                            u.MemberStatus.StatusName == "Affiliate",
+                        u =>
+                            u.CreatedOn != null &&
+                            (DateTime.UtcNow - u.CreatedOn.Value).TotalDays < 30)
                 }
             };
 
@@ -322,7 +329,7 @@
                     {
                         area = "Members",
                         userId = user.Id,
-                        code = code
+                        code
                     }, protocol: Request.Url.Scheme);
 
                     var confirmationModel = new RegistrationConfirmationModel
@@ -380,40 +387,151 @@
                 // Attempt to remove the user from the system
                 try
                 {
-                    var member = await UserManager.FindByIdAsync(model.SelectedUserId);
+                    var user = await UserManager.FindByIdAsync(model.SelectedUserId);
 
                     // Disallow unregistration if someone has meaninfully interacted with the system.
-                    if (member.ClassesTaken.Any() ||
-                       member.IncidentReports.Any() ||
-                       member.LaundrySignups.Any() ||
-                       member.LittleBrothers.Any() ||
-                       member.MajorsToMember.Any() ||
-                       member.PositionsHeld.Any() ||
-                       member.ClassFileUploads.Any() ||
-                       member.Rooms.Any() ||
-                       member.SoberSignups.Any() ||
-                       member.ServiceHours.Any() ||
-                       member.WorkOrders.Any())
+                    var userInteractedWithSystem = false;
+                    var interactionMessage = "";
+                    if (user.ClassesTaken.Any())
                     {
-                        TempData["FailureMessage"] = "Could not remove user because they have pertinent data that can't be removed.";
-                        return RedirectToAction("Registration");
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Classes";
+                    }
+                    else if (user.BigBroId != null)
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Big Brother";
+                    }
+                    else if (user.LittleBrothers.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Little Brothers";
+                    }
+                    else if (user.LaundrySignups.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Laundry Signups";
+                    }
+                    else if (user.ServiceHours.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Service Hours";
+                    }
+                    else if (user.SoberSignups.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Sober Signups";
+                    }
+                    else if (user.PositionsHeld.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Positions";
+                    }
+                    else if (user.IncidentReports.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Incident Reports";
+                    }
+                    else if (user.MealPlates.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Meal Plates";
+                    }
+                    else if (user.Rooms.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Rooms";
+                    }
+                    else if (user.MealItemVotes.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Meal Item Votes";
+                    }
+                    else if (user.ServiceHourAmendments.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Service Hour Amendments";
+                    }
+                    else if (user.ServiceEventAmendments.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Service Event Amendments";
+                    }
+                    else if (user.SubmittedEvents.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Event Submission";
+                    }
+                    else if (user.WorkOrders.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Work Orders";
+                    }
+                    else if (user.ClassFileUploads.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Class File Uploads";
+                    }
+                    else if (user.WorkOrderComments.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Work Order Comments";
+                    }
+                    else if (user.BugReports.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Bug Reports";
+                    }
+                    else if (user.WorkOrderPriorityChanges.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Work Order Priority Changes";
+                    }
+                    else if (user.WorkOrderStatusChanges.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Work Order Status Changes";
+                    }
+                    else if (user.ChoreGroups.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Chore Groups";
+                    }
+                    else if (user.ChoreSignOffs.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Chore Sign Offs";
+                    }
+                    else if (user.ChoresEnforced.Any())
+                    {
+                        userInteractedWithSystem = true;
+                        interactionMessage = "Chores Enforced";
                     }
 
-                    await UserManager.DeleteAsync(member);
-
-                    TempData["SuccessMessage"] = "Successfully removed the user.";
-                    return RedirectToAction("Registration");
+                    if (!userInteractedWithSystem)
+                    {
+                        await UserManager.DeleteAsync(user);
+                        TempData["SuccessMessage"] = "Successfully removed the user.";
+                    }
+                    else
+                    {
+                        TempData["FailureMessage"] = "Could not remove user because they have interacted with the system. " +
+                            $"Interaction: {interactionMessage}";
+                    }
                 }
                 catch (MembershipCreateUserException e)
                 {
-                    ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                    TempData["FailureMessage"] = $"Error, please contact your administrator. {e.Message}";
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException e)
                 {
-                    ModelState.AddModelError("", "Invalid Submission.");
+                    TempData["FailureMessage"] = $"Error, please contact your administrator. {e.Message}";
+                }
+                catch (Exception e)
+                {
+                    TempData["FailureMessage"] = $"Error, please contact your administrator. {e.Message}";
                 }
             }
-            TempData["FailureMessage"] = "Failed to remove the user for an unknown reason.  Please contact your administrator.";
             return RedirectToAction("Registration");
         }
 

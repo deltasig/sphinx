@@ -12,6 +12,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
@@ -332,6 +333,24 @@
                 {
                     UserId = member.Id,
                     Name = member.FirstName + " " + member.LastName
+                });
+            }
+            return new SelectList(newList, "UserId", "Name");
+        }
+        protected virtual async Task<SelectList> GetUsersAsFullNameAsync(Expression<Func<Member, bool>> preSelector, Func<Member, bool> postSelector)
+        {
+            var users = await _db.Users
+                .Where(preSelector)
+                .OrderBy(u => u.LastName)
+                .ToListAsync();
+
+            var newList = new List<object>();
+            foreach (var u in users.Where(postSelector))
+            {
+                newList.Add(new
+                {
+                    UserId = u.Id,
+                    Name = $"{u.FirstName} {u.LastName}"
                 });
             }
             return new SelectList(newList, "UserId", "Name");
@@ -1163,4 +1182,4 @@
             base.Dispose(disposing);
         }
     }
-} 
+}
