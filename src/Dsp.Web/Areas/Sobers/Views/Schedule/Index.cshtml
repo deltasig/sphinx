@@ -47,7 +47,7 @@
                                     <div class="col-md-2 col-p-12">
                                         @if (item.Member == null)
                                         {
-                                            if (!User.IsInRole("Pledge") || item.SoberType.Name != "Officer")
+                                            if (!User.IsInRole("New") || item.SoberType.Name != "Officer")
                                             {
                                                 @Html.ActionLink("Sign up", "SignupConfirmation", "Schedule", new { id = item.SignupId }, new { @class = "no-print" })
                                             }

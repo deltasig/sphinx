@@ -1,13 +1,7 @@
 namespace Dsp.Data.Migrations
 {
     using Dsp.Data;
-    using Dsp.Data.Entities;
-    using Microsoft.AspNet.Identity;
-    using System;
-    using System.Collections.Generic;
     using System.Data.Entity.Migrations;
-    using System.Linq;
-    using System.Web.Security;
 
     internal sealed class Configuration : DbMigrationsConfiguration<SphinxDbContext>
     {
@@ -22,7 +16,7 @@ namespace Dsp.Data.Migrations
             /*
             #region Member Statuses
             context.MemberStatus.AddOrUpdate(m => m.StatusName,
-                new MemberStatus { StatusName = "Pledge" },
+                new MemberStatus { StatusName = "New" },
                 new MemberStatus { StatusName = "Neophyte" },
                 new MemberStatus { StatusName = "Active" },
                 new MemberStatus { StatusName = "Alumnus" },

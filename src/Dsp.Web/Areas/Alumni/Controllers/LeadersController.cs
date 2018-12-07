@@ -7,7 +7,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class LeadersController : BaseController
     {
         [HttpGet]

@@ -1,17 +1,15 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Models;
-    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.UI;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class RosterController : BaseController
     {
         [HttpGet]
@@ -46,35 +44,35 @@
         }
 
         [HttpGet, Authorize(Roles = "Administrator, Secretary")]
-        public async Task<ActionResult> InitiatePledges(string message)
+        public async Task<ActionResult> InitiateNewMembers(string message)
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
 
-            var model = new InitiatePledgesModel
+            var model = new InitiateNewMembersModel
             {
-                Pledges = await GetPledgeUserIdListAsFullNameAsync()
+                NewMembers = await GetNewMemberUserIdListAsFullNameAsync()
             };
 
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
-        public async Task<ActionResult> InitiatePledges(InitiatePledgesModel model)
+        public async Task<ActionResult> InitiateNewMembers(InitiateNewMembersModel model)
         {
-            var pledges = await _db.Users
+            var newMembers = await _db.Users
                 .Where(m =>
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
             var activeId = (await _db.MemberStatuses.SingleAsync(s => s.StatusName == "Active")).StatusId;
 
-            foreach (var p in pledges)
+            foreach (var m in newMembers)
             {
-                p.StatusId = activeId;
-                _db.Entry(p).State = EntityState.Modified;
+                m.StatusId = activeId;
+                _db.Entry(m).State = EntityState.Modified;
             }
 
             await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Pledges successfully moved to active status.";
+            TempData["SuccessMessage"] = "New members successfully moved to active status.";
             return RedirectToAction("InitiatePledges");
         }
 

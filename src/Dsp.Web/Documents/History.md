@@ -56,7 +56,7 @@ The new location included a rectangular residential building (long house) and a 
 
 Long house had 36 two-man rooms and a single room designated for the chapter president.
 There was one phone (364-4192) for the entire house (extension to the round house) with an intercom to notify residents 
-of incoming calls in the evening (one of the pledge duties).
+of incoming calls in the evening (one of the new member duties).
 The room under the president was used for an extensive file system on classes that saved many brothers anguish.
 Long house had 24-hour quiet hours, except for a half an hour each evening.
 

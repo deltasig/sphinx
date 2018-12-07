@@ -19,7 +19,7 @@
     using Microsoft.AspNet.Identity;
 #endif
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class IncidentsController : BaseController
     {
         private IIncidentService _incidentService;

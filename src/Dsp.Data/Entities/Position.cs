@@ -45,7 +45,7 @@ namespace Dsp.Data.Entities
         {
             NonMember,
             Active,
-            Pledge,
+            New,
             Alumni,
             Affiliate,
             Advisor

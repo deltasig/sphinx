@@ -12,7 +12,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
+    [Authorize(Roles = "Neophyte, New, Active, Administrator")]
     public class EventsController : BaseController
     {
         public async Task<ActionResult> Index(int? s)

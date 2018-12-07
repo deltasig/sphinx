@@ -10,11 +10,11 @@
     var isAdmin = User.IsInRole("Administrator");
     var isAlumnus = User.IsInRole("Alumnus");
     var isActive = User.IsInRole("Active");
-    var isPledge = User.IsInRole("Pledge");
+    var isNew = User.IsInRole("New");
     var isNeophyte = User.IsInRole("Neophyte");
-    var isUndergrad = isNeophyte || isPledge || isActive;
+    var isUndergrad = isNeophyte || isNew || isActive;
     var isAffiliate = User.IsInRole("Affiliate");
-
+    
     // Laundry-related
     var laundry = Model.LaundrySummary.OrderBy(o => o.DateTimeShift);
 
@@ -138,7 +138,7 @@
 @Scripts.Render("~/bundles/clipboard")
 
 <div class="container-fluid">
-    @if (isActive || isPledge || isNeophyte || isAlumnus)
+    @if (isActive || isNew || isNeophyte || isAlumnus)
     {
         <div class="row">
             <div class="col-lg-9 col-md-8">

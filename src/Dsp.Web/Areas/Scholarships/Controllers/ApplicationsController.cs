@@ -16,7 +16,7 @@
 
     public class ApplicationsController : BaseController
     {
-        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
         public async Task<ActionResult> Index()
         {
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -33,7 +33,7 @@
             return View(apps);
         }
 
-        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -79,7 +79,7 @@
             _db.ScholarshipApps.Add(model.Application);
             if (model.Questions == null || !model.Questions.Any())
             {
-                TempData[FailureMessageKey] = 
+                TempData[FailureMessageKey] =
                     "Application creation failed because of an internal issue with questions. Please contact your administrator.";
                 return RedirectToAction("Index");
             }
@@ -200,12 +200,12 @@
             TempData[SuccessMessageKey] = "Application deleted successfully.";
             return RedirectToAction("Index");
         }
-        
+
         [AllowAnonymous]
         public async Task<ActionResult> Submit(int? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                        
+
             var model = new SubmitScholarshipAppModel();
             model.Submission = new ScholarshipSubmission();
             model.App = await _db.ScholarshipApps.FindAsync(id);
@@ -230,7 +230,7 @@
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.FailMessage = 
+                ViewBag.FailMessage =
                     "Your application could not be submitted.  Please check the information you provided and try again.  " +
                     "If you continue to receive this error, please contact the person in charge of the scholarship.";
                 return View(model);
@@ -259,7 +259,7 @@
             return RedirectToAction("Scholarships", "Home", new { Area = "" });
         }
 
-        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, Pledge")]
+        [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
         public async Task<ActionResult> Submission(Guid? id)
         {
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -297,7 +297,7 @@
         {
             var subject = "Scholarship Application Submitted with Delta Sigma Phi!";
             var body = "Dear " + submission.FirstName + ", <br/><br/>" +
-                "This email has been sent to confirm that we have successfully received your application for the " + 
+                "This email has been sent to confirm that we have successfully received your application for the " +
                 submission.Application.Title + ".  <br />" +
                 "Please refer to ";
             body += @"<a href=""https://www.deltasig-de.org/scholarships/" + @""">our scholarship page</a> ";

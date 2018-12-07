@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.House.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Models;
     using System;
     using System.Data.Entity;
@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class RoomsController : BaseController
     {
         public async Task<ActionResult> Index(int? sid)
@@ -24,7 +24,7 @@
             {
                 model.Semester = await _db.Semesters.FindAsync(sid);
             }
-            
+
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateStart).ToListAsync();
             model.SemesterList = base.GetCustomSemesterListAsync(semesters);
             model.sid = model.Semester.SemesterId;
@@ -125,13 +125,13 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Provided 'sid' did not match an existing semester.");
             }
             var semester = await _db.Semesters.FindAsync(sid);
-            
+
             // See if rooms already exist.
             if (semester.Rooms.Any())
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Semester already has rooms entered. Delete all existing rooms before generating.");
             }
-            
+
             // First let's try to copy the previous semesters room entries for convenience.
             var previousSemester = (await _db.Semesters
                 .Where(s => s.DateEnd < semester.DateStart)
@@ -203,7 +203,7 @@
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Provided 'mid' did not match an existing member.");
 
             var room = await _db.Rooms.FindAsync(rid);
-            if(room == null)
+            if (room == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Provided 'rid' did not match an existing room.");
 
             var roomAssignment = new RoomToMember
@@ -234,7 +234,7 @@
             var roomAssignment = await _db.RoomsToMembers.FindAsync(aid);
             if (roomAssignment == null)
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, "Provided 'aid' did not match an existing room assignment.");
-            
+
             try
             {
                 _db.RoomsToMembers.Remove(roomAssignment);

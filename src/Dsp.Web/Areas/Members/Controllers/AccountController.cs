@@ -271,7 +271,7 @@
                 {
                     Users = await GetUsersAsFullNameAsync(
                         u =>
-                            u.MemberStatus.StatusName == "Pledge" ||
+                            u.MemberStatus.StatusName == "New" ||
                             u.MemberStatus.StatusName == "Affiliate",
                         u =>
                             u.CreatedOn != null &&

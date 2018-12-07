@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -11,7 +11,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class AddressesController : BaseController
     {
         public async Task<ActionResult> Index(string s)
@@ -87,9 +87,9 @@
             const string header = "First Name, Last Name, Member Status, Address Type, Address 1, Address 2, City, State, Postal Code, Country";
             var sb = new StringBuilder();
             sb.AppendLine(header);
-            foreach(var a in addresses)
+            foreach (var a in addresses)
             {
-                var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}", 
+                var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
                     a.Member.FirstName,
                     a.Member.LastName,
                     a.Member.MemberStatus.StatusName,

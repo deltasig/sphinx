@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Edu.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -10,7 +10,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class MajorsController : BaseController
     {
         public async Task<ActionResult> Index()

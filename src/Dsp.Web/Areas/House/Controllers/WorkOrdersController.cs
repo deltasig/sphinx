@@ -14,7 +14,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
     public class WorkOrdersController : BaseController
     {
         [HttpGet]

@@ -99,7 +99,7 @@
                     m.MemberStatus.StatusName == "Alumnus" ||
                     m.MemberStatus.StatusName == "Neophyte" ||
                     m.MemberStatus.StatusName == "Active" ||
-                    m.MemberStatus.StatusName == "Pledge") &&
+                    m.MemberStatus.StatusName == "New") &&
                     m.GraduationSemester.DateEnd < semester.DateStart);
             return results.OrderBy(m => m.LastName);
 
@@ -120,7 +120,7 @@
                     d.MemberStatus.StatusName == "Alumnus" ||
                     d.MemberStatus.StatusName == "Neophyte" ||
                     d.MemberStatus.StatusName == "Active" ||
-                    d.MemberStatus.StatusName == "Pledge") &&
+                    d.MemberStatus.StatusName == "New") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                     d.GraduationSemester.DateEnd > semester.DateStart));
             return results.OrderBy(m => m.LastName);

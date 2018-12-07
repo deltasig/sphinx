@@ -1,14 +1,14 @@
 ﻿namespace Dsp.Web.Areas.Sobers.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using MarkdownSharp;
     using System.Data.Entity;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Alumnus, Active, Pledge, Neophyte")]
+    [Authorize(Roles = "Alumnus, Active, New, Neophyte")]
     public class TypesController : BaseController
     {
         [Authorize(Roles = "Administrator, Sergeant-at-Arms")]

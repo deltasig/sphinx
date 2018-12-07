@@ -76,15 +76,15 @@
         {
             return await _db.Users.Where(m => m.MemberStatus.StatusName == "Active").ToListAsync();
         }
-        protected virtual async Task<IEnumerable<Member>> GetAllPledgeMembersAsync()
+        protected virtual async Task<IEnumerable<Member>> GetAllNewMembersAsync()
         {
-            return await _db.Users.Where(m => m.MemberStatus.StatusName == "Pledge").ToListAsync();
+            return await _db.Users.Where(m => m.MemberStatus.StatusName == "New").ToListAsync();
         }
-        protected virtual async Task<IEnumerable<Member>> GetAllActivePledgeNeophyteMembersAsync()
+        protected virtual async Task<IEnumerable<Member>> GetAllActiveNewNeophyteMembersAsync()
         {
             return await _db.Users
                 .Where(m => m.MemberStatus.StatusName == "Active" ||
-                            m.MemberStatus.StatusName == "Pledge" ||
+                            m.MemberStatus.StatusName == "New" ||
                             m.MemberStatus.StatusName == "Neophyte")
                 .ToListAsync();
         }
@@ -99,7 +99,7 @@
                     d.LastName != "Hirtz" &&
                     (d.MemberStatus.StatusName == "Alumnus" ||
                     d.MemberStatus.StatusName == "Active" ||
-                    d.MemberStatus.StatusName == "Pledge" ||
+                    d.MemberStatus.StatusName == "New" ||
                     d.MemberStatus.StatusName == "Neophyte") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                     d.GraduationSemester.DateEnd > semester.DateStart)
@@ -112,7 +112,7 @@
                     d.LastName != "Hirtz" &&
                     (d.MemberStatus.StatusName == "Alumnus" ||
                     d.MemberStatus.StatusName == "Active" ||
-                    d.MemberStatus.StatusName == "Pledge" ||
+                    d.MemberStatus.StatusName == "New" ||
                     d.MemberStatus.StatusName == "Neophyte" ||
                     d.MemberStatus.StatusName == "Released") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
@@ -201,7 +201,7 @@
         }
         protected virtual async Task<IEnumerable<object>> GetUserIdListAsFullNameWithNoneNonSelectListAsync()
         {
-            var members = (await GetAllActivePledgeNeophyteMembersAsync()).OrderBy(o => o.LastName);
+            var members = (await GetAllActiveNewNeophyteMembersAsync()).OrderBy(o => o.LastName);
             var newList = new List<object> { new { UserId = 0, Name = "None" } };
             foreach (var member in members)
             {
@@ -325,7 +325,7 @@
         }
         protected virtual async Task<SelectList> GetUserIdListAsFullNameAsync()
         {
-            var members = (await GetAllActivePledgeNeophyteMembersAsync()).OrderBy(o => o.LastName);
+            var members = (await GetAllActiveNewNeophyteMembersAsync()).OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -355,9 +355,9 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected virtual async Task<SelectList> GetPledgeUserIdListAsFullNameAsync()
+        protected virtual async Task<SelectList> GetNewMemberUserIdListAsFullNameAsync()
         {
-            var members = (await GetAllPledgeMembersAsync()).OrderBy(o => o.LastName);
+            var members = (await GetAllNewMembersAsync()).OrderBy(o => o.LastName);
             var newList = new List<object>();
             foreach (var member in members)
             {
@@ -1117,7 +1117,7 @@
             CancelSignupSuccess,
             EditSignupSuccess,
             EditSignupFailure,
-            SignupPledgeOfficerFailure,
+            SignupNewMemberOfficerFailure,
             DeleteSignupSuccess,
             MultiAddSignupNoDatesFailure,
         }
@@ -1165,8 +1165,8 @@
                     ViewBag.FailMessage = "Failed to modify sober signup.  Please try again or contact your administrator" +
                                           "if the problem persists.";
                     break;
-                case SoberMessage.SignupPledgeOfficerFailure:
-                    ViewBag.FailMessage = "Unfortunately members with pledge status are not allowed to be sober officers.";
+                case SoberMessage.SignupNewMemberOfficerFailure:
+                    ViewBag.FailMessage = "Unfortunately, new members are not allowed to be sober officers.";
                     break;
             }
         }

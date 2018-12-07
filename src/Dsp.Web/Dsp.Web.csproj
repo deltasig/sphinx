@@ -341,7 +341,7 @@
     <Compile Include="Areas\Members\MembersAreaRegistration.cs" />
     <Compile Include="Areas\Members\Models\AccountInformationModel.cs" />
     <Compile Include="Areas\Members\Models\AddressIndexFilterModel.cs" />
-    <Compile Include="Areas\Members\Models\InitiatePledgesModel.cs" />
+    <Compile Include="Areas\Members\Models\InitiateNewMembersModel.cs" />
     <Compile Include="Areas\Members\Models\LoginModel.cs" />
     <Compile Include="Areas\Members\Models\MemberStatusFilter.cs" />
     <Compile Include="Areas\Members\Models\RegisterModel.cs" />
@@ -494,7 +494,7 @@
     <Content Include="Areas\Alumni\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Members\Views\Roster\InitiatePledges.cshtml" />
+    <Content Include="Areas\Members\Views\Roster\InitiateNewMembers.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Transcript.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Edit.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Delete.cshtml" />
