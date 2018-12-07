@@ -1,9 +1,14 @@
-﻿### November 2018
+﻿### December 2018
+
+- Modified the website such that new members are actually called "new members."
+
+### November 2018
 
 - Reworked user registration:
   - Non-members can now be registered more easily as "Affiliates."
   - Affiliates can only see the meal schedule (for the chef), their account page, and the bug reporting page.
   - Fixed some bugs where affiliates could not see their account page.
+- Attempted to fix an issue with uploading an avatar.
 
 ---
 

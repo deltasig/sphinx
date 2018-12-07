@@ -16,7 +16,7 @@
     using System.Web.Mvc;
     using Web.Controllers;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class ScheduleController : BaseController
     {
         private ISoberService _soberService;
@@ -178,9 +178,9 @@
             {
                 return RedirectToAction("Index", new { message = SoberMessage.SignupFailure });
             }
-            if (User.IsInRole("Pledge") && model.SoberType.Name == "Officer")
+            if (User.IsInRole("New") && model.SoberType.Name == "Officer")
             {
-                return RedirectToAction("Index", new { message = SoberMessage.SignupPledgeOfficerFailure });
+                return RedirectToAction("Index", new { message = SoberMessage.SignupNewMemberOfficerFailure });
             }
 
             model.UserId = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;

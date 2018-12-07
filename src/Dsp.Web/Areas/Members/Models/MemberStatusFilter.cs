@@ -2,7 +2,7 @@
 {
     public class MemberStatusFilter
     {
-        public bool Pledges { get; set; }
+        public bool NewMembers { get; set; }
         public bool Neophytes { get; set; }
         public bool Actives { get; set; }
         public bool Alumni { get; set; }
@@ -11,7 +11,7 @@
 
         internal bool IsBlank()
         {
-            return !Pledges && !Neophytes && !Actives && !Alumni && !Affiliates && !Released;
+            return !NewMembers && !Neophytes && !Actives && !Alumni && !Affiliates && !Released;
         }
     }
 }

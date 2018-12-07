@@ -4,7 +4,7 @@
     ViewBag.Title = "Roster";
     ViewBag.Subtitle = Model.Semester.ToString();
 
-    var pledgeCount = Model.Members.Count(m => m.PledgeClass.SemesterId == Model.SelectedSemester);
+    var newMemberCount = Model.Members.Count(m => m.PledgeClass.SemesterId == Model.SelectedSemester);
     var activeCount = Model.Members.Count(m => m.PledgeClass.SemesterId != Model.SelectedSemester);
 
     var filter = new RosterFilterModel
@@ -140,7 +140,7 @@
                             </div>|<div class="label label-default"
                                  data-toggle="tooltip"
                                  data-placement="top"
-                                 title="Pledges">@pledgeCount</div>
+                                 title="New Members">@newMemberCount</div>
                         </div>
                         <div class="col-sm-6 text-sm-right">
                             <a class="btn btn-xs btn-default" href="@Url.Action("Download", "Roster", new {area = "Members"})">
@@ -148,8 +148,8 @@
                             </a>
                             @if (User.IsInRole("Secretary") || User.IsInRole("Administrator"))
                             {
-                                <a class="btn btn-xs btn-default" href="@Url.Action("InitiatePledges", "Roster", new {area = "Members"})">
-                                    Initiate Pledges
+                                <a class="btn btn-xs btn-default" href="@Url.Action("InitiateNewMembers", "Roster", new {area = "Members"})">
+                                    Initiate New Members
                                 </a>
                                 <a class="btn btn-xs btn-default" href="@Url.Action("GraduateActives", "Roster", new {area = "Members"})">
                                     Graduate Actives
@@ -162,6 +162,8 @@
                     @foreach (var m in Model.Members)
                     {
                         var phone = m.PhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Data.Entities.PhoneNumber();
+                        var status = m.MemberStatus.StatusName;
+                        var statusColor = status == "Active" ? "label-success" : status == "New" ? "label-info" : "label-warning"; 
 
                         <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" 
                            class="list-group-item @(m.EmailConfirmed ? "" : "list-group-item-danger")">
@@ -174,7 +176,7 @@
                                     <small>(Account Unconfirmed)</small>
                                 }
                                 <small class="pull-right">
-                                    <span class="label label-success">@m.MemberStatus.StatusName</span>
+                                    <span class="label @statusColor">@m.MemberStatus.StatusName</span>
                                 </small>
                                 <small class="pull-right" style="margin-right:5px">
                                     <span class="label label-default">@m.PledgeClass.PledgeClassName</span>
@@ -189,16 +191,16 @@
                                 }
                             </h4>
                             <div class="row">
-                                <div class="col-md-3 col-sm-6">
+                                <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-envelope"></i> @m.Email
                                 </div>
-                                <div class="col-md-3 col-sm-6">
+                                <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-mobile-phone"></i> @phone.Number
                                 </div>
-                                <div class="col-md-3 col-sm-6">
+                                <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-home"></i> @m.LivingAssignmentForSemester(Model.Semester.SemesterId)
                                 </div>
-                                <div class="col-md-3 col-sm-6">
+                                <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-graduation-cap"></i> @m.GraduationSemester.ToString()
                                 </div>
                             </div>

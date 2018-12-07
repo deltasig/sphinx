@@ -13,8 +13,6 @@
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Http;
-    using System.Web.Mvc;
-    using System.Web.UI;
 
     [System.Web.Http.Authorize]
     [System.Web.Http.RoutePrefix("api/members")]
@@ -33,7 +31,7 @@
             _positionService = new PositionService(_db);
         }
 
-        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.Authorize(Roles = "New, Active, Alumnus")]
         [System.Web.Http.HttpGet, System.Web.Http.Route("roster/{sid:int}")]
         public async Task<IHttpActionResult> Roster(int sid)
         {
@@ -56,7 +54,7 @@
             }
         }
 
-        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.Authorize(Roles = "New, Active, Alumnus")]
         [System.Web.Http.HttpGet, System.Web.Http.Route("alumni/{sid:int}")]
         public async Task<IHttpActionResult> Alumni(int sid)
         {
@@ -79,7 +77,7 @@
             }
         }
 
-        [System.Web.Http.Authorize(Roles = "Pledge, Active, Alumnus")]
+        [System.Web.Http.Authorize(Roles = "New, Active, Alumnus")]
         [System.Web.Http.HttpGet, System.Web.Http.Route("feed/{page:int}")]
         public async Task<IHttpActionResult> Feed(int page = 0)
         {

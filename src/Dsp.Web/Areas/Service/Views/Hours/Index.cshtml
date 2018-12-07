@@ -23,10 +23,10 @@
     var nonExemptActives = actives
         .Where(m => !exemptMembers.Select(e => e.Member.Id).Contains(m.Member.Id))
         .ToList();
-    var pledges = Model.ServiceHours
+    var newMembers = Model.ServiceHours
         .Where(m => m.Member.PledgeClass.SemesterId == Model.Semester.SemesterId)
         .ToList();
-    var nonExemptPledges = pledges
+    var nonExemptNewMembers = newMembers
         .Where(m => !exemptMembers.Select(e => e.Member.Id).Contains(m.Member.Id))
         .ToList();
 
@@ -60,20 +60,20 @@
             .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
     var averageActiveAttendancePercentage = (int)(100 * (averageActiveAttendance / (double)(nonExemptActives.Count == 0 ? 1 : nonExemptActives.Count)));
 
-    var pledgesServed = nonExemptPledges.Count(m => m.Hours > 0);
-    var pledgesServedPercentage = (int)(100 * (pledgesServed / (double)(nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)));
-    var pledgesServedTen = nonExemptPledges.Count(m => m.Hours >= 10);
-    var pledgesTenPercentage = (int)(100 * (pledgesServedTen / (double)(nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)));
-    var pledgesServedFifteen = nonExemptPledges.Count(m => m.Hours >= 15);
-    var pledgesFifteenPercentage = (int)(100 * (pledgesServedFifteen / (double)(nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)));
-    var totalPledgeHours = pledges.Sum(m => m.Hours);
-    var averagePledgeHours = (totalPledgeHours / (nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)).ToString("F1");
-    var averagePledgeAttendance = nonExemptPledges.Count(m =>
+    var newMembersServed = nonExemptNewMembers.Count(m => m.Hours > 0);
+    var newMembersServedPercentage = (int)(100 * (newMembersServed / (double)(nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)));
+    var newMembersServedTen = nonExemptNewMembers.Count(m => m.Hours >= 10);
+    var newMembersTenPercentage = (int)(100 * (newMembersServedTen / (double)(nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)));
+    var newMembersServedFifteen = nonExemptNewMembers.Count(m => m.Hours >= 15);
+    var newMembersFifteenPercentage = (int)(100 * (newMembersServedFifteen / (double)(nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)));
+    var totalPledgeHours = newMembers.Sum(m => m.Hours);
+    var averagePledgeHours = (totalPledgeHours / (nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)).ToString("F1");
+    var averagePledgeAttendance = nonExemptNewMembers.Count(m =>
         m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
             .Where(a => a.SemesterId == Model.Semester.SemesterId)
             .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
-    var averagePledgeAttendancePercentage = (int)(100 * (averagePledgeAttendance / (double)(nonExemptPledges.Count == 0 ? 1 : nonExemptPledges.Count)));
+    var averagePledgeAttendancePercentage = (int)(100 * (averagePledgeAttendance / (double)(nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)));
 }
 
 <div class="container-fluid">
@@ -123,8 +123,8 @@
                             <tr class="active">
                                 <th class="col-xs-3"></th>
                                 <th class="col-xs-3">@(exemptMembers.Any() ? "*" : "")All Members (@nonExemptMemberCount)</th>
-                                <th class="col-xs-3">Actives (@nonExemptActives.Count)</th>
-                                <th class="col-xs-3">Pledges (@nonExemptPledges.Count)</th>
+                                <th class="col-xs-3">Active (@nonExemptActives.Count)</th>
+                                <th class="col-xs-3">New (@nonExemptNewMembers.Count)</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -132,25 +132,25 @@
                                 <td class="active">Total hours:</td>
                                 <td>@totalMemberHours</td>
                                 <td>@actives.Sum(a => a.Hours)</td>
-                                <td>@pledges.Sum(p => p.Hours)</td>
+                                <td>@newMembers.Sum(p => p.Hours)</td>
                             </tr>
                             <tr>
                                 <td class="active">Members served &gt; 0 hours:</td>
                                 <td>@membersServed (@membersServedPercentage %)</td>
                                 <td>@activesServed (@activesServedPercentage %)</td>
-                                <td>@pledgesServed (@pledgesServedPercentage %)</td>
+                                <td>@newMembersServed (@newMembersServedPercentage %)</td>
                             </tr>
                             <tr>
                                 <td class="active">Members served &ge; 10 hours:</td>
                                 <td>@membersServedTen (@servedTenPercentage %)</td>
                                 <td>@activesServedTen (@activesTenPercentage %)</td>
-                                <td>@pledgesServedTen (@pledgesTenPercentage %)</td>
+                                <td>@newMembersServedTen (@newMembersTenPercentage %)</td>
                             </tr>
                             <tr>
                                 <td class="active">Members served &ge; 15 hours:</td>
                                 <td>@membersServedFifteen (@servedFifteenPercentage %)</td>
                                 <td>@activesServedFifteen (@activesFifteenPercentage %)</td>
-                                <td>@pledgesServedFifteen (@pledgesFifteenPercentage %)</td>
+                                <td>@newMembersServedFifteen (@newMembersFifteenPercentage %)</td>
                             </tr>
                             <tr>
                                 <td class="active">Service Hours Per Member:</td>

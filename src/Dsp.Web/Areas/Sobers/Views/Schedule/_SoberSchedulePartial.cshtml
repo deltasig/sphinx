@@ -47,7 +47,7 @@
                     <td>
                         @if (item.Member == null)
                         {
-                            if (User.IsInRole("Pledge") && item.SoberType.Name == "Officer")
+                            if (User.IsInRole("New") && item.SoberType.Name == "Officer")
                             {
                                 <small>None</small>
                             }

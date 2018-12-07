@@ -58,7 +58,7 @@
             }.AsQueryable();
             var memberStatusesData = new List<MemberStatus>
             {
-                new MemberStatus { StatusId = 1, StatusName = "Pledge" },
+                new MemberStatus { StatusId = 1, StatusName = "New" },
                 new MemberStatus { StatusId = 2, StatusName = "Neophyte" },
                 new MemberStatus { StatusId = 3, StatusName = "Active" },
                 new MemberStatus { StatusId = 4, StatusName = "Alumnus" },

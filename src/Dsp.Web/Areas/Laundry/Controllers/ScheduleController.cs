@@ -27,7 +27,7 @@
             _laundryService = laundryService;
         }
 
-        [HttpGet, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpGet, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Index()
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -45,7 +45,7 @@
             return View(model);
         }
 
-        [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpPost, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Reserve(LaundrySignup entity)
         {
             if (!ModelState.IsValid)
@@ -75,7 +75,7 @@
             return RedirectToAction("Index");
         }
 
-        [HttpPost, Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+        [HttpPost, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
         public async Task<ActionResult> Cancel(LaundrySignup entity)
         {
             entity.UserId = User.Identity.GetUserId<int>();

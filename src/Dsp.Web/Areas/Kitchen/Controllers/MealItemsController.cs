@@ -13,7 +13,7 @@
     using System.Web.Mvc;
     using System.Web.UI;
 
-    [Authorize(Roles = "Alumnus, Active, Neophyte, Pledge")]
+    [Authorize(Roles = "Alumnus, Active, Neophyte, New")]
     public class MealItemsController : BaseController
     {
         private IMealService _mealService;

@@ -13,7 +13,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Administrator")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class HoursController : BaseController
     {
         public async Task<ActionResult> Index(int? s)
@@ -429,7 +429,7 @@
                     d.LastName != "Hirtz" &&
                     (d.MemberStatus.StatusName == "Alumnus" ||
                         d.MemberStatus.StatusName == "Active" ||
-                        d.MemberStatus.StatusName == "Pledge" ||
+                        d.MemberStatus.StatusName == "New" ||
                         d.MemberStatus.StatusName == "Neophyte") &&
                     d.PledgeClass.Semester.DateStart <= semester.DateStart &&
                     d.GraduationSemester.DateEnd >= semester.DateEnd)

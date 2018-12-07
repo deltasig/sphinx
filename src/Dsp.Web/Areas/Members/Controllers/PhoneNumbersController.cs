@@ -1,7 +1,7 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
-    using Dsp.Web.Controllers;
     using Dsp.Data.Entities;
+    using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -11,7 +11,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate")]
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
     public class PhoneNumbersController : BaseController
     {
         public async Task<ActionResult> Index(string s)
@@ -20,7 +20,7 @@
 
             if (!string.IsNullOrEmpty(s))
             {
-                if(s == ":all")
+                if (s == ":all")
                 {
                     model = await _db.Users
                         .OrderBy(m => m.LastName)
@@ -39,7 +39,7 @@
                     ViewBag.SearchTerm = s;
                 }
             }
-            
+
             return View(model);
         }
 

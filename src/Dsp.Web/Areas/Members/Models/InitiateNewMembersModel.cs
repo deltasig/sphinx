@@ -3,9 +3,9 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
 
-    public class InitiatePledgesModel
+    public class InitiateNewMembersModel
     {
         public int[] SelectedMemberIds { get; set; }
-        public IEnumerable<SelectListItem> Pledges { get; set; }
+        public IEnumerable<SelectListItem> NewMembers { get; set; }
     }
 }

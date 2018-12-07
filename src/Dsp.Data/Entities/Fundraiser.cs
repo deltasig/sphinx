@@ -33,7 +33,7 @@ namespace Dsp.Data.Entities
         [Required, Display(Name = "Display on Donate Page")]
         public bool IsPublic { get; set; }
 
-        [Required, Display(Name = "Allow Pledges")]
+        [Required, Display(Name = "Allow New Members")]
         public bool IsPledgeable { get; set; }
 
         [ForeignKey("CauseId")]

@@ -146,7 +146,7 @@
             return Content(result);
         }
 
-        [Authorize(Roles = "Pledge, Neophyte, Active, Alumnus, Affiliate"), HttpGet]
+        [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate"), HttpGet]
         public async Task<ActionResult> Sphinx()
         {
             var nowCst = DateTime.UtcNow.FromUtcToCst();

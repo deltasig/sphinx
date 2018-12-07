@@ -12,7 +12,7 @@ using System.Web.Mvc;
 
 namespace Dsp.Web.Areas.Treasury.Controllers
 {
-    [Authorize(Roles = "Neophyte, Pledge, Active, Administrator")]
+    [Authorize(Roles = "Neophyte, New, Active, Administrator")]
     public class FundraisersController : BaseController
     {
         private ITreasuryService _treasuryService;
