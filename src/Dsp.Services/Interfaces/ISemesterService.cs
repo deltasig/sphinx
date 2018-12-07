@@ -17,8 +17,8 @@
         PledgeClass GetEstimatedNextPledgeClass(Semester currentSemester);
         string GetNextPledgeClassName(string currentPledgeClassName);
 
-        Task AddSemesterAsync(Semester semester);
-        Task AddPledgeClassAsync(PledgeClass pledgeClass);
+        Task CreateSemesterAsync(Semester semester);
+        Task CreatePledgeClassAsync(PledgeClass pledgeClass);
 
         Task UpdateSemesterAsync(Semester semester);
         Task UpdatePledgeClassAsync(PledgeClass pledgeClass);

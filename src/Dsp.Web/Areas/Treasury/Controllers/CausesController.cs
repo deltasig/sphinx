@@ -46,7 +46,7 @@ namespace Dsp.Web.Areas.Treasury.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            await _causeService.AddCauseAsync(model);
+            await _causeService.CreateCauseAsync(model);
 
             TempData["SuccessMessage"] = "Cause created successfully.";
             return RedirectToAction("Index");

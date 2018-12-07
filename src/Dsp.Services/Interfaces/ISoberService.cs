@@ -14,9 +14,9 @@
         Task<IEnumerable<SoberSignup>> GetFutureVacantSignups();
         Task<IEnumerable<SoberType>> GetTypesAsync();
 
-        Task AddSignupAsync(SoberSignup signup);
-        Task AddSignupsAsync(IEnumerable<SoberSignup> signups);
-        Task AddTypeAsync(SoberType type);
+        Task CreateSignupAsync(SoberSignup signup);
+        Task CreateSignupsAsync(IEnumerable<SoberSignup> signups);
+        Task CreateTypeAsync(SoberType type);
 
         Task UpdateSignupAsync(SoberSignup signup);
         Task UpdateTypeAsync(SoberType type);

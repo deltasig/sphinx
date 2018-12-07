@@ -50,7 +50,7 @@ namespace Dsp.Web.Areas.Treasury.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            await _treasuryService.AddDonationAsync(model);
+            await _treasuryService.CreateDonationAsync(model);
 
             TempData["SuccessMessage"] = "Donation created successfully.";
             return RedirectToAction("Details", "Fundraisers", new { id = model.FundraiserId });

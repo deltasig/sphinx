@@ -80,7 +80,7 @@
                 orderBy: o => o.OrderByDescending(p => p.EndsOn).ThenBy(p => p.Name));
         }
 
-        public async Task AddDonationAsync(Donation donation)
+        public async Task CreateDonationAsync(Donation donation)
         {
             donation.CreatedOn = DateTime.UtcNow;
             if (donation.ReceivedOn != null)
@@ -91,13 +91,13 @@
             await _repository.SaveAsync();
         }
 
-        public async Task AddFundraiserAsync(Fundraiser fundraiser)
+        public async Task CreateFundraiserAsync(Fundraiser fundraiser)
         {
             _repository.Create(fundraiser);
             await _repository.SaveAsync();
         }
 
-        public async Task AddCauseAsync(Cause cause)
+        public async Task CreateCauseAsync(Cause cause)
         {
             _repository.Create(cause);
             await _repository.SaveAsync();

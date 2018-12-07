@@ -8,7 +8,7 @@
     {
         Task<IEnumerable<MemberStatus>> GetAllStatusesAsync();
         Task<MemberStatus> GetStatusByIdAsync(int id);
-        Task AddStatus(MemberStatus status);
+        Task CreateStatus(MemberStatus status);
         Task UpdateStatus(MemberStatus status);
         Task DeleteStatus(int id);
     }

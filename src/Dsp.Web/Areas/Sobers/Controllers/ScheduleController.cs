@@ -69,7 +69,7 @@
             model.NewSignup.DateOfShift = ConvertCstToUtc(model.NewSignup.DateOfShift);
             model.NewSignup.CreatedOn = DateTime.UtcNow;
 
-            await _soberService.AddSignupAsync(model.NewSignup);
+            await _soberService.CreateSignupAsync(model.NewSignup);
 
             return RedirectToAction("Manager", new { message = SoberMessage.AddSignupSuccess });
         }
@@ -131,7 +131,7 @@
                         });
                     }
                 }
-                await _soberService.AddSignupsAsync(signups);
+                await _soberService.CreateSignupsAsync(signups);
             }
 
             return RedirectToAction("Manager", new { message = SoberMessage.MultiAddSignupSuccess });

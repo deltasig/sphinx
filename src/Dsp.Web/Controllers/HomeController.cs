@@ -131,7 +131,7 @@
                 Amount = model.Amount,
                 FundraiserId = model.FundraiserId
             };
-            await treasuryService.AddDonationAsync(donation);
+            await treasuryService.CreateDonationAsync(donation);
 
             donation.Fundraiser = await treasuryService.GetFundraiserByIdAsync(donation.FundraiserId);
 
