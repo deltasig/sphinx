@@ -53,6 +53,24 @@
             return await _repository.GetOneAsync<Position>(m => m.Name == name);
         }
 
+        public async Task<IEnumerable<Position>> GetEboardPositionsAsync()
+        {
+            var eBoardPositions = await _repository.GetAsync<Position>(m => m.IsExecutive);
+
+            return eBoardPositions;
+        }
+
+        public async Task<Member> GetUserInPositionAsync(string positionName, int sid)
+        {
+            var position = await _repository.GetOneAsync<Position>(x => x.Name == positionName);
+            if (position == null) return null;
+
+            var appointment = await _repository.GetOneAsync<Leader>(x => x.RoleId == position.Id && x.SemesterId == sid);
+            if (appointment == null) return null;
+
+            return appointment.Member;
+        }
+
         public async Task RemovePositionAsync(Position entity)
         {
             if (entity == null)

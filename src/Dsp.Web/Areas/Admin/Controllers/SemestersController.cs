@@ -78,7 +78,7 @@
                 model.Semester.DateStart = base.ConvertCstToUtc(model.Semester.DateStart);
                 model.Semester.DateEnd = base.ConvertCstToUtc(model.Semester.DateEnd);
                 model.Semester.TransitionDate = base.ConvertCstToUtc(model.Semester.TransitionDate);
-                await _semesterService.AddSemesterAsync(model.Semester);
+                await _semesterService.CreateSemesterAsync(model.Semester);
             }
             catch
             {
@@ -98,7 +98,7 @@
                     model.PledgeClass.PinningDate = base.ConvertCstToUtc((DateTime)model.PledgeClass.PinningDate);
                 }
                 model.PledgeClass.SemesterId = model.Semester.SemesterId;
-                await _semesterService.AddPledgeClassAsync(model.PledgeClass);
+                await _semesterService.CreatePledgeClassAsync(model.PledgeClass);
             }
             catch
             {

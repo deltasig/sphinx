@@ -14,9 +14,9 @@
         Task<IEnumerable<Fundraiser>> GetActivePledgeableFundraisersAsync();
         Task<Donation> GetDonationByIdAsync(int id);
 
-        Task AddCauseAsync(Cause signup);
-        Task AddFundraiserAsync(Fundraiser signups);
-        Task AddDonationAsync(Donation type);
+        Task CreateCauseAsync(Cause signup);
+        Task CreateFundraiserAsync(Fundraiser signups);
+        Task CreateDonationAsync(Donation type);
 
         Task UpdateCauseAsync(Cause signup);
         Task UpdateFundraiserAsync(Fundraiser type);

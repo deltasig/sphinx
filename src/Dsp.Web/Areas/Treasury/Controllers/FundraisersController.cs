@@ -51,7 +51,7 @@ namespace Dsp.Web.Areas.Treasury.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            await _treasuryService.AddFundraiserAsync(model);
+            await _treasuryService.CreateFundraiserAsync(model);
 
             TempData["SuccessMessage"] = "Fundraiser created successfully.";
             return RedirectToAction("Details", "Causes", new { id = model.CauseId });

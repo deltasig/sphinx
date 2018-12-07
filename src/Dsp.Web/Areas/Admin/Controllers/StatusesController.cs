@@ -43,7 +43,7 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            await _statusService.AddStatus(model);
+            await _statusService.CreateStatus(model);
 
             return RedirectToAction("Index");
         }

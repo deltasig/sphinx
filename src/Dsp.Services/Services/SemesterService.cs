@@ -147,13 +147,13 @@
             return nextPledgeClass;
         }
 
-        public async Task AddSemesterAsync(Semester semester)
+        public async Task CreateSemesterAsync(Semester semester)
         {
             _repository.Create(semester);
             await _repository.SaveAsync();
         }
 
-        public async Task AddPledgeClassAsync(PledgeClass pledgeClass)
+        public async Task CreatePledgeClassAsync(PledgeClass pledgeClass)
         {
             _repository.Create(pledgeClass);
             await _repository.SaveAsync();

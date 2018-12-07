@@ -41,7 +41,7 @@
             return await _repository.GetByIdAsync<MemberStatus>(id);
         }
 
-        public async Task AddStatus(MemberStatus status)
+        public async Task CreateStatus(MemberStatus status)
         {
             _repository.Create(status);
             await _repository.SaveAsync();

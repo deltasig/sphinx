@@ -100,13 +100,13 @@
             return await _repository.GetAllAsync<SoberType>();
         }
 
-        public async Task AddSignupAsync(SoberSignup signup)
+        public async Task CreateSignupAsync(SoberSignup signup)
         {
             _repository.Create(signup);
             await _repository.SaveAsync();
         }
 
-        public async Task AddSignupsAsync(IEnumerable<SoberSignup> signups)
+        public async Task CreateSignupsAsync(IEnumerable<SoberSignup> signups)
         {
             foreach (var s in signups)
             {
@@ -115,7 +115,7 @@
             await _repository.SaveAsync();
         }
 
-        public async Task AddTypeAsync(SoberType type)
+        public async Task CreateTypeAsync(SoberType type)
         {
             _repository.Create(type);
             await _repository.SaveAsync();
