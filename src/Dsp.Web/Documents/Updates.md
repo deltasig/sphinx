@@ -1,6 +1,7 @@
 ﻿### December 2018
 
 - Modified the website such that new members are actually called "new members."
+- Fixed some bugs with paging results, primarily incident reports.
 
 ### November 2018
 

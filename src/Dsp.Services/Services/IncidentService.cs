@@ -29,7 +29,7 @@
             _repository = repository;
         }
 
-        public async Task<IEnumerable<IncidentReport>> GetIncidentReportsAsync(
+        public async Task<Tuple<IEnumerable<IncidentReport>, int, int, int>> GetIncidentReportsAsync(
             int page = 1,
             int pageSize = 10,
             bool includeResolved = true,
@@ -38,27 +38,38 @@
             string searchTerm = "")
         {
             page--;
-            var lowerSearchTerm = searchTerm.ToLower();
+            if (page < 0) page = 0;
+            var lowerSearchTerm = searchTerm?.ToLower() ?? string.Empty;
+
             var entities = await _repository
                 .GetAsync<IncidentReport>(
                     filter: x =>
-                        (x.OfficialReport.ToLower().Contains(lowerSearchTerm) ||
+                        (x.PolicyBroken.ToLower().Contains(lowerSearchTerm) ||
+                         x.OfficialReport.ToLower().Contains(lowerSearchTerm) ||
                          x.Description.ToLower().Contains(lowerSearchTerm) ||
-                         x.InvestigationNotes.ToLower().Contains(lowerSearchTerm)) && // Search term filter
-                        (string.IsNullOrEmpty(x.OfficialReport) == includeResolved ||
-                         !string.IsNullOrEmpty(x.OfficialReport) == includeUnresolved), // Resolved vs. unresolved
+                         x.InvestigationNotes.ToLower().Contains(lowerSearchTerm)) &&
+                        (string.IsNullOrEmpty(x.OfficialReport) && includeUnresolved ||
+                         !string.IsNullOrEmpty(x.OfficialReport) && includeResolved),
                     orderBy: x => sort == "oldest"
                         ? x.OrderBy(b => b.DateTimeSubmitted)
-                        : x.OrderByDescending(b => b.DateTimeSubmitted),
-                    skip: page * pageSize,
-                    take: pageSize
+                        : x.OrderByDescending(b => b.DateTimeSubmitted)
                 );
-            foreach (var b in entities)
+            var filteredEntities = entities.Skip(pageSize * page).Take(pageSize);
+            foreach (var b in filteredEntities)
             {
                 b.DateTimeOfIncident = ConvertUtcToCst(b.DateTimeOfIncident);
                 b.DateTimeSubmitted = ConvertUtcToCst(b.DateTimeSubmitted);
             }
-            return entities;
+
+            var totalResults = entities.Count();
+            var totalPages = (int)Math.Ceiling((double)totalResults / pageSize);
+            var totalUnresolved = 0;
+            var totalResolved = 0;
+            if (includeUnresolved) totalUnresolved = entities.Count(x => string.IsNullOrEmpty(x.OfficialReport));
+            if (includeResolved) totalResolved = entities.Count(x => !string.IsNullOrEmpty(x.OfficialReport));
+
+            var result = new Tuple<IEnumerable<IncidentReport>, int, int, int>(filteredEntities, totalPages, totalUnresolved, totalResolved);
+            return result;
         }
 
         public async Task<IncidentReport> GetIncidentReportByIdAsync(int id)

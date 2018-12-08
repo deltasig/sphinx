@@ -325,7 +325,6 @@
     <Compile Include="Areas\House\HouseAreaRegistration.cs" />
     <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderArchiveModel.cs" />
-    <Compile Include="Areas\House\Models\MyWorkOrdersModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderDiscussionEntry.cs" />
     <Compile Include="Areas\House\Models\WorkOrderViewModel.cs" />
     <Compile Include="Areas\House\Models\WorkOrderIndexModel.cs" />
@@ -575,7 +574,7 @@
     <Content Include="Areas\House\Views\WorkOrderStatuses\Index.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\View.cshtml" />
     <Content Include="Areas\House\Views\WorkOrders\CreateOld.cshtml" />
-    <Content Include="Areas\House\Views\WorkOrders\MyWorkOrders.cshtml" />
+    <Content Include="Areas\House\Views\WorkOrders\UsersWorkOrders.cshtml" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />

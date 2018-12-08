@@ -37,7 +37,7 @@
 
         public async Task<ActionResult> Index(IncidentsIndexFilterModel filter)
         {
-            var filterResults = await _incidentService.GetIncidentReportsAsync(
+            var serviceResult = await _incidentService.GetIncidentReportsAsync(
                 filter.page,
                 filter.pageSize,
                 filter.resolved,
@@ -45,12 +45,18 @@
                 filter.sort,
                 filter.s
             );
+            var filterResults = serviceResult.Item1;
+            var totalPages = serviceResult.Item2;
+            var unresolvedCount = serviceResult.Item3;
+            var resolvedCount = serviceResult.Item4;
 
-            // Build view model with collected data.
-            var model = new IncidentsIndexModel
-            {
-                Incidents = filterResults
-            };
+            var model = new IncidentsIndexModel(
+                filterResults,
+                filter,
+                totalPages,
+                unresolvedCount,
+                resolvedCount
+            );
 
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];

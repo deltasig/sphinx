@@ -11,15 +11,24 @@
 
         public WorkOrderIndexFilterModel()
         {
-            
+            this.open = true;
+            this.closed = false;
+            this.sort = "newest";
+            this.s = string.Empty;
+
+            base.page = 1;
+            base.pageSize = 10;
         }
+
         public WorkOrderIndexFilterModel(WorkOrderIndexFilterModel original)
         {
-            page = original.page;
-            open = original.open;
-            closed = original.closed;
-            sort = original.sort;
-            s = original.s;
+            this.open = original.open;
+            this.closed = original.closed;
+            this.sort = original.sort;
+            this.s = original.s;
+
+            base.page = original.page;
+            base.pageSize = original.pageSize;
         }
     }
 }

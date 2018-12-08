@@ -1,30 +1,25 @@
 ﻿@model BugsIndexModel
 @{
     ViewBag.Title = "Bug Reports";
-    ViewBag.Count = Model.Filter.count;
-    ViewBag.Page = Model.Filter.page;
-    ViewBag.Pages = Model.Filter.pages;
-    ViewBag.PageSize = Model.Filter.pageSize;
 
-    var previousFilter = new BugsIndexFilterModel(Model.Filter);
-    previousFilter.page--;
-    var nextFilter = new BugsIndexFilterModel(Model.Filter);
-    nextFilter.page++;
+    var previousPageFilter = new BugsIndexFilterModel(Model.Filter);
+    var nextPageFilter = new BugsIndexFilterModel(Model.Filter);
     var includeFixedFilter = new BugsIndexFilterModel(Model.Filter);
+
+    previousPageFilter.page--;
+    nextPageFilter.page++;
     includeFixedFilter.includeFixed = !includeFixedFilter.includeFixed;
+
     var pagerModel = new PagerModel
     {
-        Previous = previousFilter,
+        Previous = previousPageFilter,
         Incrementer = Model.Filter,
-        Next = nextFilter,
+        Next = nextPageFilter,
+        CurrentPage = Model.Filter.page,
+        PageSize = Model.Filter.pageSize,
+        ResultCount = Model.ResultCount,
+        TotalPages = Model.TotalPages
     };
-
-    var countMsg = ViewBag.Count + " Bug Report";
-    if (ViewBag.Count != 1)
-    {
-        countMsg += "s";
-    }
-
 }
 
 <div class="container-fluid">
@@ -32,11 +27,22 @@
         <div class="col-md-8">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <i class="fa fa-fw fa-bug"></i> @countMsg
-                    <a href="@Url.Action("Index", includeFixedFilter)"
-                       class="@(Model.Filter.includeFixed ? "active" : "") btn btn-xs btn-default pull-right">
-                        Include Fixed
-                    </a>
+                    <div class="row row-fluid">
+                        <div class="col-md-6">
+                            <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small style="padding-right: 5px">Open</small>
+                            <i class="fa fa-check-circle"></i> @Model.FixedCount <small>Fixed</small>
+                        </div>
+                        <div class="col-md-6 text-right">
+                            @if (!string.IsNullOrEmpty(Model.Filter.search))
+                            {
+                                <small>Searched for: <em>@Model.Filter.search</em></small>
+                            }
+                            <a href="@Url.Action("Index", includeFixedFilter)"
+                               class="@(Model.Filter.includeFixed ? "active" : "") btn btn-xs btn-default pull-right">
+                                Include Fixed
+                            </a>
+                        </div>
+                    </div>
                 </div>
                 <ul class="list-group">
                 @if (Model.BugReports.Any())
@@ -46,7 +52,7 @@
                         var now = DateTime.UtcNow.FromUtcToCst();
                         var timeSinceReported = (now - br.ReportedOn).ToUserFriendlyString();
                         var timeSinceLastUpdate = (now - br.LastUpdatedOn).ToUserFriendlyString();
-                        var statusLabel = br.IsFixed ? "Fixed" : "Pending";
+                        var statusLabel = br.IsFixed ? "Fixed" : "Open";
                         var statusLabelColor = br.IsFixed ? "label-success" : "label-default";
 
                         <a href="@Url.Action("Details", new { id = br.Id })" class="list-group-item truncate">

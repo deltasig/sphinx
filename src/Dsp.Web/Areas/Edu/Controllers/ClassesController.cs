@@ -22,17 +22,30 @@
     {
         public async Task<ActionResult> Index(ClassesIndexFilterModel filter)
         {
+            var classes = await _db.Classes.ToListAsync();
+            var filterResults = await GetFilteredClassList(
+                classes,
+                filter.s,
+                filter.sort,
+                filter.page,
+                filter.select,
+                filter.pageSize
+            );
+            var totalPages = ViewBag.Pages;
+            var resultCount = ViewBag.Count;
+            var currentSemester = await GetThisSemesterAsync();
+
+            var model = new ClassIndexModel(
+                filterResults,
+                currentSemester,
+                filter,
+                totalPages,
+                resultCount
+            );
+
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];
 
-            var classes = await _db.Classes.ToListAsync();
-            const int pageSize = 10;
-
-            var model = new ClassIndexModel
-            {
-                Classes = await GetFilteredClassList(classes, filter.s, filter.sort, filter.page, filter.select, pageSize),
-                CurrentSemester = await GetThisSemesterAsync()
-            };
             return View(model);
         }
 

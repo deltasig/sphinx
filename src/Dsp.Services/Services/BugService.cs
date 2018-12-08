@@ -29,25 +29,43 @@
             _repository = repository;
         }
 
-        public async Task<IEnumerable<BugReport>> GetBugReportsAsync(int page = 1, int pageSize = 10, bool includeFixed = false, string searchTerm = "")
+        public async Task<Tuple<IEnumerable<BugReport>, int, int, int>> GetBugReportsAsync(
+            int page = 1,
+            int pageSize = 10,
+            bool includeFixed = false,
+            string searchTerm = "")
         {
             page--;
-            var lowerSearchTerm = searchTerm.ToLower();
-            var bugReports = await _repository
+            if (page < 0) page = 0;
+            var lowerSearchTerm = searchTerm?.ToLower() ?? string.Empty;
+
+            var entities = await _repository
                 .GetAsync<BugReport>(
                     filter: x =>
                         (!x.IsFixed || x.IsFixed == includeFixed) &&
-                        (x.Description.ToLower().Contains(lowerSearchTerm) || x.UrlWithProblem.ToLower().Contains(lowerSearchTerm)),
-                    orderBy: x => x.OrderByDescending(b => b.ReportedOn),
-                    skip: page * pageSize,
-                    take: pageSize
+                        (x.Description.ToLower().Contains(lowerSearchTerm) ||
+                         x.UrlWithProblem.ToLower().Contains(lowerSearchTerm)),
+                    orderBy: x => x.OrderByDescending(b => b.ReportedOn)
                 );
-            foreach (var b in bugReports)
+            var filteredEntities = entities.Skip(pageSize * page).Take(pageSize);
+
+            var totalResults = entities.Count();
+            var totalPages = (int)Math.Ceiling((double)totalResults / pageSize);
+            var totalOpen = totalResults;
+            var totalFixed = 0;
+            if (includeFixed)
+            {
+                totalOpen = entities.Count(x => !x.IsFixed);
+                totalFixed = totalResults - totalOpen;
+            }
+
+            foreach (var b in filteredEntities)
             {
                 b.ReportedOn = ConvertUtcToCst(b.ReportedOn);
                 b.LastUpdatedOn = ConvertUtcToCst(b.LastUpdatedOn);
             }
-            return bugReports;
+            var result = new Tuple<IEnumerable<BugReport>, int, int, int>(filteredEntities, totalPages, totalOpen, totalFixed);
+            return result;
         }
 
         public async Task<int> GetBugReportCountAsync(bool includeFixed = false)
