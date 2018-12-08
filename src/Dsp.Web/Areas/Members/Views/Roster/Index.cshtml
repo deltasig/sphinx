@@ -54,7 +54,8 @@
                         autocomplete = "off",
                         id = "semester-dd",
                         data_live_search = "true",
-                        data_width = "125px",
+                        data_size = "10",
+                        data_width = "150px",
                         onchange = "this.form.submit()"
                     })
                 </div>
@@ -163,7 +164,19 @@
                     {
                         var phone = m.PhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Data.Entities.PhoneNumber();
                         var status = m.MemberStatus.StatusName;
-                        var statusColor = status == "Active" ? "label-success" : status == "New" ? "label-info" : "label-warning"; 
+                        var statusColor = "label-default";
+                        if (status == "Active")
+                        {
+                            statusColor = "label-success";
+                        }
+                        else if (status == "New")
+                        {
+                            statusColor = "label-info";
+                        }
+                        else if (status == "Neophyte")
+                        {
+                            statusColor = "label-warning";
+                        }
 
                         <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" 
                            class="list-group-item @(m.EmailConfirmed ? "" : "list-group-item-danger")">

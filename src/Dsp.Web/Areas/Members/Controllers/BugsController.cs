@@ -31,14 +31,18 @@ namespace Dsp.Web.Areas.Members.Controllers
         [HttpGet]
         public async Task<ActionResult> Index(BugsIndexFilterModel filter)
         {
-            var bugReports = await _bugService.GetBugReportsAsync(filter.page, filter.pageSize, filter.includeFixed, filter.search);
-            filter.count = await _bugService.GetBugReportCountAsync(filter.includeFixed);
-            if (filter.pageSize == 0) filter.pageSize = 10;
-            filter.pages = (filter.count + filter.pageSize - 1) / filter.pageSize;
+            var serviceResult = await _bugService.GetBugReportsAsync(
+                filter.page,
+                filter.pageSize,
+                filter.includeFixed,
+                filter.search
+            );
+            var filterResults = serviceResult.Item1;
+            var totalPages = serviceResult.Item2;
+            var openCount = serviceResult.Item3;
+            var fixedCount = serviceResult.Item4;
 
-            var model = new BugsIndexModel();
-            model.BugReports = bugReports;
-            model.Filter = filter;
+            var model = new BugsIndexModel(filterResults, filter, totalPages, openCount, fixedCount);
 
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];

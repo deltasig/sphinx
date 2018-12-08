@@ -6,24 +6,6 @@
 @{
     Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Work Orders";
-    var filter = new WorkOrderIndexFilterModel
-    {
-        page = ViewBag.Page,
-        open = ViewBag.Open,
-        closed = ViewBag.Closed,
-        sort = ViewBag.Sort,
-        s = ViewBag.CurrentFilter
-    };
-    var sortNewestFilter = new WorkOrderIndexFilterModel(filter);
-    var sortOldestFilter = new WorkOrderIndexFilterModel(filter);
-    var sortMostCommentedFilter = new WorkOrderIndexFilterModel(filter);
-    var sortLeastCommentedFilter = new WorkOrderIndexFilterModel(filter);
-    var sortRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
-    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(filter);
-    var pagePreviousFilter = new WorkOrderIndexFilterModel(filter);
-    var pageNextFilter = new WorkOrderIndexFilterModel(filter);
-    var openFilter = new WorkOrderIndexFilterModel(filter);
-    var closedFilter = new WorkOrderIndexFilterModel(filter);
 
     const string newestSortText = "newest";
     const string oldestSortText = "oldest";
@@ -32,16 +14,38 @@
     const string recentlyUpdatedSortText = "recently-updated";
     const string leastRecentlyUpdatedSortText = "least-recently-updated";
 
-    sortNewestFilter.sort = filter.sort == newestSortText ? "" : newestSortText;
-    sortOldestFilter.sort = filter.sort == oldestSortText ? "" : oldestSortText;
-    sortMostCommentedFilter.sort = filter.sort == mostCommentedSortText ? "" : mostCommentedSortText;
-    sortLeastCommentedFilter.sort = filter.sort == leastCommentedSortText ? "" : leastCommentedSortText;
-    sortRecentlyUpdatedFilter.sort = filter.sort == recentlyUpdatedSortText ? "" : recentlyUpdatedSortText;
-    sortLeastRecentlyUpdatedFilter.sort = filter.sort == leastRecentlyUpdatedSortText ? "" : leastRecentlyUpdatedSortText;
-    pagePreviousFilter.page = filter.page - 1;
-    pageNextFilter.page = filter.page + 1;
-    openFilter.open = !filter.open;
-    closedFilter.closed = !filter.closed;
+    var sortNewestFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortOldestFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortMostCommentedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortLeastCommentedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var previousPageFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var nextPageFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var openFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var closedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+
+    sortNewestFilter.sort = Model.Filter.sort == newestSortText ? "" : newestSortText;
+    sortOldestFilter.sort = Model.Filter.sort == oldestSortText ? "" : oldestSortText;
+    sortMostCommentedFilter.sort = Model.Filter.sort == mostCommentedSortText ? "" : mostCommentedSortText;
+    sortLeastCommentedFilter.sort = Model.Filter.sort == leastCommentedSortText ? "" : leastCommentedSortText;
+    sortRecentlyUpdatedFilter.sort = Model.Filter.sort == recentlyUpdatedSortText ? "" : recentlyUpdatedSortText;
+    sortLeastRecentlyUpdatedFilter.sort = Model.Filter.sort == leastRecentlyUpdatedSortText ? "" : leastRecentlyUpdatedSortText;
+    previousPageFilter.page--;
+    nextPageFilter.page++;
+    openFilter.open = !Model.Filter.open;
+    closedFilter.closed = !Model.Filter.closed;
+
+    var pagerModel = new PagerModel
+    {
+        Previous = previousPageFilter,
+        Incrementer = Model.Filter,
+        Next = nextPageFilter,
+        CurrentPage = Model.Filter.page,
+        PageSize = Model.Filter.pageSize,
+        ResultCount = Model.ResultCount,
+        TotalPages = Model.TotalPages
+    };
 
     var elevatedPermissions =
         User.IsInRole("Administrator") ||
@@ -59,61 +63,61 @@
                         <div class="btn-group" role="group" aria-label="...">
                             @Html.ActionLink("Open", "Index", "WorkOrders", openFilter, new
                             {
-                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Open ? " active" : "")
+                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (Model.Filter.open ? " active" : "")
                             })
                             @Html.ActionLink("Closed", "Index", "WorkOrders", closedFilter, new
                             {
-                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (ViewBag.Closed ? " active" : "")
+                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (Model.Filter.closed ? " active" : "")
                             })
                             <div class="btn-group" role="group" aria-label="...">
                                 <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                                     Sort <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation" class="@(ViewBag.sort == newestSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == newestSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
                                             <i class="fa fa-sort-amount-asc"></i> Newest
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == oldestSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == oldestSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
-                                            @if (ViewBag.sort == oldestSortText)
+                                            @if (Model.Filter.sort == oldestSortText)
                                             {
                                                 <i class="fa fa-lg fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-sort-amount-desc"></i> Oldest
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == mostCommentedSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == mostCommentedSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortMostCommentedFilter)">
-                                            @if (ViewBag.sort == mostCommentedSortText)
+                                            @if (Model.Filter.sort == mostCommentedSortText)
                                             {
                                                 <i class="fa fa-lg fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-sort-numeric-desc"></i> Most Commented
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == leastCommentedSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == leastCommentedSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastCommentedFilter)">
-                                            @if (ViewBag.sort == leastCommentedSortText)
+                                            @if (Model.Filter.sort == leastCommentedSortText)
                                             {
                                                 <i class="fa fa-lg fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-sort-numeric-asc"></i> Least Commented
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == recentlyUpdatedSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == recentlyUpdatedSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortRecentlyUpdatedFilter)">
-                                            @if (ViewBag.sort == recentlyUpdatedSortText)
+                                            @if (Model.Filter.sort == recentlyUpdatedSortText)
                                             {
                                                 <i class="fa fa-lg fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-sort-amount-asc"></i> Recently Updated
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == leastRecentlyUpdatedSortText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == leastRecentlyUpdatedSortText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastRecentlyUpdatedFilter)">
-                                            @if (ViewBag.sort == leastRecentlyUpdatedSortText)
+                                            @if (Model.Filter.sort == leastRecentlyUpdatedSortText)
                                             {
                                                 <i class="fa fa-lg fa-times-circle-o"></i>
                                             }
@@ -126,11 +130,11 @@
                         <hr class="visible-xs" />
                         <div class="input-group">
                             <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
-                            <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
-                            <input id="open" name="open" type="hidden" value="@ViewBag.Open.ToString()">
-                            <input id="closed" name="closed" type="hidden" value="@ViewBag.Closed.ToString()">
-                            <input id="sort" name="sort" type="hidden" value="@ViewBag.Sort.ToString()">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                            <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
+                            <input id="open" name="open" type="hidden" value="@Model.Filter.open.ToString()">
+                            <input id="closed" name="closed" type="hidden" value="@Model.Filter.closed.ToString()">
+                            <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
+                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" aria-describedby="search-addon">
                         </div>
                     }
                     <hr class="visible-xs visible-sm" />
@@ -177,13 +181,13 @@
                     <div class="panel-heading">
                         <div class="row row-fluid">
                             <div class="col-md-6">
-                                <i class="fa fa-exclamation-circle"></i> @ViewBag.OpenResultCount <small style="padding-right: 5px">Open</small>
-                                <i class="fa fa-check-circle"></i> @ViewBag.ClosedResultCount <small>Closed</small>
+                                <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small style="padding-right: 5px">Open</small>
+                                <i class="fa fa-check-circle"></i> @Model.ClosedCount <small>Closed</small>
                             </div>
                             <div class="col-md-6 text-right">
-                                @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                                @if (!string.IsNullOrEmpty(Model.Filter.s))
                                 {
-                                    <small>Searched for: <em>@ViewBag.CurrentFilter</em></small>
+                                    <small>Searched for: <em>@Model.Filter.s</em></small>
                                 }
                             </div>
                         </div>
@@ -249,12 +253,7 @@
                             </a>
                         }
                     </ul>
-                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
-                    {
-                        Previous = pagePreviousFilter,
-                        Incrementer = filter,
-                        Next = pageNextFilter
-                    })
+                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", pagerModel)
                 </div>
             }
             else
@@ -265,7 +264,7 @@
             }
         </div>
         <div class="col-md-4 no-print">
-            @Html.Partial("MyWorkOrders", Model.UserWorkOrders)
+            @Html.Partial("UsersWorkOrders", Model.UsersWorkOrders)
         </div>
     </div>
 </div>

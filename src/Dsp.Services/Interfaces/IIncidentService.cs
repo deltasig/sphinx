@@ -1,12 +1,13 @@
 ﻿namespace Dsp.Services.Interfaces
 {
     using Data.Entities;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
     public interface IIncidentService
     {
-        Task<IEnumerable<IncidentReport>> GetIncidentReportsAsync(
+        Task<Tuple<IEnumerable<IncidentReport>, int, int, int>> GetIncidentReportsAsync(
             int page = 1,
             int pageSize = 10,
             bool includeResolved = true,

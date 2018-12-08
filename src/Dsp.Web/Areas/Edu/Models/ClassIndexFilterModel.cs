@@ -10,17 +10,21 @@
 
         public ClassesIndexFilterModel()
         {
-            page = 1;
-            select = string.Empty;
-            sort = "number";
-            s = string.Empty;
+            this.select = string.Empty;
+            this.sort = "number";
+            this.s = string.Empty;
+
+            base.page = 1;
+            base.pageSize = 10;
         }
         public ClassesIndexFilterModel(ClassesIndexFilterModel original)
         {
-            page = original.page;
-            select = original.select;
-            sort = original.sort;
-            s = original.s;
+            this.select = original.select;
+            this.sort = original.sort;
+            this.s = original.s;
+
+            base.page = original.page;
+            base.pageSize = original.pageSize;
         }
     }
 }

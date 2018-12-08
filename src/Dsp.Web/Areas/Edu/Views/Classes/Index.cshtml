@@ -8,32 +8,6 @@
     var isAdmin = User.IsInRole("Administrator");
     var isAcademics = User.IsInRole("Academics");
 
-    var filter = new ClassesIndexFilterModel
-    {
-        page = ViewBag.Page,
-        select = ViewBag.Select,
-        sort = ViewBag.Sort,
-        s = ViewBag.CurrentFilter
-    };
-    var sortNumberAscFilter = new ClassesIndexFilterModel(filter);
-    var sortNumberDescFilter = new ClassesIndexFilterModel(filter);
-    var sortNameAscFilter = new ClassesIndexFilterModel(filter);
-    var sortNameDescFilter = new ClassesIndexFilterModel(filter);
-    var sortFilesAscFilter = new ClassesIndexFilterModel(filter);
-    var sortFilesDescFilter = new ClassesIndexFilterModel(filter);
-    var sortTakenAscFilter = new ClassesIndexFilterModel(filter);
-    var sortTakenDescFilter = new ClassesIndexFilterModel(filter);
-    var sortTakingAscFilter = new ClassesIndexFilterModel(filter);
-    var sortTakingDescFilter = new ClassesIndexFilterModel(filter);
-    var pagePreviousFilter = new ClassesIndexFilterModel(filter);
-    var pageNextFilter = new ClassesIndexFilterModel(filter);
-    var selectMeAllFilter = new ClassesIndexFilterModel(filter);
-    var selectMeNowFilter = new ClassesIndexFilterModel(filter);
-    var selectBeingTakenFilter = new ClassesIndexFilterModel(filter);
-    var selectNoneTakingFilter = new ClassesIndexFilterModel(filter);
-    var selectHasFileFilter = new ClassesIndexFilterModel(filter);
-    var selectNoFileFilter = new ClassesIndexFilterModel(filter);
-
     const string sortNumberAscText = "number-asc";
     const string sortNumberDescText = "number-desc";
     const string sortNameAscText = "name-asc";
@@ -51,24 +25,54 @@
     const string selectHasFileText = "has-file";
     const string selectNoFileText = "no-file";
 
-    sortNumberAscFilter.sort = filter.sort == sortNumberAscText ? "" : sortNumberAscText;
-    sortNumberDescFilter.sort = filter.sort == sortNumberDescText ? "" : sortNumberDescText;
-    sortNameAscFilter.sort = filter.sort == sortNameAscText ? "" : sortNameAscText;
-    sortNameDescFilter.sort = filter.sort == sortNameDescText ? "" : sortNameDescText;
-    sortFilesAscFilter.sort = filter.sort == sortFilesAscText ? "" : sortFilesAscText;
-    sortFilesDescFilter.sort = filter.sort == sortFilesDescText ? "" : sortFilesDescText;
-    sortTakenAscFilter.sort = filter.sort == sortTakenAscText ? "" : sortTakenAscText;
-    sortTakenDescFilter.sort = filter.sort == sortTakenDescText ? "" : sortTakenDescText;
-    sortTakingAscFilter.sort = filter.sort == sortTakingAscText ? "" : sortTakingAscText;
-    sortTakingDescFilter.sort = filter.sort == sortTakingDescText ? "" : sortTakingDescText;
-    pagePreviousFilter.page = filter.page - 1;
-    pageNextFilter.page = filter.page + 1;
-    selectMeAllFilter.select = filter.select == selectMeAllText ? "" : selectMeAllText;
-    selectMeNowFilter.select = filter.select == selectMeNowText ? "" : selectMeNowText;
-    selectBeingTakenFilter.select = filter.select == selectBeingTakenText ? "" : selectBeingTakenText;
-    selectNoneTakingFilter.select = filter.select == selectNoneTakingText ? "" : selectNoneTakingText;
-    selectHasFileFilter.select = filter.select == selectHasFileText ? "" : selectHasFileText;
-    selectNoFileFilter.select = filter.select == selectNoFileText ? "" : selectNoFileText;
+    var sortNumberAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNumberDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNameAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNameDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortFilesAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortFilesDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakenAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakenDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakingAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakingDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var previousPageFilter = new ClassesIndexFilterModel(Model.Filter);
+    var nextPageFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectMeAllFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectMeNowFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectBeingTakenFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectNoneTakingFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectHasFileFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectNoFileFilter = new ClassesIndexFilterModel(Model.Filter);
+
+    sortNumberAscFilter.sort = Model.Filter.sort == sortNumberAscText ? "" : sortNumberAscText;
+    sortNumberDescFilter.sort = Model.Filter.sort == sortNumberDescText ? "" : sortNumberDescText;
+    sortNameAscFilter.sort = Model.Filter.sort == sortNameAscText ? "" : sortNameAscText;
+    sortNameDescFilter.sort = Model.Filter.sort == sortNameDescText ? "" : sortNameDescText;
+    sortFilesAscFilter.sort = Model.Filter.sort == sortFilesAscText ? "" : sortFilesAscText;
+    sortFilesDescFilter.sort = Model.Filter.sort == sortFilesDescText ? "" : sortFilesDescText;
+    sortTakenAscFilter.sort = Model.Filter.sort == sortTakenAscText ? "" : sortTakenAscText;
+    sortTakenDescFilter.sort = Model.Filter.sort == sortTakenDescText ? "" : sortTakenDescText;
+    sortTakingAscFilter.sort = Model.Filter.sort == sortTakingAscText ? "" : sortTakingAscText;
+    sortTakingDescFilter.sort = Model.Filter.sort == sortTakingDescText ? "" : sortTakingDescText;
+    previousPageFilter.page = Model.Filter.page - 1;
+    nextPageFilter.page = Model.Filter.page + 1;
+    selectMeAllFilter.select = Model.Filter.select == selectMeAllText ? "" : selectMeAllText;
+    selectMeNowFilter.select = Model.Filter.select == selectMeNowText ? "" : selectMeNowText;
+    selectBeingTakenFilter.select = Model.Filter.select == selectBeingTakenText ? "" : selectBeingTakenText;
+    selectNoneTakingFilter.select = Model.Filter.select == selectNoneTakingText ? "" : selectNoneTakingText;
+    selectHasFileFilter.select = Model.Filter.select == selectHasFileText ? "" : selectHasFileText;
+    selectNoFileFilter.select = Model.Filter.select == selectNoFileText ? "" : selectNoFileText;
+
+    var pagerModel = new PagerModel
+    {
+        Previous = previousPageFilter,
+        Incrementer = Model.Filter,
+        Next = nextPageFilter,
+        CurrentPage = Model.Filter.page,
+        PageSize = Model.Filter.pageSize,
+        TotalPages = Model.TotalPages,
+        ResultCount = Model.ResultCount
+    };
 }
 
 <div class="container-fluid">
@@ -84,86 +88,86 @@
                                     Sort <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation" class="@(ViewBag.sort == sortNumberAscText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNumberAscFilter)">
                                             <i class="fa fa-fw fa-sort-numeric-asc"></i> Class Number <small>ASC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortNumberDescText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberDescText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNumberDescFilter)">
-                                            @if (ViewBag.Sort == sortNumberDescText)
+                                            @if (Model.Filter.sort == sortNumberDescText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-numeric-desc"></i> Class Number <small>DESC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortNameAscText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNameAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNameAscFilter)">
-                                            @if (ViewBag.Sort == sortNameAscText)
+                                            @if (Model.Filter.sort == sortNameAscText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-alpha-asc"></i> Class Name <small>ASC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortNameDescText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNameDescText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNameDescFilter)">
-                                            @if (ViewBag.Sort == sortNameDescText)
+                                            @if (Model.Filter.sort == sortNameDescText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-alpha-desc"></i> Class Name <small>DESC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortTakenAscText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortTakenAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortTakenAscFilter)">
-                                            @if (ViewBag.Sort == sortTakenAscText)
+                                            @if (Model.Filter.sort == sortTakenAscText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-amount-asc"></i> Enrollment Current <small>ASC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortTakenDescText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortTakenDescText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortTakenDescFilter)">
-                                            @if (ViewBag.Sort == sortTakenDescText)
+                                            @if (Model.Filter.sort == sortTakenDescText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-amount-desc"></i> Enrollment Current <small>DESC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortTakingAscText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortTakingAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortTakingAscFilter)">
-                                            @if (ViewBag.Sort == sortTakingAscText)
+                                            @if (Model.Filter.sort == sortTakingAscText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-amount-asc"></i> Enrollment All <small>ASC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortTakingDescText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortTakingDescText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortTakingDescFilter)">
-                                            @if (ViewBag.Sort == sortTakingDescText)
+                                            @if (Model.Filter.sort == sortTakingDescText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-amount-desc"></i> Enrollment All <small>DESC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortFilesAscText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortFilesAscText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortFilesAscFilter)">
-                                            @if (ViewBag.Sort == sortFilesAscText)
+                                            @if (Model.Filter.sort == sortFilesAscText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             <i class="fa fa-fw fa-sort-amount-asc"></i> Files <small>ASC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == sortFilesDescText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortFilesDescText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortFilesDescFilter)">
-                                            @if (ViewBag.Sort == sortFilesDescText)
+                                            @if (Model.Filter.sort == sortFilesDescText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
@@ -177,54 +181,54 @@
                                     Selection <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation" class="@(ViewBag.sort == selectMeAllText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectMeAllText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectMeAllFilter)">
-                                            @if (ViewBag.Select == selectMeAllText)
+                                            @if (Model.Filter.select == selectMeAllText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             All of my classes
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == selectMeNowText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectMeNowText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectMeNowFilter)">
-                                            @if (ViewBag.Select == selectMeNowText)
+                                            @if (Model.Filter.select == selectMeNowText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             All of my current classes
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == selectBeingTakenText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectBeingTakenText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectBeingTakenFilter)">
-                                            @if (ViewBag.Select == selectBeingTakenText)
+                                            @if (Model.Filter.select == selectBeingTakenText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             Classes being taken
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == selectNoneTakingText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectNoneTakingText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectNoneTakingFilter)">
-                                            @if (ViewBag.Select == selectNoneTakingText)
+                                            @if (Model.Filter.select == selectNoneTakingText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             Classes not being taken
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == selectHasFileText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectHasFileText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectHasFileFilter)">
-                                            @if (ViewBag.Select == selectHasFileText)
+                                            @if (Model.Filter.select == selectHasFileText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             Classes with a file
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(ViewBag.sort == selectNoFileText ? "active" : "")">
+                                    <li role="presentation" class="@(Model.Filter.select == selectNoFileText ? "active" : "")">
                                         <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectNoFileFilter)">
-                                            @if (ViewBag.Select == selectNoFileText)
+                                            @if (Model.Filter.select == selectNoFileText)
                                             {
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
@@ -240,11 +244,12 @@
                                   title="Search by class number, name, department, or member.">
                                 <i class="fa fa-search"></i>
                             </span>
-                            <input id="page" name="page" type="hidden" value="@ViewBag.Page.ToString()">
-                            <input id="sort" name="sort" type="hidden" value="@ViewBag.Sort.ToString()">
-                            <input id="select" name="select" type="hidden" value="@(ViewBag.Select == null ? "" : ViewBag.Select.ToString())">
+                            <input id="page" name="page" type="hidden" value="@Model.Filter.page">
+                            <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort">
+                            <input id="select" name="select" type="hidden" 
+                                   value="@(Model.Filter.select == null ? "" : Model.Filter.select)">
                             <input class="form-control" id="s" name="s" placeholder="Search" type="text" 
-                                   value="@ViewBag.CurrentFilter" aria-describedby="search-addon">
+                                   value="@Model.Filter.s" aria-describedby="search-addon">
                         </div>
                     }
                     <hr class="visible-xs visible-sm" />
@@ -265,10 +270,10 @@
                     <div class="panel-heading">
                         <div class="row">
                             <div class="col-xs-12">
-                                @ViewBag.Count <small>Results</small>
-                                @if (!string.IsNullOrEmpty(ViewBag.Select))
+                                @Model.ResultCount <small>Results</small>
+                                @if (!string.IsNullOrEmpty(Model.Filter.select))
                                 {
-                                    string selection = ViewBag.Select.ToString();
+                                    string selection = Model.Filter.select;
                                     var text = string.Empty;
                                     switch (selection)
                                     {
@@ -293,9 +298,9 @@
                                     }
                                     <small>| Selection: <em>@text</em></small>
                                 }
-                                @if (!string.IsNullOrEmpty(ViewBag.CurrentFilter))
+                                @if (!string.IsNullOrEmpty(Model.Filter.s))
                                 {
-                                    <small>| Searched for: <em>@ViewBag.CurrentFilter</em></small>
+                                    <small>| Searched for: <em>@Model.Filter.s</em></small>
                                 }
                                 <div class="btn-group pull-right" role="group" aria-label="...">
                                     @if (isAdmin || isAcademics)
@@ -344,12 +349,7 @@
                             </a>
                         }
                     </ul>
-                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", new PagerModel
-                    {
-                        Previous = pagePreviousFilter,
-                        Incrementer = filter,
-                        Next = pageNextFilter
-                    })
+                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", pagerModel)
                 </div>
             }
             else

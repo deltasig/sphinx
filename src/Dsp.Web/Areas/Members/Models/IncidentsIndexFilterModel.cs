@@ -11,19 +11,23 @@
 
         public IncidentsIndexFilterModel()
         {
-            page = 1;
-            unresolved = true;
-            resolved = false;
-            sort = "newest";
-            s = string.Empty;
+            this.unresolved = true;
+            this.resolved = false;
+            this.sort = "newest";
+            this.s = string.Empty;
+
+            base.page = 1;
+            base.pageSize = 10;
         }
         public IncidentsIndexFilterModel(IncidentsIndexFilterModel original)
         {
-            page = original.page;
-            unresolved = original.unresolved;
-            resolved = original.resolved;
-            sort = original.sort;
-            s = original.s;
+            this.unresolved = original.unresolved;
+            this.resolved = original.resolved;
+            this.sort = original.sort;
+            this.s = original.s;
+
+            base.page = original.page;
+            base.pageSize = original.pageSize;
         }
     }
 }

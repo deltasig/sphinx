@@ -1,13 +1,16 @@
 ﻿@model PagerModel
 
-@if (ViewBag.Count > ViewBag.PageSize)
+@if (Model.ResultCount > Model.PageSize)
 {
+    var currentPage = Model.CurrentPage;
+    var maxPages = Model.TotalPages;
     var action = ViewContext.RouteData.Values["action"].ToString();
 
     <nav class="text-center">
         <ul class="pagination">
-            <li class="@(ViewBag.Page > 1 ? "" : "disabled")">
-                @if (ViewBag.Page > 1)
+            <!-- Previous page button. -->
+            <li class="@(currentPage > 1 ? "" : "disabled")">
+                @if (currentPage > 1)
                 {
                     <a href="@Url.Action(action, Model.Previous)" aria-label="Previous">
                         <i class="fa fa-caret-left" aria-hidden="true"></i>
@@ -18,17 +21,21 @@
                     <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
                 }
             </li>
-            @for (var i = 1; i <= ViewBag.Pages; i++)
+            <!-- All pages in between arrow buttons.  Only showing up to 3 to the left and right of the current page. -->
+            @for (var i = 1; i <= maxPages; i++)
             {
-                if (i == 1 || (i > ViewBag.Page - 3 && i < ViewBag.Page + 3) || i == ViewBag.Pages)
+                var minPageNumber = currentPage - 3;
+                var maxPageNumber = currentPage + 3;
+
+                if (i == 1 || (i > minPageNumber && i < maxPageNumber) || i == maxPages)
                 {
                     var pageFilter = Model.Incrementer;
                     pageFilter.page = i;
-                    <li class="@(ViewBag.Page == i ? "active" : "")">
+                    <li class="@(currentPage == i ? "active" : "")">
                         <a href="@Url.Action(action, pageFilter)">@i</a>
                     </li>
                 }
-                else if (i == ViewBag.Page - 3 && i > 1)
+                else if (i == minPageNumber && i > 1)
                 {
                     var pageFilter = Model.Incrementer;
                     pageFilter.page = (i + 1) / 2;
@@ -36,17 +43,18 @@
                         <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
                     </li>
                 }
-                else if (i == ViewBag.Page + 3 && i < ViewBag.Pages)
+                else if (i == maxPageNumber && i < maxPages)
                 {
                     var pageFilter = Model.Incrementer;
-                    pageFilter.page = i + (ViewBag.Pages - i - 1) / 2;
+                    pageFilter.page = i + (maxPages - i - 1) / 2;
                     <li class="">
                         <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
                     </li>
                 }
             }
-            <li class="@(ViewBag.Page < ViewBag.Pages ? "" : "disabled")">
-                @if (ViewBag.Page < ViewBag.Pages)
+            <!-- Next page button. -->
+            <li class="@(currentPage < maxPages ? "" : "disabled")">
+                @if (currentPage < maxPages)
                 {
                     <a href="@Url.Action(action, Model.Next)" aria-label="Next">
                         <i class="fa fa-caret-right" aria-hidden="true"></i>

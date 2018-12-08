@@ -18,28 +18,35 @@
     public class WorkOrdersController : BaseController
     {
         [HttpGet]
-        public async Task<ActionResult> Index(string s, string sort = "newest", int page = 1, bool open = true, bool closed = false)
+        public async Task<ActionResult> Index(WorkOrderIndexFilterModel filter)
         {
+            var workOrders = await _db.WorkOrders.ToListAsync();
+            var filterResults = GetFilteredWorkOrderList(
+                workOrders,
+                filter.s,
+                filter.sort,
+                filter.page,
+                filter.open,
+                filter.closed
+            );
+            var currentUserId = User.Identity.GetUserId<int>();
+            var usersWorkOrders = workOrders
+                .Where(x => x.GetCurrentStatus() != "Closed" && x.UserId == currentUserId);
+            var totalPages = ViewBag.Pages;
+            var openCount = ViewBag.OpenResultCount;
+            var closedCount = ViewBag.ClosedResultCount;
+
+            var model = new WorkOrderIndexModel(
+                filterResults,
+                usersWorkOrders,
+                filter,
+                totalPages,
+                openCount,
+                closedCount
+            );
+
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
             ViewBag.FailureMessage = TempData["FailureMessage"];
-
-            var workOrders = await _db.WorkOrders.ToListAsync();
-            var filterResults = GetFilteredWorkOrderList(workOrders, s, sort, page, open, closed);
-
-            // Build view model with collected data.
-            var model = new WorkOrderIndexModel
-            {
-                WorkOrders = filterResults,
-                UserWorkOrders = new MyWorkOrdersModel
-                {
-                    CreatedWorkOrders = workOrders.Where(w =>
-                        w.UserId == User.Identity.GetUserId<int>() &&
-                        w.GetCurrentStatus() != "Closed"),
-                    InvolvedWorkOrders = workOrders.Where(w =>
-                        w.Comments.Any(c => c.UserId == User.Identity.GetUserId<int>()) &&
-                        w.GetCurrentStatus() != "Closed")
-                }
-            };
 
             return View(model);
         }
@@ -63,18 +70,11 @@
             }
 
             var workOrders = await _db.WorkOrders.ToListAsync();
+            var currentUserId = User.Identity.GetUserId<int>();
             var model = new WorkOrderViewModel
             {
                 WorkOrder = workOrder,
-                UserWorkOrders = new MyWorkOrdersModel
-                {
-                    CreatedWorkOrders = workOrders.Where(w =>
-                        w.UserId == User.Identity.GetUserId<int>() &&
-                        w.GetCurrentStatus() != "Closed"),
-                    InvolvedWorkOrders = workOrders.Where(w =>
-                        w.Comments.Any(c => c.UserId == User.Identity.GetUserId<int>()) &&
-                        w.GetCurrentStatus() != "Closed")
-                }
+                UsersWorkOrders = workOrders.Where(x => x.GetCurrentStatus() != "Closed" && x.UserId == currentUserId)
             };
 
             return View(model);
