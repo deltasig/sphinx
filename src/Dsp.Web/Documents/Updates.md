@@ -126,9 +126,9 @@
 ### January 2017
 
 
-- Recruitment calendar to recruitment page that integrates with ***REMOVED*** Google Calendar.
+- Recruitment calendar to recruitment page that integrates with dspeboard@gmail.com Google Calendar.
   - Add [RECRUITMENT] to description of calendar event for it to appear there.
-- Social calendar to sphinx page that integrates with ***REMOVED*** Google Calendar.
+- Social calendar to sphinx page that integrates with dspeboard@gmail.com Google Calendar.
   - Add [SOCIAL] to description of calendar event for it to appear there
 - Caching for certain pages in attempt to reduce data usage and page load time.
   - **As a result, updates to sphinx, roster, and external pages will be delayed from 1 minute to an hour depending on the page.**
