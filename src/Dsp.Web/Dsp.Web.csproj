@@ -711,14 +711,12 @@
     <Content Include="Documents\History.md" />
     <Content Include="Documents\Awards.md" />
     <Content Include="Content\bootstrap-select.css.map" />
-    <None Include="Properties\PublishProfiles\deltasig-de.org - FTP.pubxml" />
     <Content Include="Images\switch.png" />
     <Content Include="robots.txt" />
     <Content Include="Scripts\bootstrap-combobox.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
-    <None Include="Properties\PublishProfiles\deltasig-de.org - Web Deploy.pubxml" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
     <Content Include="Scripts\Chart.min.js.map">

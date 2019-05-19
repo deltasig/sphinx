@@ -20,23 +20,21 @@
 
     public class EmailService : IIdentityMessageService
     {
-        public string EmailUser = ConfigurationManager.AppSettings["EmailUser"];
-        public string EmailServer = ConfigurationManager.AppSettings["EmailServer"];
-        public string EmailAddress = ConfigurationManager.AppSettings["EmailAddress"];
-        public string EmailKey = ConfigurationManager.AppSettings["EmailKey"];
-
         public Task SendAsync(IdentityMessage message)
         {
             try
             {
+                var awsAccessKey = ConfigurationManager.AppSettings["AWSAccessKey"];
+                var awsSecretKey = ConfigurationManager.AppSettings["AWSSecretKey"];
+                var emailAddress = ConfigurationManager.AppSettings["EmailAddress"];
                 var destination = new Destination(new List<string> { message.Destination });
                 var subject = new Content(message.Subject);
                 var htmlContent = new Content { Charset = "UTF-8", Data = message.Body };
                 var body = new Body { Html = htmlContent };
                 var emailMessage = new Message(subject, body);
-                var request = new SendEmailRequest(EmailAddress, destination, emailMessage);
+                var request = new SendEmailRequest(emailAddress, destination, emailMessage);
 
-                using (var client = new AmazonSimpleEmailServiceClient(EmailUser, EmailKey, Amazon.RegionEndpoint.USEast1))
+                using (var client = new AmazonSimpleEmailServiceClient(awsAccessKey, awsSecretKey, Amazon.RegionEndpoint.USEast1))
                 {
                     client.SendEmail(request);
                 }
