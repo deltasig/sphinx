@@ -96,8 +96,10 @@
             // Invalid value
             if (model.HoursServed < 0)
             {
-                TempData["FailureMessage"] = "Please enter an amount of hours greater than or equal to 0 in increments of 0.5.";
-                return RedirectToAction("Submit", new { s = semester.SemesterId });
+                ViewBag.FailureMessage = "Please enter an amount of hours greater than or equal to 0 in increments of 0.5.";
+                model.Semester = semester;
+                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                return View(model);
             }
 
             var fraction = (model.HoursServed % 1) * 10;
@@ -109,15 +111,19 @@
             // Check if event is in the future
             if (selectedEvent.DateTimeOccurred.AddHours(selectedEvent.DurationHours) > DateTime.UtcNow)
             {
-                TempData["FailureMessage"] = "You can't submit hours for an event that has not yet occurred.";
-                return RedirectToAction("Submit", new { s = semester.SemesterId });
+                ViewBag.FailureMessage = "You can't submit hours for an event that has not yet occurred.";
+                model.Semester = semester;
+                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                return View(model);
             }
 
             // Check if hours submitted are more than the duration of the event
             if (model.HoursServed > selectedEvent.DurationHours)
             {
-                TempData["FailureMessage"] = "Please enter an amount of hours less than or equal to the duration of the event in increments of 0.5.";
-                return RedirectToAction("Submit", new { s = semester.SemesterId });
+                ViewBag.FailureMessage = "Please enter an amount of hours less than or equal to the duration of the event in increments of 0.5.";
+                model.Semester = semester;
+                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                return View(model);
             }
 
             var userId = User.Identity.GetUserId<int>();
@@ -146,8 +152,10 @@
             // No existing, invalid value
             if (model.HoursServed.Equals(0))
             {
-                TempData["FailureMessage"] = "Please enter an amount of hours greater than 0 in increments of 0.5.";
-                return RedirectToAction("Submit", new { s = semester.SemesterId });
+                ViewBag.FailureMessage = "Please enter an amount of hours greater than 0 in increments of 0.5.";
+                model.Semester = semester;
+                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                return View(model);
             }
 
             // If no previous submission, create new entry and add it to database
