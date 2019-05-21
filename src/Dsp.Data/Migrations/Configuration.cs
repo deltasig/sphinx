@@ -196,23 +196,23 @@ namespace Dsp.Data.Migrations
 
             var userStore = new SphinxUserStore(context);
             var userManager = new ApplicationUserManager(userStore);
-            if (!(context.Users.Any(u => u.UserName == "tjm6f4")))
+            if (!(context.Users.Any(u => u.UserName == "admin")))
             {
                 var userToInsert = new Member
                 {
-                    UserName = "tjm6f4", 
-                    Email = "tjm6f4@mst.edu",
-                    FirstName = "Ty",
-                    LastName = "Morrow",
+                    UserName = "admin", 
+                    Email = "admin@mst.edu",
+                    FirstName = "Admin",
+                    LastName = "User",
                     StatusId = 4,
                     PledgeClassId = 12,
                     ExpectedGraduationId = 19,
                     ShirtSize = "M"
                 };
-                userManager.Create(userToInsert, "***REMOVED***");
+                userManager.Create(userToInsert, "password");
             }
 
-            var user = userManager.FindByName("tjm6f4");
+            var user = userManager.FindByName("admin");
 
             if (!userManager.GetRoles(user.Id).Contains("Administrator"))
             {
