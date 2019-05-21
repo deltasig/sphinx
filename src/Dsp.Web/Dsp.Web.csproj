@@ -908,6 +908,12 @@
     <Content Include="Views\Emails\NewBugReport.cshtml" />
     <Content Include="Views\Emails\BugReportUserUpdate.cshtml" />
     <Content Include="Views\Emails\BugReportAdminUpdate.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
