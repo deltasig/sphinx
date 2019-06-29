@@ -6,6 +6,5 @@
     {
         public Class Class { get; set; }
         public Semester CurrentSemester { get; set; }
-        public FileInfoModel FileInfoModel { get; set; }
     }
 }

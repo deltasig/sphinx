@@ -245,11 +245,6 @@
                             <div class="col-xs-6 text-right">
                                 <small>
                                     @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
-                                    @if (User.IsInRole("Administrator") || User.IsInRole("Academics") || Model.Member.UserName == User.Identity.GetUserName())
-                                    {
-                                        @: |
-                                        @Html.ActionLink("Transcript", "Transcript", "Classes", new { userName = Model.Member.UserName, area = "Edu" }, new { @class = "" })
-                                    }
                                 </small>
                             </div>
                         </div>
@@ -272,16 +267,12 @@
                                 {
                                     foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
                                     {
-                                        var fileCount = item.Class.ClassFiles.Count;
                                         var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
 
                                         <tr>
                                             <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
                                             <td>
                                                 @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
-                                            </td>
-                                            <td>
-                                                @Html.ActionLink(fileCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
                                             </td>
                                         </tr>
                                     }

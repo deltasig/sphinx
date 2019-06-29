@@ -14,7 +14,6 @@
     using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Text;
     using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using System.Web;
@@ -466,11 +465,6 @@
                     {
                         userInteractedWithSystem = true;
                         interactionMessage = "Work Orders";
-                    }
-                    else if (user.ClassFileUploads.Any())
-                    {
-                        userInteractedWithSystem = true;
-                        interactionMessage = "Class File Uploads";
                     }
                     else if (user.WorkOrderComments.Any())
                     {

@@ -318,9 +318,7 @@
     <Compile Include="Areas\House\Controllers\WorkOrdersController.cs" />
     <Compile Include="Areas\Edu\EduAreaRegistration.cs" />
     <Compile Include="Areas\Edu\Models\ClassIndexModel.cs" />
-    <Compile Include="Areas\Edu\Models\ClassTranscriptModel.cs" />
     <Compile Include="Areas\Edu\Models\ClassDetailsModel.cs" />
-    <Compile Include="Areas\Edu\Models\FileInfoModel.cs" />
     <Compile Include="Areas\House\Controllers\RoomsController.cs" />
     <Compile Include="Areas\House\HouseAreaRegistration.cs" />
     <Compile Include="Areas\House\Models\RoomIndexModel.cs" />
@@ -494,7 +492,6 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="Areas\Members\Views\Roster\InitiateNewMembers.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\Transcript.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Edit.cshtml" />
     <Content Include="Areas\Service\Views\Hours\Delete.cshtml" />
     <Content Include="Areas\Admin\Views\Statuses\Index.cshtml" />
@@ -536,7 +533,6 @@
     <Content Include="Areas\Kitchen\Views\MealPeriods\Index.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Details.cshtml" />
     <Content Include="Areas\Service\Views\Events\Details.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\DeleteFile.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Create.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Delete.cshtml" />
     <Content Include="Areas\Edu\Views\Departments\Index.cshtml" />
@@ -671,7 +667,6 @@
     <Content Include="Areas\Members\Views\Roster\GraduateActives.cshtml" />
     <Content Include="Areas\Alumni\Views\Acb\Index.cshtml" />
     <Content Include="Areas\Alumni\Views\Connect\Index.cshtml" />
-    <Content Include="Areas\Edu\Views\Classes\Uploading.cshtml" />
     <Content Include="Areas\Sobers\Views\Types\Details.cshtml" />
     <Content Include="Areas\Laundry\Views\web.config" />
     <Content Include="Areas\Sobers\Views\Schedule\SignupConfirmation.cshtml" />

@@ -21,12 +21,10 @@ namespace Dsp.Data.Entities
         [Required, Display(Name = "Credit Hours")]
         [Range(1, 6, ErrorMessage = "Please enter a valid number of credit hours: 1-6.")]
         public int CreditHours { get; set; }
-        
+
         [ForeignKey("DepartmentId")]
         public virtual Department Department { get; set; }
         [InverseProperty("Class")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
-        [InverseProperty("Class")]
-        public virtual ICollection<ClassFile> ClassFiles { get; set; }
     }
 }

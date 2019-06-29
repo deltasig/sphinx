@@ -12,8 +12,6 @@
     const string sortNumberDescText = "number-desc";
     const string sortNameAscText = "name-asc";
     const string sortNameDescText = "name-desc";
-    const string sortFilesAscText = "files-asc";
-    const string sortFilesDescText = "files-desc";
     const string sortTakenAscText = "taken-asc";
     const string sortTakenDescText = "taken-desc";
     const string sortTakingAscText = "taking-asc";
@@ -22,15 +20,11 @@
     const string selectMeNowText = "me-now";
     const string selectBeingTakenText = "being-taken";
     const string selectNoneTakingText = "none-taking";
-    const string selectHasFileText = "has-file";
-    const string selectNoFileText = "no-file";
 
     var sortNumberAscFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortNumberDescFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortNameAscFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortNameDescFilter = new ClassesIndexFilterModel(Model.Filter);
-    var sortFilesAscFilter = new ClassesIndexFilterModel(Model.Filter);
-    var sortFilesDescFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortTakenAscFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortTakenDescFilter = new ClassesIndexFilterModel(Model.Filter);
     var sortTakingAscFilter = new ClassesIndexFilterModel(Model.Filter);
@@ -41,15 +35,11 @@
     var selectMeNowFilter = new ClassesIndexFilterModel(Model.Filter);
     var selectBeingTakenFilter = new ClassesIndexFilterModel(Model.Filter);
     var selectNoneTakingFilter = new ClassesIndexFilterModel(Model.Filter);
-    var selectHasFileFilter = new ClassesIndexFilterModel(Model.Filter);
-    var selectNoFileFilter = new ClassesIndexFilterModel(Model.Filter);
 
     sortNumberAscFilter.sort = Model.Filter.sort == sortNumberAscText ? "" : sortNumberAscText;
     sortNumberDescFilter.sort = Model.Filter.sort == sortNumberDescText ? "" : sortNumberDescText;
     sortNameAscFilter.sort = Model.Filter.sort == sortNameAscText ? "" : sortNameAscText;
     sortNameDescFilter.sort = Model.Filter.sort == sortNameDescText ? "" : sortNameDescText;
-    sortFilesAscFilter.sort = Model.Filter.sort == sortFilesAscText ? "" : sortFilesAscText;
-    sortFilesDescFilter.sort = Model.Filter.sort == sortFilesDescText ? "" : sortFilesDescText;
     sortTakenAscFilter.sort = Model.Filter.sort == sortTakenAscText ? "" : sortTakenAscText;
     sortTakenDescFilter.sort = Model.Filter.sort == sortTakenDescText ? "" : sortTakenDescText;
     sortTakingAscFilter.sort = Model.Filter.sort == sortTakingAscText ? "" : sortTakingAscText;
@@ -60,8 +50,6 @@
     selectMeNowFilter.select = Model.Filter.select == selectMeNowText ? "" : selectMeNowText;
     selectBeingTakenFilter.select = Model.Filter.select == selectBeingTakenText ? "" : selectBeingTakenText;
     selectNoneTakingFilter.select = Model.Filter.select == selectNoneTakingText ? "" : selectNoneTakingText;
-    selectHasFileFilter.select = Model.Filter.select == selectHasFileText ? "" : selectHasFileText;
-    selectNoFileFilter.select = Model.Filter.select == selectNoFileText ? "" : selectNoFileText;
 
     var pagerModel = new PagerModel
     {
@@ -156,24 +144,6 @@
                                             <i class="fa fa-fw fa-sort-amount-desc"></i> Enrollment All <small>DESC</small>
                                         </a>
                                     </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == sortFilesAscText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortFilesAscFilter)">
-                                            @if (Model.Filter.sort == sortFilesAscText)
-                                            {
-                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-fw fa-sort-amount-asc"></i> Files <small>ASC</small>
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == sortFilesDescText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortFilesDescFilter)">
-                                            @if (Model.Filter.sort == sortFilesDescText)
-                                            {
-                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-fw fa-sort-amount-desc"></i> Files <small>DESC</small>
-                                        </a>
-                                    </li>
                                 </ul>
                             </div>
                             <div class="btn-group" role="group" aria-label="...">
@@ -215,24 +185,6 @@
                                                 <i class="fa fa-fw fa-times-circle-o"></i>
                                             }
                                             Classes not being taken
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.select == selectHasFileText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectHasFileFilter)">
-                                            @if (Model.Filter.select == selectHasFileText)
-                                            {
-                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                            }
-                                            Classes with a file
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.select == selectNoFileText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", selectNoFileFilter)">
-                                            @if (Model.Filter.select == selectNoFileText)
-                                            {
-                                                <i class="fa fa-fw fa-times-circle-o"></i>
-                                            }
-                                            Classes without a file
                                         </a>
                                     </li>
                                 </ul>
@@ -289,12 +241,6 @@
                                         case "none-taking":
                                             text = "Classes no one is taking";
                                             break;
-                                        case "has-file":
-                                            text = "Classes with a file";
-                                            break;
-                                        case "no-file":
-                                            text = "Classes with no file";
-                                            break;
                                     }
                                     <small>| Selection: <em>@text</em></small>
                                 }
@@ -329,20 +275,12 @@
                                             <i class="fa fa-fw fa-users"></i>
                                             @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
                                         </small>
-                                        <small data-toggle="tooltip" data-placement="top" title="Files">
-                                            <i class="fa fa-fw fa-folder-open-o"></i>
-                                            @c.ClassFiles.Count
-                                        </small>
                                     </div>
                                     <div class="col-md-4 visible-xs visible-sm">
                                         <small style="margin-right:15px"
                                                data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
                                             <i class="fa fa-fw fa-users"></i>
                                             @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
-                                        </small>
-                                        <small data-toggle="tooltip" data-placement="top" title="Files">
-                                            <i class="fa fa-fw fa-folder-open-o"></i>
-                                            @c.ClassFiles.Count
                                         </small>
                                     </div>
                                 </div>

@@ -19,7 +19,6 @@
         public virtual DbSet<BugImage> BugImages { get; set; }
         public virtual DbSet<BugReport> BugReports { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
-        public virtual DbSet<ClassFile> ClassFiles { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
         public virtual DbSet<Donation> Donations { get; set; }

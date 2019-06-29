@@ -673,16 +673,6 @@
             var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
             return list;
         }
-        protected virtual IEnumerable<object> GetGrades()
-        {
-            var gradeList = new List<string> { "", "A", "B", "C", "D", "F", "I", "S", "U" };
-            var list = new List<object>();
-            foreach (var g in gradeList)
-            {
-                list.Add(new { Value = g, Text = g });
-            }
-            return list;
-        }
         protected virtual SelectList GetTerms()
         {
             var terms = new List<string>
@@ -919,12 +909,6 @@
                     filterResults = classes.Where(c =>
                         c.ClassesTaken.All(t => t.SemesterId != thisSemester.SemesterId)).ToList();
                     break;
-                case "has-file":
-                    filterResults = classes.Where(c => c.ClassFiles.Any()).ToList();
-                    break;
-                case "no-file":
-                    filterResults = classes.Where(c => !c.ClassFiles.Any()).ToList();
-                    break;
             }
 
             switch (sort)
@@ -937,12 +921,6 @@
                     break;
                 case "name-desc":
                     filterResults = filterResults.OrderByDescending(o => o.CourseName).ToList();
-                    break;
-                case "files-asc":
-                    filterResults = filterResults.OrderBy(o => o.ClassFiles.Count).ThenBy(o => o.CourseShorthand).ToList();
-                    break;
-                case "files-desc":
-                    filterResults = filterResults.OrderByDescending(o => o.ClassFiles.Count).ThenBy(o => o.CourseShorthand).ToList();
                     break;
                 case "taken-asc":
                     filterResults = filterResults.OrderBy(o => o.ClassesTaken.Count).ThenBy(o => o.CourseShorthand).ToList();

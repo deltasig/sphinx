@@ -23,11 +23,4 @@
     {
         @class = "btn btn-default " + (ViewBag.Title.Contains("Schedule") ? "active" : "")
     })
-    if (User.IsInRole("Administrator") || User.IsInRole("Academics") || User.Identity.Name == ViewBag.UserName ?? string.Empty)
-    {
-        <a href="@Url.Action("Transcript", "Classes", new { userName = ViewBag.UserName ?? User.Identity.GetUserName(), area = "Edu" })"
-           class="btn btn-default @(ViewBag.Title.Contains("Transcript") ? "active" : "")">
-            <i class="fa fa-lock"></i> Transcript
-        </a>
-    }
 }

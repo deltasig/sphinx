@@ -86,18 +86,6 @@
             Priority = NotificationPriority.Moderate
         });
     }
-    if (lastSemesterClasses.Any() && lastSemesterClasses.Any(c => string.IsNullOrEmpty(c.FinalGrade) && c.Dropped != true) && isUndergrad)
-    {
-        notifications.Add(new Notification
-        {
-            Message = "Report previous semester grades.",
-            LinkText = "Go to Transcript",
-            Link = Url.Action("Transcript", "Classes", new { area = "Edu", userName = Model.MemberInfo.UserName }),
-            Why = "This is how you are held accountable to academic standards. " +
-                  "The academic chairman will contact you about this if you wait too long.",
-            Priority = NotificationPriority.High
-        });
-    }
     if (!thisSemesterClasses.Any() && isUndergrad)
     {
         notifications.Add(new Notification
