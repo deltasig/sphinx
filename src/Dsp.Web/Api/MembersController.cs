@@ -263,22 +263,6 @@
                 Symbol = "fa-graduation-cap"
             }));
 
-            // Class Files
-            var classFiles = await _db.ClassFiles
-                .Where(f => f.UploadedOn > startOfFeedUtc && f.UploadedOn <= nowUtc)
-                .ToListAsync();
-            model.AddRange(classFiles.Select(s => new FeedItem
-            {
-                UserName = s.Uploader.UserName,
-                Name = s.Uploader.ToString(),
-                ImageName = s.Uploader.GetAvatarString(),
-                TimeSince = (nowUtc - s.UploadedOn).ToUserFriendlyString(),
-                OccurredOn = s.UploadedOn,
-                DisplayText = "New file uploaded for " + s.Class.CourseShorthand,
-                Link = $"/edu/classes/details?id={s.ClassId}",
-                Symbol = "fa-folder"
-            }));
-
             // Incidents
             var incidents = await _db.IncidentReports
                 .Where(i => i.DateTimeSubmitted > startOfFeedUtc && i.DateTimeSubmitted <= nowUtc)

@@ -64,8 +64,6 @@
         public virtual ICollection<ChoreAssignment> ChoreSignOffs { get; set; }
         [InverseProperty("Enforcer")]
         public virtual ICollection<ChoreAssignment> ChoresEnforced { get; set; }
-        [InverseProperty("Uploader")]
-        public virtual ICollection<ClassFile> ClassFileUploads { get; set; }
         [InverseProperty("Member")]
         public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
         [InverseProperty("Member")]

@@ -1,7 +1,5 @@
 ﻿namespace Dsp.Web.Areas.Edu.Controllers
 {
-    using Amazon.S3;
-    using Amazon.S3.Model;
     using Dsp.Data.Entities;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
@@ -9,12 +7,9 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
-    using System.IO;
     using System.Linq;
     using System.Net;
-    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
-    using System.Web.Configuration;
     using System.Web.Mvc;
 
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
@@ -96,11 +91,7 @@
             var model = new ClassDetailsModel
             {
                 Class = course,
-                CurrentSemester = await GetThisSemesterAsync(),
-                FileInfoModel = new FileInfoModel
-                {
-                    ExistingFiles = new List<string> { "tests.pdf", "homework.pdf", "notes.pdf" }
-                }
+                CurrentSemester = await GetThisSemesterAsync()
             };
             return View(model);
         }
@@ -219,14 +210,6 @@
                         var classTaken = await _db.ClassesTaken.FindAsync(e.ClassTakenId);
                         classTaken.ClassId = primaryId;
                         _db.Entry(classTaken).State = EntityState.Modified;
-                    }
-                    // Set any files to use the primary class.
-                    var filesToMove = await _db.ClassFiles.Where(c => c.ClassId == cid).ToListAsync();
-                    foreach (var f in filesToMove)
-                    {
-                        var classFile = await _db.ClassesTaken.FindAsync(f.ClassFileId);
-                        classFile.ClassId = primaryId;
-                        _db.Entry(classFile).State = EntityState.Modified;
                     }
                     // Now with everything moved over to the primary, remove the duplicated class.
                     var classToRemove = await _db.Classes.FindAsync(cid);
@@ -347,8 +330,7 @@
 
             var model = new EditEnrollmentModel
             {
-                Enrollment = enrollment,
-                Grades = GetGrades()
+                Enrollment = enrollment
             };
 
             return View(model);
@@ -369,9 +351,6 @@
                         t.ClassId == model.Enrollment.ClassId &&
                         t.SemesterId == model.Enrollment.SemesterId &&
                         t.UserId == model.Enrollment.UserId);
-            classTaken.MidtermGrade = model.Enrollment.MidtermGrade;
-            classTaken.FinalGrade = model.Enrollment.FinalGrade;
-            classTaken.Dropped = model.Enrollment.Dropped;
             classTaken.IsSummerClass = model.Enrollment.IsSummerClass;
             _db.Entry(classTaken).State = EntityState.Modified;
             await _db.SaveChangesAsync();
@@ -380,248 +359,6 @@
 
             TempData["SuccessMessage"] = "Enrollment update was successful.";
             return RedirectToAction("Schedule", new { userName = member.UserName });
-        }
-
-        public async Task<ActionResult> Transcript(string userName)
-        {
-            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") && User.Identity.GetUserName() != userName)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
-
-            var member = await UserManager.Users.SingleAsync(m => m.UserName == userName);
-            var model = member.ClassesTaken
-                .OrderByDescending(c => c.Semester.DateStart)
-                .ThenByDescending(c => !c.IsSummerClass)
-                .ThenBy(c => c.Class.CourseShorthand)
-                .Select(c => new ClassTranscriptModel
-                {
-                    Member = member,
-                    ClassTaken = c,
-                    Grades = GetGrades()
-                }).ToList();
-
-            ViewBag.UserName = userName;
-            ViewBag.Name = member.ToString();
-            return View(model);
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Transcript(IList<ClassTranscriptModel> model)
-        {
-            if (!User.IsInRole("Administrator") && !User.IsInRole("Academics") &&
-                !model.Any() && User.Identity.GetUserName() != model.First().Member.UserName)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            }
-
-            foreach (var c in model)
-            {
-                var c1 = c;
-                var classTaken = await _db.ClassesTaken
-                    .SingleAsync(t =>
-                        t.ClassId == c1.ClassTaken.ClassId &&
-                        t.SemesterId == c1.ClassTaken.SemesterId &&
-                        t.UserId == c1.ClassTaken.UserId);
-
-                classTaken.MidtermGrade = c.ClassTaken.MidtermGrade;
-                classTaken.FinalGrade = c.ClassTaken.FinalGrade;
-                classTaken.Dropped = c.ClassTaken.Dropped;
-                classTaken.IsSummerClass = c.ClassTaken.IsSummerClass;
-                _db.Entry(classTaken).State = EntityState.Modified;
-            }
-
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "Successfully updated transcript.";
-            return RedirectToAction("Transcript", new { userName = model.First().Member.UserName });
-        }
-
-        [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> UploadFile(ClassDetailsModel model)
-        {
-            if (model.FileInfoModel.File == null || model.FileInfoModel.File.ContentLength <= 0)
-            {
-                TempData["FailureMessage"] = "Failed to add file because nothing was uploaded.";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-
-            var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
-            var maxLength = section != null ? section.MaxRequestLength * 1024 : 10240 * 1024;
-
-            if (model.FileInfoModel.File.ContentLength > maxLength)
-            {
-                TempData["FailureMessage"] = $"Failed to add file because it is too large. Max size: {maxLength}";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-            if (model.FileInfoModel.File.ContentType != "application/pdf")
-            {
-                TempData["FailureMessage"] = "Failed to add file because the file type was identified as PDF.";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-            var regex = new Regex(@"^(Test|Hw|Quiz|Crib|Proj|PTest|Lab) \d{2} - (SP|FS|SS)\d{4} - [a-zA-Z]{2,25}.pdf$");
-            var match = regex.Match(model.FileInfoModel.File.FileName);
-            if (!match.Success)
-            {
-                TempData["FailureMessage"] = "Your file name does not match the required format. Please review the upload instructions.";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-
-            var newFileName = string.Join(" - ", model.Class.CourseShorthand, model.FileInfoModel.File.FileName);
-            var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
-            var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
-            var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
-
-            var key = string.Format(model.Class.CourseShorthand + "/{0}", newFileName);
-            try
-            {
-                IAmazonS3 client;
-                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
-                {
-                    var request = new PutObjectRequest()
-                    {
-                        BucketName = awsBucket,
-                        CannedACL = S3CannedACL.Private,
-                        Key = key,
-                        InputStream = model.FileInfoModel.File.InputStream
-                    };
-
-                    client.PutObject(request);
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["FailureMessage"] = "An error occurred while saving the file because of an AWS error.  Contact your admin.";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-
-            try
-            {
-                var file = new ClassFile
-                {
-                    ClassId = model.Class.ClassId,
-                    UserId = User.Identity.GetUserId<int>(),
-                    AwsCode = key,
-                    UploadedOn = DateTime.UtcNow,
-                };
-                _db.ClassFiles.Add(file);
-                await _db.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["FailureMessage"] = "An error occurred while saving the file because of a database error. Contact your admin.";
-                return RedirectToAction("Details", new { id = model.Class.ClassId });
-            }
-
-            TempData["SuccessMessage"] = "File was added successfully.";
-            return RedirectToAction("Details", new { id = model.Class.ClassId });
-        }
-
-        public async Task<ActionResult> DownloadFile(int? id)
-        {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            var file = await _db.ClassFiles.FindAsync(id);
-            if (file == null) return HttpNotFound();
-
-            try
-            {
-                var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
-                var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
-                var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
-                IAmazonS3 client;
-                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
-                {
-                    var request = new GetObjectRequest
-                    {
-                        BucketName = awsBucket,
-                        Key = file.AwsCode
-                    };
-                    // Make AWS Request for file.
-                    var response = client.GetObject(request);
-
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        // Convert response to a readable format.
-                        response.ResponseStream.CopyTo(memoryStream);
-                        var contents = memoryStream.ToArray();
-                        var fileName = file.AwsCode.Split('/').Last();
-
-                        // Update file access time in database.
-                        file.LastAccessedOn = DateTime.UtcNow;
-                        file.DownloadCount++;
-                        _db.Entry(file).State = EntityState.Modified;
-                        await _db.SaveChangesAsync();
-
-                        // Return file to user's browser.
-                        return File(contents, "application/pdf", fileName);
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["FailureMessage"] = "Failed to download the file because of a server error.  " +
-                                             "If the problem persists please contact your administrator.";
-                return RedirectToAction("Details", new { id = file.Class.ClassId });
-            }
-        }
-
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> DeleteFile(int? id)
-        {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-            var model = await _db.ClassFiles.FindAsync(id);
-            if (model == null) return HttpNotFound();
-
-            return View(model);
-        }
-
-        [HttpPost, ActionName("DeleteFile"), ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator, Academics")]
-        public async Task<ActionResult> DeleteFileConfirmed(int id, int classId)
-        {
-            var file = await _db.ClassFiles.SingleAsync(f => f.ClassFileId == id);
-            if (file == null) return new HttpStatusCodeResult(HttpStatusCode.NotFound);
-
-            try
-            {
-                var awsAccessKey = WebConfigurationManager.AppSettings["AWSAccessKey"];
-                var awsSecretKey = WebConfigurationManager.AppSettings["AWSSecretKey"];
-                var awsBucket = WebConfigurationManager.AppSettings["AWSFileBucket"];
-                IAmazonS3 client;
-                using (client = new AmazonS3Client(awsAccessKey, awsSecretKey))
-                {
-                    var request = new DeleteObjectRequest
-                    {
-                        BucketName = awsBucket,
-                        Key = file.AwsCode
-                    };
-                    client.DeleteObject(request);
-                }
-            }
-            catch (Exception e)
-            {
-                Elmah.ErrorSignal.FromCurrentContext().Raise(e);
-                TempData["FailureMessage"] = "Failed to delete the file because of a server error.  " +
-                                             "If the problem persists please contact your administrator.";
-                return RedirectToAction("Details", new { id = classId });
-            }
-
-            _db.Entry(file).State = EntityState.Deleted;
-            await _db.SaveChangesAsync();
-
-            TempData["SuccessMessage"] = "File deleted successfully.";
-            return RedirectToAction("Details", new { id = classId });
-        }
-
-        public ActionResult Uploading()
-        {
-            return View();
         }
     }
 }

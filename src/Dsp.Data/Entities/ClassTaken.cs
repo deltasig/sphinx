@@ -1,8 +1,8 @@
 namespace Dsp.Data.Entities
 {
     using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
 
     [Table("ClassesTaken")]
     public class ClassTaken
@@ -21,14 +21,6 @@ using System.ComponentModel.DataAnnotations.Schema;
         [Required, Column(Order = 2), DatabaseGenerated(DatabaseGeneratedOption.None)]
         [Index("IX_ClassTaken", 2, IsUnique = true), Display(Name = "Semesters")]
         public int SemesterId { get; set; }
-
-        [StringLength(1)]
-        public string MidtermGrade { get; set; }
-
-        [StringLength(1)]
-        public string FinalGrade { get; set; }
-
-        public bool? Dropped { get; set; }
 
         public bool IsSummerClass { get; set; }
 

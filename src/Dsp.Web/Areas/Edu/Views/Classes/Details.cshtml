@@ -20,10 +20,6 @@
             SemesterId = Model.CurrentSemester.SemesterId
         }
     };
-
-    var section = WebConfigurationManager.GetSection("system.web/httpRuntime") as HttpRuntimeSection;
-    var maxKB = section != null ? section.MaxRequestLength : 10240; // KB
-    var maxMB = maxKB / 1024; // MB
 }
 
 <div class="container-fluid">
@@ -127,77 +123,6 @@
                     </table>
                 </div>
                 <div class="panel-footer">Count: @Model.Class.ClassesTaken.Count</div>
-            </div>
-        </div>
-        <div class="col-sm-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-folder-open"></i> <strong>Files</strong>
-                </div>
-                <ul class="list-group">
-                    @if (Model.Class.ClassFiles.Any())
-                    {
-                        foreach (var f in Model.Class.ClassFiles.OrderBy(c => c.AwsCode.Split('/')[1]))
-                        {
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-12">
-                                        <small>
-                                            @f.AwsCode.Split('/')[1]
-                                            <i data-toggle="tooltip" data-placement="top"
-                                               title="Uploaded by @f.Uploader on @TimeZoneInfo.ConvertTimeFromUtc(f.UploadedOn, cstZone).  Downloaded @f.DownloadCount time(s)."
-                                               class="fa fa-info-circle fa-lg text-info"></i>
-                                        </small>
-                                        <small class="pull-right">
-                                            <a href="@Url.Action("DownloadFile", new {id = f.ClassFileId})" class="btn btn-xs btn-default">
-                                                Download
-                                            </a>
-                                            @if (hasElevatedPermissions)
-                                            {
-                                                @:
-                                                <a href="@Url.Action("DeleteFile", new { id = f.ClassFileId })" class="btn btn-xs btn-danger">
-                                                    Delete
-                                                </a>
-                                            }
-                                        </small>
-                                    </div>
-                                </div>
-                            </li>
-                        }
-                    }
-                    else
-                    {
-                        <li class="list-group-item list-group-item-warning">
-                            No files uploaded yet for this class.
-                        </li>
-                    }
-                </ul>
-            </div>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <i class="fa fa-cloud-upload"></i> <strong>Upload a New File</strong>
-                    <a href="@Url.Action("Uploading")"
-                       class="btn btn-xs btn-info pull-right">
-                        <i class="fa fa-info-circle"></i> Instructions
-                    </a>
-                </div>
-                <div class="panel-body">
-                    @using (Html.BeginForm("UploadFile", "Classes", FormMethod.Post, new { enctype = "multipart/form-data", role = "form" }))
-                    {
-                        @Html.AntiForgeryToken()
-
-                        @Html.HiddenFor(m => Model.Class.ClassId)
-                        @Html.HiddenFor(m => Model.Class.CourseName)
-                        @Html.HiddenFor(m => Model.Class.CourseShorthand)
-
-                        <div class="form-group">
-                            <input type="file" 
-                                   name="FileInfoModel.File" id="FileInfoModel_File" data-val="true" />
-                            <p class="help-block">PDF files only; max size is @(maxMB)MB.</p>
-                        </div>
-                        <input type="submit" value="Upload" class="btn btn-sm btn-default" />
-                    }
-                </div>
             </div>
         </div>
     </div>

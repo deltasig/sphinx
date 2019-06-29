@@ -70,7 +70,6 @@
     <Compile Include="Entities\ChorePeriod.cs" />
     <Compile Include="Entities\ChoreType.cs" />
     <Compile Include="Entities\Class.cs" />
-    <Compile Include="Entities\ClassFile.cs" />
     <Compile Include="Entities\ClassTaken.cs" />
     <Compile Include="Entities\Department.cs" />
     <Compile Include="Entities\ElmahErrorLog.cs" />
@@ -316,6 +315,14 @@
     <Compile Include="Migrations\201810060122124_MemberDietaryInstructions.Designer.cs">
       <DependentUpon>201810060122124_MemberDietaryInstructions.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201906292138158_RemovedFilesAndGrades.cs" />
+    <Compile Include="Migrations\201906292138158_RemovedFilesAndGrades.Designer.cs">
+      <DependentUpon>201906292138158_RemovedFilesAndGrades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201906292147464_RemovedFilesAndGrades2.cs" />
+    <Compile Include="Migrations\201906292147464_RemovedFilesAndGrades2.Designer.cs">
+      <DependentUpon>201906292147464_RemovedFilesAndGrades2.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -481,6 +488,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201810060122124_MemberDietaryInstructions.resx">
       <DependentUpon>201810060122124_MemberDietaryInstructions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906292138158_RemovedFilesAndGrades.resx">
+      <DependentUpon>201906292138158_RemovedFilesAndGrades.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201906292147464_RemovedFilesAndGrades2.resx">
+      <DependentUpon>201906292147464_RemovedFilesAndGrades2.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
