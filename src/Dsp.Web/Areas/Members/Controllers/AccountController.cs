@@ -122,8 +122,7 @@
                 Semesters = await GetAllSemesterListAsync(),
                 PledgeClasses = await GetPledgeClassListAsync(),
                 Statuses = await GetStatusListAsync(),
-                Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync(),
-                ShirtSizes = GetShirtSizesSelectList()
+                Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync()
             };
 
             return View(model);
@@ -141,7 +140,6 @@
             model.PledgeClasses = await GetPledgeClassListAsync();
             model.Statuses = await GetStatusListAsync();
             model.Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync();
-            model.ShirtSizes = GetShirtSizesSelectList();
 
             if (!ModelState.IsValid)
             {
@@ -158,7 +156,6 @@
             member.PledgeClassId = model.Member.PledgeClassId;
             member.ExpectedGraduationId = model.Member.ExpectedGraduationId;
             member.BigBroId = model.Member.BigBroId == 0 ? null : model.Member.BigBroId;
-            member.ShirtSize = model.Member.ShirtSize;
             member.DietaryInstructions = model.Member.DietaryInstructions;
             member.LastUpdatedOn = DateTime.UtcNow;
 

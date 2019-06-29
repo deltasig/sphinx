@@ -14,7 +14,6 @@
     var showStatus = isAdmin || isSecretary;
     var showPledgeClass = isAdmin || isSecretary;
     var showBigBro = true;
-    var showShirtSize = true;
     var showDietaryInstructions = true;
 }
 
@@ -167,18 +166,6 @@
                 else
                 {
                     @Html.HiddenFor(m => m.Member.BigBroId)
-                }
-
-                if (showShirtSize)
-                {
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Member.ShirtSize, new {@class = "control-label"})
-                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new {@class = "form-control selectpicker"})
-                    </div>
-                }
-                else
-                {
-                    @Html.HiddenFor(m => m.Member.ShirtSize)
                 }
 
                 if (showDietaryInstructions)
