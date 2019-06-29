@@ -1,5 +1,11 @@
 ﻿# Awards
 
+#### North American Interfraternity Council (NIC)
+
+- Chapter Award of Distinction - recognizes exceptional fraternity collegiate chapters demonstrating excellence in 
+  operations, involvement in their fraternity/sorority and campus community, and a commitment to a positive fraternity experience.
+  - 2019
+
 #### Delta Sigma Phi Nationals
 
 - Pyramid of Excellence - The highest award given to undergraduate chapters for excellence in all areas of operation.
