@@ -1,7 +1,25 @@
-﻿### December 2018
+### June 2019
+
+- Removed class grades and files from website.
+- Removed shirt size from account profiles.
+- Updated Awards.
+
+---
+
+### May 2019
+
+- Improved messages in response to improper service hour submissions.
+- Open sourced website code on Github: [repository](https://github.com/deltasig/sphinx/)
+- Began developing wiki for chairmen documentation, frequently asked questions, and recurring tasks: [wiki](https://github.com/deltasig/sphinx/wiki)
+
+---
+
+### December 2018
 
 - Modified the website such that new members are actually called "new members."
 - Fixed some bugs with paging results, primarily incident reports.
+
+---
 
 ### November 2018
 
