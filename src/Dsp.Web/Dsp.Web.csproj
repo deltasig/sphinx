@@ -467,7 +467,6 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\CustomGoogleApi.js" />
     <Content Include="DownPage.html" />
-    <Content Include="google2da471a22d508cbe.html" />
     <Content Include="Images\letters.png" />
     <Content Include="Content\Site.css" />
     <Content Include="Global.asax" />
