@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ILaundryService
+    public interface ILaundryService : IService
     {
         Task<IEnumerable<LaundrySignup>> GetSignups(DateTime beginningOn);
 

@@ -2,7 +2,7 @@
   "name": "dsp.bower",
   "private": true,
   "authors": [
-    "Tyler Morrow <tjm6f4@gmail.com>"
+    "Tyler Morrow <tjm6f4@mst.edu>"
   ],
   "ignore": [
     "**/.*",
@@ -10,6 +10,7 @@
     "bower_components"
   ],
   "dependencies": {
-    "clipboard": "1.6.1"
+    "clipboard": "1.6.1",
+    "chart.js": "Chart.js#v2.8.0"
   }
 }

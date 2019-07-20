@@ -30,6 +30,9 @@
             bundles.Add(new ScriptBundle("~/bundles/clipboard").Include(
                 "~/bower_components/clipboard/dist/clipboard.js"
             ));
+            bundles.Add(new ScriptBundle("~/bundles/charts").Include(
+                "~/bower_components/chart.js/dist/Chart.js"
+            ));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap-core")
                 .Include("~/Scripts/bootstrap.js")

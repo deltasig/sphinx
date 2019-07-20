@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IStatusService
+    public interface IStatusService : IService
     {
         Task<IEnumerable<MemberStatus>> GetAllStatusesAsync();
         Task<MemberStatus> GetStatusByIdAsync(int id);

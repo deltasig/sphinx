@@ -268,7 +268,7 @@
             // Build model for view
             model.SelectedSemester = semester.SemesterId;
             model.Semester = semester;
-            model.SemesterList = GetCustomSemesterListAsync(semesters);
+            model.SemesterList = GetSemesterSelectListAsync(semesters);
             // Identify members for current semester
             model.Members = await GetRosterForSemester(semester);
 
@@ -317,6 +317,73 @@
                 });
             }
             return new SelectList(newList, "SoberTypeId", "Text");
+        }
+
+        public enum SoberMessage
+        {
+            SignupSuccess,
+            SignupFailure,
+            AddSignupSuccess,
+            AddSignupFailure,
+            MultiAddSignupSuccess,
+            MultiAddSignupFailure,
+            MultiAddSignupMissingTypesFailure,
+            CancelSignupSuccess,
+            EditSignupSuccess,
+            EditSignupFailure,
+            SignupNewMemberOfficerFailure,
+            DeleteSignupSuccess,
+            MultiAddSignupNoDatesFailure,
+        }
+
+        public void SetSoberMessage(SoberMessage? message)
+        {
+            switch (message)
+            {
+                case SoberMessage.SignupSuccess:
+                    ViewBag.SuccessMessage = "Sober signup was successful.";
+                    break;
+                case SoberMessage.AddSignupSuccess:
+                    ViewBag.SuccessMessage = "Successfully added a new sober signup slot.";
+                    break;
+                case SoberMessage.MultiAddSignupSuccess:
+                    ViewBag.SuccessMessage = "Successfully added multiple new sober signup slots.";
+                    break;
+                case SoberMessage.CancelSignupSuccess:
+                    ViewBag.SuccessMessage = "Successfully cancelled member's sober signup.";
+                    break;
+                case SoberMessage.EditSignupSuccess:
+                    ViewBag.SuccessMessage = "Successfully modified sober signup.";
+                    break;
+                case SoberMessage.DeleteSignupSuccess:
+                    ViewBag.FailMessage = "Successfully deleted sober signup slot.";
+                    break;
+                case SoberMessage.SignupFailure:
+                    ViewBag.FailMessage = "Sober signup failed.";
+                    break;
+                case SoberMessage.AddSignupFailure:
+                    ViewBag.FailMessage = "Failed to add sober signup.  Please check the values you entered and try again.";
+                    break;
+                case SoberMessage.MultiAddSignupFailure:
+                    ViewBag.FailMessage = "Multi-add tool failed because no amounts or dates were provided.";
+                    break;
+                case SoberMessage.MultiAddSignupNoDatesFailure:
+                    ViewBag.FailMessage = "Multi-add tool failed because no dates were provided.";
+                    break;
+                case SoberMessage.MultiAddSignupMissingTypesFailure:
+                    ViewBag.FailMessage = "There was an error with the multi-add tool.  " +
+                              "This is most likely because the sober types Driver and Officer do not both exist.  " +
+                              "If Driver and Officer types exist exactly as they are spelled here and you still " +
+                              "get this message, contact Ty Morrow.";
+                    break;
+                case SoberMessage.EditSignupFailure:
+                    ViewBag.FailMessage = "Failed to modify sober signup.  Please try again or contact your administrator" +
+                                          "if the problem persists.";
+                    break;
+                case SoberMessage.SignupNewMemberOfficerFailure:
+                    ViewBag.FailMessage = "Unfortunately, new members are not allowed to be sober officers.";
+                    break;
+            }
         }
     }
 }

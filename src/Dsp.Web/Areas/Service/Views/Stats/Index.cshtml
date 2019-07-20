@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Service Stats";
+}
+@Scripts.Render("~/bundles/charts")
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-xs-6">
+            <div class="dropdown">
+                <button class="btn btn-default dropdown-toggle" type="button" id="semester-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Change Semester
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="semester-dropdown"></ul>
+            </div>
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a href="@Url.Action("Index", "Hours")" class="btn btn-sm btn-default">
+                    Service Hours
+                </a>
+                <a href="@Url.Action("Index", "Events")" class="btn btn-sm btn-default">
+                    Service Events
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="statsChart"></canvas>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        var ctx = document.getElementById('statsChart').getContext('2d');
+
+
+        var data = {
+            labels: ["May", "June", "July", "August", "September", "October", "November", "December"],
+            datasets: [
+                {
+                    label: '> 0 hours',
+                    data: [0, 2, 3, 15, 30, 45, 75, 80],
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '> 5 hours',
+                    data: [0, 1, 1, 10, 20, 40, 65, 78],
+                    borderWidth: 1,
+                    fill: false
+                },
+                {
+                    label: '> 10 hours',
+                    data: [0, 0, 0, 5, 7, 25, 45, 60],
+                    borderWidth: 1,
+                    fill: false
+                },
+            ]
+        };
+
+        var options = {
+            scales: {
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of people'
+                    },
+                    type: 'time',
+                    time: {
+                        unit: 'month'
+                    }
+                }],
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: '# of people'
+                    }
+                }]
+            },
+        };
+        var myLineChart = new Chart(ctx, {
+            type: 'line',
+            data: data,
+            options: options
+        });
+
+    </script>
+}

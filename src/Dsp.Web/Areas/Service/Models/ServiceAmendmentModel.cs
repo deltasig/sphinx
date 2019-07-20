@@ -8,7 +8,7 @@
     {
         public Semester Semester { get; set; }
         public IEnumerable<SelectListItem> SemesterList { get; set; }
-        public List<ServiceHourAmendment> ServiceHourAmendments { get; set; }
-        public List<ServiceEventAmendment> ServiceEventAmendments { get; set; }
+        public IEnumerable<ServiceHourAmendment> ServiceHourAmendments { get; set; }
+        public IEnumerable<ServiceEventAmendment> ServiceEventAmendments { get; set; }
     }
 }

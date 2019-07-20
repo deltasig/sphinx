@@ -327,6 +327,10 @@
     <Compile Include="Migrations\201906292206344_RemoveShirtSize.Designer.cs">
       <DependentUpon>201906292206344_RemoveShirtSize.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201907201558340_AddSemesterToServiceEvent.cs" />
+    <Compile Include="Migrations\201907201558340_AddSemesterToServiceEvent.Designer.cs">
+      <DependentUpon>201907201558340_AddSemesterToServiceEvent.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -501,6 +505,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201906292206344_RemoveShirtSize.resx">
       <DependentUpon>201906292206344_RemoveShirtSize.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201907201558340_AddSemesterToServiceEvent.resx">
+      <DependentUpon>201907201558340_AddSemesterToServiceEvent.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

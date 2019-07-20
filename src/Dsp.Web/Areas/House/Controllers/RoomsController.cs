@@ -26,7 +26,7 @@
             }
 
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateStart).ToListAsync();
-            model.SemesterList = base.GetCustomSemesterListAsync(semesters);
+            model.SemesterList = base.GetSemesterSelectListAsync(semesters);
             model.sid = model.Semester.SemesterId;
             model.Members = (await base.GetRosterForSemester(model.Semester)).ToList();
             model.Rooms = model.Semester.Rooms;

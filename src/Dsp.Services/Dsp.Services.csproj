@@ -62,12 +62,14 @@
     <Compile Include="Interfaces\IIncidentService.cs" />
     <Compile Include="Interfaces\ILaundryService.cs" />
     <Compile Include="Interfaces\IMealService.cs" />
+    <Compile Include="Interfaces\IServiceService.cs" />
     <Compile Include="Interfaces\ITreasuryService.cs" />
     <Compile Include="Interfaces\IStatusService.cs" />
     <Compile Include="Services\IncidentService.cs" />
     <Compile Include="Services\BugService.cs" />
     <Compile Include="Services\LaundryService.cs" />
     <Compile Include="Services\MealService.cs" />
+    <Compile Include="Services\ServiceService.cs" />
     <Compile Include="Services\TreasuryService.cs" />
     <Compile Include="Services\StatusService.cs" />
     <Compile Include="Services\SoberService.cs" />

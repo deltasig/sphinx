@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ITreasuryService
+    public interface ITreasuryService : IService
     {
         Task<Cause> GetCauseByIdAsync(int id);
         Task<IEnumerable<Cause>> GetAllCausesAsync();

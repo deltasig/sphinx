@@ -56,6 +56,8 @@
       </Objects>
     </PublishDatabaseSettings>
     <IncludeIisSettings>false</IncludeIisSettings>
+    <CodeAnalysisRuleSet>BasicDesignGuidelineRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -276,6 +278,7 @@
     <Compile Include="Areas\Members\Models\BugsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
+    <Compile Include="Areas\Service\Controllers\StatsController.cs" />
     <Compile Include="Areas\Treasury\Controllers\DonationsController.cs" />
     <Compile Include="Areas\Treasury\Controllers\FundraisersController.cs" />
     <Compile Include="Areas\Treasury\Controllers\CausesController.cs" />
@@ -292,7 +295,6 @@
     <Compile Include="Models\FeedItem.cs" />
     <Compile Include="Areas\Laundry\Models\LaundrySchedule.cs" />
     <Compile Include="Extensions\DspRoleProvider.cs" />
-    <Compile Include="Extensions\Attributes.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Models\Pager.cs" />
@@ -688,6 +690,8 @@
     <Content Include="Areas\Members\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Members\Views\Bugs\Edit.cshtml" />
     <Content Include="Areas\Members\Views\Bugs\Delete.cshtml" />
+    <Content Include="Areas\Service\Views\Stats\Index.cshtml" />
+    <Content Include="Areas\Service\Views\_ViewStart.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

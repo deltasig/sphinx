@@ -1,6 +1,5 @@
 ﻿@model Dsp.Data.Entities.ServiceEvent
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Delete Event";
     ViewBag.Subtitle = Model.EventName;
 }
@@ -9,7 +8,7 @@
     <div class="row">
         <div class="col-xs-12">
             <p>
-                <a href="@Url.Action("Index", new { s = ViewBag.SemesterId })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", new { sid = Model.SemesterId })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Events
                 </a>
             </p>
@@ -18,7 +17,7 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="alert alert-danger">
-                <p>Are you sure you want to delete this <strong>event</strong>?</p>
+                <p>Are you sure you want to delete this event?</p>
             </div>
             <div class="form-group">
                 <dl class="dl-horizontal">
