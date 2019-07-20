@@ -400,10 +400,5 @@
         {
             return String.IsNullOrEmpty(configValue) ? defaultValue : configValue;
         }
-        private DateTime ConvertUtcToCst(DateTime utc)
-        {
-            var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
-            return TimeZoneInfo.ConvertTimeFromUtc(utc, cstZone);
-        }
     }
 }

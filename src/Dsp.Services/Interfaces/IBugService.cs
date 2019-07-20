@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Dsp.Services.Interfaces
 {
-    public interface IBugService
+    public interface IBugService : IService
     {
         Task<Tuple<IEnumerable<BugReport>, int, int, int>> GetBugReportsAsync(
             int page = 1,

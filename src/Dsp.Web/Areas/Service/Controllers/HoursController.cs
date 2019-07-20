@@ -1,12 +1,15 @@
 ﻿namespace Dsp.Web.Areas.Service.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Text;
@@ -16,38 +19,44 @@
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class HoursController : BaseController
     {
-        public async Task<ActionResult> Index(int? s)
+        private readonly IMemberService _memberService;
+        private readonly ISemesterService _semesterService;
+        private readonly IServiceService _serviceService;
+
+        public HoursController()
         {
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null)
-            {
-                s = thisSemester.SemesterId;
-            }
+            var repo = new Repository<SphinxDbContext>(_db);
+            _memberService = new MemberService(repo);
+            _semesterService = new SemesterService(repo);
+            _serviceService = new ServiceService(repo);
+        }
 
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
+        public HoursController(IMemberService memberService, ISemesterService semesterService, IServiceService serviceService)
+        {
+            _memberService = memberService;
+            _semesterService = semesterService;
+            _serviceService = serviceService;
+        }
 
-            var semester = await _db.Semesters.FindAsync(s);
-            var previousSemester = (await _db.Semesters
-                .Where(sem => sem.DateEnd < semester.DateStart)
-                .OrderBy(sem => sem.DateEnd)
-                .ToListAsync()).LastOrDefault() ?? new Semester
-                {
-                    // In case they pick the very first semester in the system.
-                    DateEnd = semester.DateStart
-                };
+        public async Task<ActionResult> Index(int? sid)
+        {
+            var currentSemester = await _semesterService.GetCurrentSemesterAsync();
+            Semester selectedSemester = sid == null
+                ? currentSemester
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
 
             var model = new ServiceHourIndexModel
             {
-                ServiceHours = new List<ServiceHourIndexMemberRowModel>()
+                ServiceHours = new List<ServiceHourIndexMemberRowModel>(),
+                Semester = selectedSemester
             };
-            var members = await GetRosterForSemester(semester);
+
+            var members = await GetRosterForSemester(selectedSemester);
             foreach (var m in members)
             {
                 var serviceHours = m.ServiceHours
                     .Where(e =>
-                        e.Event.DateTimeOccurred > previousSemester.DateEnd &&
-                        e.Event.DateTimeOccurred <= semester.DateEnd &&
+                        e.Event.SemesterId == selectedSemester.SemesterId &&
                         e.Event.IsApproved).ToList();
 
                 var member = new ServiceHourIndexMemberRowModel
@@ -60,45 +69,46 @@
                 model.ServiceHours.Add(member);
             }
 
-            model.SemesterList = await GetSemesterList(thisSemester);
-            model.Semester = semester;
+            var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
+            model.SemesterList = GetSemesterSelectListAsync(semestersWithEvents);
 
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
             return View(model);
         }
 
-        public async Task<ActionResult> Submit(int? s)
+        public async Task<ActionResult> Submit(int? sid)
         {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
-
             var model = new ServiceHourSubmissionModel();
-            if (s != null)
+            if (sid != null)
             {
-                model.Semester = await _db.Semesters.FindAsync(s);
-                model.Events = await GetAllEventIdsAsEventNameAsync((int)s);
+                model.Semester = await _semesterService.GetSemesterByIdAsync((int)sid);
+                var events = await _serviceService.GetEventsForSemesterAsync(model.Semester);
+                model.Events = GetServiceEventSelectList(events);
             }
             else
             {
                 model.Semester = await GetThisSemesterAsync();
-                model.Events = await GetAllEventIdsAsEventNameAsync();
+                var events = await _serviceService.GetEventsForSemesterAsync(model.Semester);
+                model.Events = GetServiceEventSelectList(events);
             }
+
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Submit(ServiceHourSubmissionModel model)
         {
-            var selectedEvent = await _db.ServiceEvents.FindAsync(model.SelectedEventId);
-            var semester = await _db.Semesters
-                .Where(s => selectedEvent.DateTimeOccurred <= s.DateEnd)
-                .OrderBy(s => s.DateStart)
-                .FirstAsync();
+            var selectedEvent = await _serviceService.GetEventByIdAsync(model.SelectedEventId);
             // Invalid value
             if (model.HoursServed < 0)
             {
                 ViewBag.FailureMessage = "Please enter an amount of hours greater than or equal to 0 in increments of 0.5.";
-                model.Semester = semester;
-                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                model.Semester = selectedEvent.Semester;
+                var events = await _serviceService.GetEventsForSemesterAsync(selectedEvent.Semester);
+                model.Events = GetServiceEventSelectList(events);
                 return View(model);
             }
 
@@ -112,8 +122,9 @@
             if (selectedEvent.DateTimeOccurred.AddHours(selectedEvent.DurationHours) > DateTime.UtcNow)
             {
                 ViewBag.FailureMessage = "You can't submit hours for an event that has not yet occurred.";
-                model.Semester = semester;
-                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                model.Semester = selectedEvent.Semester;
+                var events = await _serviceService.GetEventsForSemesterAsync(selectedEvent.Semester);
+                model.Events = GetServiceEventSelectList(events);
                 return View(model);
             }
 
@@ -121,40 +132,41 @@
             if (model.HoursServed > selectedEvent.DurationHours)
             {
                 ViewBag.FailureMessage = "Please enter an amount of hours less than or equal to the duration of the event in increments of 0.5.";
-                model.Semester = semester;
-                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                model.Semester = selectedEvent.Semester;
+                var events = await _serviceService.GetEventsForSemesterAsync(selectedEvent.Semester);
+                model.Events = GetServiceEventSelectList(events);
                 return View(model);
             }
 
             var userId = User.Identity.GetUserId<int>();
             // Check if submission has already been created
-            var duplicateSubmission = await _db.ServiceHours.Where(e => (e.EventId == model.SelectedEventId && e.UserId == userId)).ToListAsync();
-            if (duplicateSubmission.Any())
+            var duplicateSubmission = await _serviceService.GetHoursAsync(model.SelectedEventId, userId);
+            if (duplicateSubmission != null)
             {
                 // Delete existing record
                 if (model.HoursServed.Equals(0))
                 {
-                    _db.ServiceHours.Remove(duplicateSubmission.Single());
-                    await _db.SaveChangesAsync();
-                    TempData["SuccessMessage"] = "Service hours deleted successfully.";
+                    await _serviceService.DeleteHoursAsync(duplicateSubmission);
+                    TempData[SuccessMessageKey] = "Service hours deleted successfully.";
 
-                    return RedirectToAction("Submit", new { s = semester.SemesterId });
+                    return RedirectToAction("Submit", new { sid = selectedEvent.SemesterId });
                 }
 
                 // Update submission
-                duplicateSubmission.First().DurationHours = model.HoursServed;
-                await _db.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Service hours updated successfully.";
+                duplicateSubmission.DurationHours = model.HoursServed;
+                await _serviceService.UpdateHoursAsync(duplicateSubmission);
+                TempData[SuccessMessageKey] = "Service hours updated successfully.";
 
-                return RedirectToAction("Submit", new { s = semester.SemesterId });
+                return RedirectToAction("Submit", new { sid = selectedEvent.SemesterId });
             }
 
             // No existing, invalid value
             if (model.HoursServed.Equals(0))
             {
                 ViewBag.FailureMessage = "Please enter an amount of hours greater than 0 in increments of 0.5.";
-                model.Semester = semester;
-                model.Events = await GetAllEventIdsAsEventNameAsync(semester.SemesterId);
+                model.Semester = selectedEvent.Semester;
+                var events = await _serviceService.GetEventsForSemesterAsync(selectedEvent.Semester);
+                model.Events = GetServiceEventSelectList(events);
                 return View(model);
             }
 
@@ -167,22 +179,20 @@
                 DurationHours = model.HoursServed
             };
 
-            _db.ServiceHours.Add(submission);
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service hours submitted successfully.";
+            await _serviceService.CreateHoursAsync(submission);
+            TempData[SuccessMessageKey] = "Service hours submitted successfully.";
 
-            return RedirectToAction("Submit", new { s = semester.SemesterId });
+            return RedirectToAction("Submit", new { sid = selectedEvent.SemesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Edit(int? eid, int? uid)
+        public async Task<ActionResult> Edit(int eid, int uid)
         {
-            if (eid == null || uid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.ServiceHours.SingleAsync(s => s.EventId == eid && s.UserId == uid);
+            if (eid <= 0 || uid <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _serviceService.GetHoursAsync(eid, uid);
             if (model == null) return HttpNotFound();
 
-            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred)).SemesterId;
-
+            ViewBag.SemesterId = model.Event.SemesterId;
             return View(model);
         }
 
@@ -191,79 +201,72 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            var serviceHour = await _db.ServiceHours.SingleAsync(s => s.EventId == model.EventId && s.UserId == model.UserId);
-            serviceHour.DurationHours = model.DurationHours;
+            var entity = await _serviceService.GetHoursAsync(model.EventId, model.UserId);
+            entity.DurationHours = model.DurationHours;
 
-            _db.Entry(serviceHour).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
+            await _serviceService.UpdateHoursAsync(entity);
+            TempData[SuccessMessageKey] = "Service hours updated successfully.";
 
-            TempData["SuccessMessage"] = "Service hours updated successfully.";
-
-            var semesterId = (await GetSemestersForUtcDateAsync(serviceHour.Event.DateTimeOccurred)).SemesterId;
-
-            return RedirectToAction("Index", new { s = semesterId });
+            var serviceEvent = await _serviceService.GetEventByIdAsync(model.EventId);
+            return RedirectToAction("Index", new { sid = serviceEvent.SemesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Delete(int? eid, int? uid)
+        public async Task<ActionResult> Delete(int eid, int uid)
         {
-            if (eid == null || uid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.ServiceHours.SingleAsync(s => s.EventId == eid && s.UserId == uid);
+            if (eid <= 0 || uid <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _serviceService.GetHoursAsync(eid, uid);
             if (model == null) return HttpNotFound();
 
-            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.Event.DateTimeOccurred)).SemesterId;
-
+            ViewBag.SemesterId = model.Event.SemesterId;
             return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> Delete(ServiceHour model)
         {
-            var serviceHour = await _db.ServiceHours.SingleAsync(s => s.EventId == model.EventId && s.UserId == model.UserId);
-            var time = serviceHour.Event.DateTimeOccurred;
+            var entity = await _serviceService.GetHoursAsync(model.EventId, model.UserId);
+            var time = entity.Event.DateTimeOccurred;
 
-            _db.ServiceHours.Remove(serviceHour);
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service hours deleted successfully.";
+            await _serviceService.DeleteHoursAsync(entity);
+            TempData[SuccessMessageKey] = "Service hours deleted successfully.";
 
-            var semesterId = (await GetSemestersForUtcDateAsync(time)).SemesterId;
-
-            return RedirectToAction("Index", new { s = semesterId });
+            var serviceEvent = await _serviceService.GetEventByIdAsync(model.EventId);
+            return RedirectToAction("Index", new { sid = serviceEvent.SemesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Amendments(int? s)
+        public async Task<ActionResult> Amendments(int? sid)
         {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null)
-            {
-                s = thisSemester.SemesterId;
-            }
-            var semester = await _db.Semesters.FindAsync(s);
+            var currentSemester = await GetThisSemesterAsync();
+            Semester selectedSemester = sid == null
+                ? currentSemester
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
 
             var model = new ServiceAmendmentModel
             {
-                Semester = semester,
-                SemesterList = await GetSemesterList(thisSemester),
-                ServiceHourAmendments = await _db.ServiceHourAmendments.Where(a => a.SemesterId == s).ToListAsync(),
-                ServiceEventAmendments = await _db.ServiceEventAmendments.Where(a => a.SemesterId == s).ToListAsync()
+                Semester = selectedSemester,
+                SemesterList = GetSemesterSelectListAsync(await _serviceService.GetSemestersWithEventsAsync(currentSemester)),
+                ServiceHourAmendments = await _serviceService.GetHoursAmendmentsBySemesterIdAsync((int)sid),
+                ServiceEventAmendments = await _serviceService.GetEventAmendmentsBySemesterIdAsync((int)sid)
             };
 
             return View(model);
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> AddHourAmendment(int? s)
+        public async Task<ActionResult> AddHourAmendment(int? sid)
         {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null) s = thisSemester.SemesterId;
-            var semester = await _db.Semesters.FindAsync(s);
+            Semester semester = sid == null
+                ? await _semesterService.GetCurrentSemesterAsync()
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
+
             var model = new ServiceAddHourAmendmentModel
             {
                 Amendment = new ServiceHourAmendment
@@ -295,8 +298,8 @@
                 model.Amendment.AmountHours < -50 ||
                 model.Amendment.AmountHours > 50)
             {
-                TempData["FailureMessage"] = "Please enter hours within the range -50 and 50 (excluding 0) in increments of 0.5.";
-                return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
+                TempData[FailureMessageKey] = "Please enter hours within the range -50 and 50 (excluding 0) in increments of 0.5.";
+                return RedirectToAction("AddHourAmendment", new { sid = model.Amendment.SemesterId });
             }
             // Adjust hours to nearest half hour.
             var fraction = (model.Amendment.AmountHours % 1) * 10;
@@ -305,38 +308,36 @@
                 model.Amendment.AmountHours = Math.Floor(model.Amendment.AmountHours);
             }
 
-            _db.ServiceHourAmendments.Add(model.Amendment);
-            await _db.SaveChangesAsync();
+            await _serviceService.CreateHoursAmendmentAsync(model.Amendment);
 
-            TempData["SuccessMessage"] = "Service amendment added successfully.";
+            TempData[SuccessMessageKey] = "Service amendment added successfully.";
 
-            return RedirectToAction("AddHourAmendment", new { s = model.Amendment.SemesterId });
+            return RedirectToAction("AddHourAmendment", new { sid = model.Amendment.SemesterId });
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> DeleteHourAmendment(int? aid)
+        public async Task<ActionResult> DeleteHourAmendment(int aid)
         {
-            if (aid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var amendment = await _db.ServiceHourAmendments.FindAsync(aid);
+            if (aid <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var amendment = await _serviceService.GetHoursAmendmentByIdAsync(aid);
             var semesterId = amendment.SemesterId;
 
-            _db.ServiceHourAmendments.Remove(amendment);
-            await _db.SaveChangesAsync();
+            await _serviceService.DeleteHoursAmendmentByIdAsync(aid);
+            TempData[SuccessMessageKey] = "Service amendment deleted successfully.";
 
-            TempData["SuccessMessage"] = "Service amendment deleted successfully.";
-
-            return RedirectToAction("Amendments", new { s = semesterId });
+            return RedirectToAction("Amendments", new { sid = semesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> AddEventAmendment(int? s)
+        public async Task<ActionResult> AddEventAmendment(int? sid)
         {
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
 
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null) s = thisSemester.SemesterId;
-            var semester = await _db.Semesters.FindAsync(s);
+            Semester semester = sid == null
+                ? await _semesterService.GetCurrentSemesterAsync()
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
+
             var model = new ServiceAddEventAmendmentModel
             {
                 Amendment = new ServiceEventAmendment
@@ -345,7 +346,7 @@
                 },
                 Semester = semester
             };
-            var members = await GetRosterForSemester(semester);
+            var members = await _memberService.GetRosterForSemesterAsync(semester);
             var memberList = new List<object>();
             foreach (var member in members.OrderBy(m => m.LastName))
             {
@@ -368,91 +369,49 @@
                 model.Amendment.NumberEvents < -50 ||
                 model.Amendment.NumberEvents > 50)
             {
-                TempData["FailureMessage"] = "Please enter a number of events within the range -50 and 50 (excluding 0) in increments of 0.5.";
-                return RedirectToAction("AddEventAmendment", new { s = model.Amendment.SemesterId });
+                TempData[FailureMessageKey] = "Please enter a number of events within the range -50 and 50 (excluding 0) in increments of 0.5.";
+                return RedirectToAction("AddEventAmendment", new { sid = model.Amendment.SemesterId });
             }
 
-            _db.ServiceEventAmendments.Add(model.Amendment);
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service amendment added successfully.";
+            await _serviceService.CreateEventAmendmentAsync(model.Amendment);
+            TempData[SuccessMessageKey] = "Service amendment added successfully.";
 
-            return RedirectToAction("AddEventAmendment", new { s = model.Amendment.SemesterId });
+            return RedirectToAction("AddEventAmendment", new { sid = model.Amendment.SemesterId });
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> DeleteEventAmendment(int? aid)
+        public async Task<ActionResult> DeleteEventAmendment(int aid)
         {
-            if (aid == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var amendment = await _db.ServiceEventAmendments.FindAsync(aid);
+            if (aid <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var amendment = await _serviceService.GetEventAmendmentByIdAsync(aid);
             var semesterId = amendment.SemesterId;
 
-            _db.ServiceEventAmendments.Remove(amendment);
-            await _db.SaveChangesAsync();
+            await _serviceService.DeleteEventAmendmentByIdAsync(aid);
 
-            TempData["SuccessMessage"] = "Service amendment deleted successfully.";
+            TempData[SuccessMessageKey] = "Service amendment deleted successfully.";
 
-            return RedirectToAction("Amendments", new { s = semesterId });
+            return RedirectToAction("Amendments", new { sid = semesterId });
         }
 
-        private async Task<SelectList> GetSemesterList(Semester thisSemester)
+        public async Task<ActionResult> Download(int? sid)
         {
-            // Identify valid semesters for dropdown
-            var events = await _db.ServiceEvents.ToListAsync();
-            var allSemesters = await _db.Semesters.ToListAsync();
-            var semesters = new List<Semester>();
-            foreach (var sem in allSemesters)
-            {
-                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
-                {
-                    semesters.Add(sem);
-                }
-            }
-            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
-            {
-                semesters.Add(thisSemester);
-            }
-
-            return GetCustomSemesterListAsync(semesters);
-        }
-
-        public async Task<ActionResult> Download(int? id)
-        {
-            if (id == null)
+            if (sid == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var semester = await _db.Semesters.FindAsync(id);
-            var previousSemester = (await _db.Semesters
-                .Where(s => s.DateEnd < semester.DateStart)
-                .OrderBy(s => s.DateEnd)
-                .ToListAsync()).LastOrDefault() ?? new Semester
-                {
-                    DateEnd = semester.DateStart
-                };
-
-            var members = await UserManager.Users
-                .Where(d =>
-                    d.LastName != "Hirtz" &&
-                    (d.MemberStatus.StatusName == "Alumnus" ||
-                        d.MemberStatus.StatusName == "Active" ||
-                        d.MemberStatus.StatusName == "New" ||
-                        d.MemberStatus.StatusName == "Neophyte") &&
-                    d.PledgeClass.Semester.DateStart <= semester.DateStart &&
-                    d.GraduationSemester.DateEnd >= semester.DateEnd)
-                .OrderBy(m => m.LastName)
-                .ToListAsync();
+            var selectedSemester = await _semesterService.GetSemesterByIdAsync((int)sid);
+            var priorSemester = await _semesterService.GetPriorSemesterAsync(selectedSemester);
+            var members = await _memberService.GetRosterForSemesterAsync(selectedSemester);
 
             var serviceHours = new List<ServiceHour>();
             foreach (var m in members)
             {
                 var hours = m.ServiceHours
                     .Where(e =>
-                        e.Event.DateTimeOccurred > previousSemester.DateEnd &&
-                        e.Event.DateTimeOccurred <= semester.DateEnd &&
+                        e.Event.DateTimeOccurred > priorSemester.DateEnd &&
+                        e.Event.DateTimeOccurred <= selectedSemester.DateEnd &&
                         e.Event.IsApproved);
-
                 serviceHours.AddRange(hours);
             }
 
@@ -502,7 +461,23 @@
             totalsLine += "," + events.Sum(e => e.ServiceHours.Sum(h => h.DurationHours));
             sb.AppendLine(totalsLine);
 
-            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-service-" + semester + ".csv");
+            return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-service-" + selectedSemester + ".csv");
+        }
+
+        private SelectList GetServiceEventSelectList(IEnumerable<ServiceEvent> events)
+        {
+            var newList = new List<object>();
+            foreach (var e in events)
+            {
+                var utcEventTime = _serviceService.ConvertUtcToCst(e.DateTimeOccurred);
+                newList.Add(new
+                {
+                    e.EventId,
+                    EventName = $"{utcEventTime}: {e.EventName} (Lasted {e.DurationHours} hours)"
+                });
+            }
+
+            return new SelectList(newList, "EventId", "EventName");
         }
     }
 }

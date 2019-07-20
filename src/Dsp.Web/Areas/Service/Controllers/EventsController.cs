@@ -1,12 +1,14 @@
 ﻿namespace Dsp.Web.Areas.Service.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
     using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
@@ -15,65 +17,56 @@
     [Authorize(Roles = "Neophyte, New, Active, Administrator")]
     public class EventsController : BaseController
     {
-        public async Task<ActionResult> Index(int? s)
+        private readonly ISemesterService _semesterService;
+        private readonly IServiceService _serviceService;
+
+        public EventsController()
         {
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null)
+            var db = new Repository<SphinxDbContext>(_db);
+            _semesterService = new SemesterService(db);
+            _serviceService = new ServiceService(db);
+        }
+
+        public EventsController(ISemesterService semesterService, IServiceService serviceService)
+        {
+            _semesterService = semesterService;
+            _serviceService = serviceService;
+        }
+
+        public async Task<ActionResult> Index(int? sid)
+        {
+            var currentSemester = await _semesterService.GetCurrentSemesterAsync();
+            Semester selectedSemester = sid == null
+                ? currentSemester
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
+
+            var serviceEvents = await _serviceService.GetEventsForSemesterAsync(selectedSemester);
+            foreach (var se in serviceEvents)
             {
-                s = thisSemester.SemesterId;
+                se.DateTimeOccurred = _semesterService.ConvertUtcToCst(se.DateTimeOccurred);
             }
-            ViewBag.SuccessMessage = TempData["SuccessMessage"];
-            ViewBag.FailureMessage = TempData["FailureMessage"];
+            var model = new ServiceEventIndexModel(selectedSemester, serviceEvents);
 
-            var semester = await _db.Semesters.FindAsync(s);
-            var previousSemester = (await _db.Semesters
-                .Where(sem => sem.DateEnd < semester.DateStart)
-                .OrderBy(sem => sem.DateEnd).ToListAsync()).LastOrDefault() ?? new Semester
-                {
-                    // In case they pick the very first semester in the system.
-                    DateEnd = semester.DateStart
-                };
+            var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
+            model.SemesterList = GetSemesterSelectListAsync(semestersWithEvents);
 
-            var model = new ServiceEventIndexModel
-            {
-                Semester = semester,
-                Events = await _db.ServiceEvents
-                    .Where(e => e.DateTimeOccurred < semester.DateEnd &&
-                                e.DateTimeOccurred >= previousSemester.DateEnd)
-                    .ToListAsync()
-            };
-
-            // Identify valid semesters for dropdown
-            var events = await _db.ServiceEvents.ToListAsync();
-            var allSemesters = await _db.Semesters.ToListAsync();
-            var semesters = new List<Semester>();
-            foreach (var sem in allSemesters)
-            {
-                if (events.Any(i => i.DateTimeOccurred >= sem.DateStart && i.DateTimeOccurred <= sem.DateEnd))
-                {
-                    semesters.Add(sem);
-                }
-            }
-            // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(sem => sem.SemesterId != thisSemester.SemesterId))
-            {
-                semesters.Add(thisSemester);
-            }
-
-            model.SemesterList = GetCustomSemesterListAsync(semesters);
-
+            ViewBag.SuccessMessage = TempData[SuccessMessageKey];
+            ViewBag.FailureMessage = TempData[FailureMessageKey];
             return View(model);
         }
 
-        public async Task<ActionResult> Create(int? s)
+        public async Task<ActionResult> Create(int sid)
         {
-            var thisSemester = await GetThisSemesterAsync();
-            if (s == null)
+            if (sid <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var semester = await _semesterService.GetSemesterByIdAsync(sid);
+            var model = new ServiceEvent
             {
-                s = thisSemester.SemesterId;
-            }
-            ViewBag.SemesterId = s;
-            return View();
+                DateTimeOccurred = _semesterService.ConvertUtcToCst(semester.DateStart),
+                SemesterId = semester.SemesterId
+            };
+
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken]
@@ -91,40 +84,37 @@
                 // TODO: Email service chairman.
             }
             model.SubmitterId = User.Identity.GetUserId<int>();
-            model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
+            model.DateTimeOccurred = _semesterService.ConvertCstToUtc(model.DateTimeOccurred);
             model.CreatedOn = DateTime.UtcNow;
+            var eventSemester = await _semesterService.GetSemesterByUtcDateTimeAsync(model.DateTimeOccurred);
+            model.SemesterId = eventSemester.SemesterId;
 
-            _db.ServiceEvents.Add(model);
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service event created successfully.";
+            await _serviceService.CreateEventAsync(model);
 
-            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
-
-            return RedirectToAction("Index", new { s = semesterId });
+            TempData[SuccessMessageKey] = "Service event created successfully.";
+            return RedirectToAction("Index", new { sid = eventSemester.SemesterId });
         }
 
-        public async Task<ActionResult> Details(int? id)
+        public async Task<ActionResult> Details(int id)
         {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.ServiceEvents.FindAsync(id);
+            if (id <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _serviceService.GetEventByIdAsync(id);
             if (model == null) return HttpNotFound();
 
-            var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
-            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
+            model.DateTimeOccurred = _semesterService.ConvertUtcToCst(model.DateTimeOccurred);
 
-            ViewBag.SemesterId = semester.SemesterId;
             return View(model);
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Edit(int? id)
+        public async Task<ActionResult> Edit(int id)
         {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.ServiceEvents.FindAsync(id);
+            if (id <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _serviceService.GetEventByIdAsync(id);
             if (model == null) return HttpNotFound();
 
-            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
-            ViewBag.SemesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
+            model.DateTimeOccurred = _semesterService.ConvertUtcToCst(model.DateTimeOccurred);
+
             return View(model);
         }
 
@@ -134,33 +124,31 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            model.DateTimeOccurred = ConvertCstToUtc(model.DateTimeOccurred);
+            model.DateTimeOccurred = _semesterService.ConvertCstToUtc(model.DateTimeOccurred);
+            var eventSemester = await _semesterService.GetSemesterByUtcDateTimeAsync(model.DateTimeOccurred);
+            model.SemesterId = eventSemester.SemesterId;
 
-            _db.Entry(model).State = EntityState.Modified;
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service event modified successfully.";
+            await _serviceService.UpdateEventAsync(model);
 
-            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
-
-            return RedirectToAction("Index", new { s = semesterId });
+            TempData[SuccessMessageKey] = "Service event modified successfully.";
+            return RedirectToAction("Index", new { sid = eventSemester.SemesterId });
         }
 
         [Authorize(Roles = "Administrator, Service")]
-        public async Task<ActionResult> Delete(int? id)
+        public async Task<ActionResult> Delete(int id)
         {
-            if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            var model = await _db.ServiceEvents.FindAsync(id);
+            if (id <= 0) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            var model = await _serviceService.GetEventByIdAsync(id);
             if (model == null) return HttpNotFound();
 
-            var semester = await GetSemestersForUtcDateAsync(model.DateTimeOccurred);
             if (model.ServiceHours.Any())
             {
-                TempData["FailureMessage"] = "Failed to delete event because someone has already turned in hours for it.";
-                return RedirectToAction("Index", new { s = semester.SemesterId });
+                TempData[FailureMessageKey] = "Failed to delete event because someone has already turned in hours for it.";
+                return RedirectToAction("Index", new { sid = model.SemesterId });
             }
-            model.DateTimeOccurred = ConvertUtcToCst(model.DateTimeOccurred);
 
-            ViewBag.SemesterId = semester.SemesterId;
+            model.DateTimeOccurred = _semesterService.ConvertUtcToCst(model.DateTimeOccurred);
+
             return View(model);
         }
 
@@ -168,15 +156,13 @@
         [Authorize(Roles = "Administrator, Service")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            var model = await _db.ServiceEvents.FindAsync(id);
+            var model = await _serviceService.GetEventByIdAsync(id);
+            var eventSemesterId = model.SemesterId;
 
-            _db.ServiceEvents.Remove(model);
-            await _db.SaveChangesAsync();
-            TempData["SuccessMessage"] = "Service event deleted successfully.";
+            await _serviceService.DeleteEventByIdAsync(id);
+            TempData[SuccessMessageKey] = "Service event deleted successfully.";
 
-            var semesterId = (await GetSemestersForUtcDateAsync(model.DateTimeOccurred)).SemesterId;
-
-            return RedirectToAction("Index", new { s = semesterId });
+            return RedirectToAction("Index", new { sid = eventSemesterId });
         }
     }
 }

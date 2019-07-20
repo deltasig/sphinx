@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IMealService
+    public interface IMealService : IService
     {
         Task<IEnumerable<MealPeriod>> GetAllPeriodsAsync();
         Task<IEnumerable<MealItem>> GetAllItemsAsync();

@@ -40,6 +40,8 @@ namespace Dsp.Data.Entities
         [InverseProperty("Semester")]
         public virtual ICollection<Room> Rooms { get; set; }
         [InverseProperty("Semester")]
+        public virtual ICollection<ServiceEvent> ServiceEvents { get; set; }
+        [InverseProperty("Semester")]
         public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; }
         [InverseProperty("Semester")]
         public virtual ICollection<ServiceEventAmendment> ServiceEventAmendments { get; set; }

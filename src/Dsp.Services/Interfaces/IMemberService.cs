@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IMemberService
+    public interface IMemberService : IService
     {
         Task<Member> GetMemberByIdAsync(int id);
         Task<Member> GetMemberByUserNameAsync(string userName);

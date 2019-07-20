@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface ISoberService
+    public interface ISoberService : IService
     {
         Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync();
         Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync(DateTime date);

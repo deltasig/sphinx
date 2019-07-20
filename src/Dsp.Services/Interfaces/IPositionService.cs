@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IPositionService
+    public interface IPositionService : IService
     {
         Task<IEnumerable<Position>> GetAllPositionsAsync();
         Task<Position> GetPositionByIdAsync(int id);

@@ -5,7 +5,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IIncidentService
+    public interface IIncidentService : IService
     {
         Task<Tuple<IEnumerable<IncidentReport>, int, int, int>> GetIncidentReportsAsync(
             int page = 1,

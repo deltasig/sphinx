@@ -70,10 +70,38 @@
             return await _repository.GetByIdAsync<Semester>(id);
         }
 
+        public async Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime)
+        {
+            return await _repository.GetFirstAsync<Semester>(
+                filter: x => datetime <= x.DateEnd,
+                orderBy: x => x.OrderBy(o => o.DateEnd)
+            );
+        }
+
         public async Task<Semester> GetFutureMostSemesterAsync()
         {
             var allSemesters = await GetAllSemestersAsync();
             return allSemesters.LastOrDefault();
+        }
+
+        public async Task<IEnumerable<Semester>> GetPriorSemestersAsync(Semester currentSemester)
+        {
+            var priorSemesters = await _repository.GetAsync<Semester>(
+                filter: x => x.DateEnd < currentSemester.DateEnd,
+                orderBy: x => x.OrderBy(o => o.DateEnd)
+            );
+            return priorSemesters;
+        }
+
+        public async Task<Semester> GetPriorSemesterAsync(Semester currentSemester)
+        {
+            var priorSemesters = await GetPriorSemestersAsync(currentSemester);
+            var priorSemester = priorSemesters.LastOrDefault() ?? new Semester
+            {
+                // This is the where they picked the very first semester in the system.
+                DateEnd = currentSemester.DateStart
+            };
+            return priorSemester;
         }
 
         public string GetNextPledgeClassName(string currentPledgeClassName)

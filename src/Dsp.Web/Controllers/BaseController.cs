@@ -3,7 +3,6 @@
     using Areas.Scholarships.Models;
     using Dsp.Data;
     using Dsp.Data.Entities;
-    using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using System;
@@ -16,7 +15,6 @@
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Mvc;
-    using System.Web.Security;
 
     public class BaseController : Controller
     {
@@ -72,10 +70,6 @@
             }
         }
 
-        protected virtual async Task<List<Member>> GetAllActiveMembersAsync()
-        {
-            return await _db.Users.Where(m => m.MemberStatus.StatusName == "Active").ToListAsync();
-        }
         protected virtual async Task<IEnumerable<Member>> GetAllNewMembersAsync()
         {
             return await _db.Users.Where(m => m.MemberStatus.StatusName == "New").ToListAsync();
@@ -105,61 +99,6 @@
                     d.GraduationSemester.DateEnd > semester.DateStart)
                 .ToListAsync();
         }
-        protected virtual async Task<List<Member>> GetRosterForSemesterPlusReleased(Semester semester)
-        {
-            return await _db.Users
-                .Where(d =>
-                    d.LastName != "Hirtz" &&
-                    (d.MemberStatus.StatusName == "Alumnus" ||
-                    d.MemberStatus.StatusName == "Active" ||
-                    d.MemberStatus.StatusName == "New" ||
-                    d.MemberStatus.StatusName == "Neophyte" ||
-                    d.MemberStatus.StatusName == "Released") &&
-                    d.PledgeClass.Semester.DateStart < semester.DateEnd &&
-                    d.GraduationSemester.DateEnd > semester.DateStart)
-                .ToListAsync();
-        }
-        protected virtual async Task<IEnumerable<Semester>> GetThisAndNextSemesterListAsync()
-        {
-            var thisAndComingSemesters = await _db.Semesters
-                .Where(s => s.DateEnd >= DateTime.UtcNow)
-                .OrderBy(s => s.DateStart)
-                .Take(2)
-                .ToListAsync();
-
-            return thisAndComingSemesters;
-        }
-        protected virtual async Task<SelectList> GetThisAndNextSemesterSelectListAsync()
-        {
-            var thisAndComingSemesters = await _db.Semesters
-                .Where(s => s.DateEnd >= DateTime.UtcNow)
-                .OrderBy(s => s.DateStart)
-                .ToListAsync();
-
-            var newList = new List<object>
-            {
-                new
-                {
-                    thisAndComingSemesters[0].SemesterId,
-                    Name = thisAndComingSemesters[0].ToString()
-                },
-                new
-                {
-                    thisAndComingSemesters[1].SemesterId,
-                    Name = thisAndComingSemesters[1].ToString()
-                }
-            };
-
-            return new SelectList(newList, "SemesterId", "Name");
-        }
-        protected virtual async Task<Semester> GetThisOrLastSemesterAsync()
-        {
-            return (await _db.Semesters
-                .Where(s => s.DateEnd <= DateTime.UtcNow)
-                .OrderBy(s => s.DateStart)
-                .ToListAsync())
-                .Last();
-        }
         protected virtual async Task<Semester> GetThisSemesterAsync()
         {
             return (await _db.Semesters
@@ -175,29 +114,6 @@
                     .OrderBy(s => s.DateStart)
                     .ToListAsync())
                     .Last();
-        }
-        protected virtual async Task<int?> GetThisSemestersIdAsync()
-        {
-            var semesters = await _db.Semesters.ToListAsync();
-            if (semesters.Count <= 0) return null;
-
-            try
-            {
-                var thisSemester = await GetThisSemesterAsync();
-                return thisSemester.SemesterId;
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-        }
-        protected virtual async Task<Semester> GetSemestersForUtcDateAsync(DateTime date)
-        {
-            return (await _db.Semesters
-                    .Where(s => s.DateEnd >= date)
-                    .OrderBy(s => s.DateStart)
-                    .ToListAsync())
-                    .First();
         }
         protected virtual async Task<IEnumerable<object>> GetUserIdListAsFullNameWithNoneNonSelectListAsync()
         {
@@ -226,20 +142,6 @@
                 });
             }
             return new SelectList(newList, "UserId", "Name");
-        }
-        protected virtual async Task<IEnumerable<object>> GetAlumniIdListAsFullNameWithNoneNonSelectListAsync()
-        {
-            var members = (await GetAllAlumniMembersAsync()).OrderBy(o => o.LastName);
-            var newList = new List<object> { new { UserId = 0, Name = "None" } };
-            foreach (var member in members)
-            {
-                newList.Add(new
-                {
-                    UserId = member.Id,
-                    Name = member.FirstName + " " + member.LastName
-                });
-            }
-            return newList;
         }
         protected virtual async Task<SelectList> GetAllSemesterListAsync()
         {
@@ -308,7 +210,7 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
-        protected virtual SelectList GetCustomSemesterListAsync(IEnumerable<Semester> list)
+        protected virtual SelectList GetSemesterSelectListAsync(IEnumerable<Semester> list)
         {
             var newList = new List<object>();
 
@@ -485,57 +387,7 @@
             var remainingHours = requiredHours - totalHours;
             return remainingHours < 0 ? 0 : remainingHours;
         }
-        protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync()
-        {
-            var lastSemester = await GetLastSemesterAsync();
-            var thisSemester = await GetThisSemesterAsync();
-
-            var events = await _db.ServiceEvents
-                .Where(e =>
-                    e.DateTimeOccurred > lastSemester.DateEnd &&
-                    e.DateTimeOccurred <= thisSemester.DateEnd)
-                .OrderByDescending(o => o.DateTimeOccurred)
-                .ToListAsync();
-
-            var newList = new List<object>();
-            foreach (var e in events)
-            {
-                newList.Add(new
-                {
-                    e.EventId,
-                    EventName = ConvertUtcToCst(e.DateTimeOccurred) + ": " + e.EventName + " (Lasted " + e.DurationHours + "hrs)"
-                });
-            }
-
-            return new SelectList(newList, "EventId", "EventName");
-        }
-        protected virtual async Task<SelectList> GetAllEventIdsAsEventNameAsync(int semesterId)
-        {
-            var thisSemester = await _db.Semesters.FindAsync(semesterId);
-            var lastSemester = await _db.Semesters
-                .Where(s => s.DateStart < thisSemester.DateStart)
-                .OrderByDescending(s => s.DateStart)
-                .FirstAsync();
-
-            var events = await _db.ServiceEvents
-                .Where(e =>
-                    e.DateTimeOccurred > lastSemester.DateEnd &&
-                    e.DateTimeOccurred <= thisSemester.DateEnd)
-                .OrderByDescending(o => o.DateTimeOccurred)
-                .ToListAsync();
-
-            var newList = new List<object>();
-            foreach (var e in events)
-            {
-                newList.Add(new
-                {
-                    e.EventId,
-                    EventName = ConvertUtcToCst(e.DateTimeOccurred) + ": " + e.EventName + " (Lasted " + e.DurationHours + "hrs)"
-                });
-            }
-
-            return new SelectList(newList, "EventId", "EventName");
-        }
+        // TODO: Remove
         protected virtual async Task<IEnumerable<ServiceHour>> GetAllCompletedEventsForUserAsync(int userId)
         {
             var thisSemester = await GetThisSemesterAsync();
@@ -561,102 +413,6 @@
                             s.DateOfShift <= semester.DateEnd)
                 .ToListAsync();
         }
-        protected virtual async Task<List<SoberSignup>> GetSoberSignupsNextSevenDaysAsync(DateTime date)
-        {
-            var startOfTodayCst = ConvertUtcToCst(date).Date;
-            var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
-            var sevenDaysAheadOfToday = startOfTodayUtc.AddDays(7);
-            var thisSemester = await GetThisSemesterAsync();
-            var soberSignups = await _db.SoberSignups
-                .Where(s => s.DateOfShift >= startOfTodayUtc &&
-                            s.DateOfShift <= thisSemester.DateEnd)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
-                .ToListAsync();
-            var data = soberSignups
-                .Where(s => s.DateOfShift >= startOfTodayUtc &&
-                            s.DateOfShift <= sevenDaysAheadOfToday)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
-                .ToList();
-            return data;
-        }
-        protected virtual async Task<List<SoberSignup>> GetThisWeeksSoberSignupsAsync(DateTime now)
-        {
-            var nowUtc = now;
-            var nowCst = this.ConvertUtcToCst(nowUtc);
-
-            // This makes the week restart at 4am on Sundays so that users can check the list
-            // up until 4am in the morning before it rolls over.
-            if (nowCst.Hour < 4 && nowCst.DayOfWeek == DayOfWeek.Sunday)
-            {
-                nowCst = nowCst.AddDays(-1);
-            }
-
-            var startOfTodayCst = nowCst.Date;
-            var startOfTodayUtc = this.ConvertCstToUtc(startOfTodayCst);
-            var weekOfYear = DateTimeExtensions.GetWeekOfYear(startOfTodayUtc);
-            var startOfThisWeek = DateTimeExtensions.FirstDateOfWeek(startOfTodayUtc.Year, weekOfYear, CultureInfo.GetCultureInfo("en-US"));
-            var startOfNextWeek = startOfThisWeek.AddDays(7);
-
-            return await _db.SoberSignups
-                .Where(s =>
-                    s.DateOfShift >= startOfThisWeek &&
-                    s.DateOfShift < startOfNextWeek)
-                .OrderBy(s => s.DateOfShift)
-                .ThenBy(s => s.SoberTypeId)
-                .ToListAsync();
-        }
-        public virtual DateTime GetStartOfCurrentWeek()
-        {
-            var now = ConvertUtcToCst(DateTime.UtcNow).Date;
-            switch (now.DayOfWeek)
-            {
-                case DayOfWeek.Sunday:
-                    return now;
-                case DayOfWeek.Monday:
-                    return now.AddDays(-1);
-                case DayOfWeek.Tuesday:
-                    return now.AddDays(-2);
-                case DayOfWeek.Wednesday:
-                    return now.AddDays(-3);
-                case DayOfWeek.Thursday:
-                    return now.AddDays(-4);
-                case DayOfWeek.Friday:
-                    return now.AddDays(-5);
-                default: // Saturday
-                    return now.AddDays(-6);
-            }
-        }
-        protected virtual DateTime GetStartOfCurrentStudyWeek()
-        {
-            var now = ConvertUtcToCst(DateTime.UtcNow).Date;
-            switch (now.DayOfWeek)
-            {
-                case DayOfWeek.Sunday:
-                    return now.AddDays(-5);
-                case DayOfWeek.Monday:
-                    return now.AddDays(-6);
-                case DayOfWeek.Tuesday:
-                    return now;
-                case DayOfWeek.Wednesday:
-                    return now.AddDays(-1);
-                case DayOfWeek.Thursday:
-                    return now.AddDays(-2);
-                case DayOfWeek.Friday:
-                    return now.AddDays(-3);
-                default: // Saturday
-                    return now.AddDays(-4);
-            }
-        }
-        public virtual DateTime DateTimeFloor(DateTime date, TimeSpan span)
-        {
-            //Rounds down based on the TimeSpan
-            //Ex. date = DateTime.UtcNow, span = TimeSpan of one day
-            //Results in 12:00am of today
-            var ticks = (date.Ticks / span.Ticks);
-            return new DateTime(ticks * span.Ticks);
-        }
         public virtual DateTime ConvertUtcToCst(DateTime utc)
         {
             var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
@@ -666,19 +422,6 @@
         {
             var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
             return TimeZoneInfo.ConvertTimeToUtc(cst, cstZone);
-        }
-        protected virtual SelectList GetTerms()
-        {
-            var terms = new List<string>
-            {
-                "Spring", "Fall"
-            };
-            return new SelectList(terms);
-        }
-        protected virtual SelectList GetPositionsList()
-        {
-            var positions = Roles.GetAllRoles();
-            return new SelectList(positions);
         }
         protected virtual async Task<SelectList> GetScholarshipTypesSelectListAsync()
         {
@@ -713,20 +456,6 @@
             }
 
             return list;
-        }
-        protected virtual async Task<SelectList> GetMealItemsSelectListAsync()
-        {
-            var list = await _db.MealItems.ToListAsync();
-            var newList = new List<object>();
-            foreach (var m in list)
-            {
-                newList.Add(new
-                {
-                    m.Id,
-                    Text = m.Name
-                });
-            }
-            return new SelectList(newList, "Id", "Text");
         }
         protected virtual IEnumerable<WorkOrder> GetFilteredWorkOrderList(
             IList<WorkOrder> workOrders,
@@ -1074,76 +803,6 @@
                 return sw.GetStringBuilder().ToString();
             }
         }
-
-        #region Messages
-
-        public enum SoberMessage
-        {
-            SignupSuccess,
-            SignupFailure,
-            AddSignupSuccess,
-            AddSignupFailure,
-            MultiAddSignupSuccess,
-            MultiAddSignupFailure,
-            MultiAddSignupMissingTypesFailure,
-            CancelSignupSuccess,
-            EditSignupSuccess,
-            EditSignupFailure,
-            SignupNewMemberOfficerFailure,
-            DeleteSignupSuccess,
-            MultiAddSignupNoDatesFailure,
-        }
-        public void SetSoberMessage(SoberMessage? message)
-        {
-            switch (message)
-            {
-                case SoberMessage.SignupSuccess:
-                    ViewBag.SuccessMessage = "Sober signup was successful.";
-                    break;
-                case SoberMessage.AddSignupSuccess:
-                    ViewBag.SuccessMessage = "Successfully added a new sober signup slot.";
-                    break;
-                case SoberMessage.MultiAddSignupSuccess:
-                    ViewBag.SuccessMessage = "Successfully added multiple new sober signup slots.";
-                    break;
-                case SoberMessage.CancelSignupSuccess:
-                    ViewBag.SuccessMessage = "Successfully cancelled member's sober signup.";
-                    break;
-                case SoberMessage.EditSignupSuccess:
-                    ViewBag.SuccessMessage = "Successfully modified sober signup.";
-                    break;
-                case SoberMessage.DeleteSignupSuccess:
-                    ViewBag.FailMessage = "Successfully deleted sober signup slot.";
-                    break;
-                case SoberMessage.SignupFailure:
-                    ViewBag.FailMessage = "Sober signup failed.";
-                    break;
-                case SoberMessage.AddSignupFailure:
-                    ViewBag.FailMessage = "Failed to add sober signup.  Please check the values you entered and try again.";
-                    break;
-                case SoberMessage.MultiAddSignupFailure:
-                    ViewBag.FailMessage = "Multi-add tool failed because no amounts or dates were provided.";
-                    break;
-                case SoberMessage.MultiAddSignupNoDatesFailure:
-                    ViewBag.FailMessage = "Multi-add tool failed because no dates were provided.";
-                    break;
-                case SoberMessage.MultiAddSignupMissingTypesFailure:
-                    ViewBag.FailMessage = "There was an error with the multi-add tool.  " +
-                              "This is most likely because the sober types Driver and Officer do not both exist.  " +
-                              "If Driver and Officer types exist exactly as they are spelled here and you still " +
-                              "get this message, contact Ty Morrow.";
-                    break;
-                case SoberMessage.EditSignupFailure:
-                    ViewBag.FailMessage = "Failed to modify sober signup.  Please try again or contact your administrator" +
-                                          "if the problem persists.";
-                    break;
-                case SoberMessage.SignupNewMemberOfficerFailure:
-                    ViewBag.FailMessage = "Unfortunately, new members are not allowed to be sober officers.";
-                    break;
-            }
-        }
-
-        #endregion
 
         protected override void Dispose(bool disposing)
         {
