@@ -716,11 +716,6 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
-    <Content Include="Scripts\Chart.js" />
-    <Content Include="Scripts\Chart.min.js" />
-    <Content Include="Scripts\Chart.min.js.map">
-      <DependentUpon>Chart.js</DependentUpon>
-    </Content>
     <None Include="Properties\PublishProfiles\DSP - AWS.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
