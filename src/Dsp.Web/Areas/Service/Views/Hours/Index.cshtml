@@ -1,15 +1,15 @@
 ﻿@model Dsp.Web.Areas.Service.Models.ServiceHourIndexModel
 @{
     ViewBag.Title = "Service Hours";
-    ViewBag.Subtitle = Model.Semester;
+    ViewBag.Subtitle = Model.NavModel.SelectedSemester;
     ViewBag.Print = true;
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
 
     var exemptMembers = Model.ServiceHours
         .Where(m =>
             (m.Member.ServiceHourAmendments
-                .Where(a => a.SemesterId == Model.Semester.SemesterId)
-                .Sum(a => a.AmountHours) + Model.Semester.MinimumServiceHours)
+                .Where(a => a.SemesterId == Model.NavModel.SelectedSemester.SemesterId)
+                .Sum(a => a.AmountHours) + Model.NavModel.SelectedSemester.MinimumServiceHours)
             .Equals(0))
         .OrderBy(m => m.Member.LastName)
         .ToList();
@@ -17,13 +17,13 @@
         .Where(m => !exemptMembers.Select(e => e.Member.Id).Contains(m.Member.Id)).ToList();
     var nonExemptMemberCount = nonExemptMembers.Count;
     var actives = Model.ServiceHours
-        .Where(m => m.Member.PledgeClass.SemesterId != Model.Semester.SemesterId)
+        .Where(m => m.Member.PledgeClass.SemesterId != Model.NavModel.SelectedSemester.SemesterId)
         .ToList();
     var nonExemptActives = actives
         .Where(m => !exemptMembers.Select(e => e.Member.Id).Contains(m.Member.Id))
         .ToList();
     var newMembers = Model.ServiceHours
-        .Where(m => m.Member.PledgeClass.SemesterId == Model.Semester.SemesterId)
+        .Where(m => m.Member.PledgeClass.SemesterId == Model.NavModel.SelectedSemester.SemesterId)
         .ToList();
     var nonExemptNewMembers = newMembers
         .Where(m => !exemptMembers.Select(e => e.Member.Id).Contains(m.Member.Id))
@@ -40,8 +40,8 @@
     var averageMemberAttendance = nonExemptMembers.Count(m =>
         m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
-            .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
+            .Where(a => a.SemesterId == Model.NavModel.SelectedSemester.SemesterId)
+            .Sum(a => a.NumberEvents) + Model.NavModel.SelectedSemester.MinimumServiceEvents);
     var averageMemberAttendancePercentage = (int)(100 * (averageMemberAttendance / (double)(nonExemptMembers.Count == 0 ? 1 : nonExemptMembers.Count)));
 
     var activesServed = nonExemptActives.Count(m => m.Hours > 0);
@@ -55,8 +55,8 @@
     var averageActiveAttendance = nonExemptActives.Count(m =>
         m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
-            .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
+            .Where(a => a.SemesterId == Model.NavModel.SelectedSemester.SemesterId)
+            .Sum(a => a.NumberEvents) + Model.NavModel.SelectedSemester.MinimumServiceEvents);
     var averageActiveAttendancePercentage = (int)(100 * (averageActiveAttendance / (double)(nonExemptActives.Count == 0 ? 1 : nonExemptActives.Count)));
 
     var newMembersServed = nonExemptNewMembers.Count(m => m.Hours > 0);
@@ -70,294 +70,271 @@
     var averagePledgeAttendance = nonExemptNewMembers.Count(m =>
         m.ServiceHours.Count() >=
         m.Member.ServiceEventAmendments
-            .Where(a => a.SemesterId == Model.Semester.SemesterId)
-            .Sum(a => a.NumberEvents) + Model.Semester.MinimumServiceEvents);
+            .Where(a => a.SemesterId == Model.NavModel.SelectedSemester.SemesterId)
+            .Sum(a => a.NumberEvents) + Model.NavModel.SelectedSemester.MinimumServiceEvents);
     var averagePledgeAttendancePercentage = (int)(100 * (averagePledgeAttendance / (double)(nonExemptNewMembers.Count == 0 ? 1 : nonExemptNewMembers.Count)));
 }
 
 <div class="container-fluid">
-    <div class="row row-space no-print">
-        <div class="col-xs-6">
-            <div class="dropdown">
-                <button class="btn btn-default dropdown-toggle" type="button" id="semester-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    Change Semester
-                    <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="semester-dropdown">
-                    @foreach (var s in Model.SemesterList)
-                    {
-                        <li><a href="@Url.Action("Index", new { sid = s.Value })">@s.Text</a></li>
-                    }
-                </ul>
-            </div>
+    <div class="row">
+        <div class="col-lg-2 col-md-3 no-print">
+            @Html.Partial("~/Areas/Service/Views/Shared/_ServiceNavPartial.cshtml", Model.NavModel)
         </div>
-        <div class="col-xs-6 text-right">
-            <p>
-                @if (hasElevatedPermissions)
-                {
-                    <a href="@Url.Action("Amendments", "Hours", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
-                        Amendments
-                    </a>
-                }
-                <a href="@Url.Action("Index", "Events", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
-                    Service Events
-                </a>
-                @Html.ActionLink("Submit Hours", "Submit", new { sid = Model.Semester.SemesterId }, new { @class = "btn btn-sm btn-success" })
-            </p>
-        </div>
-    </div>
-    <div class="row" style="page-break-after: always">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    Service Stats
-                    <a href="@Url.Action("Download", "Hours", new { sid = Model.Semester.SemesterId })" 
-                       class="btn btn-xs btn-default pull-right no-print">
-                        <i class="fa fa-download"></i> Download
-                    </a>
-                </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr class="active">
-                                <th class="col-xs-3"></th>
-                                <th class="col-xs-3">@(exemptMembers.Any() ? "*" : "")All Members (@nonExemptMemberCount)</th>
-                                <th class="col-xs-3">Active (@nonExemptActives.Count)</th>
-                                <th class="col-xs-3">New (@nonExemptNewMembers.Count)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="active">Total hours:</td>
-                                <td>@totalMemberHours</td>
-                                <td>@actives.Sum(a => a.Hours)</td>
-                                <td>@newMembers.Sum(p => p.Hours)</td>
-                            </tr>
-                            <tr>
-                                <td class="active">Members served &gt; 0 hours:</td>
-                                <td>@membersServed (@membersServedPercentage %)</td>
-                                <td>@activesServed (@activesServedPercentage %)</td>
-                                <td>@newMembersServed (@newMembersServedPercentage %)</td>
-                            </tr>
-                            <tr>
-                                <td class="active">Members served &ge; 10 hours:</td>
-                                <td>@membersServedTen (@servedTenPercentage %)</td>
-                                <td>@activesServedTen (@activesTenPercentage %)</td>
-                                <td>@newMembersServedTen (@newMembersTenPercentage %)</td>
-                            </tr>
-                            <tr>
-                                <td class="active">Members served &ge; 15 hours:</td>
-                                <td>@membersServedFifteen (@servedFifteenPercentage %)</td>
-                                <td>@activesServedFifteen (@activesFifteenPercentage %)</td>
-                                <td>@newMembersServedFifteen (@newMembersFifteenPercentage %)</td>
-                            </tr>
-                            <tr>
-                                <td class="active">Service Hours Per Member:</td>
-                                <td>@averageMemberHours</td>
-                                <td>@averageActiveHours</td>
-                                <td>@averagePledgeHours</td>
-                            </tr>
-                            <tr>
-                                <td class="active">Members Meeting Their Attendance Requirement:</td>
-                                <td>@averageMemberAttendance (@averageMemberAttendancePercentage %)</td>
-                                <td>@averageActiveAttendance (@averageActiveAttendancePercentage %)</td>
-                                <td>@averagePledgeAttendance (@averagePledgeAttendancePercentage %)</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                @if (exemptMembers.Any())
-                {
-                    <div class="panel-footer">
-                        <strong>* Members exempted from service hours (excluded from stats above)</strong>
-                        <br />
-                        @for (var i = 0; i < exemptMembers.Count; i++)
+        <div class="col-lg-10 col-md-9">
+            <div class="row" style="page-break-after: always">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Service Stats
+                            <a href="@Url.Action("Download", "Hours", new { sid = Model.NavModel.SelectedSemester.SemesterId })"
+                               class="btn btn-xs btn-default pull-right no-print">
+                                <i class="fa fa-download"></i> Download
+                            </a>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-3"></th>
+                                        <th class="col-xs-3">@(exemptMembers.Any() ? "*" : "")All Members (@nonExemptMemberCount)</th>
+                                        <th class="col-xs-3">Active (@nonExemptActives.Count)</th>
+                                        <th class="col-xs-3">New (@nonExemptNewMembers.Count)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="active">Total hours:</td>
+                                        <td>@totalMemberHours</td>
+                                        <td>@actives.Sum(a => a.Hours)</td>
+                                        <td>@newMembers.Sum(p => p.Hours)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &gt; 0 hours:</td>
+                                        <td>@membersServed (@membersServedPercentage %)</td>
+                                        <td>@activesServed (@activesServedPercentage %)</td>
+                                        <td>@newMembersServed (@newMembersServedPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 10 hours:</td>
+                                        <td>@membersServedTen (@servedTenPercentage %)</td>
+                                        <td>@activesServedTen (@activesTenPercentage %)</td>
+                                        <td>@newMembersServedTen (@newMembersTenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 15 hours:</td>
+                                        <td>@membersServedFifteen (@servedFifteenPercentage %)</td>
+                                        <td>@activesServedFifteen (@activesFifteenPercentage %)</td>
+                                        <td>@newMembersServedFifteen (@newMembersFifteenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Service Hours Per Member:</td>
+                                        <td>@averageMemberHours</td>
+                                        <td>@averageActiveHours</td>
+                                        <td>@averagePledgeHours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members Meeting Their Attendance Requirement:</td>
+                                        <td>@averageMemberAttendance (@averageMemberAttendancePercentage %)</td>
+                                        <td>@averageActiveAttendance (@averageActiveAttendancePercentage %)</td>
+                                        <td>@averagePledgeAttendance (@averagePledgeAttendancePercentage %)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @if (exemptMembers.Any())
                         {
-                            if (i < exemptMembers.Count - 1)
-                            {
-                                @exemptMembers[i].Member.ToString()@:,
+                            <div class="panel-footer">
+                                <strong>* Members exempted from service hours (excluded from stats above)</strong>
+                                <br />
+                                @for (var i = 0; i < exemptMembers.Count; i++)
+                                {
+                                    if (i < exemptMembers.Count - 1)
+                                    {
+                                        @exemptMembers[i].Member.ToString()@:,
+                                    }
+                                    else
+                                    {
+                                        @exemptMembers[i].Member.ToString()
+                                    }
                                 }
-                            else
-                            {
-                                @exemptMembers[i].Member.ToString()
-                            }
+                            </div>
                         }
                     </div>
-                }
+                </div>
             </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Members</div>
-                <div class="table-responsive no-print">
-                    <table class="table table-condensed table-hover table-bordered">
-                        <thead>
-                            <tr class="active">
-                                <th class="col-xs-4">Name</th>
-                                <th class="col-xs-2">Hours Progress</th>
-                                <th class="col-xs-3">Hours</th>
-                                <th class="col-xs-3">Events</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Members</div>
+                        <div class="table-responsive no-print">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-4">Name</th>
+                                        <th class="col-xs-2">Hours Progress</th>
+                                        <th class="col-xs-3">Hours</th>
+                                        <th class="col-xs-3">Events</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
+                                    {
+                                        var hourAmendments = Model.NavModel.SelectedSemester.ServiceHourAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                                        var hourAmendmentTotal = hourAmendments.Sum(a => a.AmountHours);
+                                        var eventAmendments = Model.NavModel.SelectedSemester.ServiceEventAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                                        var eventAmendmentTotal = eventAmendments.Sum(a => a.NumberEvents);
+                                        var hoursGoal = Model.NavModel.SelectedSemester.MinimumServiceHours + hourAmendmentTotal;
+                                        var eventsGoal = Model.NavModel.SelectedSemester.MinimumServiceEvents + eventAmendmentTotal;
+                                        var percentage = item.Hours * 100.0;
+                                        if (hoursGoal > 0)
+                                        {
+                                            percentage /= hoursGoal;
+                                        }
+                                        var barColor = percentage < 25 ? "danger" : percentage >= 100 ? "success" : "warning";
+
+                                        <tr type="button" data-toggle="collapse" data-target=".@item.Member.Id"
+                                            aria-expanded="false" aria-controls="@item.Member.Id">
+                                            <td>
+                                                @item.Member.LastName, @item.Member.FirstName
+                                                @if (hasElevatedPermissions)
+                                                {
+                                                    <small class="pull-right">
+                                                        @if (hourAmendments.Any())
+                                                        {
+                                                            for (var i = 0; i < hourAmendments.Count; i++)
+                                                            {
+                                                                @hourAmendments[i].Reason
+                                                                @:(@hourAmendments[i].AmountHours hr@(!hourAmendments[i].AmountHours.Equals(1) ? "s" : ""))
+                                                                if (i < hourAmendments.Count - 1)
+                                                                {
+                                                                    @:,
+                                                                }
+                                                            }
+                                                        }
+                                                        @if (eventAmendments.Any())
+                                                        {
+                                                            @:,
+                                                            for (var i = 0; i < eventAmendments.Count; i++)
+                                                            {
+                                                                @eventAmendments[i].Reason
+                                                                @:(@eventAmendments[i].NumberEvents event@(!eventAmendments[i].NumberEvents.Equals(1) ? "s" : ""))
+                                                                if (i < eventAmendments.Count - 1)
+                                                                {
+                                                                    @:,
+                                                                }
+                                                            }
+                                                        }
+                                                    </small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <div class="progress" style="margin: 0;">
+                                                    <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
+                                                         aria-valuenow="@(item.Hours)" aria-valuemin="0"
+                                                         aria-valuemax="@(hoursGoal)" style="width: @(percentage > 100 ? 100 : percentage)%;">
+                                                        @Math.Round(percentage, 2)%
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>@item.Hours / @hoursGoal</td>
+                                            <td>
+                                                @item.ServiceHours.Count() / @eventsGoal
+                                                @if (item.ServiceHours.Count() >= eventsGoal)
+                                                {
+                                                    <i class="fa fa-check-circle text-success"></i>
+                                                }
+                                                <button class="btn btn-default btn-xs pull-right" type="button">Details</button>
+                                            </td>
+                                        </tr>
+                                        if (item.ServiceHours.Any())
+                                        {
+                                            foreach (var s in item.ServiceHours)
+                                            {
+                                                var eventPercentage = (int)((s.DurationHours / s.Event.DurationHours) * 100.0);
+
+                                                <tr class="collapse @item.Member.Id active">
+                                                    <td>
+                                                        @Html.ActionLink(s.Event.EventName, "Details", "Events", new { id = s.Event.EventId }, null)
+                                                        <span class="badge"><small>@s.Event.DurationHours h</small></span>
+                                                    </td>
+                                                    <td>
+                                                        <div class="progress" style="margin: 0" data-toggle="tooltip"
+                                                             data-placement="left" title="Present for ###% of event">
+                                                            <div class="progress-bar progress-bar-info" role="progressbar"
+                                                                 aria-valuenow="@(s.DurationHours)" aria-valuemin="0"
+                                                                 aria-valuemax="@(s.Event.DurationHours)"
+                                                                 style="width: @(eventPercentage > 100 ? 100 : eventPercentage)%;">
+                                                                @eventPercentage%
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        @s.DurationHours
+                                                    </td>
+                                                    <td>
+                                                        @if (hasElevatedPermissions)
+                                                        {
+                                                            <div class="pull-right text-right">
+                                                                @Html.ActionLink("Edit", "Edit", new { eid = s.EventId, uid = s.UserId }) |
+                                                                @Html.ActionLink("Delete", "Delete", new { eid = s.EventId, uid = s.UserId })
+                                                            </div>
+                                                        }
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <tr class="collapse @item.Member.Id warning">
+                                                <td style="border: none" colspan="4">
+                                                    No events attended.
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="list-group print hide">
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-xs-3 col-p-3">Name</div>
+                                    <div class="col-xs-3 col-p-3">Hours Progress</div>
+                                    <div class="col-xs-3 col-p-3">Hours</div>
+                                    <div class="col-xs-3 col-p-3">Events</div>
+                                </div>
+                            </div>
                             @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
                             {
-                                var hourAmendments = Model.Semester.ServiceHourAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                                var hourAmendments = Model.NavModel.SelectedSemester.ServiceHourAmendments.Where(a => a.UserId == item.Member.Id).ToList();
                                 var hourAmendmentTotal = hourAmendments.Sum(a => a.AmountHours);
-                                var eventAmendments = Model.Semester.ServiceEventAmendments.Where(a => a.UserId == item.Member.Id).ToList();
+                                var eventAmendments = Model.NavModel.SelectedSemester.ServiceEventAmendments.Where(a => a.UserId == item.Member.Id).ToList();
                                 var eventAmendmentTotal = eventAmendments.Sum(a => a.NumberEvents);
-                                var hoursGoal = Model.Semester.MinimumServiceHours + hourAmendmentTotal;
-                                var eventsGoal = Model.Semester.MinimumServiceEvents + eventAmendmentTotal;
+                                var hoursGoal = Model.NavModel.SelectedSemester.MinimumServiceHours + hourAmendmentTotal;
+                                var eventsGoal = Model.NavModel.SelectedSemester.MinimumServiceEvents + eventAmendmentTotal;
                                 var percentage = item.Hours * 100.0;
                                 if (hoursGoal > 0)
                                 {
                                     percentage /= hoursGoal;
                                 }
-                                var barColor = percentage < 25 ? "danger" : percentage >= 100 ? "success" : "warning";
 
-                                <tr type="button" data-toggle="collapse" data-target=".@item.Member.Id"
-                                    aria-expanded="false" aria-controls="@item.Member.Id">
-                                    <td>
-                                        @item.Member.LastName, @item.Member.FirstName
-                                        @if (hasElevatedPermissions)
-                                        {
-                                            <small class="pull-right">
-                                                @if (hourAmendments.Any())
-                                                {
-                                                    for (var i = 0; i < hourAmendments.Count; i++)
-                                                    {
-                                                        @hourAmendments[i].Reason
-                                                        @:(@hourAmendments[i].AmountHours hr@(!hourAmendments[i].AmountHours.Equals(1) ? "s" : ""))
-                                                        if (i < hourAmendments.Count - 1)
-                                                        {
-                                                            @:,
-                                                        }
-                                                    }
-                                                }
-                                                @if (eventAmendments.Any())
-                                                {
-                                                    @:,
-                                                    for (var i = 0; i < eventAmendments.Count; i++)
-                                                    {
-                                                        @eventAmendments[i].Reason
-                                                        @:(@eventAmendments[i].NumberEvents event@(!eventAmendments[i].NumberEvents.Equals(1) ? "s" : ""))
-                                                        if (i < eventAmendments.Count - 1)
-                                                        {
-                                                            @:,
-                                                        }
-                                                    }
-                                                }
-                                            </small>
-                                        }
-                                    </td>
-                                    <td>
-                                        <div class="progress" style="margin: 0;">
-                                            <div class="progress-bar progress-bar-striped progress-bar-@barColor" role="progressbar"
-                                                 aria-valuenow="@(item.Hours)" aria-valuemin="0"
-                                                 aria-valuemax="@(hoursGoal)" style="width: @(percentage > 100 ? 100 : percentage)%;">
-                                                @Math.Round(percentage, 2)%
-                                            </div>
+                                <div class="list-group-item" style="page-break-inside: avoid">
+                                    <div class="row">
+                                        <div class="col-xs-3 col-p-3">
+                                            @item.Member.LastName, @item.Member.FirstName
                                         </div>
-                                    </td>
-                                    <td>@item.Hours / @hoursGoal</td>
-                                    <td>
-                                        @item.ServiceHours.Count() / @eventsGoal
-                                        @if (item.ServiceHours.Count() >= eventsGoal)
-                                        {
-                                            <i class="fa fa-check-circle text-success"></i>
-                                        }
-                                        <button class="btn btn-default btn-xs pull-right" type="button">Details</button>
-                                    </td>
-                                </tr>
-                                if (item.ServiceHours.Any())
-                                {
-                                    foreach (var s in item.ServiceHours)
-                                    {
-                                        var eventPercentage = (int)((s.DurationHours / s.Event.DurationHours) * 100.0);
-
-                                        <tr class="collapse @item.Member.Id active">
-                                            <td>
-                                                @Html.ActionLink(s.Event.EventName, "Details", "Events", new {id = s.Event.EventId}, null)
-                                                <span class="badge"><small>@s.Event.DurationHours h</small></span>
-                                            </td>
-                                            <td>
-                                                <div class="progress" style="margin: 0" data-toggle="tooltip"
-                                                     data-placement="left" title="Present for ###% of event">
-                                                    <div class="progress-bar progress-bar-info" role="progressbar"
-                                                         aria-valuenow="@(s.DurationHours)" aria-valuemin="0"
-                                                         aria-valuemax="@(s.Event.DurationHours)"
-                                                         style="width: @(eventPercentage > 100 ? 100 : eventPercentage)%;">
-                                                        @eventPercentage%
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                @s.DurationHours
-                                            </td>
-                                            <td>
-                                                @if (hasElevatedPermissions)
-                                                {
-                                                    <div class="pull-right text-right">
-                                                        @Html.ActionLink("Edit", "Edit", new { eid = s.EventId, uid = s.UserId }) |
-                                                        @Html.ActionLink("Delete", "Delete", new { eid = s.EventId, uid = s.UserId })
-                                                    </div>
-                                                }
-                                            </td>
-                                        </tr>
-                                    }
-                                }
-                                else
-                                {
-                                    <tr class="collapse @item.Member.Id warning">
-                                        <td style="border: none" colspan="4">
-                                            No events attended.
-                                        </td>
-                                    </tr>
-                                }
+                                        <div class="col-xs-3 col-p-3">@Math.Round(percentage, 2)%</div>
+                                        <div class="col-xs-3 col-p-3">@item.Hours / @hoursGoal</div>
+                                        <div class="col-xs-3 col-p-3">
+                                            @item.ServiceHours.Count() / @eventsGoal
+                                        </div>
+                                    </div>
+                                </div>
                             }
-                        </tbody>
-                    </table>
-                </div>
-                <div class="list-group print hide">
-                    <div class="list-group-item">
-                        <div class="row">
-                            <div class="col-xs-3 col-p-3">Name</div>
-                            <div class="col-xs-3 col-p-3">Hours Progress</div>
-                            <div class="col-xs-3 col-p-3">Hours</div>
-                            <div class="col-xs-3 col-p-3">Events</div>
                         </div>
+                        <div class="panel-footer">Member Count: @Model.ServiceHours.Count()</div>
                     </div>
-                    @foreach (var item in Model.ServiceHours.OrderBy(o => o.Member.LastName))
-                    {
-                        var hourAmendments = Model.Semester.ServiceHourAmendments.Where(a => a.UserId == item.Member.Id).ToList();
-                        var hourAmendmentTotal = hourAmendments.Sum(a => a.AmountHours);
-                        var eventAmendments = Model.Semester.ServiceEventAmendments.Where(a => a.UserId == item.Member.Id).ToList();
-                        var eventAmendmentTotal = eventAmendments.Sum(a => a.NumberEvents);
-                        var hoursGoal = Model.Semester.MinimumServiceHours + hourAmendmentTotal;
-                        var eventsGoal = Model.Semester.MinimumServiceEvents + eventAmendmentTotal;
-                        var percentage = item.Hours * 100.0;
-                        if (hoursGoal > 0)
-                        {
-                            percentage /= hoursGoal;
-                        }
-
-                        <div class="list-group-item" style="page-break-inside: avoid">
-                            <div class="row">
-                                <div class="col-xs-3 col-p-3">
-                                    @item.Member.LastName, @item.Member.FirstName
-                                </div>
-                                <div class="col-xs-3 col-p-3">@Math.Round(percentage, 2)%</div>
-                                <div class="col-xs-3 col-p-3">@item.Hours / @hoursGoal</div>
-                                <div class="col-xs-3 col-p-3">
-                                    @item.ServiceHours.Count() / @eventsGoal
-                                </div>
-                            </div>
-                        </div>
-                    }
                 </div>
-                <div class="panel-footer">Member Count: @Model.ServiceHours.Count</div>
             </div>
         </div>
     </div>

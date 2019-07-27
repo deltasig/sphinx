@@ -1,17 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using Dsp.Data;
+using Dsp.Data.Entities;
+using Dsp.Repositories;
+using Dsp.Services;
+using Dsp.Services.Interfaces;
+using Dsp.Web.Areas.Service.Models;
+using Dsp.Web.Controllers;
+using System.Threading.Tasks;
 using System.Web.Mvc;
 
 namespace Dsp.Web.Areas.Service.Controllers
 {
-    public class StatsController : Controller
+    [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+    public class StatsController : BaseController
     {
-        // GET: Service/Stats
-        public ActionResult Index()
+        private readonly ISemesterService _semesterService;
+        private readonly IServiceService _serviceService;
+
+        public StatsController()
         {
-            return View();
+            var repo = new Repository<SphinxDbContext>(_db);
+            _semesterService = new SemesterService(repo);
+            _serviceService = new ServiceService(repo);
+        }
+
+        public async Task<ActionResult> Index(int? sid)
+        {
+            var currentSemester = await _semesterService.GetCurrentSemesterAsync();
+            Semester selectedSemester = sid == null
+                ? currentSemester
+                : await _semesterService.GetSemesterByIdAsync((int)sid);
+            var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
+            var semesterList = GetSemesterSelectList(semestersWithEvents);
+            var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
+            var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
+            var model = new ServiceStatsIndexModel(navModel);
+
+            return View(model);
         }
     }
 }

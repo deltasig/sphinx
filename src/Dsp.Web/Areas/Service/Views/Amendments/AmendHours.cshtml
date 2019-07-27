@@ -1,4 +1,4 @@
-﻿@model Dsp.Web.Areas.Service.Models.ServiceAddHourAmendmentModel
+﻿@model AddServiceHourAmendmentModel
 @{
     ViewBag.Title = "Add Service Hour Amendment";
     ViewBag.Subtitle = Model.Semester;
@@ -8,7 +8,7 @@
     <div class="row">
         <div class="col-xs-12">
             <p>
-                <a href="@Url.Action("Amendments", "Hours", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", "Amendments", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Amendments
                 </a>
             </p>
@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-sm-6 col-xs-12">
-            @using (Html.BeginForm("AddHourAmendment", "Hours", new { area = "Service" }, FormMethod.Post, new { role = "form" }))
+            @using (Html.BeginForm("AmendHours", "Amendments", new { area = "Service" }, FormMethod.Post, new { role = "form" }))
             {
                 @Html.AntiForgeryToken()
                 @Html.ValidationSummary(true)

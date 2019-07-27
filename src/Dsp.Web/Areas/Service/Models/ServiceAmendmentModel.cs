@@ -2,13 +2,21 @@
 {
     using Dsp.Data.Entities;
     using System.Collections.Generic;
-    using System.Web.Mvc;
 
     public class ServiceAmendmentModel
     {
-        public Semester Semester { get; set; }
-        public IEnumerable<SelectListItem> SemesterList { get; set; }
-        public IEnumerable<ServiceHourAmendment> ServiceHourAmendments { get; set; }
-        public IEnumerable<ServiceEventAmendment> ServiceEventAmendments { get; set; }
+        public ServiceNavModel NavModel { get; }
+        public IEnumerable<ServiceHourAmendment> ServiceHourAmendments { get; }
+        public IEnumerable<ServiceEventAmendment> ServiceEventAmendments { get; }
+
+        public ServiceAmendmentModel(
+            ServiceNavModel navModel,
+            IEnumerable<ServiceHourAmendment> serviceHourAmendments,
+            IEnumerable<ServiceEventAmendment> serviceEventAmendments)
+        {
+            NavModel = navModel;
+            ServiceHourAmendments = serviceHourAmendments;
+            ServiceEventAmendments = serviceEventAmendments;
+        }
     }
 }

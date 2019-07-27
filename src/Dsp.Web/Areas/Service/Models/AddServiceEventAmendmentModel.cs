@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
 
-    public class ServiceAddEventAmendmentModel
+    public class AddServiceEventAmendmentModel
     {
         public ServiceEventAmendment Amendment { get; set; }
         public Semester Semester { get; set; }

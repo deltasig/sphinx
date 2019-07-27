@@ -167,7 +167,7 @@
                 {
                     Semester = semester,
                     Positions = positions,
-                    SemesterList = base.GetSemesterSelectListAsync(semesters)
+                    SemesterList = base.GetSemesterSelectList(semesters)
                 };
 
                 return View(model);
