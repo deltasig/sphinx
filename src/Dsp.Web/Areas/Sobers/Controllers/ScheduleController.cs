@@ -268,7 +268,7 @@
             // Build model for view
             model.SelectedSemester = semester.SemesterId;
             model.Semester = semester;
-            model.SemesterList = GetSemesterSelectListAsync(semesters);
+            model.SemesterList = GetSemesterSelectList(semesters);
             // Identify members for current semester
             model.Members = await GetRosterForSemester(semester);
 

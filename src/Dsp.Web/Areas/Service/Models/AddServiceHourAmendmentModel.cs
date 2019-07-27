@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
 
-    public class ServiceAddHourAmendmentModel
+    public class AddServiceHourAmendmentModel
     {
         public ServiceHourAmendment Amendment { get; set; }
         public Semester Semester { get; set; }

@@ -45,10 +45,12 @@
             {
                 se.DateTimeOccurred = _semesterService.ConvertUtcToCst(se.DateTimeOccurred);
             }
-            var model = new ServiceEventIndexModel(selectedSemester, serviceEvents);
 
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
-            model.SemesterList = GetSemesterSelectListAsync(semestersWithEvents);
+            var semesterList = GetSemesterSelectList(semestersWithEvents);
+            var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
+            var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
+            var model = new ServiceEventIndexModel(navModel, serviceEvents);
 
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
             ViewBag.FailureMessage = TempData[FailureMessageKey];

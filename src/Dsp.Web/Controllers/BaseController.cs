@@ -210,7 +210,7 @@
 
             return new SelectList(newList, "SemesterId", "Name");
         }
-        protected virtual SelectList GetSemesterSelectListAsync(IEnumerable<Semester> list)
+        protected virtual SelectList GetSemesterSelectList(IEnumerable<Semester> list)
         {
             var newList = new List<object>();
 
