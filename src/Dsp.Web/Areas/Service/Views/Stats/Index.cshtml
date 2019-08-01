@@ -1,8 +1,11 @@
 ﻿@model ServiceStatsIndexModel
 @{
     ViewBag.Title = "Service Stats";
+    ViewBag.Subtitle = Model.NavModel.SelectedSemester;
 }
-@Scripts.Render("~/bundles/charts")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" 
+        integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" 
+        crossorigin="anonymous"></script>
 
 <div class="container-fluid">
     <div class="row">
@@ -11,7 +14,15 @@
         </div>
         <div class="col-lg-10 col-md-9">
             <div class="row">
-                <canvas id="statsChart"></canvas>
+                <canvas id="statsChart" style="background-color: white" height="500"></canvas>
+            </div>
+            <div class="row">
+                <p class="alert alert-info">
+                    <i class="fa fa-info-circle"></i>
+                    The adjusted 80% target is "adjusted" because it does not include 
+                    members with service hour amendments that completely eliminate their 
+                    semester requirement.
+                </p>
             </div>
         </div>
     </div>
@@ -19,57 +30,107 @@
 
 @section scripts {
     <script type="text/javascript">
-        var ctx = document.getElementById('statsChart').getContext('2d');
+        
+        (function () {
+            var settings = {
+                url: '/api/service/hourstats?sid=' + @Model.NavModel.SelectedSemester.SemesterId,
+                dataType: 'json',
+                success: function (response) {
+                    var data = {
+                        labels: response["months"],
+                        datasets: [
+                            {
+                                label: 'Adjusted 80% Target',
+                                data: response["targetMemberCount"],
+                                borderColor: 'rgb(0, 0, 0)',
+                                borderWidth: 1,
+                                pointRadius: 0,
+                                borderDash: [10, 5],
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '> 0 hours',
+                                data: response["moreThanZeroHours"],
+                                backgroundColor: 'rgb(235, 76, 52)',
+                                borderColor: 'rgb(235, 76, 52)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 5 hours',
+                                data: response["fiveOrMoreHours"],
+                                backgroundColor: 'rgb(252, 231, 3)',
+                                borderColor: 'rgb(252, 231, 3)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 10 hours',
+                                data: response["tenOrMoreHours"],
+                                backgroundColor: 'rgb(136, 252, 3)',
+                                borderColor: 'rgb(136, 252, 3)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 15 hours',
+                                data: response["fifteenOrMoreHours"],
+                                backgroundColor: 'rgb(50, 168, 82)',
+                                borderColor: 'rgb(50, 168, 82)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                        ]
+                    };
+                    var options = {
+                        title: {
+                            display: true,
+                            text: "Service Hours Progress",
+                        },
+                        legend: {
+                            position: "right"
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Month'
+                                },
+                            }],
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: '# of Members'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    max: response["unadjustedMemberCount"]
+                                }
+                            }]
+                        },
+                        bezierCurve: false
+                    };
 
-        var data = {
-            labels: ["May", "June", "July", "August", "September", "October", "November", "December"],
-            datasets: [
-                {
-                    label: '> 0 hours',
-                    data: [0, 2, 3, 15, 30, 45, 75, 80],
-                    borderWidth: 1,
-                    fill: false
+                    var ctx = document.getElementById('statsChart').getContext('2d');
+                    var myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: data,
+                        options: options
+                    });
                 },
-                {
-                    label: '> 5 hours',
-                    data: [0, 1, 1, 10, 20, 40, 65, 78],
-                    borderWidth: 1,
-                    fill: false
-                },
-                {
-                    label: '> 10 hours',
-                    data: [0, 0, 0, 5, 7, 25, 45, 60],
-                    borderWidth: 1,
-                    fill: false
-                },
-            ]
-        };
-
-        var options = {
-            scales: {
-                xAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: '# of people'
-                    },
-                    type: 'time',
-                    time: {
-                        unit: 'month'
-                    }
-                }],
-                yAxes: [{
-                    scaleLabel: {
-                        display: true,
-                        labelString: '# of people'
-                    }
-                }]
-            },
-        };
-        var myLineChart = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        });
+                error: function (response) {
+                    console.log(response);
+                }
+            };
+            $.ajax(settings);
+        })();
 
     </script>
 }

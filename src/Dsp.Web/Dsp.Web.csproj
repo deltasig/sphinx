@@ -250,6 +250,7 @@
   <ItemGroup>
     <Compile Include="Api\MealsController.cs" />
     <Compile Include="Api\Models\MealItemVoteApiModel.cs" />
+    <Compile Include="Api\ServiceController.cs" />
     <Compile Include="Api\SobersController.cs" />
     <Compile Include="Api\TreasuryController.cs" />
     <Compile Include="Api\MembersController.cs" />

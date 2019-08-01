@@ -115,11 +115,10 @@
         {
             var results = await _repository
                 .GetAsync<Member>(d =>
-                    d.MemberStatus.StatusName == "Advisor" ||
-                    ((d.MemberStatus.StatusName == "Released" ||
-                    d.MemberStatus.StatusName == "Alumnus" ||
-                    d.MemberStatus.StatusName == "Neophyte" ||
+                    d.MemberStatus.StatusName != "Advisor" &&
+                    ((d.MemberStatus.StatusName == "Alumnus" ||
                     d.MemberStatus.StatusName == "Active" ||
+                    d.MemberStatus.StatusName == "Neophyte" ||
                     d.MemberStatus.StatusName == "New") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                     d.GraduationSemester.DateEnd > semester.DateStart));
