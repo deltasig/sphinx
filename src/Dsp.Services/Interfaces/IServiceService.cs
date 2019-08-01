@@ -1,4 +1,5 @@
 ﻿using Dsp.Data.Entities;
+using Dsp.Services.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,5 +28,8 @@ namespace Dsp.Services.Interfaces
         Task DeleteHoursAsync(ServiceHour serviceHours);
         Task DeleteEventAmendmentByIdAsync(int id);
         Task DeleteHoursAmendmentByIdAsync(int id);
+
+        Task<ServiceMemberStats> GetMemberStatsBySemesterIdAsync(int sid);
+        Task<ServiceHourStats> GetHourStatsBySemesterIdAsync(int sid);
     }
 }

@@ -8,6 +8,9 @@
     using Microsoft.Owin.Security.Cookies;
     using Owin;
     using System;
+#if !DEBUG
+    using System.Web.Configuration;
+#endif
 
     public partial class Startup
     {
