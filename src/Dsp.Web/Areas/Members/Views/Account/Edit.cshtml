@@ -14,6 +14,7 @@
     var showStatus = isAdmin || isSecretary;
     var showPledgeClass = isAdmin || isSecretary;
     var showBigBro = true;
+    var showShirtSize = true;
     var showDietaryInstructions = true;
 }
 
@@ -34,7 +35,7 @@
         <div class="col-sm-6">
             <div class="media">
                 <div class="media-left">
-                    <img src="~/Images/Avatars/@(Model.Member.AvatarPath)" height="90" width="90" 
+                    <img src="~/Images/Avatars/@(Model.Member.AvatarPath)" height="90" width="90"
                          onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
                 </div>
                 <div class="media-body">
@@ -56,12 +57,12 @@
                     }
                 </div>
             </div>
-            
+
             <h4>Information</h4>
-            @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new {@class = "", role = "form"}))
+            @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "", role = "form" }))
             {
                 @Html.AntiForgeryToken()
-                @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 @Html.HiddenFor(m => m.Member.Id)
                 @Html.HiddenFor(m => m.Member.UserName)
 
@@ -81,9 +82,9 @@
                 if (showLastName)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.LastName, new {@class = "control-label"})
-                        @Html.EditorFor(m => m.Member.LastName, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(m => m.Member.LastName, "", new {@class = "text-danger"})
+                        @Html.LabelFor(m => m.Member.LastName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.LastName, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
@@ -94,9 +95,9 @@
                 if (showEmail)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.Email, new {@class = "control-label"})
-                        @Html.EditorFor(m => m.Member.Email, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(m => m.Member.Email, "", new {@class = "text-danger"})
+                        @Html.LabelFor(m => m.Member.Email, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Email, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
@@ -107,7 +108,7 @@
                 if (showExpectedGraduation)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.ExpectedGraduationId, new {@class = "control-label"})
+                        @Html.LabelFor(m => m.Member.ExpectedGraduationId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.ExpectedGraduationId, Model.Semesters,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
@@ -120,9 +121,9 @@
                 if (showPin)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.Pin, new {@class = "control-label"})
-                        @Html.EditorFor(m => m.Member.Pin, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(m => m.Member.Pin, "", new {@class = "text-danger"})
+                        @Html.LabelFor(m => m.Member.Pin, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.Member.Pin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.Member.Pin, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
@@ -133,8 +134,8 @@
                 if (showStatus)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.StatusId, new {@class = "control-label"})
-                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new {@class = "form-control selectpicker"})
+                        @Html.LabelFor(m => m.Member.StatusId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.StatusId, Model.Statuses, new { @class = "form-control selectpicker" })
                     </div>
                 }
                 else
@@ -145,7 +146,7 @@
                 if (showPledgeClass)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.PledgeClassId, new {@class = "control-label"})
+                        @Html.LabelFor(m => m.Member.PledgeClassId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.PledgeClassId, Model.PledgeClasses,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
@@ -158,7 +159,7 @@
                 if (showBigBro)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.Member.BigBroId, new {@class = "control-label"})
+                        @Html.LabelFor(m => m.Member.BigBroId, new { @class = "control-label" })
                         @Html.DropDownListFor(m => m.Member.BigBroId, Model.Members,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
@@ -166,6 +167,18 @@
                 else
                 {
                     @Html.HiddenFor(m => m.Member.BigBroId)
+                }
+
+                if (showShirtSize)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Member.ShirtSize, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.Member.ShirtSize, Model.ShirtSizes, new { @class = "form-control selectpicker" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.Member.ShirtSize)
                 }
 
                 if (showDietaryInstructions)
@@ -180,9 +193,9 @@
                 {
                     @Html.HiddenFor(m => m.Member.DietaryInstructions)
                 }
-                
+
                 <div class="form-group">
-                    <input type="submit" value="Save" class="btn btn-default"/>
+                    <input type="submit" value="Save" class="btn btn-default" />
                 </div>
             }
         </div>

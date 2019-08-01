@@ -775,6 +775,12 @@
             return true;
         }
 
+        protected virtual SelectList GetShirtSizesSelectList()
+        {
+            var newList = new List<string> { "S", "M", "L", "XL", "2XL" };
+            var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
+            return list;
+        }
         protected virtual async Task<Leader> GetCurrentLeader(string positionName)
         {
             var term = await GetCurrentTerm();

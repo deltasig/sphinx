@@ -5,6 +5,7 @@
     using Microsoft.AspNet.Identity.EntityFramework;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
@@ -33,6 +34,9 @@
 
         [Display(Name = "Big Brother")]
         public int? BigBroId { get; set; }
+
+        [Display(Name = "Shirt Size"), DefaultValue("M")]
+        public string ShirtSize { get; set; }
 
         public DateTime? CreatedOn { get; set; }
 
