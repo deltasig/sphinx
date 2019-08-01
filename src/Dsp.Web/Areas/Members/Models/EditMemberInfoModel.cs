@@ -12,5 +12,6 @@
         public IEnumerable<SelectListItem> PledgeClasses { get; set; }
         public IEnumerable<SelectListItem> Semesters { get; set; }
         public IEnumerable<SelectListItem> Members { get; set; }
+        public IEnumerable<SelectListItem> ShirtSizes { get; set; }
     }
 }

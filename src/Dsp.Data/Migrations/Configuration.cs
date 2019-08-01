@@ -207,6 +207,7 @@ namespace Dsp.Data.Migrations
                     StatusId = 4,
                     PledgeClassId = 12,
                     ExpectedGraduationId = 19
+                    ShirtSize = "M",
                 };
                 userManager.Create(userToInsert, "password");
             }
