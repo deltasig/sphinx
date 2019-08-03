@@ -2,6 +2,7 @@
 @{
     ViewBag.Title = "Service Stats";
     ViewBag.Subtitle = Model.NavModel.SelectedSemester;
+    ViewBag.Print = true;
 }
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" 
         integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" 
@@ -14,15 +15,139 @@
         </div>
         <div class="col-lg-10 col-md-9">
             <div class="row">
-                <canvas id="statsChart" style="background-color: white" height="500"></canvas>
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Semester Stats
+                            <span class="pull-right">Calculated: @Model.SemesterMemberStats.CalculatedOn</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-3"></th>
+                                        <th class="col-xs-3">@(Model.SemesterMemberStats.ExemptMemberCount > 0 ? "*" : "")All Members (@Model.SemesterMemberStats.NonExemptMemberCount)</th>
+                                        <th class="col-xs-3">Active (@Model.SemesterMemberStats.NonExemptActiveMemberCount)</th>
+                                        <th class="col-xs-3">New (@Model.SemesterMemberStats.NonExemptNewMemberCount)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="active">Total hours:</td>
+                                        <td>@Model.SemesterMemberStats.TotalMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.TotalActiveHours</td>
+                                        <td>@Model.SemesterMemberStats.TotalNewMemberHours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &gt; 0 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServed    (@Model.SemesterMemberStats.AllMembersServedPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServed    (@Model.SemesterMemberStats.ActiveMembersServedPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServed (@Model.SemesterMemberStats.NewMembersServedPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 10 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServedTen    (@Model.SemesterMemberStats.AllMembersServedTenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServedTen    (@Model.SemesterMemberStats.ActiveMembersServedTenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServedTen (@Model.SemesterMemberStats.NewMembersServedTenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 15 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServedFifteen    (@Model.SemesterMemberStats.AllMembersServedFifteenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServedFifteen    (@Model.SemesterMemberStats.ActiveMembersServedFifteenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServedFifteen (@Model.SemesterMemberStats.NewMembersServedFifteenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Service Hours Per Member:</td>
+                                        <td>@Model.SemesterMemberStats.AverageAllMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.AverageActiveMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.AverageNewMemberHours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members Meeting Their Attendance Requirement:</td>
+                                        <td>@Model.SemesterMemberStats.AverageAllMemberAttendance    (@Model.SemesterMemberStats.AverageAllMemberAttendancePercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.AverageActiveMemberAttendance    (@Model.SemesterMemberStats.AverageActiveMemberAttendancePercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.AverageNewMemberAttendance (@Model.SemesterMemberStats.AverageNewMemberAttendancePercentage %)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @if (Model.SemesterMemberStats.ExemptMemberCount > 0)
+                        {
+                            <div class="panel-footer">
+                                <strong>* Members exempted from service hours (excluded from stats above)</strong>
+                                <br />
+                                @Model.SemesterMemberStats.ExemptMembersDisplay
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
             <div class="row">
-                <p class="alert alert-info">
-                    <i class="fa fa-info-circle"></i>
-                    The adjusted 80% target is "adjusted" because it does not include 
-                    members with service hour amendments that completely eliminate their 
-                    semester requirement.
-                </p>
+                <canvas id="statsChart" style="background-color: white" height="500"></canvas>
+            </div>
+            <div class="row" style="page-break-after: always">
+                <div class="col-xs-12">
+                    <p class="alert alert-info">
+                        <i class="fa fa-info-circle"></i>
+                        The adjusted 80% target is "adjusted" because it does not include
+                        members with service hour amendments that completely eliminate their
+                        semester requirement.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            General Stats For All Semesters
+                            @if (Model.GeneralStats.Any())
+                            {
+                                <span class="pull-right">Calculated: @Model.GeneralStats.First().CalculatedOn</span>
+                            }
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-2">Semester</th>
+                                        <th class="col-xs-2">Total Hours</th>
+                                        <th class="col-xs-2">Average Hours</th>
+                                        <th class="col-xs-4">Biggest Event</th>
+                                        <th class="col-xs-2"># of Events</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var stat in Model.GeneralStats)
+                                    {
+                                        var isSelectedSemester = stat.SemesterId == Model.NavModel.SelectedSemester.SemesterId;
+
+                                        <tr class="@(isSelectedSemester ? "success" : "")">
+                                            <td class="active">
+                                                <a href="@Url.Action("Index", "Events", new { sid = stat.SemesterId })">
+                                                    @stat.SemesterName
+                                                </a>
+                                            </td>
+                                            <td>@stat.TotalHours</td>
+                                            <td>@stat.AverageHours</td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Events", new { id = stat.BiggestEventId })">
+                                                    @stat.BiggestEventName
+                                                </a>
+                                            </td>
+                                            <td>@stat.NumberOfEvents</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p class="alert alert-info no-print">
+                        <i class="fa fa-info-circle"></i>
+                        Note: Stats for the current semester update every six hours. 
+                        Stats for non-current semesters are cached for one week.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
@@ -90,7 +215,7 @@
                     var options = {
                         title: {
                             display: true,
-                            text: "Service Hours Progress",
+                            text: "Service Hour Progress Through Semester",
                         },
                         legend: {
                             position: "right"

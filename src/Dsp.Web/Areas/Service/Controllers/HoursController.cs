@@ -45,30 +45,12 @@
                 ? currentSemester
                 : await _semesterService.GetSemesterByIdAsync((int)sid);
 
-            var memberServiceHours = new List<ServiceHourIndexMemberRowModel>();
-            var members = await GetRosterForSemester(selectedSemester);
-            foreach (var m in members)
-            {
-                var serviceHours = m.ServiceHours
-                    .Where(e =>
-                        e.Event.SemesterId == selectedSemester.SemesterId &&
-                        e.Event.IsApproved).ToList();
-
-                var member = new ServiceHourIndexMemberRowModel
-                {
-                    Member = m,
-                    Hours = serviceHours.Sum(h => h.DurationHours),
-                    ServiceHours = serviceHours
-                };
-
-                memberServiceHours.Add(member);
-            }
-
+            var rosterProgress = await _serviceService.GetRosterProgressBySemesterIdAsync(selectedSemester.SemesterId);
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);
             var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
             var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
-            var model = new ServiceHourIndexModel(navModel, memberServiceHours);
+            var model = new ServiceHourIndexModel(navModel, rosterProgress);
 
             ViewBag.SuccessMessage = TempData[SuccessMessageKey];
             ViewBag.FailureMessage = TempData[FailureMessageKey];

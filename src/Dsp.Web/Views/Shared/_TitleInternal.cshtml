@@ -5,15 +5,14 @@
                 <div class="col-xs-12">
                     <h3>
                         <img style="display:none" height="35" width="35" class="print-inline"
-                             src="https://www.deltasig-de.org/Images/MobileTouch-57x57.png" />
+                             src="https://deltasig-de.org/Images/MobileTouch-57x57.png" />
                         @ViewBag.Title
                         <small>@ViewBag.Subtitle</small>
                         <small class="pull-right no-print">
                             @if (ViewBag.Print != null && ViewBag.Print)
                             {
                                 <i class="fa fa-print" data-toggle="tooltip" data-placement="left"
-                                   title="This page supports nifty printing from the browser (CTRL+P).  
-                                        Did you know you can export to PDF that way too?"></i>
+                                   title="This page has been set up to support printing to PDF.  For best results, use Chrome."></i>
                             }
                         </small>
                     </h3>

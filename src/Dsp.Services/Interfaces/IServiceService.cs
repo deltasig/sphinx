@@ -29,6 +29,8 @@ namespace Dsp.Services.Interfaces
         Task DeleteEventAmendmentByIdAsync(int id);
         Task DeleteHoursAmendmentByIdAsync(int id);
 
+        Task<IList<ServiceGeneralHistoricalStats>> GetGeneralHistoricalStatsAsync();
+        Task<IEnumerable<ServiceMemberProgress>> GetRosterProgressBySemesterIdAsync(int sid);
         Task<ServiceMemberStats> GetMemberStatsBySemesterIdAsync(int sid);
         Task<ServiceHourStats> GetHourStatsBySemesterIdAsync(int sid);
     }
