@@ -1,3 +1,19 @@
+### August 2019
+
+- Reorganized service features.
+- Added additional service stats.
+- Migrated bug reporting to Github issues.
+- Added Wiki link to sidebar navigation under "Website" group.
+
+---
+
+### July 2019
+
+- General refactoring of service features.
+- Re-added shirt size from account profiles - whoops.
+
+---
+
 ### June 2019
 
 - Removed class grades and files from website.
