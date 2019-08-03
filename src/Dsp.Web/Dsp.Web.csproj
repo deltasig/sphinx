@@ -269,14 +269,11 @@
     <Compile Include="Areas\Kitchen\Models\MealPeriodIndexModel.cs" />
     <Compile Include="Areas\Kitchen\Models\MealItemIndexModel.cs" />
     <Compile Include="Areas\Laundry\LaundryAreaRegistration.cs" />
-    <Compile Include="Areas\Members\Controllers\BugsController.cs" />
-    <Compile Include="Areas\Members\Models\BugsIndexModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
-    <Compile Include="Areas\Members\Models\BugsIndexFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Service\Controllers\AmendmentsController.cs" />
@@ -292,7 +289,6 @@
     <Compile Include="Areas\Treasury\TreasuryAreaRegistration.cs" />
     <Compile Include="Extensions\ApplicationPreload.cs" />
     <Compile Include="Models\BaseViewModel.cs" />
-    <Compile Include="Areas\Members\Models\BugsEditModel.cs" />
     <Compile Include="Models\RecruitmentModel.cs" />
     <Compile Include="Models\DonationModel.cs" />
     <Compile Include="Models\Notification.cs" />
@@ -691,8 +687,6 @@
     <Content Include="Areas\Treasury\Views\Donations\Edit.cshtml" />
     <Content Include="Areas\Treasury\Views\web.config" />
     <Content Include="Areas\Members\Views\_ViewStart.cshtml" />
-    <Content Include="Areas\Members\Views\Bugs\Edit.cshtml" />
-    <Content Include="Areas\Members\Views\Bugs\Delete.cshtml" />
     <Content Include="Areas\Service\Views\Stats\Index.cshtml" />
     <Content Include="Areas\Service\Views\_ViewStart.cshtml" />
     <Content Include="Areas\Service\Views\Shared\_ServiceNavPartial.cshtml" />
@@ -902,12 +896,6 @@
     <Content Include="Views\Shared\_LayoutInternal.cshtml" />
     <Content Include="Views\Home\Donate.cshtml" />
     <Content Include="Views\Home\DonationConfirmation.cshtml" />
-    <Content Include="Areas\Members\Views\Bugs\Submit.cshtml" />
-    <Content Include="Areas\Members\Views\Bugs\Index.cshtml" />
-    <Content Include="Areas\Members\Views\Bugs\Details.cshtml" />
-    <Content Include="Views\Emails\NewBugReport.cshtml" />
-    <Content Include="Views\Emails\BugReportUserUpdate.cshtml" />
-    <Content Include="Views\Emails\BugReportAdminUpdate.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

@@ -22,10 +22,10 @@
             <i class="fa fa-sign-out"></i> <span class="hidden-sm hidden-md hidden-lg">Sign Out</span>
         </a>
     </li>
-    <li class="@(ViewBag.Title.Contains("Bug Report") ? "active" : "")">
-        <a href="@Url.Action("Submit", "Bugs", new { area = "Members", urlWithProblem = Request.Url })"
-           data-toggle="tooltip" data-placement="bottom" title="Report a Problem">
-            <i class="fa fa-bug"></i> <span class="hidden-sm hidden-md hidden-lg">Report a Problem</span>
+    <li>
+        <a href="https://github.com/deltasig/sphinx/issues" target="_blank"
+           data-toggle="tooltip" data-placement="bottom" title="Report an Issue">
+            <i class="fa fa-bug"></i> <span class="hidden-sm hidden-md hidden-lg">Report an Issue</span>
         </a>
     </li>
 }

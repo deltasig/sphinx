@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="Exceptions\MealExceptions.cs" />
     <Compile Include="Exceptions\LaundryExceptions.cs" />
-    <Compile Include="Interfaces\IBugService.cs" />
     <Compile Include="Interfaces\IIncidentService.cs" />
     <Compile Include="Interfaces\ILaundryService.cs" />
     <Compile Include="Interfaces\IMealService.cs" />
@@ -71,7 +70,6 @@
     <Compile Include="Models\ServiceMemberStats.cs" />
     <Compile Include="Models\ServiceHourStats.cs" />
     <Compile Include="Services\IncidentService.cs" />
-    <Compile Include="Services\BugService.cs" />
     <Compile Include="Services\LaundryService.cs" />
     <Compile Include="Services\MealService.cs" />
     <Compile Include="Services\ServiceService.cs" />

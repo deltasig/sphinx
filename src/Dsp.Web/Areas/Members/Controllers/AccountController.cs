@@ -471,11 +471,6 @@
                         userInteractedWithSystem = true;
                         interactionMessage = "Work Order Comments";
                     }
-                    else if (user.BugReports.Any())
-                    {
-                        userInteractedWithSystem = true;
-                        interactionMessage = "Bug Reports";
-                    }
                     else if (user.WorkOrderPriorityChanges.Any())
                     {
                         userInteractedWithSystem = true;
