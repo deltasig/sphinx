@@ -153,7 +153,7 @@
                 if (sid == null)
                 {
                     semester = await _semesterService.GetCurrentSemesterAsync();
-                    semesterId = semester.SemesterId;
+                    semesterId = semester.Id;
                 }
                 else
                 {

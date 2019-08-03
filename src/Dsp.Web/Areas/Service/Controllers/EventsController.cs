@@ -65,7 +65,7 @@
             var model = new ServiceEvent
             {
                 DateTimeOccurred = _semesterService.ConvertUtcToCst(semester.DateStart),
-                SemesterId = semester.SemesterId
+                SemesterId = semester.Id
             };
 
             return View(model);
@@ -89,12 +89,12 @@
             model.DateTimeOccurred = _semesterService.ConvertCstToUtc(model.DateTimeOccurred);
             model.CreatedOn = DateTime.UtcNow;
             var eventSemester = await _semesterService.GetSemesterByUtcDateTimeAsync(model.DateTimeOccurred);
-            model.SemesterId = eventSemester.SemesterId;
+            model.SemesterId = eventSemester.Id;
 
             await _serviceService.CreateEventAsync(model);
 
             TempData[SuccessMessageKey] = "Service event created successfully.";
-            return RedirectToAction("Index", new { sid = eventSemester.SemesterId });
+            return RedirectToAction("Index", new { sid = eventSemester.Id });
         }
 
         public async Task<ActionResult> Details(int id)
@@ -128,12 +128,12 @@
 
             model.DateTimeOccurred = _semesterService.ConvertCstToUtc(model.DateTimeOccurred);
             var eventSemester = await _semesterService.GetSemesterByUtcDateTimeAsync(model.DateTimeOccurred);
-            model.SemesterId = eventSemester.SemesterId;
+            model.SemesterId = eventSemester.Id;
 
             await _serviceService.UpdateEventAsync(model);
 
             TempData[SuccessMessageKey] = "Service event modified successfully.";
-            return RedirectToAction("Index", new { sid = eventSemester.SemesterId });
+            return RedirectToAction("Index", new { sid = eventSemester.Id });
         }
 
         [Authorize(Roles = "Administrator, Service")]

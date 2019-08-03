@@ -273,14 +273,14 @@
                                         <small style="margin-right:15px"
                                                data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
                                             <i class="fa fa-fw fa-users"></i>
-                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
+                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.Id) / @c.ClassesTaken.Count
                                         </small>
                                     </div>
                                     <div class="col-md-4 visible-xs visible-sm">
                                         <small style="margin-right:15px"
                                                data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
                                             <i class="fa fa-fw fa-users"></i>
-                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.SemesterId) / @c.ClassesTaken.Count
+                                            @c.ClassesTaken.Count(t => t.SemesterId == Model.CurrentSemester.Id) / @c.ClassesTaken.Count
                                         </small>
                                     </div>
                                 </div>

@@ -45,7 +45,7 @@
                 ? currentSemester
                 : await _semesterService.GetSemesterByIdAsync((int)sid);
 
-            var rosterProgress = await _serviceService.GetRosterProgressBySemesterIdAsync(selectedSemester.SemesterId);
+            var rosterProgress = await _serviceService.GetRosterProgressBySemesterIdAsync(selectedSemester.Id);
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);
             var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");

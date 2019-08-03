@@ -127,7 +127,7 @@
                 <ul class="list-group" style="max-height: 600px; overflow-y:scroll">
                     @foreach (var m in Model.Members.OrderBy(m => m.LastName).ThenBy(m => m.FirstName))
                     {
-                        var isAssigned = m.Rooms.Any(r => r.Room.SemesterId == Model.Semester.SemesterId);
+                        var isAssigned = m.Rooms.Any(r => r.Room.SemesterId == Model.Semester.Id);
                         var color = isAssigned ? "list-group-item-info" : "";
 
                         <li class="list-group-item @color" id="m-@m.Id" onclick="selectMember(@m.Id, &quot;@m.ToString()&quot;)" style="cursor: pointer">

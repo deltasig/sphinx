@@ -8,10 +8,10 @@
     <div class="row">
         <div class="col-xs-12">
             <p>
-                <a href="@Url.Action("Index", "Events", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", "Events", new { sid = Model.Semester.Id })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Events
                 </a>
-                <a href="@Url.Action("Index", "Hours", new { sid = Model.Semester.SemesterId })" class="btn btn-sm btn-default">
+                <a href="@Url.Action("Index", "Hours", new { sid = Model.Semester.Id })" class="btn btn-sm btn-default">
                     <i class="fa fa-caret-left"></i> Back to Service Hours
                 </a>
             </p>
@@ -57,7 +57,7 @@
                 <hr />
                 <p>
                     If you don't see an event in the dropdown, you can add it yourself by going
-                    @Html.ActionLink("here", "Create", "Events", new { area = "Service", sid = Model.Semester.SemesterId }, new { @class = "" }).
+                    @Html.ActionLink("here", "Create", "Events", new { area = "Service", sid = Model.Semester.Id }, new { @class = "" }).
                 </p>
             </div>
         </div>

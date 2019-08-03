@@ -8,8 +8,8 @@ namespace Dsp.Data.Entities
 
     public class Semester
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SemesterId { get; set; }
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("SemesterId")]
+        public int Id { get; set; }
 
         [Required, DataType(DataType.Date), Display(Name = "Start Date")]
         public DateTime DateStart { get; set; }

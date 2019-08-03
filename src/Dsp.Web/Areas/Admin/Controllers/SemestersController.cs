@@ -97,7 +97,7 @@
                 {
                     model.PledgeClass.PinningDate = base.ConvertCstToUtc((DateTime)model.PledgeClass.PinningDate);
                 }
-                model.PledgeClass.SemesterId = model.Semester.SemesterId;
+                model.PledgeClass.SemesterId = model.Semester.Id;
                 await _semesterService.CreatePledgeClassAsync(model.PledgeClass);
             }
             catch

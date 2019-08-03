@@ -39,7 +39,7 @@ namespace Dsp.Services.Models
             var serviceHours = member.ServiceHours
                 .Where(e =>
                     e.Event.IsApproved &&
-                    e.Event.SemesterId == selectedSemester.SemesterId).ToList();
+                    e.Event.SemesterId == selectedSemester.Id).ToList();
             ServiceHoursCount = serviceHours.Count();
             Hours = serviceHours.Sum(h => h.DurationHours);
             Submissions = serviceHours.Select(x => new ServiceEventProgress(x));

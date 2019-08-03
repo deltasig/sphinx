@@ -19,7 +19,7 @@
             if (filter.sem == null)
             {
                 semester = await base.GetThisSemesterAsync();
-                filter.sem = semester.SemesterId;
+                filter.sem = semester.Id;
             }
             else
             {
@@ -34,7 +34,7 @@
 
             var model = new RosterIndexModel
             {
-                SelectedSemester = semester.SemesterId,
+                SelectedSemester = semester.Id,
                 Semester = semester,
                 Semesters = await base.GetSemesterListAsync(),
                 Members = filteredResults

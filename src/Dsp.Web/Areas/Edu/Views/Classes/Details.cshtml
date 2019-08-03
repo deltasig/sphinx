@@ -17,7 +17,7 @@
         {
             UserId = User.Identity.GetUserId<int>(),
             ClassId = Model.Class.ClassId,
-            SemesterId = Model.CurrentSemester.SemesterId
+            SemesterId = Model.CurrentSemester.Id
         }
     };
 }
@@ -34,7 +34,7 @@
             @using (Html.BeginForm("Enroll", "Classes"))
             {
                 if (!Model.Class.ClassesTaken.Any(c =>
-                    c.UserId == User.Identity.GetUserId<int>() && c.SemesterId == Model.CurrentSemester.SemesterId))
+                    c.UserId == User.Identity.GetUserId<int>() && c.SemesterId == Model.CurrentSemester.Id))
                 {
                     @Html.AntiForgeryToken()
                     <input id="SelectedUserName" name="SelectedUserName" type="hidden" value="@enrollModel.SelectedUserName">
@@ -91,7 +91,7 @@
                                 foreach (var s in Model.Class.ClassesTaken
                                     .OrderByDescending(c => c.Semester.DateEnd).ThenBy(c => c.Member.LastName))
                                 {
-                                    <tr class="@(s.SemesterId == Model.CurrentSemester.SemesterId ? "success" : "")">
+                                    <tr class="@(s.SemesterId == Model.CurrentSemester.Id ? "success" : "")">
                                         <td>
                                             <a href="@Url.Action("Schedule", new {userName = s.Member.UserName})">
                                                 @(s.Member.FirstName + " " + s.Member.LastName)

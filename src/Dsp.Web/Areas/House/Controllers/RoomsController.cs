@@ -27,7 +27,7 @@
 
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateStart).ToListAsync();
             model.SemesterList = base.GetSemesterSelectList(semesters);
-            model.sid = model.Semester.SemesterId;
+            model.sid = model.Semester.Id;
             model.Members = (await base.GetRosterForSemester(model.Semester)).ToList();
             model.Rooms = model.Semester.Rooms;
 
@@ -40,13 +40,13 @@
             if (sid == null)
             {
                 var thisSemester = await base.GetThisSemesterAsync();
-                sid = thisSemester.SemesterId;
+                sid = thisSemester.Id;
                 ViewBag.Semester = thisSemester.ToString();
             }
             else
             {
                 var semester = await _db.Semesters.FindAsync((int)sid);
-                sid = semester.SemesterId;
+                sid = semester.Id;
                 ViewBag.Semester = semester.ToString();
             }
             var room = new Room { SemesterId = (int)sid };
@@ -144,7 +144,7 @@
                 {
                     var newRoom = new Room
                     {
-                        SemesterId = semester.SemesterId,
+                        SemesterId = semester.Id,
                         Name = r.Name,
                         MaxCapacity = r.MaxCapacity
                     };

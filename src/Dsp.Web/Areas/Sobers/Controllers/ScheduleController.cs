@@ -260,13 +260,13 @@
                     signups.Any(i => i.DateOfShift >= s.DateStart && i.DateOfShift <= s.DateEnd))
                 .ToList();
             // Sometimes the current semester doesn't contain any signups, yet we still want it in the list
-            if (semesters.All(s => s.SemesterId != thisSemester.SemesterId))
+            if (semesters.All(s => s.Id != thisSemester.Id))
             {
                 semesters.Add(thisSemester);
             }
 
             // Build model for view
-            model.SelectedSemester = semester.SemesterId;
+            model.SelectedSemester = semester.Id;
             model.Semester = semester;
             model.SemesterList = GetSemesterSelectList(semesters);
             // Identify members for current semester
