@@ -16,8 +16,6 @@
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<BugImage> BugImages { get; set; }
-        public virtual DbSet<BugReport> BugReports { get; set; }
         public virtual DbSet<Class> Classes { get; set; }
         public virtual DbSet<ClassTaken> ClassesTaken { get; set; }
         public virtual DbSet<Department> Departments { get; set; }
