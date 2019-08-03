@@ -59,7 +59,7 @@
             {
                 Amendment = new ServiceHourAmendment
                 {
-                    SemesterId = semester.SemesterId
+                    SemesterId = semester.Id
                 },
                 Semester = semester
             };
@@ -71,7 +71,7 @@
                 {
                     UserId = member.Id,
                     Name = member.FirstName + " " + member.LastName +
-                        " (" + member.LivingAssignmentForSemester(semester.SemesterId) + ")"
+                        " (" + member.LivingAssignmentForSemester(semester.Id) + ")"
                 });
             }
             model.Members = new SelectList(memberList, "UserId", "Name");
@@ -137,7 +137,7 @@
             {
                 Amendment = new ServiceEventAmendment
                 {
-                    SemesterId = semester.SemesterId
+                    SemesterId = semester.Id
                 },
                 Semester = semester
             };
@@ -149,7 +149,7 @@
                 {
                     UserId = member.Id,
                     Name = member.FirstName + " " + member.LastName +
-                        " (" + member.LivingAssignmentForSemester(semester.SemesterId) + ")"
+                        " (" + member.LivingAssignmentForSemester(semester.Id) + ")"
                 });
             }
             model.Members = new SelectList(memberList, "UserId", "Name");

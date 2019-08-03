@@ -11,7 +11,7 @@
     <ul class="dropdown-menu" aria-labelledby="semester-dropdown">
         @foreach (var s in Model.SemesterList)
         {
-            var isActive = s.Value == Model.SelectedSemester.SemesterId.ToString();
+            var isActive = s.Value == Model.SelectedSemester.Id.ToString();
 
             <li><a href="@Url.Action("Index", new { sid = s.Value })" class="@(isActive ? "active" : "")">@s.Text</a></li>
         }
@@ -20,21 +20,21 @@
 
 <div class="panel panel-default">
     <div class="list-group">
-        <a href="@Url.Action("Index", "Hours", new { sid = Model.SelectedSemester.SemesterId })"
+        <a href="@Url.Action("Index", "Hours", new { sid = Model.SelectedSemester.Id })"
            class="list-group-item @(ViewBag.Title.Contains("Hours") ? "active" : "")">
             Member Progress
         </a>
-        <a href="@Url.Action("Index", "Events", new { sid = Model.SelectedSemester.SemesterId })"
+        <a href="@Url.Action("Index", "Events", new { sid = Model.SelectedSemester.Id })"
            class="list-group-item @(ViewBag.Title.Contains("Events") ? "active" : "")">
             Events
         </a>
-        <a href="@Url.Action("Index", "Stats", new { sid = Model.SelectedSemester.SemesterId })"
+        <a href="@Url.Action("Index", "Stats", new { sid = Model.SelectedSemester.Id })"
            class="list-group-item @(ViewBag.Title.Contains("Stats") ? "active" : "")">
             Stats
         </a>
         @if (Model.HasElevatedPermissions)
         {
-            <a href="@Url.Action("Index", "Amendments", new { sid = Model.SelectedSemester.SemesterId })"
+            <a href="@Url.Action("Index", "Amendments", new { sid = Model.SelectedSemester.Id })"
                class="list-group-item @(ViewBag.Title.Contains("Amendments") ? "active" : "")">
                 <i class="fa fa-fw fa-lock" data-toggle="tooltip" data-placement="right" title="For chairman only"></i> Amendments
             </a>
@@ -44,11 +44,11 @@
 
 <div class="panel panel-default">
     <div class="list-group">
-        <a href="@Url.Action("Submit", "Hours" , new { sid=Model.SelectedSemester.SemesterId })"
+        <a href="@Url.Action("Submit", "Hours" , new { sid=Model.SelectedSemester.Id })"
            class="list-group-item">
             <i class="fa fa-fw fa-plus"></i> Submit Hours
         </a>
-        <a href="@Url.Action("Create", "Events", new { sid = Model.SelectedSemester.SemesterId })"
+        <a href="@Url.Action("Create", "Events", new { sid = Model.SelectedSemester.Id })"
            class="list-group-item">
             <i class="fa fa-fw fa-plus"></i> Create Event
         </a>

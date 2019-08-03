@@ -19,8 +19,8 @@
     var laundry = Model.LaundrySummary.OrderBy(o => o.DateTimeShift);
 
     // Class-related
-    var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.SemesterId).ToList();
-    var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.SemesterId).ToList();
+    var lastSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.PreviousSemester.Id).ToList();
+    var thisSemesterClasses = Model.MemberInfo.ClassesTaken.Where(c => c.SemesterId == Model.CurrentSemester.Id).ToList();
 
     // Service-related
     var approvedHours = 0.0;
@@ -30,8 +30,8 @@
         approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
         unapprovedHours = Model.CompletedEvents.Where(e => !e.Event.IsApproved).Sum(h => h.DurationHours);
     }
-    var hourAmendments = Model.MemberInfo.ServiceHourAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
-    var eventAmendments = Model.MemberInfo.ServiceEventAmendments.Where(a => a.SemesterId == Model.CurrentSemester.SemesterId);
+    var hourAmendments = Model.MemberInfo.ServiceHourAmendments.Where(a => a.SemesterId == Model.CurrentSemester.Id);
+    var eventAmendments = Model.MemberInfo.ServiceEventAmendments.Where(a => a.SemesterId == Model.CurrentSemester.Id);
     var totalHourAmendment = hourAmendments.Sum(a => a.AmountHours);
     var totalEventAmendment = eventAmendments.Sum(a => a.NumberEvents);
     var hoursGoal = Model.CurrentSemester.MinimumServiceHours + totalHourAmendment;
@@ -248,7 +248,7 @@
                                 </div>
                             </div>
                         }
-                        @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.SemesterId)
+                        @if (!lastSemesterClasses.Any() && Model.MemberInfo.PledgeClass.SemesterId == Model.CurrentSemester.Id)
                         {
                             <div class="alert alert-warning">
                                 <strong>New Member: </strong>You do not appear to have classes entered for @Model.PreviousSemester.ToString().

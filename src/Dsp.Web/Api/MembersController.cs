@@ -136,7 +136,7 @@
                 .Where(s => s.CreatedOn > startOfFeedUtc && s.CreatedOn <= nowUtc)
                 .ToListAsync();
             var saas = await _db.Leaders
-                .Where(l => l.Position.Name == "Sergeant-at-Arms" && l.SemesterId == thisSemester.SemesterId).ToListAsync();
+                .Where(l => l.Position.Name == "Sergeant-at-Arms" && l.SemesterId == thisSemester.Id).ToListAsync();
             var saa = (saas.LastOrDefault() ?? new Leader
             {
                 Member = await _memberService.GetMemberByIdAsync(User.Identity.GetUserId<int>())

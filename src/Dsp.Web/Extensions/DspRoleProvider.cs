@@ -91,7 +91,7 @@
                                     RoleId = positionId,
                                     SemesterId = (from s in db.Semesters
                                                   orderby s.DateEnd descending
-                                                  select s.SemesterId).First(),
+                                                  select s.Id).First(),
                                     AppointedOn = DateTime.UtcNow
                                 };
                                 db.Leaders.Add(memberInRole);

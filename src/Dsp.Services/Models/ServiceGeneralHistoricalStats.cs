@@ -21,7 +21,7 @@ namespace Dsp.Services.Models
             IEnumerable<Member> nonExemptMembers,
             DateTime calculatedOn)
         {
-            SemesterId = semester.SemesterId;
+            SemesterId = semester.Id;
             SemesterName = semester.ToString();
 
             var approvedServiceEvents = semester.ServiceEvents

@@ -30,7 +30,7 @@ namespace Dsp.Web.Areas.Service.Controllers
                 ? currentSemester
                 : await _semesterService.GetSemesterByIdAsync((int)sid);
 
-            var memberStats = await _serviceService.GetMemberStatsBySemesterIdAsync(selectedSemester.SemesterId);
+            var memberStats = await _serviceService.GetMemberStatsBySemesterIdAsync(selectedSemester.Id);
             var generalStats = await _serviceService.GetGeneralHistoricalStatsAsync();
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);

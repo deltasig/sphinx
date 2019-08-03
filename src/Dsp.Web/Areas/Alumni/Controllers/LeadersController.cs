@@ -19,7 +19,7 @@
 
             var model = await _db.Leaders
                 .Where(l =>
-                    l.SemesterId == currentSemester.SemesterId &&
+                    l.SemesterId == currentSemester.Id &&
                     l.Position.Type == Position.PositionType.Alumni)
                 .ToListAsync();
 

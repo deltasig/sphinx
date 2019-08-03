@@ -243,7 +243,7 @@
                 Semesters = await GetSemesterListAsync(),
                 ClassTaken = new ClassTaken
                 {
-                    SemesterId = semesterId == null ? (await GetThisSemesterAsync()).SemesterId : (int)semesterId,
+                    SemesterId = semesterId == null ? (await GetThisSemesterAsync()).Id : (int)semesterId,
                     UserId = member.Id
                 },
                 ClassesTaken = member.ClassesTaken

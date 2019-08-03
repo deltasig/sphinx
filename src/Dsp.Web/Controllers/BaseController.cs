@@ -152,12 +152,12 @@
             {
                 newList.Add(new
                 {
-                    s.SemesterId,
+                    s.Id,
                     Name = s.ToString()
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name", (await GetThisSemesterAsync()).SemesterId);
+            return new SelectList(newList, "Id", "Name", (await GetThisSemesterAsync()).Id);
         }
         protected virtual async Task<SelectList> GetAllSemesterListWithNoneAsync()
         {
@@ -168,12 +168,12 @@
             {
                 newList.Add(new
                 {
-                    s.SemesterId,
+                    s.Id,
                     Name = s.ToString()
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name");
+            return new SelectList(newList, "Id", "Name");
         }
         protected virtual async Task<SelectList> GetSemesterListAsync()
         {
@@ -187,12 +187,12 @@
             {
                 newList.Add(new
                 {
-                    s.SemesterId,
+                    s.Id,
                     Name = s.ToString()
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name", (await GetThisSemesterAsync()).SemesterId);
+            return new SelectList(newList, "Id", "Name", (await GetThisSemesterAsync()).Id);
         }
         protected virtual async Task<SelectList> GetSemesterListWithNoneAsync()
         {
@@ -203,12 +203,12 @@
             {
                 newList.Add(new
                 {
-                    s.SemesterId,
+                    s.Id,
                     Name = s.ToString()
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name");
+            return new SelectList(newList, "Id", "Name");
         }
         protected virtual SelectList GetSemesterSelectList(IEnumerable<Semester> list)
         {
@@ -218,12 +218,12 @@
             {
                 newList.Add(new
                 {
-                    s.SemesterId,
+                    s.Id,
                     Name = s.ToString()
                 });
             }
 
-            return new SelectList(newList, "SemesterId", "Name");
+            return new SelectList(newList, "Id", "Name");
         }
         protected virtual async Task<SelectList> GetUserIdListAsFullNameAsync()
         {
@@ -276,7 +276,7 @@
             var thisAndPreviousSemesters = await _db.Semesters
                 .Where(s => s.DateEnd <= DateTime.UtcNow)
                 .ToListAsync();
-            var semesterIds = thisAndPreviousSemesters.Select(s => (int?)s.SemesterId);
+            var semesterIds = thisAndPreviousSemesters.Select(s => (int?)s.Id);
             var members = UserManager.Users
                 .Where(m =>
                     (m.ExpectedGraduationId == null || semesterIds.Contains(m.ExpectedGraduationId))
@@ -621,16 +621,16 @@
                     filterResults = classes.Where(c =>
                         c.ClassesTaken.Any(t =>
                             t.UserId == userId &&
-                            t.SemesterId == thisSemester.SemesterId &&
+                            t.SemesterId == thisSemester.Id &&
                             !t.IsSummerClass)).ToList();
                     break;
                 case "being-taken":
                     filterResults = classes.Where(c =>
-                        c.ClassesTaken.Any(t => t.SemesterId == thisSemester.SemesterId)).ToList();
+                        c.ClassesTaken.Any(t => t.SemesterId == thisSemester.Id)).ToList();
                     break;
                 case "none-taking":
                     filterResults = classes.Where(c =>
-                        c.ClassesTaken.All(t => t.SemesterId != thisSemester.SemesterId)).ToList();
+                        c.ClassesTaken.All(t => t.SemesterId != thisSemester.Id)).ToList();
                     break;
             }
 
@@ -653,12 +653,12 @@
                     break;
                 case "taking-asc":
                     filterResults = filterResults.OrderBy(o =>
-                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.SemesterId).ToList().Count)
+                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.Id).ToList().Count)
                         .ThenBy(o => o.CourseShorthand).ToList();
                     break;
                 case "taking-desc":
                     filterResults = filterResults.OrderByDescending(o =>
-                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.SemesterId).ToList().Count)
+                            o.ClassesTaken.Select(t => t.SemesterId == thisSemester.Id).ToList().Count)
                         .ThenBy(o => o.CourseShorthand).ToList();
                     break;
                 default:

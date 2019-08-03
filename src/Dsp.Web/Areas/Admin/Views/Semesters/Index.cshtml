@@ -83,11 +83,11 @@
                                     }
                                 </td>
                                 <td class="text-right">
-                                    @Html.ActionLink("Edit", "Edit", new { id = item.SemesterId })
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                                     @if (User.IsInRole("Administrator"))
                                     {
                                         @:|
-                                        @Html.ActionLink("Delete", "Delete", new { id = item.SemesterId })
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                                     }
                                 </td>
                             </tr>

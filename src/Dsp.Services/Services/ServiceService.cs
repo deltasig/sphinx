@@ -49,7 +49,7 @@
 
         public async Task<IEnumerable<ServiceEvent>> GetEventsForSemesterAsync(Semester semester)
         {
-            var events = await GetEventsBySemesterIdAsync(semester.SemesterId);
+            var events = await GetEventsBySemesterIdAsync(semester.Id);
 
             return events;
         }
@@ -60,7 +60,7 @@
                 filter: x => x.ServiceEvents.Any(),
                 orderBy: x => x.OrderByDescending(o => o.DateStart));
 
-            if (includeCurrent && !semesters.Any(x => x.SemesterId == currentSemester.SemesterId))
+            if (includeCurrent && !semesters.Any(x => x.Id == currentSemester.Id))
             {
                 semesters = semesters
                     .Concat(new List<Semester> { currentSemester })
@@ -180,10 +180,10 @@
                 .OrderByDescending(x => x.DateStart);
             foreach (var sem in semestersWithApprovedEvents)
             {
-                var roster = await _memberService.GetRosterForSemesterAsync(sem.SemesterId);
+                var roster = await _memberService.GetRosterForSemesterAsync(sem.Id);
                 var nonExemptRoster = roster
                     .Where(x => x.ServiceHourAmendments
-                        .Where(s => s.SemesterId == sem.SemesterId)
+                        .Where(s => s.SemesterId == sem.Id)
                         .Sum(h => h.AmountHours) + sem.MinimumServiceHours > 0);
                 var calculatedOn = ConvertUtcToCst(DateTime.UtcNow);
                 var semesterStats = new ServiceGeneralHistoricalStats(sem, nonExemptRoster, calculatedOn);
@@ -220,7 +220,7 @@
             // Add to cache
             var currentSemester = await _semesterService.GetCurrentSemesterAsync();
             CacheItemPolicy cacheItemPolicy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromDays(7) };
-            if (selectedSemester.SemesterId == currentSemester.SemesterId)
+            if (selectedSemester.Id == currentSemester.Id)
             {
                 cacheItemPolicy = new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(6) };
             }
@@ -250,14 +250,14 @@
                 .Where(m => m.HourAmendmentsTotal + selectedSemester.MinimumServiceHours > 0).ToList();
             var nonExemptMemberCount = nonExemptMembers.Count;
             var actives = rosterProgress
-                .Where(m => m.NewMemberClassSemesterId != selectedSemester.SemesterId)
+                .Where(m => m.NewMemberClassSemesterId != selectedSemester.Id)
                 .ToList();
             var nonExemptActiveMembers = actives
                 .Where(m => !exemptMembers.Select(e => e.MemberId).Contains(m.MemberId))
                 .ToList();
             var nonExemptActiveMemberCount = nonExemptActiveMembers.Count;
             var newMembers = rosterProgress
-                .Where(m => m.NewMemberClassSemesterId == selectedSemester.SemesterId)
+                .Where(m => m.NewMemberClassSemesterId == selectedSemester.Id)
                 .ToList();
             var nonExemptNewMembers = newMembers
                 .Where(m => !exemptMembers.Select(e => e.MemberId).Contains(m.MemberId))
@@ -349,7 +349,7 @@
             // Add model to cache
             var currentSemester = await _semesterService.GetCurrentSemesterAsync();
             CacheItemPolicy cacheItemPolicy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromDays(7) };
-            if (selectedSemester.SemesterId == currentSemester.SemesterId)
+            if (selectedSemester.Id == currentSemester.Id)
             {
                 cacheItemPolicy = new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(6) };
             }
@@ -372,7 +372,7 @@
             var roster = await _memberService.GetRosterForSemesterAsync(sid);
             var unadjustedMemberCount = roster.Count();
             roster = roster.Where(x => x.ServiceHourAmendments
-                    .Where(s => s.SemesterId == selectedSemester.SemesterId)
+                    .Where(s => s.SemesterId == selectedSemester.Id)
                     .Sum(h => h.AmountHours) + selectedSemester.MinimumServiceHours > 0);
             var adjustedMemberCount = roster.Count();
             var events = await GetEventsBySemesterIdAsync(sid);
@@ -433,7 +433,7 @@
             // Add model to cache
             var currentSemester = await _semesterService.GetCurrentSemesterAsync();
             CacheItemPolicy cacheItemPolicy = new CacheItemPolicy { SlidingExpiration = TimeSpan.FromDays(7) };
-            if (selectedSemester.SemesterId == currentSemester.SemesterId)
+            if (selectedSemester.Id == currentSemester.Id)
             {
                 cacheItemPolicy = new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.UtcNow.AddHours(6) };
             }

@@ -109,8 +109,8 @@
             // Send notification emails to Sergean-at-Arms and President.
 #if !DEBUG
             var currentSemester = await _semesterService.GetCurrentSemesterAsync();
-            var saa = await _positionService.GetUserInPositionAsync("Sergeant-at-Arms", currentSemester.SemesterId);
-            var president = await _positionService.GetUserInPositionAsync("President", currentSemester.SemesterId);
+            var saa = await _positionService.GetUserInPositionAsync("Sergeant-at-Arms", currentSemester.Id);
+            var president = await _positionService.GetUserInPositionAsync("President", currentSemester.Id);
             var body = RenderRazorViewToString("~/Views/Emails/NewIncidentReport.cshtml", model);
             var message = new IdentityMessage
             {

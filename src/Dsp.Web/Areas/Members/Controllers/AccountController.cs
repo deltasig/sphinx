@@ -53,7 +53,7 @@
                 Member = member,
                 CurrentSemester = thisSemester,
                 ThisSemesterCourses = member.ClassesTaken
-                    .Where(c => c.SemesterId == thisSemester.SemesterId)
+                    .Where(c => c.SemesterId == thisSemester.Id)
             };
             ViewBag.UserName = userName;
 

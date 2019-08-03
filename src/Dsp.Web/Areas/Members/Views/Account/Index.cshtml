@@ -267,7 +267,7 @@
                                 {
                                     foreach (var item in Model.ThisSemesterCourses.Where(c => !c.IsSummerClass))
                                     {
-                                        var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.SemesterId) - 1;
+                                        var broCount = item.Class.ClassesTaken.Count(c => c.SemesterId == Model.CurrentSemester.Id) - 1;
 
                                         <tr>
                                             <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>

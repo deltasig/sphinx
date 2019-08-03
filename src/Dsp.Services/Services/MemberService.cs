@@ -44,7 +44,7 @@
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             var roster = await GetRosterForSemesterAsync(semester);
-            return roster.Where(m => m.PledgeClass.SemesterId != semester.SemesterId);
+            return roster.Where(m => m.PledgeClass.SemesterId != semester.Id);
         }
 
         public async Task<IEnumerable<Member>> GetActivesAsync(int semesterId)
@@ -56,14 +56,14 @@
         public async Task<IEnumerable<Member>> GetActivesAsync(Semester semester)
         {
             var roster = await GetRosterForSemesterAsync(semester);
-            return roster.Where(m => m.PledgeClass.SemesterId != semester.SemesterId);
+            return roster.Where(m => m.PledgeClass.SemesterId != semester.Id);
         }
 
         public async Task<IEnumerable<Member>> GetNewMembersAsync()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             var roster = await GetRosterForSemesterAsync(semester);
-            return roster.Where(m => m.PledgeClass.SemesterId == semester.SemesterId);
+            return roster.Where(m => m.PledgeClass.SemesterId == semester.Id);
         }
 
         public async Task<IEnumerable<Member>> GetNewMembersAsync(int semesterId)
@@ -75,7 +75,7 @@
         public async Task<IEnumerable<Member>> GetNewMembersAsync(Semester semester)
         {
             var roster = await GetRosterForSemesterAsync(semester);
-            return roster.Where(m => m.PledgeClass.SemesterId == semester.SemesterId);
+            return roster.Where(m => m.PledgeClass.SemesterId == semester.Id);
         }
 
         public async Task<IEnumerable<Member>> GetAlumniAsync()

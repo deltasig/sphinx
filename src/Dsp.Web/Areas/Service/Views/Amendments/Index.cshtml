@@ -15,7 +15,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Hour Amendments
-                            <a href="@Url.Action("AmendHours", "Amendments", new { sid = Model.NavModel.SelectedSemester.SemesterId })" class="btn btn-xs btn-success pull-right">
+                            <a href="@Url.Action("AmendHours", "Amendments", new { sid = Model.NavModel.SelectedSemester.Id })" class="btn btn-xs btn-success pull-right">
                                 <i class="fa fa-plus-circle"></i>
                             </a>
                         </div>
@@ -59,7 +59,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading">
                             Event Amendments
-                            <a href="@Url.Action("AmendEvents", "Amendments", new { sid = Model.NavModel.SelectedSemester.SemesterId })" class="btn btn-xs btn-success pull-right">
+                            <a href="@Url.Action("AmendEvents", "Amendments", new { sid = Model.NavModel.SelectedSemester.Id })" class="btn btn-xs btn-success pull-right">
                                 <i class="fa fa-plus-circle"></i>
                             </a>
                         </div>

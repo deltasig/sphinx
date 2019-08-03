@@ -67,8 +67,8 @@
             }.AsQueryable();
             var semestersData = new List<Semester>
             {
-                new Semester { SemesterId = 1, DateStart = new DateTime(2015, 1, 15), DateEnd = new DateTime(2015, 5, 15) },
-                new Semester { SemesterId = 2, DateStart = new DateTime(2015, 1, 15), DateEnd = new DateTime(2015, 5, 15) }
+                new Semester { Id = 1, DateStart = new DateTime(2015, 1, 15), DateEnd = new DateTime(2015, 5, 15) },
+                new Semester { Id = 2, DateStart = new DateTime(2015, 1, 15), DateEnd = new DateTime(2015, 5, 15) }
             }.AsQueryable();
             // TODO: Finish semesters and add pledge classes to test roster.
 
