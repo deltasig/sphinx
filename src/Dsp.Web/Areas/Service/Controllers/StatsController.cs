@@ -29,11 +29,14 @@ namespace Dsp.Web.Areas.Service.Controllers
             Semester selectedSemester = sid == null
                 ? currentSemester
                 : await _semesterService.GetSemesterByIdAsync((int)sid);
+
+            var memberStats = await _serviceService.GetMemberStatsBySemesterIdAsync(selectedSemester.SemesterId);
+            var generalStats = await _serviceService.GetGeneralHistoricalStatsAsync();
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);
             var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
             var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
-            var model = new ServiceStatsIndexModel(navModel);
+            var model = new ServiceStatsIndexModel(navModel, memberStats, generalStats);
 
             return View(model);
         }

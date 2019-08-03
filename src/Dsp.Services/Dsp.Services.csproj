@@ -66,6 +66,8 @@
     <Compile Include="Interfaces\IServiceService.cs" />
     <Compile Include="Interfaces\ITreasuryService.cs" />
     <Compile Include="Interfaces\IStatusService.cs" />
+    <Compile Include="Models\ServiceGeneralHistoricalStats.cs" />
+    <Compile Include="Models\ServiceMemberProgress.cs" />
     <Compile Include="Models\ServiceMemberStats.cs" />
     <Compile Include="Models\ServiceHourStats.cs" />
     <Compile Include="Services\IncidentService.cs" />

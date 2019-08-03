@@ -1,6 +1,7 @@
 ﻿@model Dsp.Web.Areas.Service.Models.ServiceEventIndexModel
 @{
     ViewBag.Title = "Service Events";
+    ViewBag.Print = true;
 }
 
 <div class="container-fluid">
@@ -19,7 +20,7 @@
                                     <tr>
                                         <th class="col-sm-2">Date/Time</th>
                                         <th>Event Name</th>
-                                        <th class="col-sm-1">
+                                        <th class="col-sm-2">
                                             Duration
                                             <i data-toggle="tooltip" data-placement="top" title="Displayed in Hours" class="fa fa-info-circle text-info"></i>
                                         </th>
