@@ -18,3 +18,10 @@ A clear and concise description of any alternative solutions or features you've 
 
 **Additional context**
 Add any other context or screenshots about the feature request here.
+
+## Regarding Approval
+
+Features are handled differently than bugs.  Where bugs are handled much more quickly (depending on severity), features take longer and are far more numerous.  Therefore, in order for feature requests to be considered, the following will need to happen before work begins:
+
+- Sufficient dialog will need to occur in order to define requirements
+- 5 or more "thumbs up" 👍 reactions on your original post from other members, and less than 5 "thumbs down" 👎 reactions.
