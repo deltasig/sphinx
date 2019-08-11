@@ -162,7 +162,7 @@
         protected virtual async Task<SelectList> GetAllSemesterListWithNoneAsync()
         {
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
-            var newList = new List<object> { new { SemesterId = 0, Name = "None" } };
+            var newList = new List<object> { new { Id = 0, Name = "None" } };
 
             foreach (var s in semesters)
             {
@@ -197,7 +197,7 @@
         protected virtual async Task<SelectList> GetSemesterListWithNoneAsync()
         {
             var semesters = await _db.Semesters.OrderByDescending(s => s.DateEnd).ToListAsync();
-            var newList = new List<object> { new { SemesterId = -1, Name = "--Graduating Semester (optional)--" } };
+            var newList = new List<object> { new { Id = -1, Name = "--Graduating Semester (optional)--" } };
 
             foreach (var s in semesters)
             {
