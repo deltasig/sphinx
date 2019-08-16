@@ -1,6 +1,7 @@
 namespace Dsp.Data.Entities
 {
     using System;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.ComponentModel.DataAnnotations.Schema;
 
@@ -28,6 +29,9 @@ namespace Dsp.Data.Entities
 
         [DataType(DataType.MultilineText), StringLength(1500), Display(Name = "Official Report")]
         public string OfficialReport { get; set; }
+
+        [Required, Display(Name = "Share Identity?"), DefaultValue(false)]
+        public bool ShareIdentity { get; set; }
 
         [ForeignKey("ReportedBy")]
         public virtual Member Member { get; set; }

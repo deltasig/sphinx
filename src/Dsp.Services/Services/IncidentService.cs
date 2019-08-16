@@ -91,10 +91,13 @@
 
         public async Task UpdateIncidentReportAsync(IncidentReport incidentReport)
         {
-            incidentReport.DateTimeOfIncident = ConvertCstToUtc(incidentReport.DateTimeOfIncident);
-            incidentReport.DateTimeSubmitted = ConvertCstToUtc(incidentReport.DateTimeSubmitted);
+            var existingReport = await GetIncidentReportByIdAsync(incidentReport.Id);
 
-            _repository.Update(incidentReport);
+            existingReport.PolicyBroken = incidentReport.PolicyBroken;
+            existingReport.InvestigationNotes = incidentReport.InvestigationNotes;
+            existingReport.OfficialReport = incidentReport.OfficialReport;
+
+            _repository.Update(existingReport);
             await _repository.SaveAsync();
         }
     }
