@@ -338,6 +338,10 @@
     <Compile Include="Migrations\201908031622582_RemoveBugReports.Designer.cs">
       <DependentUpon>201908031622582_RemoveBugReports.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201908161344300_AddIncidentReportIdentitySharing.cs" />
+    <Compile Include="Migrations\201908161344300_AddIncidentReportIdentitySharing.Designer.cs">
+      <DependentUpon>201908161344300_AddIncidentReportIdentitySharing.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SphinxDbContext.cs" />
@@ -522,6 +526,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201908031622582_RemoveBugReports.resx">
       <DependentUpon>201908031622582_RemoveBugReports.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201908161344300_AddIncidentReportIdentitySharing.resx">
+      <DependentUpon>201908161344300_AddIncidentReportIdentitySharing.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

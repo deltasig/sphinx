@@ -4,6 +4,7 @@
 - Added additional service stats.
 - Migrated bug reporting to Github issues.
 - Added Wiki link to sidebar navigation under "Website" group.
+- Added opt-in checkbox allowing incident reporters to share their identity with President and SAA.
 
 ---
 
@@ -32,7 +33,7 @@
 
 ### December 2018
 
-- Modified the website such that new members are actually called "new members."
+- Modified the website such that new members are called "new members" instead of "pledges."
 - Fixed some bugs with paging results, primarily incident reports.
 
 ---
@@ -40,7 +41,7 @@
 ### November 2018
 
 - Reworked user registration:
-  - Non-members can now be registered more easily as "Affiliates."
+  - Non-members can now be registered more easily as "Affiliate."
   - Affiliates can only see the meal schedule (for the chef), their account page, and the bug reporting page.
   - Fixed some bugs where affiliates could not see their account page.
 - Attempted to fix an issue with uploading an avatar.
@@ -92,7 +93,7 @@
 - Fixed a bug where people on iPhone could not fill out the donation form because the iPhone wasn't letting them enter hyphens.
 - Moved the "updates" and "External site" links to the "Website" grouping to make more room and in anticipation for a "report an issue" link.
 - Fixed a bug where people's profile pictures weren't showing up on the laundry schedule.
-- Fixed a bug where Nathan Weidner's existence was preventing the roster CSV download from working - good times.
+- Fixed a bug where a member's very existence was preventing the roster CSV download from working.
 
 ---
 
@@ -139,7 +140,7 @@
 
 ### March 2017
 
-- Removed ability to cencel sober signups; tweaked layout; added button to single-click copy phone number (only works in newer browsers).
+- Removed ability to cancel sober signups; tweaked layout; added button to single-click copy phone number (only works in newer browsers).
 - The social tab on the sphinx page now shows the number of upcoming social events since it's not selected by default.
 - Chapter `about` page was given some images and the layout was modified.
 - External page links that refer visitors to the contacts page will now take them directly to the member on the contacts they need to contact 
@@ -167,15 +168,15 @@
 - Caching for certain pages in attempt to reduce data usage and page load time.
   - **As a result, updates to sphinx, roster, and external pages will be delayed from 1 minute to an hour depending on the page.**
 - Chapter status box redesigned and made visible to all members on sphinx page.
-- New *Updates* page for public record of changes @ `deltasig.de/updates` (aka this one).
+- New *Updates* page for public record of changes @ `deltasig-de.org/updates` (aka this one).
 - Sphinx notifications were redesigned appearance-wise and moved above sober signups to be more prominent.
 - Laundry and sober schedules were moved out from under sphinx in URL because there was no meaningful reason for that.
-  - `deltasig.de/sphinx/home` -> `deltasig.de/sphinx`
-  - `deltasig.de/sphinx/laundry/schedule` -> `deltasig.de/laundry/schedule`
-  - `deltasig.de/sphinx/sobers/sechedule` - > `deltasig.de/sobers/schedule`
+  - `deltasig-de.org/sphinx/home` -> `deltasig-de.org/sphinx`
+  - `deltasig-de.org/sphinx/laundry/schedule` -> `deltasig-de.org/laundry/schedule`
+  - `deltasig-de.org/sphinx/sobers/schedule` - > `deltasig-de.org/sobers/schedule`
 - A lot of refactoring under the hood, such as making the sphinx feed use the API and `mustache.js` (this for me, not you).
-- Fixed display problems on sober types pages - been ignoring it for a while.
-- Resolved mimtype browser warnings - also been there for a while.
+- Fixed display problems on sober types pages.
+- Resolved MIME type browser warnings.
 - Removed BroQuest.
 
 ---
@@ -204,7 +205,7 @@
 - Expanded validation of naming on uploaded class files.
 - Added class file upload instructions and change limitations.
 - Altered source code project structure to separate concerns.
-- Fixed bug with disenroling from class when duplicate is created - frikkin weird.
+- Fixed bug related to un-enrolling from class when duplicate is created.
 - Removed print icon from external pages.
 
 ---
@@ -213,7 +214,7 @@
 
 - Fixed display ordering of scholarships.
 - Added color legend to study report page.
-- Initial setup for eventual chore implementation - *sighs*.
+- Initial setup for eventual chore implementation.
 
 ---
 
@@ -227,4 +228,4 @@
 - Map on home page is static image instead of pulling from google maps.
 - Added *About* page.
 - Position permissions and contact page were moved to rely on semester transition date instead of semester end.
-- Fixed avatar display bug, but I would eventually delete everyone's profile pic months later...
+- Fixed avatar display bug.

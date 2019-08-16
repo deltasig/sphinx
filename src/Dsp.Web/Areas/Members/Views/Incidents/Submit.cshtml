@@ -47,6 +47,16 @@
                     @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
                 </div>
 
+                <div class="checkbox form-group">
+                    <label class="control-label text-warning" data-toggle="tooltip" data-placement="top" 
+                           title="Shares your identity with only the President and SAA in case they need to reach out to you in person.">
+                        @Html.EditorFor(m => m.ShareIdentity)
+                        <strong>Share Identity</strong>
+                        <i class="fa fa-fw fa-info-circle"></i>
+                    </label>
+                    @Html.ValidationMessageFor(m => m.ShareIdentity, "", new { @class = "text-danger" })
+                </div>
+
                 <div class="form-group">
                     <input type="submit" value="Submit" class="btn btn-default" />
                 </div>

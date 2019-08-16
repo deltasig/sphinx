@@ -77,6 +77,23 @@
                             No official report has been submitted yet.
                         </div>
                     }
+                    @if (Model.CanViewOriginalReport)
+                    {
+                        <div class="list-group-item">
+                            <p>Reported By</p>
+                            <small>
+                                @if (Model.Report.ShareIdentity)
+                                {
+                                    var member = Model.Report.Member;
+                                    @(member != null ? member.ToString() : "Unknown")
+                                }
+                                else
+                                {
+                                    @: Not shared.
+                                }
+                            </small>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
