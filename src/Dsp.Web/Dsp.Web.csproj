@@ -272,8 +272,11 @@
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
+    <Compile Include="Areas\Members\Models\ForgotUsernameModel.cs" />
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
+    <Compile Include="Areas\Members\Models\ForgotPasswordModel.cs" />
+    <Compile Include="Areas\Members\Models\ResetPasswordModel.cs" />
     <Compile Include="Areas\Members\Models\RosterFilterModel.cs" />
     <Compile Include="Areas\Members\Models\RegistrationConfirmationModel.cs" />
     <Compile Include="Areas\Service\Controllers\AmendmentsController.cs" />
@@ -547,7 +550,6 @@
     <Content Include="Areas\House\Views\web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
     <Content Include="Areas\Sobers\Views\Schedule\Report.cshtml" />
     <Content Include="Areas\Sobers\Views\Types\Create.cshtml" />
     <Content Include="Areas\Sobers\Views\Types\Delete.cshtml" />
@@ -692,6 +694,12 @@
     <Content Include="Areas\Service\Views\Shared\_ServiceNavPartial.cshtml" />
     <Content Include="Areas\Service\Views\Amendments\UnamendHours.cshtml" />
     <Content Include="Areas\Service\Views\Amendments\UnamendEvents.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ResetPassword.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ForgotUsername.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ForgoUsernameConfirmation.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />

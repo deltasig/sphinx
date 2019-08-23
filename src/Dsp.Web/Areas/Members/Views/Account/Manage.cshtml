@@ -3,6 +3,7 @@
     ViewBag.Title = "Account Management";
     ViewBag.Subtitle = Model.Member.ToString();
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes().ToList();
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Secretary");
 }
 
 <div class="container-fluid">
@@ -100,17 +101,13 @@
             }
         </div>
         <div class="col-md-8 col-md-offset-4 col-lg-5 col-lg-offset-0">
-            @if (User.IsInRole("Administrator"))
+            @if (hasElevatedPermissions)
             {
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         Admin Functions
                     </div>
                     <div class="panel-body">
-                        @Html.ActionLink("Reset Password", "ResetPassword", "Account", new
-                            {
-                                id = Model.Member.Id
-                            }, new { @class = "btn btn-sm btn-danger" })
                         @Html.ActionLink("Resend Confirmation Email", "ResendConfirmationEmail", "Account", new
                             {
                                 id = Model.Member.Id
