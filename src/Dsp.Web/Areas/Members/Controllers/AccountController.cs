@@ -322,22 +322,7 @@
                     await _db.SaveChangesAsync();
 
                     // Send confirmation email.
-                    var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new
-                    {
-                        area = "Members",
-                        userId = user.Id,
-                        code
-                    }, protocol: Request.Url.Scheme);
-
-                    var confirmationModel = new RegistrationConfirmationModel
-                    {
-                        UserName = model.UserName,
-                        TemporaryPassword = tempPassword,
-                        CallbackUrl = callbackUrl
-                    };
-                    var body = RenderRazorViewToString("~/Views/Emails/RegistrationConfirmation.cshtml", confirmationModel);
-                    await UserManager.SendEmailAsync(user.Id, "Account Registration Successful!", body);
+                    await SendConfirmationEmailAsync(user.Id, model.UserName, tempPassword);
 
                     TempData["SuccessMessage"] = user + " was successfully registered and emailed for confirmation.";
                 }
@@ -366,6 +351,26 @@
             return RedirectToAction("Registration");
         }
 
+        private async Task SendConfirmationEmailAsync(int userId, string username, string tempPassword)
+        {
+            var code = await UserManager.GenerateEmailConfirmationTokenAsync(userId);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new
+            {
+                area = "Members",
+                userId = userId,
+                code
+            }, protocol: Request.Url.Scheme);
+
+            var confirmationModel = new RegistrationConfirmationModel
+            {
+                UserName = username,
+                TemporaryPassword = tempPassword,
+                CallbackUrl = callbackUrl
+            };
+            var body = RenderRazorViewToString("~/Views/Emails/RegistrationConfirmation.cshtml", confirmationModel);
+            await UserManager.SendEmailAsync(userId, "Account Registration Successful!", body);
+        }
+
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(int userId, string code)
         {
@@ -375,6 +380,44 @@
             }
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResendConfirmationEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResendConfirmationEmail(ResendConfirmationEmailModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return View("ResendConfirmationEmailConfirmation");
+                }
+
+                // Resend email
+                var tempPassword = Membership.GeneratePassword(10, 5);
+                var resetToken = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                await UserManager.ResetPasswordAsync(user.Id, resetToken, tempPassword);
+                await SendConfirmationEmailAsync(user.Id, user.UserName, tempPassword);
+                return RedirectToAction("ResendConfirmationEmailConfirmation", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResendConfirmationEmailConfirmation()
+        {
+            return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator")]
@@ -644,51 +687,6 @@
         public ActionResult ResetPasswordConfirmation()
         {
             return View();
-        }
-
-        [Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> ResendConfirmationEmail(int? id)
-        {
-            if (id == null) return HttpNotFound();
-            var member = await UserManager.FindByIdAsync((int)id);
-            return View(member);
-        }
-
-        [Authorize(Roles = "Administrator"), HttpPost, ValidateAntiForgeryToken, ActionName("ResendConfirmationEmail")]
-        public async Task<ActionResult> ResendConfirmationEmail(Member member)
-        {
-            if (await UserManager.IsEmailConfirmedAsync(member.Id))
-            {
-                return RedirectToAction("Manage", new { message = ManageMessageId.ResendConfirmationAlreadyConfirmed, member.UserName });
-            }
-
-            var tempPassword = Membership.GeneratePassword(10, 0);
-            var token = await UserManager.GeneratePasswordResetTokenAsync(member.Id);
-            var result = await UserManager.ResetPasswordAsync(member.Id, token, tempPassword);
-            if (result.Succeeded)
-            {
-                var code = await UserManager.GenerateEmailConfirmationTokenAsync(member.Id);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new
-                {
-                    area = "Members",
-                    userId = member.Id,
-                    code = code
-                }, protocol: Request.Url.Scheme);
-
-                var confirmationModel = new RegistrationConfirmationModel
-                {
-                    UserName = member.UserName,
-                    TemporaryPassword = tempPassword,
-                    CallbackUrl = callbackUrl
-                };
-                var body = RenderRazorViewToString("~/Views/Emails/RegistrationConfirmation.cshtml", confirmationModel);
-                await UserManager.SendEmailAsync(member.Id, "Confirm your account!", body);
-
-                return RedirectToAction("Manage", new { message = ManageMessageId.ResendConfirmationSuccess, member.UserName });
-            }
-            AddErrors(result);
-
-            return RedirectToAction("Manage", new { message = ManageMessageId.ResetPasswordFailure, member.UserName });
         }
 
         #region External Authentication
