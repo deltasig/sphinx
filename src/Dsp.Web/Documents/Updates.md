@@ -1,5 +1,6 @@
 ### August 2019
 
+- Added forgot username and forgot password features to sign in page.
 - Reorganized service features.
 - Added additional service stats.
 - Migrated bug reporting to Github issues.

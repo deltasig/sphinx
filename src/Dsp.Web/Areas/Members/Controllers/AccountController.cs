@@ -2,7 +2,6 @@
 {
     using Dsp.Data.Entities;
     using Dsp.Web.Controllers;
-    using Extensions;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
     using Microsoft.Owin.Security;
@@ -540,47 +539,111 @@
                 : new { message = ManageMessageId.ChangePasswordWrongOriginal });
         }
 
-        [Authorize(Roles = "Administrator")]
-        public async Task<ActionResult> ResetPassword(int? id)
+        [AllowAnonymous]
+        public ActionResult ForgotUsername()
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var member = await UserManager.FindByIdAsync((int)id);
-            if (member == null)
-            {
-                return HttpNotFound();
-            }
-            return View(member);
+            return View();
         }
 
-        [Authorize(Roles = "Administrator"), HttpPost, ValidateAntiForgeryToken, ActionName("ResetPassword")]
-        public async Task<ActionResult> ResetPasswordConfirmed(Member member)
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotUsername(ForgotUsernameModel model)
         {
-            var tempPassword = Membership.GeneratePassword(10, 0);
-            var token = await UserManager.GeneratePasswordResetTokenAsync(member.Id);
-            var result = await UserManager.ResetPasswordAsync(member.Id, token, tempPassword);
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return View("ForgotUsernameConfirmation");
+                }
 
+                await UserManager.SendEmailAsync(user.Id, "Sphinx Username", "Your username is: " + user.UserName);
+                return RedirectToAction("ForgotUsernameConfirmation", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotUsernameConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ForgotPassword(ForgotPasswordModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                {
+                    // Don't reveal that the user does not exist or is not confirmed
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                // Send email with link
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Sphinx Password Reset", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
+            }
+
+            // If we got this far, something failed, redisplay form
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public ActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ResetPassword(string code)
+        {
+            return code == null ? View("Error") : View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await UserManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                // Don't reveal that the user does not exist
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
+            }
+            var result = await UserManager.ResetPasswordAsync(user.Id, model.Code, model.Password);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByNameAsync(member.UserName);
-                var emailMessage = new IdentityMessage
-                {
-                    Subject = "Account Password has been reset at deltasig-de.org",
-                    Body = "Your account password has been reset on deltasig-de.org. Your username is " + member.UserName +
-                        " and your new temporary password (change it when you sign in) is: " + tempPassword,
-                    Destination = user.Email
-                };
-
-                var emailService = new EmailService();
-                await emailService.SendAsync(emailMessage);
-
-                return RedirectToAction("Manage", new { member.UserName, message = ManageMessageId.ResetPasswordSuccess });
+                return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
             AddErrors(result);
+            return View();
+        }
 
-            return RedirectToAction("Manage", new { member.UserName, message = ManageMessageId.ResetPasswordFailure });
+        [AllowAnonymous]
+        public ActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
 
         [Authorize(Roles = "Administrator")]
