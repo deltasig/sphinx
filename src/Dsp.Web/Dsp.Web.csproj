@@ -272,6 +272,7 @@
     <Compile Include="Areas\Members\Models\ExternalLoginConfirmationViewModel.cs" />
     <Compile Include="Areas\Members\Models\ExternalLoginListViewModel.cs" />
     <Compile Include="Areas\Members\Models\AccountManagementModel.cs" />
+    <Compile Include="Areas\Members\Models\ResendConfirmationEmailModel.cs" />
     <Compile Include="Areas\Members\Models\ForgotUsernameModel.cs" />
     <Compile Include="Areas\Members\Models\GraduateActivesModel.cs" />
     <Compile Include="Areas\Members\Models\IncidentReportDetailsModel.cs" />
@@ -590,7 +591,7 @@
     <Content Include="Areas\Members\Views\Account\Manage.cshtml" />
     <Content Include="Areas\Members\Views\Shared\_AccountNavPartial.cshtml" />
     <Content Include="Areas\Members\Views\Account\Lockout.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ResendConfirmationEmailConfirmation.cshtml" />
     <Content Include="Areas\Members\Views\Account\ResendConfirmationEmail.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\Duplicates.cshtml" />
     <Content Include="Areas\Edu\Views\Classes\_ClassInstructions.cshtml" />
@@ -699,7 +700,8 @@
     <Content Include="Areas\Members\Views\Account\ForgotPassword.cshtml" />
     <Content Include="Areas\Members\Views\Account\ForgotPasswordConfirmation.cshtml" />
     <Content Include="Areas\Members\Views\Account\ForgotUsername.cshtml" />
-    <Content Include="Areas\Members\Views\Account\ForgoUsernameConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ForgotUsernameConfirmation.cshtml" />
+    <Content Include="Areas\Members\Views\Account\ConfirmEmail.cshtml" />
     <None Include="compilerconfig.json" />
     <Content Include="Content\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\fonts\fontawesome-webfont.ttf" />
