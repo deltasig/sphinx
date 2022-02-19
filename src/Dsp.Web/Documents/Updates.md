@@ -1,3 +1,9 @@
+### February 2022
+
+- Fixed display bug on the account page
+
+---
+
 ### August 2019
 
 - Added forgot username, forgot password, and resend confirmation email features to sign in page.
