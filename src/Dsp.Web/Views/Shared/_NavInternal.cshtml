@@ -152,11 +152,6 @@
                         <i class="fa fa-fw fa-globe"></i> Service
                     </a>
                 </li>
-                <li class="@(ViewBag.Title.Contains("Cause") || ViewBag.Title.Contains("Fundraiser") || ViewBag.Title.Contains("Donation") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Causes", new { area = "Treasury" })">
-                        <i class="fa fa-fw fa-money"></i> Causes
-                    </a>
-                </li>
                 <li class="@(ViewBag.Title.Contains("Class") ? "active" : "")">
                     <a href="@Url.Action("Index", "Classes", new { area = "Edu" })">
                         <i class="fa fa-fw fa-institution"></i> Classes
@@ -167,6 +162,16 @@
                         <i class="fa fa-fw fa-wrench"></i> Work Orders
                     </a>
                 </li>
+                <li class="@(ViewBag.Title.Contains("Room") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Rooms", new { area = "House" })">
+                        <i class="fa fa-fw fa-bed"></i> Rooms
+                    </a>
+                </li>
+                <li class="@(ViewBag.Title.Contains("Cause") || ViewBag.Title.Contains("Fundraiser") || ViewBag.Title.Contains("Donation") ? "active" : "")">
+                    <a href="@Url.Action("Index", "Causes", new { area = "Treasury" })">
+                        <i class="fa fa-fw fa-money"></i> Causes
+                    </a>
+                </li>
                 <li class="@(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
                     <a href="@Url.Action("Index", "Applications", new { area = "Scholarships" })">
                         <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
@@ -175,11 +180,6 @@
                 <li class="@(ViewBag.Title.Contains("Incident") ? "active" : "")">
                     <a href="@Url.Action("Index", "Incidents", new {area = "Members"})">
                         <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
-                    </a>
-                </li>
-                <li class="@(ViewBag.Title.Contains("Room") ? "active" : "")">
-                    <a href="@Url.Action("Index", "Rooms", new { area = "House" })">
-                        <i class="fa fa-fw fa-home"></i> Housing
                     </a>
                 </li>
                 <li>
@@ -208,7 +208,7 @@
                                 <li>@Html.ActionLink("Appointments", "Appointments", "Positions", new { area = "Admin" }, null)</li>
                             }
                             @if (showPositionsLink)
-                            { 
+                            {
                                 <li>@Html.ActionLink("Positions", "Index", "Positions", new { area = "Admin" }, null)</li>
                             }
                             @if (showRegistrationLink)

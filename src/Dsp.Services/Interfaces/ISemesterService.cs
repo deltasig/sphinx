@@ -10,8 +10,8 @@
         IList<string> Alphabet { get; }
 
         Task<IEnumerable<Semester>> GetAllSemestersAsync();
-        Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync();
-        Task<Semester> GetCurrentSemesterAsync();
+        Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null);
+        Task<Semester> GetCurrentSemesterAsync(DateTime? now = null);
         Task<Semester> GetSemesterByIdAsync(int id);
         Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime);
         Task<Semester> GetFutureMostSemesterAsync();

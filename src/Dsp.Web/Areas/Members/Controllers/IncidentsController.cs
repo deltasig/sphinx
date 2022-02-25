@@ -6,17 +6,16 @@
     using Dsp.Services;
     using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
+    using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Linq;
     using System.Net;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Security;
 #if !DEBUG
     using System.Net.Mail;
     using Dsp.Web.Extensions;
-    using Microsoft.AspNet.Identity;
 #endif
 
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
@@ -74,14 +73,24 @@
 
             var eBoardPositions = await _positionService.GetEboardPositionsAsync();
             var eBoardPositionNames = eBoardPositions.Select(x => x.Name);
-            var userRoles = Roles.GetRolesForUser(User.Identity.Name).ToList();
+            var userId = User.Identity.GetUserId<int>();
+            var userRoles = await _positionService.GetCurrentPositionsByUserAsync(userId);
             var model = new IncidentReportDetailsModel
             {
                 Report = incidentReport,
-                CanEditReport = userRoles.Contains("Administrator") || userRoles.Contains("Sergeant-at-Arms") || userRoles.Contains("President")
+                CanEditReport = await _positionService.UserHasAtLeastOnePositionPowerAsync(
+                    userId,
+                    new[] { "Sergeant-at-Arms", "President" }
+                )
             };
-            model.CanViewOriginalReport = model.CanEditReport; // Could change in the future
-            model.CanViewInvestigationNotes = eBoardPositionNames.Intersect(userRoles).Any();
+            model.CanViewOriginalReport = await _positionService.UserHasAtLeastOnePositionPowerAsync(
+                userId,
+                new[] { "Sergeant-at-Arms", "President", "Chapter Advisor" }
+            );
+            model.CanViewInvestigationNotes = await _positionService.UserHasAtLeastOnePositionPowerAsync(
+                userId,
+                eBoardPositionNames.Concat(new string[] { "Chapter Advisor" }).ToArray()
+            );
 
             return View(model);
         }
@@ -106,7 +115,7 @@
             model.ReportedBy = submitter.Id;
             await _incidentService.CreateIncidentReportAsync(model);
 
-            // Send notification emails to Sergean-at-Arms and President.
+            // Send notification emails to Sergeant-at-Arms and President.
 #if !DEBUG
             var currentSemester = await _semesterService.GetCurrentSemesterAsync();
             var saa = await _positionService.GetUserInPositionAsync("Sergeant-at-Arms", currentSemester.Id);

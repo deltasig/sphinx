@@ -14,23 +14,26 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [Authorize(Roles = "Neophyte, New, Active, Administrator")]
+    [Authorize(Roles = "Neophyte, New, Active, Alumnus, Administrator")]
     public class EventsController : BaseController
     {
         private readonly ISemesterService _semesterService;
         private readonly IServiceService _serviceService;
+        private readonly IPositionService _positionService;
 
         public EventsController()
         {
             var db = new Repository<SphinxDbContext>(_db);
             _semesterService = new SemesterService(db);
             _serviceService = new ServiceService(db);
+            _positionService = new PositionService(db);
         }
 
-        public EventsController(ISemesterService semesterService, IServiceService serviceService)
+        public EventsController(ISemesterService semesterService, IServiceService serviceService, IPositionService positionService)
         {
             _semesterService = semesterService;
             _serviceService = serviceService;
+            _positionService = positionService;
         }
 
         public async Task<ActionResult> Index(int? sid)
@@ -48,7 +51,8 @@
 
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);
-            var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");
             var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
             var model = new ServiceEventIndexModel(navModel, serviceEvents);
 
@@ -76,7 +80,9 @@
         {
             if (!ModelState.IsValid) return View(model);
 
-            if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");
+            if (hasElevatedPermissions)
             {
                 model.IsApproved = true;
             }
@@ -85,7 +91,7 @@
                 model.IsApproved = false;
                 // TODO: Email service chairman.
             }
-            model.SubmitterId = User.Identity.GetUserId<int>();
+            model.SubmitterId = userId;
             model.DateTimeOccurred = _semesterService.ConvertCstToUtc(model.DateTimeOccurred);
             model.CreatedOn = DateTime.UtcNow;
             var eventSemester = await _semesterService.GetSemesterByUtcDateTimeAsync(model.DateTimeOccurred);

@@ -1,6 +1,10 @@
 ﻿namespace Dsp.Web.Areas.House.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Extensions;
     using Microsoft.AspNet.Identity;
@@ -17,6 +21,19 @@
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
     public class WorkOrdersController : BaseController
     {
+        private readonly IPositionService _positionService;
+
+        public WorkOrdersController()
+        {
+            var repo = new Repository<SphinxDbContext>(_db);
+            _positionService = new PositionService(repo);
+        }
+
+        public WorkOrdersController(IPositionService positionService)
+        {
+            _positionService = positionService;
+        }
+
         [HttpGet]
         public async Task<ActionResult> Index(WorkOrderIndexFilterModel filter)
         {
@@ -61,7 +78,9 @@
             var workOrder = await _db.WorkOrders.FindAsync(id);
             if (workOrder == null) return HttpNotFound();
 
-            if (User.IsInRole("House Manager") && workOrder.GetCurrentStatus() == "Unread")
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "House Manager");
+            if (hasElevatedPermissions && workOrder.GetCurrentStatus() == "Unread")
             {
                 var underReviewStatus = await _db.WorkOrderStatuses.SingleAsync(s => s.Name == "Under Review");
                 await UpdateWorkOrderStatus(workOrder, underReviewStatus);
@@ -70,11 +89,10 @@
             }
 
             var workOrders = await _db.WorkOrders.ToListAsync();
-            var currentUserId = User.Identity.GetUserId<int>();
             var model = new WorkOrderViewModel
             {
                 WorkOrder = workOrder,
-                UsersWorkOrders = workOrders.Where(x => x.GetCurrentStatus() != "Closed" && x.UserId == currentUserId)
+                UsersWorkOrders = workOrders.Where(x => x.GetCurrentStatus() != "Closed" && x.UserId == userId)
             };
 
             return View(model);

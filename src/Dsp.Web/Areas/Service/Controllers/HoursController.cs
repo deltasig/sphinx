@@ -20,6 +20,7 @@
     public class HoursController : BaseController
     {
         private readonly IMemberService _memberService;
+        private readonly IPositionService _positionService;
         private readonly ISemesterService _semesterService;
         private readonly IServiceService _serviceService;
 
@@ -27,13 +28,15 @@
         {
             var repo = new Repository<SphinxDbContext>(_db);
             _memberService = new MemberService(repo);
+            _positionService = new PositionService(repo);
             _semesterService = new SemesterService(repo);
             _serviceService = new ServiceService(repo);
         }
 
-        public HoursController(IMemberService memberService, ISemesterService semesterService, IServiceService serviceService)
+        public HoursController(IMemberService memberService, IPositionService positionService, ISemesterService semesterService, IServiceService serviceService)
         {
             _memberService = memberService;
+            _positionService = positionService;
             _semesterService = semesterService;
             _serviceService = serviceService;
         }
@@ -48,7 +51,8 @@
             var rosterProgress = await _serviceService.GetRosterProgressBySemesterIdAsync(selectedSemester.Id);
             var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
             var semesterList = GetSemesterSelectList(semestersWithEvents);
-            var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Service");
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");
             var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
             var model = new ServiceHourIndexModel(navModel, rosterProgress);
 

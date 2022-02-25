@@ -14,6 +14,8 @@
     public class PositionService : BaseService, IPositionService
     {
         private readonly IRepository _repository;
+        private readonly IMemberService _memberService;
+        private readonly ISemesterService _semesterService;
 
         public PositionService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
         {
@@ -28,6 +30,8 @@
         public PositionService(IRepository repository)
         {
             _repository = repository;
+            _memberService = new MemberService(repository);
+            _semesterService = new SemesterService(repository);
         }
 
         public async Task<IEnumerable<Position>> GetAllPositionsAsync()
@@ -69,6 +73,139 @@
             if (appointment == null) return null;
 
             return appointment.Member;
+        }
+
+        public async Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(int userId)
+        {
+            var currentAppointmentsForUser = new List<Position>();
+            var adminAppointmentForUser = await GetAdminAppoinmentForUserAsync(userId);
+            if (adminAppointmentForUser != null)
+            {
+                currentAppointmentsForUser.Add(adminAppointmentForUser.Position);
+            }
+
+            var now = DateTime.UtcNow;
+            var applicableSemesters = await _repository.GetAsync<Semester>(
+                filter: x => now < x.TransitionDate,
+                orderBy: x => x.OrderBy(o => o.DateStart)
+            );
+            if (applicableSemesters.Any())
+            {
+                var numberOfApplicableSemesters = applicableSemesters.Count();
+                var firstApplicableSemester = applicableSemesters.First();
+                if (now < firstApplicableSemester.DateEnd || numberOfApplicableSemesters == 1)
+                {
+                    /* Two scenarios are represented here, both of which are handled in the same way:
+                     *   1) the first condition represents that the first applicable semester happens 
+                     *      to be the current semester but we are NOT in the transition period.  
+                     *      Therefore, only the current semester's appointments are in effect.
+                     *   2) the second condition represents that this is the final semester in the 
+                     *      database so even if we are in a transition period, there can't be any 
+                     *      future appointments anyway, so only the previous semester's appointments 
+                     *      are in effect (until the transition date passes).
+                     */
+                    currentAppointmentsForUser.AddRange(
+                        firstApplicableSemester.Leaders
+                            .Where(x => x.UserId == userId)
+                            .Select(x => x.Position)
+                    );
+                }
+                else
+                {
+                    /* Otherwise, we are in a transition period, and the second semester 
+                     * happens to be the current semester.  Therefore, both the previous semester and 
+                     * current semester appointments are in effect.
+                     */
+                    currentAppointmentsForUser.AddRange(
+                        applicableSemesters
+                            .Take(2)
+                            .SelectMany(x => x.Leaders)
+                            .Where(x => x.UserId == userId)
+                            .Select(x => x.Position)
+                            .Distinct()
+                    );
+                }
+            }
+
+            return currentAppointmentsForUser;
+        }
+
+        public async Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(string userName)
+        {
+            var user = await _memberService.GetMemberByUserNameAsync(userName);
+            var currentAppointmentsForUser = await GetCurrentPositionsByUserAsync(user.Id);
+            return currentAppointmentsForUser;
+        }
+
+        public async Task<Position> GetAdminPositionAsync()
+        {
+            var adminPosition = await GetPositionByNameAsync("Administrator");
+            return adminPosition;
+        }
+
+        public async Task<Leader> GetAdminAppoinmentForUserAsync(int userId)
+        {
+            var adminPosition = await GetAdminPositionAsync();
+            var adminAppointForUser = adminPosition.Leaders
+                .FirstOrDefault(x => x.UserId == userId);
+
+            return adminAppointForUser;
+        }
+
+        public async Task<bool> UserIsAdminAsync(int userId)
+        {
+            var adminAppointForUser = await GetAdminAppoinmentForUserAsync(userId);
+            var userIsAdmin = adminAppointForUser == null;
+            return userIsAdmin;
+        }
+
+        public async Task<bool> UserIsAdminAsync(string userName)
+        {
+            var user = await _memberService.GetMemberByUserNameAsync(userName);
+            var userIsAdmin = await UserIsAdminAsync(user.Id);
+            return userIsAdmin;
+        }
+
+        public async Task<bool> UserHasPositionPowerAsync(int userId, int positionId)
+        {
+            var currentUserPositions = await GetCurrentPositionsByUserAsync(userId);
+            var adminPosition = await GetAdminPositionAsync();
+            var userHasPositionPower = currentUserPositions
+                .Any(x => x.Id == positionId ||
+                          x.Id == adminPosition.Id); // Admins have all power
+
+            return userHasPositionPower;
+        }
+
+        public async Task<bool> UserHasPositionPowerAsync(int userId, string positionName)
+        {
+            var position = await GetPositionByNameAsync(positionName);
+            var userIsInPosition = await UserHasPositionPowerAsync(userId, position.Id);
+            return userIsInPosition;
+        }
+
+        public async Task<bool> UserHasPositionPowerAsync(string userName, string positionName)
+        {
+            var user = await _memberService.GetMemberByUserNameAsync(userName);
+            var userIsInPosition = await UserHasPositionPowerAsync(user.Id, positionName);
+            return userIsInPosition;
+        }
+
+        public async Task<bool> UserHasAtLeastOnePositionPowerAsync(int userId, string[] positionNames)
+        {
+            var currentUserPositions = await GetCurrentPositionsByUserAsync(userId);
+            var adminPosition = await GetAdminPositionAsync();
+            bool userHasPositionPower = false;
+            foreach (var p in positionNames)
+            {
+                userHasPositionPower = currentUserPositions
+                    .Any(x => x.Name == p ||
+                              x.Name == adminPosition.Name); // Admins have all power
+
+                if (userHasPositionPower) break;
+            }
+
+            return userHasPositionPower;
         }
 
         public async Task RemovePositionAsync(Position entity)

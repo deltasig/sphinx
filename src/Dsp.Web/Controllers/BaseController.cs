@@ -563,26 +563,11 @@
             if (!string.IsNullOrEmpty(s))
             {
                 s = s.ToLower();
-                // Privileged search
-                if (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms") ||
-                    User.IsInRole("Sergeant-at-Arms"))
-                {
-                    filterResults = filterResults
-                    .Where(i =>
-                        i.PolicyBroken.ToLower().Contains(s) ||
-                        (!string.IsNullOrEmpty(i.OfficialReport) && i.OfficialReport.ToLower().Contains(s)) ||
-                        i.Description.ToLower().Contains(s))
-                    .ToList();
-                }
-                // Normal search
-                else
-                {
-                    filterResults = filterResults
+                filterResults = filterResults
                     .Where(i =>
                         i.PolicyBroken.ToLower().Contains(s) ||
                         i.OfficialReport.ToLower().Contains(s))
                     .ToList();
-                }
 
             }
             ViewBag.UnresolvedResultCount = filterResults.Count(i => string.IsNullOrEmpty(i.OfficialReport));

@@ -4,6 +4,7 @@
     using Dsp.Services;
     using Extensions;
     using MarkdownSharp;
+    using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -141,8 +142,10 @@
         [AllowAnonymous]
         public async Task<ActionResult> EmailSoberSchedule()
         {
-            var isPermitted = (User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms"));
-            var result = await EmailService.TryToSendSoberSchedule(new SoberService(_db), _db, isPermitted);
+            var positionService = new PositionService();
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await positionService.UserHasPositionPowerAsync(userId, "Sergeant-at-Arms");
+            var result = await EmailService.TryToSendSoberSchedule(new SoberService(_db), _db, hasElevatedPermissions);
             return Content(result);
         }
 

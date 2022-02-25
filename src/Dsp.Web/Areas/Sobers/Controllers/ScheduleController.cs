@@ -5,6 +5,7 @@
     using Dsp.Repositories;
     using Dsp.Services;
     using Dsp.Services.Interfaces;
+    using Microsoft.AspNet.Identity;
     using Models;
     using System;
     using System.Collections.Generic;
@@ -20,15 +21,19 @@
     public class ScheduleController : BaseController
     {
         private ISoberService _soberService;
+        private IMemberService _memberService;
 
         public ScheduleController()
         {
-            _soberService = new SoberService(new Repository<SphinxDbContext>(_db));
+            var repo = new Repository<SphinxDbContext>(_db);
+            _soberService = new SoberService(repo);
+            _memberService = new MemberService(repo);
         }
 
-        public ScheduleController(ISoberService soberService)
+        public ScheduleController(ISoberService soberService, IMemberService memberService)
         {
             _soberService = soberService;
+            _memberService = memberService;
         }
 
         public async Task<ActionResult> Index(SoberMessage? message)
@@ -178,12 +183,15 @@
             {
                 return RedirectToAction("Index", new { message = SoberMessage.SignupFailure });
             }
-            if (User.IsInRole("New") && model.SoberType.Name == "Officer")
+
+            var userId = User.Identity.GetUserId<int>();
+            var user = await _memberService.GetMemberByIdAsync(userId);
+            if (user.MemberStatus.StatusName == "New" && model.SoberType.Name == "Officer")  // New members can't be sober officer
             {
                 return RedirectToAction("Index", new { message = SoberMessage.SignupNewMemberOfficerFailure });
             }
 
-            model.UserId = (await UserManager.Users.SingleAsync(m => m.UserName == User.Identity.Name)).Id;
+            model.UserId = userId;
             model.DateTimeSignedUp = DateTime.UtcNow;
 
             _db.Entry(model).State = EntityState.Modified;

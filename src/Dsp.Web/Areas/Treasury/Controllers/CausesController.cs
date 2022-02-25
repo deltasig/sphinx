@@ -10,7 +10,7 @@ using System.Web.Mvc;
 
 namespace Dsp.Web.Areas.Treasury.Controllers
 {
-    [Authorize(Roles = "Neophyte, New, Active, Administrator")]
+    [Authorize(Roles = "Neophyte, New, Active, Alumnus, Administrator")]
     public class CausesController : BaseController
     {
         private ITreasuryService _causeService;

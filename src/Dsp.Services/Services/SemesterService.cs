@@ -45,18 +45,24 @@
             return semesters;
         }
 
-        public async Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync()
+        public async Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null)
         {
+            if (now == null)
+                now = DateTime.UtcNow;
+
             var thisAndNextSemester = await _repository
                 .GetAsync<Semester>(
-                    filter: s => s.DateEnd >= DateTime.UtcNow,
+                    filter: s => s.DateEnd >= now,
                     orderBy: o => o.OrderBy(s => s.DateStart),
                     take: 2);
             return thisAndNextSemester;
         }
 
-        public async Task<Semester> GetCurrentSemesterAsync()
+        public async Task<Semester> GetCurrentSemesterAsync(DateTime? now = null)
         {
+            if (now == null)
+                now = DateTime.UtcNow;
+
             var semesters = await _repository
                 .GetAsync<Semester>(
                     s => s.DateEnd >= DateTime.UtcNow,
@@ -177,6 +183,9 @@
 
         public async Task CreateSemesterAsync(Semester semester)
         {
+            if (semester.TransitionDate < semester.DateEnd)
+                throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
+
             _repository.Create(semester);
             await _repository.SaveAsync();
         }
@@ -189,6 +198,9 @@
 
         public async Task UpdateSemesterAsync(Semester semester)
         {
+            if (semester.TransitionDate < semester.DateEnd)
+                throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
+
             _repository.Update(semester);
             await _repository.SaveAsync();
         }

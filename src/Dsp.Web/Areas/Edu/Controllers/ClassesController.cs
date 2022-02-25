@@ -1,6 +1,10 @@
 ﻿namespace Dsp.Web.Areas.Edu.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Models;
@@ -15,6 +19,19 @@
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class ClassesController : BaseController
     {
+        private readonly IPositionService _positionService;
+
+        public ClassesController()
+        {
+            var repo = new Repository<SphinxDbContext>(_db);
+            _positionService = new PositionService(repo);
+        }
+
+        public ClassesController(IPositionService positionService)
+        {
+            _positionService = positionService;
+        }
+
         public async Task<ActionResult> Index(ClassesIndexFilterModel filter)
         {
             var classes = await _db.Classes.ToListAsync();
@@ -263,8 +280,9 @@
                 return RedirectToAction("Schedule", new { userName = model.SelectedUserName });
             }
 
-            if (!User.IsInRole("Academics") && !User.IsInRole("Administrator") &&
-                User.Identity.GetUserName() != model.SelectedUserName)
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
+            if (!hasElevatedPermissions && User.Identity.GetUserName() != model.SelectedUserName)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }

@@ -21,16 +21,20 @@
     [Authorize(Roles = "Alumnus, Active, Neophyte, New, Affiliate")]
     public class MealsController : BaseController
     {
-        private IMealService _mealService;
+        private readonly IMealService _mealService;
+        private readonly IPositionService _positionService;
 
         public MealsController()
         {
-            _mealService = new MealService(new Repository<SphinxDbContext>(_db));
+            var repo = new Repository<SphinxDbContext>(_db);
+            _mealService = new MealService(repo);
+            _positionService = new PositionService(repo);
         }
 
-        public MealsController(IMealService mealService)
+        public MealsController(IMealService mealService, IPositionService positionService)
         {
             _mealService = mealService;
+            _positionService = positionService;
         }
 
         public async Task<ActionResult> Index(int week = 0)
@@ -84,7 +88,7 @@
             return new HttpStatusCodeResult(HttpStatusCode.OK);
         }
 
-        [HttpPost,]
+        [HttpPost]
         public async Task<ActionResult> AddPlate(DateTime dateTime, string type, int week = 0)
         {
             var plate = new MealPlate
@@ -100,14 +104,16 @@
             return RedirectToAction("Index", new { week });
         }
 
-        [HttpPost,]
+        [HttpPost]
         public async Task<ActionResult> RemovePlate(int id, int week = 0)
         {
             var plate = await _mealService.GetPlateByIdAsync(id);
 
             if (plate == null) return HttpNotFound();
 
-            if (!User.IsInRole("Administrator") && !User.IsInRole("House Steward") && plate.UserId != User.Identity.GetUserId<int>())
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "House Steward");
+            if (!hasElevatedPermissions && plate.UserId != userId)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

@@ -16,16 +16,20 @@
     [Authorize(Roles = "Alumnus, Active, Neophyte, New")]
     public class MealItemsController : BaseController
     {
-        private IMealService _mealService;
+        private readonly IMealService _mealService;
+        private readonly IPositionService _positionService;
 
         public MealItemsController()
         {
-            _mealService = new MealService(new Repository<SphinxDbContext>(_db));
+            var repo = new Repository<SphinxDbContext>(_db);
+            _mealService = new MealService(repo);
+            _positionService = new PositionService(repo);
         }
 
-        public MealItemsController(IMealService mealService)
+        public MealItemsController(IMealService mealService, IPositionService positionService)
         {
             _mealService = mealService;
+            _positionService = positionService;
         }
 
         [OutputCache(Duration = 2592000, VaryByParam = "none", Location = OutputCacheLocation.Server)]
@@ -35,8 +39,8 @@
             ViewBag.FailMessage = TempData["FailureMessage"];
 
             var mealItems = await _mealService.GetAllItemsAsync();
-            var currentUserId = User.Identity.GetUserId<int>();
-            var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("House Steward");
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "House Steward");
             var model = new MealItemIndexModel(mealItems, hasElevatedPermissions);
 
             return View(model);

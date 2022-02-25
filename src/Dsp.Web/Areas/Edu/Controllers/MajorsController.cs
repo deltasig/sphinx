@@ -1,6 +1,10 @@
 ﻿namespace Dsp.Web.Areas.Edu.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using System.Collections.Generic;
@@ -13,6 +17,20 @@
     [Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
     public class MajorsController : BaseController
     {
+        private readonly IPositionService _positionService;
+
+        public MajorsController()
+        {
+            var repo = new Repository<SphinxDbContext>(_db);
+            _positionService = new PositionService(repo);
+        }
+
+        public MajorsController(IPositionService positionService)
+        {
+            _positionService = positionService;
+        }
+
+
         public async Task<ActionResult> Index()
         {
             ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -112,7 +130,9 @@
             }
             else
             {
-                if (User.IsInRole("Administrator") || User.IsInRole("Academics"))
+                var userId = User.Identity.GetUserId<int>();
+                var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
+                if (hasElevatedPermissions)
                 {
                     ViewBag.UserId = await GetUserIdListAsFullNameAsync();
                 }
@@ -140,7 +160,10 @@
                 TempData["FailureMessage"] = "Failed to assign member to major because the submission was invalid.  Please try again.";
                 return RedirectToAction("Assign", new { id = model.UserId });
             }
-            if (model.UserId != User.Identity.GetUserId<int>() && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
+            if (model.UserId != userId && !hasElevatedPermissions)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -165,7 +188,9 @@
             if (id == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var model = await _db.MajorsToMembers.FindAsync(id);
             if (model == null) return HttpNotFound();
-            if (model.UserId != User.Identity.GetUserId<int>() && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
+            if (model.UserId != userId && !hasElevatedPermissions)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
@@ -178,7 +203,9 @@
             var model = await _db.MajorsToMembers.FindAsync(id);
             var name = model.Member.ToString();
             var majorName = model.Major.MajorName;
-            if (model.UserId != User.Identity.GetUserId<int>() && !User.IsInRole("Administrator") && !User.IsInRole("Academics"))
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
+            if (model.UserId != userId && !hasElevatedPermissions)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

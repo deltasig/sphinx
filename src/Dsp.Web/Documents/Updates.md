@@ -1,6 +1,7 @@
 ### February 2022
 
-- Fixed display bug on the account page
+- Major refactoring of how position powers are determined. Broken behavior related to laundry scheduling should now be fixed and some other, minor adjustments were made.
+- Fixed display bug on the account page.
 
 ---
 

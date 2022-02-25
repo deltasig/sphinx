@@ -12,6 +12,17 @@
         Task<Member> GetUserInPositionAsync(string positionName, int sid);
         Task<IEnumerable<Position>> GetAppointmentsAsync(int sid);
         Task<IEnumerable<Position>> GetEboardPositionsAsync();
+        Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(int userId);
+        Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(string userName);
+        Task<Position> GetAdminPositionAsync();
+        Task<Leader> GetAdminAppoinmentForUserAsync(int userId);
+
+        Task<bool> UserIsAdminAsync(int userId);
+        Task<bool> UserIsAdminAsync(string userName);
+        Task<bool> UserHasPositionPowerAsync(int userId, int positionId);
+        Task<bool> UserHasPositionPowerAsync(int userId, string positionName);
+        Task<bool> UserHasPositionPowerAsync(string userName, string positionName);
+        Task<bool> UserHasAtLeastOnePositionPowerAsync(int userId, string[] positionNames);
 
         Task CreatePositionAsync(Position entity);
         Task AppointMemberToPositionAsync(int mid, int pid, int sid);

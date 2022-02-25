@@ -1,6 +1,10 @@
 ﻿namespace Dsp.Web.Areas.Members.Controllers
 {
+    using Dsp.Data;
     using Dsp.Data.Entities;
+    using Dsp.Repositories;
+    using Dsp.Services;
+    using Dsp.Services.Interfaces;
     using Dsp.Web.Controllers;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.Owin;
@@ -22,6 +26,19 @@
     [Authorize, RequireHttps]
     public class AccountController : BaseController
     {
+        private readonly IPositionService _positionService;
+
+        public AccountController()
+        {
+            var repo = new Repository<SphinxDbContext>(_db);
+            _positionService = new PositionService(repo);
+        }
+
+        public AccountController(IPositionService positionService)
+        {
+            _positionService = positionService;
+        }
+
         [HttpGet]
         public async Task<ActionResult> Index(string userName, ManageMessageId? accountMessage)
         {
@@ -108,7 +125,10 @@
             {
                 userName = User.Identity.GetUserName();
             }
-            if (!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != userName)
+
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Secretary");
+            if (!hasElevatedPermissions && User.Identity.Name != userName)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
@@ -131,7 +151,9 @@
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(EditMemberInfoModel model)
         {
-            if (!User.IsInRole("Administrator") && !User.IsInRole("Secretary") && User.Identity.Name != model.Member.UserName)
+            var userId = User.Identity.GetUserId<int>();
+            var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Secretary");
+            if (!hasElevatedPermissions && User.Identity.Name != model.Member.UserName)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
