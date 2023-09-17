@@ -2,10 +2,9 @@
 {
     using Data;
     using Dsp.Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Dsp.Services.Models;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
@@ -15,34 +14,23 @@
 
     public class ServiceService : BaseService, IServiceService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
         private readonly IMemberService _memberService;
         private readonly ISemesterService _semesterService;
 
-        public ServiceService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public ServiceService(DspDbContext context)
         {
-
+            _context = context;
+            _memberService = new MemberService(context);
+            _semesterService = new SemesterService(context);
         }
-
-        public ServiceService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public ServiceService(IRepository repository)
-        {
-            _repository = repository;
-            _memberService = new MemberService(repository);
-            _semesterService = new SemesterService(repository);
-        }
-
 
         public async Task<IEnumerable<ServiceEvent>> GetEventsBySemesterIdAsync(int sid)
         {
-            var events = await _repository.GetAsync<ServiceEvent>(
-                filter: x => x.SemesterId == sid,
-                orderBy: x => x.OrderByDescending(o => o.DateTimeOccurred)
-            );
+            var events = await _context.ServiceEvents
+                .Where(x => x.SemesterId == sid)
+                .OrderByDescending(x => x.DateTimeOccurred)
+                .ToListAsync();
 
             return events;
         }
@@ -56,15 +44,17 @@
 
         public async Task<IEnumerable<Semester>> GetSemestersWithEventsAsync(Semester currentSemester, bool includeCurrent = true)
         {
-            var semesters = await _repository.GetAsync<Semester>(
-                filter: x => x.ServiceEvents.Any(),
-                orderBy: x => x.OrderByDescending(o => o.DateStart));
+            var semesters = await _context.Semesters
+                .Where(x => x.ServiceEvents.Any())
+                .OrderByDescending(x => x.DateStart)
+                .ToListAsync();
 
             if (includeCurrent && !semesters.Any(x => x.Id == currentSemester.Id))
             {
                 semesters = semesters
                     .Concat(new List<Semester> { currentSemester })
-                    .OrderByDescending(x => x.DateStart);
+                    .OrderByDescending(x => x.DateStart)
+                    .ToList();
             }
 
             return semesters;
@@ -72,95 +62,104 @@
 
         public async Task<ServiceEvent> GetEventByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<ServiceEvent>(id);
+            return await _context.FindAsync<ServiceEvent>(id);
         }
 
         public async Task<ServiceHour> GetHoursAsync(int eventId, int userId)
         {
-            return await _repository.GetOneAsync<ServiceHour>(filter: x => x.EventId == eventId && x.UserId == userId);
+            return await _context.ServiceHours
+                .Where(x => x.EventId == eventId && x.UserId == userId)
+                .SingleAsync();
         }
 
         public async Task<IEnumerable<ServiceEventAmendment>> GetEventAmendmentsBySemesterIdAsync(int semesterId)
         {
-            return await _repository.GetAsync<ServiceEventAmendment>(filter: x => x.SemesterId == semesterId);
+            return await _context.ServiceEventAmendments
+                .Where(x => x.SemesterId == semesterId)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<ServiceHourAmendment>> GetHoursAmendmentsBySemesterIdAsync(int semesterId)
         {
-            return await _repository.GetAsync<ServiceHourAmendment>(filter: x => x.SemesterId == semesterId);
+            return await _context.ServiceHourAmendments
+                .Where(x => x.SemesterId == semesterId)
+                .ToListAsync();
         }
 
         public async Task<ServiceEventAmendment> GetEventAmendmentByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<ServiceEventAmendment>(id);
+            return await _context.FindAsync<ServiceEventAmendment>(id);
         }
 
         public async Task<ServiceHourAmendment> GetHoursAmendmentByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<ServiceHourAmendment>(id);
+            return await _context.FindAsync<ServiceHourAmendment>(id);
         }
 
 
         public async Task CreateEventAsync(ServiceEvent serviceEvent)
         {
-            _repository.Create(serviceEvent);
-            await _repository.SaveAsync();
+            _context.Add(serviceEvent);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateHoursAsync(ServiceHour serviceHours)
         {
-            _repository.Create(serviceHours);
-            await _repository.SaveAsync();
+            _context.Add(serviceHours);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateEventAmendmentAsync(ServiceEventAmendment eventAmendment)
         {
-            _repository.Create(eventAmendment);
-            await _repository.SaveAsync();
+            _context.Add(eventAmendment);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateHoursAmendmentAsync(ServiceHourAmendment hoursAmendment)
         {
-            _repository.Create(hoursAmendment);
-            await _repository.SaveAsync();
+            _context.Add(hoursAmendment);
+            await _context.SaveChangesAsync();
         }
 
 
         public async Task UpdateEventAsync(ServiceEvent serviceEvent)
         {
-            _repository.Update(serviceEvent);
-            await _repository.SaveAsync();
+            _context.Update(serviceEvent);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateHoursAsync(ServiceHour serviceHours)
         {
-            _repository.Update(serviceHours);
-            await _repository.SaveAsync();
+            _context.Update(serviceHours);
+            await _context.SaveChangesAsync();
         }
 
 
         public async Task DeleteEventByIdAsync(int id)
         {
-            _repository.Delete<ServiceEvent>(id);
-            await _repository.SaveAsync();
+            var entity = new ServiceEvent { EventId = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteHoursAsync(ServiceHour serviceHours)
         {
-            _repository.Delete(serviceHours);
-            await _repository.SaveAsync();
+            _context.Remove(serviceHours);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteEventAmendmentByIdAsync(int id)
         {
-            _repository.Delete<ServiceEventAmendment>(id);
-            await _repository.SaveAsync();
+            var entity = new ServiceEventAmendment { Id = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteHoursAmendmentByIdAsync(int id)
         {
-            _repository.Delete<ServiceHourAmendment>(id);
-            await _repository.SaveAsync();
+            var entity = new ServiceHourAmendment { Id = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
 

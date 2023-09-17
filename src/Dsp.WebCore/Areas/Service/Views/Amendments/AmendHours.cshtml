@@ -1,0 +1,47 @@
+﻿@model AddServiceHourAmendmentModel
+@{
+    ViewBag.Title = "Add Service Hour Amendment";
+    ViewBag.Subtitle = Model.Semester;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index", "Amendments", new { sid = Model.Semester.Id })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Amendments
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col">
+            @using (Html.BeginForm("AmendHours", "Amendments", new { area = "Service" }, FormMethod.Post, false, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(m => m.Amendment.SemesterId)
+
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Amendment.UserId)
+                    @Html.DropDownListFor(m => m.Amendment.UserId, Model.Members,
+                        new { @class = "form-control selectpicker", autocomplete = "off", id = "events-dd", data_live_search = "true" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Amendment.Reason)
+                    @Html.TextBoxFor(m => m.Amendment.Reason, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Amendment.Reason, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Amendment.AmountHours)
+                    @Html.TextBoxFor(m => m.Amendment.AmountHours, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Amendment.AmountHours, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-success">Submit</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

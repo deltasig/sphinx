@@ -1,24 +1,17 @@
-namespace Dsp.Data.Entities
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+
+namespace Dsp.Data.Entities;
+
+public partial class Leader : IdentityUserRole<int>
 {
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int SemesterId { get; set; }
 
-    public class Leader : IdentityUserRole<int>
-    {
-        [Required]
-        public int SemesterId { get; set; }
+    public DateTime AppointedOn { get; set; }
 
-        public DateTime AppointedOn { get; set; }
+    public virtual Position Position { get; set; }
 
-        [ForeignKey("UserId")]
-        public virtual Member Member { get; set; }
+    public virtual Semester Semester { get; set; }
 
-        [ForeignKey("RoleId")]
-        public virtual Position Position { get; set; }
-
-        [ForeignKey("SemesterId")]
-        public virtual Semester Semester { get; set; }
-    }
+    public virtual Member User { get; set; }
 }

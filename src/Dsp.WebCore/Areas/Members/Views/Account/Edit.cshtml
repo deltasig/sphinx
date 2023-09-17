@@ -1,0 +1,178 @@
+﻿@model EditMemberInfoModel
+@{
+    ViewBag.Title = "Editing " + Model.User;
+    var isAdmin = User.IsInRole("Administrator");
+    var isSecretary = User.IsInRole("Secretary");
+    var isCurrentUser = User.GetUserId() == Model.User.Id;
+
+    var showAvatar = isAdmin || isCurrentUser;
+    var showFirstName = true;
+    var showLastName = true;
+    var showEmail = true;
+    var showExpectedGraduation = true;
+    var showPin = true;
+    var showStatus = isAdmin || isSecretary;
+    var showPledgeClass = isAdmin || isSecretary;
+    var showBigBro = true;
+    var showShirtSize = true;
+    var showDietaryInstructions = true;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index", "Account", new {userName = Model.User.UserName, area = "Members"})" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Member Profile
+                </a>
+                <a href="@Url.Action("Index", "Roster", new {area = "Members"})" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Roster
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="media">
+                <div class="media-left">
+                    <img src="~/Images/Avatars/@(Model.User.AvatarPath)" height="90" width="90"
+                         onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
+                </div>
+                <div class="media-body">
+                    @if (showAvatar)
+                    {
+                        <h4 class="media-heading">Upload new avatar</h4>
+
+                        using (Html.BeginForm("Avatar", "Account", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.HiddenFor(m => m.User.Id)
+
+                            <div class="form-group">
+                                <input type="file" name="avatar" />
+                            </div>
+                            <div class="form-group">
+                                <input type="submit" value="Upload" class="btn btn-sm btn-default" />
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <h4>Information</h4>
+            @using (Html.BeginForm("Edit", "Account", FormMethod.Post, new { @class = "", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(m => m.User.Id)
+                @Html.HiddenFor(m => m.User.UserName)
+
+                if (showFirstName)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.FirstName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.User.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.User.FirstName, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.FirstName)
+                }
+
+                if (showLastName)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.LastName, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.User.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.User.LastName, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.LastName)
+                }
+
+                if (showEmail)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.Email, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.User.Email, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.User.Email, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.Email)
+                }
+
+                if (showExpectedGraduation)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.ExpectedGraduationId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.ExpectedGraduationId, Model.Semesters,
+                            new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.ExpectedGraduationId)
+                }
+
+                if (showStatus)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.StatusId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.StatusId, Model.Statuses, new { @class = "form-control selectpicker" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.StatusId)
+                }
+
+                if (showPledgeClass)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.PledgeClassId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.PledgeClassId, Model.PledgeClasses,
+                            new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.PledgeClassId)
+                }
+
+                if (showBigBro)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.BigBroId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.BigBroId, Model.Members,
+                            new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.BigBroId)
+                }
+
+                if (showDietaryInstructions)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.User.DietaryInstructions, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.User.DietaryInstructions, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.User.DietaryInstructions, "", new { @class = "text-danger" })
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(m => m.User.DietaryInstructions)
+                }
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

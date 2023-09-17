@@ -1,0 +1,161 @@
+﻿@using Dsp.WebCore.Areas.Edu.Models
+@model List<DuplicateGroup>
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Duplicates";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-lg-6">
+
+        </div>
+        <div class="col-lg-6 text-right">
+            <div class="btn-group" role="group" aria-label="...">
+                @{ Html.RenderPartial("~/Areas/Edu/Views/Shared/_EduNavPartial.cshtml"); }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            @using (Html.BeginForm("Duplicates", "Classes", FormMethod.Post, new { role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        To merge the classes in a row, check <strong>one</strong> of the checkboxes next to the desired primary class.
+                    </div>
+                    <ul class="list-group">
+                        @if (Model.Any())
+                        {
+
+                            <li class="list-group-item hidden-xs">
+                                <div class="row">
+                                    <div class="col-sm-1">
+                                        <strong>Group</strong>
+                                    </div>
+                                    <div class="col-sm-11">
+                                        <strong>Primary Class Selection</strong>
+                                    </div>
+                                </div>
+                            </li>
+                            for (var g = 0; g < Model.Count; g++)
+                            {
+                                <li class="list-group-item">
+                                    <div class="row" id="group-@g">
+                                        <div class="col-sm-1">
+                                            @(g+1)
+                                        </div>
+                                        @for (var c = 0; c < Model[g].Classes.Count; c++)
+                                        {
+                                            @Html.HiddenFor(m => Model[g].Shorthand)
+                                            @Html.HiddenFor(m => Model[g].Classes[c].Class.ClassId)
+                                            @Html.HiddenFor(m => Model[g].Classes[c].Class.CourseName)
+                                            @Html.HiddenFor(m => Model[g].Classes[c].Class.CourseShorthand)
+                                            @Html.HiddenFor(m => Model[g].Classes[c].Class.CreditHours)
+                                            @Html.HiddenFor(m => Model[g].Classes[c].Class.DepartmentId)
+
+                                            <div class="col-sm-3" id="item-@Model[g].Classes[c].Class.ClassId">
+
+                                                @Html.CheckBoxFor(m => Model[g].Classes[c].IsPrimary, new
+                                                {
+                                                    id = "cb-" + Model[g].Classes[c].Class.ClassId,
+                                                    onclick = "primarySelected('" + g + "', '" + Model[g].Classes[c].Class.ClassId + "')"
+                                                })
+
+                                                <span class="badge"
+                                                      data-toggle="tooltip" data-placement="top"
+                                                      title="Enrolled">
+                                                    @Model[g].Classes[c].Class.ClassesTaken.Count
+                                                </span>
+                                                <i class="fa fa-info-circle text-info"
+                                                   data-toggle="tooltip" data-placement="top"
+                                                   title="@Model[g].Classes[c].Class.CourseName, @Model[g].Classes[c].Class.CreditHours Credit(s)">
+                                                </i>
+
+                                                <a href="@Url.Action("Details", new {id = Model[g].Classes[c].Class.ClassId})">
+                                                    @Model[g].Classes[c].Class.CourseShorthand
+                                                </a>
+                                            </div>
+                                        }
+                                    </div>
+                                </li>
+                            }
+                        }
+                        else
+                        {
+                            <li class="list-group-item">
+                                No duplicates detected!
+                            </li>
+                        }
+                    </ul>
+                    <div class="panel-footer">
+                        <button type="submit" class="btn btn-default @(Model.Any() ? "" : "hidden")">Submit</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="alert alert-warning">
+                <strong>
+                    How does this work?
+                </strong>
+                <hr />
+                <p class="text-justify">
+                    The site gathers all existing classes and groups with matching shorthands (aka, course numbers).
+                    Each group is represented by a row in the table above.
+                </p>
+                <p class="text-justify">
+                    The first step in the merge is for you to select which class will be the <em>primary</em> one for merging.
+                    This is the class that will be kept, while the others will be deleted.
+                    During the merge, all enrollments in the non-primary classes will be moved to the primary class so that data isn't lost.
+                    <strong><small>Note: a merge will only occur for rows that have a primary class selected.</small></strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        // Gathers a list of all of the checkbox IDs within a given row.
+        function getIdsForGroup(group) {
+
+            var array = new Array();
+            $("div input", "#group-" + group).each(function () {
+                if (typeof $(this).attr("id") != "undefined") {
+                    array.push($(this).attr("id"));
+                }
+            });
+            return array;
+
+        }
+
+        function primarySelected(group, cbid) {
+
+            // Uncheck any checkboxes in the row that are already checked.
+            var ids = getIdsForGroup(group);
+            ids.forEach(function (id) {
+                if (id !== "cb-" + cbid) {
+                    $("#" + id).prop("checked", false);
+                }
+            });
+
+            // Color the row to denote its involvement in the merge.
+            if ($("#cb-" + cbid).is(':checked')) {
+                $("#group-" + group).parent().addClass("list-group-item-success");
+            } else {
+                $("#group-" + group).parent().removeClass("list-group-item-success");
+            }
+
+        }
+
+    </script>
+
+}

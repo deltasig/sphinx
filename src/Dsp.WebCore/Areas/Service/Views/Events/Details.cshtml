@@ -1,0 +1,47 @@
+﻿@model Dsp.Data.Entities.ServiceEvent
+@{
+    ViewBag.Title = "Event Details";
+    ViewBag.Subtitle = Model.EventName;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index", new { sid = Model.SemesterId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Events
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>@Html.DisplayNameFor(model => model.DateTimeOccurred)</dt>
+                    <dd>@Html.DisplayFor(model => model.DateTimeOccurred)</dd>
+                    <dt>@Html.DisplayNameFor(model => model.DurationHours)</dt>
+                    <dd>@Html.DisplayFor(model => model.DurationHours)</dd>
+                    <dt>Members who Served</dt>
+                    <dd>
+                        @foreach (var s in Model.ServiceHours.OrderBy(m => m.User.LastName))
+                        {
+                            var label = s.User.FirstName + " " + s.User.LastName + " (" + s.DurationHours + " hrs)";
+                            <small>@label</small>
+
+                            if (User.IsInRole("Administrator") || User.IsInRole("Service"))
+                            {
+                                <small class="float-end">
+                                    @Html.ActionLink("Edit", "Edit", "Hours", new { eid = s.EventId, uid = s.UserId }, null) |
+                                    @Html.ActionLink("Delete", "Delete", "Hours", new { eid = s.EventId, uid = s.UserId }, null)
+                                </small>
+                            }
+                            <br />
+                        }
+                        <strong>Total:</strong> @Model.ServiceHours.Count <br />
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

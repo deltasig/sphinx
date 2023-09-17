@@ -1,0 +1,68 @@
+﻿@model Dsp.WebCore.Areas.Service.Models.ServiceEventIndexModel
+@{
+    ViewBag.Title = "Service Events";
+    ViewBag.Print = true;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 no-print">
+            @Html.Partial("~/Areas/Service/Views/Shared/_ServiceNavPartial.cshtml", Model.NavModel)
+        </div>
+        <div class="col-lg-10 col-md-9">
+            <div class="row">
+                <div class="col">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Events</div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-sm-2">Date/Time</th>
+                                        <th>Event Name</th>
+                                        <th class="col-sm-2">
+                                            Duration
+                                            <i data-toggle="tooltip" data-placement="top" title="Displayed in Hours" class="fa fa-info-circle text-info"></i>
+                                        </th>
+                                        <th class="col-sm-1">Members</th>
+                                        <th class="col-sm-1">Approved</th>
+                                        @if (Model.NavModel.HasElevatedPermissions)
+                                        {
+                                            <th class="col-sm-2"></th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var e in Model.Events)
+                                    {
+                                        var canDeleteEvent = !e.ServiceHours.Any();
+
+                                        <tr>
+                                            <td>@e.DateTimeOccurred.ToString("MM-dd@hh:mm tt (ddd)")</td>
+                                            <td>@e.EventName</td>
+                                            <td>@e.DurationHours</td>
+                                            <td>@e.ServiceHours.Count</td>
+                                            <td>@Html.DisplayFor(m => e.IsApproved)</td>
+                                            @if (Model.NavModel.HasElevatedPermissions)
+                                            {
+                                                <td class="text-right">
+                                                    @Html.ActionLink("Details", "Details", new { id = e.EventId }) |
+                                                    @Html.ActionLink("Edit", "Edit", new { id = e.EventId })
+                                                    @if (canDeleteEvent)
+                                                    {
+                                                        @:|
+                                                        @Html.ActionLink("Delete", "Delete", new { id = e.EventId })
+                                                    }
+                                                </td>
+                                            }
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

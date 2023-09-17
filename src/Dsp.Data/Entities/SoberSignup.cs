@@ -1,32 +1,25 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class SoberSignup
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int SignupId { get; set; }
 
-    public class SoberSignup
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SignupId { get; set; }
+    public int? UserId { get; set; }
 
-        public int? UserId { get; set; }
+    public int SoberTypeId { get; set; }
 
-        [Display(Name = "Type")]
-        public int SoberTypeId { get; set; }
+    public string Description { get; set; }
 
-        [StringLength(100), Display(Name = "Description")]
-        public string Description { get; set; }
+    public DateTime DateOfShift { get; set; }
 
-        [Required, DataType(DataType.Date), Display(Name = "Date of Shift")]
-        public DateTime DateOfShift { get; set; }
+    public DateTime? DateTimeSignedUp { get; set; }
 
-        public DateTime? DateTimeSignedUp { get; set; }
+    public DateTime? CreatedOn { get; set; }
 
-        public DateTime? CreatedOn { get; set; }
+    public virtual SoberType SoberType { get; set; }
 
-        [ForeignKey("SoberTypeId")]
-        public virtual SoberType SoberType { get; set; }
-        [ForeignKey("UserId")]
-        public virtual Member Member { get; set; }
-    }
+    public virtual Member User { get; set; }
 }

@@ -1,30 +1,21 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Class
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int ClassId { get; set; }
 
-    public class Class
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ClassId { get; set; }
+    public int DepartmentId { get; set; }
 
-        [Required, Display(Name = "Department")]
-        public int DepartmentId { get; set; }
+    public string CourseShorthand { get; set; }
 
-        [Required, MinLength(1), StringLength(50), DataType(DataType.Text), Display(Name = "Number")]
-        public string CourseShorthand { get; set; }
+    public string CourseName { get; set; }
 
-        [Required, MinLength(1), StringLength(100), Display(Name = "Name")]
-        public string CourseName { get; set; }
+    public int CreditHours { get; set; }
 
-        [Required, Display(Name = "Credit Hours")]
-        [Range(1, 6, ErrorMessage = "Please enter a valid number of credit hours: 1-6.")]
-        public int CreditHours { get; set; }
+    public virtual ICollection<ClassTaken> ClassesTaken { get; set; } = new List<ClassTaken>();
 
-        [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
-        [InverseProperty("Class")]
-        public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
-    }
+    public virtual Department Department { get; set; }
 }

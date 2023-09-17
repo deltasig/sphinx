@@ -2,9 +2,8 @@
 {
     using Data;
     using Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +12,7 @@
 
     public class SemesterService : BaseService, ISemesterService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
 
         public IList<string> Alphabet { get; } = new List<string>
         {
@@ -22,26 +21,16 @@
             "Pi", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi", "Omega"
         };
 
-        public SemesterService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public SemesterService(DspDbContext context)
         {
-
-        }
-
-        public SemesterService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public SemesterService(IRepository repository)
-        {
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<IEnumerable<Semester>> GetAllSemestersAsync()
         {
-            var semesters = await _repository
-                .GetAllAsync<Semester>(
-                    orderBy: o => o.OrderBy(s => s.DateStart));
+            var semesters = await _context.Semesters
+                .OrderBy(x => x.DateStart)
+                .ToListAsync();
             return semesters;
         }
 
@@ -50,11 +39,11 @@
             if (now == null)
                 now = DateTime.UtcNow;
 
-            var thisAndNextSemester = await _repository
-                .GetAsync<Semester>(
-                    filter: s => s.DateEnd >= now,
-                    orderBy: o => o.OrderBy(s => s.DateStart),
-                    take: 2);
+            var thisAndNextSemester = await _context.Semesters
+                .Where(s => s.DateEnd >= now)
+                .OrderByDescending(x => x.DateStart)
+                .Take(2)
+                .ToListAsync();
             return thisAndNextSemester;
         }
 
@@ -63,25 +52,27 @@
             if (now == null)
                 now = DateTime.UtcNow;
 
-            var semesters = await _repository
-                .GetAsync<Semester>(
-                    s => s.DateEnd >= DateTime.UtcNow,
-                    x => x.OrderBy(s => s.DateStart),
-                    take: 1);
-            return semesters.SingleOrDefault();
+            var semesters = await _context.Semesters
+                .Where(s => s.DateEnd >= DateTime.UtcNow)
+                .OrderBy(s => s.DateStart)
+                .Take(1)
+                .ToListAsync();
+            var currentSemester = semesters.SingleOrDefault();
+
+            return currentSemester;
         }
 
         public async Task<Semester> GetSemesterByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<Semester>(id);
+            return await _context.FindAsync<Semester>(id);
         }
 
         public async Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime)
         {
-            return await _repository.GetFirstAsync<Semester>(
-                filter: x => datetime <= x.DateEnd,
-                orderBy: x => x.OrderBy(o => o.DateEnd)
-            );
+            return await _context.Semesters
+                .Where(x => datetime <= x.DateEnd)
+                .OrderBy(x => x.DateEnd)
+                .FirstAsync();
         }
 
         public async Task<Semester> GetFutureMostSemesterAsync()
@@ -92,10 +83,10 @@
 
         public async Task<IEnumerable<Semester>> GetPriorSemestersAsync(Semester currentSemester)
         {
-            var priorSemesters = await _repository.GetAsync<Semester>(
-                filter: x => x.DateEnd < currentSemester.DateEnd,
-                orderBy: x => x.OrderBy(o => o.DateEnd)
-            );
+            var priorSemesters = await _context.Semesters
+                .Where(x => x.DateEnd < currentSemester.DateEnd)
+                .OrderBy(x => x.DateEnd)
+                .ToListAsync();
             return priorSemesters;
         }
 
@@ -186,14 +177,14 @@
             if (semester.TransitionDate < semester.DateEnd)
                 throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
 
-            _repository.Create(semester);
-            await _repository.SaveAsync();
+            _context.Add(semester);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreatePledgeClassAsync(PledgeClass pledgeClass)
         {
-            _repository.Create(pledgeClass);
-            await _repository.SaveAsync();
+            _context.Add(pledgeClass);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateSemesterAsync(Semester semester)
@@ -201,26 +192,28 @@
             if (semester.TransitionDate < semester.DateEnd)
                 throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
 
-            _repository.Update(semester);
-            await _repository.SaveAsync();
+            _context.Update(semester);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdatePledgeClassAsync(PledgeClass pledgeClass)
         {
-            _repository.Update(pledgeClass);
-            await _repository.SaveAsync();
+            _context.Update(pledgeClass);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteSemesterAsync(int id)
         {
-            _repository.Delete<Semester>(id);
-            await _repository.SaveAsync();
+            var entity = new Semester { Id = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeletePledgeClassAsync(int id)
         {
-            _repository.Delete<PledgeClass>(id);
-            await _repository.SaveAsync();
+            var entity = new PledgeClass { PledgeClassId = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

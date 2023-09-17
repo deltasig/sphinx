@@ -1,23 +1,17 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Major
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int MajorId { get; set; }
 
-    public class Major
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int MajorId { get; set; }
+    public int DepartmentId { get; set; }
 
-        [Required, Display(Name = "Department")]
-        public int DepartmentId { get; set; }
+    public string MajorName { get; set; }
 
-        [Required, Display(Name = "Name"), StringLength(100)]
-        public string MajorName { get; set; }
+    public virtual Department Department { get; set; }
 
-        [ForeignKey("DepartmentId")]
-        public virtual Department Department { get; set; }
-        [InverseProperty("Major")]
-        public virtual ICollection<MajorToMember> MajorToMembers { get; set; }
-    }
+    public virtual ICollection<MajorToMember> MajorToMembers { get; set; } = new List<MajorToMember>();
 }

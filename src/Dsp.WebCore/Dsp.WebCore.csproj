@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="wwwroot\css\HouseDiagram.css" />
+    <None Remove="wwwroot\css\Site.css" />
+    <None Remove="wwwroot\css\wmd.css" />
+    <None Remove="Documents\Awards.md" />
+    <None Remove="Documents\History.md" />
+    <None Remove="Documents\Updates.md" />
+    <None Remove="wwwroot\images\Avatars\NoAvatar.jpg" />
+    <None Remove="wwwroot\images\dsp-directions.png" />
+    <None Remove="wwwroot\images\Favicon-16x16.png" />
+    <None Remove="wwwroot\images\History\chapter-house-1.jpg" />
+    <None Remove="wwwroot\images\History\chapter-house-2.jpg" />
+    <None Remove="wwwroot\images\History\chapter-house-3.jpg" />
+    <None Remove="wwwroot\images\History\chapter-house-4.jpg" />
+    <None Remove="wwwroot\images\History\chapter-house-5.jpg" />
+    <None Remove="wwwroot\images\HouseFrontDay70s.jpg" />
+    <None Remove="wwwroot\images\HouseFrontNight70s.jpg" />
+    <None Remove="wwwroot\images\letters.png" />
+    <None Remove="wwwroot\images\MobileTouch-57x57.png" />
+    <None Remove="wwwroot\images\switch.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Documents\Awards.md" />
+    <Content Include="Documents\History.md" />
+    <Content Include="Documents\Updates.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="2.2.0">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Cryptography.Internal" Version="7.0.10">
+      <TreatAsUsed>true</TreatAsUsed>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters.CoreServices" Version="1.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.10" />
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.0.1" />
+    <PackageReference Include="MarkdownSharp" Version="2.0.5" />
+    <PackageReference Include="AWSSDK.Core" Version="3.7.202.1" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.200.32" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dsp.Data\Dsp.Data.csproj" />
+    <ProjectReference Include="..\Dsp.Services\Dsp.Services.csproj" />
+  </ItemGroup>
+
+</Project>

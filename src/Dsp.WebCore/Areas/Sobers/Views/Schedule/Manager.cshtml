@@ -1,0 +1,199 @@
+@using Microsoft.AspNetCore.Http.Extensions;
+@model Dsp.WebCore.Areas.Sobers.Models.SoberManagerModel
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Sober Manager";
+    var returnUrl = Context.Request.GetEncodedUrl().Split('?')[0];
+}
+@section styles {
+    @*@Styles.Render("~/content/datepicker")*@
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+            <p>
+                <a href="@Url.Action("Index", "Schedule")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sober Schedule
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a href="@Url.Action("Index", "Types")" class="btn btn-sm btn-default">
+                    Sober Types
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li class="active"><a href="#single-add" data-toggle="pill">Single-Add Tool</a></li>
+                <li><a href="#multi-add" data-toggle="pill">Multi-Add Tool</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="single-add">
+                    @using (Html.BeginForm("AddSignup", "Schedule", FormMethod.Post, new {@class = "", role = "form"}))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewSignup.SoberTypeId, new {@class = "control-label"})
+                            @Html.DropDownListFor(m => m.NewSignup.SoberTypeId, Model.SignupTypes, new {@class = "form-control"})
+                            @Html.ValidationMessageFor(m => m.NewSignup.SoberTypeId, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewSignup.Description, new {@class = "control-label"})
+                            @Html.EditorFor(m => m.NewSignup.Description, new {htmlAttributes = new {@class = "form-control"}})
+                            @Html.ValidationMessageFor(m => m.NewSignup.Description, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.NewSignup.DateOfShift, new {@class = "control-label"})
+                            <div class="input-group date" id="dp1">
+                                @Html.EditorFor(m => m.NewSignup.DateOfShift, new {htmlAttributes = new {@class = "form-control", type = "datetime", @Value = DateTime.UtcNow.ToShortDateString()}})
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.NewSignup.DateOfShift, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group text-right">
+                            <input type="submit" value="Submit" class="btn btn-success"/>
+                        </div>
+                    }
+                </div>
+                <div class="tab-pane" id="multi-add">
+                    @using (Html.BeginForm("MultiAddSignup", "Schedule", FormMethod.Post, new {@class = "", role = "form", id = "multi-form"}))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+                        <div class="form-group">
+                            <div class="alert alert-warning">
+                                <strong>How this works</strong>
+                                <hr/>
+                                The numbers of drivers and officers entered below
+                                will be generated <em>for each</em> selected date. <br/>
+                                <small>
+                                    Example: if you enter 2 for drivers, 3 for officers, and select 5 dates, a total of
+                                    25 signups will be generated (each date will have 2 drivers and 3 officers: 5*(2+3) = <em>25</em>).
+                                </small> <br/>
+                                Note: This tool only works for the "Driver" and "Officer" sober types.
+                                If the "Driver" or "Officer" types have had their name changed in any way, the tool will fail.
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">Number of Drivers</label>
+                            @Html.EditorFor(m => m.MultiAddModel.DriverAmount, new {htmlAttributes = new {@class = "form-control", placeholder = "Enter amount"}})
+                            @Html.ValidationMessageFor(m => m.MultiAddModel.DriverAmount, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Number of Officers</label>
+                            @Html.EditorFor(m => m.MultiAddModel.OfficerAmount, new {htmlAttributes = new {@class = "form-control", placeholder = "Enter amount"}})
+                            @Html.ValidationMessageFor(m => m.MultiAddModel.OfficerAmount, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Date Selection</label>
+                            <div class="input-group date" id="dp2">
+                                @Html.EditorFor(m => m.MultiAddModel.DateString, new {htmlAttributes = new {@class = "form-control"}})
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                            </div>
+                            @Html.ValidationMessageFor(m => m.NewSignup.DateOfShift, "", new {@class = "text-danger"})
+                        </div>
+
+                        <div class="form-group text-right">
+                            <input type="submit" value="Submit" class="btn btn-success"/>
+                        </div>
+                    }
+                </div>
+            </div>
+            @if (User.IsInRole("Sergeant-at-Arms") || User.Identity.Name == "tjm6f4")
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">Manually Send Sober Schedule Email</div>
+                    <div class="panel-body">
+                        <div class="alert alert-danger">
+                            Clicking the button below will <strong>immediately</strong> send the sober schedule email.
+                            It will contain all of the sober signup information that is currently visible on the Sphinx page.
+                            <a class="btn btn-sm btn-default" href="@Url.Action("EmailSoberSchedule", "Home", new {area = ""})">
+                                Send Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Volunteers still needed on the following dates:
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-5"><small>Type</small></th>
+                                <th class="col-xs-4"><small>Date</small></th>
+                                <th class="col-xs-3"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Signups.Any())
+                            {
+                                foreach (var item in Model.Signups)
+                                {
+                                    <tr>
+                                        <td>@item.SoberType.Name</td>
+                                        <td>@item.DateOfShift.ToShortDateString()</td>
+                                        <td class="text-right">
+                                            <small>
+                                                <a class="" href="@Url.Action("EditSignup", "Schedule", new { id = item.SignupId })">
+                                                    Edit
+                                                </a> |
+                                                <a class="" href="@Url.Action("DeleteSignup", "Schedule", new { id = item.SignupId, returnUrl })">
+                                                    Delete
+                                                </a>
+                                            </small>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr class="warning">
+                                    <td colspan="3">No empty sober signups posted.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datepicker")*@
+    <script type="text/javascript">
+
+        $(function () {
+            $("#dp1").datepicker({
+                orientation: "top left"
+            });
+
+            $("#dp2").datepicker({
+                orientation: "top left",
+                multidate: true
+            });
+        });
+
+    </script>
+}

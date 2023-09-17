@@ -1,32 +1,21 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class MealItem
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int Id { get; set; }
 
-    public class MealItem
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public string Name { get; set; }
 
-        [Required, StringLength(150)]
-        public string Name { get; set; }
+    public bool IsGlutenFree { get; set; }
 
-        [Required]
-        public bool IsGlutenFree { get; set; }
+    public int Upvotes { get; set; }
 
-        public int Upvotes { get; set; }
+    public int Downvotes { get; set; }
 
-        public int Downvotes { get; set; }
+    public virtual ICollection<MealItemVote> Votes { get; set; } = new List<MealItemVote>();
 
-        [InverseProperty("MealItem")]
-        public virtual ICollection<MealItemToPeriod> MealPeriods { get; set; }
-        [InverseProperty("MealItem")]
-        public virtual ICollection<MealItemVote> MealVotes { get; set; }
-
-        public string GetGlutenLabel()
-        {
-            return IsGlutenFree ? "Yes" : "No";
-        }
-    }
+    public virtual ICollection<MealItemToPeriod> Periods { get; set; } = new List<MealItemToPeriod>();
 }

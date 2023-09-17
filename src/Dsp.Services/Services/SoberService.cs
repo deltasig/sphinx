@@ -2,9 +2,8 @@
 {
     using Dsp.Data;
     using Dsp.Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Dsp.Services.Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -12,23 +11,13 @@
 
     public class SoberService : BaseService, ISoberService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
         private readonly ISemesterService _semesterService;
 
-        public SoberService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public SoberService(DspDbContext context)
         {
-
-        }
-
-        public SoberService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public SoberService(IRepository repository)
-        {
-            _repository = repository;
-            _semesterService = new SemesterService(repository);
+            _context = context;
+            _semesterService = new SemesterService(context);
         }
 
         public virtual async Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync()
@@ -47,10 +36,11 @@
             var startOfTodayCst = ConvertUtcToCst(date).Date;
             var startOfTodayUtc = ConvertCstToUtc(startOfTodayCst);
             var thisSemester = await _semesterService.GetCurrentSemesterAsync();
-            var futureSignups = await _repository
-                .GetAsync<SoberSignup>(s =>
+            var futureSignups = await _context.SoberSignups
+                .Where(s =>
                     s.DateOfShift >= startOfTodayUtc &&
-                    s.DateOfShift <= thisSemester.DateEnd);
+                    s.DateOfShift <= thisSemester.DateEnd)
+                .ToListAsync();
             var orderedSignups = futureSignups
                 .OrderBy(s => s.DateOfShift)
                 .ThenBy(s => s.SoberTypeId)
@@ -76,10 +66,10 @@
         {
             var threeAmYesterday = ConvertCstToUtc(ConvertUtcToCst(start).Date).AddDays(-1).AddHours(3);
 
-            var signups = await _repository
-                .GetAsync<SoberSignup>(
-                    s => s.DateOfShift >= threeAmYesterday,
-                    o => o.OrderBy(s => s.DateOfShift));
+            var signups = await _context.SoberSignups
+                .Where(s => s.DateOfShift >= threeAmYesterday)
+                .OrderBy(s => s.DateOfShift)
+                .ToListAsync();
 
             return signups;
         }
@@ -87,62 +77,64 @@
         public async Task<IEnumerable<SoberSignup>> GetFutureVacantSignups()
         {
             var startOfTodayUtc = ConvertCstToUtc(ConvertUtcToCst(DateTime.UtcNow).Date);
-            var vacantSignups = await _repository
-                .GetAsync<SoberSignup>(
-                    s => s.DateOfShift >= startOfTodayUtc && s.UserId == null,
-                    o => o.OrderBy(s => s.DateOfShift),
-                    includeProperties: "SoberType");
+            var vacantSignups = await _context.SoberSignups
+                .Where(s => s.DateOfShift >= startOfTodayUtc && s.UserId == null)
+                .OrderBy(s => s.DateOfShift)
+                .Include(x => x.SoberType)
+                .ToListAsync();
             return vacantSignups;
         }
 
         public async Task<IEnumerable<SoberType>> GetTypesAsync()
         {
-            return await _repository.GetAllAsync<SoberType>();
+            return await _context.SoberTypes.ToListAsync();
         }
 
         public async Task CreateSignupAsync(SoberSignup signup)
         {
-            _repository.Create(signup);
-            await _repository.SaveAsync();
+            _context.Add(signup);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateSignupsAsync(IEnumerable<SoberSignup> signups)
         {
             foreach (var s in signups)
             {
-                _repository.Create(s);
+                _context.Add(s);
             }
-            await _repository.SaveAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateTypeAsync(SoberType type)
         {
-            _repository.Create(type);
-            await _repository.SaveAsync();
+            _context.Add(type);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateSignupAsync(SoberSignup signup)
         {
-            _repository.Update(signup);
-            await _repository.SaveAsync();
+            _context.Update(signup);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateTypeAsync(SoberType type)
         {
-            _repository.Update(type);
-            await _repository.SaveAsync();
+            _context.Update(type);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteSignupAsync(int id)
         {
-            _repository.Delete<SoberSignup>(id);
-            await _repository.SaveAsync();
+            var entity = new SoberSignup { SignupId = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteTypeAsync(int id)
         {
-            _repository.Delete<SoberType>(id);
-            await _repository.SaveAsync();
+            var entity = new SoberType { SoberTypeId = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -1,19 +1,13 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class MemberStatus
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int StatusId { get; set; }
 
-    [Table("MemberStatuses")]
-    public class MemberStatus
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int StatusId { get; set; }
+    public string StatusName { get; set; }
 
-        [Required, StringLength(50), DataType(DataType.Text), Display(Name = "Name")]
-        public string StatusName { get; set; }
-
-        [InverseProperty("MemberStatus")]
-        public virtual ICollection<Member> Members { get; set; }
-    }
+    public virtual ICollection<Member> Members { get; set; } = new List<Member>();
 }

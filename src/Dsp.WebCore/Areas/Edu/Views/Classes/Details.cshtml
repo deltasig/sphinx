@@ -1,0 +1,129 @@
+﻿@using Dsp.WebCore.Areas.Edu.Models
+@using Dsp.Data.Entities
+@using System.Web.Configuration
+@using Dsp.WebCore.Extensions;
+@model ClassDetailsModel
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = Model.Class.CourseName;
+    ViewBag.Subtitle = Model.Class.CourseShorthand;
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
+
+    var enrollModel = new ClassScheduleModel
+    {
+        SelectedUserName = User.GetUserName(),
+        ClassTaken = new ClassTaken
+        {
+            UserId = User.GetUserId(),
+            ClassId = Model.Class.ClassId,
+            SemesterId = Model.CurrentSemester.Id
+        }
+    };
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col-lg-6">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Classes
+            </a>
+            <hr class="hidden-lg"/>
+        </div>
+        <div class="col-lg-6 text-right">
+            @using (Html.BeginForm("Enroll", "Classes"))
+            {
+                if (!Model.Class.ClassesTaken.Any(c =>
+                    c.UserId == User.GetUserId() && c.SemesterId == Model.CurrentSemester.Id))
+                {
+                    @Html.AntiForgeryToken()
+                    <input id="SelectedUserName" name="SelectedUserName" type="hidden" value="@enrollModel.SelectedUserName">
+                    <input id="ClassTaken_UserId" name="ClassTaken.UserId" type="hidden" value="@enrollModel.ClassTaken.UserId">
+                    <input id="ClassTaken_ClassId" name="ClassTaken.ClassId" type="hidden" value="@enrollModel.ClassTaken.ClassId">
+                    <input id="ClassTaken_SemesterId" name="ClassTaken.SemesterId" type="hidden" value="@enrollModel.ClassTaken.SemesterId">
+                    <button type="submit" class="btn btn-default btn-sm">
+                        <i class="fa fa-plus"></i> Add to my @Model.CurrentSemester schedule
+                    </button>
+                }
+
+                <a href="@Url.Action("Details", "Departments", new {id = Model.Class.Department.DepartmentId})" class="btn btn-sm btn-default">
+                    @Model.Class.Department.Name Department
+                </a>
+
+                <a href="@Url.Action("Edit", new {id = Model.Class.ClassId})" class="btn btn-sm btn-info">
+                    <i class="fa fa-cog"></i> Edit
+                </a>
+                if (hasElevatedPermissions)
+                {
+                    if (!Model.Class.ClassesTaken.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = Model.Class.ClassId})" class="btn btn-sm btn-danger">
+                            <i class="fa fa-times"></i> Delete
+                        </a>
+                    }
+                }
+            }
+            <hr class="hidden-lg"/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-users"></i>
+                    Members who are or were enrolled in @Model.Class.CourseShorthand
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-6"><small>Member</small></th>
+                                <th><small>Semester</small></th>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <th class="col-xs-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.Class.ClassesTaken.Any())
+                            {
+                                foreach (var s in Model.Class.ClassesTaken
+                                .OrderByDescending(c => c.Semester.DateEnd).ThenBy(c => c.User.LastName))
+                                {
+                                    <tr class="@(s.SemesterId == Model.CurrentSemester.Id ? "success" : "")">
+                                        <td>
+                                            <a href="@Url.Action("Schedule", new {userName = s.User.UserName})">
+                                                @(s.User.FirstName + " " + s.User.LastName)
+                                            </a>
+                                        </td>
+                                        <td>@s.Semester</td>
+                                        @if (hasElevatedPermissions)
+                                        {
+                                            var enrollmentInfo = new { ctid = s.ClassTakenId };
+                                            <td class="text-right">
+                                                <small>
+                                                    <a href="@Url.Action("EditEnrollment", enrollmentInfo)">Edit</a> |
+                                                    <a href="@Url.Action("Disenroll", enrollmentInfo)">Delete</a>
+                                                </small>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                var columns = hasElevatedPermissions ? 3 : 2;
+
+                                <tr class="warning">
+                                    <td colspan="@(columns)">No one has taken this class yet</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">Count: @Model.Class.ClassesTaken.Count</div>
+            </div>
+        </div>
+    </div>
+</div>

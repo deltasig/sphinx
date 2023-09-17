@@ -1,0 +1,94 @@
+@using System.Configuration
+@model RecruitmentModel
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Joining";
+
+    var anyApps = Model.ScholarshipApps.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow);
+}
+@section Title
+{
+    <partial name="_TitleExternal.cshtml"></partial>
+}
+@section AdditionalMeta {
+    <meta name="description" content="Learn about how you can join Delta Sig." >
+}
+
+<div class="container">
+    @if (!anyApps)
+    {
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-warning" role="alert">
+                    <strong>Attention first-semester students!</strong>  
+                    If you have not applied for our scholarship, @Html.ActionLink("click here", "Scholarships", "Home") to learn more!
+                </div>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col">
+            <h2 class="mt-4">
+                <i class="fa-solid fa-scroll"></i>
+                Our Philosophy
+            </h2>
+            <p class="text-justify">
+                Our goal is to build a diverse group where everyone shares a vision for making themselves and the community a better place.
+                We want to make the most out of our time in college by:
+                <ul>
+                    <li>contributing to the community through organized service events</li>
+                    <li>learning what it takes to run an organization</li>
+                    <li>improving social skills by participating in activities pre-planned activities</li>
+                </ul>
+            </p>
+            <p class="text-justify">
+                If Delta Sig is not the fraternity for you, that does not mean other fraternities are not a good fit.
+                After all, each fraternity has its own culture offering a unique experience.
+                We encourage all potential new members to get to know both us and other fraternities before committing.
+                While Greek Life can offer a lot, not everyone is interested, and that is okay.
+                If you would still like to help out in some way by participating in things like service events, let us know!
+            </p>
+
+            @if (Model.Semester != null)
+            {
+                <h2 class="mt-4">
+                    <i class="fa-solid fa-book"></i> Recruitment Book
+                    <a href="@Model.Semester.RecruitmentBookUrl" target="_blank"
+                       class="btn btn-dark btn-sm float-end d-none d-lg-block">
+                        <i class="fa-solid fa-file-arrow-down"></i> Download
+                    </a>
+                </h2>
+                <p class="d-lg-none">
+                    <a href="@Model.Semester.RecruitmentBookUrl"
+                       target="_blank" class="btn btn-light btn-sm"><i class="fa fa-"></i>Download</a>
+                </p>
+                <p class="text-justify">
+                    The <em>Recruitment Book</em> provides new members and their families with information regarding:
+                </p>
+                <ul>
+                    <li>Common Concerns</li>
+                    <li>New Member Education</li>
+                    <li>Costs</li>
+                    <li>Housing</li>
+                </ul>
+                <p class="text-justify">
+                    If you look through it and still have questions, feel free to
+                    <a href="@Url.Action("Contacts")#director_of_recruitment">email our Director of Recruitment</a>.
+                </p>
+            }
+
+            <h2 class="mt-4">
+                <i class="fa-solid fa-bullhorn"></i>
+                Getting in Touch
+            </h2>
+            <p class="text-justify">
+                Most members become interested after getting to know someone in a class, involvement, or existing social circle.
+                Still, potential new members have sought us out themselves, and we encourage you to do that if you do not know anyone but are interested in Greek Life.
+            </p>
+            <p class="text-justify">
+                Introduce yourself by <a href="@Url.Action("Contacts")#director_of_recruitment">emailing our Director of Recruitment</a>.
+                Ask questions, tour the house, and attend events to get to know us better!
+            </p>
+        </div>
+    </div>
+</div>

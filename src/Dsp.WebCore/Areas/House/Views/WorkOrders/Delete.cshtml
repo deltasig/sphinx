@@ -1,0 +1,31 @@
+﻿@model Dsp.Data.Entities.WorkOrder
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Delete Work Order";
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Work Orders
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="alert alert-danger">
+                <p>Are you sure you want to delete the work order "@Model.Title"?</p>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-group">
+                    <input type="submit" value="Delete" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

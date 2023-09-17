@@ -1,0 +1,261 @@
+﻿@model ServiceStatsIndexModel
+@{
+    ViewBag.Title = "Service Stats";
+    ViewBag.Subtitle = Model.NavModel.SelectedSemester;
+    ViewBag.Print = true;
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" 
+        integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" 
+        crossorigin="anonymous"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 no-print">
+            @Html.Partial("~/Areas/Service/Views/Shared/_ServiceNavPartial.cshtml", Model.NavModel)
+        </div>
+        <div class="col-lg-10 col-md-9">
+            <div class="row">
+                <div class="col">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Semester Stats
+                            <span class="float-end">Calculated: @Model.SemesterMemberStats.CalculatedOn</span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-3"></th>
+                                        <th class="col-xs-3">@(Model.SemesterMemberStats.ExemptMemberCount > 0 ? "*" : "")All Members (@Model.SemesterMemberStats.NonExemptMemberCount)</th>
+                                        <th class="col-xs-3">Active (@Model.SemesterMemberStats.NonExemptActiveMemberCount)</th>
+                                        <th class="col-xs-3">New (@Model.SemesterMemberStats.NonExemptNewMemberCount)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="active">Total hours:</td>
+                                        <td>@Model.SemesterMemberStats.TotalMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.TotalActiveHours</td>
+                                        <td>@Model.SemesterMemberStats.TotalNewMemberHours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &gt; 0 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServed    (@Model.SemesterMemberStats.AllMembersServedPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServed    (@Model.SemesterMemberStats.ActiveMembersServedPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServed (@Model.SemesterMemberStats.NewMembersServedPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 10 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServedTen    (@Model.SemesterMemberStats.AllMembersServedTenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServedTen    (@Model.SemesterMemberStats.ActiveMembersServedTenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServedTen (@Model.SemesterMemberStats.NewMembersServedTenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members served &ge; 15 hours:</td>
+                                        <td>@Model.SemesterMemberStats.AllMembersServedFifteen    (@Model.SemesterMemberStats.AllMembersServedFifteenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.ActiveMembersServedFifteen    (@Model.SemesterMemberStats.ActiveMembersServedFifteenPercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.NewMembersServedFifteen (@Model.SemesterMemberStats.NewMembersServedFifteenPercentage %)</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Service Hours Per Member:</td>
+                                        <td>@Model.SemesterMemberStats.AverageAllMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.AverageActiveMemberHours</td>
+                                        <td>@Model.SemesterMemberStats.AverageNewMemberHours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="active">Members Meeting Their Attendance Requirement:</td>
+                                        <td>@Model.SemesterMemberStats.AverageAllMemberAttendance    (@Model.SemesterMemberStats.AverageAllMemberAttendancePercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.AverageActiveMemberAttendance    (@Model.SemesterMemberStats.AverageActiveMemberAttendancePercentage %)</td>
+                                        <td>@Model.SemesterMemberStats.AverageNewMemberAttendance (@Model.SemesterMemberStats.AverageNewMemberAttendancePercentage %)</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        @if (Model.SemesterMemberStats.ExemptMemberCount > 0)
+                        {
+                            <div class="panel-footer">
+                                <strong>* Members exempted from service hours (excluded from stats above)</strong>
+                                <br />
+                                @Model.SemesterMemberStats.ExemptMembersDisplay
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <canvas id="statsChart" style="background-color: white" height="500"></canvas>
+            </div>
+            <div class="row" style="page-break-after: always">
+                <div class="col">
+                    <p class="alert alert-info">
+                        <i class="fa fa-info-circle"></i>
+                        The adjusted 80% target is "adjusted" because it does not include
+                        members with service hour amendments that completely eliminate their
+                        semester requirement.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            General Stats For All Semesters
+                            @if (Model.GeneralStats.Any())
+                            {
+                                <span class="float-end">Calculated: @Model.GeneralStats.First().CalculatedOn</span>
+                            }
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-xs-2">Semester</th>
+                                        <th class="col-xs-2">Total Hours</th>
+                                        <th class="col-xs-2">Average Hours</th>
+                                        <th class="col-xs-4">Biggest Event</th>
+                                        <th class="col-xs-2"># of Events</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var stat in Model.GeneralStats)
+                                    {
+                                        var isSelectedSemester = stat.SemesterId == Model.NavModel.SelectedSemester.Id;
+
+                                        <tr class="@(isSelectedSemester ? "success" : "")">
+                                            <td class="active">
+                                                <a href="@Url.Action("Index", "Events", new { sid = stat.SemesterId })">
+                                                    @stat.SemesterName
+                                                </a>
+                                            </td>
+                                            <td>@stat.TotalHours</td>
+                                            <td>@stat.AverageHours</td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Events", new { id = stat.BiggestEventId })">
+                                                    @stat.BiggestEventName
+                                                </a>
+                                            </td>
+                                            <td>@stat.NumberOfEvents</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <p class="alert alert-info no-print">
+                        <i class="fa fa-info-circle"></i>
+                        Note: Stats for the current semester update every six hours. 
+                        Stats for non-current semesters are cached for one week.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        
+        (function () {
+            var settings = {
+                url: '/api/service/hourstats?sid=' + @Model.NavModel.SelectedSemester.Id,
+                dataType: 'json',
+                success: function (response) {
+                    var data = {
+                        labels: response["months"],
+                        datasets: [
+                            {
+                                label: 'Adjusted 80% Target',
+                                data: response["targetMemberCount"],
+                                borderColor: 'rgb(0, 0, 0)',
+                                borderWidth: 1,
+                                pointRadius: 0,
+                                borderDash: [10, 5],
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '> 0 hours',
+                                data: response["moreThanZeroHours"],
+                                backgroundColor: 'rgb(235, 76, 52)',
+                                borderColor: 'rgb(235, 76, 52)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 5 hours',
+                                data: response["fiveOrMoreHours"],
+                                backgroundColor: 'rgb(252, 231, 3)',
+                                borderColor: 'rgb(252, 231, 3)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 10 hours',
+                                data: response["tenOrMoreHours"],
+                                backgroundColor: 'rgb(136, 252, 3)',
+                                borderColor: 'rgb(136, 252, 3)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                            {
+                                label: '\u2265 15 hours',
+                                data: response["fifteenOrMoreHours"],
+                                backgroundColor: 'rgb(50, 168, 82)',
+                                borderColor: 'rgb(50, 168, 82)',
+                                borderWidth: 1,
+                                fill: false,
+                                lineTension: 0,
+                            },
+                        ]
+                    };
+                    var options = {
+                        title: {
+                            display: true,
+                            text: "Service Hour Progress Through Semester",
+                        },
+                        legend: {
+                            position: "right"
+                        },
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            xAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Month'
+                                },
+                            }],
+                            yAxes: [{
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: '# of Members'
+                                },
+                                ticks: {
+                                    beginAtZero: true,
+                                    max: response["unadjustedMemberCount"]
+                                }
+                            }]
+                        },
+                        bezierCurve: false
+                    };
+
+                    var ctx = document.getElementById('statsChart').getContext('2d');
+                    var myLineChart = new Chart(ctx, {
+                        type: 'line',
+                        data: data,
+                        options: options
+                    });
+                },
+                error: function (response) {
+                    console.log(response);
+                }
+            };
+            $.ajax(settings);
+        })();
+
+    </script>
+}

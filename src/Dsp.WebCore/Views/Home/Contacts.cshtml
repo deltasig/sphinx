@@ -1,0 +1,63 @@
+﻿@model Semester
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Contacts";
+    ViewBag.Subtitle = Model.ToString();
+    var leaders = Model.Leaders ?? new List<Leader>();
+    var list = leaders
+        .Where(l => l.Position.IsPublic)
+        .OrderBy(l => l.Position.Type)
+        .ThenBy(l => l.Position.Name);
+}
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+@section AdditionalMeta{
+    <meta name="description" content="Get in touch with one our leaders.">
+}
+<div class="container">
+    <div class="row">
+        @if (leaders.Any(l => l.Position.IsPublic))
+        {
+            foreach (var leader in list)
+            {
+                var avatar = string.IsNullOrEmpty(leader.User.AvatarPath) ? "NoAvatar.jpg" : leader.User.AvatarPath;
+                var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
+
+                <div class="col-sm-3 text-center">
+                    <div class="list-group">
+                        <div class="list-group-item" id="@(formattedId)" 
+                             style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; word-break: break-all; word-wrap: break-word;">
+                            @leader.Position.Name
+                        </div>
+                        <div class="list-group-item">
+                            <p>
+                                <img src="~/Images/Avatars/@avatar" height="75" width="75" class="img-circle no-print" id="avatar" />
+                            </p>
+                            <p class="list-group-item-text">
+                                <a href="mailto:@leader.User.Email">
+                                    @leader.User.ToShortLastNameString()
+                                </a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="alert alert-warning">
+                Contact information for our leadership will be available as soon as appointments are made - we apologize for the inconvenience.<br />
+                Members, please inform the president (preferably all of you at the same time) that he is late in making appointments.
+            </div>
+        }
+    </div>
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        var selectedId = location.hash.slice(1);
+        $(`#${selectedId}`).addClass("list-group-item-success");
+    </script>
+}

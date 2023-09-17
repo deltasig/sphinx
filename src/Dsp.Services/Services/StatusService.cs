@@ -2,61 +2,51 @@
 {
     using Data;
     using Dsp.Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class StatusService : BaseService, IStatusService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
 
-        public StatusService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public StatusService(DspDbContext context)
         {
-
-        }
-
-        public StatusService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public StatusService(IRepository repository)
-        {
-            _repository = repository;
+            _context = context;
         }
 
         public async Task<IEnumerable<MemberStatus>> GetAllStatusesAsync()
         {
-            var statuses = await _repository
-                .GetAllAsync<MemberStatus>(
-                    orderBy: o => o.OrderBy(s => s.StatusId));
+            var statuses = await _context.MemberStatuses
+                .OrderBy(s => s.StatusId)
+                .ToListAsync();
             return statuses;
         }
 
         public async Task<MemberStatus> GetStatusByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<MemberStatus>(id);
+            return await _context.FindAsync<MemberStatus>(id);
         }
 
         public async Task CreateStatus(MemberStatus status)
         {
-            _repository.Create(status);
-            await _repository.SaveAsync();
+            _context.Add(status);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateStatus(MemberStatus status)
         {
-            _repository.Update(status);
-            await _repository.SaveAsync();
+            _context.Update(status);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteStatus(int id)
         {
-            _repository.Delete<MemberStatus>(id);
-            await _repository.SaveAsync();
+            var entity = new MemberStatus { StatusId = id };
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
     }
 }

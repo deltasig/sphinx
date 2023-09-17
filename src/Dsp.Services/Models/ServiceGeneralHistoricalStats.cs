@@ -29,7 +29,7 @@ namespace Dsp.Services.Models
             NumberOfEvents = approvedServiceEvents.Count();
             TotalHours = approvedServiceEvents
                 .SelectMany(x => x.ServiceHours)
-                .Where(x => nonExemptMembers.Contains(x.Member))
+                .Where(x => nonExemptMembers.Contains(x.User))
                 .Sum(x => x.DurationHours);
             AverageHours = TotalHours / nonExemptMembers.Count();
             AverageHours = Math.Round(AverageHours, 2);

@@ -2,41 +2,27 @@
 {
     using Data;
     using Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity.Core;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class PositionService : BaseService, IPositionService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
         private readonly IMemberService _memberService;
-        private readonly ISemesterService _semesterService;
 
-        public PositionService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public PositionService(DspDbContext context)
         {
-
-        }
-
-        public PositionService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public PositionService(IRepository repository)
-        {
-            _repository = repository;
-            _memberService = new MemberService(repository);
-            _semesterService = new SemesterService(repository);
+            _context = context;
+            _memberService = new MemberService(context);
         }
 
         public async Task<IEnumerable<Position>> GetAllPositionsAsync()
         {
-            return await _repository.GetAllAsync<Position>();
+            return await _context.Roles.ToListAsync();
         }
 
         public async Task<Position> GetPositionByIdAsync(int id)
@@ -45,7 +31,7 @@
             {
                 throw new ArgumentException("The entity's ID is not valid.");
             }
-            return await _repository.GetOneAsync<Position>(p => p.Id == id);
+            return await _context.FindAsync<Position>(id);
         }
 
         public async Task<Position> GetPositionByNameAsync(string name)
@@ -54,25 +40,33 @@
             {
                 throw new ArgumentException("The entity's name is not valid.");
             }
-            return await _repository.GetOneAsync<Position>(m => m.Name == name);
+            return await _context.Roles
+                .Where(m => m.Name == name)
+                .SingleAsync();
         }
 
         public async Task<IEnumerable<Position>> GetEboardPositionsAsync()
         {
-            var eBoardPositions = await _repository.GetAsync<Position>(m => m.IsExecutive);
+            var eBoardPositions = await _context.Roles
+                .Where(m => m.IsExecutive)
+                .ToListAsync();
 
             return eBoardPositions;
         }
 
         public async Task<Member> GetUserInPositionAsync(string positionName, int sid)
         {
-            var position = await _repository.GetOneAsync<Position>(x => x.Name == positionName);
+            var position = await _context.Roles
+                .Where(x => x.Name == positionName)
+                .SingleOrDefaultAsync();
             if (position == null) return null;
 
-            var appointment = await _repository.GetOneAsync<Leader>(x => x.RoleId == position.Id && x.SemesterId == sid);
+            var appointment = await _context.Leaders
+                .Where(x => x.RoleId == position.Id && x.SemesterId == sid)
+                .SingleOrDefaultAsync();
             if (appointment == null) return null;
 
-            return appointment.Member;
+            return appointment.User;
         }
 
         public async Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(int userId)
@@ -85,10 +79,10 @@
             }
 
             var now = DateTime.UtcNow;
-            var applicableSemesters = await _repository.GetAsync<Semester>(
-                filter: x => now < x.TransitionDate,
-                orderBy: x => x.OrderBy(o => o.DateStart)
-            );
+            var applicableSemesters = await _context.Semesters
+                .Where(x => now < x.TransitionDate)
+                .OrderBy(x => x.DateStart)
+                .ToListAsync();
             if (applicableSemesters.Any())
             {
                 var numberOfApplicableSemesters = applicableSemesters.Count();
@@ -218,8 +212,8 @@
             {
                 throw new ArgumentException("The entity's ID is not valid.");
             }
-            _repository.Delete(entity);
-            await _repository.SaveAsync();
+            _context.Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemovePositionByIdAsync(int id)
@@ -228,24 +222,24 @@
             {
                 throw new ArgumentException("The entity's ID is not valid.");
             }
-            var entity = await _repository.GetByIdAsync<Position>(id);
+            var entity = await _context.FindAsync<Position>(id);
             if (entity == null)
             {
-                throw new ObjectNotFoundException("A position for the given ID was not found.");
+                throw new ArgumentException("A position for the given ID was not found.");
             }
             await RemovePositionAsync(entity);
         }
 
         public async Task CreatePositionAsync(Position entity)
         {
-            var exists = await _repository.GetExistsAsync<Position>(m => m.Name == entity.Name);
+            var exists = await _context.Roles.AnyAsync(m => m.Name == entity.Name);
             if (exists)
             {
                 throw new ArgumentException("A position with that name already exists.");
             }
 
-            _repository.Create(entity);
-            await _repository.SaveAsync();
+            _context.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdatePositionAsync(Position entity)
@@ -262,7 +256,7 @@
             var oldPosition = await GetPositionByIdAsync(entity.Id);
             if (oldPosition == null)
             {
-                throw new ObjectNotFoundException("The entity being updated does not exist in the database.");
+                throw new ArgumentException("The entity being updated does not exist in the database.");
             }
             oldPosition.Name = entity.Name;
             oldPosition.Description = entity.Description;
@@ -278,10 +272,10 @@
             {
                 oldPosition.DisplayOrder = entity.DisplayOrder;
                 // Auto adjusting the display order of all positions to accomodate change.
-                var allPositions = await _repository
-                    .GetAsync<Position>(
-                        p => p.Type == entity.Type && p.Id != entity.Id,
-                        o => o.OrderBy(p => p.DisplayOrder));
+                var allPositions = await _context.Roles
+                    .Where(p => p.Type == entity.Type && p.Id != entity.Id)
+                    .OrderBy(p => p.DisplayOrder)
+                    .ToListAsync();
 
                 var positionsList = allPositions.ToList();
                 positionsList.Add(oldPosition);
@@ -289,23 +283,24 @@
                 for (var i = 0; i < positionsList.Count; i++)
                 {
                     positionsList[i].DisplayOrder = i;
-                    _repository.Update(positionsList[i]);
+                    _context.Update(positionsList[i]);
                 }
             }
             else
             {
-                _repository.Update(oldPosition);
+                _context.Update(oldPosition);
             }
 
-            await _repository.SaveAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Position>> GetAppointmentsAsync(int sid)
         {
-            var positions = await _repository
-                .GetAsync<Position>(
-                    p => !p.IsDisabled && p.Name != "Administrator",
-                    x => x.OrderBy(p => p.Type).ThenBy(p => p.DisplayOrder));
+            var positions = await _context.Roles
+                .Where(p => !p.IsDisabled && p.Name != "Administrator")
+                .OrderBy(p => p.Type)
+                .ThenBy(p => p.DisplayOrder)
+                .ToListAsync();
             return positions;
         }
 
@@ -318,16 +313,17 @@
                 SemesterId = sid,
                 AppointedOn = DateTime.UtcNow
             };
-            _repository.Create(entity);
-            await _repository.SaveAsync();
+            _context.Add(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task RemoveMemberFromPositionAsync(int mid, int pid, int sid)
         {
-            var appointment = await _repository
-                .GetOneAsync<Leader>(l => l.UserId == mid && l.RoleId == pid && l.SemesterId == sid);
-            _repository.Delete(appointment);
-            await _repository.SaveAsync();
+            var appointment = await _context.Leaders
+                .Where(l => l.UserId == mid && l.RoleId == pid && l.SemesterId == sid)
+                .SingleAsync();
+            _context.Remove(appointment);
+            await _context.SaveChangesAsync();
         }
     }
 }

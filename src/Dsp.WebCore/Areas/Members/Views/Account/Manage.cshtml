@@ -1,0 +1,42 @@
+﻿@model AccountManagementModel
+@{
+    ViewBag.Title = "Account Management";
+    ViewBag.Subtitle = Model.User.ToString();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4 col-lg-2">
+            @Html.Partial("~/Areas/Members/Views/Shared/_AccountNavPartial.cshtml")
+        </div>
+        <div class="col-md-8 col-lg-5">
+            @if (User.Identity.Name == Model.User.UserName)
+            {
+                <div class="panel panel-default">
+                    <div class="panel-heading">Change Password</div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("ChangePassword", "Account", null, FormMethod.Post, false, new {role = "form"}))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control", placeholder = "Old Password" })
+                                @Html.ValidationMessageFor(m => m.OldPassword, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control", placeholder = "New Password" })
+                                @Html.ValidationMessageFor(m => m.NewPassword, "", new { @class = "text-danger" })
+                            </div>
+                            <div class="form-group">
+                                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm Password" })
+                                @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                            </div>
+                            <button type="submit" class="btn btn-default">Submit</button>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

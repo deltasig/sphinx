@@ -1,0 +1,49 @@
+﻿@model SignInModel
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "Sign In";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-4 offset-4 col-sm-6 offset-sm-3">
+            <div class="clearfix" style="margin-top: 100px">
+                <img class="img-responsive float-start" src="~/Images/MobileTouch-57x57.png" alt="DSP" width="35" style="margin-right:10px">
+                <h4>Member Sign-In</h4>
+            </div>
+            <hr />
+
+            <form asp-controller="Account" asp-action="SignIn" asp-antiforgery="true" method="post" role="form">
+                <div class="mb-3">
+                    <input asp-for="UserName" class="form-control" placeholder="User Name" type="text" autofocus />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder = "Password" })
+                    @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+                </div>
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-md btn-success">Sign In</button>
+                    <div class="checkbox float-end">
+                        <label>
+                            @Html.CheckBoxFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe, new { style = "padding:0" })
+                        </label>
+                    </div>
+                </div>
+            </form>
+
+            <p class="text-danger">
+                @ViewBag.FailMessage
+            </p>
+
+            <hr />
+            
+            <p>
+                <a href="@Url.Action("ForgotUsername", "Account", new { area = "Members" })">Forgot Username</a> |
+                <a href="@Url.Action("ForgotPassword", "Account", new { area = "Members" })">Forgot Password</a> |
+                <a href="@Url.Action("ResendConfirmationEmail", "Account", new { area = "Members" })">Resend Confirmation Email</a>
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,27 @@
+﻿@model AboutModel
+@{
+    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
+    ViewBag.Title = "About Delta Epsilon";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+}
+@section Title
+{
+    @Html.Partial("_TitleExternal")
+}
+@section AdditionalMeta{
+    <meta name="description" content="Information about the history and accomplishments of Delta Epsilon.">
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <section id="awards">
+                @Html.Raw(Model.Awards)
+            </section>
+            <section id="chapter-history">
+                @Html.Raw(Model.History)
+            </section>
+        </div>
+    </div>
+</div>

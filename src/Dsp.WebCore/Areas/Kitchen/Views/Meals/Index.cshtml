@@ -1,0 +1,359 @@
+@using Dsp.WebCore.Extensions;
+@model MealIndexModel
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Meal Schedule";
+}
+@*@Scripts.Render("~/bundles/mustache")*@
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-6">
+
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            @if (Model.HasElevatedPermissions)
+            {
+                <p>
+                    <a href="@Url.Action("Index", "MealItems")" class="btn btn-sm btn-default">Items</a>
+                    <a href="@Url.Action("Index", "MealPeriods")" class="btn btn-sm btn-default">Periods</a>
+                </p>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-calendar" title="Current window"></i>
+                    <small>
+                        @Model.StartDate.ToShortDateString() to
+                        @Model.StartDate.AddDays(6).ToShortDateString()
+                    </small>
+                    <span class="float-end">
+                        <a href="@Url.Action("Index", new { week = Model.WeekOffset - 1 })"
+                           class="btn btn-xs btn-default">
+                            <i class="fa fa-fw fa-angle-double-left"></i>
+                        </a>
+                        <a href="@Url.Action("Index", new { week = Model.WeekOffset + 1 })"
+                           class="btn btn-xs btn-default">
+                            <i class="fa fa-fw fa-angle-double-right"></i>
+                        </a>
+                    </span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-2"></th>
+                                @foreach (var c in Model.DistinctDates)
+                                {
+                                    <th class="text-center">
+                                        <small>
+                                            @c.ToShortDateString()
+                                            (@c.ToString("ddd"))
+                                        </small>
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.Rows)
+                            {
+                                var counter = 0;
+                                <tr>
+                                    <td class="active">
+                                        <small>
+                                            <strong>@r.Period.Name</strong> <br />
+                                            @r.Period.StartTime.ToShortTimeString() - @r.Period.EndTime.ToShortTimeString()
+                                        </small>
+                                    </td>
+                                    @foreach (var c in r.Columns)
+                                    {
+                                        var entryDateTime = new DateTime(c.Date.Year, c.Date.Month, c.Date.Day, r.Period.StartTime.Hour, r.Period.StartTime.Minute, 0);
+
+                                        counter++;
+                                        <td id="@r.Period.Id-@counter">
+                                            @foreach (var i in c.Items)
+                                            {
+                                                <div id="@i.Id" class="row">
+                                                    <div class="col">
+                                                        <small>@i.MealItem.Name</small>
+                                                        @if (Model.HasElevatedPermissions)
+                                                        {
+                                                            <button class="btn btn-xs btn-link float-end" title="Delete"
+                                                                    onclick="deleteMealItemToPeriod(this, @i.Id)">
+                                                                <i class="fa fa-minus-circle text-danger"></i>
+                                                            </button>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                            <hr />
+                                            <div class="row">
+                                                <div class="col bottom">
+                                                    @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "Late", week = Model.WeekOffset },
+                                                   FormMethod.Post, false, new { style = "display:inline" }))
+                                                    {
+                                                        <button class="btn btn-xs btn-default" type="submit"
+                                                                data-toggle="tooltip" data-placement="top" title="Late plate">
+                                                            <i class="fa fa-cutlery"></i>
+                                                        </button>
+                                                    }
+                                                    @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "+1", week = Model.WeekOffset },
+                                                            FormMethod.Post, false, new { style = "display:inline" }))
+                                                    {
+                                                        <button class="btn btn-xs btn-default" type="submit"
+                                                                data-toggle="tooltip" data-placement="top" title="+1 plate">
+                                                            +1
+                                                        </button>
+                                                    }
+                                                    @using (Html.BeginForm("AddPlate", "Meals", new { dateTime = entryDateTime, type = "Guest", week = Model.WeekOffset },
+                                                   FormMethod.Post, false, new { style = "display:inline" }))
+                                                    {
+                                                        <button class="btn btn-xs btn-default" type="submit"
+                                                                data-toggle="tooltip" data-placement="top" title="Guest plate">
+                                                            <i class="fa fa-user"></i>
+                                                        </button>
+                                                    }
+                                                    @if (Model.HasElevatedPermissions)
+                                                    {
+                                                        <button class="btn btn-xs btn-success"
+                                                                data-toggle="tooltip" data-placement="left" title="Add meal item(s)"
+                                                                onclick="showMealItemModal(this, '@r.Period.Name', @r.Period.Id, '@c.Date.ToShortDateString()')">
+                                                            <i class="fa fa-plus-circle"></i>
+                                                        </button>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Plate Signups
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th class="col-xs-2"></th>
+                                @foreach (var c in Model.DistinctDates)
+                                {
+                                    <th class="text-center">
+                                        <small>
+                                            @c.ToShortDateString()
+                                            (@c.ToString("ddd"))
+                                        </small>
+                                    </th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in Model.Rows)
+                            {
+                                <tr>
+                                    <td class="active">
+                                        <small>
+                                            <strong>@r.Period.Name</strong> <br />
+                                            @r.Period.StartTime.ToShortTimeString() - @r.Period.EndTime.ToShortTimeString()
+                                        </small>
+                                    </td>
+                                    @foreach (var c in r.Columns)
+                                    {
+                                        var entryDateTime = new DateTime(c.Date.Year, c.Date.Month, c.Date.Day, r.Period.StartTime.Hour, r.Period.StartTime.Minute, 0);
+                                        var plates = Model.Plates.Where(p => p.PlateDateTime == entryDateTime).OrderBy(o => o.User.FirstName);
+
+                                        <td>
+                                            @foreach (var p in plates)
+                                            {
+                                                <div id="@p.Id" class="row">
+                                                    <div class="col">
+                                                        <small>
+                                                            @p.User.FirstName @p.User.LastName[0]. (@p.Type)
+                                                            @if (!string.IsNullOrEmpty(p.User.DietaryInstructions))
+                                                            {
+                                                                @:(<i class="fa fa-fw fa-heart text-danger" data-toggle="tooltip" date-placement="top" title="Dietary Instructions"></i>:
+                                                                @p.User.DietaryInstructions
+                                                                @:)
+                                                            }
+                                                        </small>
+                                                        @if (User.GetUserId() == p.UserId)
+                                                        {
+                                                            using (Html.BeginForm("RemovePlate", "Meals", new { id = p.Id, week = Model.WeekOffset },
+                                                                   FormMethod.Post, false, new { style = "display:inline" }))
+                                                            {
+                                                                @Html.AntiForgeryToken()
+                                                                <button class="btn btn-xs btn-link float-end" type="submit" title="Delete">
+                                                                    <i class="fa fa-minus-circle text-danger"></i>
+                                                                </button>
+                                                            }
+                                                        }
+                                                    </div>
+                                                </div>
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">
+                    <small>
+                        <em>Late</em> = late plate (only 1 allowed) | <em>+1</em> = extra plate | <em>Guest</em> = guest plate
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="meal-item-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">
+                    Select what to add to
+                    <strong id="period-label"></strong> on
+                    <strong id="date-label"></strong>
+                </h4>
+            </div>
+            <div class="modal-body">
+                <input id="period-id" type="hidden" value="" />
+                <label>Meal Items</label>
+                <select id="meal-item-select" class="form-control" multiple>
+                    @foreach (var mi in Model.MealItems)
+                    {
+                        <option value="@mi.Id">@mi.Name</option>
+                    }
+                </select>
+                <a href="@Url.Action("Index", "MealItems")">
+                    Click here if you don't see the meal item you need.
+                </a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="addMealItems()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script id="meal-item-template" type="text/x-custom-template">
+    <div id="{{Id}}" class="row">
+        <div class="col">
+            <a class="social" style="cursor: pointer;" title="Upvote">
+                <i class="fa fa-arrow-circle-up text-success"></i>
+            </a>
+            <a class="social" style="cursor: pointer;" title="Downvote">
+                <i class="fa fa-arrow-circle-down text-muted"></i>
+            </a>
+            <small>{{MealItemName}}</small>
+            <button class="btn btn-xs btn-link float-end" title="Delete"
+                    onclick="deleteMealItemToPeriod(this, {{Id}})">
+                <i class="fa fa-minus-circle text-danger"></i>
+            </button>
+        </div>
+    </div>
+</script>
+
+@section scripts {
+<script type="text/javascript">
+    var mealItemModalEle = $("#meal-item-modal");
+    var mealItemSelectEle = $("#meal-item-select");
+    var periodEle = $("#period-label");
+    var periodIdEle = $("#period-id");
+    var dateEle = $("#date-label");
+    var locationToAddMealItem = null;
+
+    mealItemSelectEle.selectpicker({
+        size: 10,
+        liveSearch: true
+    });
+
+    function deleteMealItemToPeriod(ele, mealItemToPeriodId) {
+        var sure = confirm("Are you sure?");
+        if (!sure) return;
+        $.ajax({
+            url: "Meals/DeleteMealItemFromPeriod?id=" + mealItemToPeriodId,
+            type: "DELETE",
+            success: function (result) {
+                console.log("Deleted ID: " + mealItemToPeriodId);
+                $(`#${mealItemToPeriodId}`).remove();
+            },
+            error: function (result, msg) {
+                console.log(msg);
+            }
+        });
+    }
+
+    function addMealItems() {
+        var data = [];
+        var periodId = parseInt(periodIdEle.val());
+        var date = dateEle.text();
+        var mealItemIds = mealItemSelectEle.selectpicker("val");
+        if (!Array.isArray(mealItemIds) || !mealItemIds.length) {
+            console.log("No meal items were selected - nothing to add.");
+            mealItemModalEle.modal("hide");
+            return;
+        }
+
+        for (var i = 0; i < mealItemIds.length; i++) {
+            data.push({
+                Date: date,
+                MealPeriodId: periodId,
+                MealItemId: parseInt(mealItemIds[i])
+            });
+        }
+        console.log(data);
+
+        $.ajax({
+            url: "Meals/AddMealItemsToPeriod",
+            type: "POST",
+            dataType: "json",
+            data: { "": data },
+            success: function (result) {
+                var template = document.getElementById("meal-item-template").innerHTML;
+                Mustache.parse(template);
+                console.log(result);
+                for (var i = 0; i < result.length; i++) {
+                    var rendered = Mustache.render(template, result[i]);
+                    locationToAddMealItem.find("hr").before(rendered);
+                }
+            },
+            error: function (result, msg) {
+                console.log(msg);
+                console.log(result);
+            }
+        });
+
+        mealItemSelectEle.selectpicker("deselectAll");
+        mealItemModalEle.modal("hide");
+    }
+
+    function showMealItemModal(ele, period, periodId, date) {
+        locationToAddMealItem = $(ele).closest("td");
+        periodEle.text(period);
+        periodIdEle.val(periodId);
+        dateEle.text(date);
+        console.log(period, periodId, date);
+        mealItemSelectEle.selectpicker("deselectAll");
+        mealItemModalEle.modal();
+    }
+
+</script>
+}

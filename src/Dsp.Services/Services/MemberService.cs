@@ -2,42 +2,33 @@
 {
     using Data;
     using Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
     using Interfaces;
+    using Microsoft.EntityFrameworkCore;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
 
     public class MemberService : BaseService, IMemberService
     {
-        private readonly IRepository _repository;
+        private readonly DspDbContext _context;
         private readonly ISemesterService _semesterService;
 
-        public MemberService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+        public MemberService(DspDbContext context)
         {
-
-        }
-
-        public MemberService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public MemberService(IRepository repository)
-        {
-            _repository = repository;
-            _semesterService = new SemesterService(repository);
+            _context = context;
+            _semesterService = new SemesterService(context);
         }
 
         public async Task<Member> GetMemberByIdAsync(int id)
         {
-            return await _repository.GetByIdAsync<Member>(id);
+            return await _context.FindAsync<Member>(id);
         }
 
         public async Task<Member> GetMemberByUserNameAsync(string userName)
         {
-            return await _repository.GetOneAsync<Member>(m => m.UserName == userName);
+            return await _context.Users
+                .Where(m => m.UserName == userName)
+                .SingleAsync();
         }
 
         public async Task<IEnumerable<Member>> GetActivesAsync()
@@ -92,17 +83,19 @@
 
         public async Task<IEnumerable<Member>> GetAlumniAsync(Semester semester)
         {
-            var results = await _repository
-                .GetAsync<Member>(m =>
-                    m.MemberStatus.StatusName == "Advisor" ||
-                    (m.MemberStatus.StatusName == "Released" ||
-                    m.MemberStatus.StatusName == "Alumnus" ||
-                    m.MemberStatus.StatusName == "Neophyte" ||
-                    m.MemberStatus.StatusName == "Active" ||
-                    m.MemberStatus.StatusName == "New") &&
-                    m.GraduationSemester.DateEnd < semester.DateStart);
-            return results.OrderBy(m => m.LastName);
+            var results = await _context.Users
+                .Where(m =>
+                    m.Status.StatusName == "Advisor" ||
+                    (m.Status.StatusName == "Released" ||
+                    m.Status.StatusName == "Alumnus" ||
+                    m.Status.StatusName == "Neophyte" ||
+                    m.Status.StatusName == "Active" ||
+                    m.Status.StatusName == "New") &&
+                    m.ExpectedGraduation.DateEnd < semester.DateStart)
+                .OrderBy(m => m.LastName)
+                .ToListAsync();
 
+            return results;
         }
 
         public async Task<IEnumerable<Member>> GetRosterForSemesterAsync(int semesterId)
@@ -113,16 +106,18 @@
 
         public async Task<IEnumerable<Member>> GetRosterForSemesterAsync(Semester semester)
         {
-            var results = await _repository
-                .GetAsync<Member>(d =>
-                    d.MemberStatus.StatusName != "Advisor" &&
-                    ((d.MemberStatus.StatusName == "Alumnus" ||
-                    d.MemberStatus.StatusName == "Active" ||
-                    d.MemberStatus.StatusName == "Neophyte" ||
-                    d.MemberStatus.StatusName == "New") &&
+            var results = await _context.Users
+                .Where(d =>
+                    d.Status.StatusName != "Advisor" &&
+                    (d.Status.StatusName == "Alumnus" ||
+                    d.Status.StatusName == "Active" ||
+                    d.Status.StatusName == "Neophyte" ||
+                    d.Status.StatusName == "New") &&
                     d.PledgeClass.Semester.DateStart < semester.DateEnd &&
-                    d.GraduationSemester.DateEnd > semester.DateStart));
-            return results.OrderBy(m => m.LastName);
+                    d.ExpectedGraduation.DateEnd > semester.DateStart)
+                .OrderBy(m => m.LastName)
+                .ToListAsync();
+            return results;
         }
     }
 }

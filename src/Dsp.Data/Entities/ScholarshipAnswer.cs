@@ -1,24 +1,19 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class ScholarshipAnswer
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int ScholarshipAnswerId { get; set; }
 
-    public class ScholarshipAnswer
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ScholarshipAnswerId { get; set; }
-        
-        public Guid ScholarshipSubmissionId { get; set; }
-        
-        public int ScholarshipQuestionId { get; set; }
-        
-        [StringLength(3000), DataType(DataType.MultilineText), Display(Name = "Answer")]
-        public string AnswerText { get; set; }
+    public Guid ScholarshipSubmissionId { get; set; }
 
-        [ForeignKey("ScholarshipSubmissionId")]
-        public virtual ScholarshipSubmission Submission { get; set; }
-        [ForeignKey("ScholarshipQuestionId")]
-        public virtual ScholarshipQuestion Question { get; set; }
-    }
+    public int ScholarshipQuestionId { get; set; }
+
+    public string AnswerText { get; set; }
+
+    public virtual ScholarshipQuestion Question { get; set; }
+
+    public virtual ScholarshipSubmission Submission { get; set; }
 }

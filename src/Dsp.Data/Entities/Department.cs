@@ -1,20 +1,15 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Department
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int DepartmentId { get; set; }
 
-    public class Department
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int DepartmentId { get; set; }
+    public string Name { get; set; }
 
-        [Required, StringLength(100), Display(Name = "Name")]
-        public string Name { get; set; }
+    public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 
-        [InverseProperty("Department")]
-        public virtual ICollection<Major> Majors { get; set; }
-        [InverseProperty("Department")]
-        public virtual ICollection<Class> Classes { get; set; }
-    }
+    public virtual ICollection<Major> Majors { get; set; } = new List<Major>();
 }

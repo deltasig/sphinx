@@ -1,54 +1,38 @@
-namespace Dsp.Data.Entities
+﻿using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Position : IdentityRole<int>
 {
-    using Microsoft.AspNet.Identity.EntityFramework;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public string Description { get; set; }
 
-    public class Position : IdentityRole<int, Leader>
-    {
-        [StringLength(100)]
-        public string Description { get; set; }
+    public PositionType Type { get; set; }
 
-        [StringLength(50)]
-        public string Inquiries { get; set; }
+    public bool IsExecutive { get; set; }
 
-        [Required, DefaultValue(PositionType.Active)]
-        public PositionType Type { get; set; }
+    public bool IsElected { get; set; }
 
-        [Required, DefaultValue(false)]
-        public bool IsExecutive { get; set; }
+    public int DisplayOrder { get; set; }
 
-        [Required, DefaultValue(false)]
-        public bool IsElected { get; set; }
+    public bool IsDisabled { get; set; }
 
-        [Required, DefaultValue(1)]
-        public int DisplayOrder { get; set; }
+    public bool IsPublic { get; set; }
 
-        [Required, DefaultValue(false)]
-        public bool IsDisabled { get; set; }
+    public bool CanBeRemoved { get; set; }
 
-        [Required, DefaultValue(true)]
-        public bool IsPublic { get; set; }
+    public string Inquiries { get; set; }
 
-        [DefaultValue(true)]
-        public bool CanBeRemoved { get; set; }
+    public virtual ICollection<Leader> Leaders { get; set; } = new List<Leader>();
+}
 
-        [InverseProperty("Position")]
-        public virtual ICollection<Leader> Leaders { get; set; }
-
-        public Position() { }
-        public Position(string name) { Name = name; }
-
-        public enum PositionType
-        {
-            NonMember,
-            Active,
-            New,
-            Alumni,
-            Affiliate,
-            Advisor
-        }
-    }
+public enum PositionType : int
+{
+    NonMember,
+    Active,
+    New,
+    Alumni,
+    Affiliate,
+    Advisor
 }

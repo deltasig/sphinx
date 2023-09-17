@@ -1,6 +1,0 @@
-﻿User-agent: *
-
-disallow: /contacts*
-disallow: /scholarships/applications*
-
-sitemap: https://www.deltasig-de.org/sitemap.xml

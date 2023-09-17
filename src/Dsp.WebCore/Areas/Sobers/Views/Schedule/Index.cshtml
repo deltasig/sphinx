@@ -1,0 +1,86 @@
+﻿@using Dsp.Data.Entities
+@model IEnumerable<SoberSignup>
+@{
+    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
+    ViewBag.Title = "Sober Schedule";
+    ViewBag.Print = true;
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms");
+}
+
+<div class="container-fluid">
+    <div class="row row-space no-print">
+        <div class="col-sm-6">
+
+        </div>
+        <div class="col-sm-6 text-sm-right">
+            <a href="@Url.Action("Report", "Schedule")" class="btn btn-sm btn-default">
+                <i class="fa fa-file-text-o"></i> Sober Report
+            </a>
+            @if (hasElevatedPermissions)
+            {
+                <a href="@Url.Action("Manager", "Schedule")" class="btn btn-sm btn-info">
+                    <i class="fa fa-wrench"></i> Manage
+                </a>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Future Sober Signups</div>
+                <div class="list-group">
+                    @if (Model.Any())
+                    {
+                        foreach (var item in Model.OrderBy(s => s.DateOfShift).ThenBy(s => s.SoberTypeId).ThenBy(s => s.Description))
+                        {
+                            <div class="list-group-item">
+                                <div class="row">
+                                    <div class="col-md-2 col-p-3">@item.DateOfShift.ToString("MM-dd-yyyy")</div>
+                                    <div class="col-md-2 col-p-9">
+                                        <a href="@Url.Action("Details", "Types", new {id = item.SoberTypeId})" class="no-print">
+                                            <i data-toggle="tooltip" data-placement="top" class="fa fa-info-circle text-info"
+                                               title="Click to learn about this job."></i>
+                                        </a>
+                                        @item.SoberType.Name
+                                    </div>
+                                    <div class="col-md-4 col-p-12">@item.Description</div>
+                                    <div class="col-md-2 col-p-12">
+                                        @if (item.User == null)
+                                        {
+                                            if (!User.IsInRole("New") || item.SoberType.Name != "Officer")
+                                            {
+                                                @Html.ActionLink("Sign up", "SignupConfirmation", "Schedule", new { id = item.SignupId }, new { @class = "no-print" })
+                                            }
+                                        }
+                                        else
+                                        {
+                                            @item.User.ToString()
+                                        }
+                                    </div>
+                                    <div class="col-md-2 text-md-right no-print">
+                                        @if (hasElevatedPermissions)
+                                        {
+                                            <a class="" href="@Url.Action("EditSignup", "Schedule", new { id = item.SignupId })">
+                                                Edit
+                                            </a> @: |
+                                            <a class="" href="@Url.Action("DeleteSignup", "Schedule", new { id = item.SignupId })">
+                                                Delete
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="list-group-item list-group-item-warning">
+                            No sober signups have been posted.
+                        </div>
+                    }
+                </div>
+                <div class="panel-footer">Count: @Model.Count()</div>
+            </div>
+        </div>
+    </div>
+</div>
