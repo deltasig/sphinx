@@ -98,7 +98,7 @@
                                     @(Model.User.Majors.Count <= 1 ? "Major" : "Majors")
                                     @if (canModifyMajor)
                                     {
-                                        <a href="@Url.Action("Assign", "Majors", new { area = "Edu", id = Model.User.Id })" class="float-end">
+                                        <a href="@Url.Action("Assign", "Majors", new { area = "School", id = Model.User.Id })" class="float-end">
                                             <i class="fa fa-plus-circle text-success" data-toggle="tooltip" data-placement="top"
                                                title="Add a new major"></i>
                                         </a>
@@ -113,7 +113,7 @@
                                             @:(@m.DegreeLevel)
                                             if (canModifyMajor)
                                             {
-                                                <a href="@Url.Action("Unassign", "Majors", new { area = "Edu", id = m.MajorToMemberId })"
+                                                <a href="@Url.Action("Unassign", "Majors", new { area = "School", id = m.MajorToMemberId })"
                                                    class="float-end">
                                                     <i class="fa fa-minus-circle text-danger" data-toggle="tooltip" data-placement="left"
                                                        title="Remove this major"></i>
@@ -167,7 +167,7 @@
                         @if(Model.User.PhoneNumber != null)
                         {
                             <tr>
-                                <td class="active">Primary</td>
+                                <td class="active">Primary Phone</td>
                                 <td class="">
                                     <a href="tel:@Model.User.PhoneNumber">
                                         @Model.User.PhoneNumber
@@ -175,17 +175,16 @@
                                 </td>
                             </tr>
                         }
-                        @foreach (var item in Model.User.ExtraPhoneNumbers)
+                        @if (Model.User.EmergencyPhoneNumber != null)
                         {
                             <tr>
-                                <td class="active">@item.Type</td>
-                                <td class="@(string.IsNullOrEmpty(item.PhoneNumber) ? "warning" : "")">
-                                    @if (!string.IsNullOrEmpty(item.PhoneNumber))
-                                    {
-                                        <a href="tel:@item.PhoneNumber">
-                                            @item.PhoneNumber
-                                        </a>
-                                    }
+                                <td class="active">Emergency Contact</td>
+                                <td class="">
+                                    <a href="tel:@Model.User.EmergencyPhoneNumber">
+                                        @Model.User.EmergencyContact
+                                        (Relation: @(Model.User.EmergencyRelation ?? "Unknown"))
+                                        (@Model.User.PhoneNumber)
+                                    </a>
                                 </td>
                             </tr>
                         }
@@ -237,7 +236,7 @@
                             </div>
                             <div class="col-xs-6 text-right">
                                 <small>
-                                    @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.User.UserName, area = "Edu" }, new { @class = "" })
+                                    @Html.ActionLink("All Classes", "Schedule", "Classes", new { userName = Model.User.UserName, area = "School" }, new { @class = "" })
                                 </small>
                             </div>
                         </div>
@@ -264,7 +263,7 @@
                                         <tr>
                                             <td>@item.Class.CourseShorthand - @item.Class.CourseName</td>
                                             <td>
-                                                @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "Edu", id = item.ClassId }, null)
+                                                @Html.ActionLink(broCount.ToString(), "Details", "Classes", new { area = "School", id = item.ClassId }, null)
                                             </td>
                                         </tr>
                                     }

@@ -162,7 +162,6 @@
                 <div class="list-group">
                     @foreach (var m in Model.Members)
                     {
-                        var phone = m.ExtraPhoneNumbers.Single(p => p.Type == "Mobile") ?? new Dsp.Data.Entities.ExtraPhoneNumber();
                         var status = m.Status.StatusName;
                         var statusColor = "label-default";
                         if (status == "Active")
@@ -208,7 +207,7 @@
                                     <i class="fa fa-fw fa-envelope"></i> @m.Email
                                 </div>
                                 <div class="col-md-3 col-sm-6 truncate">
-                                    <i class="fa fa-fw fa-mobile-phone"></i> @phone.PhoneNumber
+                                    <i class="fa fa-fw fa-mobile-phone"></i> @m.PhoneNumber
                                 </div>
                                 <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-home"></i> @m.LivingAssignmentForSemester(Model.Semester.Id)

@@ -4,6 +4,7 @@ using Dsp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Dsp.Data.Migrations
 {
     [DbContext(typeof(DspDbContext))]
-    partial class DspDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230923212819_MigrateUsernamesAndEmails")]
+    partial class MigrateUsernamesAndEmails
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -153,6 +156,33 @@ namespace Dsp.Data.Migrations
                         .HasName("PK_dbo.Departments");
 
                     b.ToTable("Departments", (string)null);
+                });
+
+            modelBuilder.Entity("Dsp.Data.Entities.ExtraPhoneNumber", b =>
+                {
+                    b.Property<int>("PhoneNumberId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PhoneNumberId"));
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PhoneNumber");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PhoneNumberId")
+                        .HasName("PK_dbo.PhoneNumbers");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("PhoneNumbers", (string)null);
                 });
 
             modelBuilder.Entity("Dsp.Data.Entities.IncidentReport", b =>
@@ -474,17 +504,6 @@ namespace Dsp.Data.Migrations
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("EmergencyContact")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("EmergencyPhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("EmergencyRelation")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int?>("ExpectedGraduationId")
                         .HasColumnType("int");
@@ -1370,6 +1389,18 @@ namespace Dsp.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Dsp.Data.Entities.ExtraPhoneNumber", b =>
+                {
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
+                        .WithMany("ExtraPhoneNumbers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_dbo.PhoneNumbers_dbo.Members_UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Dsp.Data.Entities.IncidentReport", b =>
                 {
                     b.HasOne("Dsp.Data.Entities.Member", "User")
@@ -1838,6 +1869,8 @@ namespace Dsp.Data.Migrations
                     b.Navigation("Addresses");
 
                     b.Navigation("ClassesTaken");
+
+                    b.Navigation("ExtraPhoneNumbers");
 
                     b.Navigation("IncidentReports");
 

@@ -81,7 +81,7 @@ app.MapAreaControllerRoute("Alumni_default", "Alumni", "Alumni/{controller}/{act
 
 app.MapAreaControllerRoute("Scholarships_default", "Scholarships", "Scholarships/{controller}/{action=Index}/{id?}");
 
-app.MapAreaControllerRoute("Edu_default", "Edu", "Edu/{controller}/{action=Index}/{id?}");
+app.MapAreaControllerRoute("School_default", "School", "School/{controller}/{action=Index}/{id?}");
 
 app.MapAreaControllerRoute("Members_default", "Members", "Members/{controller}/{action=Index}/{id?}");
 

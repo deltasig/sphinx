@@ -61,7 +61,7 @@
             Link = Url.Action("Index", "Schedule", new { area = "Sobers" }),
             Why = "With people like Luckert, it is true that not everyone needs to sign up - see the report. " +
                   "Signing up spreads the work though, helping brothers, reducing risk, and spreading the Taco Bell. ",
-            Priority = NotificationPriority.Moderate
+            Priority = NotificationPriority.Low
         });
     }
     if (Model.MemberInfo.Addresses?.Any(a => a.Type == "Mailing" && !a.IsFilledOut()) ?? false)
@@ -72,19 +72,30 @@
             LinkText = "Go to Account",
             Link = Url.Action("Index", "Account", new { area = "Members" }),
             Why = "This is mainly for recordkeeping purposes so that we know where to mail things.",
-            Priority = NotificationPriority.Low
+            Priority = NotificationPriority.Moderate
         });
     }
-    if (Model.MemberInfo.ExtraPhoneNumbers?.Any(a => a.Type == "Mobile" && string.IsNullOrEmpty(a.PhoneNumber)) ?? false)
+    if (string.IsNullOrWhiteSpace(Model.MemberInfo.PhoneNumber))
     {
         notifications.Add(new Notification
         {
-            Message = "Add a mobile phone number.",
+            Message = "Add a primary phone number.",
             LinkText = "Go to Account",
             Link = Url.Action("Index", "Account", new { area = "Members" }),
             Why = "This is mainly for recordkeeping as well as having a number to call for sober driving.",
-            Priority = NotificationPriority.Moderate
+            Priority = NotificationPriority.High
         });
+    }
+    if (string.IsNullOrWhiteSpace(Model.MemberInfo.EmergencyPhoneNumber))
+    {
+        notifications.Add(new Notification
+            {
+                Message = "Add an emergency contact.",
+                LinkText = "Go to Account",
+                Link = Url.Action("Index", "Account", new { area = "Members" }),
+                Why = "This helps know who to get in contact if you are in an emergency.",
+                    Priority = NotificationPriority.High
+            });
     }
     if (!thisSemesterClasses.Any() && isUndergrad)
     {
@@ -92,10 +103,10 @@
         {
             Message = "Report upcoming or current semester courses.",
             LinkText = "Go to Class Schedule",
-            Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "Edu" }),
+                    Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "School" }),
             Why = "This is how you are held accountable to academic standards. " +
                   "The academic chairman will contact you about this if you wait too long.",
-            Priority = NotificationPriority.High
+            Priority = NotificationPriority.Moderate
         });
     }
     if (!Model.MemberInfo.Majors?.Any() ?? false)
@@ -225,7 +236,7 @@
                                 </small>
 
                                 Otherwise, please go fill out your classes for last semester with the
-                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "Edu"}, null).
+                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "School"}, null).
 
                                 If you transferred here from another college you attended after graduating high school,
                                 you still need to enter your previous semester classes.

@@ -326,10 +326,6 @@
                 {
                     user = await UserManager.FindByNameAsync(user.UserName);
 
-                    Context.Addresses.Add(new Address { UserId = user.Id, Type = "Mailing" });
-                    Context.Addresses.Add(new Address { UserId = user.Id, Type = "Permanent" });
-                    Context.ExtraPhoneNumbers.Add(new ExtraPhoneNumber { UserId = user.Id, Type = "Mobile" });
-                    Context.ExtraPhoneNumbers.Add(new ExtraPhoneNumber { UserId = user.Id, Type = "Emergency" });
                     await Context.SaveChangesAsync();
 
                     // Send confirmation email.

@@ -27,8 +27,6 @@ public partial class DspDbContext :
 
     public virtual DbSet<Department> Departments { get; set; }
 
-    public virtual DbSet<ExtraPhoneNumber> ExtraPhoneNumbers { get; set; }
-
     public virtual DbSet<IncidentReport> IncidentReports { get; set; }
 
     public virtual DbSet<LaundrySignup> LaundrySignups { get; set; }
@@ -353,6 +351,15 @@ public partial class DspDbContext :
                 .IsRequired()
                 .HasMaxLength(256);
 
+            entity.Property(e => e.EmergencyContact)
+                .IsRequired(false)
+                .HasMaxLength(50);
+            entity.Property(e => e.EmergencyRelation)
+                .IsRequired(false)
+                .HasMaxLength(50);
+            entity.Property(e => e.EmergencyPhoneNumber)
+                .IsRequired(false);
+
             entity.HasOne(d => d.BigBro).WithMany(p => p.LittleBros)
                 .HasForeignKey(d => d.BigBroId)
                 .HasConstraintName("FK_dbo.Members_dbo.Members_BigBroId");
@@ -381,20 +388,6 @@ public partial class DspDbContext :
                 .HasMaxLength(50);
 
             entity.ToTable("MemberStatuses");
-        });
-
-        modelBuilder.Entity<ExtraPhoneNumber>(entity =>
-        {
-            entity.HasKey(e => e.PhoneNumberId).HasName("PK_dbo.PhoneNumbers");
-
-            entity.Property(e => e.PhoneNumber).HasColumnName("PhoneNumber");
-            entity.Property(e => e.Type).HasMaxLength(100);
-
-            entity.HasOne(d => d.User).WithMany(p => p.ExtraPhoneNumbers)
-                .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK_dbo.PhoneNumbers_dbo.Members_UserId");
-
-            entity.ToTable("PhoneNumbers");
         });
 
         modelBuilder.Entity<PledgeClass>(entity =>

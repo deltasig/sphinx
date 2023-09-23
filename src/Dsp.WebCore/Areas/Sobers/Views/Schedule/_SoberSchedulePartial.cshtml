@@ -74,7 +74,7 @@
                 </tr>
                 if (item.User != null)
                 {
-                    var number = item.User.ExtraPhoneNumbers.Single(m => m.Type == "Mobile").PhoneNumber;
+                    var number = item.User.PhoneNumber;
                     <tr class="@(item.User.UserName == User.Identity.Name ? "warning" : "")">
                         <td></td>
                         <td>

@@ -27,6 +27,12 @@ public partial class Member : IdentityUser<int>
 
     public string DietaryInstructions { get; set; }
 
+    public string EmergencyContact { get; set; }
+
+    public string EmergencyRelation { get; set; }
+
+    public string EmergencyPhoneNumber { get; set; }
+
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
     public virtual Member BigBro { get; set; }
@@ -48,8 +54,6 @@ public partial class Member : IdentityUser<int>
     public virtual ICollection<MealItemVote> MealItemVotes { get; set; } = new List<MealItemVote>();
 
     public virtual ICollection<MealPlate> MealPlates { get; set; } = new List<MealPlate>();
-
-    public virtual ICollection<ExtraPhoneNumber> ExtraPhoneNumbers { get; set; } = new List<ExtraPhoneNumber>();
 
     public virtual PledgeClass PledgeClass { get; set; }
 
