@@ -1,6 +1,5 @@
-﻿@model IEnumerable<Dsp.Data.Entities.Major>
+﻿@model IEnumerable<Major>
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Majors";
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }

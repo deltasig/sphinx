@@ -1,17 +1,16 @@
-﻿namespace Dsp.WebCore.Areas.Service.Models
+﻿namespace Dsp.WebCore.Areas.Service.Models;
+
+using Dsp.Data.Entities;
+using System.Collections.Generic;
+
+public class ServiceEventIndexModel
 {
-    using Dsp.Data.Entities;
-    using System.Collections.Generic;
+    public ServiceNavModel NavModel { get; }
+    public IEnumerable<ServiceEvent> Events { get; }
 
-    public class ServiceEventIndexModel
+    public ServiceEventIndexModel(ServiceNavModel navModel, IEnumerable<ServiceEvent> serviceEvents)
     {
-        public ServiceNavModel NavModel { get; }
-        public IEnumerable<ServiceEvent> Events { get; }
-
-        public ServiceEventIndexModel(ServiceNavModel navModel, IEnumerable<ServiceEvent> serviceEvents)
-        {
-            NavModel = navModel;
-            Events = serviceEvents;
-        }
+        NavModel = navModel;
+        Events = serviceEvents;
     }
 }

@@ -1,7 +1,6 @@
-﻿namespace Dsp.WebCore.Areas.Laundry.Models
+﻿namespace Dsp.WebCore.Areas.Laundry.Models;
+
+public class LaundryIndexModel
 {
-    public class LaundryIndexModel
-    {
-        public LaundrySchedule Schedule { get; set; }
-    }
+    public LaundrySchedule Schedule { get; set; }
 }

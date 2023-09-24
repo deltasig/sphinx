@@ -1,6 +1,5 @@
 ﻿@model ExternalScholarshipModel
 @{
-    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Scholarships";
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
     var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);

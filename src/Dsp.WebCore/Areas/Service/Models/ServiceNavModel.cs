@@ -1,21 +1,20 @@
-﻿namespace Dsp.WebCore.Areas.Service.Models
+﻿namespace Dsp.WebCore.Areas.Service.Models;
+
+using Dsp.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+public class ServiceNavModel
 {
-    using Dsp.Data.Entities;
-    using Microsoft.AspNetCore.Mvc.Rendering;
+    public bool HasElevatedPermissions { get; }
+    public Semester SelectedSemester { get; }
+    public SelectList SemesterList { get; }
+    public string SemesterListLabel { get; }
 
-    public class ServiceNavModel
+    public ServiceNavModel(bool hasElevatedPermissions, Semester selectedSemester, SelectList semesterList)
     {
-        public bool HasElevatedPermissions { get; }
-        public Semester SelectedSemester { get; }
-        public SelectList SemesterList { get; }
-        public string SemesterListLabel { get; }
-
-        public ServiceNavModel(bool hasElevatedPermissions, Semester selectedSemester, SelectList semesterList)
-        {
-            HasElevatedPermissions = hasElevatedPermissions;
-            SelectedSemester = selectedSemester;
-            SemesterList = semesterList;
-            SemesterListLabel = $"Semester: {selectedSemester}";
-        }
+        HasElevatedPermissions = hasElevatedPermissions;
+        SelectedSemester = selectedSemester;
+        SemesterList = semesterList;
+        SemesterListLabel = $"Semester: {selectedSemester}";
     }
 }

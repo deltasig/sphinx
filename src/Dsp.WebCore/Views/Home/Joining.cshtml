@@ -1,7 +1,6 @@
 @using System.Configuration
 @model RecruitmentModel
 @{
-    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Joining";
 
     var anyApps = Model.ScholarshipApps.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow);

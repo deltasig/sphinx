@@ -1,7 +1,6 @@
-﻿@model IEnumerable<Dsp.Data.Entities.Role>
+﻿@model IEnumerable<Role>
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
-    ViewBag.Title = "Positions";
+    ViewBag.Title = "Roles";
 }
 
 <div class="container-fluid">
@@ -11,7 +10,7 @@
         </div>
         <div class="col-xs-6 text-right">
             <p>
-                @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-sm btn-success" })
+                @Html.ActionLink("Create", "Create", null, new { @class = "btn btn-sm btn-success" })
             </p>
         </div>
     </div>

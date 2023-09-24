@@ -1,7 +1,5 @@
-﻿@using Dsp.Data.Entities
-@model IEnumerable<SoberSignup>
+﻿@model IEnumerable<SoberSignup>
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Sober Schedule";
     ViewBag.Print = true;
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Sergeant-at-Arms");

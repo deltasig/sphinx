@@ -1,11 +1,9 @@
-﻿using Dsp.Data.Entities;
-using System.Collections.Generic;
+﻿namespace Dsp.WebCore.Models;
 
-namespace Dsp.WebCore.Models
+using Dsp.Data.Entities;
+
+public class RecruitmentModel
 {
-    public class RecruitmentModel
-    {
-        public Semester Semester { get; set; }
-        public IEnumerable<ScholarshipApp> ScholarshipApps { get; set; }
-    }
+    public Semester Semester { get; set; }
+    public IEnumerable<ScholarshipApp> ScholarshipApps { get; set; }
 }

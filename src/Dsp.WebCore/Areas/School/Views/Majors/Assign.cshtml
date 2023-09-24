@@ -1,7 +1,5 @@
-﻿@using Dsp.Data.Entities;
-@model Dsp.Data.Entities.MajorToMember
+﻿@model MajorToMember
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Assign Major";
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }

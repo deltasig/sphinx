@@ -1,8 +1,7 @@
-﻿namespace Dsp.WebCore.Models
+﻿namespace Dsp.WebCore.Models;
+
+public class AboutModel
 {
-    public class AboutModel
-    {
-        public string History { get; set; }
-        public string Awards { get; set; }
-    }
+    public string History { get; set; }
+    public string Awards { get; set; }
 }

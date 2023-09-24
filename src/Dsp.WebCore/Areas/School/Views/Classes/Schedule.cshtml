@@ -1,6 +1,5 @@
-﻿@model Dsp.WebCore.Areas.Edu.Models.ClassScheduleModel
+﻿@model ClassScheduleModel
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Schedule";
     ViewBag.Subtitle = Model.User.ToString();
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");

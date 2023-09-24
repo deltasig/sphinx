@@ -1,17 +1,16 @@
-﻿namespace Dsp.WebCore.Areas.Service.Models
+﻿namespace Dsp.WebCore.Areas.Service.Models;
+
+using Dsp.Services.Models;
+using System.Collections.Generic;
+
+public class ServiceHourIndexModel
 {
-    using Dsp.Services.Models;
-    using System.Collections.Generic;
+    public ServiceNavModel NavModel { get; }
+    public IEnumerable<ServiceMemberProgress> Progress { get; }
 
-    public class ServiceHourIndexModel
+    public ServiceHourIndexModel(ServiceNavModel navModel, IEnumerable<ServiceMemberProgress> progress)
     {
-        public ServiceNavModel NavModel { get; }
-        public IEnumerable<ServiceMemberProgress> Progress { get; }
-
-        public ServiceHourIndexModel(ServiceNavModel navModel, IEnumerable<ServiceMemberProgress> progress)
-        {
-            NavModel = navModel;
-            Progress = progress;
-        }
+        NavModel = navModel;
+        Progress = progress;
     }
 }

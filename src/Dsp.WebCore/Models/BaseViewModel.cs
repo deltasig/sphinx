@@ -1,7 +1,6 @@
-﻿namespace Dsp.WebCore.Models
+﻿namespace Dsp.WebCore.Models;
+
+public class BaseViewModel
 {
-    public class BaseViewModel
-    {
-        public bool HasElevatedPermissions { get; set; }
-    }
+    public bool HasElevatedPermissions { get; set; }
 }

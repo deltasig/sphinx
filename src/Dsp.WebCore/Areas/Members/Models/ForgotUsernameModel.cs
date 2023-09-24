@@ -1,12 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace Dsp.WebCore.Areas.Members.Models;
 
-namespace Dsp.WebCore.Areas.Members.Models
+using System.ComponentModel.DataAnnotations;
+
+public class ForgotUsernameModel
 {
-    public class ForgotUsernameModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-    }
+    [Required]
+    [EmailAddress]
+    [Display(Name = "Email")]
+    public string Email { get; set; }
 }

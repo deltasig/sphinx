@@ -1,11 +1,10 @@
-﻿namespace Dsp.WebCore.Areas.Edu.Models
-{
-    using Dsp.Data.Entities;
-    using Microsoft.AspNetCore.Mvc.Rendering;
+﻿namespace Dsp.WebCore.Areas.School.Models;
 
-    public class CreateClassModel
-    {
-        public SelectList Departments { get; set; }
-        public Class Class { get; set; }
-    }
+using Dsp.Data.Entities;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+public class CreateClassModel
+{
+    public SelectList Departments { get; set; }
+    public Class Class { get; set; }
 }

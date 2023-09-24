@@ -1,6 +1,5 @@
-﻿@model IEnumerable<Dsp.Data.Entities.Department>
+﻿@model IEnumerable<Department>
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Departments";
     var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
 }

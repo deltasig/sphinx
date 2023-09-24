@@ -1,44 +1,43 @@
-﻿namespace Dsp.WebCore.Api
+﻿namespace Dsp.WebCore.Api;
+
+using Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Services;
+using Services.Interfaces;
+using System;
+using System.Threading.Tasks;
+
+[Authorize]
+[ApiController]
+[Route("api/service")]
+public class ServiceController : ControllerBase
 {
-    using Data;
-    using Microsoft.AspNetCore.Authorization;
-    using Microsoft.AspNetCore.Mvc;
-    using Services;
-    using Services.Interfaces;
-    using System;
-    using System.Threading.Tasks;
+    private IServiceService _serviceService;
 
-    [Authorize]
-    [ApiController]
-    [Route("api/service")]
-    public class ServiceController : ControllerBase
+    public ServiceController(DspDbContext db)
     {
-        private IServiceService _serviceService;
+        _serviceService = new ServiceService(db);
+    }
 
-        public ServiceController(DspDbContext db)
+    [AllowAnonymous]
+    [Route("~/api/service/hourstats")]
+    public async Task<IActionResult> HourStats(int sid)
+    {
+        if (sid <= 0) return BadRequest("Based id value provided.");
+        try
         {
-            _serviceService = new ServiceService(db);
+            var stats = await _serviceService.GetHourStatsBySemesterIdAsync(sid);
+            if (stats != null)
+            {
+                return Ok(stats);
+            }
+
+            return Ok("No stats to report.");
         }
-
-        [AllowAnonymous]
-        [Route("~/api/service/hourstats")]
-        public async Task<IActionResult> HourStats(int sid)
+        catch (Exception)
         {
-            if (sid <= 0) return BadRequest("Based id value provided.");
-            try
-            {
-                var stats = await _serviceService.GetHourStatsBySemesterIdAsync(sid);
-                if (stats != null)
-                {
-                    return Ok(stats);
-                }
-
-                return Ok("No stats to report.");
-            }
-            catch (Exception)
-            {
-                return BadRequest("API request failed for an unknown reason. Contact your administrator.");
-            }
+            return BadRequest("API request failed for an unknown reason. Contact your administrator.");
         }
     }
 }

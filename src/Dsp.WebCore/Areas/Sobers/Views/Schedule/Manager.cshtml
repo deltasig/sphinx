@@ -1,7 +1,6 @@
 @using Microsoft.AspNetCore.Http.Extensions;
-@model Dsp.WebCore.Areas.Sobers.Models.SoberManagerModel
+@model SoberManagerModel
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Sober Manager";
     var returnUrl = Context.Request.GetEncodedUrl().Split('?')[0];
 }

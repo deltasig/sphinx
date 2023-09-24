@@ -1,10 +1,9 @@
-﻿@using Dsp.WebCore.Areas.Edu.Models
+﻿@using Dsp.WebCore.Areas.School.Models
 @using Dsp.Data.Entities
 @using System.Web.Configuration
 @using Dsp.WebCore.Extensions;
 @model ClassDetailsModel
 @{
-    Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = Model.Class.CourseName;
     ViewBag.Subtitle = Model.Class.CourseShorthand;
     var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");

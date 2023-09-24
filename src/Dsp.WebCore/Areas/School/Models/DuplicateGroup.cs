@@ -1,17 +1,16 @@
-﻿namespace Dsp.WebCore.Areas.Edu.Models
+﻿namespace Dsp.WebCore.Areas.School.Models;
+
+using System.Collections.Generic;
+using Dsp.Data.Entities;
+
+public class DuplicateGroup
 {
-    using System.Collections.Generic;
-    using Dsp.Data.Entities;
+    public string Shorthand { get; set; }
+    public List<DuplicateClass> Classes { get; set; }
+}
 
-    public class DuplicateGroup
-    {
-        public string Shorthand { get; set; }
-        public List<DuplicateClass> Classes { get; set; }
-    }
-
-    public class DuplicateClass
-    {
-        public Class Class { get; set; }
-        public bool IsPrimary { get; set; }
-    }
+public class DuplicateClass
+{
+    public Class Class { get; set; }
+    public bool IsPrimary { get; set; }
 }

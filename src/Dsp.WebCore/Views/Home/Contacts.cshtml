@@ -1,6 +1,5 @@
 ﻿@model Semester
 @{
-    Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Contacts";
     ViewBag.Subtitle = Model.ToString();
     var leaders = Model.Leaders ?? new List<UserRole>();

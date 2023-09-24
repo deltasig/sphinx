@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Dsp.Services.Interfaces
+namespace Dsp.Services.Interfaces;
+
+public interface IService
 {
-    public interface IService
-    {
-        DateTime ConvertUtcToCst(DateTime utc);
-        DateTime ConvertCstToUtc(DateTime cst);
-    }
+    DateTime ConvertUtcToCst(DateTime utc);
+    DateTime ConvertCstToUtc(DateTime cst);
 }

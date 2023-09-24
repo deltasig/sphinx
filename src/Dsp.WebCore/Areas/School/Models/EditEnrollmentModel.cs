@@ -1,9 +1,8 @@
-﻿namespace Dsp.WebCore.Areas.Edu.Models
-{
-    using Dsp.Data.Entities;
+﻿namespace Dsp.WebCore.Areas.School.Models;
 
-    public class EditEnrollmentModel
-    {
-        public ClassTaken Enrollment { get; set; }
-    }
+using Dsp.Data.Entities;
+
+public class EditEnrollmentModel
+{
+    public ClassTaken Enrollment { get; set; }
 }

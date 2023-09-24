@@ -1,28 +1,27 @@
-﻿namespace Dsp.WebCore.Areas.Edu.Models
+﻿namespace Dsp.WebCore.Areas.School.Models;
+
+using Dsp.Data.Entities;
+using System.Collections.Generic;
+
+public class ClassIndexModel
 {
-    using Dsp.Data.Entities;
-    using System.Collections.Generic;
+    public IEnumerable<Class> Classes { get; set; }
+    public Semester CurrentSemester { get; set; }
+    public ClassesIndexFilterModel Filter { get; set; }
+    public int TotalPages { get; set; }
+    public int ResultCount { get; set; }
 
-    public class ClassIndexModel
+    public ClassIndexModel(
+        IEnumerable<Class> classes,
+        Semester currentSemester,
+        ClassesIndexFilterModel filter,
+        int totalPages,
+        int resultCount)
     {
-        public IEnumerable<Class> Classes { get; set; }
-        public Semester CurrentSemester { get; set; }
-        public ClassesIndexFilterModel Filter { get; set; }
-        public int TotalPages { get; set; }
-        public int ResultCount { get; set; }
-
-        public ClassIndexModel(
-            IEnumerable<Class> classes,
-            Semester currentSemester,
-            ClassesIndexFilterModel filter,
-            int totalPages,
-            int resultCount)
-        {
-            Classes = classes;
-            CurrentSemester = currentSemester;
-            Filter = filter;
-            TotalPages = totalPages;
-            ResultCount = resultCount;
-        }
+        Classes = classes;
+        CurrentSemester = currentSemester;
+        Filter = filter;
+        TotalPages = totalPages;
+        ResultCount = resultCount;
     }
 }

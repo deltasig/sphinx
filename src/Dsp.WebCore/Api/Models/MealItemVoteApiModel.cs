@@ -1,8 +1,7 @@
-﻿namespace Dsp.WebCore.Api.Models
+﻿namespace Dsp.WebCore.Api.Models;
+
+public class MealItemVoteApiModel
 {
-    public class MealItemVoteApiModel
-    {
-        public int MealItemId { get; set; }
-        public bool IsUpvote { get; set; }
-    }
+    public int MealItemId { get; set; }
+    public bool IsUpvote { get; set; }
 }

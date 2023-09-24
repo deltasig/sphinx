@@ -1,49 +1,48 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿namespace Dsp.WebCore.Api;
+
+using Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-namespace Dsp.WebCore.Api
+using Services;
+using Services.Interfaces;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+[Authorize]
+[ApiController]
+[Route("api/sobers")]
+public class SobersController : ControllerBase
 {
-    using Data;
-    using Services;
-    using Services.Interfaces;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
+    private ISoberService _soberService;
 
-    [Authorize]
-    [ApiController]
-    [Route("api/sobers")]
-    public class SobersController : ControllerBase
+    public SobersController(DspDbContext db)
     {
-        private ISoberService _soberService;
+        _soberService = new SoberService(db);
+    }
 
-        public SobersController(DspDbContext db)
+    [AllowAnonymous]
+    [Route("~/api/sobers/upcoming")]
+    public async Task<IActionResult> Upcoming()
+    {
+        try
         {
-            _soberService = new SoberService(db);
-        }
-
-        [AllowAnonymous]
-        [Route("~/api/sobers/upcoming")]
-        public async Task<IActionResult> Upcoming()
-        {
-            try
+            var upcomingSobers = await _soberService.GetUpcomingSignupsAsync();
+            if (upcomingSobers.Any())
             {
-                var upcomingSobers = await _soberService.GetUpcomingSignupsAsync();
-                if (upcomingSobers.Any())
+                return Ok(upcomingSobers.Select(m => new
                 {
-                    return Ok(upcomingSobers.Select(m => new
-                    {
-                        name = m.User?.ToShortLastNameString() ?? "",
-                        when = m.DateOfShift,
-                        phone = m.User?.PhoneNumber ?? ""
-                    }));
-                }
+                    name = m.User?.ToShortLastNameString() ?? "",
+                    when = m.DateOfShift,
+                    phone = m.User?.PhoneNumber ?? ""
+                }));
+            }
 
-                return Ok("No upcoming sober members were found.");
-            }
-            catch (Exception)
-            {
-                return BadRequest("API request failed for an unknown reason. Contact your administrator.");
-            }
+            return Ok("No upcoming sober members were found.");
+        }
+        catch (Exception)
+        {
+            return BadRequest("API request failed for an unknown reason. Contact your administrator.");
         }
     }
 }
