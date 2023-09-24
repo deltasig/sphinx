@@ -11,7 +11,7 @@ public partial class LaundrySignup
 
     public DateTime DateTimeSignedUp { get; set; }
 
-    public virtual Member User { get; set; }
+    public virtual User User { get; set; }
 
     public int GetSlotSizeActualSize(int slotSize)
     {

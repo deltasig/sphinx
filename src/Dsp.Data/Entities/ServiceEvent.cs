@@ -25,5 +25,5 @@ public partial class ServiceEvent
 
     public virtual ICollection<ServiceHour> ServiceHours { get; set; } = new List<ServiceHour>();
 
-    public virtual Member Submitter { get; set; }
+    public virtual User Submitter { get; set; }
 }

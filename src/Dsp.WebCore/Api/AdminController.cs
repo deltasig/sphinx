@@ -41,7 +41,7 @@
 
             try
             {
-                var leader = await _context.Leaders
+                var leader = await _context.UserRoles
                     .Where(l => l.SemesterId == sid && l.RoleId == pid)
                     .OrderByDescending(l => l.AppointedOn)
                     .FirstOrDefaultAsync();
@@ -62,7 +62,7 @@
 
         [Authorize(Roles = "Administrator, President")]
         [Route("~/api/admin/appoint")]
-        public async Task<IActionResult> Appoint([FromBody] Leader app)
+        public async Task<IActionResult> Appoint([FromBody] UserRole app)
         {
             var member = await _memberService.GetMemberByIdAsync(app.UserId);
             if (member == null) return NotFound();
@@ -85,7 +85,7 @@
 
         [Authorize(Roles = "Administrator, President")]
         [Route("~/api/admin/unappoint")]
-        public async Task<IActionResult> Unappoint([FromBody] Leader app)
+        public async Task<IActionResult> Unappoint([FromBody] UserRole app)
         {
             var member = await _memberService.GetMemberByIdAsync(app.UserId);
             if (member == null) return NotFound();

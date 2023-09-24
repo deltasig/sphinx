@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Dsp.Data.Entities;
 
-public partial class Position : IdentityRole<int>
+public partial class Role : IdentityRole<int>
 {
     public string Description { get; set; }
 
@@ -24,7 +24,7 @@ public partial class Position : IdentityRole<int>
 
     public string Inquiries { get; set; }
 
-    public virtual ICollection<Leader> Leaders { get; set; } = new List<Leader>();
+    public virtual ICollection<UserRole> Users { get; set; } = new List<UserRole>();
 }
 
 public enum PositionType : int

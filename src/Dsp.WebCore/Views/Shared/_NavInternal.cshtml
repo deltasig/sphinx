@@ -1,5 +1,5 @@
 ﻿@using Microsoft.AspNetCore.Identity;
-@inject UserManager<Member> UserManager
+@inject UserManager<User> UserManager
 @{
     var user = await UserManager.FindByNameAsync(User.Identity.Name);
     var roles = await UserManager.GetRolesAsync(user);

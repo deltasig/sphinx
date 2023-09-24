@@ -15,5 +15,5 @@ public partial class ServiceHour
 
     public virtual ServiceEvent Event { get; set; }
 
-    public virtual Member User { get; set; }
+    public virtual User User { get; set; }
 }

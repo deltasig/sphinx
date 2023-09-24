@@ -3,11 +3,11 @@
     Layout = "~/Views/Shared/_LayoutExternal.cshtml";
     ViewBag.Title = "Contacts";
     ViewBag.Subtitle = Model.ToString();
-    var leaders = Model.Leaders ?? new List<Leader>();
+    var leaders = Model.Leaders ?? new List<UserRole>();
     var list = leaders
-        .Where(l => l.Position.IsPublic)
-        .OrderBy(l => l.Position.Type)
-        .ThenBy(l => l.Position.Name);
+        .Where(l => l.Role.IsPublic)
+        .OrderBy(l => l.Role.Type)
+        .ThenBy(l => l.Role.Name);
 }
 @section Title
 {
@@ -18,18 +18,18 @@
 }
 <div class="container">
     <div class="row">
-        @if (leaders.Any(l => l.Position.IsPublic))
+        @if (leaders.Any(l => l.Role.IsPublic))
         {
             foreach (var leader in list)
             {
                 var avatar = string.IsNullOrEmpty(leader.User.AvatarPath) ? "NoAvatar.jpg" : leader.User.AvatarPath;
-                var formattedId = leader.Position.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
+                var formattedId = leader.Role.Name.ToLower().Replace(" ", "_").Replace("-", "_").Replace("'", "").Replace(".", "");
 
                 <div class="col-sm-3 text-center">
                     <div class="list-group">
                         <div class="list-group-item" id="@(formattedId)" 
                              style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; word-break: break-all; word-wrap: break-word;">
-                            @leader.Position.Name
+                            @leader.Role.Name
                         </div>
                         <div class="list-group-item">
                             <p>

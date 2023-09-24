@@ -309,7 +309,7 @@
                 var tempPassword = PasswordHelper.GenerateRandomPassword();
                 var pledgeClassId = int.Parse(model.PledgeClassId);
                 var expectedGraduationId = int.Parse(model.ExpectedGraduationId);
-                var user = new Member
+                var user = new User
                 {
                     UserName = model.UserName.ToLower(),
                     Email = model.Email.ToLower(),

@@ -5,7 +5,7 @@
 
     public class AccountInformationModel
     {
-        public Member User { get; set; }
+        public User User { get; set; }
         public Semester CurrentSemester { get; set; }
         public IEnumerable<ClassTaken> ThisSemesterCourses { get; set; }
         public IEnumerable<string> Roles { get; set; }

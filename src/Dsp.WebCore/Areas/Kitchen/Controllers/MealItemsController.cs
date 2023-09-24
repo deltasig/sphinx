@@ -17,9 +17,9 @@
     {
         private readonly IMealService _mealService;
         private readonly IPositionService _positionService;
-        private readonly UserManager<Member> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public MealItemsController(DspDbContext context, UserManager<Member> userManager)
+        public MealItemsController(DspDbContext context, UserManager<User> userManager)
         {
             _mealService = new MealService(context);
             _positionService = new PositionService(context);

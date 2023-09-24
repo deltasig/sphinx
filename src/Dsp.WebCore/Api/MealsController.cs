@@ -20,9 +20,9 @@
     {
         private DspDbContext _db;
         private IMealService _mealService;
-        private readonly UserManager<Member> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public MealsController(DspDbContext db, UserManager<Member> userManager)
+        public MealsController(DspDbContext db, UserManager<User> userManager)
         {
             _db = db;
             _mealService = new MealService(db);

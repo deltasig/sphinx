@@ -17,26 +17,26 @@
             _context = context;
         }
 
-        public async Task<IEnumerable<MemberStatus>> GetAllStatusesAsync()
+        public async Task<IEnumerable<UserType>> GetAllStatusesAsync()
         {
-            var statuses = await _context.MemberStatuses
+            var statuses = await _context.UserTypes
                 .OrderBy(s => s.StatusId)
                 .ToListAsync();
             return statuses;
         }
 
-        public async Task<MemberStatus> GetStatusByIdAsync(int id)
+        public async Task<UserType> GetStatusByIdAsync(int id)
         {
-            return await _context.FindAsync<MemberStatus>(id);
+            return await _context.FindAsync<UserType>(id);
         }
 
-        public async Task CreateStatus(MemberStatus status)
+        public async Task CreateStatus(UserType status)
         {
             _context.Add(status);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateStatus(MemberStatus status)
+        public async Task UpdateStatus(UserType status)
         {
             _context.Update(status);
             await _context.SaveChangesAsync();
@@ -44,7 +44,7 @@
 
         public async Task DeleteStatus(int id)
         {
-            var entity = new MemberStatus { StatusId = id };
+            var entity = new UserType { StatusId = id };
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }

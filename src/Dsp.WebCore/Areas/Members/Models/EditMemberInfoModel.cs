@@ -6,7 +6,7 @@
 
     public class EditMemberInfoModel
     {
-        public Member User { get; set; }
+        public User User { get; set; }
 
         public IEnumerable<SelectListItem> Statuses { get; set; }
         public IEnumerable<SelectListItem> PledgeClasses { get; set; }

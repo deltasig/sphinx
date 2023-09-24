@@ -20,7 +20,7 @@ builder.Services.AddDbContext<DspDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services
-    .AddIdentity<Member, Position>(options =>
+    .AddIdentity<User, Role>(options =>
     {
         options.User.RequireUniqueEmail = true;
 

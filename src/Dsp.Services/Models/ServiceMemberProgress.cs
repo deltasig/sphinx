@@ -28,7 +28,7 @@ namespace Dsp.Services.Models
 
         public ServiceMemberProgress(
             Semester selectedSemester,
-            Member member,
+            User member,
             DateTime calculatedOn)
         {
             MemberId = member.Id;

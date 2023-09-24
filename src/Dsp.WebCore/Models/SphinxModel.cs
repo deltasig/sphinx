@@ -5,7 +5,7 @@
 
     public class SphinxModel
     {
-        public Member MemberInfo { get; set; }
+        public User MemberInfo { get; set; }
         public bool NeedsToSoberDrive { get; set; }
         public Semester CurrentSemester { get; set; }
         public Semester PreviousSemester { get; set; }

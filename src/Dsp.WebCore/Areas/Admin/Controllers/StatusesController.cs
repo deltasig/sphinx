@@ -39,7 +39,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(MemberStatus model)
+        public async Task<ActionResult> Create(UserType model)
         {
             if (!ModelState.IsValid) return View(model);
 
@@ -65,7 +65,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(MemberStatus model)
+        public async Task<ActionResult> Edit(UserType model)
         {
             if (!ModelState.IsValid) return View(model);
 

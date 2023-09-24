@@ -23,5 +23,5 @@ public partial class IncidentReport
 
     public bool ShareIdentity { get; set; }
 
-    public virtual Member User { get; set; }
+    public virtual User User { get; set; }
 }

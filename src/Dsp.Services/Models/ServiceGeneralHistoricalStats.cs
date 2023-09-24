@@ -18,7 +18,7 @@ namespace Dsp.Services.Models
 
         public ServiceGeneralHistoricalStats(
             Semester semester,
-            IEnumerable<Member> nonExemptMembers,
+            IEnumerable<User> nonExemptMembers,
             DateTime calculatedOn)
         {
             SemesterId = semester.Id;

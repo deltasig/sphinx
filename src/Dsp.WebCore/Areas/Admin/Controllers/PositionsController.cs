@@ -56,7 +56,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Position position)
+        public async Task<ActionResult> Create(Role position)
         {
             if (!ModelState.IsValid) return View(position);
             if (string.IsNullOrEmpty(position.Name))
@@ -95,7 +95,7 @@
         }
 
         [HttpPost, ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit(Position position)
+        public async Task<ActionResult> Edit(Role position)
         {
             if (!ModelState.IsValid) return View(position);
 

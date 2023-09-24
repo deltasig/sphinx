@@ -21,9 +21,9 @@ public partial class Semester
 
     public virtual ICollection<ClassTaken> ClassesTaken { get; set; } = new List<ClassTaken>();
 
-    public virtual ICollection<Leader> Leaders { get; set; } = new List<Leader>();
+    public virtual ICollection<UserRole> Leaders { get; set; } = new List<UserRole>();
 
-    public virtual ICollection<Member> GraduatingMembers { get; set; } = new List<Member>();
+    public virtual ICollection<User> GraduatingMembers { get; set; } = new List<User>();
 
     public virtual ICollection<PledgeClass> PledgeClasses { get; set; } = new List<PledgeClass>();
 

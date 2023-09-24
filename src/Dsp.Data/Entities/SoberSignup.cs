@@ -21,5 +21,5 @@ public partial class SoberSignup
 
     public virtual SoberType SoberType { get; set; }
 
-    public virtual Member User { get; set; }
+    public virtual User User { get; set; }
 }

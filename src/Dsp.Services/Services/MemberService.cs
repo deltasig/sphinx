@@ -19,69 +19,69 @@
             _semesterService = new SemesterService(context);
         }
 
-        public async Task<Member> GetMemberByIdAsync(int id)
+        public async Task<User> GetMemberByIdAsync(int id)
         {
-            return await _context.FindAsync<Member>(id);
+            return await _context.FindAsync<User>(id);
         }
 
-        public async Task<Member> GetMemberByUserNameAsync(string userName)
+        public async Task<User> GetMemberByUserNameAsync(string userName)
         {
             return await _context.Users
                 .Where(m => m.UserName == userName)
                 .SingleAsync();
         }
 
-        public async Task<IEnumerable<Member>> GetActivesAsync()
+        public async Task<IEnumerable<User>> GetActivesAsync()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             var roster = await GetRosterForSemesterAsync(semester);
             return roster.Where(m => m.PledgeClass.SemesterId != semester.Id);
         }
 
-        public async Task<IEnumerable<Member>> GetActivesAsync(int semesterId)
+        public async Task<IEnumerable<User>> GetActivesAsync(int semesterId)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(semesterId);
             return await GetActivesAsync(semester);
         }
 
-        public async Task<IEnumerable<Member>> GetActivesAsync(Semester semester)
+        public async Task<IEnumerable<User>> GetActivesAsync(Semester semester)
         {
             var roster = await GetRosterForSemesterAsync(semester);
             return roster.Where(m => m.PledgeClass.SemesterId != semester.Id);
         }
 
-        public async Task<IEnumerable<Member>> GetNewMembersAsync()
+        public async Task<IEnumerable<User>> GetNewMembersAsync()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             var roster = await GetRosterForSemesterAsync(semester);
             return roster.Where(m => m.PledgeClass.SemesterId == semester.Id);
         }
 
-        public async Task<IEnumerable<Member>> GetNewMembersAsync(int semesterId)
+        public async Task<IEnumerable<User>> GetNewMembersAsync(int semesterId)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(semesterId);
             return await GetNewMembersAsync(semester);
         }
 
-        public async Task<IEnumerable<Member>> GetNewMembersAsync(Semester semester)
+        public async Task<IEnumerable<User>> GetNewMembersAsync(Semester semester)
         {
             var roster = await GetRosterForSemesterAsync(semester);
             return roster.Where(m => m.PledgeClass.SemesterId == semester.Id);
         }
 
-        public async Task<IEnumerable<Member>> GetAlumniAsync()
+        public async Task<IEnumerable<User>> GetAlumniAsync()
         {
             var semester = await _semesterService.GetCurrentSemesterAsync();
             return await GetAlumniAsync(semester);
         }
 
-        public async Task<IEnumerable<Member>> GetAlumniAsync(int semesterId)
+        public async Task<IEnumerable<User>> GetAlumniAsync(int semesterId)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(semesterId);
             return await GetAlumniAsync(semester);
         }
 
-        public async Task<IEnumerable<Member>> GetAlumniAsync(Semester semester)
+        public async Task<IEnumerable<User>> GetAlumniAsync(Semester semester)
         {
             var results = await _context.Users
                 .Where(m =>
@@ -98,13 +98,13 @@
             return results;
         }
 
-        public async Task<IEnumerable<Member>> GetRosterForSemesterAsync(int semesterId)
+        public async Task<IEnumerable<User>> GetRosterForSemesterAsync(int semesterId)
         {
             var semester = await _semesterService.GetSemesterByIdAsync(semesterId);
             return await GetRosterForSemesterAsync(semester);
         }
 
-        public async Task<IEnumerable<Member>> GetRosterForSemesterAsync(Semester semester)
+        public async Task<IEnumerable<User>> GetRosterForSemesterAsync(Semester semester)
         {
             var results = await _context.Users
                 .Where(d =>

@@ -64,7 +64,7 @@
                 .Where(m =>
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
-            var activeId = (await Context.MemberStatuses.SingleAsync(s => s.StatusName == "Active")).StatusId;
+            var activeId = (await Context.UserTypes.SingleAsync(s => s.StatusName == "Active")).StatusId;
 
             foreach (var m in newMembers)
             {
@@ -97,7 +97,7 @@
                 .Where(m =>
                     model.SelectedMemberIds.Contains(m.Id))
                 .ToListAsync();
-            var alumnusId = (await Context.MemberStatuses.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
+            var alumnusId = (await Context.UserTypes.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
 
             foreach (var p in actives)
             {

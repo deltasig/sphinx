@@ -23,9 +23,9 @@
         private DspDbContext _context;
         private ISemesterService _semesterService;
         private IMemberService _memberService;
-        private readonly UserManager<Member> _userManager;
+        private readonly UserManager<User> _userManager;
 
-        public MembersController(DspDbContext context, UserManager<Member> userManager)
+        public MembersController(DspDbContext context, UserManager<User> userManager)
         {
             _context = context;
             _semesterService = new SemesterService(context);
@@ -137,9 +137,9 @@
             var soberSlotsAdded = await _context.SoberSignups
                 .Where(s => s.CreatedOn > startOfFeedUtc && s.CreatedOn <= nowUtc)
                 .ToListAsync();
-            var saas = await _context.Leaders
-                .Where(l => l.Position.Name == "Sergeant-at-Arms" && l.SemesterId == thisSemester.Id).ToListAsync();
-            var saa = (saas.LastOrDefault() ?? new Leader
+            var saas = await _context.UserRoles
+                .Where(l => l.Role.Name == "Sergeant-at-Arms" && l.SemesterId == thisSemester.Id).ToListAsync();
+            var saa = (saas.LastOrDefault() ?? new UserRole
             {
                 User = await _userManager.GetUserAsync(HttpContext.User)
             }).User;

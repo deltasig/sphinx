@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Dsp.Data.Entities;
 
-public partial class Member : IdentityUser<int>
+public partial class User : IdentityUser<int>
 {
     public string FirstName { get; set; }
 
@@ -35,7 +35,7 @@ public partial class Member : IdentityUser<int>
 
     public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-    public virtual Member BigBro { get; set; }
+    public virtual User BigBro { get; set; }
 
     public virtual ICollection<ClassTaken> ClassesTaken { get; set; } = new List<ClassTaken>();
 
@@ -43,11 +43,11 @@ public partial class Member : IdentityUser<int>
 
     public virtual ICollection<IncidentReport> IncidentReports { get; set; } = new List<IncidentReport>();
 
-    public virtual ICollection<Member> LittleBros { get; set; } = new List<Member>();
+    public virtual ICollection<User> LittleBros { get; set; } = new List<User>();
 
     public virtual ICollection<LaundrySignup> LaundrySignups { get; set; } = new List<LaundrySignup>();
 
-    public virtual ICollection<Leader> Leaders { get; set; } = new List<Leader>();
+    public virtual ICollection<UserRole> Roles { get; set; } = new List<UserRole>();
 
     public virtual ICollection<MajorToMember> Majors { get; set; } = new List<MajorToMember>();
 
@@ -69,7 +69,7 @@ public partial class Member : IdentityUser<int>
 
     public virtual ICollection<SoberSignup> SoberSignups { get; set; } = new List<SoberSignup>();
 
-    public virtual MemberStatus Status { get; set; }
+    public virtual UserType Status { get; set; }
 
     public virtual ICollection<WorkOrder> WorkOrders { get; set; } = new List<WorkOrder>();
 

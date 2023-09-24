@@ -18,7 +18,7 @@
     {
         public async Task<ActionResult> Index(string s)
         {
-            var model = new List<Member>();
+            var model = new List<User>();
 
             if (!string.IsNullOrEmpty(s))
             {

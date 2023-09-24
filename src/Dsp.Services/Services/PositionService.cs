@@ -20,21 +20,21 @@
             _memberService = new MemberService(context);
         }
 
-        public async Task<IEnumerable<Position>> GetAllPositionsAsync()
+        public async Task<IEnumerable<Role>> GetAllPositionsAsync()
         {
             return await _context.Roles.ToListAsync();
         }
 
-        public async Task<Position> GetPositionByIdAsync(int id)
+        public async Task<Role> GetPositionByIdAsync(int id)
         {
             if (id <= 0)
             {
                 throw new ArgumentException("The entity's ID is not valid.");
             }
-            return await _context.FindAsync<Position>(id);
+            return await _context.FindAsync<Role>(id);
         }
 
-        public async Task<Position> GetPositionByNameAsync(string name)
+        public async Task<Role> GetPositionByNameAsync(string name)
         {
             if (string.IsNullOrEmpty(name))
             {
@@ -45,7 +45,7 @@
                 .SingleAsync();
         }
 
-        public async Task<IEnumerable<Position>> GetEboardPositionsAsync()
+        public async Task<IEnumerable<Role>> GetEboardPositionsAsync()
         {
             var eBoardPositions = await _context.Roles
                 .Where(m => m.IsExecutive)
@@ -54,14 +54,14 @@
             return eBoardPositions;
         }
 
-        public async Task<Member> GetUserInPositionAsync(string positionName, int sid)
+        public async Task<User> GetUserInPositionAsync(string positionName, int sid)
         {
             var position = await _context.Roles
                 .Where(x => x.Name == positionName)
                 .SingleOrDefaultAsync();
             if (position == null) return null;
 
-            var appointment = await _context.Leaders
+            var appointment = await _context.UserRoles
                 .Where(x => x.RoleId == position.Id && x.SemesterId == sid)
                 .SingleOrDefaultAsync();
             if (appointment == null) return null;
@@ -69,13 +69,13 @@
             return appointment.User;
         }
 
-        public async Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(int userId)
+        public async Task<IEnumerable<Role>> GetCurrentPositionsByUserAsync(int userId)
         {
-            var currentAppointmentsForUser = new List<Position>();
+            var currentAppointmentsForUser = new List<Role>();
             var adminAppointmentForUser = await GetAdminAppoinmentForUserAsync(userId);
             if (adminAppointmentForUser != null)
             {
-                currentAppointmentsForUser.Add(adminAppointmentForUser.Position);
+                currentAppointmentsForUser.Add(adminAppointmentForUser.Role);
             }
 
             var now = DateTime.UtcNow;
@@ -101,7 +101,7 @@
                     currentAppointmentsForUser.AddRange(
                         firstApplicableSemester.Leaders
                             .Where(x => x.UserId == userId)
-                            .Select(x => x.Position)
+                            .Select(x => x.Role)
                     );
                 }
                 else
@@ -115,7 +115,7 @@
                             .Take(2)
                             .SelectMany(x => x.Leaders)
                             .Where(x => x.UserId == userId)
-                            .Select(x => x.Position)
+                            .Select(x => x.Role)
                             .Distinct()
                     );
                 }
@@ -124,23 +124,23 @@
             return currentAppointmentsForUser;
         }
 
-        public async Task<IEnumerable<Position>> GetCurrentPositionsByUserAsync(string userName)
+        public async Task<IEnumerable<Role>> GetCurrentPositionsByUserAsync(string userName)
         {
             var user = await _memberService.GetMemberByUserNameAsync(userName);
             var currentAppointmentsForUser = await GetCurrentPositionsByUserAsync(user.Id);
             return currentAppointmentsForUser;
         }
 
-        public async Task<Position> GetAdminPositionAsync()
+        public async Task<Role> GetAdminPositionAsync()
         {
             var adminPosition = await GetPositionByNameAsync("Administrator");
             return adminPosition;
         }
 
-        public async Task<Leader> GetAdminAppoinmentForUserAsync(int userId)
+        public async Task<UserRole> GetAdminAppoinmentForUserAsync(int userId)
         {
             var adminPosition = await GetAdminPositionAsync();
-            var adminAppointForUser = adminPosition.Leaders
+            var adminAppointForUser = adminPosition.Users
                 .FirstOrDefault(x => x.UserId == userId);
 
             return adminAppointForUser;
@@ -202,7 +202,7 @@
             return userHasPositionPower;
         }
 
-        public async Task RemovePositionAsync(Position entity)
+        public async Task RemovePositionAsync(Role entity)
         {
             if (entity == null)
             {
@@ -222,7 +222,7 @@
             {
                 throw new ArgumentException("The entity's ID is not valid.");
             }
-            var entity = await _context.FindAsync<Position>(id);
+            var entity = await _context.FindAsync<Role>(id);
             if (entity == null)
             {
                 throw new ArgumentException("A position for the given ID was not found.");
@@ -230,7 +230,7 @@
             await RemovePositionAsync(entity);
         }
 
-        public async Task CreatePositionAsync(Position entity)
+        public async Task CreatePositionAsync(Role entity)
         {
             var exists = await _context.Roles.AnyAsync(m => m.Name == entity.Name);
             if (exists)
@@ -242,7 +242,7 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdatePositionAsync(Position entity)
+        public async Task UpdatePositionAsync(Role entity)
         {
             if (entity == null)
             {
@@ -294,7 +294,7 @@
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<Position>> GetAppointmentsAsync(int sid)
+        public async Task<IEnumerable<Role>> GetAppointmentsAsync(int sid)
         {
             var positions = await _context.Roles
                 .Where(p => !p.IsDisabled && p.Name != "Administrator")
@@ -306,7 +306,7 @@
 
         public async Task AppointMemberToPositionAsync(int mid, int pid, int sid)
         {
-            var entity = new Leader
+            var entity = new UserRole
             {
                 UserId = mid,
                 RoleId = pid,
@@ -319,7 +319,7 @@
 
         public async Task RemoveMemberFromPositionAsync(int mid, int pid, int sid)
         {
-            var appointment = await _context.Leaders
+            var appointment = await _context.UserRoles
                 .Where(l => l.UserId == mid && l.RoleId == pid && l.SemesterId == sid)
                 .SingleAsync();
             _context.Remove(appointment);

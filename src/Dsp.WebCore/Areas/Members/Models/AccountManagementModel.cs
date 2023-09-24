@@ -7,7 +7,7 @@
 
     public class AccountManagementModel
     {
-        public Member User { get; set; }
+        public User User { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

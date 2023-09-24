@@ -58,7 +58,7 @@
             };
             var members = await GetRosterForSemester(semester);
             var memberList = new List<object>();
-            foreach (Member member in members.OrderBy(m => m.LastName))
+            foreach (User member in members.OrderBy(m => m.LastName))
             {
                 memberList.Add(new
                 {

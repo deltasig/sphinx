@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Dsp.Data.Entities.MemberStatus>
+﻿@model IEnumerable<Dsp.Data.Entities.UserType>
 @{
     Layout = "~/Views/Shared/_LayoutInternal.cshtml";
     ViewBag.Title = "Member Statuses";
@@ -31,10 +31,10 @@
                         {
                             <tr>
                                 <td>@item.StatusName</td>
-                                <td>@item.Members.Count</td>
+                                <td>@item.Users.Count</td>
                                 <td class="text-right">
                                     @Html.ActionLink("Edit", "Edit", new { id = item.StatusId })
-                                    @if (!item.Members.Any())
+                                    @if (!item.Users.Any())
                                     {
                                         @:|
                                         @Html.ActionLink("Delete", "Delete", new { id = item.StatusId })

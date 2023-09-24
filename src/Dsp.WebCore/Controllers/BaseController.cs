@@ -24,20 +24,20 @@
         protected const string FailureMessageKey = "FailureMessage";
         
         private DspDbContext _context;
-        private UserManager<Member> _userManager;
-        private SignInManager<Member> _signInManager;
-        private RoleManager<Position> _roleManager;
+        private UserManager<User> _userManager;
+        private SignInManager<User> _signInManager;
+        private RoleManager<Role> _roleManager;
 
         protected DspDbContext Context => _context ??= HttpContext.RequestServices.GetService<DspDbContext>();
-        protected UserManager<Member> UserManager => _userManager ??= HttpContext.RequestServices.GetService<UserManager<Member>>();
-        protected SignInManager<Member> SignInManager => _signInManager ??= HttpContext.RequestServices.GetService<SignInManager<Member>>();
-        protected RoleManager<Position> RoleManager => _roleManager ??= HttpContext.RequestServices.GetService<RoleManager<Position>>();
+        protected UserManager<User> UserManager => _userManager ??= HttpContext.RequestServices.GetService<UserManager<User>>();
+        protected SignInManager<User> SignInManager => _signInManager ??= HttpContext.RequestServices.GetService<SignInManager<User>>();
+        protected RoleManager<Role> RoleManager => _roleManager ??= HttpContext.RequestServices.GetService<RoleManager<Role>>();
 
-        protected virtual async Task<IEnumerable<Member>> GetAllNewMembersAsync()
+        protected virtual async Task<IEnumerable<User>> GetAllNewMembersAsync()
         {
             return await Context.Users.Where(m => m.Status.StatusName == "New").ToListAsync();
         }
-        protected virtual async Task<IEnumerable<Member>> GetAllActiveNewNeophyteMembersAsync()
+        protected virtual async Task<IEnumerable<User>> GetAllActiveNewNeophyteMembersAsync()
         {
             return await Context.Users
                 .Where(m => m.Status.StatusName == "Active" ||
@@ -45,7 +45,7 @@
                             m.Status.StatusName == "Neophyte")
                 .ToListAsync();
         }
-        protected virtual async Task<List<Member>> GetRosterForSemester(Semester semester)
+        protected virtual async Task<List<User>> GetRosterForSemester(Semester semester)
         {
             return await Context.Users
                 .Where(d =>
@@ -182,7 +182,7 @@
             }
             return new SelectList(newList, "UserId", "Name");
         }
-        protected virtual async Task<SelectList> GetUsersAsFullNameAsync(Expression<Func<Member, bool>> preSelector, Func<Member, bool> postSelector)
+        protected virtual async Task<SelectList> GetUsersAsFullNameAsync(Expression<Func<User, bool>> preSelector, Func<User, bool> postSelector)
         {
             var users = await Context.Users
                 .Where(preSelector)
@@ -246,7 +246,7 @@
         }
         protected virtual async Task<SelectList> GetStatusListAsync()
         {
-            var statusList = await Context.MemberStatuses.ToListAsync();
+            var statusList = await Context.UserTypes.ToListAsync();
             var newList = new List<object>();
             foreach (var status in statusList)
             {
@@ -260,7 +260,7 @@
         }
         protected virtual async Task<SelectList> GetStatusListWithNoneAsync()
         {
-            var statusList = await Context.MemberStatuses.ToListAsync();
+            var statusList = await Context.UserTypes.ToListAsync();
             var newList = new List<object> { new { StatusId = -1, StatusName = "--Status (optional)--" } };
             foreach (var status in statusList)
             {
@@ -596,10 +596,10 @@
             return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
         }
 
-        protected virtual IEnumerable<Member> GetFilteredMembersList(
-            IList<Member> members, string s, string sort, string order)
+        protected virtual IEnumerable<User> GetFilteredMembersList(
+            IList<User> members, string s, string sort, string order)
         {
-            IEnumerable<Member> filteredResults;
+            IEnumerable<User> filteredResults;
 
             if (!string.IsNullOrEmpty(s))
             {
@@ -683,11 +683,11 @@
             var list = new SelectList(newList.Select(x => new { Value = x, Text = x }), "Value", "Text");
             return list;
         }
-        protected virtual async Task<Leader> GetCurrentLeader(string positionName)
+        protected virtual async Task<UserRole> GetCurrentLeader(string positionName)
         {
             var term = await GetCurrentTerm();
             return term.Leaders
-                .Where(l => l.Position.Name == positionName)
+                .Where(l => l.Role.Name == positionName)
                 .OrderByDescending(l => l.AppointedOn)
                 .FirstOrDefault();
         }
