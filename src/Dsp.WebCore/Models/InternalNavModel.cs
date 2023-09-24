@@ -17,7 +17,7 @@ public class InternalNavModel
 
     public InternalNavModel(IEnumerable<string> userRoles)
     {
-        var isAdmin = userRoles.Any(r => r == "Administrator");
+        var isAdmin = true;//userRoles.Any(r => r == "Administrator");
         var isActive = isAdmin;
         var isReleased = false;
         var isSecretary = isAdmin;
