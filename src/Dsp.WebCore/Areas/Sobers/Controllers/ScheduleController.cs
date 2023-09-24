@@ -16,7 +16,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WebCore.Controllers;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+[Authorize]
 public class ScheduleController : BaseController
 {
     private ISoberService _soberService;
@@ -37,7 +37,7 @@ public class ScheduleController : BaseController
         return View(signups);
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Manager(SoberMessage? message)
     {
         SetSoberMessage(message);
@@ -58,7 +58,7 @@ public class ScheduleController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> AddSignup(SoberManagerModel model)
     {
         if (!ModelState.IsValid) return RedirectToAction("Manager", new { message = SoberMessage.AddSignupFailure });
@@ -71,7 +71,7 @@ public class ScheduleController : BaseController
         return RedirectToAction("Manager", new { message = SoberMessage.AddSignupSuccess });
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> MultiAddSignup(SoberManagerModel model)
     {
         var modelInvalid =
@@ -134,7 +134,7 @@ public class ScheduleController : BaseController
         return RedirectToAction("Manager", new { message = SoberMessage.MultiAddSignupSuccess });
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> DeleteSignup(int id, string returnUrl)
     {
         if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -192,7 +192,8 @@ public class ScheduleController : BaseController
         return RedirectToAction("Index", new { message = SoberMessage.SignupSuccess });
     }
 
-    [HttpGet, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [HttpGet]
+    [Authorize]
     public async Task<ActionResult> EditSignup(int id, string returnUrl)
     {
         var signup = await Context.SoberSignups.FindAsync(id);
@@ -211,7 +212,8 @@ public class ScheduleController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize]
     public async Task<ActionResult> EditSignup(EditSoberSignupModel model)
     {
         if (!ModelState.IsValid)

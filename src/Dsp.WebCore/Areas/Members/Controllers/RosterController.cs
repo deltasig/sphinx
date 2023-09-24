@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+[Authorize]
 public class RosterController : BaseController
 {
     [HttpGet]
@@ -44,7 +44,7 @@ public class RosterController : BaseController
         return View(model);
     }
 
-    [HttpGet, Authorize(Roles = "Administrator, Secretary")]
+    [HttpGet, Authorize]
     public async Task<ActionResult> InitiateNewMembers(string message)
     {
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -57,7 +57,7 @@ public class RosterController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
+    [HttpPost, ValidateAntiForgeryToken, Authorize]
     public async Task<ActionResult> InitiateNewMembers(InitiateNewMembersModel model)
     {
         var newMembers = await Context.Users
@@ -77,7 +77,7 @@ public class RosterController : BaseController
         return RedirectToAction("InitiatePledges");
     }
 
-    [HttpGet, Authorize(Roles = "Administrator, Secretary")]
+    [HttpGet, Authorize]
     public async Task<ActionResult> GraduateActives(string message)
     {
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -90,7 +90,7 @@ public class RosterController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary")]
+    [HttpPost, ValidateAntiForgeryToken, Authorize]
     public async Task<ActionResult> GraduateActives(GraduateActivesModel model)
     {
         var actives = await Context.Users

@@ -12,7 +12,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator, President")]
+[Authorize]
 public class PositionsController : BaseController
 {
     private IPositionService _positionService;
@@ -137,7 +137,8 @@ public class PositionsController : BaseController
         }
     }
 
-    [HttpGet, Authorize(Roles = "Administrator, President")]
+    [HttpGet]
+    [Authorize]
     public async Task<ActionResult> Appointments(int? sid = null)
     {
         try

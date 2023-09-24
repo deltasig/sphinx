@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Neophyte, New, Active, Alumnus, Administrator")]
+[Authorize]
 public class EventsController : BaseController
 {
     private readonly ISemesterService _semesterService;
@@ -104,7 +104,7 @@ public class EventsController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> Edit(int id)
     {
         if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -117,7 +117,7 @@ public class EventsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> Edit(ServiceEvent model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -132,7 +132,7 @@ public class EventsController : BaseController
         return RedirectToAction("Index", new { sid = eventSemester.Id });
     }
 
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> Delete(int id)
     {
         if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -151,7 +151,7 @@ public class EventsController : BaseController
     }
 
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
         var model = await _serviceService.GetEventByIdAsync(id);

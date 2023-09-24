@@ -260,7 +260,7 @@ public class AccountController : BaseController
         return RedirectToAction("SignIn", "Account");
     }
 
-    [HttpGet, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
+    [HttpGet, Authorize]
     public async Task<ActionResult> Registration()
     {
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -289,7 +289,7 @@ public class AccountController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
+    [HttpPost, ValidateAntiForgeryToken, Authorize]
     public async Task<ActionResult> Register(RegisterModel model)
     {
         try
@@ -423,7 +423,7 @@ public class AccountController : BaseController
         return View();
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator")]
+    [HttpPost, ValidateAntiForgeryToken, Authorize]
     public async Task<ActionResult> Unregister(UnregisterModel model)
     {
         if (ModelState.IsValid)

@@ -15,7 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class ClassesController : BaseController
 {
     private readonly IPositionService _positionService;
@@ -137,7 +137,7 @@ public class ClassesController : BaseController
 
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.NotFound);
@@ -151,7 +151,7 @@ public class ClassesController : BaseController
     }
 
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
         var model = await Context.Classes.FindAsync(id);
@@ -167,7 +167,7 @@ public class ClassesController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Duplicates()
     {
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -191,7 +191,7 @@ public class ClassesController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Duplicates(List<DuplicateGroup> model)
     {
         // If no primary was selected, return an error message.
@@ -302,7 +302,7 @@ public class ClassesController : BaseController
         return RedirectToAction("Schedule", new { userName = model.SelectedUserName, semesterId = model.ClassTaken.SemesterId });
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Disenroll(int ctid)
     {
         var entry = await Context.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
@@ -311,7 +311,7 @@ public class ClassesController : BaseController
     }
 
     [HttpPost, ActionName("Disenroll"), ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> DisenrollConfirmed(ClassTaken model)
     {
         var entry = await Context.ClassesTaken
@@ -333,7 +333,7 @@ public class ClassesController : BaseController
         return RedirectToAction("Schedule", new { userName = member.UserName ?? User.GetUserName() });
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> EditEnrollment(int ctid)
     {
         var enrollment = await Context.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
@@ -348,7 +348,7 @@ public class ClassesController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> EditEnrollment(EditEnrollmentModel model)
     {
         if (!ModelState.IsValid)

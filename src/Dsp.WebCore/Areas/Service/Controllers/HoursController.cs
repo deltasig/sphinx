@@ -15,7 +15,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class HoursController : BaseController
 {
     private readonly IMemberService _memberService;
@@ -159,7 +159,7 @@ public class HoursController : BaseController
         return RedirectToAction("Submit", new { sid = selectedEvent.SemesterId });
     }
 
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> Edit(int eid, int uid)
     {
         if (eid <= 0 || uid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -170,7 +170,8 @@ public class HoursController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize]
     public async Task<ActionResult> Edit(ServiceHour model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -185,7 +186,7 @@ public class HoursController : BaseController
         return RedirectToAction("Index", new { sid = serviceEvent.SemesterId });
     }
 
-    [Authorize(Roles = "Administrator, Service")]
+    [Authorize]
     public async Task<ActionResult> Delete(int eid, int uid)
     {
         if (eid <= 0 || uid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -196,7 +197,8 @@ public class HoursController : BaseController
         return View(model);
     }
 
-    [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Service")]
+    [HttpPost, ValidateAntiForgeryToken]
+    [Authorize]
     public async Task<ActionResult> Delete(ServiceHour model)
     {
         var entity = await _serviceService.GetHoursAsync(model.EventId, model.UserId);

@@ -11,6 +11,7 @@ using Models;
 using System;
 using System.Threading.Tasks;
 
+[Authorize]
 public class ScheduleController : BaseController
 {
     private ILaundryService _laundryService;
@@ -22,7 +23,7 @@ public class ScheduleController : BaseController
         _positionService = positionService;
     }
 
-    [HttpGet, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+    [HttpGet]
     public async Task<ActionResult> Index()
     {
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
@@ -40,7 +41,7 @@ public class ScheduleController : BaseController
         return View(model);
     }
 
-    [HttpPost, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+    [HttpPost]
     public async Task<ActionResult> Reserve(LaundrySignup entity)
     {
         if (!ModelState.IsValid)
@@ -69,7 +70,7 @@ public class ScheduleController : BaseController
         return RedirectToAction("Index");
     }
 
-    [HttpPost, Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+    [HttpPost]
     public async Task<ActionResult> Cancel(LaundrySignup entity)
     {
         entity.UserId = User.GetUserId();

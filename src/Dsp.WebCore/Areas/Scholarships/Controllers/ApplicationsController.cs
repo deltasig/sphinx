@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 public class ApplicationsController : BaseController
 {
-    [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
+    [Authorize]
     public async Task<ActionResult> Index()
     {
         ViewBag.SuccessMessage = TempData[SuccessMessageKey];
@@ -33,7 +33,7 @@ public class ApplicationsController : BaseController
         return View(apps);
     }
 
-    [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
+    [Authorize]
     public async Task<ActionResult> Details(int? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -51,7 +51,7 @@ public class ApplicationsController : BaseController
         return View(scholarshipApp);
     }
 
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> Create()
     {
         var model = new CreateScholarshipAppModel();
@@ -63,7 +63,7 @@ public class ApplicationsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> Create(CreateScholarshipAppModel model)
     {
         if (!ModelState.IsValid)
@@ -94,7 +94,7 @@ public class ApplicationsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -135,7 +135,7 @@ public class ApplicationsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> Edit(CreateScholarshipAppModel model)
     {
         if (!ModelState.IsValid)
@@ -179,7 +179,7 @@ public class ApplicationsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -190,7 +190,7 @@ public class ApplicationsController : BaseController
     }
 
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
         var scholarshipApp = await Context.ScholarshipApps.FindAsync(id);
@@ -259,7 +259,7 @@ public class ApplicationsController : BaseController
         return RedirectToAction("Scholarships", "Home", new { Area = "" });
     }
 
-    [Authorize(Roles = "Administrator, Alumnus, Active, Neophyte, New")]
+    [Authorize]
     public async Task<ActionResult> Submission(Guid? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -276,7 +276,7 @@ public class ApplicationsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+    [Authorize]
     public async Task<ActionResult> EditSubmission(ScholarshipSubmission model)
     {
         if (!ModelState.IsValid)

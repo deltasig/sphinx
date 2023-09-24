@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator")]
+[Authorize]
 public class StatusesController : BaseController
 {
     private IStatusService _statusService;

@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+[Authorize]
 public class RoomsController : BaseController
 {
     public async Task<ActionResult> Index(int? sid)
@@ -36,7 +36,6 @@ public class RoomsController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     public async Task<ActionResult> Create(int? sid)
     {
         if (sid == null)
@@ -55,7 +54,6 @@ public class RoomsController : BaseController
         return View(room);
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Create(Room room)
     {
@@ -66,7 +64,6 @@ public class RoomsController : BaseController
         return RedirectToAction("Index", new { sid = room.SemesterId });
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     public async Task<ActionResult> Edit(int? id)
     {
         if (id == null)
@@ -81,7 +78,6 @@ public class RoomsController : BaseController
         return View(room);
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Edit(Room room)
     {
@@ -92,7 +88,6 @@ public class RoomsController : BaseController
         return RedirectToAction("Index", new { sid = room.SemesterId });
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null)
@@ -107,7 +102,6 @@ public class RoomsController : BaseController
         return View(room);
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
@@ -118,7 +112,6 @@ public class RoomsController : BaseController
         return RedirectToAction("Index", new { sid });
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> GenerateRooms(int? sid)
     {
@@ -191,8 +184,6 @@ public class RoomsController : BaseController
         await Context.SaveChangesAsync();
         return new StatusCodeResult((int) HttpStatusCode.Accepted);
     }
-
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Assign(int sid, int mid, int rid, DateTime moveIn, DateTime moveOut)
     {
@@ -229,7 +220,6 @@ public class RoomsController : BaseController
         return new StatusCodeResult((int) HttpStatusCode.Accepted);
     }
 
-    [Authorize(Roles = "Administrator, House Manager")]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Unassign(int aid, int sid)
     {

@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Alumnus, Active, New, Neophyte")]
+[Authorize]
 public class TypesController : BaseController
 {
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Index()
     {
         var types = await Context.SoberTypes.Include(m => m.Signups).ToListAsync();
@@ -26,13 +26,13 @@ public class TypesController : BaseController
         return View(types);
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public ActionResult Create()
     {
         return View();
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Create(SoberType soberType)
     {
@@ -43,7 +43,7 @@ public class TypesController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
         if (id == null)
@@ -58,7 +58,7 @@ public class TypesController : BaseController
         return View(soberType);
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Edit(SoberType soberType)
     {
@@ -69,7 +69,7 @@ public class TypesController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null)
@@ -88,7 +88,7 @@ public class TypesController : BaseController
         return View(soberType);
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {

@@ -14,7 +14,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator, ACB House Manager")]
+[Authorize]
 public class WorkOrdersController : BaseController
 {
     private readonly IPositionService _positionService;

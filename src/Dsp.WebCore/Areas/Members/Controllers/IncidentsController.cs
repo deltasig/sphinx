@@ -12,7 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class IncidentsController : BaseController
 {
     private IIncidentService _incidentService;
@@ -145,7 +145,7 @@ public class IncidentsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Edit(int id)
     {
         if (id < 1) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -159,7 +159,7 @@ public class IncidentsController : BaseController
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Sergeant-at-Arms")]
+    [Authorize]
     public async Task<ActionResult> Edit(IncidentReport model)
     {
         if (!ModelState.IsValid)

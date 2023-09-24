@@ -13,7 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator, Service")]
+[Authorize]
 public class AmendmentsController : BaseController
 {
     private readonly IMemberService _memberService;

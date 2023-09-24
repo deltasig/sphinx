@@ -9,7 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator, Vice President Growth, Director of Recruitment")]
+[Authorize]
 public class QuestionsController : BaseController
 {
     public async Task<ActionResult> Index()

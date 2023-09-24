@@ -13,7 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+[Authorize]
 public class AddressesController : BaseController
 {
     public async Task<ActionResult> Index(string s)

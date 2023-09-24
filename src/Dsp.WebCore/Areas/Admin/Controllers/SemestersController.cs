@@ -14,7 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator, President, Secretary, Academics, Service, Director of Recruitment")]
+[Authorize]
 public class SemestersController : BaseController
 {
     private ISemesterService _semesterService;
@@ -146,7 +146,7 @@ public class SemestersController : BaseController
     }
 
     [HttpGet]
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     public async Task<ActionResult> Delete(int id)
     {
         if (id < 1)
@@ -172,7 +172,7 @@ public class SemestersController : BaseController
     }
 
     [HttpPost, ActionName("Delete")]
-    [Authorize(Roles = "Administrator")]
+    [Authorize]
     [ValidateAntiForgeryToken]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {

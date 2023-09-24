@@ -97,7 +97,7 @@ public class HomeController : BaseController
         return Content(result);
     }
 
-    [Route("Sphinx"), Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate")]
+    [Route("Sphinx"), Authorize]
     public async Task<ActionResult> Sphinx()
     {
         var nowCst = DateTime.UtcNow.FromUtcToCst();

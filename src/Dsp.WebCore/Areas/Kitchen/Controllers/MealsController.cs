@@ -15,7 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Alumnus, Active, Neophyte, New, Affiliate")]
+[Authorize]
 public class MealsController : BaseController
 {
     private readonly IMealService _mealService;
@@ -114,7 +114,8 @@ public class MealsController : BaseController
         return RedirectToAction("Index", new { week });
     }
 
-    [HttpPost, Authorize(Roles = "Administrator, House Steward")]
+    [HttpPost]
+    [Authorize]
     public async Task<ActionResult> AddMealItemsToPeriod(MealItemToPeriod[] model)
     {
         var response = new List<MealItemToPeriodModel>();
@@ -150,7 +151,8 @@ public class MealsController : BaseController
         return Json(response);
     }
 
-    [HttpDelete, Authorize(Roles = "Administrator, House Steward")]
+    [HttpDelete]
+    [Authorize]
     public async Task<ActionResult> DeleteMealItemFromPeriod(int id)
     {
         if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class StatsController : BaseController
 {
     private readonly ISemesterService _semesterService;

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Alumnus, Active, Neophyte, New")]
+[Authorize]
 public class MealItemsController : BaseController
 {
     private readonly IMealService _mealService;
@@ -67,7 +67,6 @@ public class MealItemsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, House Steward")]
     public async Task<ActionResult> Edit(int id)
     {
         var model = await _mealService.GetItemByIdAsync(id);
@@ -78,7 +77,6 @@ public class MealItemsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, House Steward")]
     public async Task<ActionResult> Edit(MealItem model)
     {
         if (!ModelState.IsValid)
@@ -94,7 +92,6 @@ public class MealItemsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, House Steward")]
     public async Task<ActionResult> Delete(int id)
     {
         var model = await _mealService.GetItemByIdAsync(id);
@@ -105,7 +102,6 @@ public class MealItemsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken, ActionName("Delete")]
-    [Authorize(Roles = "Administrator, House Steward")]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
         await _mealService.DeleteItem(id);

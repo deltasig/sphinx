@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "Administrator, House Steward")]
+[Authorize]
 public class MealPeriodsController : BaseController
 {
     private IMealService _mealService;

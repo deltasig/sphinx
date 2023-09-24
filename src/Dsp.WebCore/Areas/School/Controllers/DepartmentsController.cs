@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class DepartmentsController : BaseController
 {
     public async Task<ActionResult> Index()
@@ -33,14 +33,14 @@ public class DepartmentsController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public ActionResult Create()
     {
         return View();
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Create(Department model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -52,7 +52,7 @@ public class DepartmentsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
         if (id == null)
@@ -68,7 +68,7 @@ public class DepartmentsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Edit(Department model)
     {
         if (!ModelState.IsValid) return View(model);
@@ -80,7 +80,7 @@ public class DepartmentsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null)
@@ -96,7 +96,7 @@ public class DepartmentsController : BaseController
     }
 
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
         var model = await Context.Departments.FindAsync(id);

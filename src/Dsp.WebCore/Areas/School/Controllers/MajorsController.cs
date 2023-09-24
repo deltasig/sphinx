@@ -13,7 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-[Authorize(Roles = "New, Neophyte, Active, Alumnus, Administrator")]
+[Authorize]
 public class MajorsController : BaseController
 {
     private readonly IPositionService _positionService;
@@ -31,7 +31,7 @@ public class MajorsController : BaseController
         return View(await Context.Majors.ToListAsync());
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Create()
     {
         ViewBag.DepartmentId = new SelectList(await Context.Departments.OrderBy(c => c.Name).ToListAsync(),
@@ -39,7 +39,7 @@ public class MajorsController : BaseController
         return View();
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Create(Major model)
     {
@@ -52,7 +52,7 @@ public class MajorsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
         if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
@@ -63,7 +63,7 @@ public class MajorsController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Edit(Major model)
     {
@@ -76,7 +76,7 @@ public class MajorsController : BaseController
         return RedirectToAction("Index");
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
         if (id == null)
@@ -91,7 +91,7 @@ public class MajorsController : BaseController
         return View(model);
     }
 
-    [Authorize(Roles = "Administrator, Academics")]
+    [Authorize]
     [HttpPost, ActionName("Delete"), ValidateAntiForgeryToken]
     public async Task<ActionResult> DeleteConfirmed(int id)
     {
