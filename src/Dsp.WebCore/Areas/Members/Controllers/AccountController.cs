@@ -253,7 +253,7 @@ public class AccountController : BaseController
         }
     }
 
-    [HttpPost, ValidateAntiForgeryToken]
+    [HttpGet]
     public async Task<ActionResult> SignOut()
     {
         await SignInManager.SignOutAsync();

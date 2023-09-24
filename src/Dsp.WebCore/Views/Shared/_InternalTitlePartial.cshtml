@@ -1,0 +1,43 @@
+﻿<div class="container-fluid my-2">
+    <div class="row align-items-end">
+        <div class="col">
+            <h1>
+                <img style="display:none" height="35" width="35" class="print-inline"
+                     src="https://deltasig-de.org/Images/MobileTouch-57x57.png" />
+                @ViewBag.Title
+            </h1>
+        </div>
+        <div class="col text-end">
+            <h3>@ViewBag.Subtitle</h3>
+        </div>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            @{
+                var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? "hidden" : "";
+                var hideFail = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
+                var hideFailure = string.IsNullOrEmpty(ViewBag.FailureMessage) ? "hidden" : "";
+            }
+            <div class="alert alert-success alert-dismissible fade in @(hideSuccess)" role="alert" id="success-message">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @ViewBag.SuccessMessage
+            </div>
+            <div class="alert alert-danger alert-dismissible fade in @(hideFail)" role="alert" id="fail-message">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @ViewBag.FailMessage
+            </div>
+            <div class="alert alert-danger alert-dismissible fade in @(hideFailure)" role="alert" id="failure-message">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                @ViewBag.FailureMessage
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,86 @@
+@inject UserManager<User> UserManager
+@{
+    var user = await UserManager.FindByNameAsync(User.Identity.Name);
+    var userRoles = await UserManager.GetRolesAsync(user);
+    var internalNavModel = new InternalNavModel(userRoles);
+}
+
+<!doctype html>
+<html class="h-100" lang="en" data-bs-theme="light">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    @RenderSection("AdditionalMeta", false)
+
+    <title>@ViewBag.Title</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/Favicon-16x16.png" />
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/Site.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+
+        @RenderSection("styles", required: false)
+
+        <script src="~/lib/jquery/jquery.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/scss/bootstrap.min.css" />
+        <link rel="stylesheet" href="~/css/Site.css" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
+
+        @RenderSection("styles", required: false)
+        
+        <script src="~/lib/jquery/jquery.js"></script>
+    </environment>
+</head>
+<body class="d-flex flex-column h-100">
+    <main class="flex-shrink-0">
+        <partial name="_InternalNavPartial.cshtml" model="internalNavModel"></partial>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 col-lg-1 col-md-2 d-md-none d-lg-block">
+                    <div class="card text-bg-light my-3 mx-2">
+                        <div class="card-header">Navigation</div>
+                        <div class="card-body px-1 py-1">
+                            <partial name="_InternalNavSideLinksPartial.cshtml" model="internalNavModel"></partial>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <partial name="_InternalTitlePartial.cshtml"></partial>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <environment include="Development">
+        <script src="~/lib/popper.js/umd/popper.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    </environment>
+    <environment exclude="Development">
+        <script src="~/lib/popper.js/umd/popper.js"></script>
+        <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+    </environment>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        $(function() {
+            // Activate all alerts and set them to auto-close after 10 seconds.
+            setTimeout(function() {
+                $("#success-message").alert('close');
+                $("#fail-message").alert('close'); // Temporary (being phased out)
+                $("#failure-message").alert('close');
+                $("#message").alert('close'); // Temporary (being phased out)
+            }, 10000);
+
+            // Activate all tooltips and popovers.
+            const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+            const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
+        });
+
+    </script>
+</body>
+</html>

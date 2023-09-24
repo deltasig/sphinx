@@ -1,0 +1,25 @@
+﻿@model InternalNavModel
+
+<nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark" role="navigation">
+    <div class="container-fluid">
+        <div class="col-lg-2 col-lg-1 col-md-2 d-md-none d-lg-block text-center">
+            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Sphinx">
+                <img class="img-fluid" src="~/Images/letters.png" alt="DSP" width="70" title="Sphinx" />
+            </a>
+        </div>
+        <div class="col">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <partial name="_InternalNavTopLeftLinksPartial.cshtml" model="Model"></partial>
+                </ul>
+                <partial name="_NavTopRightPartial.cshtml"></partial>
+            </div>
+        </div>
+    </div>
+</nav>

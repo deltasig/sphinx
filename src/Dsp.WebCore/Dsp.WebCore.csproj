@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="compilerconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="wwwroot\css\HouseDiagram.css" />
-    <None Remove="wwwroot\css\Site.css" />
     <None Remove="wwwroot\css\wmd.css" />
     <None Remove="Documents\Awards.md" />
     <None Remove="Documents\History.md" />
@@ -32,6 +35,10 @@
     <Content Include="Documents\Awards.md" />
     <Content Include="Documents\History.md" />
     <Content Include="Documents\Updates.md" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="compilerconfig.json" />
   </ItemGroup>
 
   <ItemGroup>

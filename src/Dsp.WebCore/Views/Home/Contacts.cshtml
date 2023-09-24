@@ -8,10 +8,6 @@
         .OrderBy(l => l.Role.Type)
         .ThenBy(l => l.Role.Name);
 }
-@section Title
-{
-    @Html.Partial("_TitleExternal")
-}
 @section AdditionalMeta{
     <meta name="description" content="Get in touch with one our leaders.">
 }

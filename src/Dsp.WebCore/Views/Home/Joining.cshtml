@@ -5,10 +5,6 @@
 
     var anyApps = Model.ScholarshipApps.Any(a => a.OpensOn <= DateTime.UtcNow && a.ClosesOn >= DateTime.UtcNow);
 }
-@section Title
-{
-    <partial name="_TitleExternal.cshtml"></partial>
-}
 @section AdditionalMeta {
     <meta name="description" content="Learn about how you can join Delta Sig." >
 }

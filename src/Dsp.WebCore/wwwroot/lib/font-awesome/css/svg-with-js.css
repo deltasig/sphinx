@@ -35,10 +35,10 @@ svg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {
     vertical-align: -0.25em; }
   .svg-inline--fa.fa-2xl {
     vertical-align: -0.3125em; }
-  .svg-inline--fa.fa-float-start {
+  .svg-inline--fa.fa-pull-left {
     margin-right: var(--fa-pull-margin, 0.3em);
     width: auto; }
-  .svg-inline--fa.fa-float-end {
+  .svg-inline--fa.fa-pull-right {
     margin-left: var(--fa-pull-margin, 0.3em);
     width: auto; }
   .svg-inline--fa.fa-li {
@@ -218,11 +218,11 @@ svg:not(:root).svg-inline--fa, svg:not(:host).svg-inline--fa {
   border-width: var(--fa-border-width, 0.08em);
   padding: var(--fa-border-padding, 0.2em 0.25em 0.15em); }
 
-.fa-float-start {
+.fa-pull-left {
   float: left;
   margin-right: var(--fa-pull-margin, 0.3em); }
 
-.fa-float-end {
+.fa-pull-right {
   float: right;
   margin-left: var(--fa-pull-margin, 0.3em); }
 
