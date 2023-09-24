@@ -16,26 +16,16 @@
     <div class="row">
         <div class="col">
             @{
-                var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? "hidden" : "";
-                var hideFail = string.IsNullOrEmpty(ViewBag.FailMessage) ? "hidden" : "";
-                var hideFailure = string.IsNullOrEmpty(ViewBag.FailureMessage) ? "hidden" : "";
+                var hideSuccess = string.IsNullOrEmpty(ViewBag.SuccessMessage) ? " d-none" : "";
+                var hideFail = string.IsNullOrEmpty(ViewBag.FailMessage) ? " d-none" : "";
+                var hideFailure = string.IsNullOrEmpty(ViewBag.FailureMessage) ? " d-none" : "";
             }
-            <div class="alert alert-success alert-dismissible fade in @(hideSuccess)" role="alert" id="success-message">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="alert alert-success alert-dismissible @(hideSuccess)" role="alert" id="success-message">
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
                 @ViewBag.SuccessMessage
             </div>
-            <div class="alert alert-danger alert-dismissible fade in @(hideFail)" role="alert" id="fail-message">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                @ViewBag.FailMessage
-            </div>
-            <div class="alert alert-danger alert-dismissible fade in @(hideFailure)" role="alert" id="failure-message">
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <div class="alert alert-danger alert-dismissible @(hideFail)" role="alert" id="failure-message">
+                <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close"></button>
                 @ViewBag.FailureMessage
             </div>
         </div>

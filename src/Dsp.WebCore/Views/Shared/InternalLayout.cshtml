@@ -69,11 +69,10 @@
     <script type="text/javascript">
         $(function() {
             // Activate all alerts and set them to auto-close after 10 seconds.
-            setTimeout(function() {
+            setTimeout(function () {
                 $("#success-message").alert('close');
-                $("#fail-message").alert('close'); // Temporary (being phased out)
                 $("#failure-message").alert('close');
-                $("#message").alert('close'); // Temporary (being phased out)
+                $("#message").alert('close');
             }, 10000);
 
             // Activate all tooltips and popovers.
