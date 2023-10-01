@@ -15,11 +15,6 @@ public class StatusesController : BaseController
 {
     private IStatusService _statusService;
 
-    public StatusesController(DspDbContext context)
-    {
-        _statusService = new StatusService(context);
-    }
-
     public StatusesController(IStatusService statusService)
     {
         _statusService = statusService;
