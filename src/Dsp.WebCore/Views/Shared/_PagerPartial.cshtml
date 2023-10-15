@@ -10,18 +10,19 @@
         <div class="col my-2">
             <ul class="list-group list-group-horizontal">
                 <!-- Previous page button. -->
-                <li class="@(currentPage > 1 ? "" : "disabled") list-group-item">
-                    @if (currentPage > 1)
-                    {
-                        <a href="@Url.Action(action, Model.Previous)" aria-label="Previous">
-                            <i class="fa fa-caret-left" aria-hidden="true"></i>
-                        </a>
-                    }
-                    else
-                    {
+                @if (currentPage > 1)
+                {
+                    <a class="@(currentPage > 1 ? "" : "disabled") list-group-item"
+                       href="@Url.Action(action, Model.Previous)" aria-label="Previous">
+                        <i class="fa fa-caret-left" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <li class="list-group-item">
                         <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
-                    }
-                </li>
+                    </li>
+                }
                 <!-- All pages in between arrow buttons.  Only showing up to 3 to the left and right of the current page. -->
                 @for (var i = 1; i <= maxPages; i++)
                 {
@@ -32,40 +33,44 @@
                     {
                         var pageFilter = Model.Incrementer;
                         pageFilter.page = i;
-                        <li class="@(currentPage == i ? "active" : "") list-group-item">
-                            <a href="@Url.Action(action, pageFilter)">@i</a>
-                        </li>
+                        <a class="@(currentPage == i ? "active" : "") list-group-item"
+                           href="@Url.Action(action, pageFilter)">
+                            @i
+                        </a>
                     }
                     else if (i == minPageNumber && i > 1)
                     {
                         var pageFilter = Model.Incrementer;
                         pageFilter.page = (i + 1) / 2;
-                        <li class="list-group-item">
-                            <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
-                        </li>
+                        <a class="list-group-item"
+                           href="@Url.Action(action, pageFilter)" disabled>
+                            ...
+                        </a>
                     }
                     else if (i == maxPageNumber && i < maxPages)
                     {
                         var pageFilter = Model.Incrementer;
                         pageFilter.page = i + (maxPages - i - 1) / 2;
-                        <li class="list-group-item">
-                            <a href="@Url.Action(action, pageFilter)" class="disabled">...</a>
-                        </li>
+                        <a class="list-group-item"
+                           href="@Url.Action(action, pageFilter)" disabled>
+                            ...
+                        </a>
                     }
                 }
                 <!-- Next page button. -->
-                <li class="@(currentPage < maxPages ? "" : "disabled") list-group-item">
-                    @if (currentPage < maxPages)
-                    {
-                        <a href="@Url.Action(action, Model.Next)" aria-label="Next">
-                            <i class="fa fa-caret-right" aria-hidden="true"></i>
-                        </a>
-                    }
-                    else
-                    {
+                @if (currentPage < maxPages)
+                {
+                    <a class="@(currentPage < maxPages ? "" : "disabled") list-group-item"
+                       href="@Url.Action(action, Model.Next)" aria-label="Next">
+                        <i class="fa fa-caret-right" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <li class="list-group-item">
                         <span><i class="fa fa-caret-right" aria-hidden="true"></i></span>
-                    }
-                </li>
+                    </li>
+                }
             </ul>
         </div>
     </div>
