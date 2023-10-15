@@ -20,118 +20,82 @@
     resolvedFilter.resolved = !Model.Filter.resolved;
 
     var pagerModel = new PagerModel
-    {
-        Previous = previousPageFilter,
-        Incrementer = Model.Filter,
-        Next = nextPageFilter,
-        CurrentPage = Model.Filter.page,
-        PageSize = Model.Filter.pageSize,
-        ResultCount = Model.ResultCount,
-        TotalPages = Model.TotalPages
-    };
+            {
+                Previous = previousPageFilter,
+                Incrementer = Model.Filter,
+                Next = nextPageFilter,
+                CurrentPage = Model.Filter.page,
+                PageSize = Model.Filter.pageSize,
+                ResultCount = Model.ResultCount,
+                TotalPages = Model.TotalPages
+            };
 }
 
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <div class="row row-space">
-                <div class="col-md-8">
-                    @using (Html.BeginForm("Index", "Incidents", FormMethod.Get, new {@class = "form-inline"}))
-                    {
-                        <div class="btn-group" role="group" aria-label="...">
-                            @Html.ActionLink("Unresolved", "Index", "Incidents", unresolvedFilter, new
-                            {
-                                @class = "btn btn-default " + (ViewBag.Title == "Incidents" ? "active" : "") + (Model.Filter.unresolved ? " active" : "")
-                            })
-                            @Html.ActionLink("Resolved", "Index", "Incidents", resolvedFilter, new
-                            {
-                                @class = "btn btn-default " + (ViewBag.Title == "Incidents" ? "active" : "") + (Model.Filter.resolved ? " active" : "")
-                            })
-                            <div class="btn-group" type="group">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                    Sort <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-right" role="menu" aria-labelledby="dropdownMenu1">
-                                    <li role="presentation" class="@(Model.Filter.sort == newestSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
-                                            @if (Model.Filter.sort == newestSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-amount-asc"></i> Newest
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == oldestSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
-                                            @if (Model.Filter.sort == oldestSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-amount-desc"></i> Oldest
-                                        </a>
-                                    </li>
-                                </ul>
+            <div class="row">
+                <div class="col">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <a href="@Url.Action("Index", "Incidents", unresolvedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.unresolved ? "active" : "")">Unresolved</a>
+                                <a href="@Url.Action("Index", "Incidents", resolvedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.resolved ? "active" : "")">Resolved</a>
                             </div>
                         </div>
-                        <hr class="visible-xs" />
-                        <div class="input-group">
-                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
-                            <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
-                            <input id="unresolved" name="unresolved" type="hidden" value="@Model.Filter.unresolved.ToString()">
-                            <input id="resolved" name="resolved" type="hidden" value="@Model.Filter.resolved.ToString()">
-                            <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" aria-describedby="search-addon">
+                        <div class="col">
+                            <form asp-controller="Incidents" asp-action="Index" asp-antiforgery="false" method="get" role="form">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                    <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
+                                    <input id="unresolved" name="unresolved" type="hidden" value="@Model.Filter.unresolved.ToString()">
+                                    <input id="resolved" name="resolved" type="hidden" value="@Model.Filter.resolved.ToString()">
+                                    <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
+                                    <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" />
+                                </div>
+                            </form>
                         </div>
-                    }
-                    <hr class="visible-xs visible-sm" />
+                    </div>
                 </div>
-                <div class="col-md-4 text-right">
-                    @Html.ActionLink("Submit Incident Report", "Submit", null, new { @class = "btn btn-sm btn-success" })
+                <div class="col text-end">
+                    <a href="@Url.Action("Submit", "Incidents")" class="btn btn-success">Create</a>
                 </div>
             </div>
 
             @if (Model.Incidents.Any())
             {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="row row-fluid">
-                            <div class="col-md-6">
-                                <i class="fa fa-exclamation-circle"></i> @Model.UnresolvedCount <small style="padding-right: 5px">Unresolved</small>
-                                <i class="fa fa-check-circle"></i> @Model.ResolvedCount <small>Resolved</small>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                @if (!string.IsNullOrEmpty(Model.Filter.s))
-                                {
-                                    <small>Searched for: <em>@Model.Filter.s</em></small>
-                                }
-                            </div>
-                        </div>
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-exclamation-circle"></i> @Model.UnresolvedCount <small>Unresolved</small>
+                        <i class="fa fa-check-circle ps-2"></i> @Model.ResolvedCount <small>Resolved</small>
+                        @if (!string.IsNullOrEmpty(Model.Filter.s))
+                        {
+                            <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
+                        }
                     </div>
 
-                    <ul class="list-group">
+                    <ul class="list-group list-group-flush">
                         @foreach (var i in Model.Incidents)
                         {
                             var status = string.IsNullOrEmpty(i.OfficialReport) ? "unresolved" : "resolved";
-                            var labelColor = string.IsNullOrEmpty(i.OfficialReport) ? "label-warning" : "label-success";
+                            var badgeColor = string.IsNullOrEmpty(i.OfficialReport) ? "bg-warning" : "bg-success";
                             var timeSince = (DateTime.UtcNow - i.DateTimeSubmitted).ToUserFriendlyString();
 
                             <a href="@Url.Action("Details", new {id = i.Id})" class="list-group-item">
-                                <h4 class="list-group-item-heading">
+                                <div class="fw-bold"> 
                                     @i.PolicyBroken
-                                    <small>
-                                        <span class="label @labelColor" style="font-weight: normal !important; margin-right: 5px;">
-                                            @status
-                                        </span>
-                                    </small>
-                                </h4>
-                                <p class="list-group-item-text">
-                                    submitted @timeSince
-                                </p>
+                                    <span class="badge @badgeColor float-end">
+                                        @status
+                                    </span>
+                                </div>
+                                submitted @timeSince
                             </a>
                         }
                     </ul>
-                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", pagerModel)
                 </div>
+                    <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel"></partial>
             }
             else
             {
