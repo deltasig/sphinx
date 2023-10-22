@@ -106,14 +106,19 @@
             @if (Model.ShowUpdatesLink)
             {
                 <li>
-                    <a class="dropdown-item" asp-area="" asp-controller="Home" asp-action="Updates">
-                        <i class="fa fa-fw fa-book"></i> Updates
+                    <a class="dropdown-item" href="https://github.com/deltasig/sphinx/commits">
+                        <i class="fa fa-fw fa-code-commit"></i> Updates <i class="fa fa-fw fa-external-link"></i>
                     </a>
                 </li>
             }
             <li>
                 <a class="dropdown-item" href="https://github.com/deltasig/sphinx/wiki" target="_blank">
-                    <i class="fa fa-fw fa-book"></i> Wiki
+                    <i class="fa fa-fw fa-book"></i> Wiki <i class="fa fa-fw fa-external-link"></i>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="https://github.com/deltasig/sphinx/issues" target="_blank">
+                    <i class="fa fa-fw fa-bug"></i> Report Issue <i class="fa fa-fw fa-external-link"></i>
                 </a>
             </li>
         </ul>

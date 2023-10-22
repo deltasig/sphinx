@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("School")]
 [Authorize]
 public class DepartmentsController : BaseController
 {
@@ -23,7 +24,7 @@ public class DepartmentsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await Context.Departments.FindAsync(id);
         if (model == null)
@@ -57,7 +58,7 @@ public class DepartmentsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await Context.Departments.FindAsync(id);
         if (model == null)
@@ -85,7 +86,7 @@ public class DepartmentsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await Context.Departments.FindAsync(id);
         if (model == null)

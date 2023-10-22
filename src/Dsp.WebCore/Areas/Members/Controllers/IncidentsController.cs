@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Members")]
 [Authorize]
 public class IncidentsController : BaseController
 {
@@ -59,7 +60,7 @@ public class IncidentsController : BaseController
 
     public async Task<ActionResult> Details(int id)
     {
-        if (id < 1) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id < 1) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var incidentReport = await _incidentService.GetIncidentReportByIdAsync(id);
 
@@ -148,7 +149,7 @@ public class IncidentsController : BaseController
     [Authorize]
     public async Task<ActionResult> Edit(int id)
     {
-        if (id < 1) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id < 1) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var model = await _incidentService.GetIncidentReportByIdAsync(id);
 

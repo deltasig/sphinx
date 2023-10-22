@@ -5,7 +5,7 @@
     <li class="nav-item mr-2 @(ViewBag.Title.Contains("Sober") ? "active" : "")">
         <a class="nav-link" asp-area="Sobers" asp-controller="Schedule" asp-action="Index"
            data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Sobers">
-            <i class="fa fa-car"></i>
+            <i class="fa fa-fw fa-car"></i>
         </a>
     </li>
 }
@@ -14,7 +14,7 @@
     <li class="nav-item mr-2 @(ViewBag.Title.Contains("Laundry") ? "active" : "")"
         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Laundry">
         <a class="nav-link" asp-area="Laundry" asp-controller="Schedule" asp-action="Index">
-            <i class="fa fa-lg fa-tint"></i>
+            <i class="fa fa-fw fa-lg fa-tint"></i>
         </a>
     </li>
 }
@@ -23,7 +23,7 @@
     <li class="nav-item mr-2 @(ViewBag.Title.Contains("Meal") ? "active" : "")"
         data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Meals">
         <a class="nav-link" asp-area="Kitchen" asp-controller="Meals" asp-action="Index">
-            <i class="fa fa-cutlery"></i>
+            <i class="fa fa-fw fa-cutlery"></i>
         </a>
     </li>
 }

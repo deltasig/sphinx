@@ -14,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Scholarships")]
 public class ApplicationsController : BaseController
 {
     [Authorize]
@@ -36,7 +37,7 @@ public class ApplicationsController : BaseController
     [Authorize]
     public async Task<ActionResult> Details(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var scholarshipApp = await Context.ScholarshipApps.FindAsync(id);
         if (scholarshipApp == null) return NotFound();
 
@@ -97,7 +98,7 @@ public class ApplicationsController : BaseController
     [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var scholarshipApp = await Context.ScholarshipApps.FindAsync(id);
         if (scholarshipApp == null) return NotFound();
 
@@ -182,7 +183,7 @@ public class ApplicationsController : BaseController
     [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var scholarshipApp = await Context.ScholarshipApps.FindAsync(id);
         if (scholarshipApp == null) return NotFound();
 
@@ -204,7 +205,7 @@ public class ApplicationsController : BaseController
     [AllowAnonymous]
     public async Task<ActionResult> Submit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var model = new SubmitScholarshipAppModel();
         model.Submission = new ScholarshipSubmission();
@@ -262,7 +263,7 @@ public class ApplicationsController : BaseController
     [Authorize]
     public async Task<ActionResult> Submission(Guid? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.ScholarshipSubmissions.FindAsync(id);
         if (model == null) return NotFound();
 

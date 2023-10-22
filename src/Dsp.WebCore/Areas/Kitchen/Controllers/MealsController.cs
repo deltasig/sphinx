@@ -6,7 +6,6 @@ using Dsp.Services.Interfaces;
 using Dsp.WebCore.Areas.Kitchen.Models;
 using Dsp.WebCore.Controllers;
 using Dsp.WebCore.Extensions;
-using Dsp.WebCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -15,6 +14,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Kitchen")]
 [Authorize]
 public class MealsController : BaseController
 {
@@ -63,7 +63,7 @@ public class MealsController : BaseController
         };
         await _mealService.ProcessVote(vote);
 
-        return new StatusCodeResult((int) HttpStatusCode.OK);
+        return new StatusCodeResult((int)HttpStatusCode.OK);
     }
 
     public async Task<ActionResult> Downvote(int id, int week = 0)
@@ -76,7 +76,7 @@ public class MealsController : BaseController
         };
         await _mealService.ProcessVote(vote);
 
-        return new StatusCodeResult((int) HttpStatusCode.OK);
+        return new StatusCodeResult((int)HttpStatusCode.OK);
     }
 
     [HttpPost]
@@ -106,7 +106,7 @@ public class MealsController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "House Steward");
         if (!hasElevatedPermissions && plate.UserId != userId)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
         await _mealService.DeletePlate(id);
@@ -145,7 +145,7 @@ public class MealsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
         return Json(response);
@@ -155,7 +155,7 @@ public class MealsController : BaseController
     [Authorize]
     public async Task<ActionResult> DeleteMealItemFromPeriod(int id)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         try
         {
@@ -163,9 +163,9 @@ public class MealsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
-        return new StatusCodeResult((int) HttpStatusCode.OK);
+        return new StatusCodeResult((int)HttpStatusCode.OK);
     }
 }

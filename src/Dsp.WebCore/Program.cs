@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSystemWebAdapters();
-builder.Services.AddHttpForwarder();
+//builder.Services.AddHttpForwarder();
 
 // Add services to the container.
+//builder.Services
+//    .AddMvcCore(options => options.EnableEndpointRouting = false);
 builder.Services
     .AddControllersWithViews()
     .AddRazorRuntimeCompilation();
@@ -92,40 +94,28 @@ if (!app.Environment.IsDevelopment())
 {
     app.UseHsts();
 }
+else
+{
+    app.UseDeveloperExceptionPage();
+    app.MapGet("/debug/routes", (IEnumerable<EndpointDataSource> endpointSources) =>
+        string.Join("\n", endpointSources.SelectMany(source => source.Endpoints)));
+}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
 app.UseAuthorization();
 
-app.UseSystemWebAdapters();
-
-
-app.MapAreaControllerRoute("Alumni_default", "Alumni", "Alumni/{controller}/{action=Index}/{id?}");
-
-app.MapAreaControllerRoute("Scholarships_default", "Scholarships", "Scholarships/{controller}/{action=Index}/{id?}");
-
-app.MapAreaControllerRoute("School_default", "School", "School/{controller}/{action=Index}/{id?}");
-
-app.MapAreaControllerRoute("Members_default", "Members", "Members/{controller}/{action=Index}/{id?}");
-
-app.MapAreaControllerRoute("Service_default", "Service", "Service/{controller}/{action=Index}/{id?}");
-
-app.MapAreaControllerRoute("Sobers_default", "Sobers", "Sobers/{controller}/{action=Index}/{id?}");
-
 app.MapAreaControllerRoute("Admin_default", "Admin", "Admin/{controller}/{action=Index}/{id?}");
-
+app.MapAreaControllerRoute("Alumni_default", "Alumni", "Alumni/{controller}/{action=Index}/{id?}");
 app.MapAreaControllerRoute("House_default", "House", "House/{controller}/{action=Index}/{id?}");
-
 app.MapAreaControllerRoute("Kitchen_default", "Kitchen", "Kitchen/{controller}/{action=Index}/{id?}");
-
 app.MapAreaControllerRoute("Laundry_default", "Laundry", "Laundry/{controller}/{action=Index}/{id?}");
-
-//app.MapRazorPages();
-
-//app.MapDefaultControllerRoute();
+app.MapAreaControllerRoute("Members_default", "Members", "Members/{controller}/{action=Index}/{id?}");
+app.MapAreaControllerRoute("Scholarships_default", "Scholarships", "Scholarships/{controller}/{action=Index}/{id?}");
+app.MapAreaControllerRoute("School_default", "School", "School/{controller}/{action=Index}/{id?}");
+app.MapAreaControllerRoute("Service_default", "Service", "Service/{controller}/{action=Index}/{id?}");
+app.MapAreaControllerRoute("Sobers_default", "Sobers", "Sobers/{controller}/{action=Index}/{id?}");
 
 //app.MapForwarder("/{**catch-all}", app.Configuration["ProxyTo"]).Add(static builder => ((RouteEndpointBuilder)builder).Order = int.MaxValue);
 
@@ -133,5 +123,9 @@ app.MapControllerRoute(
       name: "HomeActionOnly",
       pattern: "{action}",
       defaults: new { controller = "Home", action = "Index" });
+
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

@@ -5,26 +5,20 @@
             <a class="nav-link @(ViewBag.Title.Contains("Sphinx") ? "active" : "")"
                asp-area="" asp-controller="Home" asp-action="Sphinx"
                data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Sphinx">
-                <i class="fa fa-home"></i> <span class="d-none d-xs-block">Sphinx</span>
+                <i class="fa fa-fw fa-home"></i> <span class="d-none d-xs-block">Sphinx</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link @(ViewBag.Title.Contains("Account") ? "active" : "")"
                asp-area="Members" asp-controller="Account" asp-action="Index"
                data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Account">
-                <i class="fa fa-user"></i> <span class="d-none d-xs-block">Account</span>
+                <i class="fa fa-fw fa-user"></i> <span class="d-none d-xs-block">Account</span>
             </a>
         </li>
         <li class="nav-item">
             <a class="nav-link" asp-area="Members" asp-controller="Account" asp-action="SignOut"
                data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Sign Out">
-                <i class="fa fa-sign-out"></i> <span class="d-none d-xs-block">Sign Out</span>
-            </a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="https://github.com/deltasig/sphinx/issues" target="_blank"
-               data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Report an Issue">
-                <i class="fa fa-bug"></i> <span class="d-none d-xs-block">Report an Issue</span>
+                <i class="fa fa-fw fa-sign-out"></i> <span class="d-none d-xs-block">Sign Out</span>
             </a>
         </li>
     }
@@ -34,7 +28,7 @@
             <a class="nav-link @(ViewBag.Title.Contains("Sign In") ? "active" : "")"
                asp-area="Members" asp-controller="Account" asp-action="SignIn"
                data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="Sign In">
-                <i class="fa-solid fa-sign-in"></i> <span class="d-none d-xs-block">Sign In</span>
+                <i class="fa-solid fa-fw fa-sign-in"></i> <span class="d-none d-xs-block">Sign In</span>
             </a>
         </li>
     }

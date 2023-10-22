@@ -15,6 +15,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+[Area("Service")]
 [Authorize]
 public class HoursController : BaseController
 {
@@ -162,7 +163,7 @@ public class HoursController : BaseController
     [Authorize]
     public async Task<ActionResult> Edit(int eid, int uid)
     {
-        if (eid <= 0 || uid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (eid <= 0 || uid <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetHoursAsync(eid, uid);
         if (model == null) return NotFound();
 
@@ -189,7 +190,7 @@ public class HoursController : BaseController
     [Authorize]
     public async Task<ActionResult> Delete(int eid, int uid)
     {
-        if (eid <= 0 || uid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (eid <= 0 || uid <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetHoursAsync(eid, uid);
         if (model == null) return NotFound();
 
@@ -215,7 +216,7 @@ public class HoursController : BaseController
     {
         if (sid == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
         var selectedSemester = await _semesterService.GetSemesterByIdAsync((int)sid);

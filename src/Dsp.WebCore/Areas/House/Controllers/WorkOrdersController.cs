@@ -14,6 +14,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+[Area("House")]
 [Authorize]
 public class WorkOrdersController : BaseController
 {
@@ -64,7 +65,7 @@ public class WorkOrdersController : BaseController
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.FailureMessage = TempData["FailureMessage"];
 
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var workOrder = await Context.WorkOrders.FindAsync(id);
         if (workOrder == null) return NotFound();
 
@@ -140,7 +141,7 @@ public class WorkOrdersController : BaseController
     [HttpGet]
     public async Task<ActionResult> Edit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.WorkOrders.FindAsync(id);
         if (model == null) return NotFound();
         return View(model);
@@ -162,7 +163,7 @@ public class WorkOrdersController : BaseController
     [HttpGet]
     public async Task<ActionResult> Delete(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.WorkOrders.FindAsync(id);
         if (model == null) return NotFound();
         return View(model);

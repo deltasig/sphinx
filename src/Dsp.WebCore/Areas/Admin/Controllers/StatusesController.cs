@@ -1,8 +1,6 @@
 ﻿namespace Dsp.WebCore.Areas.Admin.Controllers;
 
-using Dsp.Data;
 using Dsp.Data.Entities;
-using Dsp.Services;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
 using Microsoft.AspNetCore.Authorization;
@@ -10,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Admin")]
 [Authorize]
 public class StatusesController : BaseController
 {
@@ -48,7 +47,7 @@ public class StatusesController : BaseController
     {
         if (id < 1)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await _statusService.GetStatusByIdAsync(id);
         if (model == null)
@@ -74,7 +73,7 @@ public class StatusesController : BaseController
     {
         if (id < 1)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await _statusService.GetStatusByIdAsync(id);
         if (model == null)

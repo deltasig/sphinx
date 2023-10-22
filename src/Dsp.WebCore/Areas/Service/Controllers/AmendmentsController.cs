@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Service")]
 [Authorize]
 public class AmendmentsController : BaseController
 {
@@ -96,7 +97,7 @@ public class AmendmentsController : BaseController
 
     public async Task<ActionResult> UnamendHours(int aid)
     {
-        if (aid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (aid <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetHoursAmendmentByIdAsync(aid);
         if (model == null) return NotFound();
 
@@ -106,7 +107,7 @@ public class AmendmentsController : BaseController
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> UnamendHours(ServiceHourAmendment entity)
     {
-        if (entity.Id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (entity.Id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var semesterId = entity.SemesterId;
         await _serviceService.DeleteHoursAmendmentByIdAsync(entity.Id);
@@ -167,7 +168,7 @@ public class AmendmentsController : BaseController
 
     public async Task<ActionResult> UnamendEvents(int aid)
     {
-        if (aid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (aid <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetEventAmendmentByIdAsync(aid);
         if (model == null) return NotFound();
 
@@ -177,7 +178,7 @@ public class AmendmentsController : BaseController
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> UnamendEvents(ServiceEventAmendment entity)
     {
-        if (entity.Id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (entity.Id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var semesterId = entity.SemesterId;
         await _serviceService.DeleteEventAmendmentByIdAsync(entity.Id);

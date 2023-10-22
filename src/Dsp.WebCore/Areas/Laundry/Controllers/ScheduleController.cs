@@ -11,6 +11,7 @@ using Models;
 using System;
 using System.Threading.Tasks;
 
+[Area("Laundry")]
 [Authorize(Policy = "Member")]
 public class ScheduleController : BaseController
 {

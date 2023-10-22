@@ -19,6 +19,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
+[Area("Members")]
 [Authorize, RequireHttps]
 public class AccountController : BaseController
 {

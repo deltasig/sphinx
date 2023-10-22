@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
+[Area("Service")]
 [Authorize]
 public class StatsController : BaseController
 {

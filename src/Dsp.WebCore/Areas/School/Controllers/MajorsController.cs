@@ -13,6 +13,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("School")]
 [Authorize]
 public class MajorsController : BaseController
 {
@@ -55,7 +56,7 @@ public class MajorsController : BaseController
     [Authorize]
     public async Task<ActionResult> Edit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.Majors.FindAsync(id);
         if (model == null) return NotFound();
         ViewBag.DepartmentId = new SelectList(await Context.Departments.OrderBy(c => c.Name).ToListAsync(),
@@ -81,7 +82,7 @@ public class MajorsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var model = await Context.Majors.FindAsync(id);
         if (model == null)
@@ -157,7 +158,7 @@ public class MajorsController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
         if (model.UserId != userId && !hasElevatedPermissions)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var member = await UserManager.FindByIdAsync(model.UserId.ToString());
         if (member.Majors.Any(m => m.MajorId == model.MajorId && m.DegreeLevel == model.DegreeLevel))
@@ -177,14 +178,14 @@ public class MajorsController : BaseController
 
     public async Task<ActionResult> Unassign(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.MajorsToMembers.FindAsync(id);
         if (model == null) return NotFound();
         var userId = User.GetUserId();
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
         if (model.UserId != userId && !hasElevatedPermissions)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         return View(model);
     }
@@ -199,7 +200,7 @@ public class MajorsController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
         if (model.UserId != userId && !hasElevatedPermissions)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var userName = model.User.UserName;
         Context.MajorsToMembers.Remove(model);

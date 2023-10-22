@@ -1,8 +1,6 @@
 ﻿namespace Dsp.WebCore.Areas.Admin.Controllers;
 
-using Dsp.Data;
 using Dsp.Data.Entities;
-using Dsp.Services;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
 using Dsp.WebCore.Extensions;
@@ -14,15 +12,11 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Admin")]
 [Authorize]
 public class SemestersController : BaseController
 {
     private ISemesterService _semesterService;
-
-    public SemestersController(DspDbContext context)
-    {
-        _semesterService = new SemesterService(context);
-    }
 
     public SemestersController(ISemesterService semesterService)
     {
@@ -117,7 +111,7 @@ public class SemestersController : BaseController
     {
         if (id < 1)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var semester = await _semesterService.GetSemesterByIdAsync(id);
         if (semester == null)
@@ -151,7 +145,7 @@ public class SemestersController : BaseController
     {
         if (id < 1)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var semester = await _semesterService.GetSemesterByIdAsync(id);
         if (semester == null)
@@ -178,7 +172,7 @@ public class SemestersController : BaseController
     {
         if (id < 1)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         await _semesterService.DeleteSemesterAsync(id);
         return RedirectToAction("Index");

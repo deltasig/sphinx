@@ -1,8 +1,6 @@
 ﻿namespace Dsp.WebCore.Areas.Admin.Controllers;
 
-using Dsp.Data;
 using Dsp.Data.Entities;
-using Dsp.Services;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
 using Microsoft.AspNetCore.Authorization;
@@ -12,16 +10,17 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Admin")]
 [Authorize]
 public class PositionsController : BaseController
 {
     private IPositionService _positionService;
     private ISemesterService _semesterService;
 
-    public PositionsController(DspDbContext context)
+    public PositionsController(IPositionService positionService, ISemesterService semesterService)
     {
-        _positionService = new PositionService(context);
-        _semesterService = new SemesterService(context);
+        _positionService = positionService;
+        _semesterService = semesterService;
     }
 
     public async Task<ActionResult> Index()
@@ -33,7 +32,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -46,7 +45,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -77,7 +76,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -90,7 +89,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -106,7 +105,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -119,7 +118,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -133,7 +132,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
@@ -169,7 +168,7 @@ public class PositionsController : BaseController
         }
         catch (Exception)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
     }

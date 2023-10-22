@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Scholarships")]
 [Authorize]
 public class TypesController : BaseController
 {
@@ -18,7 +19,7 @@ public class TypesController : BaseController
         ViewBag.FailureMessage = TempData[FailureMessageKey];
         return View(await Context.ScholarshipTypes.ToListAsync());
     }
-    
+
     public ActionResult Create()
     {
         return View();
@@ -40,7 +41,7 @@ public class TypesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var scholarshiptype = await Context.ScholarshipTypes.FindAsync(id);
         if (scholarshiptype == null)
@@ -66,7 +67,7 @@ public class TypesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var scholarshiptype = await Context.ScholarshipTypes.FindAsync(id);
         if (scholarshiptype == null || scholarshiptype.Applications.Any())

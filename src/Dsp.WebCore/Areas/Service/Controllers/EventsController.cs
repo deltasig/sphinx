@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Service")]
 [Authorize]
 public class EventsController : BaseController
 {
@@ -53,7 +54,7 @@ public class EventsController : BaseController
 
     public async Task<ActionResult> Create(int sid)
     {
-        if (sid <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (sid <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var semester = await _semesterService.GetSemesterByIdAsync(sid);
         var model = new ServiceEvent
@@ -95,7 +96,7 @@ public class EventsController : BaseController
 
     public async Task<ActionResult> Details(int id)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetEventByIdAsync(id);
         if (model == null) return NotFound();
 
@@ -107,7 +108,7 @@ public class EventsController : BaseController
     [Authorize]
     public async Task<ActionResult> Edit(int id)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetEventByIdAsync(id);
         if (model == null) return NotFound();
 
@@ -135,7 +136,7 @@ public class EventsController : BaseController
     [Authorize]
     public async Task<ActionResult> Delete(int id)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await _serviceService.GetEventByIdAsync(id);
         if (model == null) return NotFound();
 

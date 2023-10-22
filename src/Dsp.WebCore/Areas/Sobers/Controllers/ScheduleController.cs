@@ -1,7 +1,8 @@
 ﻿namespace Dsp.WebCore.Areas.Sobers.Controllers;
 
-using Data.Entities;
+using Dsp.Data.Entities;
 using Dsp.Services.Interfaces;
+using Dsp.WebCore.Controllers;
 using Dsp.WebCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -14,8 +15,8 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
-using WebCore.Controllers;
 
+[Area("Sobers")]
 [Authorize]
 public class ScheduleController : BaseController
 {
@@ -137,7 +138,7 @@ public class ScheduleController : BaseController
     [Authorize]
     public async Task<ActionResult> DeleteSignup(int id, string returnUrl)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         try
         {
@@ -149,13 +150,13 @@ public class ScheduleController : BaseController
         }
         catch
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
     }
 
     public async Task<ActionResult> SignupConfirmation(int id)
     {
-        if (id <= 0) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id <= 0) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var model = await Context.SoberSignups.FindAsync(id);
 
@@ -279,7 +280,7 @@ public class ScheduleController : BaseController
 
     public async Task<ActionResult> Download(int? sid)
     {
-        if (sid == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (sid == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var semester = await Context.Semesters.FindAsync(sid);
         var soberSlots = await Context.SoberSignups

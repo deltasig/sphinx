@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Scholarships")]
 [Authorize]
 public class QuestionsController : BaseController
 {
@@ -21,7 +22,7 @@ public class QuestionsController : BaseController
 
     public async Task<ActionResult> Details(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var scholarshipQuestion = await Context.ScholarshipQuestions.FindAsync(id);
         if (scholarshipQuestion == null) return NotFound();
 
@@ -47,7 +48,7 @@ public class QuestionsController : BaseController
 
     public async Task<ActionResult> Edit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var model = await Context.ScholarshipQuestions.FindAsync(id);
         if (model == null) return NotFound();
 
@@ -68,9 +69,9 @@ public class QuestionsController : BaseController
 
     public async Task<ActionResult> Delete(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var scholarshipQuestion = await Context.ScholarshipQuestions.FindAsync(id);
-        if (scholarshipQuestion == null) return NotFound(); 
+        if (scholarshipQuestion == null) return NotFound();
 
         return View(scholarshipQuestion);
     }
@@ -81,7 +82,7 @@ public class QuestionsController : BaseController
         var scholarshipQuestion = await Context.ScholarshipQuestions.FindAsync(id);
         if (scholarshipQuestion.Answers.Any())
         {
-            TempData[FailureMessageKey] = 
+            TempData[FailureMessageKey] =
                 "Scholarship Question could not be deleted because it has existing answers associated with it.";
             return RedirectToAction("Index");
         }

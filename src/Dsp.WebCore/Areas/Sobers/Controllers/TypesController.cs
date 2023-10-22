@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("Sobers")]
 [Authorize]
 public class TypesController : BaseController
 {
@@ -48,7 +49,7 @@ public class TypesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var soberType = await Context.SoberTypes.FindAsync(id);
         if (soberType == null)
@@ -74,7 +75,7 @@ public class TypesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var soberType = await Context.SoberTypes.FindAsync(id);
         if (soberType == null)
@@ -106,7 +107,7 @@ public class TypesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var soberType = await Context.SoberTypes.FindAsync(id);
         if (soberType == null)

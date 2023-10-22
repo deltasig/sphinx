@@ -15,6 +15,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("School")]
 [Authorize]
 public class ClassesController : BaseController
 {
@@ -91,7 +92,7 @@ public class ClassesController : BaseController
 
     public async Task<ActionResult> Details(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         var course = await Context.Classes.FindAsync(id);
         if (course == null) return NotFound();
 
@@ -108,7 +109,7 @@ public class ClassesController : BaseController
 
     public async Task<ActionResult> Edit(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.NotFound);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.NotFound);
         var model = new CreateClassModel { Class = await Context.Classes.FindAsync(id) };
         if (model.Class == null) return NotFound();
 
@@ -140,7 +141,7 @@ public class ClassesController : BaseController
     [Authorize]
     public async Task<ActionResult> Delete(int? id)
     {
-        if (id == null) return new StatusCodeResult((int) HttpStatusCode.NotFound);
+        if (id == null) return new StatusCodeResult((int)HttpStatusCode.NotFound);
         var model = await Context.Classes.FindAsync(id);
         if (model == null) return NotFound();
 
@@ -277,7 +278,7 @@ public class ClassesController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Academics");
         if (!hasElevatedPermissions && User.GetUserName() != model.SelectedUserName)
         {
-            return new StatusCodeResult((int) HttpStatusCode.NotFound);
+            return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
 
         var member = await UserManager.FindByNameAsync(model.SelectedUserName);
@@ -306,7 +307,7 @@ public class ClassesController : BaseController
     public async Task<ActionResult> Disenroll(int ctid)
     {
         var entry = await Context.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
-        if (entry == null) return new StatusCodeResult((int) HttpStatusCode.NotFound);
+        if (entry == null) return new StatusCodeResult((int)HttpStatusCode.NotFound);
         return View(entry);
     }
 
@@ -337,7 +338,7 @@ public class ClassesController : BaseController
     public async Task<ActionResult> EditEnrollment(int ctid)
     {
         var enrollment = await Context.ClassesTaken.SingleAsync(c => c.ClassTakenId == ctid);
-        if (enrollment == null) return new StatusCodeResult((int) HttpStatusCode.NotFound);
+        if (enrollment == null) return new StatusCodeResult((int)HttpStatusCode.NotFound);
 
         var model = new EditEnrollmentModel
         {

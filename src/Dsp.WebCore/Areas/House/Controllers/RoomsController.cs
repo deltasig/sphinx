@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
+[Area("House")]
 [Authorize]
 public class RoomsController : BaseController
 {
@@ -68,7 +69,7 @@ public class RoomsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var room = await Context.Rooms.FindAsync(id);
         if (room == null)
@@ -92,7 +93,7 @@ public class RoomsController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var room = await Context.Rooms.FindAsync(id);
         if (room == null)
@@ -117,14 +118,14 @@ public class RoomsController : BaseController
     {
         if (sid == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var semester = await Context.Semesters.FindAsync(sid);
 
         // See if rooms already exist.
         if (semester.Rooms.Any())
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
 
         // First let's try to copy the previous semesters room entries for convenience.
@@ -147,7 +148,7 @@ public class RoomsController : BaseController
             }
 
             await Context.SaveChangesAsync();
-            return new StatusCodeResult((int) HttpStatusCode.Accepted);
+            return new StatusCodeResult((int)HttpStatusCode.Accepted);
         }
 
         // No historical data, we'll just go with the hard-coded values.
@@ -182,22 +183,22 @@ public class RoomsController : BaseController
         Context.Rooms.Add(new Room { SemesterId = (int)sid, Name = "216", MaxCapacity = 3 });
 
         await Context.SaveChangesAsync();
-        return new StatusCodeResult((int) HttpStatusCode.Accepted);
+        return new StatusCodeResult((int)HttpStatusCode.Accepted);
     }
     [HttpPost, ValidateAntiForgeryToken]
     public async Task<ActionResult> Assign(int sid, int mid, int rid, DateTime moveIn, DateTime moveOut)
     {
         var semester = await Context.Semesters.FindAsync(sid);
         if (semester == null)
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var member = await UserManager.FindByIdAsync(mid.ToString());
         if (member == null)
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var room = await Context.Rooms.FindAsync(rid);
         if (room == null)
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         var roomAssignment = new RoomToMember
         {
@@ -214,10 +215,10 @@ public class RoomsController : BaseController
         }
         catch (Exception e)
         {
-            return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
 
-        return new StatusCodeResult((int) HttpStatusCode.Accepted);
+        return new StatusCodeResult((int)HttpStatusCode.Accepted);
     }
 
     [HttpPost, ValidateAntiForgeryToken]
@@ -225,7 +226,7 @@ public class RoomsController : BaseController
     {
         var roomAssignment = await Context.RoomsToMembers.FindAsync(aid);
         if (roomAssignment == null)
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
 
         try
         {
@@ -234,7 +235,7 @@ public class RoomsController : BaseController
         }
         catch (Exception e)
         {
-            return new StatusCodeResult((int) HttpStatusCode.InternalServerError);
+            return new StatusCodeResult((int)HttpStatusCode.InternalServerError);
         }
 
         return RedirectToAction("Index", new { sid });

@@ -13,6 +13,7 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
+[Area("Members")]
 [Authorize]
 public class AddressesController : BaseController
 {
@@ -54,7 +55,7 @@ public class AddressesController : BaseController
     {
         if (id == null)
         {
-            return new StatusCodeResult((int) HttpStatusCode.BadRequest);
+            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
         var address = await Context.Addresses.FindAsync(id);
         if (address == null)
