@@ -32,20 +32,15 @@
     closedFilter.closed = !Model.Filter.closed;
 
     var pagerModel = new PagerModel
-            {
-                Previous = previousPageFilter,
-                Incrementer = Model.Filter,
-                Next = nextPageFilter,
-                CurrentPage = Model.Filter.page,
-                PageSize = Model.Filter.pageSize,
-                ResultCount = Model.ResultCount,
-                TotalPages = Model.TotalPages
-            };
-
-    var elevatedPermissions =
-        User.IsInRole("Administrator") ||
-        User.IsInRole("House Manager") ||
-        User.IsInRole("ACB House Manager");
+    {
+        Previous = previousPageFilter,
+        Incrementer = Model.Filter,
+        Next = nextPageFilter,
+        CurrentPage = Model.Filter.page,
+        PageSize = Model.Filter.pageSize,
+        ResultCount = Model.ResultCount,
+        TotalPages = Model.TotalPages
+    };
 }
 
 <div class="container-fluid">
@@ -64,7 +59,7 @@
                         </div>
                         <div class="col">
                             <div class="dropdown">
-                                <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <a class="btn btn-outline-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Sort
                                 </a>
 
@@ -95,82 +90,54 @@
                 </div>
                 <div class="col text-end">
                     <a href="@Url.Action("Create", "WorkOrders")" class="btn btn-success">Create</a>
-                    @if (elevatedPermissions)
-                    {
-                        <button type="button" class="btn btn-default dropdown-toggle"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                            <span class="sr-only">Toggle Dropdown</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-right">
-                            <li>
-                                <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="">
-                                    Create Past Work Order
-                                </a>
-                            </li>
-                            @if (User.IsInRole("Administrator"))
-                            {
-                                <li>
-                                    <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="">
-                                        Priorities
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="">
-                                        Statuses
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                    }
                 </div>
             </div>
-                @if (Model.WorkOrders.Any())
-                {
-                    <div class="card">
-                        <div class="card-header">
-                            <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small>Open</small>
-                            <i class="fa fa-check-circle ps-2"></i> @Model.ClosedCount <small>Closed</small>
-                            @if (!string.IsNullOrEmpty(Model.Filter.s))
-                            {
-                                <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
-                            }
-                        </div>
-
-                        <ul class="list-group list-group-flush">
-                            @foreach (var w in Model.WorkOrders)
-                            {
-                                var status = w.IsOpen ? "Open" : "Closed";
-                                var statusLabelColor = w.IsOpen ? "bg-warning" : "bg-success";
-                                var timeSinceCreation = (DateTime.UtcNow - w.CreatedOn).ToUserFriendlyString();
-
-                                <a href="@Url.Action("Details", new {id = w.WorkOrderId})" class="list-group-item">
-                                    <div class="fw-bold">
-                                        @w.Title
-                                        <span class="badge @statusLabelColor float-end">
-                                            @status
-                                        </span>
-                                    </div>
-
-                                    opened @timeSinceCreation
-                                    @if (w.IsClosed)
-                                    {
-                                        var timeSinceClosure = (DateTime.UtcNow - w.ClosedOn.Value).ToUserFriendlyString();
-
-                                        @:| closed @timeSinceClosure
-                                    }
-                                </a>
-                            }
-                        </ul>
-                        <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel"></partial>
+            @if (Model.WorkOrders.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small>Open</small>
+                        <i class="fa fa-check-circle ps-2"></i> @Model.ClosedCount <small>Closed</small>
+                        @if (!string.IsNullOrEmpty(Model.Filter.s))
+                        {
+                            <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
+                        }
                     </div>
-                }
-                else
-                {
-                    <div class="alert alert-warning">
-                        No work orders found.
-                    </div>
-                }
+
+                    <ul class="list-group list-group-flush">
+                        @foreach (var w in Model.WorkOrders)
+                        {
+                            var status = w.IsOpen ? "Open" : "Closed";
+                            var statusLabelColor = w.IsOpen ? "bg-warning" : "bg-success";
+                            var timeSinceCreation = (DateTime.UtcNow - w.CreatedOn).ToUserFriendlyString();
+
+                            <a href="@Url.Action("Details", new {id = w.WorkOrderId})" class="list-group-item">
+                                <div class="fw-bold">
+                                    @w.Title
+                                    <span class="badge @statusLabelColor float-end">
+                                        @status
+                                    </span>
+                                </div>
+
+                                opened @timeSinceCreation
+                                @if (w.IsClosed)
+                                {
+                                    var timeSinceClosure = (DateTime.UtcNow - w.ClosedOn.Value).ToUserFriendlyString();
+
+                                    @:| closed @timeSinceClosure
+                                }
+                            </a>
+                        }
+                    </ul>
+                    <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel"></partial>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No work orders found.
+                </div>
+            }
         </div>
     </div>
 </div>
