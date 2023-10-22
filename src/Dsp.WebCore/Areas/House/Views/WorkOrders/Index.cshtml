@@ -32,15 +32,15 @@
     closedFilter.closed = !Model.Filter.closed;
 
     var pagerModel = new PagerModel
-    {
-        Previous = previousPageFilter,
-        Incrementer = Model.Filter,
-        Next = nextPageFilter,
-        CurrentPage = Model.Filter.page,
-        PageSize = Model.Filter.pageSize,
-        ResultCount = Model.ResultCount,
-        TotalPages = Model.TotalPages
-    };
+            {
+                Previous = previousPageFilter,
+                Incrementer = Model.Filter,
+                Next = nextPageFilter,
+                CurrentPage = Model.Filter.page,
+                PageSize = Model.Filter.pageSize,
+                ResultCount = Model.ResultCount,
+                TotalPages = Model.TotalPages
+            };
 
     var elevatedPermissions =
         User.IsInRole("Administrator") ||
@@ -51,188 +51,126 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-8">
-            <div class="row row-space no-print">
-                <div class="col-md-8">
-                    @using (Html.BeginForm("Index", "WorkOrders", FormMethod.Get, new { @class = "form-inline" }))
-                    {
-                        <div class="btn-group" role="group" aria-label="...">
-                            @Html.ActionLink("Open", "Index", "WorkOrders", openFilter, new
-                            {
-                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (Model.Filter.open ? " active" : "")
-                            })
-                            @Html.ActionLink("Closed", "Index", "WorkOrders", closedFilter, new
-                            {
-                                @class = "btn btn-default " + (ViewBag.Title == "WorkOrders" ? "active" : "") + (Model.Filter.closed ? " active" : "")
-                            })
-                            <div class="btn-group" role="group" aria-label="...">
-                                <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-                                    Sort <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <a href="@Url.Action("Index", "WorkOrders", openFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.open ? "active" : "")">Open</a>
+                                <a href="@Url.Action("Index", "WorkOrders", closedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.closed ? "active" : "")">Closed</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="dropdown">
+                                <a class="btn btn-secondary dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort
+                                </a>
+
+                                <ul class="dropdown-menu">
                                     <li role="presentation" class="@(Model.Filter.sort == newestSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortNewestFilter)">
-                                            <i class="fa fa-sort-amount-asc"></i> Newest
-                                        </a>
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNewestFilter)">Newest</a>
                                     </li>
                                     <li role="presentation" class="@(Model.Filter.sort == oldestSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortOldestFilter)">
-                                            @if (Model.Filter.sort == oldestSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-amount-desc"></i> Oldest
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == mostCommentedSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortMostCommentedFilter)">
-                                            @if (Model.Filter.sort == mostCommentedSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-numeric-desc"></i> Most Commented
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == leastCommentedSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastCommentedFilter)">
-                                            @if (Model.Filter.sort == leastCommentedSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-numeric-asc"></i> Least Commented
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == recentlyUpdatedSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortRecentlyUpdatedFilter)">
-                                            @if (Model.Filter.sort == recentlyUpdatedSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-amount-asc"></i> Recently Updated
-                                        </a>
-                                    </li>
-                                    <li role="presentation" class="@(Model.Filter.sort == leastRecentlyUpdatedSortText ? "active" : "")">
-                                        <a role="menuitem" tabindex="-1" href="@Url.Action("Index", sortLeastRecentlyUpdatedFilter)">
-                                            @if (Model.Filter.sort == leastRecentlyUpdatedSortText)
-                                            {
-                                                <i class="fa fa-lg fa-times-circle-o"></i>
-                                            }
-                                            <i class="fa fa-sort-amount-desc"></i> Least Recently Updated
-                                        </a>
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortOldestFilter)">Oldest</a>
                                     </li>
                                 </ul>
                             </div>
                         </div>
-                        <hr class="visible-xs" />
-                        <div class="input-group">
-                            <span class="input-group-addon" id="search-addon"><i class="fa fa-search"></i></span>
-                            <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
-                            <input id="open" name="open" type="hidden" value="@Model.Filter.open.ToString()">
-                            <input id="closed" name="closed" type="hidden" value="@Model.Filter.closed.ToString()">
-                            <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
-                            <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" aria-describedby="search-addon">
+                        <div class="col">
+                            <form asp-controller="WorkOrder" asp-action="Index" asp-antiforgery="false" method="get" role="form">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                    <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
+                                    <input id="open" name="open" type="hidden" value="@Model.Filter.open.ToString()">
+                                    <input id="closed" name="closed" type="hidden" value="@Model.Filter.closed.ToString()">
+                                    <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
+                                    <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" />
+                                </div>
+                            </form>
                         </div>
-                    }
-                    <hr class="visible-xs visible-sm" />
+                    </div>
+
                 </div>
-                <div class="col-md-4 text-right">
-                    <div class="btn-group">
-                        <a href="@Url.Action("Create", "WorkOrders", new {area = "House"})" class="btn btn-success">
-                            Create New W.O.
-                        </a>
-                        @if (elevatedPermissions)
-                        {
-                            <button type="button" class="btn btn-default dropdown-toggle"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span>
-                                <span class="sr-only">Toggle Dropdown</span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
+                <div class="col text-end">
+                    <a href="@Url.Action("Create", "WorkOrders")" class="btn btn-success">Create</a>
+                    @if (elevatedPermissions)
+                    {
+                        <button type="button" class="btn btn-default dropdown-toggle"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li>
+                                <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="">
+                                    Create Past Work Order
+                                </a>
+                            </li>
+                            @if (User.IsInRole("Administrator"))
+                            {
                                 <li>
-                                    <a href="@Url.Action("CreateOld", "WorkOrders", new {area = "House"})" class="">
-                                        Create Past Work Order
+                                    <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="">
+                                        Priorities
                                     </a>
                                 </li>
-                                @if (User.IsInRole("Administrator"))
-                                {
-                                    <li>
-                                        <a href="@Url.Action("Index", "WorkOrderPriorities", new {area = "House"})" class="">
-                                            Priorities
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="">
-                                            Statuses
-                                        </a>
-                                    </li>
-                                }
-                            </ul>
-                        }
-                    </div>
+                                <li>
+                                    <a href="@Url.Action("Index", "WorkOrderStatuses", new {area = "House"})" class="">
+                                        Statuses
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
-            @if (Model.WorkOrders.Any())
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <div class="row row-fluid">
-                            <div class="col-md-6">
-                                <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small style="padding-right: 5px">Open</small>
-                                <i class="fa fa-check-circle"></i> @Model.ClosedCount <small>Closed</small>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                @if (!string.IsNullOrEmpty(Model.Filter.s))
-                                {
-                                    <small>Searched for: <em>@Model.Filter.s</em></small>
-                                }
-                            </div>
+                @if (Model.WorkOrders.Any())
+                {
+                    <div class="card">
+                        <div class="card-header">
+                            <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small>Open</small>
+                            <i class="fa fa-check-circle ps-2"></i> @Model.ClosedCount <small>Closed</small>
+                            @if (!string.IsNullOrEmpty(Model.Filter.s))
+                            {
+                                <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
+                            }
                         </div>
-                    </div>
-                    <ul class="list-group">
-                        @foreach (var w in Model.WorkOrders)
-                        {
-                            var status = w.IsOpen ? "Open" : "Closed";
-                            var statusLabelColor = w.IsOpen ? "label-warning" : "label-success";
-                            var timeSinceCreation = (DateTime.UtcNow - w.CreatedOn).ToUserFriendlyString();
-                            
-                            <a href="@Url.Action("View", new {id = w.WorkOrderId})" class="list-group-item">
-                                <h4 class="list-group-item-heading">
-                                    <div class="row">
-                                        <div class="col-md-8 col-p-8">
-                                            @w.Title
-                                        </div>
-                                        <div class="col-md-4 col-p-4 text-md-right text-p-right">
-                                            <small>
-                                                <span class="label @statusLabelColor" style="font-weight: normal !important; margin-right: 5px;"
-                                                      data-toggle="tooltip" data-placement="top" title="Status">
-                                                    @status
-                                                </span>
-                                            </small>
-                                        </div>
-                                    </div>
-                                </h4>
-                                <p class="list-group-item-text">
-                                    opened @timeSinceCreation by <strong>@w.User</strong>
-                                </p>
-                                @if (w.IsClosed)
-                                {
-                                    var timeSinceClosure = (DateTime.UtcNow - w.ClosedOn.Value).ToUserFriendlyString();
 
-                                    <p class="list-group-item-text">
-                                        closed @timeSinceClosure
-                                    </p>
-                                }                                
-                            </a>
-                        }
-                    </ul>
-                    @Html.Partial("~/Views/Shared/_PagerPartial.cshtml", pagerModel)
-                </div>
-            }
-            else
-            {
-                <div class="alert alert-warning">
-                    No work orders found.
-                </div>
-            }
+                        <ul class="list-group list-group-flush">
+                            @foreach (var w in Model.WorkOrders)
+                            {
+                                var status = w.IsOpen ? "Open" : "Closed";
+                                var statusLabelColor = w.IsOpen ? "bg-warning" : "bg-success";
+                                var timeSinceCreation = (DateTime.UtcNow - w.CreatedOn).ToUserFriendlyString();
+
+                                <a href="@Url.Action("Details", new {id = w.WorkOrderId})" class="list-group-item">
+                                    <div class="fw-bold">
+                                        @w.Title
+                                        <span class="badge @statusLabelColor float-end">
+                                            @status
+                                        </span>
+                                    </div>
+
+                                    opened @timeSinceCreation
+                                    @if (w.IsClosed)
+                                    {
+                                        var timeSinceClosure = (DateTime.UtcNow - w.ClosedOn.Value).ToUserFriendlyString();
+
+                                        @:| closed @timeSinceClosure
+                                    }
+                                </a>
+                            }
+                        </ul>
+                        <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel"></partial>
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-warning">
+                        No work orders found.
+                    </div>
+                }
         </div>
     </div>
 </div>
