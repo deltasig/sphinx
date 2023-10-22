@@ -8,27 +8,26 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-public class MemberService : BaseService, IMemberService
+public class UserService : BaseService, IUserService
 {
     private readonly DspDbContext _context;
     private readonly ISemesterService _semesterService;
 
-    public MemberService(DspDbContext context)
+    public UserService(DspDbContext context, ISemesterService semesterService)
     {
         _context = context;
-        _semesterService = new SemesterService(context);
+        _semesterService = semesterService;
     }
 
-    public async Task<User> GetMemberByIdAsync(int id)
+    public async Task<User> GetUserByIdAsync(int id)
     {
         return await _context.FindAsync<User>(id);
     }
 
-    public async Task<User> GetMemberByUserNameAsync(string userName)
+    public async Task<User> GetUserByUserNameAsync(string userName)
     {
         return await _context.Users
             .Where(m => m.UserName == userName)
-            .Include(m => m.Status)
             .SingleAsync();
     }
 

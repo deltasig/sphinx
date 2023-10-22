@@ -117,7 +117,7 @@ public class AccountController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Secretary");
         if (!hasElevatedPermissions && User.Identity.Name != userName)
         {
-            return new StatusCodeResult((int) HttpStatusCode.NotFound);
+            return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
         var member = string.IsNullOrEmpty(userName)
             ? await UserManager.FindByNameAsync(User.Identity.Name)
@@ -142,7 +142,7 @@ public class AccountController : BaseController
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Secretary");
         if (!hasElevatedPermissions && User.Identity.Name != model.User.UserName)
         {
-            return new StatusCodeResult((int) HttpStatusCode.NotFound);
+            return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
 
         model.Semesters = await GetAllSemesterListAsync();
@@ -193,7 +193,7 @@ public class AccountController : BaseController
             return RedirectToAction("Edit", new { userName = member.UserName });
         }
 
-        var imageUpload = new ImageUpload (_env) { Width = 300, Height = 300 };
+        var imageUpload = new ImageUpload(_env) { Width = 300, Height = 300 };
         var imageResult = await imageUpload.RenameUploadFileAsync(file, member.UserName);
         if (imageResult.Success)
         {
@@ -242,7 +242,7 @@ public class AccountController : BaseController
         {
             return RedirectToAction("Sphinx", "Home", new { area = "" });
         }
-        else if(result.IsNotAllowed)
+        else if (result.IsNotAllowed)
         {
             return View("Lockout");
         }

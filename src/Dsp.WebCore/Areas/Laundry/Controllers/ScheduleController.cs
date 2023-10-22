@@ -11,7 +11,7 @@ using Models;
 using System;
 using System.Threading.Tasks;
 
-[Authorize]
+[Authorize(Policy = "Member")]
 public class ScheduleController : BaseController
 {
     private ILaundryService _laundryService;

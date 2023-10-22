@@ -2,6 +2,8 @@ using Dsp.Data;
 using Dsp.Data.Entities;
 using Dsp.Services;
 using Dsp.Services.Interfaces;
+using Dsp.WebCore;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,10 +47,34 @@ builder.Services.AddScoped<ILaundryService, LaundryService>();
 builder.Services.AddScoped<IMealService, MealService>();
 builder.Services.AddScoped<IMemberService, MemberService>();
 builder.Services.AddScoped<IPositionService, PositionService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<ISoberService, SoberService>();
 builder.Services.AddScoped<IStatusService, StatusService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+// Authorization handlers
+builder.Services.AddScoped<IAuthorizationHandler, OneOfManyMemberStatusHandler>();
+builder.Services.AddScoped<IAuthorizationHandler, OneOfManyMemberAppointmentHandler>();
+
+// Configure authorization policies
+builder.Services.AddAuthorization(options =>
+      options.AddPolicy("Member",
+      policy => policy.Requirements.Add(new MemberStatusRequirement("New", "Neophyte", "Active", "Alumnus"))));
+builder.Services.AddAuthorization(options =>
+      options.AddPolicy("NewMember",
+      policy => policy.Requirements.Add(new MemberStatusRequirement("New"))));
+builder.Services.AddAuthorization(options =>
+      options.AddPolicy("ActiveMember",
+      policy => policy.Requirements.Add(new MemberStatusRequirement("Active"))));
+builder.Services.AddAuthorization(options =>
+      options.AddPolicy("AlumnusMember",
+      policy => policy.Requirements.Add(new MemberStatusRequirement("New"))));
+builder.Services.AddAuthorization(options =>
+      options.AddPolicy("Affiliate",
+      policy => policy.Requirements.Add(new MemberStatusRequirement("Affiliate"))));
+
 
 builder.Services.Configure<RouteOptions>(options =>
 {
