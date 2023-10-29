@@ -256,7 +256,9 @@ public class ScheduleController : BaseController
         if (semester == null) return NotFound();
 
         // Identify valid semesters for dropdown
-        var signups = await Context.SoberSignups.ToListAsync();
+        var signups = await Context.SoberSignups
+            .Include(x => x.SoberType)
+            .ToListAsync();
         var allSemesters = await Context.Semesters.ToListAsync();
         var semesters = allSemesters
             .Where(s =>

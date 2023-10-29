@@ -22,7 +22,7 @@ public class BaseController : Controller
 {
     protected const string SuccessMessageKey = "SuccessMessage";
     protected const string FailureMessageKey = "FailureMessage";
-    
+
     private DspDbContext _context;
     private UserManager<User> _userManager;
     private SignInManager<User> _signInManager;
@@ -56,6 +56,8 @@ public class BaseController : Controller
                 d.Status.StatusName == "Neophyte") &&
                 d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                 d.ExpectedGraduation.DateEnd > semester.DateStart)
+            .Include(m => m.PledgeClass)
+            .Include(m => m.Status)
             .ToListAsync();
     }
     protected virtual async Task<Semester> GetThisSemesterAsync()

@@ -28,6 +28,8 @@ public class UserService : BaseService, IUserService
     {
         return await _context.Users
             .Where(m => m.UserName == userName)
+            .Include(m => m.PledgeClass)
+            .Include(m => m.Status)
             .SingleAsync();
     }
 
@@ -93,6 +95,8 @@ public class UserService : BaseService, IUserService
                 m.Status.StatusName == "New") &&
                 m.ExpectedGraduation.DateEnd < semester.DateStart)
             .OrderBy(m => m.LastName)
+            .Include(m => m.PledgeClass)
+            .Include(m => m.Status)
             .ToListAsync();
 
         return results;
@@ -116,6 +120,8 @@ public class UserService : BaseService, IUserService
                 d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                 d.ExpectedGraduation.DateEnd > semester.DateStart)
             .OrderBy(m => m.LastName)
+            .Include(m => m.PledgeClass)
+            .Include(m => m.Status)
             .ToListAsync();
         return results;
     }

@@ -25,11 +25,13 @@ public class AccountController : BaseController
 {
     private readonly IWebHostEnvironment _env;
     private readonly IPositionService _positionService;
+    private readonly IUserService _userService;
 
-    public AccountController(IWebHostEnvironment env, IPositionService positionService)
+    public AccountController(IWebHostEnvironment env, IPositionService positionService, IUserService userService)
     {
         _env = env;
         _positionService = positionService;
+        _userService = userService;
     }
 
     [HttpGet]
@@ -55,7 +57,7 @@ public class AccountController : BaseController
 
         if (string.IsNullOrEmpty(userName)) userName = User.GetUserName();
 
-        var member = await UserManager.FindByNameAsync(userName);
+        var member = await _userService.GetUserByUserNameAsync(userName);
         var thisSemester = await GetThisSemesterAsync();
         var model = new AccountInformationModel
         {

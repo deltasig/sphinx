@@ -69,6 +69,7 @@ public class SoberService : BaseService, ISoberService
         var signups = await _context.SoberSignups
             .Where(s => s.DateOfShift >= threeAmYesterday)
             .OrderBy(s => s.DateOfShift)
+            .Include(s => s.SoberType)
             .ToListAsync();
 
         return signups;

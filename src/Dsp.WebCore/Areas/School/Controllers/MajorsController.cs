@@ -29,7 +29,10 @@ public class MajorsController : BaseController
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.FailureMessage = TempData["FailureMessage"];
 
-        return View(await Context.Majors.ToListAsync());
+        var model = await Context.Majors
+            .Include(x => x.Department)
+            .ToListAsync();
+        return View(model);
     }
 
     [Authorize]

@@ -43,6 +43,7 @@ public class AdminController : ControllerBase
             var leader = await _context.UserRoles
                 .Where(l => l.SemesterId == sid && l.RoleId == pid)
                 .OrderByDescending(l => l.AppointedOn)
+                .Include(x => x.User)
                 .FirstOrDefaultAsync();
             if (leader != null) return Ok(new
             {
