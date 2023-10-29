@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md-4 col-lg-2">
-            @Html.Partial("~/Areas/Members/Views/Shared/_AccountNavPartial.cshtml")
+            <partial name="~/Areas/Members/Views/Shared/_AccountNavPartial.cshtml" />
         </div>
         <div class="col-md-8 col-lg-5">
             @if (User.Identity.Name == Model.User.UserName)

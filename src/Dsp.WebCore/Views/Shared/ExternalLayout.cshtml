@@ -31,12 +31,12 @@
 </head>
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
-        <partial name="_ExternalNavPartial.cshtml"></partial>
-        <partial name="_ExternalTitlePartial.cshtml"></partial>
+        <partial name="_ExternalNavPartial.cshtml" />
+        <partial name="_ExternalTitlePartial.cshtml" />
         @RenderBody()
     </main>
 
-    <partial name="Footer.cshtml"></partial>
+    <partial name="Footer.cshtml" />
 
     <environment include="Development">
         <script src="~/lib/bootstrap/js/bootstrap.js"></script>

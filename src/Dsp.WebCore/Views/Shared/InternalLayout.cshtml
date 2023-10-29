@@ -38,19 +38,19 @@
 </head>
 <body class="d-flex flex-column h-100">
     <main class="flex-shrink-0">
-        <partial name="_InternalNavPartial.cshtml" model="internalNavModel"></partial>
+        <partial name="_InternalNavPartial.cshtml" model="internalNavModel" />
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-2 col-lg-1 col-md-2 d-md-none d-lg-block">
                     <div class="card text-bg-light my-3 mx-2">
                         <div class="card-header">Navigation</div>
                         <div class="card-body px-1 py-1">
-                            <partial name="_InternalNavSideLinksPartial.cshtml" model="internalNavModel"></partial>
+                            <partial name="_InternalNavSideLinksPartial.cshtml" model="internalNavModel" />
                         </div>
                     </div>
                 </div>
                 <div class="col">
-                    <partial name="_InternalTitlePartial.cshtml"></partial>
+                    <partial name="_InternalTitlePartial.cshtml" />
                     @RenderBody()
                 </div>
             </div>

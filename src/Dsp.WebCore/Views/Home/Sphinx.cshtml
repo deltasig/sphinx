@@ -170,7 +170,7 @@
                             </div>
                         }
                         <div class="panel panel-default">
-                            @Html.Partial("~/Areas/Sobers/Views/Schedule/_SoberSchedulePartial.cshtml", Model.SoberSignups)
+                            <partial name="~/Areas/Sobers/Views/Schedule/_SoberSchedulePartial.cshtml" model="Model.SoberSignups" />
                         </div>
                         @if (isUndergrad || isAdmin)
                         {

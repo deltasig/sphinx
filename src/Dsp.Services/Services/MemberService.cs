@@ -117,6 +117,7 @@ public class MemberService : BaseService, IMemberService
                 d.PledgeClass.Semester.DateStart < semester.DateEnd &&
                 d.ExpectedGraduation.DateEnd > semester.DateStart)
             .OrderBy(m => m.LastName)
+            .Include(m => m.PledgeClass)
             .ToListAsync();
         return results;
     }
