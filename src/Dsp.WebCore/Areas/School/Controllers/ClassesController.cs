@@ -93,7 +93,9 @@ public class ClassesController : BaseController
     public async Task<ActionResult> Details(int? id)
     {
         if (id == null) return new StatusCodeResult((int)HttpStatusCode.BadRequest);
-        var course = await Context.Classes.FindAsync(id);
+        var course = await Context.Classes
+            .Include(x => x.Department)
+            .FirstOrDefaultAsync(x => x.ClassId == id);
         if (course == null) return NotFound();
 
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
