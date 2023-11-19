@@ -90,18 +90,18 @@ public class IncidentsController : BaseController
         return View(model);
     }
 
-    public ActionResult Submit()
+    public ActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<ActionResult> Submit(IncidentReport model)
+    public async Task<ActionResult> Create(IncidentReport model)
     {
         if (!ModelState.IsValid)
         {
-            TempData["FailureMessage"] = "Something went wrong while submitting the incident report.";
+            TempData["FailureMessage"] = "Something went wrong while creating the incident report.";
             return View(model);
         }
 
@@ -142,7 +142,7 @@ public class IncidentsController : BaseController
             return new HttpStatusCodeResult(HttpStatusCode.InternalServerError);
         }
 #endif
-        TempData["SuccessMessage"] = "Incident report submitted.";
+        TempData["SuccessMessage"] = "Incident report created.";
         return RedirectToAction("Index");
     }
 
