@@ -29,6 +29,7 @@ public class SemesterService : BaseService, ISemesterService
     public async Task<IEnumerable<Semester>> GetAllSemestersAsync()
     {
         var semesters = await _context.Semesters
+            .Include(x => x.PledgeClasses)
             .OrderBy(x => x.DateStart)
             .ToListAsync();
         return semesters;
