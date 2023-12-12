@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "wwwroot/css/Site.css",
+    "inputFile": "wwwroot/css/Site.scss"
+  },
+  {
+    "outputFile": "wwwroot/lib/bootstrap/scss/_variables.css",
+    "inputFile": "wwwroot/lib/bootstrap/scss/_variables.scss"
+  },
+  {
+    "outputFile": "wwwroot/lib/bootstrap/scss/bootstrap.css",
+    "inputFile": "wwwroot/lib/bootstrap/scss/bootstrap.scss"
+  }
+]

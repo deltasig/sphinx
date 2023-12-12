@@ -1,0 +1,126 @@
+﻿@model InternalNavModel
+
+<ul class="nav flex-column">
+    @if (User.Identity?.IsAuthenticated ?? false && Model.ShowTopLeftLinks)
+    {
+        <li class="nav-item @(ViewBag.Title.Contains("Roster") ? "active" : "")">
+            <a class="nav-link" asp-area="Members" asp-controller="Roster" asp-action="Index">
+                <i class="fa fa-fw fa-users"></i> Roster
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Service") ? "active" : "")">
+            <a class="nav-link" asp-area="Service" asp-controller="Hours" asp-action="Index">
+                <i class="fa fa-fw fa-globe"></i> Service
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Class") ? "active" : "")">
+            <a class="nav-link" asp-area="School" asp-controller="Classes" asp-action="Index">
+                <i class="fa fa-fw fa-institution"></i> Classes
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Work Order") ? "active" : "")">
+            <a class="nav-link" asp-area="House" asp-controller="WorkOrders" asp-action="Index">
+                <i class="fa fa-fw fa-wrench"></i> Work Orders
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Room") ? "active" : "")">
+            <a class="nav-link" asp-area="House" asp-controller="Rooms" asp-action="Index">
+                <i class="fa fa-fw fa-bed"></i> Rooms
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Scholarship") ? "active" : "")">
+            <a class="nav-link" asp-area="Scholarships" asp-controller="Applications" asp-action="Index">
+                <i class="fa fa-fw fa-graduation-cap"></i> Scholarships
+            </a>
+        </li>
+        <li class="nav-item @(ViewBag.Title.Contains("Incident") ? "active" : "")">
+            <a class="nav-link" asp-area="Members" asp-controller="Incidents" asp-action="Index">
+                <i class="fa fa-fw fa-exclamation-triangle"></i> Incidents
+            </a>
+        </li>
+        if (Model.ShowAdminLink)
+        {
+            <li class="nav-item dropdown dropend">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
+                    <i class="fa fa-fw fa-lock"></i> Admin
+                </a>
+                <ul class="dropdown-menu">
+                    @if (Model.ShowAppointmentsLink)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="Admin" asp-controller="Positions" asp-action="Appointments">
+                                Appointments
+                            </a>
+                        </li>
+                    }
+                    @if (Model.ShowPositionsLink)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="Admin" asp-controller="Positions" asp-action="Index">
+                                Positions
+                            </a>
+                        </li>
+                    }
+                    @if (Model.ShowRegistrationLink)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="Members" asp-controller="Account" asp-action="Registration">
+                                Registration
+                            </a>
+                        </li>
+                    }
+                    @if (Model.ShowSemesterLink)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="Admin" asp-controller="Semesters" asp-action="Index">
+                                Semesters
+                            </a>
+                        </li>
+                    }
+                    @if (Model.ShowStatusesLink)
+                    {
+                        <li>
+                            <a class="dropdown-item" asp-area="Admin" asp-controller="Statuses" asp-action="Index">
+                                Statuses
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </li>
+        }
+    }
+    else
+    {
+        <li><p class="navbar-text"></p></li>
+    }
+    <li class="nav-item dropdown dropend">
+        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+            <i class="fa fa-fw fa-info-circle"></i> Website
+        </a>
+        <ul class="dropdown-menu">
+            <li>
+                <a class="dropdown-item" href="~/">
+                    <i class="fa fa-fw fa-reply"></i> External Site
+                </a>
+            </li>
+            @if (Model.ShowUpdatesLink)
+            {
+                <li>
+                    <a class="dropdown-item" href="https://github.com/deltasig/sphinx/commits" target="_blank">
+                        <i class="fa fa-fw fa-code-commit"></i> Updates <i class="fa fa-fw fa-external-link"></i>
+                    </a>
+                </li>
+            }
+            <li>
+                <a class="dropdown-item" href="https://github.com/deltasig/sphinx/wiki" target="_blank">
+                    <i class="fa fa-fw fa-book"></i> Wiki <i class="fa fa-fw fa-external-link"></i>
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="https://github.com/deltasig/sphinx/issues" target="_blank">
+                    <i class="fa fa-fw fa-bug"></i> Report Issue <i class="fa fa-fw fa-external-link"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+</ul>

@@ -1,0 +1,32 @@
+﻿@{
+    Layout = "~/Views/Shared/ExternalLayout.cshtml";
+    ViewBag.Title = "Account Lockout";
+}
+@section Title
+{
+    <partial name="_TitleExternal.cshtml" />
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col col-sm-10 col-md-8 col-lg-6 col-sm-offset-1 col-md-offset-2 col-lg-offset-3 text-center">
+            <h3>
+                <small>
+                    For security reasons your account has been locked because the wrong credentials were entered too many times.
+                    Please try again in 10-15 minutes.
+                </small>
+            </h3>
+            <div class="alert alert-danger">
+                <i class="fa fa-exclamation-triangle"></i> 
+                If you are seeing this page and believe it to be a mistake, please let your administrator know.
+            </div>
+            <p>
+                <a href="@Url.Action("SignIn", "Account", new {area = "Members"})"
+                   class="btn btn-sm btn-default">
+                    <i class="fa fa-angle-double-left"></i>
+                    Go Back
+                </a>
+            </p>
+        </div>
+    </div>
+</div>

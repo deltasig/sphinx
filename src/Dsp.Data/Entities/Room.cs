@@ -1,28 +1,19 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Room
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int RoomId { get; set; }
 
-    public class Room
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RoomId { get; set; }
+    public string Name { get; set; }
 
-        [Required]
-        [Column(Order = 0), Index("IX_RoomSemesterName", 0, IsUnique = true)]
-        public int SemesterId { get; set; }
+    public int MaxCapacity { get; set; }
 
-        [Required, StringLength(100)]
-        [Column(Order = 1), Index("IX_RoomSemesterName", 1, IsUnique = true)]
-        public string Name { get; set; }
+    public int SemesterId { get; set; }
 
-        [Required, Range(0, 10), Display(Name = "Max Capacity")]
-        public int MaxCapacity { get; set; }
+    public virtual ICollection<RoomToMember> Members { get; set; } = new List<RoomToMember>();
 
-        [ForeignKey("SemesterId")]
-        public virtual Semester Semester { get; set; }
-        [InverseProperty("Room")]
-        public virtual ICollection<RoomToMember> Members { get; set; }
-    }
+    public virtual Semester Semester { get; set; }
 }

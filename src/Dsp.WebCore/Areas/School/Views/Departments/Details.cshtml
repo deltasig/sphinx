@@ -1,0 +1,93 @@
+﻿@model Department
+@{
+    ViewBag.Title = "Department";
+    ViewBag.Subtitle = Model.Name;
+    var hasElevatedPermissions = User.IsInRole("Administrator") || User.IsInRole("Academics");
+}
+
+<div class="container-fluid">
+    <div class="row row-space">
+        <div class="col">
+            <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Back to Departments
+            </a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="panel panel-default">
+                <div class="panel-heading">Classes</div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                        <tr class="active">
+                            <th class="col-sm-3">Number</th>
+                            <th>Name</th>
+                            @if (hasElevatedPermissions)
+                            {
+                                <th class="col-sm-2"></th>
+                            }
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var d in Model.Classes.OrderBy(o => o.CourseShorthand))
+                        {
+                            <tr>
+                                <td>
+                                    <a href="@Url.Action("Details", "Classes", new {id = d.ClassId})">
+                                        @d.CourseShorthand
+                                    </a>
+                                </td>
+                                <td>@d.CourseName</td>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <td class="text-right">
+                                        <a href="@Url.Action("Edit", "Classes", new {id = d.ClassId})">Edit</a>
+                                    </td>
+                                }
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">Count: @Model.Classes.Count</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">Majors</div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr class="active">
+                                <th>Name</th>
+                                <th class="col-sm-2">Enrolled</th>
+                                @if (hasElevatedPermissions)
+                                {
+                                    <th class="col-sm-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var m in Model.Majors.OrderBy(o => o.MajorName))
+                            {
+                                <tr>
+                                    <td>@m.MajorName</td>
+                                    <td>@m.MajorToMembers.Count</td>
+                                    @if (hasElevatedPermissions)
+                                    {
+                                        <td class="text-right">
+                                            <a href="@Url.Action("Edit", "Majors", new {id = m.MajorId})">Edit</a>
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="panel-footer">Count: @Model.Majors.Count</div>
+            </div>
+        </div>
+    </div>
+</div>
+

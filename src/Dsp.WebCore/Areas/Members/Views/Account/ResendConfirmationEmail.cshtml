@@ -1,0 +1,21 @@
+@model ResendConfirmationEmailModel
+@{
+    Layout = "~/Views/Shared/ExternalLayout.cshtml";
+    ViewBag.Title = "Resend Confirmation Email";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-controller="Account" asp-action="ResendConfirmationEmail" asp-antiforgery="true" method="post" role="form">
+                <div class="mb-3">
+                    <label for="Email" class="form-label">Email address</label>
+                    <input type="Email" class="form-control" asp-for="Email">
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <div class="form-text">Enter your email to resend the link to confirm your email.</div>
+                </div>
+                <button type="submit" class="btn btn-success">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>

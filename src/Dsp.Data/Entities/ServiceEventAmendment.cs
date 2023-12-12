@@ -1,30 +1,21 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class ServiceEventAmendment
 {
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int Id { get; set; }
 
-    public class ServiceEventAmendment
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int UserId { get; set; }
 
-        [Required, Display(Name = "Member")]
-        public int UserId { get; set; }
+    public int SemesterId { get; set; }
 
-        [Required, Display(Name = "Semester")]
-        public int SemesterId { get; set; }
+    public string Reason { get; set; }
 
-        [Required, Range(-50,50)]
-        [Display(Name = "Number of Events")]
-        public int NumberEvents { get; set; }
+    public int NumberEvents { get; set; }
 
-        [Required, StringLength(100)]
-        [Display(Name = "Reason for Amendment")]
-        public string Reason { get; set; }
-        
-        [ForeignKey("UserId")]
-        public virtual Member Member { get; set; }
-        [ForeignKey("SemesterId")]
-        public virtual Semester Semester { get; set; }
-    }
+    public virtual Semester Semester { get; set; }
+
+    public virtual User User { get; set; }
 }

@@ -1,0 +1,39 @@
+﻿@model ServiceHour
+@{
+    ViewBag.Title = "Edit Service Hour Submission";
+    ViewBag.Subtitle = Model.Event.EventName + " | " + Model.User;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index", new { s = ViewBag.SemesterId })" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Hours
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col">
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.EventId)
+                @Html.HiddenFor(model => model.UserId)
+                @Html.HiddenFor(model => model.DateTimeSubmitted)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DurationHours, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.DurationHours, new { htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                    @Html.ValidationMessageFor(model => model.DurationHours, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            }
+        </div>
+    </div>
+</div>

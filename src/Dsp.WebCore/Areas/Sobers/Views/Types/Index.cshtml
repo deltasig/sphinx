@@ -1,0 +1,46 @@
+﻿@model IEnumerable<SoberType>
+@{
+    ViewBag.Title = "Sober Types";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+            <p>
+                <a href="@Url.Action("Manager", "Schedule")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Sober Manager
+                </a>
+            </p>
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                @Html.ActionLink("Create", "Create", "Types", new {  }, new { @class = "btn btn-sm btn-success" })
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="list-group">
+                    @foreach (var item in Model)
+                    {
+                        <a class="list-group-item" 
+                           href="@Url.Action("Edit", new { id = item.SoberTypeId })">
+                            <h2>
+                                @item.Name
+                            </h2>
+                            <hr/>
+                            <small>
+                                @Html.Raw(item.Description)
+                            </small>
+                            <hr/>
+                            <small>
+                                (Click to edit)
+                            </small>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

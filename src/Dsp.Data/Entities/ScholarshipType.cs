@@ -1,18 +1,13 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class ScholarshipType
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int ScholarshipTypeId { get; set; }
 
-    public class ScholarshipType
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ScholarshipTypeId { get; set; }
+    public string Name { get; set; }
 
-        [Required, StringLength(100)]
-        public string Name { get; set; }
-        
-        [InverseProperty("Type")]
-        public virtual ICollection<ScholarshipApp> Applications { get; set; }
-    }
+    public virtual ICollection<ScholarshipApp> Applications { get; set; } = new List<ScholarshipApp>();
 }

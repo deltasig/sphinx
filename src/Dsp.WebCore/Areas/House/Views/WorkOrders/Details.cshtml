@@ -1,0 +1,65 @@
+﻿@model WorkOrder
+@{
+    ViewBag.Title = "Work Order";
+    ViewBag.Subtitle = "ID: " + Model.WorkOrderId;
+    ViewBag.Print = true;
+
+    var currentUserId = User.GetUserId();
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var createdOn = TimeZoneInfo.ConvertTimeFromUtc(Model.CreatedOn, cstZone);
+    var elevatedPermissions =
+        User.IsInRole("Administrator") ||
+        User.IsInRole("House Manager") ||
+        User.IsInRole("ACB House Manager") ||
+        Model.UserId == currentUserId;
+
+    var timeSinceCreation = (DateTime.UtcNow - Model.CreatedOn).ToUserFriendlyString();
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row row-space no-print">
+                <div class="col-md-4">
+                    <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                        <i class="fa fa-caret-left"></i> Back to Work Orders
+                    </a>
+                </div>
+                <div class="col-md-8 text-right">
+                    @if (elevatedPermissions)
+                    {
+                        <a href="@Url.Action("Edit", new {id = Model.WorkOrderId})" class="btn btn-sm btn-info">
+                            <i class="fa fa-wrench"></i> Edit
+                        </a>
+                    }
+                </div>
+            </div>
+            <hr class="visible-xs visible-sm no-print" />
+            <div class="row">
+                <div class="col">
+                    <h3 style="margin-top:5px">
+                        @Model.Title
+                    </h3>
+                </div>
+            </div>
+            <h4><i class="fa fa-chain-broken"></i> Description</h4>
+            <div class="well">
+                <div class="media">
+                    <div class="media-left">
+                        <img src="~/Images/Avatars/@Model.User.GetAvatarString()" height="25" width="25" class="img-circle"
+                             data-toggle="tooltip" data-placement="top" title="@Model.User" />
+                    </div>
+                    <div class="media-body">
+                        <p style="margin-bottom:0">
+                            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.User.UserName})">
+                                @Model.User.ToString()
+                            </a>
+                            <small>created this work order @timeSinceCreation</small>
+                        </p>
+                        <p style="margin-bottom:0"><small>@Html.Raw(Model.Description)</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

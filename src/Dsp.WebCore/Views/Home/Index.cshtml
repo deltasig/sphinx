@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "Delta Sigma Phi";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var currentTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+    var imageClass = currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "night-img" : "day-img";
+    var textColor = currentTime.Hour >= 19 || currentTime.Hour <= 7 ? "color: whitesmoke" : "";
+}
+@section AdditionalMeta{
+    <meta name="description" content="Culture, harmony, friendship">
+}
+
+<div class="container-fluid home @imageClass" style="height: 750px; padding: 50px 0; background-size: cover !important;">
+    <div class="container">
+        <div class="row">
+            <div class="col jumbotron" style="background: none; padding: 10px; margin-top: -25px; @textColor">
+                <h1><strong>DELTA SIGMA PHI</strong></h1>
+                <h4 style="margin: 0 0 0 3px">DELTA EPSILON CHAPTER</h4>
+                <h4 style="margin: 0 0 0 3px">MISSOURI S&amp;T</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid" id="directions">
+    <div class="row p-4">
+        <div class="col-4">
+            <div class="row">
+                <div class="col">
+                    <h2>
+                        <i class="fa-solid fa-map-marker"></i> Our Location
+                    </h2>
+                    <address>
+                        <strong>Delta Sigma Phi,</strong><small> Delta Epsilon Chapter</small><br>
+                        215 W 8th St<br>
+                        Rolla, MO 65401, USA<br>
+                    </address>
+                    <p>
+                        <a href="https://www.google.com/maps/dir//37.949841,-91.772336/" target="_blank" class="btn btn-dark" role="button">
+                            <i class="fa-solid fa-map-marker"></i> 
+                            Google Maps Directions
+                            <i class="fa-solid fa-external-link"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <h2><i class="fa-solid fa-calendar"></i> Schedule a Visit</h2>
+                    <p>
+                        <a href="@Url.Action("Contacts", "Home")#vice_president_growth"
+                           class="btn btn-dark">
+                            <i class="fa fa-fw fa-envelope"></i>
+                            Email the Vice President of Growth
+                            <i class="fa fa-fw fa-external-link"></i>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <img class="img-fluid" src="~/Images/dsp-directions.png" />
+        </div>
+    </div>
+</div>

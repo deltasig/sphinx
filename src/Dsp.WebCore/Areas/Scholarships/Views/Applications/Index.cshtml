@@ -1,0 +1,78 @@
+﻿@model IEnumerable<ScholarshipApp>
+@{
+    ViewBag.Title = "Scholarship Applications";
+}
+
+<div class="container-fluid">
+    @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth") || User.IsInRole("Director of Recruitment"))
+    {
+        <div class="row">
+            <div class="col-xs-6">
+
+            </div>
+            <div class="col-xs-6 text-right">
+                <p>
+                    @Html.ActionLink("Create New", "Create", "Applications", new { area = "Scholarships" }, new { @class = "btn btn-sm btn-success" })
+                    @Html.ActionLink("Question Pool", "Index", "Questions", new { area = "Scholarships" }, new { @class = "btn btn-sm btn-default" })
+                    @Html.ActionLink("Types", "Index", "Types", new { area = "Scholarships" }, new { @class = "btn btn-sm btn-default" })
+                </p>
+            </div>
+        </div>
+    }
+    <div class="row">
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th data-sortable="true" data-field="title">Title</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="begins-on">Begins On</th>
+                                <th class="col-sm-2" data-sortable="true" data-field="ends-on">Ends On</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="is-public">Public</th>
+                                <th class="col-sm-1" data-sortable="true" data-field="submission-count">Submissions</th>
+                                <th class="col-sm-2"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @item.Title
+                                    </td>
+                                    <td>
+                                        @item.OpensOn.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @item.ClosesOn.ToShortDateString()
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsPublic)
+                                    </td>
+                                    <td>
+                                        @item.Submissions.Count
+                                    </td>
+                                    <td class="text-right">
+                                        @if (User.IsInRole("Administrator") || User.IsInRole("Vice President Growth")
+                                             || User.IsInRole("Director of Recruitment"))
+                                        {
+                                            @Html.ActionLink("Edit", "Edit", new {id = item.ScholarshipAppId})
+                                            @:|
+                                            if (!item.Submissions.Any())
+                                            {
+                                                 @Html.ActionLink("Delete", "Delete", new { id = item.ScholarshipAppId })
+                                            }
+                                        }
+                                        @if (item.Submissions.Any())
+                                        {
+                                            @Html.ActionLink("Submissions", "Details", new {id = item.ScholarshipAppId})
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            </div>
+        </div>
+    </div>
+</div>

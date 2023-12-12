@@ -1,21 +1,15 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class SoberType
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int SoberTypeId { get; set; }
 
-    public class SoberType
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int SoberTypeId { get; set; }
+    public string Name { get; set; }
 
-        [Required, StringLength(100)]
-        public string Name { get; set; }
+    public string Description { get; set; }
 
-        [StringLength(3000),DataType(DataType.MultilineText)]
-        public string Description { get; set; }
-
-        [InverseProperty("SoberType")]
-        public virtual ICollection<SoberSignup> Signups { get; set; }
-    }
+    public virtual ICollection<SoberSignup> Signups { get; set; } = new List<SoberSignup>();
 }

@@ -1,0 +1,142 @@
+﻿@model WorkOrderIndexModel
+@{
+    ViewBag.Title = "Work Orders";
+
+    const string newestSortText = "newest";
+    const string oldestSortText = "oldest";
+    const string mostCommentedSortText = "most-commented";
+    const string leastCommentedSortText = "least-commented";
+    const string recentlyUpdatedSortText = "recently-updated";
+    const string leastRecentlyUpdatedSortText = "least-recently-updated";
+
+    var sortNewestFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortOldestFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortMostCommentedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortLeastCommentedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var sortLeastRecentlyUpdatedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var previousPageFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var nextPageFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var openFilter = new WorkOrderIndexFilterModel(Model.Filter);
+    var closedFilter = new WorkOrderIndexFilterModel(Model.Filter);
+
+    sortNewestFilter.sort = Model.Filter.sort == newestSortText ? "" : newestSortText;
+    sortOldestFilter.sort = Model.Filter.sort == oldestSortText ? "" : oldestSortText;
+    sortMostCommentedFilter.sort = Model.Filter.sort == mostCommentedSortText ? "" : mostCommentedSortText;
+    sortLeastCommentedFilter.sort = Model.Filter.sort == leastCommentedSortText ? "" : leastCommentedSortText;
+    sortRecentlyUpdatedFilter.sort = Model.Filter.sort == recentlyUpdatedSortText ? "" : recentlyUpdatedSortText;
+    sortLeastRecentlyUpdatedFilter.sort = Model.Filter.sort == leastRecentlyUpdatedSortText ? "" : leastRecentlyUpdatedSortText;
+    previousPageFilter.page--;
+    nextPageFilter.page++;
+    openFilter.open = !Model.Filter.open;
+    closedFilter.closed = !Model.Filter.closed;
+
+    var pagerModel = new PagerModel
+    {
+        Previous = previousPageFilter,
+        Incrementer = Model.Filter,
+        Next = nextPageFilter,
+        CurrentPage = Model.Filter.page,
+        PageSize = Model.Filter.pageSize,
+        ResultCount = Model.ResultCount,
+        TotalPages = Model.TotalPages
+    };
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-8">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <a href="@Url.Action("Index", "WorkOrders", openFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.open ? "active" : "")">Open</a>
+                                <a href="@Url.Action("Index", "WorkOrders", closedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.closed ? "active" : "")">Closed</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="dropdown">
+                                <a class="btn btn-outline-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li role="presentation" class="@(Model.Filter.sort == newestSortText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNewestFilter)">Newest</a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == oldestSortText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortOldestFilter)">Oldest</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <form asp-controller="WorkOrder" asp-action="Index" asp-antiforgery="false" method="get" role="form">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                    <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
+                                    <input id="open" name="open" type="hidden" value="@Model.Filter.open.ToString()">
+                                    <input id="closed" name="closed" type="hidden" value="@Model.Filter.closed.ToString()">
+                                    <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
+                                    <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-end">
+                    <a href="@Url.Action("Create", "WorkOrders")" class="btn btn-success">Create</a>
+                </div>
+            </div>
+            @if (Model.WorkOrders.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-exclamation-circle"></i> @Model.OpenCount <small>Open</small>
+                        <i class="fa fa-check-circle ps-2"></i> @Model.ClosedCount <small>Closed</small>
+                        @if (!string.IsNullOrEmpty(Model.Filter.s))
+                        {
+                            <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
+                        }
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        @foreach (var w in Model.WorkOrders)
+                        {
+                            var status = w.IsOpen ? "Open" : "Closed";
+                            var statusLabelColor = w.IsOpen ? "bg-warning" : "bg-success";
+                            var timeSinceCreation = (DateTime.UtcNow - w.CreatedOn).ToUserFriendlyString();
+
+                            <a href="@Url.Action("Details", new {id = w.WorkOrderId})" class="list-group-item">
+                                <div class="fw-bold">
+                                    @w.Title
+                                    <span class="badge @statusLabelColor float-end">
+                                        @status
+                                    </span>
+                                </div>
+
+                                opened @timeSinceCreation
+                                @if (w.IsClosed)
+                                {
+                                    var timeSinceClosure = (DateTime.UtcNow - w.ClosedOn.Value).ToUserFriendlyString();
+
+                                    @:| closed @timeSinceClosure
+                                }
+                            </a>
+                        }
+                    </ul>
+                    <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel" />
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No work orders found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

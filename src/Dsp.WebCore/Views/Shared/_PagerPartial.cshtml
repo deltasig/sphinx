@@ -1,0 +1,78 @@
+﻿@model PagerModel
+
+@if (Model.ResultCount > Model.PageSize)
+{
+    var currentPage = Model.CurrentPage;
+    var maxPages = Model.TotalPages;
+    var action = ViewContext.RouteData.Values["action"].ToString();
+
+    <div class="row">
+        <div class="col my-2">
+            <ul class="list-group list-group-horizontal">
+                <!-- Previous page button. -->
+                @if (currentPage > 1)
+                {
+                    <a class="@(currentPage > 1 ? "" : "disabled") list-group-item"
+                       href="@Url.Action(action, Model.Previous)" aria-label="Previous">
+                        <i class="fa fa-caret-left" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <li class="list-group-item">
+                        <span><i class="fa fa-caret-left" aria-hidden="true"></i></span>
+                    </li>
+                }
+                <!-- All pages in between arrow buttons.  Only showing up to 3 to the left and right of the current page. -->
+                @for (var i = 1; i <= maxPages; i++)
+                {
+                    var minPageNumber = currentPage - 3;
+                    var maxPageNumber = currentPage + 3;
+
+                    if (i == 1 || (i > minPageNumber && i < maxPageNumber) || i == maxPages)
+                    {
+                        var pageFilter = Model.Incrementer;
+                        pageFilter.page = i;
+                        <a class="@(currentPage == i ? "active" : "") list-group-item"
+                           href="@Url.Action(action, pageFilter)">
+                            @i
+                        </a>
+                    }
+                    else if (i == minPageNumber && i > 1)
+                    {
+                        var pageFilter = Model.Incrementer;
+                        pageFilter.page = (i + 1) / 2;
+                        <a class="list-group-item"
+                           href="@Url.Action(action, pageFilter)" disabled>
+                            ...
+                        </a>
+                    }
+                    else if (i == maxPageNumber && i < maxPages)
+                    {
+                        var pageFilter = Model.Incrementer;
+                        pageFilter.page = i + (maxPages - i - 1) / 2;
+                        <a class="list-group-item"
+                           href="@Url.Action(action, pageFilter)" disabled>
+                            ...
+                        </a>
+                    }
+                }
+                <!-- Next page button. -->
+                @if (currentPage < maxPages)
+                {
+                    <a class="@(currentPage < maxPages ? "" : "disabled") list-group-item"
+                       href="@Url.Action(action, Model.Next)" aria-label="Next">
+                        <i class="fa fa-caret-right" aria-hidden="true"></i>
+                    </a>
+                }
+                else
+                {
+                    <li class="list-group-item">
+                        <span><i class="fa fa-caret-right" aria-hidden="true"></i></span>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+
+}

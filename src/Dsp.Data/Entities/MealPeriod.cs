@@ -1,23 +1,17 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class MealPeriod
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int Id { get; set; }
 
-    public class MealPeriod
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public string Name { get; set; }
 
-        [Required, StringLength(100)]
-        public string Name { get; set; }
+    public DateTime StartTime { get; set; }
 
-        public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
 
-        public DateTime EndTime { get; set; }
-
-        [InverseProperty("MealPeriod")]
-        public virtual ICollection<MealItemToPeriod> MealItems { get; set; }
-    }
+    public virtual ICollection<MealItemToPeriod> Items { get; set; } = new List<MealItemToPeriod>();
 }

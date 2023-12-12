@@ -1,27 +1,19 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class MealItemToPeriod
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int Id { get; set; }
 
-    [Table("MealItemsToPeriods")]
-    public class MealItemToPeriod
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+    public int MealPeriodId { get; set; }
 
-        [Required]
-        public int MealPeriodId { get; set; }
+    public int MealItemId { get; set; }
 
-        [Required]
-        public int MealItemId { get; set; }
+    public DateTime Date { get; set; }
 
-        [Required, Column(TypeName = "Date")]
-        public DateTime Date { get; set; }
+    public virtual MealItem MealItem { get; set; }
 
-        [ForeignKey("MealPeriodId")]
-        public virtual MealPeriod MealPeriod { get; set; }
-        [ForeignKey("MealItemId")]
-        public virtual MealItem MealItem { get; set; }
-    }
+    public virtual MealPeriod MealPeriod { get; set; }
 }

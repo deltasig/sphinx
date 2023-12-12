@@ -1,0 +1,99 @@
+﻿@model IEnumerable<Semester>
+@{
+    ViewBag.Title = "Semesters";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-xs-6">
+
+        </div>
+        <div class="col-xs-6 text-right">
+            <p>
+                <a class="btn btn-sm btn-success" href="@Url.Action("Create")">Add Semester</a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th>Semester</th>
+                                <th>Pledge Class(es)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateStart)</th>
+                                <th>@Html.DisplayNameFor(model => model.DateEnd)</th>
+                                <th>
+                                    @Html.DisplayNameFor(model => model.TransitionDate)
+                                    <a data-toggle="tooltip" data-placement="top"
+                                       title="Date of chairmen power transfer">
+                                        <i class="fa fa-info-circle"></i>
+                                    </a>
+                                </th>
+                                <th class="text-success">
+                                    <span data-toggle="tooltip" data-placement="top"
+                                          title="Minimum Service Hours">
+                                        <i class="fa fa-fw fa-globe"></i> Hours
+                                    </span>
+                                </th>
+                                <th class="text-success">
+                                    <span data-toggle="tooltip" data-placement="top"
+                                          title="Minimum Service Events">
+                                        <i class="fa fa-fw fa-globe"></i> Events
+                                    </span>
+                                </th>
+                                <th>
+                                    Recruitment Book
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ToString()</td>
+                                <td>
+                                    @foreach (var pledgeClass in item.PledgeClasses)
+                                    {
+                                        if (item.PledgeClasses.ToList().IndexOf(pledgeClass) > 0)
+                                        {
+                                            @:|
+                                            }
+
+                                        @pledgeClass.PledgeClassName
+                                    }
+                                </td>
+                                <td>@item.DateStart.ToString("MM/dd/yyyy")</td>
+                                <td>@item.DateEnd.ToString("MM/dd/yyyy")</td>
+                                <td>@item.TransitionDate.ToString("MM/dd/yyyy")</td>
+                                <td>@item.MinimumServiceHours</td>
+                                <td>@item.MinimumServiceEvents</td>
+                                <td>
+                                    @if(string.IsNullOrEmpty(item.RecruitmentBookUrl))
+                                    {
+                                        <strong class="text-danger">None</strong>
+                                    }
+                                    else
+                                    {
+                                        <span class="success">We good!</span>
+                                    }
+                                </td>
+                                <td class="text-right">
+                                    @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        @:|
+                                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+﻿@model ServiceAmendmentModel
+@{
+    ViewBag.Title = "Service Amendments";
+    ViewBag.Subtitle = Model.NavModel.SelectedSemester;
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-2 col-md-3 no-print">
+            <partial name="~/Areas/Service/Views/Shared/_ServiceNavPartial.cshtml" model="Model.NavModel" />
+        </div>
+        <div class="col-lg-10 col-md-9">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Hour Amendments
+                            <a href="@Url.Action("AmendHours", "Amendments", new { sid = Model.NavModel.SelectedSemester.Id })" class="btn btn-xs btn-success float-end">
+                                <i class="fa fa-plus-circle"></i>
+                            </a>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-3">Member</th>
+                                    <th class="col-xs-3">Reason</th>
+                                    <th class="col-xs-3">Amount (hrs)</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ServiceHourAmendments.Any())
+                                {
+                                    foreach (var a in Model.ServiceHourAmendments.OrderBy(m => m.User.LastName))
+                                    {
+                                        <tr>
+                                            <td>@a.User.ToString()</td>
+                                            <td>@a.Reason</td>
+                                            <td>@a.AmountHours</td>
+                                            <td class="text-right">
+                                                <a href="@Url.Action("UnamendHours", "Amendments", new { aid = a.Id })" class="btn btn-xs btn-danger">
+                                                    Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="warning">
+                                        <td colspan="4">No amendments found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Event Amendments
+                            <a href="@Url.Action("AmendEvents", "Amendments", new { sid = Model.NavModel.SelectedSemester.Id })" class="btn btn-xs btn-success float-end">
+                                <i class="fa fa-plus-circle"></i>
+                            </a>
+                        </div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th class="col-xs-3">Member</th>
+                                    <th class="col-xs-3">Reason</th>
+                                    <th class="col-xs-3">Number of Events</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @if (Model.ServiceEventAmendments.Any())
+                                {
+                                    foreach (var a in Model.ServiceEventAmendments.OrderBy(m => m.User.LastName))
+                                    {
+                                        <tr>
+                                            <td>@a.User.ToString()</td>
+                                            <td>@a.Reason</td>
+                                            <td>@a.NumberEvents</td>
+                                            <td class="text-right">
+                                                <a href="@Url.Action("UnamendEvents", "Amendments", new { aid = a.Id })" class="btn btn-xs btn-danger">
+                                                    Delete
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                }
+                                else
+                                {
+                                    <tr class="warning">
+                                        <td colspan="4">No amendments found.</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

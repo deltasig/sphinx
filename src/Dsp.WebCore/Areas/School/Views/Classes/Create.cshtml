@@ -1,0 +1,46 @@
+﻿@model CreateClassModel
+@{
+    ViewBag.Title = "Create Class";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-secondary">
+                    <i class="fa fa-caret-left"></i> Back
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <form asp-controller="Class" asp-action="Create" asp-antiforgery="true" method="post" role="form">
+                <div class="form-group mb-3">
+                    <label for="Class.DepartmentId" class="form-label">Department</label>
+                    <select class="form-select" asp-for="Class.DepartmentId" asp-items="Model.Departments"></select>
+                    <span asp-validation-for="Class.DepartmentId" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="Class.CourseShorthand" class="form-label">Course Shorthand</label>
+                    <input type="text" class="form-control" asp-for="Class.CourseShorthand">
+                    <span asp-validation-for="Class.CourseShorthand" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="Class.CourseName" class="form-label">Name</label>
+                    <input type="text" class="form-control" asp-for="Class.CourseName">
+                    <span asp-validation-for="Class.CourseName" class="text-danger"></span>
+                </div>
+                <div class="form-group mb-3">
+                    <label for="Class.CreditHours" class="form-label">Credit Hours</label>
+                    <input type="number" class="form-control" asp-for="Class.CreditHours">
+                    <span asp-validation-for="Class.CreditHours" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success">Create</button>
+            </form>
+        </div>
+        <div class="col-sm-6">
+            <partial name="~/Areas/School/Views/Classes/_ClassInstructions.cshtml" />
+        </div>
+    </div>
+</div>

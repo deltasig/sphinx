@@ -1,0 +1,247 @@
+﻿@model ClassIndexModel
+@{
+    ViewBag.Title = "Classes";
+
+    var isAdmin = User.IsInRole("Administrator");
+    var isAcademics = User.IsInRole("Academics");
+
+    const string sortNumberAscText = "number-asc";
+    const string sortNumberDescText = "number-desc";
+    const string sortNameAscText = "name-asc";
+    const string sortNameDescText = "name-desc";
+    const string sortTakenAscText = "taken-asc";
+    const string sortTakenDescText = "taken-desc";
+    const string sortTakingAscText = "taking-asc";
+    const string sortTakingDescText = "taking-desc";
+    const string selectMeAllText = "me-all";
+    const string selectMeNowText = "me-now";
+    const string selectBeingTakenText = "being-taken";
+    const string selectNoneTakingText = "none-taking";
+
+    var sortNumberAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNumberDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNameAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortNameDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakenAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakenDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakingAscFilter = new ClassesIndexFilterModel(Model.Filter);
+    var sortTakingDescFilter = new ClassesIndexFilterModel(Model.Filter);
+    var previousPageFilter = new ClassesIndexFilterModel(Model.Filter);
+    var nextPageFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectMeAllFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectMeNowFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectBeingTakenFilter = new ClassesIndexFilterModel(Model.Filter);
+    var selectNoneTakingFilter = new ClassesIndexFilterModel(Model.Filter);
+
+    sortNumberAscFilter.sort = Model.Filter.sort == sortNumberAscText ? "" : sortNumberAscText;
+    sortNumberDescFilter.sort = Model.Filter.sort == sortNumberDescText ? "" : sortNumberDescText;
+    sortNameAscFilter.sort = Model.Filter.sort == sortNameAscText ? "" : sortNameAscText;
+    sortNameDescFilter.sort = Model.Filter.sort == sortNameDescText ? "" : sortNameDescText;
+    sortTakenAscFilter.sort = Model.Filter.sort == sortTakenAscText ? "" : sortTakenAscText;
+    sortTakenDescFilter.sort = Model.Filter.sort == sortTakenDescText ? "" : sortTakenDescText;
+    sortTakingAscFilter.sort = Model.Filter.sort == sortTakingAscText ? "" : sortTakingAscText;
+    sortTakingDescFilter.sort = Model.Filter.sort == sortTakingDescText ? "" : sortTakingDescText;
+    previousPageFilter.page = Model.Filter.page - 1;
+    nextPageFilter.page = Model.Filter.page + 1;
+    selectMeAllFilter.select = Model.Filter.select == selectMeAllText ? "" : selectMeAllText;
+    selectMeNowFilter.select = Model.Filter.select == selectMeNowText ? "" : selectMeNowText;
+    selectBeingTakenFilter.select = Model.Filter.select == selectBeingTakenText ? "" : selectBeingTakenText;
+    selectNoneTakingFilter.select = Model.Filter.select == selectNoneTakingText ? "" : selectNoneTakingText;
+
+    var pagerModel = new PagerModel
+            {
+                Previous = previousPageFilter,
+                Incrementer = Model.Filter,
+                Next = nextPageFilter,
+                CurrentPage = Model.Filter.page,
+                PageSize = Model.Filter.pageSize,
+                TotalPages = Model.TotalPages,
+                ResultCount = Model.ResultCount
+            };
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-10">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <div class="btn-group" role="group" aria-label="...">
+                                <partial name="~/Areas/School/Views/Shared/_SchoolNavPartial.cshtml" />
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="dropdown">
+                                <a class="btn btn-outline-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Sort
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberAscText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNumberAscFilter)">
+                                            Class Number <i class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberDescText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNumberDescFilter)">
+                                            Class Number <i class="fa-solid fa-arrow-up-wide-short"></i>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNameAscText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNameAscFilter)">
+                                            Class Name <i class="fa-solid fa-arrow-up-short-wide"></i>
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNameDescText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", sortNameDescFilter)">
+                                            Class Name <i class="fa-solid fa-arrow-up-wide-short"></i>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="dropdown">
+                                <a class="btn btn-outline-dark dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Selection
+                                </a>
+
+                                <ul class="dropdown-menu">
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberAscText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", selectMeAllFilter)">
+                                            @if (Model.Filter.select == selectMeAllText)
+                                            {
+                                                <i class="fa-regular fa-circle-xmark"></i>
+                                            }
+                                            All of my classes
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberDescText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", selectMeNowFilter)">
+                                            @if (Model.Filter.select == selectMeNowText)
+                                            {
+                                                <i class="fa-regular fa-circle-xmark"></i>
+                                            }
+                                            All of my current classes
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberDescText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", selectBeingTakenFilter)">
+                                            @if (Model.Filter.select == selectBeingTakenText)
+                                            {
+                                                <i class="fa-regular fa-circle-xmark"></i>
+                                            }
+                                            Classes being taken
+                                        </a>
+                                    </li>
+                                    <li role="presentation" class="@(Model.Filter.sort == sortNumberDescText ? "active" : "")">
+                                        <a class="dropdown-item" href="@Url.Action("Index", selectNoneTakingFilter)">
+                                            @if (Model.Filter.select == selectNoneTakingText)
+                                            {
+                                                <i class="fa-regular fa-circle-xmark"></i>
+                                            }
+                                            Classes not being taken
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <form asp-controller="Classes" asp-action="Index" asp-antiforgery="false" method="get" role="form">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                    <input id="page" name="page" type="hidden" value="@Model.Filter.page">
+                                    <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort">
+                                    <input id="select" name="select" type="hidden"
+                                           value="@(Model.Filter.select == null ? "" : Model.Filter.select)">
+                                    <input class="form-control" id="s" name="s" placeholder="Search" type="text"
+                                           value="@Model.Filter.s" aria-describedby="search-addon">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-end">
+                    <div class="btn-group" role="group" aria-label="...">
+                        @if (isAdmin || isAcademics)
+                        {
+                            <a href="@Url.ActionLink("Duplicates", "Classes")" class="btn btn-xs btn-success">Duplicates</a>
+                        }
+                        <a href="@Url.ActionLink("Create", "Classes")" class="btn btn-xs btn-success">Create</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            @if (Model.Classes.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col">
+                                @Model.ResultCount <small>Results</small>
+                                @if (!string.IsNullOrEmpty(Model.Filter.select))
+                                {
+                                    string selection = Model.Filter.select;
+                                    var text = string.Empty;
+                                    switch (selection)
+                                    {
+                                        case "me-all":
+                                            text = "All of my classes";
+                                            break;
+                                        case "me-now":
+                                            text = "My current classes";
+                                            break;
+                                        case "being-taken":
+                                            text = "Classes currently being taken";
+                                            break;
+                                        case "none-taking":
+                                            text = "Classes no one is taking";
+                                            break;
+                                    }
+                                    <small>| Selection: <em>@text</em></small>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Filter.s))
+                                {
+                                    <small>| Searched for: <em>@Model.Filter.s</em></small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        @foreach (var c in Model.Classes)
+                        {
+                            <a href="@Url.Action("Details", new {id = c.ClassId})" class="list-group-item">
+                                <div class="row fw-bold">
+                                    <div class="col-md-2">
+                                        <small>@c.CourseShorthand</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <small>@c.CourseName</small>
+                                    </div>
+                                    <div class="col-md-4 visible-md d-none d-lg-block text-right">
+                                        <small style="margin-right:15px"
+                                               data-toggle="tooltip" data-placement="top" title="Enrollment current / all">
+                                            <i class="fa fa-fw fa-users"></i>
+                                            @c.ClassesTaken?.Count(t => t.SemesterId == Model.CurrentSemester.Id) / @c.ClassesTaken?.Count
+                                        </small>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </ul>
+                </div>
+                <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel" />
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No classes found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

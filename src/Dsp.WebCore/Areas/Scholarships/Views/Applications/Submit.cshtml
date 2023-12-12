@@ -1,0 +1,187 @@
+﻿@using System.Globalization
+@model SubmitScholarshipAppModel
+@{
+    Layout = "~/Views/Shared/ExternalLayout.cshtml";
+    ViewBag.Title = "Scholarship Submission";
+    ViewBag.Subtitle = Model.App.Title;
+}
+@section Title
+{
+    <partial name="_TitleExternal.cshtml" />
+}
+
+<div class="container">
+    <div class="row">
+        @using (Html.BeginForm("Submit", "Applications", new { area = "Scholarships" }, FormMethod.Post, false, new { }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="col">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => Model.Submission.ScholarshipAppId)
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-info-circle"></i> General Information
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">First Name</label>
+                                    @Html.EditorFor(model => model.Submission.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">Last Name</label>
+                                    @Html.EditorFor(model => model.Submission.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">Student #</label>
+                                    @Html.EditorFor(model => model.Submission.StudentNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.FirstName, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.LastName, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.StudentNumber, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6 col">
+                                    <label class="control-label">Email</label>
+                                    @Html.EditorFor(model => model.Submission.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-6 col">
+                                    <label class="control-label">Phone #</label>
+                                    @Html.EditorFor(model => model.Submission.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.Email, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.PhoneNumber, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-3 col">
+                                    <label class="control-label">Address 1</label>
+                                    @Html.EditorFor(model => model.Submission.Address1, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-2 col">
+                                    <label class="control-label">Address 2</label>
+                                    @Html.EditorFor(model => model.Submission.Address2, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-2 col">
+                                    <label class="control-label">City</label>
+                                    @Html.EditorFor(model => model.Submission.City, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-1 col">
+                                    <label class="control-label">State</label>
+                                    @Html.EditorFor(model => model.Submission.State, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-2 col">
+                                    <label class="control-label">Postal Code</label>
+                                    @Html.EditorFor(model => model.Submission.PostalCode, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-2 col">
+                                    <label class="control-label">Country</label>
+                                    @Html.EditorFor(model => model.Submission.Country, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.Address1, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.Address2, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.City, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.State, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.Country, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">High School</label>
+                                    @Html.EditorFor(model => model.Submission.HighSchool, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">ACT or SAT Score</label>
+                                    @Html.EditorFor(model => model.Submission.ActSatScore, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                                <div class="col-sm-4 col">
+                                    <label class="control-label">High School GPA</label>
+                                    @Html.EditorFor(model => model.Submission.Gpa, new { htmlAttributes = new { @class = "form-control" } })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.HighSchool, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.ActSatScore, "", new { @class = "text-danger" })</p>
+                                    <p>@Html.ValidationMessageFor(model => model.Submission.Gpa, "", new { @class = "text-danger" })</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">How did you hear about this scholarship?</label>
+                            @Html.EditorFor(model => model.Submission.HearAboutScholarship, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Submission.HearAboutScholarship, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-pencil"></i> Short Answer Questions
+                    </div>
+                    <div class="panel-body">
+                        @for (var i = 0; i < Model.Answers.Count; i++)
+                        {
+                            <div class="form-group">
+                                @Html.HiddenFor(model => Model.Answers[i].ScholarshipQuestionId)
+                                <div class="row">
+                                    <div class="col">
+                                        @{
+                                            var maxLength = Model.Answers[i].Question.AnswerMaximumLength;
+                                            var label = Model.Answers[i].Question.Prompt.ToString(CultureInfo.InvariantCulture);
+                                            var additionalText = "Please keep your response to less than " +
+                                                                    maxLength + " characters (around " + maxLength / 5 + " words)";
+                                            var appQuestion = Model.App.Questions.Single(ap => ap.ScholarshipQuestionId == Model.Answers[i].ScholarshipQuestionId);
+                                            if (!appQuestion.IsOptional)
+                                            {
+                                                label += " *";
+                                            }
+                                        }
+                                        <h5 class="text-justify"><span class="badge">@(i+1)</span> <strong>@label</strong></h5>
+
+                                        @Html.EditorFor(model => Model.Answers[i].AnswerText, new { htmlAttributes = new
+                                        {
+                                            @class = "form-control", placeholder = additionalText, style="height: 125px"
+                                        } 
+                                        })
+                                        @Html.ValidationMessageFor(model => Model.Answers[i].AnswerText, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col-sm-2 col-sm-offset-5 col">
+                            <input type="submit" value="Submit" class="btn btn-success btn-block btn-lg" />
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    * Asterisks denote short answers where you are expected to provide a response.
+                </div>
+            </div>
+        }
+    </div>
+
+</div>

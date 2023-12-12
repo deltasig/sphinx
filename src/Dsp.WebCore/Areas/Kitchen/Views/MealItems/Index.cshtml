@@ -1,0 +1,73 @@
+﻿@model MealItemIndexModel
+@{
+    ViewBag.Title = "Meal Items";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-4">
+            <a href="@Url.Action("Index", "Meals")" class="btn btn-sm btn-default">
+                <i class="fa fa-caret-left"></i> Meals Schedule
+            </a>
+        </div>
+        <div class="col-lg-4 text-right">
+            @if (Model.AllowCreate)
+            {
+                <p>
+                    @Html.ActionLink("Create New", "Create", "MealItems", new { area = "Kitchen" }, new { @class = "btn btn-sm btn-success" })
+                </p>
+            }
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="panel panel-default">
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover table-bordered">
+                        <thead>
+                            <tr class="active">
+                                <th>Name</th>
+                                <th class="col-xs-1">Score</th>
+                                @if (Model.HasElevatedPermissions)
+                                {
+                                    <th class="col-xs-2"></th>
+                                }
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.TableContents)
+                            {
+                                var entity = item.Entity;
+                                <tr>
+                                    <td class="truncate">@entity.Name</td>
+                                    <td>
+                                        <span data-toggle="tooltip" data-placement="left" title="(+@item.Upvotes / -@item.Downvotes)">
+                                            @item.VoteDifferential
+                                        </span>
+                                    </td>
+                                    @if (Model.HasElevatedPermissions)
+                                    {
+                                        <td class="text-right">
+                                            @if (item.AllowEdit)
+                                            {
+                                                @Html.ActionLink("Edit", "Edit", new { id = entity.Id })
+                                            }
+                                            @if (item.AllowEdit && item.AllowDelete)
+                                            {
+                                                @: |
+                                            }
+                                            @if (item.AllowDelete)
+                                            {
+                                                @Html.ActionLink("Delete", "Delete", new { id = entity.Id })
+                                            }
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

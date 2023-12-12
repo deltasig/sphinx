@@ -1,0 +1,106 @@
+﻿@model ExternalScholarshipModel
+@{
+    ViewBag.Title = "Scholarships";
+    var cstZone = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
+    var nowCst = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, cstZone);
+}
+@section AdditionalMeta{
+    <meta name="description" content="See what scholarships we are currently offering.">
+}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 no-print">
+            <ul class="nav flex-column">
+                @foreach (var t in Model.Types)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link @(Model.Types.First() == t ? "active" : "")"
+                            href="#@t.ScholarshipTypeId" data-bs-toggle="tab">
+                            @if (t.Applications?.Any(a => !a.IsPublic) ?? false)
+                            {
+                                <i class="fa-solid fa-lock"></i>
+                            }
+                            @t.Name
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div class="col-sm-9">
+            <div class="tab-content" style="border: 0">
+                @foreach (var t in Model.Types)
+                {
+                    <div class="tab-pane @(Model.Types.First() == t ? "active" : "")" id="@t.ScholarshipTypeId">
+                        @if (!(t.Applications?.Any() ?? false))
+                        {
+                            <div class="alert alert-warning">
+                                <i class="fa fa-fw fa-frown-o"></i>
+                                Unfortunately there are no scholarships of this type currently available.
+                            </div>
+                        }
+                        else
+                        {
+                            foreach (var a in Model.Applications.Where(a => a.ScholarshipTypeId == t.ScholarshipTypeId).OrderByDescending(o => o.ClosesOn).Take(1))
+                            {
+                                if (!a.IsPublic && !User.Identity.IsAuthenticated)
+                                {
+                                    <div class="alert alert-warning">
+                                        <i class="fa fa-fw fa-lock"></i>
+                                        These scholarships are restricted to members of Delta Sigma Phi.
+                                    </div>
+                                    break;
+                                }
+                                else
+                                {
+                                    <h2 style="margin-top: 0">@a.Title</h2>
+                                    if (a.ClosesOn >= DateTime.UtcNow.AddDays(-1) && a.OpensOn <= DateTime.UtcNow)
+                                    {
+                                        <div class="alert alert-success">
+                                            <i class="fa fa-lg fa-exclamation-triangle"></i>
+                                            Applications are now being accepted until
+
+                                            <strong>
+                                                11:59 PM on
+                                                @TimeZoneInfo.ConvertTimeFromUtc(a.ClosesOn, cstZone).ToString("dddd, MMMM d, yyyy").
+                                                <span class="badge">
+                                                    <i class="fa fa-clock-o"></i>
+                                                    @{ var r = (a.ClosesOn - DateTime.UtcNow); }
+                                                    @((int)r.TotalDays == 0 ? "" : (int)r.TotalDays + "d,")
+                                                    @(r.Hours == 0 ? "" : r.Hours + "h,")
+                                                    @(r.Minutes == 0 ? "" : r.Minutes + "m")
+                                                    remaining
+                                                </span>
+                                            </strong>
+                                        </div>
+                                        <div class="row hidden-print">
+                                            <div class="col">
+                                                <a href="@Url.Action("Submit", "Applications", new {area = "Scholarships", id = a.ScholarshipAppId})"
+                                                   class="btn btn-primary">
+                                                    <i class="fa fa-pencil-square-o"></i> Apply Now!
+                                                </a>
+                                            </div>
+                                        </div>
+                                    }
+                                    else if (a.OpensOn >= DateTime.UtcNow.AddDays(-1))
+                                    {
+                                        <div class="alert alert-success">
+                                            Applications are not being accepted <strong>yet</strong>.
+                                            The application period will begin on @TimeZoneInfo.ConvertTimeFromUtc(a.OpensOn, cstZone)
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="alert alert-warning">
+                                            Applications are no longer being accepted for this scholarship.
+                                        </div>
+                                    }
+                                    <p>@Html.Raw(a.AdditionalText)</p>
+                                }
+                            }
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

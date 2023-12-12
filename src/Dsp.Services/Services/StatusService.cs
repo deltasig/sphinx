@@ -1,62 +1,51 @@
-﻿namespace Dsp.Services
+﻿namespace Dsp.Services;
+
+using Data;
+using Dsp.Data.Entities;
+using Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+public class StatusService : BaseService, IStatusService
 {
-    using Data;
-    using Dsp.Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
-    using Interfaces;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
+    private readonly DspDbContext _context;
 
-    public class StatusService : BaseService, IStatusService
+    public StatusService(DspDbContext context)
     {
-        private readonly IRepository _repository;
+        _context = context;
+    }
 
-        public StatusService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
-        {
+    public async Task<IEnumerable<UserType>> GetAllStatusesAsync()
+    {
+        var statuses = await _context.UserTypes
+            .OrderBy(s => s.StatusId)
+            .ToListAsync();
+        return statuses;
+    }
 
-        }
+    public async Task<UserType> GetStatusByIdAsync(int id)
+    {
+        return await _context.FindAsync<UserType>(id);
+    }
 
-        public StatusService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
+    public async Task CreateStatus(UserType status)
+    {
+        _context.Add(status);
+        await _context.SaveChangesAsync();
+    }
 
-        }
+    public async Task UpdateStatus(UserType status)
+    {
+        _context.Update(status);
+        await _context.SaveChangesAsync();
+    }
 
-        public StatusService(IRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<IEnumerable<MemberStatus>> GetAllStatusesAsync()
-        {
-            var statuses = await _repository
-                .GetAllAsync<MemberStatus>(
-                    orderBy: o => o.OrderBy(s => s.StatusId));
-            return statuses;
-        }
-
-        public async Task<MemberStatus> GetStatusByIdAsync(int id)
-        {
-            return await _repository.GetByIdAsync<MemberStatus>(id);
-        }
-
-        public async Task CreateStatus(MemberStatus status)
-        {
-            _repository.Create(status);
-            await _repository.SaveAsync();
-        }
-
-        public async Task UpdateStatus(MemberStatus status)
-        {
-            _repository.Update(status);
-            await _repository.SaveAsync();
-        }
-
-        public async Task DeleteStatus(int id)
-        {
-            _repository.Delete<MemberStatus>(id);
-            await _repository.SaveAsync();
-        }
+    public async Task DeleteStatus(int id)
+    {
+        var entity = new UserType { StatusId = id };
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

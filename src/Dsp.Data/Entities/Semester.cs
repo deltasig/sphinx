@@ -1,56 +1,42 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class Semester
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int Id { get; set; }
 
-    public class Semester
+    public DateTime DateStart { get; set; }
+
+    public DateTime DateEnd { get; set; }
+
+    public DateTime TransitionDate { get; set; }
+
+    public int MinimumServiceHours { get; set; }
+
+    public int MinimumServiceEvents { get; set; }
+
+    public string RecruitmentBookUrl { get; set; }
+
+    public virtual ICollection<ClassTaken> ClassesTaken { get; set; } = new List<ClassTaken>();
+
+    public virtual ICollection<UserRole> Leaders { get; set; } = new List<UserRole>();
+
+    public virtual ICollection<User> GraduatingMembers { get; set; } = new List<User>();
+
+    public virtual ICollection<PledgeClass> PledgeClasses { get; set; } = new List<PledgeClass>();
+
+    public virtual ICollection<Room> Rooms { get; set; } = new List<Room>();
+
+    public virtual ICollection<ServiceEventAmendment> ServiceEventAmendments { get; set; } = new List<ServiceEventAmendment>();
+
+    public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; } = new List<ServiceHourAmendment>();
+
+    public virtual ICollection<ServiceEvent> ServiceEvents { get; set; } = new List<ServiceEvent>();
+
+    public override string ToString()
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity), Column("SemesterId")]
-        public int Id { get; set; }
-
-        [Required, DataType(DataType.Date), Display(Name = "Start Date")]
-        public DateTime DateStart { get; set; }
-
-        [Required, DataType(DataType.Date), Display(Name = "End Date")]
-        public DateTime DateEnd { get; set; }
-
-        [Required, DataType(DataType.Date), Display(Name = "Transition Date")]
-        public DateTime TransitionDate { get; set; }
-
-        [Required, DefaultValue(10), Display(Name = "Minimum Service Hours")]
-        public int MinimumServiceHours { get; set; }
-
-        [Required, DefaultValue(4), Display(Name = "Minimum Service Events")]
-        public int MinimumServiceEvents { get; set; }
-
-        [Display(Name = "Recruitment Book URL")]
-        public string RecruitmentBookUrl { get; set; }
-
-        [InverseProperty("Semester")]
-        public virtual ICollection<ClassTaken> ClassesTaken { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<Leader> Leaders { get; set; }
-        [InverseProperty("GraduationSemester")]
-        public virtual ICollection<Member> GraduatingMembers { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<PledgeClass> PledgeClasses { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<Room> Rooms { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<ServiceEvent> ServiceEvents { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<ServiceEventAmendment> ServiceEventAmendments { get; set; }
-        [InverseProperty("Semester")]
-        public virtual ICollection<ChoreGroup> ChoreGroups { get; set; }
-
-        public override string ToString()
-        {
-            return (DateStart.Month < 6 ? "Spring " : "Fall ") + DateStart.Year;
-        }
+        return (DateStart.Month < 6 ? "Spring " : "Fall ") + DateStart.Year;
     }
 }

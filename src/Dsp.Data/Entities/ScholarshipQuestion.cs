@@ -1,26 +1,19 @@
-﻿namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class ScholarshipQuestion
 {
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int ScholarshipQuestionId { get; set; }
 
-    public class ScholarshipQuestion
-    {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int ScholarshipQuestionId { get; set; }
+    public string Prompt { get; set; }
 
-        [Required, StringLength(500), DataType(DataType.MultilineText)]
-        public string Prompt { get; set; }
+    public int AnswerMinimumLength { get; set; }
 
-        [Required, Range(1, 3000), Display(Name = "Minimum Length (characters)")]
-        public int AnswerMinimumLength { get; set; }
+    public int AnswerMaximumLength { get; set; }
 
-        [Required, Range(1, 3000), Display(Name = "Maximum Length (characters)")]
-        public int AnswerMaximumLength { get; set; }
+    public virtual ICollection<ScholarshipAnswer> Answers { get; set; } = new List<ScholarshipAnswer>();
 
-        [InverseProperty("Question")]
-        public virtual ICollection<ScholarshipAppQuestion> AppQuestions { get; set; }
-        [InverseProperty("Question")]
-        public virtual ICollection<ScholarshipAnswer> Answers { get; set; }
-    }
+    public virtual ICollection<ScholarshipAppQuestion> Questions { get; set; } = new List<ScholarshipAppQuestion>();
 }

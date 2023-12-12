@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace Dsp.Services.Exceptions
+namespace Dsp.Services.Exceptions;
+
+public class MealItemAlreadyExistsException : Exception
 {
-    public class MealItemAlreadyExistsException : Exception
+    public MealItemAlreadyExistsException(string message) : base(message)
     {
-        public MealItemAlreadyExistsException(string message) : base(message)
-        {
 
-        }
     }
+}
 
-    public class MealItemAlreadyAssignedException : Exception
+public class MealItemAlreadyAssignedException : Exception
+{
+    public MealItemAlreadyAssignedException(string message) : base(message)
     {
-        public MealItemAlreadyAssignedException(string message) : base(message)
-        {
 
-        }
     }
 }

@@ -1,0 +1,52 @@
+﻿@model ScholarshipQuestion
+@{
+    ViewBag.Title = "Delete Scholarship Application Question";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-default">
+                    <i class="fa fa-caret-left"></i> Back to Questions
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="alert alert-danger">
+                <p>Are you sure you want to delete this?</p>
+            </div>
+            <div class="form-group">
+                <dl class="dl-horizontal">
+                    <dt>
+                        @Html.DisplayNameFor(model => model.Prompt)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.Prompt)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AnswerMinimumLength)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AnswerMinimumLength)
+                    </dd>
+                    <dt>
+                        @Html.DisplayNameFor(model => model.AnswerMaximumLength)
+                    </dt>
+                    <dd>
+                        @Html.DisplayFor(model => model.AnswerMaximumLength)
+                    </dd>
+                </dl>
+            </div>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                <input type="submit" value="Delete" class="btn btn-default" /> 
+            }
+        </div>
+    </div>
+</div>

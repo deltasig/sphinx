@@ -1,24 +1,19 @@
-namespace Dsp.Data.Entities
+﻿using System;
+using System.Collections.Generic;
+
+namespace Dsp.Data.Entities;
+
+public partial class ServiceHour
 {
-    using System;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
+    public int UserId { get; set; }
 
-    public class ServiceHour
-    {
-        [Key, Column(Order = 0), DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int UserId { get; set; }
+    public int EventId { get; set; }
 
-        [Key, Column(Order = 1), DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int EventId { get; set; }
+    public double DurationHours { get; set; }
 
-        public double DurationHours { get; set; }
+    public DateTime DateTimeSubmitted { get; set; }
 
-        public DateTime DateTimeSubmitted { get; set; }
-        
-        [ForeignKey("UserId")]
-        public virtual Member Member { get; set; }
-        [ForeignKey("EventId")]
-        public virtual ServiceEvent Event { get; set; }
-    }
+    public virtual ServiceEvent Event { get; set; }
+
+    public virtual User User { get; set; }
 }

@@ -1,0 +1,108 @@
+﻿@model IncidentsIndexModel
+@{
+    ViewBag.Title = "Incident Reports";
+
+    const string newestSortText = "newest";
+    const string oldestSortText = "oldest";
+
+    var sortNewestFilter = new IncidentsIndexFilterModel(Model.Filter);
+    var sortOldestFilter = new IncidentsIndexFilterModel(Model.Filter);
+    var previousPageFilter = new IncidentsIndexFilterModel(Model.Filter);
+    var nextPageFilter = new IncidentsIndexFilterModel(Model.Filter);
+    var unresolvedFilter = new IncidentsIndexFilterModel(Model.Filter);
+    var resolvedFilter = new IncidentsIndexFilterModel(Model.Filter);
+
+    sortNewestFilter.sort = Model.Filter.sort == newestSortText ? "" : newestSortText;
+    sortOldestFilter.sort = Model.Filter.sort == oldestSortText ? "" : oldestSortText;
+    previousPageFilter.page = Model.Filter.page - 1;
+    nextPageFilter.page = Model.Filter.page + 1;
+    unresolvedFilter.unresolved = !Model.Filter.unresolved;
+    resolvedFilter.resolved = !Model.Filter.resolved;
+
+    var pagerModel = new PagerModel
+            {
+                Previous = previousPageFilter,
+                Incrementer = Model.Filter,
+                Next = nextPageFilter,
+                CurrentPage = Model.Filter.page,
+                PageSize = Model.Filter.pageSize,
+                ResultCount = Model.ResultCount,
+                TotalPages = Model.TotalPages
+            };
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col">
+                    <div class="row row-cols-auto">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <a href="@Url.Action("Index", "Incidents", unresolvedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.unresolved ? "active" : "")">Unresolved</a>
+                                <a href="@Url.Action("Index", "Incidents", resolvedFilter)"
+                                   class="btn btn-outline-dark @(Model.Filter.resolved ? "active" : "")">Resolved</a>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <form asp-controller="Incidents" asp-action="Index" asp-antiforgery="false" method="get" role="form">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text"><i class="fa fa-magnifying-glass"></i></span>
+                                    <input id="page" name="page" type="hidden" value="@Model.Filter.page.ToString()">
+                                    <input id="unresolved" name="unresolved" type="hidden" value="@Model.Filter.unresolved.ToString()">
+                                    <input id="resolved" name="resolved" type="hidden" value="@Model.Filter.resolved.ToString()">
+                                    <input id="sort" name="sort" type="hidden" value="@Model.Filter.sort.ToString()">
+                                    <input class="form-control" id="s" name="s" placeholder="Search" type="text" value="@Model.Filter.s" />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col text-end">
+                    <a href="@Url.Action("Create", "Incidents")" class="btn btn-success">Create</a>
+                </div>
+            </div>
+
+            @if (Model.Incidents.Any())
+            {
+                <div class="card">
+                    <div class="card-header">
+                        <i class="fa fa-exclamation-circle"></i> @Model.UnresolvedCount <small>Unresolved</small>
+                        <i class="fa fa-check-circle ps-2"></i> @Model.ResolvedCount <small>Resolved</small>
+                        @if (!string.IsNullOrEmpty(Model.Filter.s))
+                        {
+                            <i class="fa fa-magnifying-glass ps-2"></i> <small>Search term: <em>@Model.Filter.s</em></small>
+                        }
+                    </div>
+
+                    <ul class="list-group list-group-flush">
+                        @foreach (var i in Model.Incidents)
+                        {
+                            var status = string.IsNullOrEmpty(i.OfficialReport) ? "unresolved" : "resolved";
+                            var badgeColor = string.IsNullOrEmpty(i.OfficialReport) ? "bg-warning" : "bg-success";
+                            var timeSince = (DateTime.UtcNow - i.DateTimeSubmitted).ToUserFriendlyString();
+
+                            <a href="@Url.Action("Details", new {id = i.Id})" class="list-group-item">
+                                <div class="fw-bold"> 
+                                    @i.PolicyBroken
+                                    <span class="badge @badgeColor float-end">
+                                        @status
+                                    </span>
+                                </div>
+                                submitted @timeSince
+                            </a>
+                        }
+                    </ul>
+                </div>
+                    <partial name="~/Views/Shared/_PagerPartial.cshtml" model="pagerModel" />
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No incident reports found.
+                </div>
+            }
+        </div>
+    </div>
+</div>

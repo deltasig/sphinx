@@ -1,226 +1,219 @@
-﻿namespace Dsp.Services
+﻿namespace Dsp.Services;
+
+using Data;
+using Data.Entities;
+using Interfaces;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+public class SemesterService : BaseService, ISemesterService
 {
-    using Data;
-    using Data.Entities;
-    using Dsp.Repositories;
-    using Dsp.Repositories.Interfaces;
-    using Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+    private readonly DspDbContext _context;
 
-    public class SemesterService : BaseService, ISemesterService
+    public IList<string> Alphabet { get; } = new List<string>
     {
-        private readonly IRepository _repository;
+        "Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta",
+        "Theta", "Iota", "Kappa", "Lambda", "Mu", "Nu", "Xi", "Omicron",
+        "Pi", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi", "Omega"
+    };
 
-        public IList<string> Alphabet { get; } = new List<string>
+    public SemesterService(DspDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<IEnumerable<Semester>> GetAllSemestersAsync()
+    {
+        var semesters = await _context.Semesters
+            .Include(x => x.PledgeClasses)
+            .OrderBy(x => x.DateStart)
+            .ToListAsync();
+        return semesters;
+    }
+
+    public async Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null)
+    {
+        if (now == null)
+            now = DateTime.UtcNow;
+
+        var thisAndNextSemester = await _context.Semesters
+            .Where(s => s.DateEnd >= now)
+            .OrderByDescending(x => x.DateStart)
+            .Take(2)
+            .ToListAsync();
+        return thisAndNextSemester;
+    }
+
+    public async Task<Semester> GetCurrentSemesterAsync(DateTime? now = null)
+    {
+        if (now == null)
+            now = DateTime.UtcNow;
+
+        var semesters = await _context.Semesters
+            .Where(s => s.DateEnd >= DateTime.UtcNow)
+            .OrderBy(s => s.DateStart)
+            .Take(1)
+            .ToListAsync();
+        var currentSemester = semesters.SingleOrDefault();
+
+        return currentSemester;
+    }
+
+    public async Task<Semester> GetSemesterByIdAsync(int id)
+    {
+        return await _context.FindAsync<Semester>(id);
+    }
+
+    public async Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime)
+    {
+        return await _context.Semesters
+            .Where(x => datetime <= x.DateEnd)
+            .OrderBy(x => x.DateEnd)
+            .FirstAsync();
+    }
+
+    public async Task<Semester> GetFutureMostSemesterAsync()
+    {
+        var allSemesters = await GetAllSemestersAsync();
+        return allSemesters.LastOrDefault();
+    }
+
+    public async Task<IEnumerable<Semester>> GetPriorSemestersAsync(Semester currentSemester)
+    {
+        var priorSemesters = await _context.Semesters
+            .Where(x => x.DateEnd < currentSemester.DateEnd)
+            .OrderBy(x => x.DateEnd)
+            .ToListAsync();
+        return priorSemesters;
+    }
+
+    public async Task<Semester> GetPriorSemesterAsync(Semester currentSemester)
+    {
+        var priorSemesters = await GetPriorSemestersAsync(currentSemester);
+        var priorSemester = priorSemesters.LastOrDefault() ?? new Semester
         {
-            "Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta",
-            "Theta", "Iota", "Kappa", "Lambda", "Mu", "Nu", "Xi", "Omicron",
-            "Pi", "Rho", "Sigma", "Tau", "Upsilon", "Phi", "Chi", "Psi", "Omega"
+            // This is the where they picked the very first semester in the system.
+            DateEnd = currentSemester.DateStart
         };
+        return priorSemester;
+    }
 
-        public SemesterService() : this(new Repository<SphinxDbContext>(new SphinxDbContext()))
+    public string GetNextPledgeClassName(string currentPledgeClassName)
+    {
+        var nameParts = currentPledgeClassName.Split(' ');
+        var nameIndeces = new List<int>();
+        foreach (var p in nameParts)
         {
-
-        }
-
-        public SemesterService(SphinxDbContext db) : this(new Repository<SphinxDbContext>(db))
-        {
-
-        }
-
-        public SemesterService(IRepository repository)
-        {
-            _repository = repository;
-        }
-
-        public async Task<IEnumerable<Semester>> GetAllSemestersAsync()
-        {
-            var semesters = await _repository
-                .GetAllAsync<Semester>(
-                    orderBy: o => o.OrderBy(s => s.DateStart));
-            return semesters;
-        }
-
-        public async Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null)
-        {
-            if (now == null)
-                now = DateTime.UtcNow;
-
-            var thisAndNextSemester = await _repository
-                .GetAsync<Semester>(
-                    filter: s => s.DateEnd >= now,
-                    orderBy: o => o.OrderBy(s => s.DateStart),
-                    take: 2);
-            return thisAndNextSemester;
-        }
-
-        public async Task<Semester> GetCurrentSemesterAsync(DateTime? now = null)
-        {
-            if (now == null)
-                now = DateTime.UtcNow;
-
-            var semesters = await _repository
-                .GetAsync<Semester>(
-                    s => s.DateEnd >= DateTime.UtcNow,
-                    x => x.OrderBy(s => s.DateStart),
-                    take: 1);
-            return semesters.SingleOrDefault();
-        }
-
-        public async Task<Semester> GetSemesterByIdAsync(int id)
-        {
-            return await _repository.GetByIdAsync<Semester>(id);
-        }
-
-        public async Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime)
-        {
-            return await _repository.GetFirstAsync<Semester>(
-                filter: x => datetime <= x.DateEnd,
-                orderBy: x => x.OrderBy(o => o.DateEnd)
-            );
-        }
-
-        public async Task<Semester> GetFutureMostSemesterAsync()
-        {
-            var allSemesters = await GetAllSemestersAsync();
-            return allSemesters.LastOrDefault();
-        }
-
-        public async Task<IEnumerable<Semester>> GetPriorSemestersAsync(Semester currentSemester)
-        {
-            var priorSemesters = await _repository.GetAsync<Semester>(
-                filter: x => x.DateEnd < currentSemester.DateEnd,
-                orderBy: x => x.OrderBy(o => o.DateEnd)
-            );
-            return priorSemesters;
-        }
-
-        public async Task<Semester> GetPriorSemesterAsync(Semester currentSemester)
-        {
-            var priorSemesters = await GetPriorSemestersAsync(currentSemester);
-            var priorSemester = priorSemesters.LastOrDefault() ?? new Semester
+            var alphabetPosition = Alphabet.IndexOf(p);
+            if (alphabetPosition >= 0)
             {
-                // This is the where they picked the very first semester in the system.
-                DateEnd = currentSemester.DateStart
-            };
-            return priorSemester;
+                nameIndeces.Add(alphabetPosition);
+            }
         }
-
-        public string GetNextPledgeClassName(string currentPledgeClassName)
+        var sb = new StringBuilder();
+        for (var i = 0; i < nameIndeces.Count; i++)
         {
-            var nameParts = currentPledgeClassName.Split(' ');
-            var nameIndeces = new List<int>();
-            foreach (var p in nameParts)
+            var index = nameIndeces[i];
+            if (i + 1 >= nameIndeces.Count)
             {
-                var alphabetPosition = Alphabet.IndexOf(p);
-                if (alphabetPosition >= 0)
+                if (index >= Alphabet.Count)
                 {
-                    nameIndeces.Add(alphabetPosition);
+                    index = 0;
+                }
+                else
+                {
+                    index++;
                 }
             }
-            var sb = new StringBuilder();
-            for (var i = 0; i < nameIndeces.Count; i++)
+            var letter = Alphabet[index];
+            sb.Append(Alphabet[index]);
+            sb.Append(" ");
+        }
+        return sb.ToString().TrimEnd();
+    }
+
+    public Semester GetEstimatedNextSemester(Semester currentSemester)
+    {
+        var nextSemester = new Semester();
+        if (currentSemester != null)
+        {
+            var offset = currentSemester.DateStart.Month < 5 ? 7 : 5;
+
+            nextSemester.MinimumServiceEvents = currentSemester.MinimumServiceEvents;
+            nextSemester.MinimumServiceHours = currentSemester.MinimumServiceHours;
+            nextSemester.DateStart = currentSemester.DateStart.AddMonths(offset);
+            nextSemester.DateEnd = currentSemester.DateEnd.AddMonths(offset);
+            nextSemester.TransitionDate = currentSemester.TransitionDate.AddMonths(offset);
+        }
+        return nextSemester;
+    }
+
+    public PledgeClass GetEstimatedNextPledgeClass(Semester currentSemester)
+    {
+        var nextPledgeClass = new PledgeClass();
+        if (currentSemester != null)
+        {
+            var currentPledgeClass = currentSemester.PledgeClasses.FirstOrDefault();
+            var offset = currentSemester.DateStart.Month < 5 ? 7 : 5;
+
+            if (currentPledgeClass.InitiationDate != null)
             {
-                var index = nameIndeces[i];
-                if (i + 1 >= nameIndeces.Count)
-                {
-                    if (index >= Alphabet.Count)
-                    {
-                        index = 0;
-                    }
-                    else
-                    {
-                        index++;
-                    }
-                }
-                var letter = Alphabet[index];
-                sb.Append(Alphabet[index]);
-                sb.Append(" ");
+                nextPledgeClass.InitiationDate = ((DateTime)currentPledgeClass.InitiationDate).AddMonths(offset);
             }
-            return sb.ToString().TrimEnd();
-        }
-
-        public Semester GetEstimatedNextSemester(Semester currentSemester)
-        {
-            var nextSemester = new Semester();
-            if (currentSemester != null)
+            if (currentPledgeClass.PinningDate != null)
             {
-                var offset = currentSemester.DateStart.Month < 5 ? 7 : 5;
-
-                nextSemester.MinimumServiceEvents = currentSemester.MinimumServiceEvents;
-                nextSemester.MinimumServiceHours = currentSemester.MinimumServiceHours;
-                nextSemester.DateStart = currentSemester.DateStart.AddMonths(offset);
-                nextSemester.DateEnd = currentSemester.DateEnd.AddMonths(offset);
-                nextSemester.TransitionDate = currentSemester.TransitionDate.AddMonths(offset);
+                nextPledgeClass.PinningDate = ((DateTime)currentPledgeClass.PinningDate).AddMonths(offset);
             }
-            return nextSemester;
+            nextPledgeClass.PledgeClassName = GetNextPledgeClassName(currentPledgeClass.PledgeClassName);
         }
+        return nextPledgeClass;
+    }
 
-        public PledgeClass GetEstimatedNextPledgeClass(Semester currentSemester)
-        {
-            var nextPledgeClass = new PledgeClass();
-            if (currentSemester != null)
-            {
-                var currentPledgeClass = currentSemester.PledgeClasses.FirstOrDefault();
-                var offset = currentSemester.DateStart.Month < 5 ? 7 : 5;
+    public async Task CreateSemesterAsync(Semester semester)
+    {
+        if (semester.TransitionDate < semester.DateEnd)
+            throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
 
-                if (currentPledgeClass.InitiationDate != null)
-                {
-                    nextPledgeClass.InitiationDate = ((DateTime)currentPledgeClass.InitiationDate).AddMonths(offset);
-                }
-                if (currentPledgeClass.PinningDate != null)
-                {
-                    nextPledgeClass.PinningDate = ((DateTime)currentPledgeClass.PinningDate).AddMonths(offset);
-                }
-                nextPledgeClass.PledgeClassName = GetNextPledgeClassName(currentPledgeClass.PledgeClassName);
-            }
-            return nextPledgeClass;
-        }
+        _context.Add(semester);
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task CreateSemesterAsync(Semester semester)
-        {
-            if (semester.TransitionDate < semester.DateEnd)
-                throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
+    public async Task CreatePledgeClassAsync(PledgeClass pledgeClass)
+    {
+        _context.Add(pledgeClass);
+        await _context.SaveChangesAsync();
+    }
 
-            _repository.Create(semester);
-            await _repository.SaveAsync();
-        }
+    public async Task UpdateSemesterAsync(Semester semester)
+    {
+        if (semester.TransitionDate < semester.DateEnd)
+            throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
 
-        public async Task CreatePledgeClassAsync(PledgeClass pledgeClass)
-        {
-            _repository.Create(pledgeClass);
-            await _repository.SaveAsync();
-        }
+        _context.Update(semester);
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task UpdateSemesterAsync(Semester semester)
-        {
-            if (semester.TransitionDate < semester.DateEnd)
-                throw new ArgumentException("Semester transition date cannot preceed the semester end date.");
+    public async Task UpdatePledgeClassAsync(PledgeClass pledgeClass)
+    {
+        _context.Update(pledgeClass);
+        await _context.SaveChangesAsync();
+    }
 
-            _repository.Update(semester);
-            await _repository.SaveAsync();
-        }
+    public async Task DeleteSemesterAsync(int id)
+    {
+        var entity = new Semester { Id = id };
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
+    }
 
-        public async Task UpdatePledgeClassAsync(PledgeClass pledgeClass)
-        {
-            _repository.Update(pledgeClass);
-            await _repository.SaveAsync();
-        }
-
-        public async Task DeleteSemesterAsync(int id)
-        {
-            _repository.Delete<Semester>(id);
-            await _repository.SaveAsync();
-        }
-
-        public async Task DeletePledgeClassAsync(int id)
-        {
-            _repository.Delete<PledgeClass>(id);
-            await _repository.SaveAsync();
-        }
+    public async Task DeletePledgeClassAsync(int id)
+    {
+        var entity = new PledgeClass { PledgeClassId = id };
+        _context.Remove(entity);
+        await _context.SaveChangesAsync();
     }
 }

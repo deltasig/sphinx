@@ -1,0 +1,28 @@
+﻿@model UserType
+@{
+    ViewBag.Title = "Create User Type";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <p>
+                <a href="@Url.Action("Index")" class="btn btn-sm btn-secondary">
+                    <i class="fa fa-caret-left"></i> Back
+                </a>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <form asp-controller="Stauses" asp-action="Create" asp-antiforgery="true" method="post" role="form">
+                <div class="mb-3">
+                    <label for="StatusName" class="form-label">Status Name</label>
+                    <input type="text" class="form-control" asp-for="StatusName">
+                    <span asp-validation-for="StatusName" class="text-danger"></span>
+                </div>
+                <button type="submit" class="btn btn-success">Create</button>
+            </form>
+        </div>
+    </div>
+</div>
