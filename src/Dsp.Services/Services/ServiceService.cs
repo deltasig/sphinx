@@ -169,11 +169,15 @@
             // Check the cache
             ObjectCache cache = MemoryCache.Default;
             var cacheKey = "general_historical_stats";
-            if (cache[cacheKey] is IList<ServiceGeneralHistoricalStats> generalHistoricalStats)
-                return generalHistoricalStats;
+            var cachedData = cache[cacheKey];
+            if (cachedData is IList<ServiceGeneralHistoricalStats>)
+            {
+                return cachedData as IList<ServiceGeneralHistoricalStats>;
+            }
+
 
             // Calculate stats
-            generalHistoricalStats = new List<ServiceGeneralHistoricalStats>();
+            var generalHistoricalStats = new List<ServiceGeneralHistoricalStats>();
             var semesters = await _semesterService.GetAllSemestersAsync();
             var semestersWithApprovedEvents = semesters
                 .Where(x => x.ServiceEvents.Any(e => e.IsApproved))
@@ -203,13 +207,16 @@
             // Check the cache
             ObjectCache cache = MemoryCache.Default;
             var cacheKey = $"roster_progress_stats_{sid}";
-            if (cache[cacheKey] is IList<ServiceMemberProgress> rosterProgress)
-                return rosterProgress;
+            var cachedData = cache[cacheKey];
+            if (cachedData is IList<ServiceMemberProgress>)
+            {
+                return cachedData as IList<ServiceMemberProgress>;
+            }
 
             // Calculate progress
             var selectedSemester = await _semesterService.GetSemesterByIdAsync(sid);
             var roster = await _memberService.GetRosterForSemesterAsync(sid);
-            rosterProgress = new List<ServiceMemberProgress>();
+            var rosterProgress = new List<ServiceMemberProgress>();
             foreach (var m in roster)
             {
                 var calculatedOn = ConvertUtcToCst(DateTime.UtcNow);
@@ -234,8 +241,12 @@
             // Check the cache
             ObjectCache cache = MemoryCache.Default;
             var cacheKey = $"member_stats_{sid.ToString()}";
-            if (cache[cacheKey] is ServiceMemberStats memberStats)
-                return memberStats;
+
+            var cachedData = cache[cacheKey];
+            if (cachedData is ServiceMemberStats)
+            {
+                return cachedData as ServiceMemberStats;
+            }
 
             // Calculate stats
             var selectedSemester = await _semesterService.GetSemesterByIdAsync(sid);
@@ -307,7 +318,7 @@
             }
 
             var calculatedOn = ConvertUtcToCst(DateTime.UtcNow);
-            memberStats = new ServiceMemberStats(
+            var memberStats = new ServiceMemberStats(
                 nonExemptMemberCount,
                 exemptMemberCount,
                 nonExemptActiveMemberCount,
@@ -363,8 +374,11 @@
             // Check the cache
             ObjectCache cache = MemoryCache.Default;
             var cacheKey = $"hour_stats_{sid.ToString()}";
-            if (cache[cacheKey] is ServiceHourStats hourStats)
-                return hourStats;
+            var cachedData = cache[cacheKey];
+            if (cachedData is ServiceHourStats)
+            {
+                return cachedData as ServiceHourStats;
+            }
 
             // Calculate stats
             var selectedSemester = await _semesterService.GetSemesterByIdAsync(sid);
@@ -419,7 +433,7 @@
             }
 
             var calculatedOn = ConvertUtcToCst(DateTime.UtcNow);
-            hourStats = new ServiceHourStats(
+            var hourStats = new ServiceHourStats(
                 unadjustedMemberCount,
                 adjustedMemberCount,
                 months,

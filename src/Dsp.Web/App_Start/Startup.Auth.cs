@@ -41,12 +41,6 @@
                 }
             });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
-
-#if !DEBUG
-            app.UseGoogleAuthentication(
-                clientId: WebConfigurationManager.AppSettings["google-auth-client-id"],
-                clientSecret: WebConfigurationManager.AppSettings["google-auth-client-secret"]);
-#endif
         }
     }
 }
