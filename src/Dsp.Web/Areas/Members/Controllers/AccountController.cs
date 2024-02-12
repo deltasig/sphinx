@@ -442,7 +442,7 @@
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator")]
+        [HttpPost, ValidateAntiForgeryToken, Authorize(Roles = "Administrator, Secretary, Director of Recruitment, New Member Education")]
         public async Task<ActionResult> Unregister(UnregisterModel model)
         {
             if (ModelState.IsValid)
