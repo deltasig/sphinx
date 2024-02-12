@@ -413,6 +413,98 @@ namespace Dsp.Data.Migrations
                     b.ToTable("MealPlates", (string)null);
                 });
 
+            modelBuilder.Entity("Dsp.Data.Entities.Member", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasColumnName("Id");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("AvatarPath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("BigBroId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("DietaryInstructions")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<int?>("ExpectedGraduationId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<bool>("IsReleased")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("LastUpdatedOn")
+                        .HasColumnType("datetime");
+
+                    b.Property<int?>("PledgeClassId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("ReleasedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id")
+                        .HasName("PK_dbo.Members");
+
+                    b.HasIndex("BigBroId");
+
+                    b.HasIndex("ExpectedGraduationId");
+
+                    b.HasIndex("PledgeClassId");
+
+                    b.ToTable("Members", (string)null);
+                });
+
+            modelBuilder.Entity("Dsp.Data.Entities.MemberPosition", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int")
+                        .HasColumnName("LeaderId");
+
+                    b.Property<int>("SemesterId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AppointedOn")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("UserId", "RoleId", "SemesterId")
+                        .HasName("PK_dbo.Leaders");
+
+                    b.HasIndex("RoleId");
+
+                    b.HasIndex("SemesterId");
+
+                    b.ToTable("MembersPositions", (string)null);
+                });
+
             modelBuilder.Entity("Dsp.Data.Entities.PledgeClass", b =>
                 {
                     b.Property<int>("PledgeClassId")
@@ -443,7 +535,7 @@ namespace Dsp.Data.Migrations
                     b.ToTable("PledgeClasses", (string)null);
                 });
 
-            modelBuilder.Entity("Dsp.Data.Entities.Role", b =>
+            modelBuilder.Entity("Dsp.Data.Entities.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -456,7 +548,6 @@ namespace Dsp.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
@@ -488,8 +579,7 @@ namespace Dsp.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Type")
                         .HasColumnType("int");
@@ -497,12 +587,7 @@ namespace Dsp.Data.Migrations
                     b.HasKey("Id")
                         .HasName("PK_dbo.Positions");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
-
-                    b.ToTable("Roles", (string)null);
+                    b.ToTable("Positions", (string)null);
                 });
 
             modelBuilder.Entity("Dsp.Data.Entities.Room", b =>
@@ -1023,18 +1108,11 @@ namespace Dsp.Data.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasColumnName("UserId");
+                        .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
-
-                    b.Property<string>("AvatarPath")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("BigBroId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -1043,10 +1121,6 @@ namespace Dsp.Data.Migrations
 
                     b.Property<DateTime?>("CreatedOn")
                         .HasColumnType("datetime");
-
-                    b.Property<string>("DietaryInstructions")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -1067,9 +1141,6 @@ namespace Dsp.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<int?>("ExpectedGraduationId")
-                        .HasColumnType("int");
-
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -1080,14 +1151,14 @@ namespace Dsp.Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("LastUpdatedOn")
-                        .HasColumnType("datetime");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
+
+                    b.Property<int?>("MemberId")
+                        .HasColumnType("int");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -1106,14 +1177,8 @@ namespace Dsp.Data.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("PledgeClassId")
-                        .HasColumnType("int");
-
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StatusId")
-                        .HasColumnType("int");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -1123,12 +1188,11 @@ namespace Dsp.Data.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id")
-                        .HasName("PK_dbo.Members");
+                    b.HasKey("Id");
 
-                    b.HasIndex("BigBroId");
-
-                    b.HasIndex("ExpectedGraduationId");
+                    b.HasIndex("MemberId")
+                        .IsUnique()
+                        .HasFilter("[MemberId] IS NOT NULL");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -1138,55 +1202,7 @@ namespace Dsp.Data.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("PledgeClassId");
-
-                    b.HasIndex("StatusId");
-
-                    b.ToTable("Users", (string)null);
-                });
-
-            modelBuilder.Entity("Dsp.Data.Entities.UserRole", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int")
-                        .HasColumnName("LeaderId");
-
-                    b.Property<int>("SemesterId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AppointedOn")
-                        .HasColumnType("datetime");
-
-                    b.HasKey("UserId", "RoleId", "SemesterId")
-                        .HasName("PK_dbo.Leaders");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("SemesterId");
-
-                    b.ToTable("UserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Dsp.Data.Entities.UserType", b =>
-                {
-                    b.Property<int>("StatusId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StatusId"));
-
-                    b.Property<string>("StatusName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("StatusId")
-                        .HasName("PK_dbo.MemberStatuses");
-
-                    b.ToTable("UserTypes", (string)null);
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Dsp.Data.Entities.WorkOrder", b =>
@@ -1226,6 +1242,36 @@ namespace Dsp.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("WorkOrders", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex")
+                        .HasFilter("[NormalizedName] IS NOT NULL");
+
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
@@ -1297,6 +1343,21 @@ namespace Dsp.Data.Migrations
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<int>", b =>
                 {
                     b.Property<int>("UserId")
@@ -1318,7 +1379,7 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Dsp.Data.Entities.Address", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("Addresses")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1356,7 +1417,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.ClassesTaken_dbo.Semesters_SemesterId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("ClassesTaken")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1372,7 +1433,7 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Dsp.Data.Entities.IncidentReport", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("IncidentReports")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1384,7 +1445,7 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Dsp.Data.Entities.LaundrySignup", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("LaundrySignups")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1415,7 +1476,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.MajorToMembers_dbo.Majors_MajorId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("Majors")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1457,7 +1518,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.MealVotes_dbo.MealItems_MealItemId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("MealItemVotes")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1471,12 +1532,66 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Dsp.Data.Entities.MealPlate", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("MealPlates")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("FK_dbo.MealLatePlates_dbo.Members_UserId");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Dsp.Data.Entities.Member", b =>
+                {
+                    b.HasOne("Dsp.Data.Entities.Member", "BigBro")
+                        .WithMany("LittleBros")
+                        .HasForeignKey("BigBroId")
+                        .HasConstraintName("FK_dbo.Members_dbo.Members_BigBroId");
+
+                    b.HasOne("Dsp.Data.Entities.Semester", "ExpectedGraduation")
+                        .WithMany("GraduatingMembers")
+                        .HasForeignKey("ExpectedGraduationId")
+                        .HasConstraintName("FK_dbo.Members_dbo.Semesters_ExpectedGraduationId");
+
+                    b.HasOne("Dsp.Data.Entities.PledgeClass", "PledgeClass")
+                        .WithMany("Users")
+                        .HasForeignKey("PledgeClassId")
+                        .HasConstraintName("FK_dbo.Members_dbo.PledgeClasses_PledgeClassId");
+
+                    b.Navigation("BigBro");
+
+                    b.Navigation("ExpectedGraduation");
+
+                    b.Navigation("PledgeClass");
+                });
+
+            modelBuilder.Entity("Dsp.Data.Entities.MemberPosition", b =>
+                {
+                    b.HasOne("Dsp.Data.Entities.Position", "Role")
+                        .WithMany("Users")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_dbo.Leaders_dbo.Members_RoleId");
+
+                    b.HasOne("Dsp.Data.Entities.Semester", "Semester")
+                        .WithMany("Leaders")
+                        .HasForeignKey("SemesterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_dbo.Leaders_dbo.Semesters_SemesterId");
+
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
+                        .WithMany("Roles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_dbo.Leaders_dbo.Members_UserId");
+
+                    b.Navigation("Role");
+
+                    b.Navigation("Semester");
 
                     b.Navigation("User");
                 });
@@ -1514,7 +1629,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.RoomToMembers_dbo.Rooms_RoomId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("Rooms")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1601,7 +1716,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.ServiceEvents_dbo.Semesters_SemesterId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "Submitter")
+                    b.HasOne("Dsp.Data.Entities.Member", "Submitter")
                         .WithMany("ServiceEvents")
                         .HasForeignKey("SubmitterId")
                         .HasConstraintName("FK_dbo.Events_dbo.Members_SubmitterId");
@@ -1620,7 +1735,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.ServiceEventAmendments_dbo.Semesters_SemesterId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("ServiceEventAmendments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1641,7 +1756,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.ServiceHours_dbo.Events_EventId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("ServiceHours")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1662,7 +1777,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.ServiceHourAmendments_dbo.Semesters_SemesterId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("ServiceHourAmendments")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1683,7 +1798,7 @@ namespace Dsp.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_dbo.SoberSignups_dbo.SoberTypes_SoberTypeId");
 
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("SoberSignups")
                         .HasForeignKey("UserId")
                         .HasConstraintName("FK_dbo.SoberSignups_dbo.Members_UserId");
@@ -1695,70 +1810,16 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Dsp.Data.Entities.User", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "BigBro")
-                        .WithMany("LittleBros")
-                        .HasForeignKey("BigBroId")
-                        .HasConstraintName("FK_dbo.Members_dbo.Members_BigBroId");
+                    b.HasOne("Dsp.Data.Entities.Member", "MemberInfo")
+                        .WithOne("UserInfo")
+                        .HasForeignKey("Dsp.Data.Entities.User", "MemberId");
 
-                    b.HasOne("Dsp.Data.Entities.Semester", "ExpectedGraduation")
-                        .WithMany("GraduatingMembers")
-                        .HasForeignKey("ExpectedGraduationId")
-                        .HasConstraintName("FK_dbo.Members_dbo.Semesters_ExpectedGraduationId");
-
-                    b.HasOne("Dsp.Data.Entities.PledgeClass", "PledgeClass")
-                        .WithMany("Users")
-                        .HasForeignKey("PledgeClassId")
-                        .HasConstraintName("FK_dbo.Members_dbo.PledgeClasses_PledgeClassId");
-
-                    b.HasOne("Dsp.Data.Entities.UserType", "Status")
-                        .WithMany("Users")
-                        .HasForeignKey("StatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_dbo.Members_dbo.MemberStatuses_StatusId");
-
-                    b.Navigation("BigBro");
-
-                    b.Navigation("ExpectedGraduation");
-
-                    b.Navigation("PledgeClass");
-
-                    b.Navigation("Status");
-                });
-
-            modelBuilder.Entity("Dsp.Data.Entities.UserRole", b =>
-                {
-                    b.HasOne("Dsp.Data.Entities.Role", "Role")
-                        .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_dbo.Leaders_dbo.Members_RoleId");
-
-                    b.HasOne("Dsp.Data.Entities.Semester", "Semester")
-                        .WithMany("Leaders")
-                        .HasForeignKey("SemesterId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_dbo.Leaders_dbo.Semesters_SemesterId");
-
-                    b.HasOne("Dsp.Data.Entities.User", "User")
-                        .WithMany("Roles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("FK_dbo.Leaders_dbo.Members_UserId");
-
-                    b.Navigation("Role");
-
-                    b.Navigation("Semester");
-
-                    b.Navigation("User");
+                    b.Navigation("MemberInfo");
                 });
 
             modelBuilder.Entity("Dsp.Data.Entities.WorkOrder", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.User", "User")
+                    b.HasOne("Dsp.Data.Entities.Member", "User")
                         .WithMany("WorkOrders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1770,7 +1831,7 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>
                 {
-                    b.HasOne("Dsp.Data.Entities.Role", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1788,6 +1849,21 @@ namespace Dsp.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<int>", b =>
                 {
+                    b.HasOne("Dsp.Data.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<int>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<int>", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Dsp.Data.Entities.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
@@ -1833,12 +1909,49 @@ namespace Dsp.Data.Migrations
                     b.Navigation("Items");
                 });
 
+            modelBuilder.Entity("Dsp.Data.Entities.Member", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("ClassesTaken");
+
+                    b.Navigation("IncidentReports");
+
+                    b.Navigation("LaundrySignups");
+
+                    b.Navigation("LittleBros");
+
+                    b.Navigation("Majors");
+
+                    b.Navigation("MealItemVotes");
+
+                    b.Navigation("MealPlates");
+
+                    b.Navigation("Roles");
+
+                    b.Navigation("Rooms");
+
+                    b.Navigation("ServiceEventAmendments");
+
+                    b.Navigation("ServiceEvents");
+
+                    b.Navigation("ServiceHourAmendments");
+
+                    b.Navigation("ServiceHours");
+
+                    b.Navigation("SoberSignups");
+
+                    b.Navigation("UserInfo");
+
+                    b.Navigation("WorkOrders");
+                });
+
             modelBuilder.Entity("Dsp.Data.Entities.PledgeClass", b =>
                 {
                     b.Navigation("Users");
                 });
 
-            modelBuilder.Entity("Dsp.Data.Entities.Role", b =>
+            modelBuilder.Entity("Dsp.Data.Entities.Position", b =>
                 {
                     b.Navigation("Users");
                 });
@@ -1899,46 +2012,6 @@ namespace Dsp.Data.Migrations
             modelBuilder.Entity("Dsp.Data.Entities.SoberType", b =>
                 {
                     b.Navigation("Signups");
-                });
-
-            modelBuilder.Entity("Dsp.Data.Entities.User", b =>
-                {
-                    b.Navigation("Addresses");
-
-                    b.Navigation("ClassesTaken");
-
-                    b.Navigation("IncidentReports");
-
-                    b.Navigation("LaundrySignups");
-
-                    b.Navigation("LittleBros");
-
-                    b.Navigation("Majors");
-
-                    b.Navigation("MealItemVotes");
-
-                    b.Navigation("MealPlates");
-
-                    b.Navigation("Roles");
-
-                    b.Navigation("Rooms");
-
-                    b.Navigation("ServiceEventAmendments");
-
-                    b.Navigation("ServiceEvents");
-
-                    b.Navigation("ServiceHourAmendments");
-
-                    b.Navigation("ServiceHours");
-
-                    b.Navigation("SoberSignups");
-
-                    b.Navigation("WorkOrders");
-                });
-
-            modelBuilder.Entity("Dsp.Data.Entities.UserType", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

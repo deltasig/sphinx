@@ -22,11 +22,13 @@ public class ScheduleController : BaseController
 {
     private ISoberService _soberService;
     private IMemberService _memberService;
+    private ISemesterService _semesterService;
 
-    public ScheduleController(ISoberService soberService, IMemberService memberService)
+    public ScheduleController(ISoberService soberService, IMemberService memberService, ISemesterService semesterService)
     {
         _soberService = soberService;
         _memberService = memberService;
+        _semesterService = semesterService;
     }
 
     public async Task<ActionResult> Index(SoberMessage? message)
@@ -177,15 +179,16 @@ public class ScheduleController : BaseController
             return RedirectToAction("Index", new { message = SoberMessage.SignupFailure });
         }
 
+        var now = DateTime.UtcNow;
         var userId = User.GetUserId();
         var user = await _memberService.GetMemberByIdAsync(userId);
-        if (user.Status.StatusName == "New" && model.SoberType.Name == "Officer")  // New members can't be sober officer
+        if (user.GetStatus(now) == "New" && model.SoberType.Name == "Officer")  // New members can't be sober officer
         {
             return RedirectToAction("Index", new { message = SoberMessage.SignupNewMemberOfficerFailure });
         }
 
         model.UserId = userId;
-        model.DateTimeSignedUp = DateTime.UtcNow;
+        model.DateTimeSignedUp = now;
 
         Context.Entry(model).State = EntityState.Modified;
         await Context.SaveChangesAsync();
@@ -201,10 +204,11 @@ public class ScheduleController : BaseController
 
         if (signup == null) return NotFound();
 
+        var members = await _memberService.GetAllMembersAsync();
         var model = new EditSoberSignupModel
         {
             SoberSignup = signup,
-            Members = await GetUserIdListAsFullNameWithNoneAsync()
+            Members = members.ToSelectListWithNone()
         };
 
         if (signup.UserId != null)
@@ -245,7 +249,7 @@ public class ScheduleController : BaseController
     [HttpGet]
     public async Task<ActionResult> Report(SoberReportModel model)
     {
-        var thisSemester = await GetThisSemesterAsync();
+        var thisSemester = await _semesterService.GetCurrentSemesterAsync();
         // Identify semester
         Semester semester;
         if (model.SelectedSemester == null)
@@ -273,9 +277,9 @@ public class ScheduleController : BaseController
         // Build model for view
         model.SelectedSemester = semester.Id;
         model.Semester = semester;
-        model.SemesterList = GetSemesterSelectList(semesters);
+        model.SemesterList = semesters.ToSelectList();
         // Identify members for current semester
-        model.Members = await GetRosterForSemester(semester);
+        model.Members = await _memberService.GetRosterForSemesterAsync(semester);
 
         return View(model);
     }

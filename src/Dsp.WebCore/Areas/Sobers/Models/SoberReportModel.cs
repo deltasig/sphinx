@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 public class SoberReportModel
 {
-    public List<User> Members { get; set; }
+    public IEnumerable<Member> Members { get; set; }
     public int? SelectedSemester { get; set; }
     public Semester Semester { get; set; }
     public IEnumerable<SelectListItem> SemesterList { get; set; }

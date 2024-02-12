@@ -20,10 +20,14 @@ using System.Threading.Tasks;
 public class ClassesController : BaseController
 {
     private readonly IPositionService _positionService;
+    private readonly IMemberService _memberService;
+    private readonly ISemesterService _semesterService;
 
-    public ClassesController(IPositionService positionService)
+    public ClassesController(IPositionService positionService, IMemberService memberService, ISemesterService semesterService)
     {
         _positionService = positionService;
+        _memberService = memberService;
+        _semesterService = semesterService;
     }
 
     public async Task<ActionResult> Index(ClassesIndexFilterModel filter)
@@ -39,7 +43,7 @@ public class ClassesController : BaseController
         );
         var totalPages = ViewBag.Pages;
         var resultCount = ViewBag.Count;
-        var currentSemester = await GetThisSemesterAsync();
+        var currentSemester = await _semesterService.GetCurrentSemesterAsync();
 
         var model = new ClassIndexModel(
             filterResults,
@@ -104,7 +108,7 @@ public class ClassesController : BaseController
         var model = new ClassDetailsModel
         {
             Class = course,
-            CurrentSemester = await GetThisSemesterAsync()
+            CurrentSemester = await _semesterService.GetCurrentSemesterAsync()
         };
         return View(model);
     }
@@ -240,23 +244,23 @@ public class ClassesController : BaseController
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.FailureMessage = TempData["FailureMessage"];
 
-        var member = await UserManager.FindByNameAsync(userName);
+        var member = await _memberService.GetMemberByUserNameAsync(userName);
         if (string.IsNullOrEmpty(userName) || member == null)
         {
             ViewBag.FailureMessage = "No one by that username was found!";
             userName = User.GetUserName();
         }
-        member = await UserManager.FindByNameAsync(userName);
+        member = await _memberService.GetMemberByUserNameAsync(userName);
 
         var model = new ClassScheduleModel
         {
             SelectedUserName = userName,
             User = member,
             AllClasses = await Context.Classes.OrderBy(c => c.CourseShorthand).ToListAsync(),
-            Semesters = await GetSemesterListAsync(),
+            Semesters = (await _semesterService.GetAllSemestersAsync()).ToSelectList(),
             ClassTaken = new ClassTaken
             {
-                SemesterId = semesterId == null ? (await GetThisSemesterAsync()).Id : (int)semesterId,
+                SemesterId = semesterId == null ? (await _semesterService.GetCurrentSemesterAsync()).Id : (int)semesterId,
                 UserId = member.Id
             },
             ClassesTaken = member.ClassesTaken
@@ -282,8 +286,7 @@ public class ClassesController : BaseController
         {
             return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
-
-        var member = await UserManager.FindByNameAsync(model.SelectedUserName);
+        var member = await _memberService.GetMemberByUserNameAsync(model.SelectedUserName);
 
         if (member.ClassesTaken.Any(c =>
             c.ClassId == model.ClassTaken.ClassId &&
@@ -319,13 +322,13 @@ public class ClassesController : BaseController
     {
         var entry = await Context.ClassesTaken
             .SingleAsync(c => c.UserId == model.UserId && c.SemesterId == model.SemesterId && c.ClassId == model.ClassId);
-        var member = await UserManager.FindByIdAsync(model.UserId.ToString());
+        var member = await _memberService.GetMemberByIdAsync(model.UserId);
         var course = await Context.Classes.FindAsync(model.ClassId);
         var semester = await Context.Semesters.FindAsync(model.SemesterId);
         if (entry == null)
         {
             TempData["FailureMessage"] = "Failed to process disenrollment because no existing information was found.";
-            return RedirectToAction("Schedule", new { userName = member.UserName ?? User.GetUserName() });
+            return RedirectToAction("Schedule", new { userName = member.UserInfo.UserName ?? User.GetUserName() });
         }
 
         Context.Entry(entry).State = EntityState.Deleted;
@@ -333,7 +336,7 @@ public class ClassesController : BaseController
 
         TempData["SuccessMessage"] = member + " was successfully disenrolled from " +
             course.CourseShorthand + " for " + semester + ".";
-        return RedirectToAction("Schedule", new { userName = member.UserName ?? User.GetUserName() });
+        return RedirectToAction("Schedule", new { userName = member.UserInfo.UserName ?? User.GetUserName() });
     }
 
     [Authorize]
@@ -357,7 +360,7 @@ public class ClassesController : BaseController
         if (!ModelState.IsValid)
         {
             TempData["FailureMessage"] = "Failed to update enrollment information.";
-            return RedirectToAction("Schedule", new { userName = model.Enrollment.User.UserName });
+            return RedirectToAction("Schedule", new { userName = model.Enrollment.User.UserInfo.UserName });
         }
 
         var classTaken = await Context.ClassesTaken
@@ -369,9 +372,100 @@ public class ClassesController : BaseController
         Context.Entry(classTaken).State = EntityState.Modified;
         await Context.SaveChangesAsync();
 
-        var member = await UserManager.FindByIdAsync(model.Enrollment.UserId.ToString());
+        var member = await _memberService.GetMemberByUserNameAsync(model.Enrollment.UserId.ToString());
 
         TempData["SuccessMessage"] = "Enrollment update was successful.";
-        return RedirectToAction("Schedule", new { userName = member.UserName });
+        return RedirectToAction("Schedule", new { userName = member.UserInfo.UserName });
+    }
+
+    protected virtual async Task<IEnumerable<Class>> GetFilteredClassList(
+        IList<Class> classes,
+        string s, string sort, int page, string select, int pageSize = 20)
+    {
+        var filterResults = classes;
+        var thisSemester = await _semesterService.GetCurrentSemesterAsync();
+        var currentUser = await UserManager.GetUserAsync(HttpContext.User);
+        var userId = currentUser.Id;
+        switch (select)
+        {
+            case "me-all":
+                filterResults = classes.Where(c =>
+                    c.ClassesTaken.Any(t => t.UserId == userId)).ToList();
+                break;
+            case "me-now":
+                filterResults = classes.Where(c =>
+                    c.ClassesTaken.Any(t =>
+                        t.UserId == userId &&
+                        t.SemesterId == thisSemester.Id &&
+                        !t.IsSummerClass)).ToList();
+                break;
+            case "being-taken":
+                filterResults = classes.Where(c =>
+                    c.ClassesTaken.Any(t => t.SemesterId == thisSemester.Id)).ToList();
+                break;
+            case "none-taking":
+                filterResults = classes.Where(c =>
+                    c.ClassesTaken.All(t => t.SemesterId != thisSemester.Id)).ToList();
+                break;
+        }
+
+        switch (sort)
+        {
+            case "number-desc":
+                filterResults = filterResults.OrderByDescending(o => o.CourseShorthand).ToList();
+                break;
+            case "name-asc":
+                filterResults = filterResults.OrderBy(o => o.CourseName).ToList();
+                break;
+            case "name-desc":
+                filterResults = filterResults.OrderByDescending(o => o.CourseName).ToList();
+                break;
+            case "taken-asc":
+                filterResults = filterResults.OrderBy(o => o.ClassesTaken.Count).ThenBy(o => o.CourseShorthand).ToList();
+                break;
+            case "taken-desc":
+                filterResults = filterResults.OrderByDescending(o => o.ClassesTaken.Count).ThenBy(o => o.CourseShorthand).ToList();
+                break;
+            case "taking-asc":
+                filterResults = filterResults.OrderBy(o =>
+                        o.ClassesTaken.Select(t => t.SemesterId == thisSemester.Id).ToList().Count)
+                    .ThenBy(o => o.CourseShorthand).ToList();
+                break;
+            case "taking-desc":
+                filterResults = filterResults.OrderByDescending(o =>
+                        o.ClassesTaken.Select(t => t.SemesterId == thisSemester.Id).ToList().Count)
+                    .ThenBy(o => o.CourseShorthand).ToList();
+                break;
+            default:
+                sort = "number-asc";
+                filterResults = filterResults.OrderBy(o => o.CourseShorthand).ToList();
+                break;
+        }
+        if (!string.IsNullOrEmpty(s))
+        {
+            s = s.ToLower();
+            filterResults = filterResults
+                .Where(i =>
+                    i.CourseShorthand.ToLower().Contains(s) ||
+                    i.CourseName.ToLower().Contains(s) ||
+                    i.Department.Name.ToLower().Contains(s) ||
+                    i.ClassesTaken.Any(t => t.User.ToString().ToLower().Contains(s)))
+                .ToList();
+        }
+
+        // Set search values so they carry over to the view.
+        ViewBag.CurrentFilter = s;
+        ViewBag.Select = select;
+        ViewBag.Sort = sort;
+
+        if (page < 1) page = 1;
+        ViewBag.Count = filterResults.Count();
+        ViewBag.PageSize = pageSize;
+        ViewBag.Pages = filterResults.Count / pageSize;
+        ViewBag.Page = page;
+        if (filterResults.Count % pageSize != 0) ViewBag.Pages += 1;
+        if (page > ViewBag.Pages) ViewBag.Page = ViewBag.Pages;
+
+        return filterResults.Skip((page - 1) * pageSize).Take(pageSize).ToList();
     }
 }

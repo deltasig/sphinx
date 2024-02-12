@@ -18,11 +18,12 @@ public class ServiceService : BaseService, IServiceService
     private readonly IMemberService _memberService;
     private readonly ISemesterService _semesterService;
 
-    public ServiceService(DspDbContext context)
+    public ServiceService(DspDbContext context, IMemberService memberService,
+        ISemesterService semesterService)
     {
         _context = context;
-        _memberService = new MemberService(context);
-        _semesterService = new SemesterService(context);
+        _memberService = memberService;
+        _semesterService = semesterService;
     }
 
     public async Task<IEnumerable<ServiceEvent>> GetEventsBySemesterIdAsync(int sid)

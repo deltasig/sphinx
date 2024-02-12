@@ -162,7 +162,7 @@
                 <div class="list-group">
                     @foreach (var m in Model.Members)
                     {
-                        var status = m.Status.StatusName;
+                        var status = m.GetStatus();
                         var statusColor = "label-default";
                         if (status == "Active")
                         {
@@ -177,18 +177,18 @@
                             statusColor = "label-warning";
                         }
 
-                        <a href="@Url.Action("Index", "Account", new {userName = m.UserName, area = "Members"})" 
-                           class="list-group-item @(m.EmailConfirmed ? "" : "list-group-item-danger")">
+                        <a href="@Url.Action("Index", "Account", new {userName = m.UserInfo.UserName, area = "Members"})"
+                           class="list-group-item @(m.UserInfo.EmailConfirmed ? "" : "list-group-item-danger")">
                             <h4 class="list-group-item-heading">
                                 <img src="~/Images/Avatars/@m.AvatarPath" height="25" width="25" class="img-circle" id="avatar"
                                      onError="this.onerror = null; this.src = '/Images/Avatars/NoAvatar.jpg';" />
                                 @m.ToString()
-                                @if(!m.EmailConfirmed)
+                                @if(!m.UserInfo.EmailConfirmed)
                                 {
                                     <small>(Account Unconfirmed)</small>
                                 }
                                 <small class="float-end">
-                                    <span class="label @statusColor">@m.Status.StatusName</span>
+                                    <span class="label @statusColor">@status</span>
                                 </small>
                                 <small class="float-end" style="margin-right:5px">
                                     <span class="label label-default">@m.PledgeClass.PledgeClassName</span>
@@ -207,7 +207,7 @@
                                     <i class="fa fa-fw fa-envelope"></i> @m.Email
                                 </div>
                                 <div class="col-md-3 col-sm-6 truncate">
-                                    <i class="fa fa-fw fa-mobile-phone"></i> @m.PhoneNumber
+                                    <i class="fa fa-fw fa-mobile-phone"></i> @m.UserInfo.PhoneNumber
                                 </div>
                                 <div class="col-md-3 col-sm-6 truncate">
                                     <i class="fa fa-fw fa-home"></i> @m.LivingAssignmentForSemester(Model.Semester.Id)

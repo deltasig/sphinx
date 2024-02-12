@@ -34,7 +34,7 @@ public class StatsController : BaseController
         var memberStats = await _serviceService.GetMemberStatsBySemesterIdAsync(selectedSemester.Id);
         var generalStats = await _serviceService.GetGeneralHistoricalStatsAsync();
         var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
-        var semesterList = GetSemesterSelectList(semestersWithEvents);
+        var semesterList = semestersWithEvents.ToSelectList();
 
         var userId = User.GetUserId();
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");

@@ -1,9 +1,7 @@
 ﻿namespace Dsp.WebCore.Api;
 
-using Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services;
 using Services.Interfaces;
 using System;
 using System.Threading.Tasks;
@@ -15,9 +13,9 @@ public class ServiceController : ControllerBase
 {
     private IServiceService _serviceService;
 
-    public ServiceController(DspDbContext db)
+    public ServiceController(IServiceService serviceService)
     {
-        _serviceService = new ServiceService(db);
+        _serviceService = serviceService;
     }
 
     [AllowAnonymous]

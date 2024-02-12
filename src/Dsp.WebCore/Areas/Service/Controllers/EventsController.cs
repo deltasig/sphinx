@@ -41,7 +41,7 @@ public class EventsController : BaseController
         }
 
         var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
-        var semesterList = GetSemesterSelectList(semestersWithEvents);
+        var semesterList = semestersWithEvents.ToSelectList();
         var userId = User.GetUserId();
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");
         var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);

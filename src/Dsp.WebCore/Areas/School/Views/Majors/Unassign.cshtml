@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row row-space">
         <div class="col">
-            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.User.UserName})"
+            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.User.UserInfo.UserName})"
                class="btn btn-sm btn-default">
                 <i class="fa fa-caret-left"></i> Back to @Model.User.FirstName's Profile
             </a>

@@ -1,9 +1,7 @@
 ﻿namespace Dsp.WebCore.Api;
 
-using Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Services;
 using Services.Interfaces;
 using System;
 using System.Linq;
@@ -16,9 +14,9 @@ public class SobersController : ControllerBase
 {
     private ISoberService _soberService;
 
-    public SobersController(DspDbContext db)
+    public SobersController(ISoberService soberService)
     {
-        _soberService = new SoberService(db);
+        _soberService = soberService;
     }
 
     [AllowAnonymous]
@@ -34,7 +32,7 @@ public class SobersController : ControllerBase
                 {
                     name = m.User?.ToShortLastNameString() ?? "",
                     when = m.DateOfShift,
-                    phone = m.User?.PhoneNumber ?? ""
+                    phone = m.User?.UserInfo?.PhoneNumber ?? ""
                 }));
             }
 

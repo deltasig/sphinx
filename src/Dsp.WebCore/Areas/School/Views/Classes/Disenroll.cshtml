@@ -6,7 +6,7 @@
 <div class="container-fluid">
     <div class="row row-space">
         <div class="col">
-            <a href="@Url.Action("Schedule", new { userName = Model.User.UserName })" class="btn btn-sm btn-default">
+            <a href="@Url.Action("Schedule", new { userName = Model.User.UserInfo.UserName })" class="btn btn-sm btn-default">
                 <i class="fa fa-caret-left"></i> Back to @Model.User.FirstName's Schedule
             </a>
         </div>

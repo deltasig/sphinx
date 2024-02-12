@@ -4,6 +4,7 @@ using Dsp.Data.Entities;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Areas.Service.Models;
 using Dsp.WebCore.Controllers;
+using Dsp.WebCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,16 +22,23 @@ public class AmendmentsController : BaseController
     private readonly ISemesterService _semesterService;
     private readonly IServiceService _serviceService;
 
+    public AmendmentsController(IMemberService memberService, ISemesterService semesterService, IServiceService serviceService)
+    {
+        _memberService = memberService;
+        _semesterService = semesterService;
+        _serviceService = serviceService;
+    }
+
     public async Task<ActionResult> Index(int? sid)
     {
-        var currentSemester = await GetThisSemesterAsync();
+        var currentSemester = await _semesterService.GetCurrentSemesterAsync();
         Semester selectedSemester = sid == null
             ? currentSemester
             : await _semesterService.GetSemesterByIdAsync((int)sid);
 
         var serviceHourAmendments = await _serviceService.GetHoursAmendmentsBySemesterIdAsync((int)sid);
         var serviceEventAmendments = await _serviceService.GetEventAmendmentsBySemesterIdAsync((int)sid);
-        var semesterList = GetSemesterSelectList(await _serviceService.GetSemestersWithEventsAsync(currentSemester));
+        var semesterList = (await _serviceService.GetSemestersWithEventsAsync(currentSemester)).ToSelectList();
         var navModel = new ServiceNavModel(true, selectedSemester, semesterList);
         var model = new ServiceAmendmentModel(navModel, serviceHourAmendments, serviceEventAmendments);
 
@@ -55,9 +63,9 @@ public class AmendmentsController : BaseController
             },
             Semester = semester
         };
-        var members = await GetRosterForSemester(semester);
+        var members = await _memberService.GetRosterForSemesterAsync(semester);
         var memberList = new List<object>();
-        foreach (User member in members.OrderBy(m => m.LastName))
+        foreach (Member member in members.OrderBy(m => m.LastName))
         {
             memberList.Add(new
             {

@@ -34,7 +34,7 @@
             </tr>
             foreach (var item in Model.Where(i => i.DateOfShift == date).OrderBy(s => s.SoberTypeId))
             {
-                <tr class="@(item.User == null ? "" : item.User.UserName == User.Identity.Name ? "warning" : "")">
+                <tr class="@(item.User == null ? "" : item.User.UserInfo.UserName == User.Identity.Name ? "warning" : "")">
                     <td class="col-xs-5">
                         <small>
                             <a href="@Url.Action("Details", "Types", new { id = item.SoberTypeId, area = "Sobers" })">
@@ -74,8 +74,8 @@
                 </tr>
                 if (item.User != null)
                 {
-                    var number = item.User.PhoneNumber;
-                    <tr class="@(item.User.UserName == User.Identity.Name ? "warning" : "")">
+                    var number = item.User.UserInfo.PhoneNumber;
+                    <tr class="@(item.User.UserInfo.UserName == User.Identity.Name ? "warning" : "")">
                         <td></td>
                         <td>
                             <small><a href="tel:@number">@number</a></small>

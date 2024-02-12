@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Dsp.Data;
 
 public partial class DspDbContext :
-        IdentityDbContext<User, Role, int, IdentityUserClaim<int>, UserRole, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
+    IdentityDbContext<User, IdentityRole<int>, int, IdentityUserClaim<int>, IdentityUserRole<int>, IdentityUserLogin<int>, IdentityRoleClaim<int>, IdentityUserToken<int>>
 {
     public DspDbContext()
     {
@@ -43,7 +43,13 @@ public partial class DspDbContext :
 
     public virtual DbSet<MealPlate> MealPlates { get; set; }
 
+    public virtual DbSet<Member> Members { get; set; }
+
+    public virtual DbSet<MemberPosition> MembersPositions { get; set; }
+
     public virtual DbSet<PledgeClass> PledgeClasses { get; set; }
+
+    public virtual DbSet<Position> Positions { get; set; }
 
     public virtual DbSet<Room> Rooms { get; set; }
 
@@ -75,26 +81,44 @@ public partial class DspDbContext :
 
     public virtual DbSet<SoberType> SoberTypes { get; set; }
 
-    public virtual DbSet<UserType> UserTypes { get; set; }
-
     public virtual DbSet<WorkOrder> WorkOrders { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.Entity<UserType>(entity =>
+        modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.StatusId).HasName("PK_dbo.MemberStatuses");
-
-            entity.Property(e => e.StatusName)
+            entity.Property(e => e.CreatedOn).HasColumnType("datetime");
+            entity.Property(e => e.Email)
+                .IsRequired()
+                .HasMaxLength(256);
+            entity.Property(e => e.FirstName)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(e => e.LastName)
                 .IsRequired()
                 .HasMaxLength(50);
+            entity.Property(e => e.UserName)
+                .IsRequired()
+                .HasMaxLength(256);
+            entity.Property(e => e.EmergencyContact)
+                .IsRequired(false)
+                .HasMaxLength(50);
+            entity.Property(e => e.EmergencyRelation)
+                .IsRequired(false)
+                .HasMaxLength(50);
+            entity.Property(e => e.EmergencyPhoneNumber)
+                .IsRequired(false);
 
-            entity.ToTable("UserTypes");
+            entity
+                .HasOne(d => d.MemberInfo)
+                .WithOne(p => p.UserInfo)
+                .HasForeignKey<User>(d => d.MemberId)
+                .IsRequired(false);
         });
 
-        modelBuilder.Entity<Role>(entity =>
+        modelBuilder.Entity<Position>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_dbo.Positions");
             entity.Property(e => e.Id).HasColumnName("PositionId");
@@ -105,13 +129,13 @@ public partial class DspDbContext :
                 .IsRequired()
                 .HasMaxLength(256);
 
-            entity.ToTable("Roles");
+            entity.ToTable("Positions");
         });
 
-        modelBuilder.Entity<User>(entity =>
+        modelBuilder.Entity<Member>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK_dbo.Members");
-            entity.Property(e => e.Id).HasColumnName("UserId");
+            entity.Property(e => e.Id).HasColumnName("Id");
 
             entity.Property(e => e.CreatedOn).HasColumnType("datetime");
             entity.Property(e => e.DietaryInstructions).HasMaxLength(50);
@@ -125,18 +149,6 @@ public partial class DspDbContext :
                 .IsRequired()
                 .HasMaxLength(50);
             entity.Property(e => e.LastUpdatedOn).HasColumnType("datetime");
-            entity.Property(e => e.UserName)
-                .IsRequired()
-                .HasMaxLength(256);
-
-            entity.Property(e => e.EmergencyContact)
-                .IsRequired(false)
-                .HasMaxLength(50);
-            entity.Property(e => e.EmergencyRelation)
-                .IsRequired(false)
-                .HasMaxLength(50);
-            entity.Property(e => e.EmergencyPhoneNumber)
-                .IsRequired(false);
 
             entity.HasOne(d => d.BigBro).WithMany(p => p.LittleBros)
                 .HasForeignKey(d => d.BigBroId)
@@ -150,14 +162,10 @@ public partial class DspDbContext :
                 .HasForeignKey(d => d.PledgeClassId)
                 .HasConstraintName("FK_dbo.Members_dbo.PledgeClasses_PledgeClassId");
 
-            entity.HasOne(d => d.Status).WithMany(p => p.Users)
-                .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("FK_dbo.Members_dbo.MemberStatuses_StatusId");
-
-            entity.ToTable("Users");
+            entity.ToTable("Members");
         });
 
-        modelBuilder.Entity<UserRole>(entity =>
+        modelBuilder.Entity<MemberPosition>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.RoleId, e.SemesterId }).HasName("PK_dbo.Leaders");
 
@@ -177,7 +185,7 @@ public partial class DspDbContext :
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK_dbo.Leaders_dbo.Members_RoleId");
 
-            entity.ToTable("UserRoles");
+            entity.ToTable("MembersPositions");
         });
 
         modelBuilder.Entity<Address>(entity =>

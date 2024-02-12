@@ -19,13 +19,13 @@ public class AddressesController : BaseController
 {
     public async Task<ActionResult> Index(string s)
     {
-        var model = new List<User>();
+        var model = new List<Member>();
 
         if (!string.IsNullOrEmpty(s))
         {
             if (s == ":all")
             {
-                model = await Context.Users
+                model = await Context.Members
                     .OrderBy(m => m.LastName)
                     .ThenBy(m => m.FirstName)
                     .ToListAsync();
@@ -33,7 +33,7 @@ public class AddressesController : BaseController
             }
             else
             {
-                model = await Context.Users
+                model = await Context.Members
                     .Where(m =>
                         m.FirstName.Contains(s) ||
                         m.LastName.Contains(s) ||
@@ -84,18 +84,16 @@ public class AddressesController : BaseController
     public async Task<FileContentResult> Download()
     {
         var addresses = await Context.Addresses
-            .OrderBy(a => a.User.StatusId)
-            .ThenBy(a => a.User.LastName)
+            .OrderBy(a => a.User.LastName)
             .ToListAsync();
         const string header = "First Name, Last Name, Member Status, Address Type, Address 1, Address 2, City, State, Postal Code, Country";
         var sb = new StringBuilder();
         sb.AppendLine(header);
         foreach (var a in addresses)
         {
-            var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9}",
+            var line = string.Format("{0},{1},{2},{3},{4},{5},{6},{7},{8}",
                 a.User.FirstName,
                 a.User.LastName,
-                a.User.Status.StatusName,
                 a.Type,
                 a.Address1,
                 a.Address2,

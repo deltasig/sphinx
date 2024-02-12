@@ -16,7 +16,7 @@ public partial class PledgeClass
 
     public string PledgeClassName { get; set; }
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<Member> Users { get; set; } = new List<Member>();
 
     public virtual Semester Semester { get; set; }
 

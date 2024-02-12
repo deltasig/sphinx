@@ -14,7 +14,7 @@ public class SemesterService : BaseService, ISemesterService
 {
     private readonly DspDbContext _context;
 
-    public IList<string> Alphabet { get; } = new List<string>
+    public IList<string> GreekAlphabet { get; } = new List<string>
     {
         "Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta",
         "Theta", "Iota", "Kappa", "Lambda", "Mu", "Nu", "Xi", "Omicron",
@@ -31,8 +31,18 @@ public class SemesterService : BaseService, ISemesterService
         var semesters = await _context.Semesters
             .Include(x => x.PledgeClasses)
             .OrderBy(x => x.DateStart)
+            .OrderByDescending(x => x.DateStart)
             .ToListAsync();
         return semesters;
+    }
+
+    public async Task<IEnumerable<PledgeClass>> GetAllPledgeClassesAsync()
+    {
+        var pledgeClasses = await _context.PledgeClasses
+            .Include(x => x.Semester)
+            .OrderByDescending(x => x.Semester.DateEnd)
+            .ToListAsync();
+        return pledgeClasses;
     }
 
     public async Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null)
@@ -108,7 +118,7 @@ public class SemesterService : BaseService, ISemesterService
         var nameIndeces = new List<int>();
         foreach (var p in nameParts)
         {
-            var alphabetPosition = Alphabet.IndexOf(p);
+            var alphabetPosition = GreekAlphabet.IndexOf(p);
             if (alphabetPosition >= 0)
             {
                 nameIndeces.Add(alphabetPosition);
@@ -120,7 +130,7 @@ public class SemesterService : BaseService, ISemesterService
             var index = nameIndeces[i];
             if (i + 1 >= nameIndeces.Count)
             {
-                if (index >= Alphabet.Count)
+                if (index >= GreekAlphabet.Count)
                 {
                     index = 0;
                 }
@@ -129,8 +139,8 @@ public class SemesterService : BaseService, ISemesterService
                     index++;
                 }
             }
-            var letter = Alphabet[index];
-            sb.Append(Alphabet[index]);
+            var letter = GreekAlphabet[index];
+            sb.Append(GreekAlphabet[index]);
             sb.Append(" ");
         }
         return sb.ToString().TrimEnd();

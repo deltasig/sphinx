@@ -15,5 +15,5 @@ public partial class MealPlate
 
     public string Type { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual Member User { get; set; }
 }

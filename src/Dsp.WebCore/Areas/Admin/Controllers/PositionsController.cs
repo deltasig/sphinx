@@ -3,6 +3,7 @@
 using Dsp.Data.Entities;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
+using Dsp.WebCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Models;
@@ -55,7 +56,7 @@ public class PositionsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<ActionResult> Create(Role position)
+    public async Task<ActionResult> Create(Position position)
     {
         if (!ModelState.IsValid) return View(position);
         if (string.IsNullOrEmpty(position.Name))
@@ -94,7 +95,7 @@ public class PositionsController : BaseController
     }
 
     [HttpPost, ValidateAntiForgeryToken]
-    public async Task<ActionResult> Edit(Role position)
+    public async Task<ActionResult> Edit(Position position)
     {
         if (!ModelState.IsValid) return View(position);
 
@@ -161,7 +162,7 @@ public class PositionsController : BaseController
             {
                 Semester = semester,
                 Positions = positions,
-                SemesterList = base.GetSemesterSelectList(semesters)
+                SemesterList = semesters.ToSelectList()
             };
 
             return View(model);

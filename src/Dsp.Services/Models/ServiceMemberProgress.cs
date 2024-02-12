@@ -28,7 +28,7 @@ public class ServiceMemberProgress
 
     public ServiceMemberProgress(
         Semester selectedSemester,
-        User member,
+        Member member,
         DateTime calculatedOn)
     {
         MemberId = member.Id;

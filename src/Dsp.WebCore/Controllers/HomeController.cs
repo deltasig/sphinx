@@ -1,7 +1,7 @@
 ﻿namespace Dsp.WebCore.Controllers;
 
 using Data.Entities;
-using Dsp.Services;
+using Dsp.Services.Interfaces;
 using Dsp.WebCore.Extensions;
 using MarkdownSharp;
 using Microsoft.AspNetCore.Authorization;
@@ -16,10 +16,22 @@ using System.Threading.Tasks;
 public class HomeController : BaseController
 {
     readonly IWebHostEnvironment _env;
+    private readonly ISemesterService _semesterService;
+    private readonly ISoberService _soberService;
+    private readonly IMemberService _memberService;
+    private readonly IUserService _userService;
+    private readonly IRoleService _roleService;
 
-    public HomeController(IWebHostEnvironment env)
+    public HomeController(IWebHostEnvironment env,
+        ISemesterService semesterService, ISoberService soberService, IMemberService memberService,
+        IUserService userService, IRoleService roleService)
     {
         _env = env;
+        _semesterService = semesterService;
+        _soberService = soberService;
+        _memberService = memberService;
+        _userService = userService;
+        _roleService = roleService;
     }
 
     [Route("")]
@@ -28,19 +40,28 @@ public class HomeController : BaseController
         return View();
     }
 
+    [Route("Donate")]
+    public ActionResult Donate()
+    {
+        return View();
+    }
+
     [Route("Joining")]
     public async Task<ActionResult> Joining()
     {
-        var model = new RecruitmentModel();
-        model.ScholarshipApps = await Context.ScholarshipApps
+        var scholarshipApps = await Context.ScholarshipApps
             .Where(m =>
                 m.IsPublic &&
                 m.Type.Name == "Building Better Men Scholarship")
             .ToListAsync();
-        model.Semester = await Context.Semesters
+        var mostRecentSemesterWithRecruitmentBook = await Context.Semesters
             .Where(m => !string.IsNullOrEmpty(m.RecruitmentBookUrl))
             .OrderByDescending(m => m.DateEnd)
             .FirstOrDefaultAsync();
+
+        var model = new RecruitmentModel();
+        model.ScholarshipApps = scholarshipApps;
+        model.Semester = mostRecentSemesterWithRecruitmentBook;
 
         return View(model);
     }
@@ -85,7 +106,7 @@ public class HomeController : BaseController
     [Route("Contacts")]
     public async Task<ActionResult> Contacts()
     {
-        var term = await GetCurrentTerm();
+        var term = await _semesterService.GetCurrentSemesterAsync();
         return View(term);
     }
 
@@ -102,14 +123,17 @@ public class HomeController : BaseController
     {
         var nowCst = DateTime.UtcNow.FromUtcToCst();
         var twoHoursAgoCst = nowCst.AddHours(-2);
-        var member = await UserManager.FindByNameAsync(User.Identity.Name);
-        var events = await GetAllCompletedEventsForUserAsync(member.Id);
-        var thisSemester = await GetThisSemesterAsync();
-        var lastSemester = await GetLastSemesterAsync();
-        var soberService = new SoberService(Context);
+        var user = await _userService.GetUserByUserNameAsync(User.Identity.Name);
+        var roles = (await _roleService.GetCurrentRolesByUserIdAsync(user.Id))
+            .Select(x => x.Name)
+            .ToList() ?? new List<string>();
+        var events = await _memberService.GetAllCompletedEventsForUserAsync(user.Id);
+        var remainingServiceHours = await _memberService.GetRemainingServiceHoursForUserAsync(user.Id);
+        var thisSemester = await _semesterService.GetCurrentSemesterAsync();
+        var prevSemester = await _semesterService.GetPriorSemesterAsync(thisSemester);
 
-        var thisWeeksSoberShifts = await soberService.GetUpcomingSignupsAsync();
-        var memberSoberSignups = await GetSoberSignupsForUserAsync(member.Id, thisSemester);
+        var thisWeeksSoberShifts = await _soberService.GetUpcomingSignupsAsync();
+        var memberSoberSignups = await _memberService.GetSoberSignupsForUserAsync(user.Id, thisSemester);
         var remainingDriverShifts = await Context.SoberSignups
             .Where(s =>
                 s.UserId == null &&
@@ -126,15 +150,15 @@ public class HomeController : BaseController
 
         var model = new SphinxModel
         {
-            MemberInfo = member,
-            Roles = await UserManager.GetRolesAsync(member),
-            RemainingCommunityServiceHours = await GetRemainingServiceHoursForUserAsync(member.Id),
+            MemberInfo = user.MemberInfo,
+            Roles = roles,
+            RemainingCommunityServiceHours = remainingServiceHours,
             CompletedEvents = events,
             SoberSignups = thisWeeksSoberShifts,
             LaundrySummary = laundrySignups.Take(laundryTake),
             NeedsToSoberDrive = !memberSoberSignups.Any() && remainingDriverShifts.Any(),
             CurrentSemester = thisSemester,
-            PreviousSemester = await GetLastSemesterAsync()
+            PreviousSemester = prevSemester
         };
 
         var mostRecentIncident = await Context.IncidentReports
@@ -142,10 +166,10 @@ public class HomeController : BaseController
             .FirstOrDefaultAsync() ?? new IncidentReport();
         var startOfYearUtc = new DateTime(nowCst.Year, 1, 1).FromCstToUtc();
         model.DaysSinceIncident = (DateTime.UtcNow - mostRecentIncident.DateTimeSubmitted).Days;
-        model.IncidentsThisSemester = await Context.IncidentReports.CountAsync(i => i.DateTimeOfIncident > lastSemester.DateEnd);
+        model.IncidentsThisSemester = await Context.IncidentReports.CountAsync(i => i.DateTimeOfIncident > prevSemester.DateEnd);
         model.ScholarshipSubmissionsThisYear = await Context.ScholarshipSubmissions.CountAsync(s => s.SubmittedOn >= startOfYearUtc);
         model.LaundryUsageThisSemester = await Context.LaundrySignups.CountAsync(l => l.DateTimeShift >= thisSemester.DateStart);
-        model.NewMembersThisSemester = await Context.Users.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.Id);
+        model.NewMembersThisSemester = await Context.Members.CountAsync(u => u.PledgeClass.SemesterId == thisSemester.Id);
         model.ServiceHoursThisSemester = 0;
         //var members = await GetRosterForSemester(thisSemester);
         //foreach (var m in members)

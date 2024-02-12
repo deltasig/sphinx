@@ -18,10 +18,17 @@ using System.Threading.Tasks;
 public class MajorsController : BaseController
 {
     private readonly IPositionService _positionService;
+    private readonly IMemberService _memberService;
+    private readonly ISemesterService _semesterService;
+    private readonly IUserService _userService;
 
-    public MajorsController(IPositionService positionService)
+    public MajorsController(IPositionService positionService, IMemberService memberService, ISemesterService semesterService,
+        IUserService userService)
     {
         _positionService = positionService;
+        _memberService = memberService;
+        _semesterService = semesterService;
+        _userService = userService;
     }
 
     public async Task<ActionResult> Index()
@@ -114,10 +121,10 @@ public class MajorsController : BaseController
 
         if (id != null)
         {
-            var member = await UserManager.FindByIdAsync(id.ToString());
+            var member = await _memberService.GetMemberByUserNameAsync(id.ToString());
             if (member != null)
             {
-                ViewBag.UserName = member.UserName;
+                ViewBag.UserName = member.UserInfo.UserName;
                 ViewBag.UserId = new SelectList(new List<object>
                 {
                     new { UserId = member.Id, Name = member.FirstName + " " + member.LastName }
@@ -163,8 +170,8 @@ public class MajorsController : BaseController
         {
             return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
-        var member = await UserManager.FindByIdAsync(model.UserId.ToString());
-        if (member.Majors.Any(m => m.MajorId == model.MajorId && m.DegreeLevel == model.DegreeLevel))
+        var user = await _userService.GetUserByIdAsync(model.UserId);
+        if (user.MemberInfo.Majors.Any(m => m.MajorId == model.MajorId && m.DegreeLevel == model.DegreeLevel))
         {
             TempData["FailureMessage"] = "Failed to assign member to major because they are already in that major at that degree level.";
             return RedirectToAction("Assign", new { id = model.UserId });
@@ -175,8 +182,8 @@ public class MajorsController : BaseController
 
         var major = await Context.Majors.FindAsync(model.MajorId);
 
-        TempData["SuccessMessage"] = member + " was successfully assigned to the " + major.MajorName + " major.";
-        return RedirectToAction("Index", "Account", new { area = "Members", userName = member.UserName });
+        TempData["SuccessMessage"] = user + " was successfully assigned to the " + major.MajorName + " major.";
+        return RedirectToAction("Index", "Account", new { area = "Members", userName = user.UserName });
     }
 
     public async Task<ActionResult> Unassign(int? id)
@@ -205,11 +212,26 @@ public class MajorsController : BaseController
         {
             return new StatusCodeResult((int)HttpStatusCode.BadRequest);
         }
-        var userName = model.User.UserName;
+        var userName = model.User.UserInfo.UserName;
         Context.MajorsToMembers.Remove(model);
         await Context.SaveChangesAsync();
 
         TempData["SuccessMessage"] = name + " was successfully unassigned from the " + majorName + " major.";
         return RedirectToAction("Index", "Account", new { area = "Members", userName });
+    }
+
+    protected virtual async Task<SelectList> GetUserIdListAsFullNameAsync()
+    {
+        var members = (await _memberService.GetCurrentRosterAsync()).OrderBy(o => o.LastName);
+        var newList = new List<object>();
+        foreach (var member in members)
+        {
+            newList.Add(new
+            {
+                UserId = member.Id,
+                Name = member.FirstName + " " + member.LastName
+            });
+        }
+        return new SelectList(newList, "UserId", "Name");
     }
 }

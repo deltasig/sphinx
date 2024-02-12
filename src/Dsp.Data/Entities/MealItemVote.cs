@@ -15,5 +15,5 @@ public partial class MealItemVote
 
     public virtual MealItem MealItem { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual Member User { get; set; }
 }

@@ -5,7 +5,6 @@ using Data.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Services;
 using Services.Interfaces;
 using System;
 using System.Linq;
@@ -21,12 +20,13 @@ public class AdminController : ControllerBase
     private IMemberService _memberService;
     private IPositionService _positionService;
 
-    public AdminController(DspDbContext context)
+    public AdminController(DspDbContext context, ISemesterService semesterService,
+        IMemberService memberService, IPositionService positionService)
     {
         _context = context;
-        _semesterService = new SemesterService(context);
-        _memberService = new MemberService(context);
-        _positionService = new PositionService(context);
+        _semesterService = semesterService;
+        _memberService = memberService;
+        _positionService = positionService;
     }
 
     [Authorize(Roles = "Administrator, President")]
@@ -40,7 +40,7 @@ public class AdminController : ControllerBase
 
         try
         {
-            var leader = await _context.UserRoles
+            var leader = await _context.MembersPositions
                 .Where(l => l.SemesterId == sid && l.RoleId == pid)
                 .OrderByDescending(l => l.AppointedOn)
                 .Include(x => x.User)
@@ -62,7 +62,7 @@ public class AdminController : ControllerBase
 
     [Authorize(Roles = "Administrator, President")]
     [Route("~/api/admin/appoint")]
-    public async Task<IActionResult> Appoint([FromBody] UserRole app)
+    public async Task<IActionResult> Appoint([FromBody] MemberPosition app)
     {
         var member = await _memberService.GetMemberByIdAsync(app.UserId);
         if (member == null) return NotFound();
@@ -85,7 +85,7 @@ public class AdminController : ControllerBase
 
     [Authorize(Roles = "Administrator, President")]
     [Route("~/api/admin/unappoint")]
-    public async Task<IActionResult> Unappoint([FromBody] UserRole app)
+    public async Task<IActionResult> Unappoint([FromBody] MemberPosition app)
     {
         var member = await _memberService.GetMemberByIdAsync(app.UserId);
         if (member == null) return NotFound();

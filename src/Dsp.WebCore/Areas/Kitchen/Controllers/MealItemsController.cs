@@ -1,14 +1,11 @@
 ﻿namespace Dsp.WebCore.Areas.Kitchen.Controllers;
 
-using Dsp.Data;
 using Dsp.Data.Entities;
-using Dsp.Services;
 using Dsp.Services.Exceptions;
 using Dsp.Services.Interfaces;
 using Dsp.WebCore.Areas.Kitchen.Models;
 using Dsp.WebCore.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -18,13 +15,11 @@ public class MealItemsController : BaseController
 {
     private readonly IMealService _mealService;
     private readonly IPositionService _positionService;
-    private readonly UserManager<User> _userManager;
 
-    public MealItemsController(DspDbContext context, UserManager<User> userManager)
+    public MealItemsController(IMealService mealService, IPositionService positionService)
     {
-        _mealService = new MealService(context);
-        _positionService = new PositionService(context);
-        _userManager = userManager;
+        _mealService = mealService;
+        _positionService = positionService;
     }
 
     public async Task<ActionResult> Index()
@@ -33,8 +28,7 @@ public class MealItemsController : BaseController
         ViewBag.FailMessage = TempData["FailureMessage"];
 
         var mealItems = await _mealService.GetAllItemsAsync();
-        var currentUser = await _userManager.GetUserAsync(HttpContext.User);
-        var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(currentUser.Id, "House Steward");
+        var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(User.Identity.Name, "House Steward");
         var model = new MealItemIndexModel(mealItems, hasElevatedPermissions);
 
         return View(model);

@@ -25,12 +25,17 @@ public class AccountController : BaseController
 {
     private readonly IWebHostEnvironment _env;
     private readonly IPositionService _positionService;
+    private readonly IMemberService _memberService;
+    private readonly ISemesterService _semesterService;
     private readonly IUserService _userService;
 
-    public AccountController(IWebHostEnvironment env, IPositionService positionService, IUserService userService)
+    public AccountController(IWebHostEnvironment env, IPositionService positionService, IMemberService memberService,
+                             ISemesterService semesterService, IUserService userService)
     {
         _env = env;
         _positionService = positionService;
+        _memberService = memberService;
+        _semesterService = semesterService;
         _userService = userService;
     }
 
@@ -57,15 +62,15 @@ public class AccountController : BaseController
 
         if (string.IsNullOrEmpty(userName)) userName = User.GetUserName();
 
-        var member = await _userService.GetUserByUserNameAsync(userName);
-        var thisSemester = await GetThisSemesterAsync();
+        var user = await _userService.GetUserByUserNameAsync(userName);
+        var thisSemester = await _semesterService.GetCurrentSemesterAsync();
         var model = new AccountInformationModel
         {
-            User = member,
+            User = user,
             CurrentSemester = thisSemester,
-            ThisSemesterCourses = member.ClassesTaken
+            ThisSemesterCourses = user.MemberInfo.ClassesTaken
                 .Where(c => c.SemesterId == thisSemester.Id),
-            Roles = await UserManager.GetRolesAsync(member)
+            Roles = await UserManager.GetRolesAsync(user)
         };
         ViewBag.UserName = userName;
 
@@ -95,14 +100,15 @@ public class AccountController : BaseController
 
         if (string.IsNullOrEmpty(userName)) userName = User.GetUserName();
 
-        var user = await UserManager.FindByNameAsync(userName);
+        var user = await _userService.GetUserByUserNameAsync(userName);
 
         ViewBag.UserName = userName;
 
-        return View(new AccountManagementModel
+        var model = new AccountManagementModel
         {
             User = user,
-        });
+        };
+        return View(model);
     }
 
     [HttpGet]
@@ -122,17 +128,19 @@ public class AccountController : BaseController
         {
             return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
-        var member = string.IsNullOrEmpty(userName)
-            ? await UserManager.FindByNameAsync(User.Identity.Name)
-            : await UserManager.FindByNameAsync(userName);
+        var user = string.IsNullOrEmpty(userName)
+            ? await _userService.GetUserByUserNameAsync(User.Identity.Name)
+            : await _userService.GetUserByUserNameAsync(userName);
+
+        var semesters = await _semesterService.GetAllSemestersAsync();
+        var pledgeClasses = await _semesterService.GetAllPledgeClassesAsync();
+        var members = await _memberService.GetAllMembersAsync();
         var model = new EditMemberInfoModel
         {
-            User = member,
-            Semesters = await GetAllSemesterListAsync(),
-            PledgeClasses = await GetPledgeClassListAsync(),
-            Statuses = await GetStatusListAsync(),
-            Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync(),
-            ShirtSizes = GetShirtSizesSelectList()
+            User = user,
+            Semesters = semesters.ToSelectList(),
+            PledgeClasses = pledgeClasses.ToSelectList(),
+            Members = members.ToSelectListWithNone(),
         };
 
         return View(model);
@@ -148,11 +156,12 @@ public class AccountController : BaseController
             return new StatusCodeResult((int)HttpStatusCode.NotFound);
         }
 
-        model.Semesters = await GetAllSemesterListAsync();
-        model.PledgeClasses = await GetPledgeClassListAsync();
-        model.Statuses = await GetStatusListAsync();
-        model.Members = await GetAllUserIdsSelectListAsFullNameWithNoneAsync();
-        model.ShirtSizes = GetShirtSizesSelectList();
+        var semesters = await _semesterService.GetAllSemestersAsync();
+        var pledgeClasses = await _semesterService.GetAllPledgeClassesAsync();
+        model.Semesters = semesters.ToSelectList();
+        model.PledgeClasses = pledgeClasses.ToSelectList();
+        var members = await _memberService.GetAllMembersAsync();
+        model.Members = members.ToSelectListWithNone();
 
         if (!ModelState.IsValid)
         {
@@ -160,18 +169,23 @@ public class AccountController : BaseController
             return View(model);
         }
 
-        var member = await UserManager.FindByIdAsync(model.User.Id.ToString());
-        member.FirstName = model.User.FirstName;
-        member.LastName = model.User.LastName;
-        member.Email = model.User.Email;
-        member.StatusId = model.User.StatusId;
-        member.PledgeClassId = model.User.PledgeClassId;
-        member.ExpectedGraduationId = model.User.ExpectedGraduationId;
-        member.BigBroId = model.User.BigBroId == 0 ? null : model.User.BigBroId;
-        member.DietaryInstructions = model.User.DietaryInstructions;
-        member.LastUpdatedOn = DateTime.UtcNow;
+        var user = await _userService.GetUserByIdAsync(model.User.Id);
+        user.FirstName = model.User.FirstName;
+        user.LastName = model.User.LastName;
+        user.Email = model.User.Email;
+        user.MemberInfo = new Member
+        {
+            FirstName = model.User.FirstName,
+            LastName = model.User.LastName,
+            Email = model.User.Email,
+            PledgeClassId = model.User.MemberInfo.PledgeClassId,
+            ExpectedGraduationId = model.User.MemberInfo.ExpectedGraduationId,
+            BigBroId = model.User.MemberInfo.BigBroId == 0 ? null : model.User.MemberInfo.BigBroId,
+            DietaryInstructions = model.User.MemberInfo.DietaryInstructions,
+            LastUpdatedOn = DateTime.UtcNow
+        };
 
-        Context.Update(member);
+        Context.Update(user);
         await Context.SaveChangesAsync();
 
         ViewBag.SuccessMessage = GetAccountChangeMessage(AccountChangeMessageId.UpdateSuccess);
@@ -182,22 +196,22 @@ public class AccountController : BaseController
     [HttpPost]
     public async Task<ActionResult> Avatar(FormCollection formCollection)
     {
-        var userId = formCollection["Member.Id"];
-        var member = await UserManager.FindByIdAsync(userId);
+        var userId = int.Parse(formCollection["Member.Id"]);
+        var member = await _memberService.GetMemberByIdAsync(userId);
         var file = Request.Form.Files[0];
         if (file == null || file.Length <= 0)
         {
             TempData["FailureMessage"] = "Upload failure (no file received).";
-            return RedirectToAction("Edit", new { userName = member.UserName });
+            return RedirectToAction("Edit", new { userName = member.UserInfo.UserName });
         }
         if (file.Length > 1000000)
         {
             TempData["FailureMessage"] = "Upload failure (file too large; max upload size is 1mb).";
-            return RedirectToAction("Edit", new { userName = member.UserName });
+            return RedirectToAction("Edit", new { userName = member.UserInfo.UserName });
         }
 
         var imageUpload = new ImageUpload(_env) { Width = 300, Height = 300 };
-        var imageResult = await imageUpload.RenameUploadFileAsync(file, member.UserName);
+        var imageResult = await imageUpload.RenameUploadFileAsync(file, member.UserInfo.UserName);
         if (imageResult.Success)
         {
             member.AvatarPath = imageResult.ImageName;
@@ -210,7 +224,7 @@ public class AccountController : BaseController
             TempData["FailureMessage"] = imageResult.ErrorMessage;
         }
 
-        return RedirectToAction("Edit", new { userName = member.UserName });
+        return RedirectToAction("Edit", new { userName = member.UserInfo.UserName });
     }
 
     [HttpGet, AllowAnonymous]
@@ -269,23 +283,20 @@ public class AccountController : BaseController
         ViewBag.SuccessMessage = TempData["SuccessMessage"];
         ViewBag.FailMessage = TempData["FailureMessage"];
 
+        var now = DateTime.UtcNow;
+        var semesters = await _semesterService.GetAllSemestersAsync();
+        var pledgeClasses = await _semesterService.GetAllPledgeClassesAsync();
+        var members = await _memberService.GetAllMembersAsync();
         var model = new RegistrationModel
         {
             RegisterModel = new RegisterModel
             {
-                StatusList = await GetStatusListAsync(),
-                PledgeClassList = await GetPledgeClassListWithNoneAsync(),
-                SemesterList = await GetAllSemesterListWithNoneAsync()
+                PledgeClassList = pledgeClasses.ToSelectListWithNone(),
+                SemesterList = semesters.ToSelectList()
             },
             UnregisterModel = new UnregisterModel
             {
-                Users = await GetUsersAsFullNameAsync(
-                    u =>
-                        u.Status.StatusName == "New" ||
-                        u.Status.StatusName == "Affiliate",
-                    u =>
-                        u.CreatedOn != null &&
-                        (DateTime.UtcNow - u.CreatedOn.Value).TotalDays < 30)
+                Users = members.ToSelectList()
             }
         };
 
@@ -312,15 +323,12 @@ public class AccountController : BaseController
             var expectedGraduationId = int.Parse(model.ExpectedGraduationId);
             var user = new User
             {
-                UserName = model.UserName.ToLower(),
                 Email = model.Email.ToLower(),
+                UserName = model.UserName,
                 FirstName = model.FirstName,
                 LastName = model.LastName,
-                StatusId = int.Parse(model.StatusId),
                 CreatedOn = DateTime.UtcNow
             };
-            if (pledgeClassId > 0) user.PledgeClassId = pledgeClassId;
-            if (expectedGraduationId > 0) user.ExpectedGraduationId = expectedGraduationId;
 
             var result = await UserManager.CreateAsync(user, tempPassword);
             if (result.Succeeded)
@@ -439,72 +447,72 @@ public class AccountController : BaseController
                 // Disallow unregistration if someone has meaninfully interacted with the system.
                 var userInteractedWithSystem = false;
                 var interactionMessage = "";
-                if (user.ClassesTaken.Any())
+                if (user.MemberInfo.ClassesTaken.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Classes";
                 }
-                else if (user.BigBroId != null)
+                else if (user.MemberInfo.BigBroId != null)
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Big Brother";
                 }
-                else if (user.LittleBros.Any())
+                else if (user.MemberInfo.LittleBros.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Little Brothers";
                 }
-                else if (user.LaundrySignups.Any())
+                else if (user.MemberInfo.LaundrySignups.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Laundry Signups";
                 }
-                else if (user.ServiceHours.Any())
+                else if (user.MemberInfo.ServiceHours.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Service Hours";
                 }
-                else if (user.SoberSignups.Any())
+                else if (user.MemberInfo.SoberSignups.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Sober Signups";
                 }
-                else if (user.IncidentReports.Any())
+                else if (user.MemberInfo.IncidentReports.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Incident Reports";
                 }
-                else if (user.MealPlates.Any())
+                else if (user.MemberInfo.MealPlates.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Meal Plates";
                 }
-                else if (user.Rooms.Any())
+                else if (user.MemberInfo.Rooms.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Rooms";
                 }
-                else if (user.MealItemVotes.Any())
+                else if (user.MemberInfo.MealItemVotes.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Meal Item Votes";
                 }
-                else if (user.ServiceHourAmendments.Any())
+                else if (user.MemberInfo.ServiceHourAmendments.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Service Hour Amendments";
                 }
-                else if (user.ServiceEventAmendments.Any())
+                else if (user.MemberInfo.ServiceEventAmendments.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Service Event Amendments";
                 }
-                else if (user.ServiceEvents.Any())
+                else if (user.MemberInfo.ServiceEvents.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Event Submission";
                 }
-                else if (user.WorkOrders.Any())
+                else if (user.MemberInfo.WorkOrders.Any())
                 {
                     userInteractedWithSystem = true;
                     interactionMessage = "Work Orders";

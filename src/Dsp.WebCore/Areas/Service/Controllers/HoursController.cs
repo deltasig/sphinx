@@ -41,7 +41,7 @@ public class HoursController : BaseController
 
         var rosterProgress = await _serviceService.GetRosterProgressBySemesterIdAsync(selectedSemester.Id);
         var semestersWithEvents = await _serviceService.GetSemestersWithEventsAsync(currentSemester);
-        var semesterList = GetSemesterSelectList(semestersWithEvents);
+        var semesterList = semestersWithEvents.ToSelectList();
         var userId = User.GetUserId();
         var hasElevatedPermissions = await _positionService.UserHasPositionPowerAsync(userId, "Service");
         var navModel = new ServiceNavModel(hasElevatedPermissions, selectedSemester, semesterList);
@@ -63,7 +63,7 @@ public class HoursController : BaseController
         }
         else
         {
-            model.Semester = await GetThisSemesterAsync();
+            model.Semester = await _semesterService.GetCurrentSemesterAsync();
             var events = await _serviceService.GetEventsForSemesterAsync(model.Semester);
             model.Events = GetServiceEventSelectList(events);
         }

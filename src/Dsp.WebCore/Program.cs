@@ -24,7 +24,7 @@ builder.Services.AddDbContext<DspDbContext>(options => options.UseSqlServer(conn
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services
-    .AddIdentity<User, Role>(options =>
+    .AddIdentity<User, IdentityRole<int>>(options =>
     {
         options.User.RequireUniqueEmail = true;
 
@@ -53,7 +53,6 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<ISemesterService, SemesterService>();
 builder.Services.AddScoped<IServiceService, ServiceService>();
 builder.Services.AddScoped<ISoberService, SoberService>();
-builder.Services.AddScoped<IStatusService, StatusService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 // Authorization handlers

@@ -18,7 +18,7 @@ public class ServiceGeneralHistoricalStats
 
     public ServiceGeneralHistoricalStats(
         Semester semester,
-        IEnumerable<User> nonExemptMembers,
+        IEnumerable<Member> nonExemptMembers,
         DateTime calculatedOn)
     {
         SemesterId = semester.Id;

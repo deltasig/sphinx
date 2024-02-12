@@ -1,6 +1,7 @@
 ﻿namespace Dsp.WebCore.Areas.House.Controllers;
 
 using Dsp.Data.Entities;
+using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
 using Dsp.WebCore.Extensions;
 using Microsoft.AspNetCore.Authorization;
@@ -16,12 +17,21 @@ using System.Threading.Tasks;
 [Authorize]
 public class RoomsController : BaseController
 {
+    private IMemberService _memberService;
+    private ISemesterService _semesterService;
+
+    public RoomsController(IMemberService memberService, ISemesterService semesterService)
+    {
+        _memberService = memberService;
+        _semesterService = semesterService;
+    }
+
     public async Task<ActionResult> Index(int? sid)
     {
         var model = new RoomIndexModel();
         if (sid == null)
         {
-            model.Semester = await base.GetThisSemesterAsync();
+            model.Semester = await _semesterService.GetCurrentSemesterAsync();
         }
         else
         {
@@ -29,9 +39,9 @@ public class RoomsController : BaseController
         }
 
         var semesters = await Context.Semesters.OrderByDescending(s => s.DateStart).ToListAsync();
-        model.SemesterList = base.GetSemesterSelectList(semesters);
+        model.SemesterList = semesters.ToSelectList();
         model.sid = model.Semester.Id;
-        model.Members = (await base.GetRosterForSemester(model.Semester)).ToList();
+        model.Members = (await _memberService.GetRosterForSemesterAsync(model.Semester)).ToList();
         model.Rooms = model.Semester.Rooms;
 
         return View(model);
@@ -41,7 +51,7 @@ public class RoomsController : BaseController
     {
         if (sid == null)
         {
-            var thisSemester = await base.GetThisSemesterAsync();
+            var thisSemester = await _semesterService.GetCurrentSemesterAsync();
             sid = thisSemester.Id;
             ViewBag.Semester = thisSemester.ToString();
         }

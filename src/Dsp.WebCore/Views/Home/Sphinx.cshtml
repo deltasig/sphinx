@@ -19,8 +19,8 @@
     var laundry = Model.LaundrySummary.OrderBy(o => o.DateTimeShift);
 
     // Class-related
-    var lastSemesterClasses = Model.MemberInfo.ClassesTaken?.Where(c => c.SemesterId == Model.PreviousSemester.Id).ToList() ?? new List<ClassTaken>();
-    var thisSemesterClasses = Model.MemberInfo.ClassesTaken?.Where(c => c.SemesterId == Model.CurrentSemester.Id).ToList() ?? new List<ClassTaken>();
+    var lastSemesterClasses = Model.MemberInfo?.ClassesTaken?.Where(c => c.SemesterId == Model.PreviousSemester.Id).ToList() ?? new List<ClassTaken>();
+    var thisSemesterClasses = Model.MemberInfo?.ClassesTaken?.Where(c => c.SemesterId == Model.CurrentSemester.Id).ToList() ?? new List<ClassTaken>();
 
     // Service-related
     var approvedHours = 0.0;
@@ -30,8 +30,8 @@
         approvedHours = Model.CompletedEvents.Where(e => e.Event.IsApproved).Sum(h => h.DurationHours);
         unapprovedHours = Model.CompletedEvents.Where(e => !e.Event.IsApproved).Sum(h => h.DurationHours);
     }
-    var hourAmendments = Model.MemberInfo.ServiceHourAmendments?.Where(a => a.SemesterId == Model.CurrentSemester.Id) ?? new List<ServiceHourAmendment>();
-    var eventAmendments = Model.MemberInfo.ServiceEventAmendments?.Where(a => a.SemesterId == Model.CurrentSemester.Id) ?? new List<ServiceEventAmendment>();
+    var hourAmendments = Model.MemberInfo?.ServiceHourAmendments?.Where(a => a.SemesterId == Model.CurrentSemester.Id) ?? new List<ServiceHourAmendment>();
+    var eventAmendments = Model.MemberInfo?.ServiceEventAmendments?.Where(a => a.SemesterId == Model.CurrentSemester.Id) ?? new List<ServiceEventAmendment>();
     var totalHourAmendment = hourAmendments.Sum(a => a.AmountHours);
     var totalEventAmendment = eventAmendments.Sum(a => a.NumberEvents);
     var hoursGoal = Model.CurrentSemester.MinimumServiceHours + totalHourAmendment;
@@ -64,7 +64,7 @@
             Priority = NotificationPriority.Low
         });
     }
-    if (Model.MemberInfo.Addresses?.Any(a => a.Type == "Mailing" && !a.IsFilledOut()) ?? false)
+    if (Model.MemberInfo?.Addresses?.Any(a => a.Type == "Mailing" && !a.IsFilledOut()) ?? false)
     {
         notifications.Add(new Notification
         {
@@ -75,7 +75,7 @@
             Priority = NotificationPriority.Moderate
         });
     }
-    if (string.IsNullOrWhiteSpace(Model.MemberInfo.PhoneNumber))
+    if (string.IsNullOrWhiteSpace(Model.MemberInfo?.UserInfo.PhoneNumber ?? ""))
     {
         notifications.Add(new Notification
         {
@@ -86,7 +86,7 @@
             Priority = NotificationPriority.High
         });
     }
-    if (string.IsNullOrWhiteSpace(Model.MemberInfo.EmergencyPhoneNumber))
+    if (string.IsNullOrWhiteSpace(Model.MemberInfo?.UserInfo.EmergencyPhoneNumber ?? ""))
     {
         notifications.Add(new Notification
             {
@@ -103,13 +103,13 @@
         {
             Message = "Report upcoming or current semester courses.",
             LinkText = "Go to Class Schedule",
-                    Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserName, area = "School" }),
+                    Link = Url.Action("Schedule", "Classes", new { userName = Model.MemberInfo.UserInfo.UserName, area = "School" }),
             Why = "This is how you are held accountable to academic standards. " +
                   "The academic chairman will contact you about this if you wait too long.",
             Priority = NotificationPriority.Moderate
         });
     }
-    if (!Model.MemberInfo.Majors?.Any() ?? false)
+    if (!Model.MemberInfo?.Majors?.Any() ?? false)
     {
         notifications.Add(new Notification
         {
@@ -120,17 +120,7 @@
             Priority = NotificationPriority.Moderate
         });
     }
-    if (string.IsNullOrEmpty(Model.MemberInfo.AvatarPath))
-    {
-        notifications.Add(new Notification
-        {
-            Message = "Upload a profile picture!",
-            LinkText = "Go to Profile",
-            Link = Url.Action("Edit", "Account", new { userName = Model.MemberInfo.UserName, area = "Members" }),
-            Why = "Use your composite photo if you have it.",
-            Priority = NotificationPriority.Moderate
-        });
-    }
+
 }
 @*@Scripts.Render("~/bundles/moment")*@
 @*@Scripts.Render("~/bundles/mustache")*@
@@ -236,7 +226,7 @@
                                 </small>
 
                                 Otherwise, please go fill out your classes for last semester with the
-                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserName, area = "School"}, null).
+                                @Html.ActionLink("Classes", "Schedule", "Classes", new {userName = Model.MemberInfo.UserInfo.UserName, area = "School"}, null).
 
                                 If you transferred here from another college you attended after graduating high school,
                                 you still need to enter your previous semester classes.

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class SphinxModel
 {
-    public User MemberInfo { get; set; }
+    public Member MemberInfo { get; set; }
     public bool NeedsToSoberDrive { get; set; }
     public Semester CurrentSemester { get; set; }
     public Semester PreviousSemester { get; set; }

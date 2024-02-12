@@ -1,11 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Dsp.Data.Entities;
 
-public partial class Role : IdentityRole<int>
+public partial class Position
 {
+    public virtual int Id { get; set; } = default!;
+
+    public virtual string? Name { get; set; }
+
+    public virtual string? NormalizedName { get; set; }
+
+    public virtual string? ConcurrencyStamp { get; set; }
+
     public string Description { get; set; }
 
     public PositionType Type { get; set; }
@@ -24,7 +30,7 @@ public partial class Role : IdentityRole<int>
 
     public string Inquiries { get; set; }
 
-    public virtual ICollection<UserRole> Users { get; set; } = new List<UserRole>();
+    public virtual ICollection<MemberPosition> Users { get; set; } = new List<MemberPosition>();
 }
 
 public enum PositionType : int

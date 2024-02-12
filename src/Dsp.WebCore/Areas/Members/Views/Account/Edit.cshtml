@@ -10,11 +10,8 @@
     var showLastName = true;
     var showEmail = true;
     var showExpectedGraduation = true;
-    var showPin = true;
-    var showStatus = isAdmin || isSecretary;
     var showPledgeClass = isAdmin || isSecretary;
     var showBigBro = true;
-    var showShirtSize = true;
     var showDietaryInstructions = true;
 }
 
@@ -35,7 +32,7 @@
         <div class="col-sm-6">
             <div class="media">
                 <div class="media-left">
-                    <img src="~/Images/Avatars/@(Model.User.AvatarPath)" height="90" width="90"
+                    <img src="~/Images/Avatars/@(Model.User.MemberInfo.AvatarPath)" height="90" width="90"
                          onError="this.onerror = null; this.src = '/Images/NoAvatar.jpg';" />
                 </div>
                 <div class="media-body">
@@ -108,65 +105,53 @@
                 if (showExpectedGraduation)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.User.ExpectedGraduationId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.User.ExpectedGraduationId, Model.Semesters,
+                        @Html.LabelFor(m => m.User.MemberInfo.ExpectedGraduationId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.MemberInfo.ExpectedGraduationId, Model.Semesters,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
                 }
                 else
                 {
-                    @Html.HiddenFor(m => m.User.ExpectedGraduationId)
-                }
-
-                if (showStatus)
-                {
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.User.StatusId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.User.StatusId, Model.Statuses, new { @class = "form-control selectpicker" })
-                    </div>
-                }
-                else
-                {
-                    @Html.HiddenFor(m => m.User.StatusId)
+                    @Html.HiddenFor(m => m.User.MemberInfo.ExpectedGraduationId)
                 }
 
                 if (showPledgeClass)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.User.PledgeClassId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.User.PledgeClassId, Model.PledgeClasses,
+                        @Html.LabelFor(m => m.User.MemberInfo.PledgeClassId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.MemberInfo.PledgeClassId, Model.PledgeClasses,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
                 }
                 else
                 {
-                    @Html.HiddenFor(m => m.User.PledgeClassId)
+                    @Html.HiddenFor(m => m.User.MemberInfo.PledgeClassId)
                 }
 
                 if (showBigBro)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.User.BigBroId, new { @class = "control-label" })
-                        @Html.DropDownListFor(m => m.User.BigBroId, Model.Members,
+                        @Html.LabelFor(m => m.User.MemberInfo.BigBroId, new { @class = "control-label" })
+                        @Html.DropDownListFor(m => m.User.MemberInfo.BigBroId, Model.Members,
                             new {@class = "form-control selectpicker", autocomplete = "off", data_live_search = "true"})
                     </div>
                 }
                 else
                 {
-                    @Html.HiddenFor(m => m.User.BigBroId)
+                    @Html.HiddenFor(m => m.User.MemberInfo.BigBroId)
                 }
 
                 if (showDietaryInstructions)
                 {
                     <div class="form-group">
-                        @Html.LabelFor(m => m.User.DietaryInstructions, new { @class = "control-label" })
-                        @Html.EditorFor(m => m.User.DietaryInstructions, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(m => m.User.DietaryInstructions, "", new { @class = "text-danger" })
+                        @Html.LabelFor(m => m.User.MemberInfo.DietaryInstructions, new { @class = "control-label" })
+                        @Html.EditorFor(m => m.User.MemberInfo.DietaryInstructions, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(m => m.User.MemberInfo.DietaryInstructions, "", new { @class = "text-danger" })
                     </div>
                 }
                 else
                 {
-                    @Html.HiddenFor(m => m.User.DietaryInstructions)
+                    @Html.HiddenFor(m => m.User.MemberInfo.DietaryInstructions)
                 }
 
                 <div class="form-group">

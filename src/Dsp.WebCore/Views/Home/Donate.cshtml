@@ -1,0 +1,102 @@
+﻿@{
+    ViewBag.Title = "Donate";
+}
+@section AdditionalMeta {
+    <meta name="description" content="Donate to us or one of our fundraisers.">
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h3>Active Funds</h3>
+            <div class="table-responsive">
+                <table class="table table-bordered text-center">
+                    <thead>
+                        <tr class="table-active">
+                            <th scope="col" style="width: 10%" colspan="2"></th>
+                            <th scope="col" style="width: 30%">General Fund</th>
+                            <th scope="col" style="width: 30%">Ten Buck Club</th>
+                            <th scope="col" style="width: 30%">House Fund</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="table-active" colspan="2"><strong>Description</strong></td>
+                            <td>This goes straight to the Chapter for them to use in whatever way you do or do not specify.</td>
+                            <td>
+                                Members of the Ten Buck Club are monthly donors who collectively decide how to support
+                                the Chapter--funds are held by the ACB.
+                            </td>
+                            <td>This goes to the ACB who puts the funds toward improvements to the Chapter house.</td>
+                        </tr>
+                        <tr>
+                            <td class="table-active" colspan="2" rowspan="2"><strong>Credit Card</strong></td>
+                            <td class="table-active" rowspan="2"></td>
+                            <td>
+                                Click the button below, check the box titled "Make this a monthly donation,"
+                                and then set your contribution amount to $10.
+                            </td>
+                            <td>
+                                Click the button below and set your contribution amount to whatever you like.
+                                When entering payment information, be sure to note "House Fund" in the special instructions.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+                                    <input type="hidden" name="cmd" value="_s-xclick">
+                                    <input type="hidden" name="hosted_button_id" value="VWVCMCDKTQ968">
+                                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+                                           border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+                                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+                                </form>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-active" rowspan="2"><strong>Checks</strong></td>
+                            <td class="table-active"><strong>Pay to</strong></td>
+                            <td>
+                                Delta Sigma Phi, Delta Epsilon Chapter
+                            </td>
+                            <td class="table-active" rowspan="2"></td>
+                            <td>
+                                Delta Epsilon ACB of Delta Sigma Phi
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="table-active"><strong>Memo</strong></td>
+                            <td>
+                                General Fund
+                            </td>
+                            <td>
+                                House Fund
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h3>Mailing Checks</h3>
+            <p>
+                Please mail checks to:
+                <address>
+                    DSP Treasurer<br>
+                    215 W 8th St<br>
+                    Rolla, MO 65401<br>
+                </address>
+            </p>
+            <h3>Disclaimers</h3>
+            <p>
+                We do not store your financial information and we never will.
+                PayPal is one of the most secure and pervasive ways to send transactions online.
+                You do not need to create a PayPal account to use the PayPal links above.
+            </p>
+            <p>
+                Delta Epsilon Alumni Corporation Board is a 501(c)(7) organization in which contributions are not tax-deductible.
+                If you would like to make a tax-deductible donation toward the Delta Epsilon Chapter,
+                please donate through the <a href="https://give.deltasig.org">Delta Sigma Phi National Foundation</a>
+                and note the donation for the "Delta Epsilon Chapter Leadership General Fund".
+                More information about these type of funds can be found <a href="https://deltasig.org/chapter-leadership-funds">here</a>.
+            </p>
+        </div>
+    </div>
+</div>

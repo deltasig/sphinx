@@ -14,10 +14,10 @@ public class SoberService : BaseService, ISoberService
     private readonly DspDbContext _context;
     private readonly ISemesterService _semesterService;
 
-    public SoberService(DspDbContext context)
+    public SoberService(DspDbContext context, ISemesterService semesterService)
     {
         _context = context;
-        _semesterService = new SemesterService(context);
+        _semesterService = semesterService;
     }
 
     public virtual async Task<IEnumerable<SoberSignup>> GetUpcomingSignupsAsync()

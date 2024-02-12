@@ -17,7 +17,7 @@ public partial class RoomToMember
 
     public virtual Room Room { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual Member User { get; set; }
 
     public string GetSemester()
     {

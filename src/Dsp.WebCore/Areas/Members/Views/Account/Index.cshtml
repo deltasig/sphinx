@@ -68,34 +68,34 @@
                         </tr>
                         <tr>
                             <td class="active">Status</td>
-                            <td>@Model.User.Status.StatusName</td>
+                            <td>@Model.User.MemberInfo.GetStatus()</td>
                         </tr>
                         @if (isMember)
                         {
-                            if (Model.User.PledgeClass != null)
+                            if (Model.User.MemberInfo.PledgeClass != null)
                             {
-                                var pledgeClassLetters = Model.User.PledgeClass.GetLetters();
+                                var pledgeClassLetters = Model.User.MemberInfo.PledgeClass.GetLetters();
                                 <tr>
                                     <td class="active">Pledge Class</td>
                                     <td>
                                         @Html.Raw(pledgeClassLetters)
                                         <i data-toggle="tooltip" data-placement="left"
-                                           title="@Model.User.PledgeClass.PledgeClassName"
+                                           title="@Model.User.MemberInfo.PledgeClass.PledgeClassName"
                                            class="fa fa-question-circle float-end">
                                         </i>
                                     </td>
                                 </tr>
                             }
-                            if (Model.User.ExpectedGraduation != null)
+                            if (Model.User.MemberInfo.ExpectedGraduation != null)
                             {
                                 <tr>
                                     <td class="active">Graduation</td>
-                                    <td>@Model.User.ExpectedGraduation.ToString()</td>
+                                    <td>@Model.User.MemberInfo.ExpectedGraduation.ToString()</td>
                                 </tr>
                             }
                             <tr>
                                 <td class="active">
-                                    @(Model.User.Majors.Count <= 1 ? "Major" : "Majors")
+                                    @(Model.User.MemberInfo.Majors.Count <= 1 ? "Major" : "Majors")
                                     @if (canModifyMajor)
                                     {
                                         <a href="@Url.Action("Assign", "Majors", new { area = "School", id = Model.User.Id })" class="float-end">
@@ -104,10 +104,10 @@
                                         </a>
                                     }
                                 </td>
-                                <td class="@(Model.User.Majors.Any() ? "" : "warning")">
-                                    @if (Model.User.Majors.Any())
+                                <td class="@(Model.User.MemberInfo.Majors.Any() ? "" : "warning")">
+                                    @if (Model.User.MemberInfo.Majors.Any())
                                     {
-                                        foreach (var m in Model.User.Majors)
+                                        foreach (var m in Model.User.MemberInfo.Majors)
                                         {
                                             @m.Major.MajorName
                                             @:(@m.DegreeLevel)
@@ -124,16 +124,16 @@
                                     }
                                 </td>
                             </tr>
-                            if (Model.User.Rooms.Any())
+                            if (Model.User.MemberInfo.Rooms.Any())
                             {
                                 var counter = 0;
-                                foreach (var r in Model.User.Rooms.OrderByDescending(s => s.MovedOut))
+                                foreach (var r in Model.User.MemberInfo.Rooms.OrderByDescending(s => s.MovedOut))
                                 {
                                     counter++;
                                     <tr>
                                         @if (counter == 1)
                                         {
-                                            <td class="active" rowspan="@(Model.User.Rooms.Count)">Residences</td>
+                                            <td class="active" rowspan="@(Model.User.MemberInfo.Rooms.Count)">Residences</td>
                                         }
                                         <td>
                                             @r.Room.Name (@r.GetSemester())
@@ -150,13 +150,13 @@
                             }
                             <tr>
                                 <td class="active">Big Bro</td>
-                                <td class="@(Model.User.BigBro == null ? "warning" : "")">
-                                    @(Model.User.BigBro == null ? "" : Model.User.BigBro.ToString())
+                                <td class="@(Model.User.MemberInfo.BigBro == null ? "warning" : "")">
+                                    @(Model.User.MemberInfo.BigBro == null ? "" : Model.User.MemberInfo.BigBro.ToString())
                                 </td>
                             </tr>
                             <tr>
                                 <td class="active">Dietary Instructions</td>
-                                <td>@Model.User.DietaryInstructions</td>
+                                <td>@Model.User.MemberInfo.DietaryInstructions</td>
                             </tr>
                         }
                         <tr class="active">
@@ -164,7 +164,7 @@
                                 <small><i class="fa fa-phone-square"></i> Phone Numbers</small>
                             </td>
                         </tr>
-                        @if(Model.User.PhoneNumber != null)
+                        @if (Model.User.PhoneNumber != null)
                         {
                             <tr>
                                 <td class="active">Primary Phone</td>
@@ -193,7 +193,7 @@
                                 <small><i class="fa fa-envelope"></i> Addresses</small>
                             </td>
                         </tr>
-                        @foreach (var item in Model.User.Addresses)
+                        @foreach (var item in Model.User.MemberInfo.Addresses)
                         {
                             <tr>
                                 <td class="active">@item.Type</td>

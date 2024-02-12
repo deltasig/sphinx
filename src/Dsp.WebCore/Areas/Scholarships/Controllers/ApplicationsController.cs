@@ -57,8 +57,9 @@ public class ApplicationsController : BaseController
     {
         var model = new CreateScholarshipAppModel();
         model.Application = new ScholarshipApp();
-        model.Types = await base.GetScholarshipTypesSelectListAsync();
-        model.Questions = await base.GetScholarshipQuestionsAsync();
+        var types = await Context.ScholarshipTypes.ToListAsync();
+        model.Types = types.ToSelectList();
+        model.Questions = await GetScholarshipQuestionsAsync();
 
         return View(model);
     }
@@ -69,8 +70,9 @@ public class ApplicationsController : BaseController
     {
         if (!ModelState.IsValid)
         {
-            model.Types = await base.GetScholarshipTypesSelectListAsync();
-            model.Questions = await base.GetScholarshipQuestionsAsync();
+            var types = await Context.ScholarshipTypes.ToListAsync();
+            model.Types = types.ToSelectList();
+            model.Questions = await GetScholarshipQuestionsAsync();
             return View(model);
         }
 
@@ -108,7 +110,8 @@ public class ApplicationsController : BaseController
         model.Application.OpensOn = model.Application.OpensOn.FromUtcToCst();
         model.Application.ClosesOn = model.Application.ClosesOn.FromUtcToCst();
         model.Questions = new List<QuestionSelectionModel>();
-        model.Types = await base.GetScholarshipTypesSelectListAsync();
+        var types = await Context.ScholarshipTypes.ToListAsync();
+        model.Types = types.ToSelectList();
 
         var questions = await Context.ScholarshipQuestions.ToListAsync();
         foreach (var q in questions)
@@ -141,8 +144,9 @@ public class ApplicationsController : BaseController
     {
         if (!ModelState.IsValid)
         {
-            model.Types = await base.GetScholarshipTypesSelectListAsync();
-            model.Questions = await base.GetScholarshipQuestionsAsync();
+            var types = await Context.ScholarshipTypes.ToListAsync();
+            model.Types = types.ToSelectList();
+            model.Questions = await GetScholarshipQuestionsAsync();
             return View(model);
         }
 
@@ -315,5 +319,24 @@ public class ApplicationsController : BaseController
 
         //var emailService = new EmailService();
         //await emailService.SendAsync(emailMessage);
+    }
+
+    protected virtual async Task<List<QuestionSelectionModel>> GetScholarshipQuestionsAsync()
+    {
+        var questions = await Context.ScholarshipQuestions.ToListAsync();
+        var list = new List<QuestionSelectionModel>();
+        foreach (var q in questions)
+        {
+            var appQuestion = new ScholarshipAppQuestion();
+            appQuestion.ScholarshipQuestionId = q.ScholarshipQuestionId;
+            appQuestion.FormOrder = 0;
+            appQuestion.Question = q;
+
+            var selection = new QuestionSelectionModel();
+            selection.Question = appQuestion;
+            list.Add(selection);
+        }
+
+        return list;
     }
 }

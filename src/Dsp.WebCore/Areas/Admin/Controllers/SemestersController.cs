@@ -40,7 +40,7 @@ public class SemestersController : BaseController
 
         var model = new CreateSemesterModel
         {
-            GreekAlphabet = _semesterService.Alphabet,
+            GreekAlphabet = _semesterService.GreekAlphabet,
             Semester = _semesterService.GetEstimatedNextSemester(latestSemester),
             PledgeClass = _semesterService.GetEstimatedNextPledgeClass(latestSemester)
         };
@@ -57,11 +57,11 @@ public class SemestersController : BaseController
         try
         {
             // Validate Pledge Class Name
-            model.PledgeClass.PledgeClassName = base.ToTitleCaseString(model.PledgeClass.PledgeClassName);
+            model.PledgeClass.PledgeClassName = model.PledgeClass.PledgeClassName.ToTitleCaseString();
             var nameParts = model.PledgeClass.PledgeClassName.Split(' ');
             foreach (var n in nameParts)
             {
-                if (!_semesterService.Alphabet.Contains(n))
+                if (!_semesterService.GreekAlphabet.Contains(n))
                 {
                     TempData["FailureMessage"] = "The pledge class name you entered is not valid. " +
                         "Please verify the spelling of each part and try again.";

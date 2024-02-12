@@ -51,7 +51,7 @@
                     </div>
                     <div class="media-body">
                         <p style="margin-bottom:0">
-                            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.User.UserName})">
+                            <a href="@Url.Action("Index", "Account", new {area = "Members", userName = Model.User.UserInfo.UserName})">
                                 @Model.User.ToString()
                             </a>
                             <small>created this work order @timeSinceCreation</small>

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<User>
+﻿@model IEnumerable<Member>
 @{
     ViewBag.Title = "Addresses";
     ViewBag.Print = true;
@@ -69,7 +69,7 @@
                             <div class="list-group-item">
                                 <div class="row">
                                     <div class="col-sm-4 col-p-4">
-                                        <a href="@Url.Action("Index", "Account", new { userName = m.UserName })" class="no-print">
+                                        <a href="@Url.Action("Index", "Account", new { userName = m.UserInfo.UserName })" class="no-print">
                                             @if (name.ToLower().Contains(ViewBag.SearchTerm.ToLower()))
                                             {
                                                 var matchLocation = name.ToLower().IndexOf(ViewBag.SearchTerm.ToLower());

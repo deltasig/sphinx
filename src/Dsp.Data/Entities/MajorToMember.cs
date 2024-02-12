@@ -15,7 +15,7 @@ public partial class MajorToMember
 
     public virtual Major Major { get; set; }
 
-    public virtual User User { get; set; }
+    public virtual Member User { get; set; }
 }
 
 public enum DegreeLevel

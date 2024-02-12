@@ -1,10 +1,11 @@
 ﻿namespace Dsp.WebCore.Areas.Members.Controllers;
 
 using Dsp.Data.Entities;
+using Dsp.Services.Interfaces;
 using Dsp.WebCore.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Models;
 using System.Linq;
 using System.Text;
@@ -14,110 +15,53 @@ using System.Threading.Tasks;
 [Authorize]
 public class RosterController : BaseController
 {
+    private ISemesterService _semesterService;
+    private IMemberService _memberService;
+
+    public RosterController(ISemesterService semesterService, IMemberService memberService)
+    {
+        _semesterService = semesterService;
+        _memberService = memberService;
+    }
+
     [HttpGet]
     public async Task<ActionResult> Index(RosterFilterModel filter)
     {
         Semester semester;
         if (filter.sem == null)
         {
-            semester = await base.GetThisSemesterAsync();
+            semester = await _semesterService.GetCurrentSemesterAsync();
             filter.sem = semester.Id;
         }
         else
         {
-            semester = await Context.Semesters.FindAsync(filter.sem);
+            semester = await _semesterService.GetSemesterByIdAsync(filter.sem.Value);
         }
 
-        var members = await base.GetRosterForSemester(semester);
+        var members = await _memberService.GetRosterForSemesterAsync(semester.Id);
         ViewBag.Sort = filter.sort;
         ViewBag.Order = filter.order;
         ViewBag.SearchTerm = filter.s;
-        var filteredResults = base.GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
+        var filteredResults = GetFilteredMembersList(members, filter.s, filter.sort, filter.order);
+        var allSemesters = await _semesterService.GetAllSemestersAsync();
+        var allSsemestersSelectList = new SelectList(allSemesters, "Id", "Name", semester.Id);
 
         var model = new RosterIndexModel
         {
             SelectedSemester = semester.Id,
             Semester = semester,
-            Semesters = await base.GetSemesterListAsync(),
+            Semesters = allSsemestersSelectList,
             Members = filteredResults
         };
 
         return View(model);
     }
 
-    [HttpGet, Authorize]
-    public async Task<ActionResult> InitiateNewMembers(string message)
-    {
-        ViewBag.SuccessMessage = TempData["SuccessMessage"];
-
-        var model = new InitiateNewMembersModel
-        {
-            NewMembers = await GetNewMemberUserIdListAsFullNameAsync()
-        };
-
-        return View(model);
-    }
-
-    [HttpPost, ValidateAntiForgeryToken, Authorize]
-    public async Task<ActionResult> InitiateNewMembers(InitiateNewMembersModel model)
-    {
-        var newMembers = await Context.Users
-            .Where(m =>
-                model.SelectedMemberIds.Contains(m.Id))
-            .ToListAsync();
-        var activeId = (await Context.UserTypes.SingleAsync(s => s.StatusName == "Active")).StatusId;
-
-        foreach (var m in newMembers)
-        {
-            m.StatusId = activeId;
-            Context.Entry(m).State = EntityState.Modified;
-        }
-
-        await Context.SaveChangesAsync();
-        TempData["SuccessMessage"] = "New members successfully moved to active status.";
-        return RedirectToAction("InitiatePledges");
-    }
-
-    [HttpGet, Authorize]
-    public async Task<ActionResult> GraduateActives(string message)
-    {
-        ViewBag.SuccessMessage = TempData["SuccessMessage"];
-
-        var model = new GraduateActivesModel
-        {
-            Actives = await GetGraduatingActiveUserIdListAsFullNameAsync()
-        };
-
-        return View(model);
-    }
-
-    [HttpPost, ValidateAntiForgeryToken, Authorize]
-    public async Task<ActionResult> GraduateActives(GraduateActivesModel model)
-    {
-        var actives = await Context.Users
-            .Where(m =>
-                model.SelectedMemberIds.Contains(m.Id))
-            .ToListAsync();
-        var alumnusId = (await Context.UserTypes.SingleAsync(s => s.StatusName == "Alumnus")).StatusId;
-
-        foreach (var p in actives)
-        {
-            p.StatusId = alumnusId;
-            Context.Entry(p).State = EntityState.Modified;
-        }
-
-        await Context.SaveChangesAsync();
-        TempData["SuccessMessage"] = "Actives successfully moved to alumni status.";
-        return RedirectToAction("GraduateActives");
-    }
-
     [HttpGet]
     public async Task<FileContentResult> Download()
     {
-        var members = await UserManager.Users
-            .OrderBy(m => m.StatusId)
-            .ThenBy(m => m.LastName)
-            .ToListAsync();
+        IOrderedEnumerable<Member> members = (await _memberService.GetAllMembersAsync())
+            .OrderBy(m => m.LastName);
         const string header = "First Name, Last Name, Mobile, Email, Member Status, Pledge Class, Pin, Graduation, Location, Big Bro";
         var sb = new StringBuilder();
         sb.AppendLine(header);
@@ -125,9 +69,9 @@ public class RosterController : BaseController
         {
             var firstName = m.FirstName;
             var lastName = m.LastName;
-            var phone = m.PhoneNumber ?? "None";
+            var phone = m.UserInfo.PhoneNumber ?? "None";
             var email = m.Email;
-            var status = m.Status.StatusName;
+            var status = m.GetStatus(DateTime.UtcNow);
             var pledgeClass = m.PledgeClass?.PledgeClassName ?? "None";
             var graduationSemester = m.ExpectedGraduation?.ToString() ?? "None";
             var location = m.RoomString();
@@ -146,5 +90,59 @@ public class RosterController : BaseController
         }
 
         return File(new UTF8Encoding().GetBytes(sb.ToString()), "text/csv", "dsp-roster.csv");
+    }
+
+
+    protected virtual IEnumerable<Member> GetFilteredMembersList(
+        IEnumerable<Member> members, string s, string sort, string order)
+    {
+        IEnumerable<Member> filteredResults;
+
+        if (!string.IsNullOrEmpty(s))
+        {
+            var lcs = s.ToLower();
+            filteredResults = members
+                .Where(m =>
+                    m.FirstName.ToLower().Contains(lcs) ||
+                    m.LastName.ToLower().Contains(lcs) ||
+                    m.PledgeClass.PledgeClassName.ToLower().Contains(lcs) ||
+                    m.ExpectedGraduation.ToString().ToLower() == lcs ||
+                    m.RoomString().ToLower() == lcs);
+        }
+        else
+        {
+            filteredResults = members;
+        }
+
+        switch (sort)
+        {
+            case "first-name":
+                filteredResults = order == "desc"
+                    ? filteredResults.OrderByDescending(m => m.FirstName)
+                    : filteredResults.OrderBy(m => m.FirstName);
+                break;
+            case "pledge-class":
+                filteredResults = order == "desc"
+                    ? filteredResults.OrderByDescending(m => m.PledgeClass.Semester.DateStart)
+                    : filteredResults.OrderBy(m => m.PledgeClass.Semester.DateStart);
+                break;
+            case "final-semester":
+                filteredResults = order == "desc"
+                    ? filteredResults.OrderByDescending(m => m.ExpectedGraduation.DateStart)
+                    : filteredResults.OrderBy(m => m.ExpectedGraduation.DateStart);
+                break;
+            case "location":
+                filteredResults = order == "desc"
+                    ? filteredResults.OrderByDescending(m => m.RoomString())
+                    : filteredResults.OrderBy(m => m.RoomString());
+                break;
+            default: // "last-name"
+                filteredResults = order == "desc"
+                    ? filteredResults.OrderByDescending(m => m.LastName)
+                    : filteredResults.OrderBy(m => m.LastName);
+                break;
+        }
+
+        return filteredResults;
     }
 }

@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 public interface ISemesterService : IService
 {
-    IList<string> Alphabet { get; }
+    IList<string> GreekAlphabet { get; }
 
     Task<IEnumerable<Semester>> GetAllSemestersAsync();
     Task<IEnumerable<Semester>> GetCurrentAndNextSemesterAsync(DateTime? now = null);
+    Task<IEnumerable<PledgeClass>> GetAllPledgeClassesAsync();
     Task<Semester> GetCurrentSemesterAsync(DateTime? now = null);
     Task<Semester> GetSemesterByIdAsync(int id);
     Task<Semester> GetSemesterByUtcDateTimeAsync(DateTime datetime);

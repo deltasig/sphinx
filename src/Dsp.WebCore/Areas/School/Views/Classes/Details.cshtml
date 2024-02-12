@@ -92,7 +92,7 @@
                                 {
                                     <tr class="@(s.SemesterId == Model.CurrentSemester.Id ? "success" : "")">
                                         <td>
-                                            <a href="@Url.Action("Schedule", new {userName = s.User.UserName})">
+                                            <a href="@Url.Action("Schedule", new {userName = s.User.UserInfo.UserName})">
                                                 @(s.User.FirstName + " " + s.User.LastName)
                                             </a>
                                         </td>

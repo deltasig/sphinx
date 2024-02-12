@@ -21,9 +21,9 @@ public partial class Semester
 
     public virtual ICollection<ClassTaken> ClassesTaken { get; set; } = new List<ClassTaken>();
 
-    public virtual ICollection<UserRole> Leaders { get; set; } = new List<UserRole>();
+    public virtual ICollection<MemberPosition> Leaders { get; set; } = new List<MemberPosition>();
 
-    public virtual ICollection<User> GraduatingMembers { get; set; } = new List<User>();
+    public virtual ICollection<Member> GraduatingMembers { get; set; } = new List<Member>();
 
     public virtual ICollection<PledgeClass> PledgeClasses { get; set; } = new List<PledgeClass>();
 
@@ -34,6 +34,14 @@ public partial class Semester
     public virtual ICollection<ServiceHourAmendment> ServiceHourAmendments { get; set; } = new List<ServiceHourAmendment>();
 
     public virtual ICollection<ServiceEvent> ServiceEvents { get; set; } = new List<ServiceEvent>();
+
+    public virtual string Name
+    {
+        get
+        {
+            return ToString();
+        }
+    }
 
     public override string ToString()
     {

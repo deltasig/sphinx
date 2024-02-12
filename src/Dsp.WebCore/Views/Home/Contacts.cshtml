@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Contacts";
     ViewBag.Subtitle = Model.ToString();
-    var leaders = Model.Leaders ?? new List<UserRole>();
+    var leaders = Model.Leaders ?? new List<MemberPosition>();
     var list = leaders
         .Where(l => l.Role.IsPublic)
         .OrderBy(l => l.Role.Type)
@@ -31,9 +31,12 @@
                                 <img src="~/Images/Avatars/@avatar" height="75" width="75" class="img-circle no-print" id="avatar" />
                             </p>
                             <p class="list-group-item-text">
-                                <a href="mailto:@leader.User.Email">
-                                    @leader.User.ToShortLastNameString()
-                                </a>
+                                @leader.User.ToShortLastNameString()
+                                
+                                <small>
+                                    <i class="fas fa-fw fa-envelope"></i>
+                                    @leader.User.Email
+                                </small>
                             </p>
                         </div>
                     </div>

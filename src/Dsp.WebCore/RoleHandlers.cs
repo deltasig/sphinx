@@ -22,7 +22,7 @@ public class OneOfManyMemberStatusHandler : AuthorizationHandler<MemberStatusReq
         var isAdmin = await roleService.UserIsAdminAsync(user.Id);
 
         var requiredStatuses = requirement.Statuses;
-        var hasRole = isAdmin || requiredStatuses.Contains(user.Status.StatusName);
+        var hasRole = isAdmin || requiredStatuses.Contains(user.GetStatus());
 
         if (hasRole)
         {
