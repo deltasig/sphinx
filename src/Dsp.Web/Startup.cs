@@ -1,5 +1,4 @@
-﻿using Dsp.Services;
-using Dsp.Web.Extensions;
+﻿using Dsp.Web.Extensions;
 using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.Owin;
@@ -8,6 +7,7 @@ using RazorEngine;
 using RazorEngine.Templating;
 using System;
 using System.IO;
+using System.Net;
 using System.Web.Configuration;
 
 [assembly: OwinStartupAttribute(typeof(Dsp.Web.Startup))]
@@ -35,6 +35,8 @@ namespace Dsp.Web
 
             var tz = TimeZoneInfo.FindSystemTimeZoneById("Central Standard Time");
             RecurringJob.AddOrUpdate("sober-schedule-email", () => EmailService.TryToSendSoberSchedule(), Cron.Daily(16), tz);
+
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
         }
     }
 }
