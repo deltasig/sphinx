@@ -1,0 +1,36 @@
+name: Sphinx Deploy
+on:
+  push:
+    branches:
+    - master
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    env:
+      SPHINX_PACKAGE: ${{ github.workspace }}\src\Dsp.Web\obj\Release\Package\Dsp.Web.zip
+      SPHINX_USERNAME: ${{ secrets.MSDEPLOY_USERNAME }}
+      SPHINX_PASSWORD: ${{ secrets.MSDEPLOY_PASSWORD }}
+      SPHINX_DEPLOY_URL: ${{ secrets.MSDEPLOY_URL }}
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup MSBuild v1
+      uses: microsoft/setup-msbuild@v1
+    - name: Setup NuGet v2.0.0
+      uses: NuGet/setup-nuget@v2.0.0
+    - name: Setup MSBuild v1.1
+      uses: microsoft/setup-msbuild@v1.1
+    - name: Restore Packages
+      run: nuget restore src/Sphinx.sln
+    - name: Build Solution
+      run: >
+        msbuild .\src\Sphinx.sln `
+          /p:Configuration=Release `
+          /p:GenerateSerializationAssemblies=False `
+          /p:DeployOnBuild=true `
+          /p:WebPublishMethod=Package `
+          /p:PackageAsSingleFile=true `
+          /p:IncludeSetAclProviderOnDestination=False `
+          /p:AutoParameterizationWebConfigConnectionStrings=False
+    - name: Deploy Application
+      shell: cmd
+      run: '"C:/Program Files (x86)/IIS/Microsoft Web Deploy V3/msdeploy.exe" -verb:sync -allowUntrusted -source:package=${{ env.SPHINX_PACKAGE }} -dest:auto,ComputerName=${{ env.SPHINX_DEPLOY_URL }},UserName=${{ env.SPHINX_USERNAME }},Password=${{ env.SPHINX_PASSWORD }},IncludeAcls=False,AuthType=Basic -setParam:name="IIS Web Application Name",value=Sphinx -disableLink:AppPoolExtension -disableLink:ContentExtension -disableLink:CertificateExtension'
