@@ -460,7 +460,6 @@
     <Content Include="Error\403.html" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Images\Avatars\NoAvatar.jpg" />
-    <Content Include="Images\dsp-directions.png" />
     <Content Include="Images\History\chapter-house-1.jpg" />
     <Content Include="Images\History\chapter-house-2.jpg" />
     <Content Include="Images\History\chapter-house-3.jpg" />
@@ -727,7 +726,6 @@
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
-    <None Include="Properties\PublishProfiles\DSP - AWS.pubxml" />
     <Content Include="Scripts\bootstrap-select.js.map" />
     <None Include="Scripts\jquery-2.1.4.intellisense.js" />
     <Content Include="Scripts\i18n\defaults-ar_AR.js" />
