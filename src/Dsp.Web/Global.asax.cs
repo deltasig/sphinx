@@ -1,13 +1,12 @@
 ﻿namespace Dsp.Web
 {
+    using Dsp.Data;
     using System.Data.Entity;
     using System.Web;
     using System.Web.Http;
     using System.Web.Mvc;
     using System.Web.Optimization;
     using System.Web.Routing;
-    using Dsp.Data;
-    using Dsp.Web.Extensions;
 
     public class MvcApplication : HttpApplication
     {
@@ -19,13 +18,6 @@
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
-            HangfireBootstrapper.Instance.Start();
-        }
-
-        protected void Application_End()
-        {
-            HangfireBootstrapper.Instance.Stop();
         }
     }
 }
