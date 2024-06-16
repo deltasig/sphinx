@@ -1,5 +1,5 @@
 name: Sphinx Build
-on: [push]
+on: push
 jobs:
   build:
     runs-on: windows-2019
