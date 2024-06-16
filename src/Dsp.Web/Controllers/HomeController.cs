@@ -149,6 +149,17 @@
             return Content(result);
         }
 
+
+        [Authorize(Roles = "Administrator, Web Master")]
+        public async Task<ActionResult> TestEmail()
+        {
+            var userId = User.Identity.GetUserId<int>();
+            var user = await UserManager.FindByIdAsync(userId);
+            var userEmail = user.Email;
+            var result = await EmailService.SendTestEmail(userEmail);
+            return Content(result);
+        }
+
         [Authorize(Roles = "New, Neophyte, Active, Alumnus, Affiliate"), HttpGet]
         public async Task<ActionResult> Sphinx()
         {
