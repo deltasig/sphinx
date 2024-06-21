@@ -19,10 +19,12 @@
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            const string FromAddress = "sphinx@deltasig-de.org";
             var smtpEndpoint = Environment.GetEnvironmentVariable("SPHINX_SMTP_ENDPOINT");
             var smtpUsername = Environment.GetEnvironmentVariable("SPHINX_SMTP_USERNAME");
             var smtpPassword = Environment.GetEnvironmentVariable("SPHINX_SMTP_PASSWORD");
+            var fromAddress = new MailAddress(smtpUsername, "Sphinx");
+            var toAddress = new MailAddress(message.Destination);
+
 
             SmtpClient client = new SmtpClient()
             {
@@ -33,14 +35,15 @@
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(smtpUsername, smtpPassword)
             };
-
-            var mailMessage = new MailMessage(new MailAddress(FromAddress), new MailAddress(message.Destination))
+            using (var mailMessage = new MailMessage(fromAddress, toAddress)
             {
                 Subject = message.Subject,
                 Body = message.Body,
                 IsBodyHtml = true,
-            };
-            await client.SendMailAsync(mailMessage);
+            })
+            {
+                await client.SendMailAsync(mailMessage);
+            }
         }
 
         public static string TryToSendSoberSchedule()
