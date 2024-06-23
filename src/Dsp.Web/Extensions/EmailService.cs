@@ -4,7 +4,6 @@
     using Dsp.Data.Entities;
     using Dsp.Services;
     using Dsp.Services.Interfaces;
-    using Elmah;
     using Microsoft.AspNet.Identity;
     using RazorEngine;
     using RazorEngine.Templating;
@@ -19,13 +18,14 @@
     {
         public async Task SendAsync(IdentityMessage message)
         {
+            await SendAsync(message.Destination, message.Subject, message.Body);
+        }
+
+        public async Task SendAsync(string to, string subject, string body)
+        {
             var smtpEndpoint = Environment.GetEnvironmentVariable("SPHINX_SMTP_ENDPOINT");
             var smtpUsername = Environment.GetEnvironmentVariable("SPHINX_SMTP_USERNAME");
             var smtpPassword = Environment.GetEnvironmentVariable("SPHINX_SMTP_PASSWORD");
-            var fromAddress = new MailAddress(smtpUsername, "Sphinx");
-            var toAddress = new MailAddress(message.Destination);
-
-
             SmtpClient client = new SmtpClient()
             {
                 Host = smtpEndpoint,
@@ -35,10 +35,10 @@
                 UseDefaultCredentials = false,
                 Credentials = new NetworkCredential(smtpUsername, smtpPassword)
             };
-            using (var mailMessage = new MailMessage(fromAddress, toAddress)
+            using (var mailMessage = new MailMessage(smtpUsername, to)
             {
-                Subject = message.Subject,
-                Body = message.Body,
+                Subject = subject,
+                Body = body,
                 IsBodyHtml = true,
             })
             {
@@ -115,28 +115,6 @@
             db.Emails.Add(email);
             await db.SaveChangesAsync();
 
-            return "OK";
-        }
-
-        public static async Task<string> SendTestEmail(string destination)
-        {
-            var message = new IdentityMessage
-            {
-                Subject = "Sphinx: Test Email",
-                Body = "This is a test email.",
-                Destination = destination
-            };
-
-            try
-            {
-                var emailService = new EmailService();
-                await emailService.SendAsync(message);
-            }
-            catch (Exception e)
-            {
-                ErrorSignal.FromCurrentContext().Raise(e);
-                return "Error";
-            }
             return "OK";
         }
     }

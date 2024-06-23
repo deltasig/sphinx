@@ -2,6 +2,7 @@
 {
     using Data.Entities;
     using Dsp.Services;
+    using Elmah;
     using Extensions;
     using MarkdownSharp;
     using Microsoft.AspNet.Identity;
@@ -155,8 +156,21 @@
         {
             var userId = User.Identity.GetUserId<int>();
             var user = await UserManager.FindByIdAsync(userId);
-            var userEmail = user.Email;
-            var result = await EmailService.SendTestEmail(userEmail);
+            string TO = user.Email.ToString();
+            const string SUBJECT = "Sphinx: Test Email";
+            const string BODY = "This is a test email.";
+            string result = "OK";
+            try
+            {
+                var emailService = new EmailService();
+                await emailService.SendAsync(TO, SUBJECT, BODY);
+            }
+            catch (Exception e)
+            {
+                ErrorSignal.FromCurrentContext().Raise(e);
+                result = "Error - " + TO;
+            }
+
             return Content(result);
         }
 
