@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.12
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36414.22 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Web", "Dsp.Web\Dsp.Web.csproj", "{10BBD6C0-2927-4716-9B02-D1E2E88F616D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Data", "Dsp.Data\Dsp.Data.csproj", "{9CE07462-20A3-4EE6-8797-7EA69E05ACB8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Services", "Dsp.Services\Dsp.Services.csproj", "{D999933E-F1D3-4E84-9219-B54B7E8E2DC8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Tests", "Dsp.Tests\Dsp.Tests.csproj", "{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dsp.Repositories", "Dsp.Repositories\Dsp.Repositories.csproj", "{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}"
 EndProject
@@ -31,10 +29,6 @@ Global
 		{D999933E-F1D3-4E84-9219-B54B7E8E2DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D999933E-F1D3-4E84-9219-B54B7E8E2DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D999933E-F1D3-4E84-9219-B54B7E8E2DC8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{24C4E28E-0DB0-4173-9E82-97A83C2ECBC0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{00CF890E-D0B7-45D9-AA1C-73D57CEBCCFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
